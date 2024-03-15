@@ -1,0 +1,572 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{multirow}
+
+\title{EBM-manufactured single tracks of Alloy 718: Influence of energy input and focus offset on geometrical and microstructural characteristics }
+
+
+\author{Paria Karimi ${ }^{\text {a,* }}$, Esmaeil Sadeghi ${ }^{a}$, Joakim Ålgårdh ${ }^{a, b}$, Joel Andersson ${ }^{a}$\\
+a Department of Engineering Science, University West, 46186 Trollhättan, Sweden\\
+${ }^{\mathrm{b}}$ Powder Materials \& Additive Manufacturing, Swerea KIMAB AB, 16440 Kista, Sweden}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+Powder bed fusion
+
+Electron beam melting
+
+Experimental design
+
+Solidified microstructure
+
+Single track
+
+Geometrical characteristics
+
+Alloy 718
+
+\begin{abstract}
+A B S T R A C T Electron beam melting-powder bed fusion (EBM-PBF) is an additive manufacturing process, which is able to produce parts in layer-by-layer fashion from a 3D model data. Currently application of this technology in parts manufacturing with high geometrical complexity has acquired growing interest in industry. To recommend the EBM process into industry for manufacturing parts, improved mechanical properties of final part must be obtained. Such properties highly depend on individual single melted track and single layer. In EBM, interactions between the electron beam, powder, and solid underlying layer affect the geometrical (e.g., re-melt depth, track width, contact angle, and track height) and microstructural (e.g., grain structure, and primary dendrite arm spacing) characteristics of the melted tracks. The core of the present research was to explore the influence of linear energy input parameters in terms of beam scanning speed, beam current as well as focus offset and their interactions on the geometry and microstructure of EBM-manufactured single tracks of Alloy 718. Increased scanning speed led to lower linear energy input values $(<0.9 \mathrm{~J} / \mathrm{mm})$ in an specific range of the focus offset $(0-10 \mathrm{~mA})$ which resulted in instability, and discontinuity of the single tracks as well as balling effect. Decreasing the scanning speed and increasing the beam current resulted in higher melt pool depth and width. By statistical evaluations, the most influencing parameters on the geometrical features were primarily the scanning speed, and secondly the beam current. Primary dendrite arm spacing (PDAS) slightly decreased by increasing the scanning speed using lower beam current values as the linear energy input decreased. By increasing the linear energy input, the chance of more equiaxed grain formation was high, however, at lower linear energy input, mainly columnar grains were observed. The lower focus offset values resulted in more uniform grains along the <001〉 crystallographic direction.
+\end{abstract}
+
+\section*{1. Introduction}
+In recent years, the electron beam melting-powder bed fusion (EBMPBF) technique has shown a considerable progress in manufacturing geometrically complex and highly dense parts [1-5]. The essential operation in EBM is track-by-track and successive layer-by-layer melting of feedstock powder to form a final 3D part [6-10]. A necessary condition for obtaining a high quality additively manufactured part is stability of geometrical characteristics of individual single tracks and a good cohesion between each melted track.
+
+In EBM, the interaction between the electron beam, powder, and solid underlying layer involves phenomena such as heat transfer (e.g. radiation, absorption, and conduction), phase transformations, fluid flow driven by surface tension gradients, mass transfer within the molten pool, as well as chemical reactions [8,11]. By modification of process parameters, it is possible to avoid various undesirable effects such as geometrical irregularity of the melted track or balling effect which could lead to poor mechanical bonding between tracks and layers $[12,13]$. This explains the essential need for developing a comprehensive scientific understanding of the EBM process related phenomena and its process parameters on the beam-powder-solid underlying layer interactions.
+
+It has been found that energy input is the most significant process parameter in PBF processes in term of microstructural characteristics $[1,12,14,15]$. The energy input $\left(\mathrm{J} / \mathrm{m}^{3}\right)$ is a measure for the averaged applied energy per volume of material during the scanning of a single layer; see Eq. (1) [23]. For a single track, calculation of energy per unit length of track so-called "linear energy input" is the ratio between beam power and scanning speed, see Eq. (2) [16]. Variations in the linear energy input parameters (scanning speed and beam current) [17,18], as
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail address: \href{mailto:paria.karimi@hv.se}{paria.karimi@hv.se} (P. Karimi).
+}
+well as the focus offset generate different geometrical features in the samples.
+
+Energy input $\left(\mathrm{J} / \mathrm{mm}^{3}\right)$
+
+
+\begin{equation*}
+=\frac{\text { voltage }(\mathrm{kV}) \times \operatorname{current}(\mathrm{mA})}{\text { scanning speed }\left(\frac{\mathrm{mm}}{\mathrm{s}}\right) \times \text { layer thickness }(\mu \mathrm{m}) \times \text { Line offset }(\mu \mathrm{m})} \tag{1}
+\end{equation*}
+
+
+Linear energy input $(\mathrm{J} / \mathrm{mm})=\frac{\text { voltage }(\mathrm{kV}) \times \operatorname{current}(\mathrm{mA})}{\text { scanning speed }\left(\frac{\mathrm{mm}}{\mathrm{s}}\right)}$
+
+The feedstock powder properties also has a significant effect on the formation of a sound and continuous single track with a low amount of irregularities [19]. The mechanism of distortion, irregularities and formation of drops may be associated with thermo-physical properties of the powder, peculiarities of its deposition and spreading, layer thickness, and linear energy input parameters of the beam [20]. The value of linear energy input strongly influences the interaction between beam, powder, and solid underlying layers and therefore has to be carefully controlled in EBM. Moreover, the focus offset is the value of current used by focusing coils located in the electron gun column to concentrate the beam, which significantly affects the geometry of melted tracks. Altering the track geometry is an approach to change the thermal gradient and solidification condition of the melt pool [21].
+
+Furthermore, the formation of satellites particles typically occurs in EBM due to; molten material spattering, partial melting of powder in peripheral region of the beam spot [12,15], remolten drops surrounding and their metallurgical contacts with the track. This can eventually provoke the formation of pores in AM parts and influence surface roughness [22,23]. Its effect is serious for the internal surfaces of the parts, especially for fine channels and thin-walled structures. Therefore, there is an essential need to find out an appropriate process window for melting of a stable and continuous single track without those challenges.
+
+In this study, the role of the main influencing linear energy input parameters (e.g., scanning speed and beam current) as well as focus offset on the formation of a single track were investigated. Microstructural (e.g., grain structure, and primary dendrite arm spacing) and geometrical (e.g., re-melted depth, track width, contact angle, and track height) characteristics were investigated in correlation to changes in these parameters. A statistical analysis of variance was performed using a design of experiments (DoE) approach in order to quantify statistical significance of these parameters on the track geometry and microstructure.
+
+\section*{2. Material and Experimental Setup}
+\subsection*{2.1. Material}
+Plasma-atomized Alloy 718 powder supplied by Arcam AB (Mölndal, Sweden) was used as feedstock material in the EBM process. According to the specification from the supplier, the particle size distribution of the virgin powder was $+45-105 \mu \mathrm{m}$; however, the feedstock powder was a mixture of virgin and re-used powder and particle size distribution of the mixture was $+45-145 \mu \mathrm{m}$. The provided nominal chemical composition of the powder by the supplier is given in Table 1.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_825bcba88c9715ece761g-02}
+\end{center}
+
+Fig. 1. Schematic of melted single track on the stand.
+
+\subsection*{2.2. EBM Setup}
+The experiments were carried out using an A2X EBM machine (Arcam AB, Mölndal, Sweden) with a constant gun-accelerating voltage $(60 \mathrm{kV})$. The machine uses the software version of 4.2.201. The sintering and melting process began once the preheat temperature of $1023^{\circ} \mathrm{C}$ was reached. The layer thickness and power calculation function were constantly held at $75 \mu \mathrm{m}$ and off-mode respectively during the entire building process.
+
+Samples in the shape of single tracks were produced with $20 \mathrm{~mm}$ length according to Fig. 1, positioned on a stainless steel build plate. As shown in Fig. 1, an additional substrate (stand) was printed using standard Arcam process parameters as a base before the single tracks were laid out [6]. The main benefit of using the stand is to avoid dilution effects between the melted tracks and build plate, which contribute to changes in melting temperature of the powder. The distance between each stand was $5 \mathrm{~mm}$ and height of each stand was $8 \mathrm{~mm}$ from the build plate.
+
+\subsection*{2.3. Experimental Design and Characterization of Microstructure}
+A full factorial design of experiment (DoE) using MODDE 12 (Umetrics, Umea, Sweden) software in three levels was applied to screen the three parameters (scanning speed, beam current, and focus offset). The full factorial design considered all interactions between the selected parameters (e.g. scanning speed $\times$ beam current, scanning speed $\times$ focus offset, and focus offset $\times$ beam current). To cover the full range of the process parameters, three values of the main process parameters were selected, presented in Table 2. Based on the values in the table, the complete DoE parameter run is presented in Table 3. Each run in the DoE was repeated four times for each single track and in each single track; two cross sections (see Fig. 2a) were evaluated to have enough statistical analysis during the study. The responses to the DoE were both geometrical characteristics, such as melt pool width (w), track height (d1), re-melt depth/penetration depth (d2), and average of contact angle $\left(\Theta=\frac{\theta_{1}+\theta_{2}}{2}\right)$, shown in Fig. 2b, and microstructural characteristics, such as primary dendrite arm spacing (PDAS) and grain structure in the cross section of the single tracks.
+
+The effectiveness of the three parameters on each studied response is shown with a plus or minus ( + and - ) sign as well as a number in percent. While the percentage gives the level of effectiveness, the plus and minus signs show the incremental and decreasing effects of the studied parameter on the pre-defined response, respectively.
+
+All the samples were sectioned at a distance of $7 \mathrm{~mm}$ from the start and end of the single tracks (see Fig. 2a), perpendicular to the scanning direction and ground using SiC paper up to 1200 grit. The ground samples were then polished using a $0.05 \mu \mathrm{m} \mathrm{SiC}$ suspension. The
+
+Table 1
+
+Chemical composition of the Alloy 718 powder.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+Element & $\mathrm{Ni}$ & Co & $\mathrm{Cr}$ & Mo & $\mathrm{Ti}$ & Mn & $\mathrm{Nb}$ & $\mathrm{P}$ & $\mathrm{Ta}$ & $\mathrm{Al}$ & $\mathrm{Fe}$ & $\mathrm{Si}$ & $\mathrm{S}$ & $\mathrm{C}$ \\
+\hline
+wt $\%$ & 54.11 & 0.04 & 19.0 & 2.99 & 1.02 & 0.12 & 4.97 & 0.004 & $<0.01$ & 0.52 & Bal. & 0.06 & $<0.001$ & 0.03 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 2
+
+Levels of each investigated EBM process parameters.
+
+\begin{center}
+\begin{tabular}{lcccc}
+\hline
+\multirow{2}{*}{No.} & Parameter & \multicolumn{2}{l}{Level of each parameter} &  \\
+\cline { 3 - 5 }
+ &  & Minimum level & Center level & Maximum level \\
+\hline
+1 & Beam current (mA) & 7 & 11 & 15 \\
+2 & \begin{tabular}{c}
+Beam scanning speed \\
+$(\mathrm{mm} / \mathrm{s})$ \\
+\end{tabular} & 300 & 650 & 1000 \\
+3 & Focus offset (mA) & 0 & 5 & 10 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 3
+
+Full factorial screening design of each investigated EBM process parameter.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\begin{tabular}{l}
+Trail no \\
+$\#$ \\
+\end{tabular} & \begin{tabular}{l}
+Scanning speed \\
+$(\mathrm{mm} / \mathrm{s})$ \\
+\end{tabular} & \begin{tabular}{l}
+Beam current \\
+$(\mathrm{mA})$ \\
+\end{tabular} & \begin{tabular}{l}
+Focus offset \\
+$(\mathrm{mA})$ \\
+\end{tabular} & \begin{tabular}{l}
+Linear energy \\
+input $(\mathrm{J} / \mathrm{mm})$ \\
+\end{tabular} \\
+\hline
+1 & 300 & 15 & 0 & 3.00 \\
+\hline
+2 & 300 & 15 & 5 & 3.00 \\
+\hline
+3 & 300 & 15 & 10 & 3.00 \\
+\hline
+4 & 300 & 11 & 0 & 2.20 \\
+\hline
+5 & 300 & 11 & 5 & 2.20 \\
+\hline
+6 & 300 & 11 & 10 & 2.20 \\
+\hline
+7 & 300 & 7 & 0 & 1.40 \\
+\hline
+8 & 300 & 7 & 5 & 1.40 \\
+\hline
+9 & 300 & 7 & 10 & 1.40 \\
+\hline
+10 & 650 & 15 & 0 & 1.38 \\
+\hline
+11 & 650 & 15 & 5 & 1.38 \\
+\hline
+12 & 650 & 15 & 10 & 1.38 \\
+\hline
+13 & 650 & 11 & 0 & 1.02 \\
+\hline
+14 & 650 & 11 & 5 & 1.02 \\
+\hline
+15 & 650 & 11 & 10 & 1.02 \\
+\hline
+16 & 1000 & 15 & 0 & 0.90 \\
+\hline
+17 & 1000 & 15 & 5 & 0.90 \\
+\hline
+18 & 1000 & 15 & 10 & 0.90 \\
+\hline
+19 & 1000 & 11 & 0 & 0.66 \\
+\hline
+20 & 1000 & 11 & 5 & 0.66 \\
+\hline
+21 & 1000 & 11 & 10 & 0.66 \\
+\hline
+22 & 650 & 7 & 0 & 0.64 \\
+\hline
+23 & 650 & 7 & 5 & 0.64 \\
+\hline
+24 & 650 & 7 & 10 & 0.64 \\
+\hline
+25 & 1000 & 7 & 0 & 0.42 \\
+\hline
+26 & 1000 & 7 & 5 & 0.42 \\
+\hline
+27 & 1000 & 7 & 10 & 0.42 \\
+\hline
+\end{tabular}
+\end{center}
+
+polished cross sections were electrolytically etched with $10 \mathrm{wt} \%$ oxalic acid at room temperature and $3 \mathrm{~V}$ for 5 to $10 \mathrm{~s}$ to reveal the PDAS and grain structure.
+
+At first, the examination of microstructural features was performed using light optical microscope (LOM) (Olympus-BX60M, Tokyo, Japan) to measure the above-mentioned geometrical features. In addition, LOM was used to analyze the type of defects present, such as powderinduced pores (round shape pores) and process-induced defects (e.g., solidification shrinkage pores). Scanning electron microscope (SEM) (ZEISS EVO 50, Cambridge, UK) equipped with energy dispersive spectrometry (EDS) was used to examine PDAS. Electron backscatter diffraction (EBSD) system (GAIA3-TESCAN, Cambridge, UK) operating at accelerating voltage of $15 \mathrm{kV}$ was employed to investigate the effect of linear energy input and focus offset on grain orientation. The EBSD mappings of 10 exemplary single tracks were obtained using a step size of $3 \mu \mathrm{m}$.
+
+\section*{3. Results}
+This research was aimed to find out the effect of the three main process parameters including beam scanning speed, beam current as well as focus offset on the geometrical and microstructural features of Alloy 718 during EBM. Therefore, the geometrical features of the samples is evaluated first, and the influence of the process parameters on the microstructure is studied afterwards.
+
+\subsection*{3.1. Geometrical Features}
+Owing to the large domain of the process parameters analyzed in DoE, the melted single tracks of various shapes, dimensional characteristics, and stabilities were examined, see Table 3. It is pertinent to mention that the conclusions from these results can be given only for a definite type of EBM machine and a certain type of feedstock powder. Thus, comparison of the results can be done only for similar machine systems or powders.
+
+\subsection*{3.1.1. Continuity of Single Track}
+As given in Table 3 and shown in Fig. 4, non-continuous samples were formed at linear energy input values lower than $0.9 \mathrm{~J} / \mathrm{mm}$ in the pre-defined range of focus offset. At linear energy input values range of $0.9-1.38 \mathrm{~J} / \mathrm{mm}$, the melted single tracks were continues. However, it should be mentioned that the adhesion between the solid and liquid was locally lower than the cohesive forces of the liquid in some areas of the tracks, so the tracks did partially spread on the stand, see Fig. 3.
+
+Fig. 4(a-b) displays the preliminary observation of the top surface of the single tracks with different values of the scanning speed, beam current, and focus offset. According to Eq. (2), a high scanning speed and low beam current results in low values of linear energy input. Such low linear energy input values $(<0.9 \mathrm{~J} / \mathrm{mm}$ ) was indicated to be insufficient for achieving a complete and continuous melt. The parameter settings \# 25-27 from Table 3 had the lowest amount of the linear energy input values and as it is shown in Fig. 4a, a few droplets were only formed on the stand. By increasing the beam current for low scanning speeds $(<650 \mathrm{~mm} / \mathrm{s}$ ), continues single tracks with smooth surface were obtained (\# 1 and \# 4 as shown in Fig. 4a).
+
+Fig. 4b shows the effect of focus offset for constant linear energy input values (e.g., 0.9 (\# 16-18), 1.02 (\# 13-15), and $1.38 \mathrm{~J} / \mathrm{mm}$ (\# $10-12)$ ). It was found that by increasing the focus offset in each linear energy input values, the stability of the single tracks increased which could be due to formation of the deeper melt pool, as illustrated in Table 4.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_825bcba88c9715ece761g-03}
+\end{center}
+
+Fig. 2. LOM micrographs of a) top view of single track, process parameter \#1 from Table 3, and b) geometrical measurement from cross section of a single track.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_825bcba88c9715ece761g-04}
+\end{center}
+
+Fig. 3. Topographical SEM image (BSE mode) of a part of sample \# 15
+
+\subsection*{3.1.2. Melt Pool Dimension}
+The LOM images from cross sections presented in Fig. 5 show the geometrical features such as; re-melt depth (d2), melt pool width (w), track height (d1), and contact angle ( $\theta$ ), see Fig. 2b. The statistical measurement reported in Table 4 were imported to the DoE model to estimate the effect of beam current and scanning speed for different focus offset values ( 0,5 , and $10 \mathrm{~mA}$ ) on the geometrical features using $4 \mathrm{D}$ contour graphs (4D: 3 process parameters plus one response parameter), see Fig. 6.
+
+From Fig. 6(a1-a3), it can be noted that by increasing the beam current for lower values of the scanning speed (increased linear energy input), the width of melt pool increased in all three focus offset values. The maximum and minimum values of the melt pool width $(\mathrm{w})$ in the continuous tracks were $821 \pm 38$, and $443 \pm 42 \mu \mathrm{m}$ belonged to samples \#3 and 18, respectively. Based on the DoE analysis the main affecting factors on the melt pool width were the scanning speed, and beam current with affecting coefficients of $-56 \%$ and $+31 \%$, respectively. According to the DoE calculations, the effect of focus offset and the interaction among all the three parameters (scanning speed $\times$ beam current; scanning speed $\times$ focus offset; and beam current $\times$ focus offset) were insignificant.
+
+The re-melt depth also increased in a similar manner as the melt pool width; see Fig. 6(b1-b3). Owing to the highest linear energy input values in each certain focus offset, samples $\# 1,2$, and 3 showed the highest re-melt depth, around $448 \pm 28, \quad 511 \pm 22$, and $478 \pm 30 \mu \mathrm{m}$, respectively. Thus, by considering consolidated layer thickness of $75 \mu \mathrm{m}, 7-8$ underlying layers were re-melted. The main influential parameters were scanning speed and beam current with $-158 \%$ and $+81 \%$ affecting coefficient, respectively. In addition, focus offset was also found to have a minimal effect on the re-melt depth. The effect of focus offset was estimated by DoE to be around $+14 \%$. The effect of interaction parameters was also insignificant. This is a clear indication that enhancing the linear energy input values resulted in a large melt pool geometry. In addition, by increasing the focus offset, the melt pool width decreased whereas the re-melt depth increased, see Fig. 6.
+
+\subsection*{3.1.3. Track Height}
+It was observed that for the focus offset value of $0 \mathrm{~mA}$, when the linear energy input value was increased, the track height increased. However, for the focus offset value of $5 \mathrm{~mA}$, the track height appears to\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_825bcba88c9715ece761g-04(1)}
+
+Fig. 4. Top view of selected samples using different process parameter settings, a) effect of scanning speed and beam current on the morphology of the samples, and b) effect of focus offset on the morphology of the samples.
+
+Table 4
+
+Full factorial screening design with the geometrical responses.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+Trail no \# & Continuity of track & Re-melt depth-d2 $(\mu \mathrm{m})$ & Track width-w $(\mu \mathrm{m})$ & Track height-d1 $(\mu \mathrm{m})$ & Contact angle- $\theta\left({ }^{\circ}\right)$ \\
+\hline
+1 & Continuous & $448 \pm 28$ & $800 \pm 47$ & $129 \pm 25$ & $44 \pm 15$ \\
+\hline
+2 & Continuous & $511 \pm 22$ & $821 \pm 43$ & $89 \pm 24$ & $33 \pm 11$ \\
+\hline
+3 & Continuous & $478 \pm 30$ & $822 \pm 38$ & $111 \pm 28$ & $49 \pm 14$ \\
+\hline
+4 & Continuous & $319 \pm 26$ & $732 \pm 50$ & $101 \pm 21$ & $37 \pm 13$ \\
+\hline
+5 & Continuous & $371 \pm 25$ & $706 \pm 26$ & $96 \pm 19$ & $49 \pm 10$ \\
+\hline
+6 & Continuous & $423 \pm 33$ & $705 \pm 35$ & $88 \pm 22$ & $43 \pm 14$ \\
+\hline
+7 & Continuous & $210 \pm 35$ & $603 \pm 49$ & $95 \pm 29$ & $33 \pm 11$ \\
+\hline
+8 & Continuous & $226 \pm 30$ & $580 \pm 18$ & $150 \pm 24$ & $62 \pm 19$ \\
+\hline
+9 & Continuous & $245 \pm 27$ & $566 \pm 25$ & $121 \pm 19$ & $55 \pm 18$ \\
+\hline
+10 & Continuous & $225 \pm 21$ & $590 \pm 32$ & $121 \pm 18$ & $45 \pm 8$ \\
+\hline
+11 & Continuous & $232 \pm 16$ & $554 \pm 41$ & $139 \pm 17$ & $58 \pm 5$ \\
+\hline
+12 & Continuous & $180 \pm 21$ & $529 \pm 42$ & $133 \pm 15$ & $49 \pm 10$ \\
+\hline
+13 & Non-continuous & - & - & - & - \\
+\hline
+14 & Continuous & $170 \pm 22$ & $453 \pm 43$ & $130 \pm 23$ & $63 \pm 14$ \\
+\hline
+15 & Continuous & $122 \pm 21$ & $445 \pm 22$ & $173 \pm 24$ & $69 \pm 12$ \\
+\hline
+16 & Non-continuous & - & - & - & - \\
+\hline
+17 & Non-continuous & - & - & - & - \\
+\hline
+18 & Continuous & $91 \pm 16$ & $444 \pm 42$ & $163 \pm 21$ & $68 \pm 16$ \\
+\hline
+19 & Non-continuous & - & - & - & - \\
+\hline
+20 & Non-continuous & - & - & - & - \\
+\hline
+21 & Non-continuous & - & - & - & - \\
+\hline
+22 & Non-continuous & - & - & - & - \\
+\hline
+23 & Non-continuous & - & - & - & - \\
+\hline
+24 & Non-continuous & - & - & - & - \\
+\hline
+25 & Non-continuous & - & - & - & - \\
+\hline
+26 & Non-continuous & - & - & - & - \\
+\hline
+27 & Non-continuous & - & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+be almost constant regardless of the total linear energy input, see Fig. 6(c1-c3). In contradiction for the final focus offset value of $10 \mathrm{~mA}$, a lower linear energy input value resulted in a taller track height. Based on the statistical measurements in this study, the range of the track height for stable and continuous tracks were about $88-173 \mu \mathrm{m}$ with a coefficient of variation (ratio of the standard deviation to the mean value) of the track height about $26 \%-37 \%$. It was found that none of the investigated parameters had an effective role on the track height in this pre-defined range.
+
+\subsection*{3.1.4. Contact Angle}
+According to Fig. 6(d1-d3), at all the three focus offset values, by decreasing the linear energy input (low beam current and higher scanning speed), the contact angle increased as well. Therefore, it was found by DoE that the main effective parameter on the contact angle was the scanning speed with an affecting factor of $+27 \%$, whereas the other parameters and interactions did not show any significant effect on the contact angle. The highest contact angle belonged to the sample \# 18 with $67 \pm 16^{\circ}$ and the lowest belonged to the sample \# 2 with $33 \pm 11^{\circ}$, which had the highest linear energy input value.
+
+\subsection*{3.2. Solidified Microstructure of Single Tracks}
+Fig. 7 shows that the microstructure of the melted single tracks with different process conditions consisted of an austenite dendritic structure with submicron-scale primary dendrite-cell spacing. Fig. 7a shows that the grains and direction of dendrites-cells was faced towards the center point of the melt pool which had a fine groove on the top surface due to the interaction of the beam and melt pool. The image contrast disclosed in the SEM images (Fig. 7(a-b)) shows dependence on the crystallographic orientation of the single grains and as such describes the orientation of grains in the polycrystalline domain. If crystal planes are parallel to the incident beam in SEM, the electrons penetrate deeper and the grains appear darker in the image. Fig. 7(a1) shows the melt pool at a higher magnification. The presence of extensive solidification shrinkage pores can be seen in interdendritic areas (both primary and secondary spacing) mainly in the top-center area of the melt pool which is reported as the last area to be solidified [24]. Fig. 7(a2) illustrates that the direction of the dendrites was altered from the stand to the new melt pool owing to the high thermal gradient in that direction. As a result of the higher cooling rate at the bottom of the melt pool rather than the top, very fine dendrites-cells were observed at the bottom of the melt pool with small secondary arms where the heat transfer to the stand was significant. Accordingly, observation of larger secondary arms can be explained at the top areas, see Fig. $7 \mathrm{~b}$.
+
+\subsection*{3.2.1. Effect of Linear Energy Input and Focus Offset on Primary Dendrite Arm Spacing (PDAS)}
+The dendrite-cell spacing was measured in the cross section of all the melted tracks. The maximum and minimum average values (obtained from 15 measurements in each sample) were $5.5 \pm 0.4$ and $2.8 \pm 0.5 \mu \mathrm{m}$ for samples \# 3 and 18 , respectively. As a general trend, the dendrite-cell spacing decreased by decreasing the linear energy input value. The scanning speed and beam current had statistically significant influence on the dendrite-cell spacing. According to DoE, the effect of the scanning speed factor was established to about $-32 \%$ for the dendrite-cell spacing in any place of the cross section of the tracks. The estimated size effect of the beam current factor on the dendrite-cell spacing in the cross section of the tracks was $+20 \%$. In addition, from the 4D contour response images, higher values of the focus offset caused coarser dendrite-cell spacing (Fig. 8).
+
+\subsection*{3.2.2. Effect of Linear Energy Input on Grain Orientation}
+The EBSD results in Fig. 9 showed that at the linear energy input value of $0.9 \mathrm{~J} / \mathrm{mm}$ in which the penetration depth was the lowest, mainly epitaxial growth was obtained from the partially melted grains from the stand. Increasing the linear energy input ( 2.2 and $3.0 \mathrm{~J} / \mathrm{mm}$ ) led to a larger melt pool, where the chance of crystallization and observation of new small grains became high. It can therefore be concluded that higher linear energy input led to more equiaxed microstructure whereas relatively lower linear energy input results in a more or less columnar microstructure.
+
+\subsection*{3.2.3. Effect of Focus Offset on Grain Orientation}
+The effect of the focus offset on the orientation of the grains was shown by the EBSD mapping in Fig. 10 for samples \#1, 2, 3 and for\\
+a)
+
+$$
+\text { Focus offset }=0
+$$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_825bcba88c9715ece761g-06(1)}
+\end{center}
+
+b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_825bcba88c9715ece761g-06}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_825bcba88c9715ece761g-06(2)}
+\end{center}
+
+Fig. 5. Cross section of each track, a) focus offset $=0 \mathrm{~mA}$, b) focus offset $=5 \mathrm{~mA}$, and c) focus offset $=10 \mathrm{~mA}$.
+
+linear energy input of $3.0 \mathrm{~J} / \mathrm{mm}$ and samples \#4, 5, 6 for linear energy input of $2.2 \mathrm{~J} / \mathrm{mm}$. It was observed that for a focus offset of $0 \mathrm{~mA}$, the grain orientations were mainly sustained in $\langle 001\rangle$ direction and the misorientation was slightly lower than for the focus offset of $10 \mathrm{~mA}$. This result was confirmed in the second row of the EBSD mapping in Fig. 10.
+
+\section*{4. Discussion}
+\subsection*{4.1. Geometrical Characteristics}
+As seen in Fig. 3, localized adherence of the single track on the stand is due to several complicated reasons. Firstly, it can be due to the beam fluctuations while scanning. During the melting process, beam has some fluctuations, which could affect the interaction between the beam and powders, and subsequently on the wettability of the melted material on the stand $[26,27]$. Secondly, the roughness of the underlying layer is also important [9,28]. At points like point (1) in Fig. 11, which has deeper valley compared to the points like point (2), the remelted depth is different which can lead to different Marangoni effects. These phenomena can cause different adherence along the single track. Thirdly, it can be due to powder particle levelling before melting [12]. As shown in Fig. 11, the powders were not perfectly distributed on the stand, so one reason can be the presence of the partially sintered powders. Thus, the thickness of powder along the single track also is not constant and has some deviations, which can affect the adherence of the melted track on the stand. In addition to these reasons, other phenomenon during melting of the powders like powder spattering due to the electrical charges of powder particles in some points along the track, can influence on the shape of the single track [1].
+
+The consistency and continuity of the single tracks are attributed to many factors, such as powder particle distribution [29], melt pool dynamics [30], or surface tension of molten material. The variations in the linear energy input and focus offset generated different behavior of the single tracks as seen in Fig. 4. As shown in Fig. 4a, for the high linear energy input values, a continuous melt pool was formed, which was due to the sufficient linear energy input to be imported on the powders. In addition, higher linear energy input values can lead to capillary and thermo-capillary flows (Marangoni effect) which significantly affect the shape of the track and its continuity [25]. Fig. 4b also showed less chance of gap formation in higher focus offset values in a same amount of scanning speed and beam current. In order to rationalize this behavior, looking at the melt pool width and depth results at Fig. 6 showed that higher focus offset has sharper beam. A sharper beam increases the energy density, which increases energy absorption and leads to a reduction in the exposure area. A less focus beam reduces the energy density, i.e., energy absorption and increases the exposure area, which further leads to un-melted powder [31].\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_825bcba88c9715ece761g-07}\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_825bcba88c9715ece761g-08(1)}
+
+Fig. 7. SEM images (BSE mode) of the solidified microstructure in the cross section of the melt pool in the melted track \# 1.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_825bcba88c9715ece761g-08}
+\end{center}
+
+Fig. 8. 4D contour response process parameters on primary dendrite-cell spacing.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_825bcba88c9715ece761g-09(1)}
+\end{center}
+
+Linear energy input: $1.4 \mathrm{~J} / \mathrm{mm} \quad$ Linear energy input: $2.2 \mathrm{~J} / \mathrm{mm} \quad$ Linear energy: $3.0 \mathrm{~J} / \mathrm{mm}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_825bcba88c9715ece761g-09(2)}
+\end{center}
+
+Sample coordinate system\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_825bcba88c9715ece761g-09}
+
+Fig. 9. EBSD mapping of the grain orientations in the melt pools produced by different linear energy input values $(0.9-3.0 \mathrm{~J} / \mathrm{mm})$.
+
+\subsection*{4.1.1. Melt Pool Dimension}
+The corresponding measurements of the melt pool dimension including melt width and remelted depth were shown in Table 4 and the estimated analysis from the DoE were presented in Fig. 6. In order to rationalize the melt pool width and re-melt depth changes at different process conditions, it is known that at high values of linear energy input (low scanning speed and high beam current), a large volume of powder is involved in the track formation, and form a large melt pool size. In addition, the beam-powder-underlying solid layer interaction time increases at low scanning speed and high beam current, and consequently increases the width and re-melted depth of the melt pool [32].
+
+\subsection*{4.1.2. Track Height}
+Another geometrical feature investigated was the height of a track which is primarily determined by powder layer thickness and most likely varies depending on the stand roughness, particularities of powder raking, levelling and spreading, and geometrical characteristics of the powder [12]. As shown in Fig. 6(c1-c3), different results was obtained in the various focus offset values which shows not clear relationship between the process parameters and track height.
+
+\subsection*{4.1.3. Contact Angle}
+From the literature [16], it has been found that the contact angle track height is a function of track height and melt pool width. For instance, with an increase in the track height, the contact angle also increases, see Eq. (3);
+
+$\Theta=2 \times \tan ^{-1}\left(\frac{2 \times d 1}{w}\right)$
+
+where $\theta$ is contact angle $\left({ }^{\circ}\right), \mathrm{d} 1$ is track height $(\mu \mathrm{m})$ and $\mathrm{w}$ is melt pool width $(\mu \mathrm{m})$. Additionally, the contact angle is a function of the wetting phenomenon in EBM as well, and it implies that the molten powder spreads on the stand or previously melted layer, instead of balling up on its surface [33], see Fig. 3. It is also known that wetting ridges can affect the fluid behavior and spreading process during the PBF processing [34]. By increasing the beam current, the temperature in the melt pool also increases [12]. High temperature can lead to the thermo-capillary phenomena known as the Marangoni effect and can expand the melt pool [35]. This leads to the enlargement in the curvature of the liquid surface, and increase in the contact angle. However, the liquid-surface tension generally decreases at higher temperatures where wettability and subsequent reduction in the contact angle are promoted [12,34].
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_825bcba88c9715ece761g-10(1)}
+\end{center}
+
+Fig. 10. EBSD mapping of the grain orientations in melt pools using different linear energy input ( 2.2 and $3.0 \mathrm{~J} / \mathrm{mm}$ ) values by altering focus offset ( 0,5 , and $10 \mathrm{~mA}$ ).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_825bcba88c9715ece761g-10}
+\end{center}
+
+Fig. 11. Schematic view of the powders on the stand showing the roughness of the stand surface.
+
+Thus, the contact angle is a result of several phenomenon such as surface tension, and Marangoni effect, etc. In addition, as seen in Fig. 6(d1-d3), by decreasing the focus offset, the melt pool became wider and shallower, which implied lower contact angle in low predefined focus offset.
+
+\subsection*{4.2. Solidified Microstructure of Single Tracks}
+In EBM, the beam spot size is about several hundreds of microns (compared to a few millimeters in some other AM processes such as laser metal deposition or laser cladding) resulting in that the melt pool is significantly small $[36,37]$. This leads to a very rapid solidification process, and as a result a fine dendrite/cell spacing [6,12,23,38]. The dendrite-cellular microstructure apparent in the material is illustrated in Fig. 7 and usually occurs as a consequence of constitutional supercooling $[35,39,40]$. The degree of constitutional supercooling depends on the actual temperature gradient into the liquid as well as the solute enrichment of the liquid in front of the solid-liquid interface [35]. For a given solute concentration profile, the highest temperature gradient corresponds to planar growth. As the gradient decreases, the crystallization mode changes from planar to cellular, cellular to dendritic and, finally, to dendritic solidification mode [35]. Characteristic length of the microstructure is governed by the cooling rate values, i.e., $\mathrm{R}$ (solidification rate) $\times \mathrm{G}$ (thermal gradient). The increase in the cooling rate results in the finer microstructural features (i.e. smaller dendritecell spacing, and finer dendrites) [35].
+
+As seen in Fig. 8, PDAS was increased in higher linear energy input values which could be due to a resulted big melt pool and slower heat dissipation compared to a small melt pool which can be cool down faster [9]. The reason for slightly coarser PDAS at higher focus offset can be owing to deeper melt pool as showed in Fig. 6.
+
+\subsection*{4.2.1. Effect of Linear Energy Input on Grain Structure}
+The beam parameters not only change the grain size and orientation, but also alter some important process properties such as the highest temperature inside melt pool, the dimension of melt pool and even the melt pool mode (conductive and keyhole). The general grain structure for all AM-processed materials is a directional columnar grain structure [4,14,25]. In fact, during the solidification, the melt pool boundary acts as a nucleation site for new grains, where the new grains start to grow towards the beam incidence point.
+
+As showed in Fig. 9, the nucleation of the new grains occurred at the bottom of the melt pool as clarified by the white dashed lines. Grains with the most favorably orientation with respect to the temperature gradient at the liquid-solid interface grow further where less favorably grains were terminated after a short growth close to the melt pool boundary. This means that if the favorite orientation of a grain is more parallel to the thermal gradient vectors at the melt pool boundary, the chance of extensive grain growth is higher. As a result of this competitive grain growth, many small grains can be observed near the melt pool boundary. The large temperature gradient inside the melt pool leads to a high growth rate of elongated grains and thus little chance for new sites for grains to nucleate in the bulk melt during the solidification $[23,33]$. A closer look at the melt pool boundary in Fig. 9 revealed that there was an intense competitive grain growth at the initial stage of solidification.
+
+Heat transfer from the superheated melt into the bottom cooled solid part is one of the most important phenomena during EBM. As shown in Fig. 7(a-b), by increasing line energy, the melt pool size was\\
+extended and resulted in a high re-melted depth and melt pool width. The EBSD results in Fig. 9 showed that at the linear energy input value of $0.9 \mathrm{~J} / \mathrm{mm}$ in which the penetration depth was the lowest, mainly epitaxial growth was obtained from the partially melted grains from the stand. The primary reason is that most heat leaves the melt pool mainly by heat conduction via the bottom of the melt pool. Thus, due to the high thermal gradient at bottom of the melt pool and its decrease in the upper surface of the melt pool, the epitaxial growth of the columnar grains is promoted [25].
+
+Increasing the linear energy input values, $(2.2$ and $3.0 \mathrm{~J} / \mathrm{mm})$ led to a larger melt pool, where the chance of crystallization and observation of new small grains became high. The heat flux towards the stand is the source of solidification and the crystallization is mainly governed by that condition [25]. It can therefore be concluded that higher energies promotes nucleation of new equiaxed grains whereas relatively lower energies results in a more or less columnar microstructure.
+
+\subsection*{4.2.2. Effect of Focus Offset on Grain Orientation}
+For the lowest focus offset values $(0 \mathrm{~mA})$, sample \#1 in the first row and sample \#4 in the second row revealed the lowest re-melt depth. For a low re-melt depth, the degree of the thermal gradient became higher in the direction perpendicular to the layers, which resulted in less misorientation degree of the grains in the microstructure. By increasing the temperature gradient along the build direction inside the melt pool, more uniform grains formed inside the melt due to an improved condition for competitive grain growth [41,42].
+
+\section*{5. Conclusions}
+The effect of three main process parameters (scanning speed, beam current, and focus offset) on EBM-manufactured single tracks of Alloy 718 was investigated and further analyzed by the use of an experimental design approach. The approach aimed to identify the impact of the three parameters on the geometrical features of the single tracks, such as melt pool width (w), height of a track (d1), re-melt depth (d2), and contact angle $(\theta)$. In addition, the effect of these parameters on grain orientation and primary dendrite arm spacing (PDAS) were also addressed.
+
+\begin{itemize}
+  \item The DoE permitted an establishment of a hierarchy of the process parameters.
+  \item Lower linear energy input ( ${ }^{<} 0.9 \mathrm{~J} / \mathrm{mm}$ ) led to a high risk in formation of non-continuous tracks, instability and balls.
+  \item The most influencing parameter on the geometrical features was the scanning speed, followed by the beam current.
+  \item Compared to the other two parameters, the focus offset was found to have quantitatively less effect on the geometrical features.
+  \item Coarser primary dendrite arm spacing (PDAS) was obtained at higher linear energy input values.
+  \item By increasing the linear energy input, more small equiaxed grains structure were formed, however, at lower linear energy input, more columnar grains were observed.
+  \item Lower focus offset resulted in a less misorientation within the grains.
+  \item The proposed approach can be applied for further development of the manufacturing strategy and optimization of the EBM process.
+\end{itemize}
+
+\section*{Acknowledgments}
+The authors would like to thank Dr. Anders Snis from Arcam AB and Mr. Jonas Olsson from University West for sharing their knowledge in running the EBM machine. The authors would also like to thank Dr. Stefan Gustafsson from Chalmers University of Technology for training in EBSD mapping. Funding from the "European Regional Development Fund", the "Simulation and Control of Material affecting Processes" (SiCoMap) and the "Sustainable Manufacturing Through NextGeneration Additive Process" (SUMAN-Next) projects with funding from the KK foundation, are highly acknowledged.
+
+\section*{References}
+[1] W. Sames, Additive Manufacturing of Inconel 718 Using Electron Beam Melting: Processing, Post-Processing, \& Mechanical Properties (Doctoral thesis), (2015)
+
+[2] M.M. Kirka, Y. Lee, D.A. Greeley, A. Okello, R.R. Dehoff, Strategy for texture management in metals additive manufacturing, JOM 69 (3) (Mar. 2017) 523-531.
+
+[3] L.E. Murr, S.M. Gaytan, E. Martinez, F.R. Medina, Metal fabrication by additive manufacturing using laser and electron beam melting technologies, J. Mater. Sci Technol. 28 (1) (Jan. 2012) 1-14.
+
+[4] H.E. Helmer, C. Körner, R.F. Singer, Additive manufacturing of nickel-based superalloy Inconel 718 by selective electron beam melting: processing window and microstructure, J. Mater. Res. 29 (17) (Sep. 2014) 1987-1996.
+
+[5] J. Karlsson, M. Norell, U. Ackelid, H. Engqvist, J. Lausmaa, Surface oxidation behavior of Ti-6Al-4V manufactured by Electron beam melting (EBM), J. Manuf. Process. 17 (1) (2015) 120-126.
+
+[6] P. Karimi, D. Deng, E. Sadeghimeresht, J. Olsson, J. Ålgårdh, J. Andersson, Microstructure development in track-by-track melting of EBM-manufactured alloy 718, Proceedings of the 9th International Symposium on Superalloy 718 \& Derivatives: Energy, Aerospace, and Industrial Applications, 2018, pp. 643-654.
+
+[7] W.J. Sames, K.A. Unocic, R.R. Dehoff, T. Lolla, S.S. Babu, Thermal effects on microstructural heterogeneity of Inconel 718 materials fabricated by electron beam melting, J. Mater. Res. 29 (17) (Sep. 2014) 1920-1930.
+
+[8] M.M. Kirka, P. Nandwana, Y. Lee, R.R. Dehoff, Solidification and solid-state transformation sciences in metals additive manufacturing, Scr. Mater. 135 (Supplement C) (Jul. 2017) 130-134.
+
+[9] P. Karimi, E. Sadeghi, P. Åkerfeldt, J. Ålgårdh, J. Andersson, Influence of successive thermal cycling on microstructure evolution of EBM-manufactured alloy 718 in track-by-track and layer-by-layer design, Mater. Des. 160 (Dec. 2018) 427-441.
+
+[10] E. Sadeghimeresht, P. Karimi, P. Zhang, R. Peng, J. Andersson, L. Pejryd, S. Joshi, Isothermal oxidation behavior of EBM-additive manufactured alloy 718, Presented at the 9th International Symposium on Superalloy 718 and Derivatives, Pittsburgh, Pennsylvania, USA, 2018.
+
+[11] K. Antony, N. Arivazhagan, Studies on energy penetration and marangoni effect during laser melting process, J. Eng. Sci. Technol. 10 (Apr. 2015) 509-525.
+
+[12] I. Yadroitsev, P. Krakhmalev, I. Yadroitsava, S. Johansson, I. Smurov, Energy input effect on morphology and microstructure of selective laser melting single track from metallic powder, J. Mater. Process. Technol. 213 (4) (Apr. 2013) 606-613.
+
+[13] R. Li, J. Liu, Y. Shi, L. Wang, W. Jiang, Balling behavior of stainless steel and nickel powder during selective laser melting process, Int. J. Adv. Manuf. Technol. 59 (9-12) (Apr. 2012) 1025-1035.
+
+[14] H. Helmer, A. Bauereiß, R.F. Singer, C. Körner, Grain structure evolution in Inconel 718 during selective electron beam melting, Mater. Sci. Eng. A 668 (Supplement C) (Jun. 2016) 180-187.
+
+[15] S. Ghosh, L. Ma, L.E. Levine, R.E. Ricker, M.R. Stoudt, J.C. Heigel, J.E. Guyer, Single-Track Melt-Pool Measurements and Microstructures in Inconel 625, JOM 70 (6) (Jun. 2018) 1011-1016.
+
+[16] T.E. Abioye, J. Folkes, A.T. Clare, A parametric study of Inconel 625 wire laser deposition, J. Mater. Process. Technol. 213 (12) (Dec. 2013) 2145-2151.
+
+[17] H. Gu, H. Gong, D. Pal, K. Rafi, T. Starr, B. Stucker, Influences of energy density on porosity and microstructure of selective laser melted 17-4PH stainless steel, Solid freeform fabrication, Austin, TX, 2013, pp. 474-489.
+
+[18] L. Thijs, F. Verhaeghe, T. Craeghs, J.V. Humbeeck, J.-P. Kruth, A study of the microstructural evolution during selective laser melting of Ti-6Al-4V, Acta Mater. 58 (9) (May 2010) 3303-3312.
+
+[19] Igor Yadroitsev, Ina Yadroitsava, Philippe Bertrand, Igor Smurov, Factor analysis of selective laser melting process parameters and geometrical characteristics of synthesized single tracks, Rapid Prototyp. J. 18 (3) (Apr. 2012) 201-208.
+
+[20] I. Yadroitsev, I. Smurov, Selective laser melting technology: from the single laser melted track stability to 3D parts of complex shape, Phys. Procedia 5 (Jan. 2010) 551-560.
+
+[21] S.S. Al-Bermani, An Investigation Into Microstructure and Microstructural Control of Additive Layer Manufactured Ti-6Al-4V by Electron Beam Melting (Doctoral thesis), University of Sheffield, 2011.
+
+[22] K. Mumtaz, N. Hopkinson, Selective laser melting of Inconel 625 using pulse shaping, Rapid Prototyp. J. 16 (4) (Jun. 2010) 248-257.
+
+[23] P. Karimi, T. Raza, J. Andersson, L.-E. Svensson, Influence of laser exposure time
+
+\includegraphics[max width=\textwidth, center]{2024_03_10_825bcba88c9715ece761g-11}\\
+Adv. Manuf. Technol. 94 (5-8) (Feb. 2018) 2199-2207.
+
+[24] A. Strondl, Characterisation of Nickel-Based Superalloys Manufactured by Electron Beam Melting (Doctoral thesis), Chalmers University of Technology, 2010.
+
+[25] A.R.A. Dezfoli, W.-S. Hwang, W.-C. Huang, T.-W. Tsai, Determination and controlling of grain structure of metals after laser incidence: theoretical approach, Sci. Rep. 7 (Jan. 2017) 41527.
+
+[26] C.J. Smith, F. Derguti, E. Hernandez Nava, M. Thomas, S. Tammas-Williams, S. Gulizia, D. Fraser, I. Todd, Dimensional accuracy of Electron beam melting (EBM) additive manufacture with regard to weight optimized truss structures, J. Mater. Process. Technol. 229 (Mar. 2016) 128-138.
+
+[27] M. Galati, L. Iuliano, A literature review of powder-based electron beam melting focusing on numerical simulations, Addit. Manuf. 19 (Jan. 2018) 1-20.
+
+[28] M.F. Zäh, S. Lutzmann, Modelling and simulation of electron beam melting, Prod. Eng. Res. Dev. 4 (1) (Feb. 2010) 15-23.
+
+[29] A.B. Spierings, M. Voegtlin, T. Bauer, K. Wegener, Powder flowability character isation methodology for powder-bed-based metal additive manufacturing, Prog.
+
+Addit. Manuf. 1 (1) (Jun. 2016) 9-20.
+
+[30] J.I. Arrizubieta, A. Lamikiz, F. Klocke, S. Martínez, K. Arntz, E. Ukar, Evaluation of the relevance of melt pool dynamics in laser material deposition process modeling, Int. J. Heat Mass Transf. 115, pp (Dec. 2017) 80-91.
+
+[31] C. Deckard, D. Miller, J. Williams, Variable beam size SLS workstation and enhanced SLS model, Rapid Prototyp. J. 3 (1) (Mar. 1997) 4-11.
+
+[32] N. Makoana, I. Yadroitsava, H. Möller, I. Yadroitsev, N.W. Makoana, I. Yadroitsava, H. Möller, I. Yadroitsev, Characterization of $17-4 \mathrm{PH}$ single tracks produced at different parametric conditions towards increased productivity of LPBF systems-the effect of laser power and spot size upscaling, Metals 8 (7) (Jun. 2018) 475
+
+[33] M. Agarwala, D. Bourell, J. Beaman, H. Marcus, J. Barlow, Direct selective laser sintering of metals, Rapid Prototyp. J. 1 (1) (Mar. 1995) 26-36.
+
+[34] E. Saiz, A.P. Tomsia, R.M. Cannon, Ridging effects on wetting and spreading of liquids on solids, Acta Mater. 46 (7) (Apr. 1998) 2349-2361.
+
+[35] S. Kou, Welding Metallurgy, John Wiley \& Sons, Inc., Hoboken, NJ, USA, 2002.
+
+[36] A. Segerstark, Laser Metal Deposition Using Alloy 718 Powder: Influence of Process Parameters on Material Characteristics, DIVA (2017).\\
+[37] J.L. Arias, M.A. Montealegre, F. Vidal, J. Rodríguez, S. Mann, P. Abels, F. Motmans, Real-time laser cladding control with variable spot size, Presented at the SPIE LASE, San Francisco, California, United States, 2014, p. 89700Q.
+
+[38] I. Hemmati, V. Ocelik, J.T.M.D. Hosson, Microstructural characterization of AISI 431 martensitic stainless steel laser-deposited coatings, J. Mater. Sci. 46 (10) (May 2011) 3405-3414.
+
+[39] C.T. Sims, Norman S. Stoloff, William C. Hagel, Chester T. Sims, Norman S. Stoloff, William C. Hagel (Eds.), Superalloys II: High-Temperature Materials for Aerospace and Industrial Power, Wiley, 1987.
+
+[40] M.M. Kirka, K.A. Unocic, N. Raghavan, F. Medina, R.R. Dehoff, S.S. Babu, Microstructure development in Electron beam-melted Inconel 718 and associated tensile properties, JOM 68 (3) (Mar. 2016) 1012-1020.
+
+[41] W.-C. Huang, K.-P. Chang, P.-H. Wu, C.-H. Wu, Lin, 3D printing optical engine for controlling material microstructure, Phys. Procedia 83 (Jan. 2016) 847-853.
+
+[42] L. Liu, T. Huang, M. Qu, G. Liu, J. Zhang, H. Fu, High thermal gradient directional solidification and its application in the processing of nickel-based superalloys, J. Mater. Process. Technol. 210 (1) (Jan. 2010) 159-165.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

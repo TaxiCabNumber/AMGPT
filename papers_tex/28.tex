@@ -1,0 +1,849 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{3-Dimensional heat transfer modeling for laser powder-bed fusion additive manufacturing with volumetric heat sources based on varied thermal conductivity and absorptivity }
+
+
+\author{Zhidong Zhang, Yuze Huang, Adhitan Rani Kasinathan, Shahriar Imani Shahabad, Usman Ali,\\
+Yahya Mahmoodkhani, Ehsan Toyserkani*}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Full length article
+
+Multi-Scale Additive Manufacturing Lab, University of Waterloo, 200 University Avenue West, Waterloo, ON N2L 3G1, Canada
+
+\begin{itemize}
+  \item Eight 3D heat sources used for simulating Laser Powder-Bed Fusion are compared.
+  \item New equations for varied thermal conductivity and laser absorptivity is proposed.
+  \item The varied thermal conductivity and absorptivity expressions can be linear functions.
+\end{itemize}
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+Additive manufacturing
+
+Laser powder-bed fusion
+
+Heat transfer modeling
+
+Volumetric heat sources
+
+Varied laser absorptivity
+
+Anisotropically enhanced thermal conductivity
+
+\begin{abstract}
+A B S T R A C T In this article, a 3-dimensional heat-transfer finite element model for Laser Powder-Bed Fusion (LPBF) was developed for accurately predicting melt pool dimensions and surface features. The sole deployment of trial-anderror experiments for arriving at optimal process parameters is very costly and time-consuming, thus the developed model can be used to reduce the process/material development costs. A literature review of heat source models was presented. Eight commonly used heat source models are evaluated and compared. All of their simulated depths are smaller than the experimental result, which may be due to the melt pool convection and inconstant laser absorptivity in the reality during the experiment. In order to enable the numerical model to predict melt pool dimensions for different combinations of process parameters, a novel model including expressions of varied anisotropically enhanced thermal conductivity and varied laser absorptivity is proposed and verified by both the melt pool dimensions and track surface morphology. It is found that the heat source expressions can be linear while causing the simulation results to be in better agreement with both experimental melt pool dimensions and track surface morphology.
+\end{abstract}
+
+\section*{1. Introduction}
+Laser Powder-Bed Fusion (LPBF) is a commercially available Additive Manufacturing (AM) process. It is regarded as one of the most common processes for direct metal fabrication [1]. In LPBF, geometrically complex parts can be produced by selectively melting layers of powder. Nevertheless, wide industrial applications of LPBF are hindered by several limitations, including porosity defects resulted from lack of fusion, keyhole collapse, and balling [2], and residual stress which causes distortion and failure of the final products due to high thermal gradients $[3,4]$. Therefore, machine process parameter optimization becomes a critical task.
+
+However, the sole deployment of trial-and-error experiments to determine optimal process parameters is very costly and time-consuming [5] since there will be a large number of coupon samples with different combinations of process parameters, such as laser power, scanning speed, powder layer thickness, hatch spacing, preheating temperature, and scanning patterns. Therefore, numerical simulations of the LPBF process are widely investigated.
+
+The physical phenomena associated in a melt pool are highly complicated, mainly controlled by mass and heat transfer. The heating and cooling rates are extremely high due to the fast-moving laser irradiation on the powder particles [6]. In addition, the dynamic melt pool development beneath the powder-bed [7], phase change dynamics from liquid to vapor and plasma [8], and powder particles drawn by high-speed metal vapor flux [9] and capillary effects exist in the melt
+\footnotetext{*Corresponding author at: Department of Mechanical and Mechatronics Engineering, University of Waterloo, Waterloo, Ontario N2L 3G1, Canada.
+
+E-mail address: \href{mailto:ehsan.toyserkani@uwaterloo.ca}{ehsan.toyserkani@uwaterloo.ca} (E. Toyserkani).
+}
+pool. Therefore, fine-scale numerical models [10,11], which included several details, such as laser-ray tracing in randomly distributed particles and thermal fluid dynamics, have been built in order to simulate several complex melt pool behaviors. However, the computational cost for such simulations is extremely high. For example, the work done in [10] employed ALE3D (developed in Lawrence Liverpool National Laboratory) massively-parallel code which consumes on the order 100,000 CPU-h [5], and the work done in [11] took $140 \mathrm{~h}$ for only $4 \mathrm{~ms}$ simulation of the process.
+
+Therefore, for reducing the computational time, effective simulation models with certain approximations and assumptions to predict the dimensions of melt pools (e.g. melt pool width and depth) have been proposed. For simplification, instead of employing laser-ray tracing method in randomly distributed particles, the heat source has been usually assumed as volumetric heat source models, and the powder layer is presumed as homogeneous bulk materials with effective powder-layer material properties. In the literature, researchers have employed various heat sources. These heat sources can be categorized into two groups based on their characteristics, namely (a) Geometrically Modified Group (GMG); and, (b) Absorptivity Profile Group (APG). In GMG, different geometries are used to mimic the actual shape of the heat source, such as cylinder shape [12], semi-sphere [13], semi-ellipsoid [13,14], and conical shape [15]. For example, the work in [12] built up a volumetric heat source model with the consideration of the optical-penetration depth (OPD) of the laser beam into the powder-bed, where the shape of the heat source is a cylinder. Bruna-Rosso et al. [14] implemented the semi-ellipsoid heat source model, which was proposed firstly by Goldak et al. [13], in the LPBF simulation. The model showed good agreement with the experimental results. Wu et al. [15] proposed a conical shape of the heat source for arc welding, which is comparable to the LPBF process, and derived a good set of data in accordance with experimental results. On the other hand, in APG, the powder-bed of LPBF is viewed as an optical medium and the laser beam is assumed to be absorbed gradually along the depth of the powder layer. Therefore, several absorptivity profiles have been proposed, such as radiation transfer equation [6], absorptivity derived by the Monte Carlo method [16], linearly decaying equation [17], and exponentially decaying equation [18]. In APG, the heat source models are not constrained in specific geometries, and their general form is that two-dimensional Gaussian distribution is on the top surface while the laser beam is absorbed along the depth of the powder-bed based on the absorptivity functions. Gusarov et al. [6] presented a mathematical approach for effectively estimating the laser radiation scattering and absorption in powder layers and developed a volumetric heat source based on the radiation transfer. In the work done in [18], a heat source model was presented, which follows a Gaussian profile on the Cartesian coordinates, and an exponentially decaying profile along the z-direction. The effective heat source models presented in the literature are computationally efficient and accurate while being compared to the corresponding experimental results. However, a comparison report is not found in the literature. Heat source modeling is regarded as one of the key factors that influence not only the melt pool dimensions but also thermal variables [18], e.g. the cooling rate, etc. Therefore, comparisons of heat sources used in simulation of the LPBF process are necessary.
+
+In addition to computation acceleration, thermal fluid dynamics, such as mass convection in the melt pool during LPBF, can be approximated effectively by the anisotropically enhanced thermal conductivity method [19]. The anisotropically enhanced thermal conductivity method could effectively improve the prediction precision of melt pool dimensions. However, its further investigation is still critical since it may be changed from one set of process parameters to others. Lastly, laser absorptivity is one of the most uncertain parameters during the numerical modeling as discussed in [5,6]. All the simulation models mentioned in the above literature employed constant absorptivity, which may not be the case in reality. The laser absorption factor is influenced not only by the powder particle size and distribution but also the angle of incidence that varies due to the dynamic melt pool surface [20]. Trapp et al. [20] and Matthews et al. [21] studied the absorptivity in LPBF using experimental approaches. The variation of absorptivity was observed very large from 0.3 up to near 0.7 dependent on process parameters. As seen in their results, for specefic range of process parameters, the absorptivity was directly proportional to the laser power. However, there is still a lack of clear expressions correlating the absorptivity and the process parameters. Besides, investigations on more different kinds of materials are still needed.
+
+Therefore, the present study gives a summary and comparison of the heat source models commonly used by researchers in the literature. In addition, to the authors' best knowledge, it is the first attempt to develop a model including expressions of varied anisotropically enhanced thermal conductivity and varied laser absorptivity. For the model validation, melt pool dimensions and track surface morphology, e.g. track stability [22] and ripple angle [18] can be used as significant indicators since they determine the final product quality and can be quantified by experimental results at the same time. Thus, the validity of the proposed approach is verified by the melt pool dimensions and track surface morphology.
+
+\section*{2. Background to heat transfer modeling utilized in LPBF}
+\subsection*{2.1. Governing equations}
+The governing expression for 3D heat transfer processes can generally be as follows,
+
+$\rho c \frac{\partial T}{\partial t}=\frac{\partial}{\partial x}\left(k_{x} \frac{\partial T}{\partial x}\right)+\frac{\partial}{\partial y}\left(k_{y} \frac{\partial T}{\partial y}\right)+\frac{\partial}{\partial z}\left(k_{z} \frac{\partial T}{\partial z}\right)+Q(x, y, z, t)$
+
+where $\rho$ is the material density $\left[\mathrm{kg} / \mathrm{m}^{3}\right], \mathrm{c}$ is the specific heat $[\mathrm{J} / \mathrm{kgK}], T$ is the current temperature $[\mathrm{K}], t$ is the time $[\mathrm{s}], x, y$, and $z$ are the coordinates in the reference system [m], $k_{\mathrm{x}}, k_{\mathrm{y}}$, and $k_{\mathrm{z}}$ are the thermal conductivity $[\mathrm{W} / \mathrm{mK}]$ of $\mathrm{x}, \mathrm{y}$, and $\mathrm{z}$-axis direction, and $\mathrm{Q}(x, y, z, t)$ is the internal heat generation per unit volume $\left[\mathrm{W} / \mathrm{m}^{3}\right]$.
+
+Because of the preheating of the substrate, the initial temperature ( $\mathrm{T}_{\text {base }}$ ) of the substrate and the powder layer was considered as $353[\mathrm{~K}]$. The ambient temperature $\left(\mathrm{T}_{0}\right)$ distribution of the environment during LPBF can be set to $293[\mathrm{~K}]$.
+
+Convective heat losses $\left(q_{\mathrm{c}}\right)$ were considered as follows,
+
+$q_{c}=-h_{c}\left(T_{\text {sur }}-T_{0}\right)$
+
+where $h_{\mathrm{c}}$ is the convective heat transfer coefficient $\left[\mathrm{W} /\left(\mathrm{m}^{2} \mathrm{~K}\right)\right]$, and $T_{\text {sur }}$ is the surface temperature $[\mathrm{K}]$.
+
+Radiative heat losses $\left(q_{\mathrm{r}}\right)$ were accounted for by using StefanBoltzmann law:
+
+$q_{r}=-\varepsilon \sigma\left(T_{\text {sur }}^{4}-T_{0}^{4}\right)$
+
+where $\varepsilon$ is the emissivity of the powder-bed, and $\sigma$ is Stefan-Boltzmann constant for radiation.
+
+\subsection*{2.2. Heat source models}
+It is important to establish an appropriate heat source model of LPBF simulations since the heat source will not only influence the geometries of melt pools but also probably have an impact on the mechanical performance of final products. Heat source models used in LPBF simulations is a laser beam which is usually assumed to be twodimensional Gaussian [23]. The beam irradiance at any point $(x, y)$ at time $t$ for the fundamental transverse electromagnetic mode $\left(\mathrm{TEM}_{00}\right)$ can be expressed as,
+
+$I(x, y, t)=\frac{2 \beta P}{\pi r_{l}^{2}} \exp \left[-2 \frac{(x-v \cdot t)^{2}+y^{2}}{r_{l}^{2}}\right]$\\
+where $P$ is the power of the stationary laser source, $r_{l}$ is the radius of the laser beam, $(x, y)$ are the coordinates of the heat source, $v$ is the scanning velocity and $\beta$ is the laser-beam absorptivity.
+
+However, it may be improper to employ the two-dimensional heat source to simulate LPBF, because the laser scanning over metal powder can penetrate into the powder-bed [6]. In other words, laser energy is deposited not only on the top surface of a powder-bed but inside the powder-bed. Thus, volumetric heat sources should be considered in order to describe the laser penetration into powders [18].
+
+Eight heat source models will be discussed and compared to investigate which heat source model is the most suitable one for LPBF simulations, the Optical Penetration Depth (OPD) method [12], threedimensional Gaussian distribution [13], ellipsoidal distribution [13], conical heat source [15], radiation transfer method [6,24], absorptivity function method [16], linearly decaying heat source [17], and exponentially decaying heat source [18]. They can, however, be categorized into two groups: 1) geometrically modified group including the first four heat sources; and, 2) absorptivity profile group containing the last four heat sources.
+
+\subsection*{2.2.1. GMG: Geometrically modified group}
+Since the Gaussian laser beam can penetrate into and reflect in the powder layers, a practical method to describe this process is to change the shape of the heat source from two-dimensional surfaces to threedimensional geometries, which can be cylindrical, semi-spherical, semiellipsoidal, and conical shapes.
+
+2.2.1.1. GMG.1: Cylindrical shape heat source model. The shape of the laser beam in LPBF is usually circular so that it is relatively straightforward to employ a 3D cylindrical heat source. The authors in [12] proposed to employ a uniform energy distribution for the heat source in the cylinder volume influenced by the Optical Penetration Depth (OPD). The OPD is defined as the depth where the laser intensity drops to $1 / e(\approx 36.8 \%)$ of the laser beam intensity absorbed on the top surface of the powder-bed. The schematic plot of the cylindrical heat source model is plotted in Fig. 1a. Therefore, the heat source intensity can be expressed as,
+
+$I(x, y, z)=\beta P / V, \quad V=S \times \alpha_{O P D} \times O P D$
+
+where $x, y$, and $z$ are the variables of the three dimensions, $\beta$ is the absorptivity of laser beam, $P$ is the laser power (W), $V$ is the volume exposed by the laser beam $\left(\mathrm{m}^{3}\right), S$ is the area of the laser spot $\left(\mathrm{m}^{2}\right)$, and $\alpha_{O P D}$ is the correction factor for the assumed OPD. In this work, the OPD is chosen to be the layer thickness $20 \mu \mathrm{m}$, and the correction factor $\alpha$ is assumed to be 1 because of a lack of data for stainless steel $17-4 \mathrm{PH}$.
+
+2.2.1.2. GMG.2: Semi-spherical shape heat source model. As known, the laser beam has a two-dimensional Gaussian intensity distribution [23]. In the case that a three-dimensional heat source should be considered, a semi-spherical Gaussian distribution of energy density $\left(\mathrm{W} / \mathrm{m}^{3}\right)$ would be a step toward a more precise model [13]. The schematic plot of the heat source model is plotted in Fig. 1b. As shown in [13], the expression of a 3D Gaussian distribution of the laser beam is as follows,
+
+$I(x, y, z)=q_{0} \cdot \exp \left[-2 \frac{x^{2}+y^{2}+z^{2}}{r_{l}^{2}}\right]$
+
+where $q_{0}$ is a coefficient, derived by the energy balance. Based on the conservation of energy, the total energy input should be equal to the integration of intensity over the semi-infinite domain,
+
+$\beta \cdot P \cdot=\int_{0}^{\infty} \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} q_{0} \cdot \exp \left[-2 \frac{x^{2}+y^{2}+z^{2}}{r^{2}}\right] d x d y d z$
+
+Thus, the expression of $q_{o}$ should be, $q_{0}=\frac{2^{5 / 2} \beta \cdot P}{\pi^{3 / 2} r_{l}^{3}}$
+
+After replacing $q_{o}$ in Eq. (6) by Eq. (8), the final expression of the intensity distribution can be obtained as,
+
+$I(x, y, z)=\frac{2^{5 / 2} \beta \cdot P}{\pi^{3 / 2} \eta^{3}} \exp \left[-2 \frac{x^{2}+y^{2}+z^{2}}{\eta^{2}}\right]$
+
+2.2.1.3. GMG.3: Semi-ellipsoidal shape heat source model. The 3D Gaussian heat source is in semi-spherical shape; however, the melt pool in LPBF is often far from a spherical shape. In order to more accurately simulate the melt pool dimensions, the semi-ellipsoidal power distribution proposed by Goldak et al. [13] originally for the welding process has been employed and investigated, as shown in Fig. 1c. As shown in [13], the ellipsoidal distribution is a Gaussian distribution in an ellipsoid with semi-axes $a, b$, and $c$ and center at $(0,0$, 0 ),
+
+$I(x, y, z)=q_{0} \cdot \exp \left[-2\left(\frac{x^{2}}{a^{2}}+\frac{y^{2}}{b^{2}}+\frac{z^{2}}{c^{2}}\right)\right]$
+
+where $a, b, c$ are semi-axes parallel to the coordinate axes $x, y, z$.
+
+Similar to the 3D Gaussian distribution, $q_{0}$ is as follows,
+
+$q_{0}=\frac{2^{5 / 2} \beta \cdot P}{\pi^{3 / 2} a b c}$
+
+Thus, the final expression of the intensity distribution can be written as,
+
+$I(x, y, z)=\frac{2^{5 / 2} \beta \cdot P}{\pi^{3 / 2} a b c} \exp \left[-2\left(\frac{x^{2}}{a^{2}}+\frac{y^{2}}{b^{2}}+\frac{z^{2}}{c^{2}}\right)\right]$
+
+According to the researchers [13], the front part of the ellipsoid could be different from the rear part in order to coincide with some experimental situations. Thus the double ellipsoidal power density distribution was proposed. The front part of the ellipsoid can be expressed as,
+
+$I_{f}(x, y, z)=f_{f} \cdot \frac{2^{5 / 2} \beta \cdot P}{\pi^{3 / 2} a_{f} b c} \exp \left[-2\left(\frac{x^{2}}{a_{f}^{2}}+\frac{y^{2}}{b^{2}}+\frac{z^{2}}{c^{2}}\right)\right]$
+
+while the rear part of the ellipsoid can be written as follows,
+
+$I_{r}(x, y, z)=f_{r} \cdot \frac{2^{5 / 2} \beta \cdot P}{\pi^{3 / 2} a_{r} b c} \exp \left[-2\left(\frac{x^{2}}{a_{r}^{2}}+\frac{y^{2}}{b^{2}}+\frac{z^{2}}{c^{2}}\right)\right]$
+
+where $a_{f}$ and $a_{r}$ are the semi-axes of the front and rear ellipsoids, respectively. It should be noted that $f_{f}+f_{r}=2$, because,
+
+
+\begin{align*}
+\beta \cdot P & =\frac{1}{2} \int_{0}^{\infty} \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} I_{f}(x, y, z) d x d y d z+\frac{1}{2} \int_{0}^{\infty} \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} I_{r}(x, y, z) d x d y d z \\
+& =f_{f} \frac{\beta \cdot P}{2}+f_{r} \frac{\beta \cdot P}{2} \tag{15}
+\end{align*}
+
+
+2.2.1.4. GMG.4: Conical shape heat source model. In the welding area, researchers [15,25] have employed conical shape heat source to simulate the welding process. Based on the inherent similarity between welding and LPBF, this model can be applied for simulating the LPBF process. The schematic plot of the conical heat source model is plotted in Fig. 1(d).
+
+As shown in [15,25], the mathematical expression of the heat source can be written as,
+
+$I(x, y, z)=q_{0} \cdot \exp \left[-2 \frac{x^{2}+y^{2}}{r_{0}^{2}}\right], \quad r_{0}(z)=r_{e}+\frac{z}{H}\left(r_{e}-r_{i}\right)$
+
+where $r_{e}$ and $r_{i}$ are the radius at the top and bottom, respectively. Based on the conservation of energy, the total energy input should be equal to\\
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-04(3)}
+\end{center}
+
+(e)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-04(6)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-04}
+\end{center}
+
+(f)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-04(1)}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-04(5)}
+\end{center}
+
+(g)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-04(2)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-04(7)}
+\end{center}
+
+(h)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-04(4)}
+\end{center}
+
+Fig. 1. The schematic of the heat source models, (a) cylindrical shape; (b) semi-spherical shape; (c) semi-ellipsoidal shape; (d) conical shape, (e) radiation transfer method; (f) ray-tracing method; (g) linearly decaying method; (h) exponentially decaying method.
+
+the integration of intensity over the conical shape domain,
+
+$\beta \cdot P=\int_{-H}^{0} \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} q_{0} \cdot \exp \left[-2 \frac{x^{2}+y^{2}}{r_{0}^{2}}\right] d x d y d z$
+
+Using Eq. (17), an expression for $q_{0}$ can be derived,
+
+$q_{0}=\frac{6 \beta \cdot P}{\pi H\left(r_{e}^{2}+r_{e} r_{i}+r_{i}^{2}\right)}$
+
+After replacing $q_{o}$ in Eq. (16) by Eq. (18), the final expression of the intensity distribution can be obtained as,
+
+$I(x, y, z)=\frac{6 \beta \cdot P}{\pi H\left(r_{e}^{2}+r_{e} r_{i}+r_{i}^{2}\right)} \cdot \exp \left[-2 \cdot \frac{x^{2}+y^{2}}{r_{0}^{2}}\right]$
+
+\subsection*{2.2.2. APG. Absorptivity profile group}
+During LPBF, a laser beam can penetrate into a depth of a powderbed, while it is being absorbed gradually along the depth of the powder layer. Therefore, the powder-bed can be viewed as an optical medium, whose optical absorptivity would be described by absorptivity profiles. The heat source models in this group are not constrained in specific geometries as those in GMG, as shown in Fig. 1(e-h). Their general form is that the two-dimensional Gaussian distribution is on the top surface while the laser beam is absorbed along the depth of the powder layer. It can be written as follows,
+
+$I(x, y, z)=\frac{2 P}{\pi r_{l}^{2}} \exp \left[-2 \frac{x^{2}+y^{2}}{r_{l}^{2}}\right] \cdot f(z)$
+
+where $f(z)=d \beta / d z$ is the absorptivity profile function. $\beta(z)$ is the absorptivity coefficient function.
+
+2.2.2.1. APG.1: Radiation transfer equation method. The onedimensional radiation transfer equation proposed by Gusarov et al.\\
+[6] is implemented and investigated. Based on the fact that laser can penetrate into a depth of a powder-bed, this approach resembles the powder-bed with a thickness of $z_{\text {bed }}$ with an optical media with an extinction coefficient of $\eta$. The schematic plot of this source model is plotted in Fig. 1(e).
+
+As developed in [6], the volumetric heat source due to radiation transfer is,
+
+$I(x, y, z)=\frac{2 P}{\pi r_{l}^{2}} \exp \left[-2 \frac{x^{2}+y^{2}}{r_{l}^{2}}\right] \cdot f_{1}(z), f_{1}(z)=\left(-\eta \cdot \frac{d q}{d \xi}\right)$
+
+where $\xi=\eta \cdot z$ is the dimensionless local depth coordinate, and $q$ is the dimensionless form of net radiative energy flux density and is described as,
+
+
+\begin{align*}
+q= & \frac{\gamma a_{s}}{(4 \gamma-3) D}\left\{\left(1-\gamma^{2}\right) \exp [-\lambda] \cdot\left[\left(1-a_{s}\right) \exp \left[-2 a_{s} \xi\right]+\left(1+a_{s}\right) \exp \left[2 a_{s} \xi\right]\right]\right. \\
+& -(3+\gamma \exp [-2 \lambda]) \\
+& \left.\times\left\{\left[1+a_{s}-\gamma\left(1-a_{s}\right)\right] \exp \left[2 a_{s}(\lambda-\xi)\right]+\left[1-a_{s}-\gamma\left(1+a_{s}\right)\right] \exp \left[2 a_{s}(\xi-\lambda)\right]\right\}\right\} \\
+& -\frac{3(1-\gamma)(\exp [-\xi]-\gamma \exp [\xi-2 \lambda])}{4 \gamma-3} \tag{22}
+\end{align*}
+
+
+where $\lambda=\eta z_{\text {bed }}$ refers to the optical thickness for the powder-bed, $a_{s}=\sqrt{1-\gamma}, \gamma$ is the hemispherical reflectivity in the dense form, and $D$ is described as,
+
+
+\begin{align*}
+D & =\left(1-a_{s}\right)\left[1-a_{s}-\gamma\left(1+a_{s}\right)\right] \exp \left[-2 a_{s} \lambda\right] \\
+& -\left(1+a_{s}\right)\left[1+a_{s}-\gamma\left(1-a_{s}\right)\right] \exp \left[2 a_{s} \lambda\right] \tag{23}
+\end{align*}
+
+
+The extinction coefficient $\eta$ is given as,
+
+$\eta=S_{p} / 4$
+
+where $S_{p}$ is the specific powder surface per unit pore volume, $z_{b e d}$ is the layer thickness. $\gamma$ is 0.7 [6], $S_{p}$ is regarded as $\pi / r_{\text {powder }}$, and $r_{\text {powder }}$ is the average powder radius.
+
+2.2.2.2. APG.2: Ray-tracing method. The above method represents an analytical way to derive the absorptivity profile function. The absorptivity profile function can also be acquired by numerical methods. Tran et al. [16] built up a powder-bed model with randomly distributed particles and calculated the absorptivity profile function by means of Monte Carlo ray-tracing simulations. As developed in [16] and shown in Fig. 1(f), the volumetric heat source model can be formulated as,
+
+$I(x, y, z)=\frac{2 P}{\pi r_{l}^{2}} \exp \left[-2 \frac{x^{2}+y^{2}}{r_{l}^{2}}\right] \cdot f_{2}(z)$
+
+where $f_{2}(z)=d \beta / d z$ is the absorptivity function derived by the Monte Carlo ray-tracing simulation.
+
+2.2.2.3. APG.3: Linearly decaying equation method. Besides the two methods presented above for deriving the absorptivity profile, Ladani et al. [17] employed a linearly decaying function (see Fig. 1(g)) to describe the absorptivity profile as,
+
+$I(x, y, z)=\frac{2 P}{\pi r_{l}^{2}} \exp \left[-2 \frac{x^{2}+y^{2}}{r_{l}^{2}}\right] \cdot f_{3}(z), \quad f_{3}(z)=\frac{2 \beta}{\delta}\left(1-\frac{z}{\delta}\right)$
+
+where $\delta$ is the beam penetration depth. In this work, the penetration depth is equal to the layer thickness.
+
+2.2.2.4. APG.4: Exponentially decaying equation method. Similarly, an exponentially decaying heat source (see Fig. 1(h)) was used by Liu et al. [18]. The specific expression is as follows,
+
+$I(x, y, z)=\frac{2 P}{\pi r_{l}^{2}} \exp \left[-2 \frac{x^{2}+y^{2}}{r_{l}^{2}}\right] \cdot f_{4}(z), \quad f_{4}(z)=\frac{\beta}{H} \cdot \exp \left[-\frac{|z|}{H}\right]$
+
+where $H$ is regarded as the powder layer thickness.
+
+\subsection*{2.2.3. Summary of heat models}
+The eight heat source models are summarized in Table 1.
+
+\subsection*{2.3. Material properties}
+Two phases of Stainless Steel 17-4PH (SS17-4PH), the powder state and the solidified state, were considered in this simulation. The effective thermal conductivity of the powder-bed is much smaller than that of bulk material. For the used material in this study, the effective thermal conductivity is typically from 0.1 to $0.2 \mathrm{~W} / \mathrm{mK}$ at room temperature, which is around $1 \%$ of the bulk thermal conductivity (i.e., $10.5 \mathrm{~W} / \mathrm{mK}$ ). In addition, the effective thermal conductivity is mainly dependent on the size and morphology of the powders [12,23,26]. Therefore, the effective thermal conductivity in this work is expressed as follows,
+
+$k_{\text {powder }}=\left\{\begin{array}{c}0.01 \times k_{\text {solid }}, \quad T<T_{m} \\ k_{\text {solid }}, \quad T>=T_{m}\end{array}\right.$
+
+where $T_{\mathrm{m}}$ is the melting temperature. $k_{\text {powder }}$ and $k_{\text {solid }}$ are the thermal conductivity of the powder phase and solid phase, respectively.
+
+As the powder-bed is regarded as a mixture of solid powder (SS174PH) and gas (argon) phases, the density of SS17-4PH powder may be derived by:
+
+$\rho_{\text {powder }}=(1-\varphi) \rho_{\text {solid }}+\varphi \cdot \rho_{\text {gas }}$
+
+where $\varphi$ is the porosity of SS17-4PH powder, and is chosen as 0.53 based on the work done by $[5,27,28]$, $\rho_{\text {solid }}$ is the density of the SS17$4 \mathrm{PH}$ bulk material, and $\rho_{\text {gas }}$ is the density of argon gas. Since the density of argon gas is very low compared with that of SS17-4PH, it can be omitted, the density of SS17-4PH may be considered as follows,
+
+$\rho_{\text {powder }}=(1-\varphi) \rho_{\text {solid }}$
+
+The heat capacity of the powder-bed may be then calculated using [12] and,
+
+$\rho_{\text {powder }} C_{\text {powder }}=(1-\varphi) \rho_{\text {solid }} C_{\text {solid }}+\varphi \cdot \rho_{\text {gas }} C_{\text {gas }}$
+
+where $C_{\text {powder }}, C_{\text {solid }}$, and $C_{\text {gas }}$ are the heat capacity of the powder-bed, gas phase, and solid phase, respectively. Similarly, by omitting the gas phase due to its low density, the heat capacity of the powder-bed is regarded as equal to the heat capacity of the solid phase. Fig. 2a-c show the temperature dependent material properties of material SS17-4PH [29] and Fig. 2d depicts those of the base plate, material mild carbon steel [30]. The effective capacity method [2] was employed in this work. The heat capacity due to latent heat during material phase
+
+Table 1
+
+Summary of mathematical representations of laser-beam heat sources.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-05}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-06(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-06(2)}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-06}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-06(3)}
+\end{center}
+
+(d)
+
+Fig. 2. Temperature-dependent thermal material properties (a) density of SS17-4PH; (b) thermal conductivity of SS17-4PH; (c) heat capacity of SS17-4PH; (d) material properties of mild carbon steel.
+
+change can be specified as
+
+$C=\left\{\begin{array}{cc}C_{\text {solid }}, \quad T \leqslant T_{S} \\ C_{\text {solid }}+2 \cdot L_{f}\left(T-T_{S}\right) /\left(T_{l}-T_{S}\right)^{2}, & T_{S}<T \leqslant T_{l} \\ C_{\text {solid }}+2 \cdot L_{v}\left(T-T_{l}\right) /\left(T_{v}-T_{l}\right)^{2}, & T_{l}<T \leqslant T_{v}\end{array}\right.$
+
+where $C_{\text {solid }}$ is the specific heat of the material at solidus temperature, $L_{f}$ and $L_{v}$ are the latent heat of fusion and vaporization, $T_{s}, T_{l}$, and $T_{v}$ are the solidus, liquidus, and vaporization temperatures.
+
+Furthermore, a model related to two material properties was proposed for better predicting melt pool dimensions, anisotropically enhanced thermal conductivity $k$ and the effective absorptivity of continuous laser light $\beta$. To the authors' best knowledge, this is the first work that considers the both varied anisotropically enhanced thermal conductivity and laser absorptivity in the LPBF modeling. The melt pool dimensions can be described in terms of linear functions to the deposited energy density for several process-parameter regions, which is consistent with the findings in [31]. The deposited energy during the laser dwell time $\tau=2 r_{l} / v$ is $\beta P \tau$, where $r_{l}$ is the laser beam radius. This energy is deposited in a volume, whose depth can be regarded as the heating depth, $H D R \cdot l_{t h}$, where $H D R=\sqrt{ }(4 \alpha \tau) / l_{t h}, \alpha$ is the diffusivity, and $l_{t h}$ is layer thickness, according to [32]. The volume is expressed as $V=\pi r_{l}^{2} \sqrt{ }(\sqrt{ }(4 \alpha \tau))$. Therefore, the absorbed energy density $e_{m}$ is derived by dividing the deposited energy $\beta P \tau$ by $V$, $e_{m}=\frac{\beta}{\pi \sqrt{2 \alpha r_{l}^{3}}} \cdot \frac{P}{\sqrt{v}}=C \cdot \frac{P}{\sqrt{v}}$
+
+where $C$ is a coefficient, which is $\beta /\left(\pi \cdot \sqrt{ }\left(2 \alpha r_{l}^{3}\right)\right)$. Since $\alpha$ during the analysis in [32] and $\beta$ in [31] were regarded as constants, it can be found that the energy density is proportional to the ratio of the laser power to the root of velocity, $P / \sqrt{ } v$.
+
+Therefore, the melt pool dimensions are proportional to $P / \sqrt{ } v$. However, physical explanations behind it were not fully understood, and simulation results with isotropic thermal conductivity $k$ and constant absorptivity $\beta$ are not consistent with the experimental results, which will be deliberated in-detail in the discussion section. For improving the accuracy of simulation results, a novel model of the material properties is proposed that the absorptivity, $\beta$, and the anisotropically enhanced factors of thermal conductivity, $\lambda_{x}, \lambda_{y}$, and $\lambda_{z}$, are assumed to be simple linear algebraic equations of $P / \sqrt{ } v$ based on experimental results The anisotropically enhanced thermal conductivity discussed in [19] was employed to approximate the contribution of the melt pool convection to melt pool dimensions. During the LPBF process, an important contributory mode of heat transfer is the melt pool convection, which may change the melt pool dimensions and influence the temperature distribution in a melt pool [33,34]. Using the anisotropically enhanced thermal heat conductivity could improve the dimension accuracy of melt pool simulation results $[18,19]$. The anisotropically enhanced thermal conductivity can be expressed as follows,
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-07(1)}
+\end{center}
+
+Fig. 3. Geometry and mesh used in the finite element simulation.
+
+$k_{x}=\lambda_{x} k, \quad k_{y}=\lambda_{y} k, \quad k_{z}=\lambda_{z} k$
+
+where $\lambda_{x}, \lambda_{y}$, and $\lambda_{z}$ are the anisotropically enhanced factors of thermal conductivity $k$. They are dependent on the temperature in the melt pool and derived based on experiments.
+
+$\left\{\begin{array}{c}\lambda_{x}=\lambda_{y}=\lambda_{z}=1, \quad T<T_{\text {melting }} \\ \lambda_{x}=1, \quad \lambda_{y}=f_{y}(P, v), \lambda_{z}=f_{z}(P, v), \quad T \geqslant T_{\text {melting }}\end{array}\right.$
+
+where $f_{y}$ and $f_{z}$ are functions of laser power $P[\mathrm{~W}]$ and scanning speed $v$ $[\mathrm{mm} / \mathrm{s}]$.
+
+In this work, a linear function of the enhanced factor of thermal conductivity, $\lambda_{z}$, is proposed and described as,
+
+$\lambda_{z}=a_{1} \frac{P}{\sqrt{v}}+b_{1}$
+
+The enhanced factor of thermal conductivity $\lambda_{y}$, which influences the width of melt pool, is formulated slightly different from $\lambda_{z}$ since the width of melt pool is proportional only to velocity $v$ and not globally proportional to $P / \sqrt{ } v$,
+
+$\lambda_{y}=\left\{\begin{array}{c}a_{2} v+b_{2}, \quad v \leqslant v_{a} \\ 1, \quad v>v_{a}\end{array}\right.$
+
+where $v_{a}, a_{1}, b_{1}, a_{2}$, and $b_{2}$ are also parameters and will be determined by experimental results. The melt pool width may be governed by the same physics that causes the melt pool to be more sensitive to the scanning speed rather than the laser power. However, further studies on the correlation of the melt pool dynamics and the width are needed.
+
+Secondly, the effective absorptivity $\beta$ of continuous laser light can also influence the melt pool dimensions significantly [20]. It typically can vary greatly based on different combinations of laser powers and scanning speeds. The recoil pressure-induced surface depression may lead to an increase in absorption of the laser light [20].
+
+The absorptivity $\beta$ in the present work is also proposed to be a linear equation and can be written as,
+
+$\beta=a_{3} \frac{P}{\sqrt{v}}+b_{3}$
+
+where $a_{3}$ and $b_{3}$ are coefficients to be determined by experiment. The variation of the effective absorptivity was specified as $0.48-0.65$, which are comparable with the data from [20].
+
+\section*{3. Numerical model configuration}
+The present study is proposed to estimate the geometries of the melt pool under the substrate top surface. Using the commercial software package, COMSOL 5.2 Multiphysics, simulations were performed considering non-linear transient thermal analyses within the metal powder and the base plate. The dimensions of the solid substrate in the simulation were $2000 \times 1000 \times 500 \mu \mathrm{m}$, and those of the powder layer were appointed to be $2000 \times 1000 \times 20 \mu \mathrm{m}$. To prevent the thermal shock problem, it is important that the simulation domain should be considered adequately large to ensure that a stable melt pool is achieved in the simulation. The thermal shock problem imposes a relatively short-term effect on the simulation zone for pure thermal analyses that may cause numerical instabilities if the melt pool is not fully developed $[35,36]$. The powder layer thickness was chosen as $20 \mu \mathrm{m}$ since it is one of the commonly used layer thickness. The material of the solid substrate was mild carbon steel, and the powder layer was Stainless Steel 17-4PH. Tetrahedral elements were employed for meshing both the solid substrate and the metal powder layer. The laser beam diameter was $100 \mu \mathrm{m}$. The eight volumetric heat sources discussed previously were employed in the simulation, while the exponentially decaying heat source was employed in the further simulations, where both varied anisotropically enhanced thermal conductivity and absorptivity were also considered. According to a series of convergence trials, the laser-beam interaction region was meshed with $20 \mu \mathrm{m}$ elements, while the other regions were filled with coarser elements in order to improve the computational efficiency. In this study, the adaptive time step algorithm was used with an initial time step of $7 \mu$ s. An adaptive time step allows users to give a reference time step, where the software changes the time step based on the convergence state during simulation. The minimum and maximum values for the time step used in numerical simulations was between $0.2 \mu$ s and $6 \mu$ s. In order to accelerate the simulations, only half of the geometry was built based on symmetry, since the domain is symmetric about the vertical plane containing the laser-beam moving line, as presented in Fig. 3. The symmetry constraint was set on the symmetric plane. In addition, radiative (Eq. (2)) and convective (Eq. (3)) heat losses at the top surface of the powder layer to the ambient air were considered. The convective heat transfer coefficient and the emissivity coefficient were chosen as $15 \mathrm{~W} / \mathrm{mK}$ [37] and 0.5 [38], respectively. The ambient temperature was set to $293 \mathrm{~K}$. The other sides of the domain were specified as a fixed preheating temperature, $353 \mathrm{~K}$.
+
+\section*{4. Experimental procedures}
+Experiments were carried out on an EOS M 290 LPBF machine. Its chamber was filled with argon atmosphere during the manufacturing process. The EOS M 290 has a $400 \mathrm{~W}$ fiber laser. The transverse electromagnetic mode of the laser beam is $\mathrm{TEM}_{00}$ indicating a single mode laser, and the beam spot diameter is $100 \mu \mathrm{m}$. The powder used in this study is the gas atomized Stainless Steel 17-4PH powder with a particle size of $16 \sim 64 \mu \mathrm{m}$. The scanning electron microscopy (SEM) image (Fig. 4) of Stainless Steel 17-4PH powder particles shows that they were almost spherical in shape.
+
+In order to validate the numerical simulation results, several single-
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-07}
+\end{center}
+
+Fig. 4. SEM image of the stated powders.
+
+Table 2
+
+Parameters for the tests of single line scanning.
+
+\begin{center}
+\begin{tabular}{llllllllll}
+\hline
+Laser power, $P[\mathrm{~W}]$ & 170 & 195 & 220 &  &  &  &  &  \\
+\hline
+Scanning speed, $v[\mathrm{~mm} / \mathrm{s}]$ & 600 & 700 & 800 & 900 & 1000 & 1100 & 1200 & 1300 \\
+\hline
+\end{tabular}
+\end{center}
+
+track experiments were conducted. The current design of experiment (DOE) included combinations of different process parameters, including laser power and scanning speed. According to the literature [39-44], the laser power used by other researchers are generally from 190 to $200 \mathrm{~W}$, for 17-4 PH stainless steel. As such, only laser powers close to this range were studied, which were 170,195 , and $220 \mathrm{~W}$. The scanning speed range was from 600 to $1300 \mathrm{~mm} / \mathrm{s}$. The corresponding selections of the processing parameters are shown in Table 2. The combinations of the process parameters were categorized into 3 groups, as exhibited in Fig. 5a. In order to avoid randomness, each set of parameters was repeated five times, as shown in Fig. 5 b.
+
+All the single tracks were cross-sectioned in the middle of the scan line perpendicular to the laser-scan direction. The samples were mounted, polished, and etched by using $5 \%$ Nital. The melt pool dimensions (width and depth) and the single-track surface profiles were measured by a laser scanning confocal microscope. For measuring the melt pool dimensions, each of the produced single tracks was mounted, cross-sectioned, and measured, as shown in Fig. 6.
+
+\section*{5. Results and discussion}
+\subsection*{5.1. Heat source model comparisons}
+Heat transfer simulations with the eight heat sources (GMG1 to GMG4 and APG1 to APG4) listed in Table 1 were performed with laser power and scanning speed of $195 \mathrm{~W}$ and $800 \mathrm{~mm} / \mathrm{s}$ respectively which were used in the literature [39,44]. The layer thickness of $20 \mu \mathrm{m}$ was used. Fig. 7a shows the melt pool dimensions of experimental and simulation results. The left and right show the melt pool width and depth respectively. For the melt pool width, all the simulation results with the eight heat source models are within the experimental variation range. The maximum melt pool width error is $7.4 \%$ (GMG1). However, for the depth, all of the simulation results are over $40 \%$ smaller than the experimental results.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-08(2)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-08}
+\end{center}
+
+Fig. 6. Melt pool cross-section.
+
+In GMG, GMG1 results in the largest width but the smallest depth. In contrast, GMG4 leads to the smallest width but the largest depth. The results of GMG2 and GMG3 are almost identical ( $0 \%$ in width, $2.5 \%$ in depth), because the semi-axes $b$ and $c$, which may influence melt pool width and depth correspondingly, were chosen as the same as the radius $r_{l}$. The melt pool dimensions derived in GMG may be further improved by carefully setting the parameters of the heat source models, for example by increasing the height of the conical shape to make the simulated melt pool deeper.
+
+In APG, the absorptivity profile in APG2 is originally from ray tracing method [16], while that in APG1 is derived by mathematical analysis [6]. APG1 and APG2 have very similar melt pool dimensions (1.7\% in width, $2.7 \%$ in depth). Since these two models were designed for predicting melt pools in the conduction mode [16] where the melt pool convection is not significant, the melt pool depths are near $50 \%$ smaller than the experimental result. In addition, APG4's melt pool is a little bit deeper, while the error still is very large, over $40 \%$.
+
+Besides, Fig. $7 \mathrm{~b}$ shows the maximum temperature for the eight heat source models. The two highest maximum temperature, GMG1 and APG3, correspond to the two largest melt pool widths respectively. Since the laser energy melted the material and formed the melt pool, the energy deposition distribution influences melt pool dimensions and
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-08(1)}
+\end{center}
+
+(b)
+
+Fig. 5. The configuration of single tracks on the substrate, (a) design of experiments, (b) the single tracks actually printed.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-09(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-09}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-09(5)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-09(2)}
+\end{center}
+
+(d)
+
+Fig. 7. Comparisons of the heat source models, (a) melt pool dimensions, (b) maximum temperature, (c) energy deposited in the powder layer, (d) energy deposited beyond $40 \mu \mathrm{m}$ depth.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-09(3)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-09(4)}
+\end{center}
+
+(b)
+
+Fig. 8. Comparison of melt pool depths between simulations by two methods, (a) the traditional method in literature, (b) the method proposed in this work considering anisotropically enhanced thermal conductivities and varied absorptivities.
+
+as well as the maximum temperature. The energy deposition in the powder layer is plotted in Fig. 7c. It can be seen that the two maximum energy deposition models are GMG1 and APG3 as well, which correspond to the trends of the maximum melt pool width and maximum temperature. In addition, the smallest energy deposition from GMG4 results in smallest melt pool width as well as one of the smallest maximum temperature. Therefore, a conclusion can be derived that there is a positive correlation between either the melt pool width or the maximum temperature and the energy deposition in the powder layer. In other words, the more energy is deposited in the powder layer, the wider melt pool and high maximum temperature are. Furthermore, Fig. $7 \mathrm{~d}$ plots the energy deposition in the region beyond the melt pool\\
+$170 \mathrm{~W}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-10}
+\end{center}
+
+$195 \mathrm{~W}$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_0862f05ef1456ffe25f0g-10(1)}
+
+$220 \mathrm{~W}$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_0862f05ef1456ffe25f0g-10(2)}
+
+Fig. 9. Melt pool shapes of single tracks on one layer of powder particles at different laser power and process speed combinations.
+
+depths, which is chosen as $40 \mu$. Comparing Fig. 7d to Fig. 7a manifests the heat sources GMG2 GMG3 GMG4 and APG4, which have larger energy deposition in this region than the remaining four, result in deeper melt pools. It seems that more energy is deposited in a deeper domain, the deeper melt pools are derived in the simulations. Even though it is not a restricted rule since the numerical simulations are nonlinear, the trend is obvious that there is a positive correlation between the melt pool depth and the energy deposition in the region beyond $40 \mu \mathrm{m}$ depth.
+
+In GMG, GMG4 may be potential to make a more accurate prediction by increasing the cone's height. However, there would be another factor, the bottom radius. To derive the optimal parameters for GMG4 may take numbers of trial and errors. In addition, the energy input is constrained in the specific geometry may need further physical explanations. In APG, APG1 and APG2 are originally designed for conduction mode and their expressions are more complex than APG3 and APG4. Besides, APG3 has less accurate prediction than APG4. Therefore, APG4 will be chosen as the heat source for the following simulations.
+
+It should be noted that all of the simulated depths are over $40 \%$ smaller than the experimental result, even by using APG4. The discrepancy between simulation and experimental results may even increase under some combinations of laser power and scanning speed. For example, Fig. 8a shows the simulated and experimental depth with the same power but under different scanning speed with APG4. The difference between the simulation and experimental results are larger with decreasing the scanning speed. All of these could be explained by the underestimation of the contribution of melt pool convection to the heat transfer model. As the discussion in $[18,19]$ about the anisotropically enhanced thermal conductivity, incorporating the melt pool convection effect into the analysis by choosing appropriate anisotropically enhanced thermal conductivity is helpful to describe both temperature and temperature-gradient distributions correctly. For example, Fig. 8b shows the results derived from the model proposed in this paper, and a better match between simulation and experimental results is obtained. Further detailed discussion of the melt pool prediction will be
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-11(2)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-11}
+\end{center}
+
+Fig. 10. Experimental results of melt pool dimensions with different laser powers and scanning velocities, (a) melt pool width, (b) melt pool depth.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-11(3)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-11(1)}
+\end{center}
+
+(b)
+
+Fig. 11. Experimental results of melt pool dimensions as functions of $P / \sqrt{ } v$, (a) melt pool width, (b) melt pool depth.
+
+Table 3
+
+Coefficients in the approximation equations of anisotropically enhanced thermal conductivity and varied absorptivity.
+
+\begin{center}
+\begin{tabular}{lllllll}
+\hline
+$a_{1}$ & $b_{1}$ & $a_{2}$ & $b_{2}$ & $a_{3}$ & $b_{3}$ & $v_{a}(\mathrm{~mm} / \mathrm{s})$ \\
+\hline
+2.1095 & -6.9460 & -0.0036 & 4.96 & 0.0398 & 0.2921 & 1100 \\
+\hline
+\end{tabular}
+\end{center}
+
+illustrated in the later sections.
+
+\subsection*{5.2. Prediction of melt pool dimensions}
+In order to study the effect of the LPBF process parameters, e.g. laser power $(P)$ and scanning velocity $(v)$ on melt pool dimensions, experiments were carried out with the process parameters listed in Table 2. The melt pool width and depth were measured through the analysis of the microscopic images as shown in Fig. 6. Several melt pool profiles are shown in Fig. 9, which covers the whole range of the process parameters. The trend of melt pool dimensions with different process parameters can be observed, for example, the melt pool is the biggest with the largest power and the smallest speed, and the melt pool is the smallest with the smallest power and the largest speed. Furthermore, the whole experimental results of the melt pool width and depth with three laser powers $(170,195,220 \mathrm{~W})$ and varied speed $(600-1300 \mathrm{~mm} /$ s) are plotted in Fig. 10a-b.
+
+Fig. 10 shows that the melt pool width and depth reduce with increasing scanning speeds. This is observed for all powers. Moreover, with a higher laser power, the melt pool depths are deeper, as shown in Fig. 10b where the red curve is above the others. The melt pool widths tend to increase less obviously, as shown in Fig. 10a, where the red curve and the blue curve are relatively close for all the scanning speeds.
+
+Fig. 11 presents the experimental results of melt pool dimensions as functions of $P / \sqrt{ } v$. Interestingly, the data of melt pool depth, which shows uncertain patterns in Fig. 10b, collapses to a linear line as shown in Fig. 11b. As for the melt pool width, it is not converged into a single curve but is formed into three similar curves with close maximum and minimum value. The inability to converge to a master curve for melt pool widths could be due to other physical parameters that affect the melt pool width more than the laser power and velocity.
+
+Experimental melt pool width and depth results, shown in this section, were used to calibrate and validate single track LPBF simulations using heat source model APG4. As the discussion previously about Fig. 8, a lack of considering anisotropically enhanced thermal conductivity and varied absorptivity, may cause the simulation results diverged from the experimental ones. In order to predict the melt pool dimensions more accurately as the experimental results, the model shown in Eq. (38), Eq. (36), and Eq. (37) was employed, in which the absorptivity $\beta$ and the anisotropically enhanced factors of thermal
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-12(2)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-12}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-12(1)}
+\end{center}
+
+(c)
+
+Fig. 12. Comparisons of melt pool dimensions at different power (a) $P=170 \mathrm{~W}$, (b) $P=170 \mathrm{~W}$, (c) $P=220 \mathrm{~W}$.
+
+Table 4
+
+Proposed model validation and comparison of simulation results with experimental data.
+
+\begin{center}
+\begin{tabular}{lllllll}
+\hline
+Power (W) & \begin{tabular}{l}
+Min \\
+Error \\
+Width \\
+$(\%)$ \\
+\end{tabular} & \begin{tabular}{l}
+Min \\
+Error \\
+Depth \\
+$(\%)$ \\
+\end{tabular} & \begin{tabular}{l}
+Max \\
+Error \\
+Width \\
+$(\%)$ \\
+\end{tabular} & \begin{tabular}{l}
+Max \\
+Error \\
+Depth \\
+$(\%)$ \\
+\end{tabular} & \begin{tabular}{l}
+Average \\
+Error \\
+Width (\%) \\
+\end{tabular} & \begin{tabular}{l}
+Average \\
+Error \\
+Depth (\%) \\
+\end{tabular} \\
+\hline
+170 & 0.8 & 2.35 & 6.3 & 22.6 & 3.7 & 11.6 \\
+195 & 0.22 & 0.11 & -3.4 & -5.9 & 1.6 & 4.3 \\
+220 & 0.57 & 0.37 & 4.5 & 10.7 & 3.3 & 6.1 \\
+\hline
+\end{tabular}
+\end{center}
+
+conductivity $\lambda_{y y}$ and $\lambda_{z z}$ are formulated in simple linear equations of $P /$ $\checkmark v$. The coefficients (Table 3 ) in these three equations are obtained by matching numerical results with experimental results. It should be noted that with the coefficients, the variation of the effective absorptivity is calculated as $0.48-0.65$ by Eq.(37), which are comparable with the data from $[20,21]$.
+
+Fig. 12a-c show the comparison of the melt pool dimensions between the simulation (sim) and experimental (exp) results at a laser power of $170 \mathrm{~W}, 195 \mathrm{~W}$, and $220 \mathrm{~W}$, respectively. Results from Fig. 12 show good agreement with experimental results. The melt pool width and depth error between simulation and experimental results are listed in Table 4. As seen in Table 4, when the model proposed consisted of Eq. (38), Eq. (36), and Eq. (37) was included, all average error of the melt pool width is within $4 \%$. The average error of melt pool depth is within $7 \%$ for $195 \mathrm{~W}$ and $220 \mathrm{~W}$. The $170 \mathrm{~W}$ has a larger error, which may be due to measuring error. In addition, $170 \mathrm{~W}$ resulted in smallest melt pool depth, so the absolute error should be comparable to those of $195 \mathrm{~W}$ and $220 \mathrm{~W}$.
+
+The simulation (sim) and experimental (exp) results are also plotted together in Fig. 13 as functions of $P / v v$, where it is proved that the proposed model can predict the trend of the melt pool dimensions very well. Results presented in Fig. 13b show that the melt pool depth is proportional to $P / \sqrt{ } v$. Therefore, the melt pool depth $d$ can be approximated with the following equation,
+
+$d=k_{d} \cdot \frac{P}{\sqrt{v}}+k_{i}$
+
+where $k_{d}$ is the slope and $k_{i}$ is the y-intercept. It should be noted that Eq. (39) is similar to the expression of the absorbed energy density shown in Eq. (33), which implies the melt pool depth may be a linear function of the absorbed energy density $e_{m}$. However, since the $C$ in Eq. (33) consists of the absorptivity and thermal conductivity $k\left(\alpha=k / \rho C_{p}\right)$, which are all variables in this proposed model, $e_{m}$ as a function to $P / \sqrt{ } v$ should be evaluated by substituting the absorptivity $\beta$ (Eq. (38)) and the enhanced factors of thermal conductivity $\lambda_{z z}$ (Eq. (36)) into it.
+
+Fig. 14 depicts the absorbed energy density $e_{m}$ versus $P / V v$, from which the approximately linear behavior for a large portion of the range could be observed. Therefore, the conclusion can be proved as discussed in $[31,45]$ that melt pool depth is proportional to the absorbed energy density for a range of the input process parameters. Furthermore, since during simulation, laser absorptivity is regarded as a linear function of the parameter $P / \sqrt{ } v$ as shown in Eq. (38), it may prove that the absorptivity in the laser scanning process may be increasing with larger $P / \sqrt{ } v$ value, as illustrated in [20]. This phenomenon may be explained by the reason that at higher intensities, a deeper depressed surface would be formed by the vapor recoil pressure in the melt pool,
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-13}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-13(2)}
+\end{center}
+
+(b)
+
+Fig. 13. Comparison between the numerical and experimental results of melt pool dimensions as functions of $P / \sqrt{ } v$, (a) melt pool width, (b) melt pool depth.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-13(1)}
+\end{center}
+
+Fig. 14. Absorbed energy density vs. $P / \sqrt{ } v$.
+
+so that the laser interacts with the deeper and steeper walls, leading to less reflection of the laser beam and increased energy absorption. It is necessary to note that the left end of the curve in Fig. 14 seems to be nonlinear, which is belonged to $170 \mathrm{~W}$, and this nonlinearity may be another reason why the error of $170 \mathrm{~W}$ shown in Table 4 is larger than those of $195 \mathrm{~W}$ and $220 \mathrm{~W}$. However, further investigation on the applicable range of this proposed model should be addressed in the future work.
+
+\subsection*{5.3. Printed track surfaces}
+Fig. 15 shows the 3D surfaces of experimental samples for different combinations of process parameters. The ripple, for example in 1-1, is almost in a triangle shape and it indicates the shape of the isotherm curves. From Fig. 15a, it can be observed that the triangle-shaped pattern of ripple becomes not clear when the scanning speed is increased to $800 \mathrm{~mm} / \mathrm{s}$, which may imply that the single tracks are becoming unstable. The similar phenomena happened at the laser power of $195 \mathrm{~W}$ (Fig. 15b) and $220 \mathrm{~W}$ (Fig. 15c), while the thresholds of the scanning speed that cause instability are around $1000 \mathrm{~mm} / \mathrm{s}$, which are larger than that with the laser power of $170 \mathrm{~W}$.
+
+As highlighted in [46], "The Plateau-Rayleigh analysis of the capillary instability of a circular cylinder of a liquid points out that the cylinder is stable" when the stability condition is satisfied [46]. The necessary and sufficient condition of stability is $\pi D / L>1$, where $D$ is the diameter of the cylinder and $L$ is the wavelength. $\pi D$ represents the circumference of the cylinder cross-section. In this work, the circumference can be regarded as the perimeter of a melt pool cross-section, and the wavelength is assumed to be the length of a melt pool. Therefore, the melt pool stability can be predicted by calculating the ratio of the circumference and the length of the melt pools in numerical simulations, which is shown as follows,
+
+Stability $=\frac{C_{m p}}{L_{m p}}$
+
+where $C_{m p}$ is the circumference of a melt pool, and $L_{m p}$ is the length of the melt pool.
+
+Fig. 16 provides the numerical results of stability calculated based on Eq. (40). The data points above the red dash line imply stable melt tracks, while those below imply that the melt tracks may be unstable. As seen in Fig. 16, the first several single tracks with smaller scanning speed tend to be stable for all the three laser powers, and melt pool stability is inclined to decrease with increasing scanning speed. Generally, the predicted results are consistent with that of the experimental results shown in Fig. 15, except that the stability of single tracks at the laser power of $170 \mathrm{~W}$ seems to be a little bit overestimated.
+
+For comparing with the form of ripples and isotherm curves, an angle $\theta$ [18] is defined as depicted in Fig. 17. $\theta$ is the tail angle of a triangle ripple. In order to reduce the randomness, five measurements on a single track were averaged. For the track with the laser power of $195 \mathrm{~W}$ and scanning speed of $800 \mathrm{~mm} / \mathrm{s}$, the experimental $\theta$ is in the range of $23^{\circ}-32^{\circ}$, as displayed in Fig. 17a. The numerical result of $\theta$ is $22^{\circ}$. Therefore, the simulated value is close to the experimental value, and the percentage of the difference between them is $20 \%$.
+
+Fig. 18 shows the ripple-angle ( $\theta$ ) comparison of experimental results and numerical data for all stable tracks with the numbering of 1-1, $1-2,2-1$ to $2-4$, and $3-1$ to $3-4$. All the simulated ripple angles are smaller than those of the experiment; however, they are either within or close to the range of experimental results. For the tracks with the laser power of $195 \mathrm{~W}$, the maximum difference of angles in experimental data is $17.3 \%$, and for $220 \mathrm{~W}$, it is $18.13 \%$. The maximum error between the experimental and simulated results is $22 \%$, which was derived from sample $1-2$ with $170 \mathrm{~W}$ and $700 \mathrm{~mm} / \mathrm{s}$. The similar trend of ripple angles $\theta$ with a specific power versus scanning speed can be observed from the experimental and simulated values, for example, $\theta$ decreases with the scanning speed. The reason can be ascribed to the fact that with the higher scanning speed, the temperature gradient could be smaller and the isotherm curves are elongated with a smaller
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-14(3)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-14(1)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-14}
+\end{center}
+
+(c)
+
+Fig. 15. Experimental 3D surfaces of the single tracks at different laser power, (a) $170 \mathrm{~W}$, (b) $195 \mathrm{~W}$, (c) $\mathrm{P}=220 \mathrm{~W}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-14(2)}
+\end{center}
+
+Fig. 16. Prediction of melt-track stability based on the simulated melt pool data.
+
+ripple angle $\theta$. Moreover, the tracks with a specific scanning speed versus power ended up with very close angles, e.g. the group of tracks $1-1,2-1$, and $3-1$, and the group of tracks $1-2,2-2$, and $3-2$. For the group with the scanning speed of $600 \mathrm{~mm} / \mathrm{s}$, tracks 1-1, 2-1, and 3-1, the maximum difference in the experimental data is only $4.66 \%$. For scanning speed of $700 \mathrm{~mm} / \mathrm{s}$, tracks 1-2, 2-2, and 3-2 have a maximum difference of $5.9 \%$. This is probably attributed to the reason that laser power may have less influence on the ripple angles than scanning speed.
+
+In the future, a larger range of process parameters such as laser power and scanning speed should be considered in order to further validate the proposed model. Besides, the influence of powder layer thickness on melt pool profiles and track morphology would be investigated. Then the proposed 3D FEM model can be implemented for multiple-track and even multiple-layer situations of the LPBF process.
+
+\section*{6. Conclusions}
+A 3D heat-transfer finite element model for LPBF was developed for accurately predicting melt pool dimensions and surface features. Based on the literature review, eight heat source models are used for the numerical modeling of LPBF and can be categorized as 1) geometrically modified group (GMG); and, 2) absorptivity profile group (APG). Experiments were carried out to validate the simulation results. All the eight heat source models lead to over $40 \%$ shallower melt pools compared with the experiments.
+
+In order to improve the model performance, a novel mathematical
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-15(1)}
+\end{center}
+
+Fig. 17. Ripple-angle $\theta$ comparison of a track with process parameter $195 \mathrm{~W}$ and $800 \mathrm{~mm} / \mathrm{s}$, (a) experimental result, (b) numerical result.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0862f05ef1456ffe25f0g-15}
+\end{center}
+
+Fig. 18. Ripple angles $\theta$ comparison between the experimental results and simulated data for all the stable tracks.
+
+model with varied anisotropically enhanced thermal conductivity and varied absorptivity was proposed and applied to the heat transfer simulation with the exponentially decaying heat source (APG4).
+
+The main conclusions are listed as follows:
+
+\begin{enumerate}
+  \item The expressions of varied anisotropically enhanced thermal conductivity and varied absorptivity were linear algebraic equations. Good agreement between the simulation and the experimental results was derived. The averaged error of melt pool width and depth are $2.9 \%$ and $7.3 \%$, respectively.
+
+  \item The proposed heat transfer model has been further validated by the surface features, track stability and ripple angle. For the track stability, the predicted results are in good agreement with the experimental results. In addition, the simulated ripple angles are within the range of experimental results.
+
+\end{enumerate}
+
+\section*{Acknowledgments}
+This work was supported by funding from the Natural Sciences and Engineering Research Council of Canada (NSERC), the Federal Economic Development Agency for Southern Ontario (FedDev Ontario) and China Scholarship Council. The authors would also like to thank Jerry Ratthapakdee and Karl Rautenberg for helping in the LPBF setup and printing the samples.
+
+\section*{Appendix A. Supplementary material}
+Supplementary data associated with this article can be found, in the online version, at \href{https://doi.org/10.1016/j.optlastec.2018.08.012}{https://doi.org/10.1016/j.optlastec.2018.08.012}.
+
+\section*{References}
+[1] T. Wohlers, Wohlers Report 2013: Additive Manufacturing and 3D Printing State of the Industry-Annual Worldwide Progress Report, Wohlers Associates, Fort Collins, CO, 2013.
+
+[2] C. Teng, H. Gong, A. Szabo, J.J.S. Dilip, K. Ashby, S. Zhang, N. Patil, D. Pal, B. Stucker, Simulating melt pool shape and lack of fusion porosity for selective laser melting of cobalt chromium components, J. Manuf. Sci. Eng. 139 (2016) 11009, \href{https://doi.org/10.1115/1.4034137}{https://doi.org/10.1115/1.4034137}.
+
+[3] D. Buchbinder, W. Meiners, N. Pirch, K. Wissenbach, J. Schrage, Investigation on reducing distortion by preheating during manufacture of aluminum components using selective laser melting, J. Laser Appl. 26 (2014) 12004, \href{https://doi.org/10}{https://doi.org/10}. $2351 / 1.4828755$.
+
+[4] K. Kempen, B. Vrancken, S. Buls, L. Thijs, J. Van Humbeeck, J.-P. Kruth, Selective laser melting of crack-free high density M2 high speed steel parts by baseplate preheating, J. Manuf. Sci. Eng. 136 (2014) 61026.
+
+[5] S.A. Khairallah, A. Anderson, Mesoscopic simulation model of selective laser melting of stainless steel powder, J. Mater. Process. Tech. 214 (2014) 2627-2636, \href{https://doi.org/10.1016/j.jmatprotec.2014.06.001}{https://doi.org/10.1016/j.jmatprotec.2014.06.001}.
+
+[6] A.V. Gusarov, I. Yadroitsev, P. Bertrand, I. Smurov, Model of radiation and heat transfer in laser-powder interaction zone at selective laser melting, J. Heat Transfer. 131 (2009) 72101, \href{https://doi.org/10.1115/1.3109245}{https://doi.org/10.1115/1.3109245}.
+
+[7] C. Zhao, K. Fezzaa, R.W. Cunningham, H. Wen, F. De Carlo, L. Chen, A.D. Rollett, T. Sun, Real-time monitoring of laser powder-bed fusion process using high-speed X-ray imaging and diffraction, Sci. Rep. 7 (2017) 1-11, \href{https://doi.org/10.1038/}{https://doi.org/10.1038/} s41598-017-03761-2.
+
+[8] P. Bidare, I. Bitharas, R.M. Ward, M.M. Attallah, A.J. Moore, Fluid and particle dynamics in laser powder-bed fusion, Acta Mater. 142 (2018) 107-120, \href{https://doi}{https://doi}. org/10.1016/j.actamat.2017.09.051.
+
+[9] M.J. Matthews, G. Guss, S.A. Khairallah, A.M. Rubenchik, P.J. Depond, W.E. King, Denudation of metal powder layers in laser powder-bed fusion processes, Acta Mater. 114 (2016) 33-42, \href{https://doi.org/10.1016/j.actamat.2016.05.017}{https://doi.org/10.1016/j.actamat.2016.05.017}.
+
+[10] S.A. Khairallah, A.T. Anderson, A. Rubenchik, W.E. King, Laser powder-bed fusion additive manufacturing: Physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones, Acta Mater. 108 (2016) 36-45, \href{https://doi}{https://doi}. org/10.1016/j.actamat.2016.02.014.
+
+[11] W. Yan, W. Ge, Y. Qian, S. Lin, B. Zhou, W.K. Liu, F. Lin, G.J. Wagner, Multi-physics modeling of single/multiple-track defect mechanisms in electron beam selective melting, Acta Mater. 134 (2017) 324-333, \href{https://doi.org/10.1016/j.actamat}{https://doi.org/10.1016/j.actamat}. 2017.05.061.
+
+[12] A. Foroozmehr, M. Badrossamay, E. Foroozmehr, Finite element simulation of selective laser melting process considering optical penetration depth of laser in powder-bed, JMADE. 89 (2016) 255-263, \href{https://doi.org/10.1016/j.matdes.2015}{https://doi.org/10.1016/j.matdes.2015}. 10.002 .
+
+[13] J. Goldak, A. Chakravarti, M. Bibby, New finite element model for welding heat sources, Metall. Trans. B Process Metall. 15 (B) (1984) 299-305, \href{https://doi.org/}{https://doi.org/} 10.1007/BF02667333.
+
+[14] C. Bruna-Rosso, A.G. Demir, B. Previtali, Selective laser melting finite element modeling: validation with high-speed imaging and lack of fusion defects prediction, Mater. Des. (2018), \href{https://doi.org/10.1016/j.matdes.2018.06.037}{https://doi.org/10.1016/j.matdes.2018.06.037}.
+
+[15] C.S. Wu, H.G. Wang, Y.M. Zhang, A new heat source model for keyhole plasma arc welding in FEM analysis of the temperature, Profile, Weld. Res. (2006) 284-291.
+
+[16] H.C. Tran, Y.L. Lo, Heat transfer simulations of selective laser melting process based on volumetric heat source with powder size consideration, J. Mater. Process. Technol. 255 (2018) 411-425, \href{https://doi.org/10.1016/j.jmatprotec.2017.12.024}{https://doi.org/10.1016/j.jmatprotec.2017.12.024}.
+
+[17] L. Ladani, J. Romano, W. Brindley, S. Burlatsky, Effective liquid conductivity for improved simulation of thermal transport in laser beam melting powder-bed technology, Addit. Manuf. 14 (2017) 13-23, \href{https://doi.org/10.1016/j.addma}{https://doi.org/10.1016/j.addma}. 2016.12.004.
+
+[18] S. Liu, H. Zhu, G. Peng, J. Yin, X. Zeng, Microstructure prediction of selective laser melting AlSi10Mg using finite element analysis, Mater. Des. 142 (2018) 319-328, \href{https://doi.org/10.1016/j.matdes.2018.01.022}{https://doi.org/10.1016/j.matdes.2018.01.022}.
+
+[19] A.M. Kamara, W. Wang, S. Marimuthu, L. Li, Modelling of the melt pool geometry in the laser deposition of nickel alloys using the anisotropic enhanced thermal conductivity approach, Proc. Inst. Mech. Eng. Part B J. Eng. Manuf. 225 (2011) 87-99, \href{https://doi.org/10.1177/09544054IEM2129}{https://doi.org/10.1177/09544054IEM2129}.
+
+[20] J. Trapp, A.M. Rubenchik, G. Guss, M.J. Matthews, In situ absorptivity measurements of metallic powders during laser powder-bed fusion additive manufacturing, Appl. Mater. Today. 9 (2017) 341-349, \href{https://doi.org/10.1016/j.apmt.2017.08}{https://doi.org/10.1016/j.apmt.2017.08}. 006.
+
+[21] M. Matthews, J. Trapp, G. Guss, A. Rubenchik, Direct measurements of laser absorptivity during metal melt pool formation associated with powder-bed fusion additive manufacturing processes, J. Laser Appl. 30 (2018) 32302, \href{https://doi.org/}{https://doi.org/} 10.2351/1.5040636.
+
+[22] I. Yadroitsev, A. Gusarov, I. Yadroitsava, I. Smurov, Single track formation in selective laser melting of metal powders, J. Mater. Process. Technol. 210 (2010) 1624-1631, \href{https://doi.org/10.1016/J.JMATPROTEC.2010.05.010}{https://doi.org/10.1016/J.JMATPROTEC.2010.05.010}.
+
+[23] I.A. Roberts, C.J. Wang, R. Esterlein, M. Stanford, D.J. Mynors, A three-dimensional finite element analysis of the temperature field during laser melting of metal powders in additive layer manufacturing, Int. J. Mach. Tools Manuf. 49 (2009) 916-923, \href{https://doi.org/10.1016/j.ijmachtools.2009.07.004}{https://doi.org/10.1016/j.ijmachtools.2009.07.004}.
+
+[24] F. Verhaeghe, T. Craeghs, J. Heulens, L. Pandelaers, A pragmatic model for selective laser melting with evaporation, Acta Mater. 57 (2009) 6006-6012, \href{https://doi.org/}{https://doi.org/} 10.1016/j.actamat.2009.08.027.
+
+[25] A. Bonakdar, M. Molavi-Zarandi, A. Chamanfar, M. Jahazi, A. Firoozrai, E. Morin, Finite element modeling of the electron beam welding of Inconel-713LC gas turbine blades, J. Manuf. Process. 26 (2017) 339-354, \href{https://doi.org/10.1016/j.jmapro}{https://doi.org/10.1016/j.jmapro}. 2017.02.011.
+
+[26] M. Rombouts, L. Froyen, A.V. Gusarov, E.H. Bentefour, C. Glorieux, Light extinction in metallic powder-beds: Correlation with powder structure, J. Appl. Phys. 98 (2005), \href{https://doi.org/10.1063/1.1948509}{https://doi.org/10.1063/1.1948509}.
+
+[27] U. Ali, Y. Mahmoodkhani, S. Imani Shahabad, R. Esmaeilizadeh, F. Liravi, E. Sheydaeian, K.Y. Huang, E. Marzbanrad, M. Vlasea, E. Toyserkani, On the measurement of relative powder-bed compaction density in powder-bed additive manufacturing processes, Mater. Des. 155 (2018) 495-501, \href{https://doi.org/10}{https://doi.org/10} 1016/j.matdes.2018.06.030.
+
+[28] Y.S. Lee, W. Zhang, Mesoscopic simulation of heat transfer and fluid flow in laser powder-bed additive manufacturing, Int. Solid Free Form Fabr. Symp. Austin. (2015) 1154-1165.
+
+[29] A.S. Sabau, W.D. Porter, Alloy shrinkage factors for the investment casting of 174PH stainless steel parts, Metall. Mater. Trans. B Process Metall. Mater. Process. Sci. 39 (2008) 317-330, \href{https://doi.org/10.1007/s11663-007-9125-3}{https://doi.org/10.1007/s11663-007-9125-3}.
+
+[30] D. Deng, H. Murakawa, Prediction of welding distortion and residual stress in a thin plate butt-welded joint, Comput. Mater. Sci. 43 (2008) 353-365, \href{https://doi.org/}{https://doi.org/} 10.1016/j.commatsci.2007.12.006.
+
+[31] W.E. King, H.D. Barth, V.M. Castillo, G.F. Gallegos, J.W. Gibbs, D.E. Hahn, C. Kamath, A.M. Rubenchik, Observation of keyhole-mode laser melting in laser powder-bed fusion additive manufacturing, J. Mater. Process. Technol. 214 (2014) 2915-2925, \href{https://doi.org/10.1016/j.jmatprotec.2014.06.005}{https://doi.org/10.1016/j.jmatprotec.2014.06.005}.
+
+[32] H. Fayazfar, M. Salarian, A. Rogalsky, D. Sarker, P. Russo, V. Paserin, E. Toyserkani, A critical review of powder-based additive manufacturing of ferrous alloys: Process parameters, microstructure and mechanical properties, Mater. Des. 144 (2018) 98-128, \href{https://doi.org/10.1016/j.matdes.2018.02.018}{https://doi.org/10.1016/j.matdes.2018.02.018}.
+
+[33] L. Wang, J. Jue, M. Xia, L. Guo, B. Yan, D. Gu, Effect of the thermodynamic behavior of selective laser melting on the formation of in situ oxide dispersionstrengthened aluminum-based composites, Metals (Basel). 6 (2016) 286, https:// \href{http://doi.org/10.3390/met6110286}{doi.org/10.3390/met6110286}.
+
+[34] C. Körner, A. Bauereiß, E. Attar, Fundamental consolidation mechanisms during selective beam melting of powders, Model. Simul. Mater. Sci. Eng. 21 (2013), \href{https://doi.org/10.1088/0965-0393/21/8/085011}{https://doi.org/10.1088/0965-0393/21/8/085011}.
+
+[35] M.I.A. Othman, I.A. Abbas, Generalized thermoelasticity of thermal-shock problem in a non-homogeneous isotropic hollow cylinder with energy dissipation, Int. J. Thermophys. 33 (2012) 913-923, \href{https://doi.org/10.1007/s10765-012-1202-4}{https://doi.org/10.1007/s10765-012-1202-4}.
+
+[36] V.D. Fachinotti, M. Bellet, Linear tetrahedral finite elements for thermal shock problems, Int. J. Numer. Methods Heat Fluid Flow. 16 (2006) 590-601, \href{https://doi}{https://doi}. org/10.1108/09615530610669120.
+
+[37] A. Bejan, A.D. Kraus, Heat Transfer Handbook, (2003).
+
+[38] Mikron, Table of Emissivity of Various Surfaces, (n.d.). \href{http://www-eng.lbl.gov/}{http://www-eng.lbl.gov/} $\sim$ dw/projects/DW4229\_LHC\_detector\_analysis/calculations/emissivity2.pdf.
+
+[39] L.E. Murr, E. Martinez, J. Hernandez, S. Collins, K.N. Amato, S.M. Gaytan, P.W. Shindo, Microstructures and properties of 17-4 PH stainless steel fabricated by selective laser melting, J. Mater. Res. Technol. 1 (2012) 167-177, \href{https://doi.org/}{https://doi.org/} 10.1016/S2238-7854(12)70029-7.
+
+[40] H. Gu, H. Gong, D. Pal, K. Rafi, T. Starr, B. Stucker, Influences of Energy Density on Porosity and Microstructure of Selective Laser Melted 17-4PH Stainless Steel, in: 2013 Solid Free. Fabr. Symp., 2013: pp. 474-489.
+
+[41] H.K. Rafi, D. Pal, N. Patil, T.L. Starr, B.E. Stucker, Microstructure and mechanical behavior of 17-4 precipitation hardenable steel processed by selective laser melting, J. Mater. Eng. Perform. 23 (2014) 4421-4428, \href{https://doi.org/10.1007/}{https://doi.org/10.1007/} s11665-014-1226-y.
+
+[42] A. Yadollahi, N. Shamsaei, S.M. Thompson, A. Elwany, L. Bian, Effects of building orientation and heat treatment on fatigue behavior of selective laser melted 17-4 PH stainless steel, Int. J. Fatigue. 94 (2017) 218-235, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. ijfatigue.2016.03.014.
+
+[43] M. Averyanova, E. Cicala, P. Bertrand, D. Grevey, Experimental design approach to optimize selective laser melting of martensitic 17-4 PH powder: part I - single laser tracks and first layer, Rapid Prototyp. J. 18 (2012) 28-37, \href{https://doi.org/10.1108/}{https://doi.org/10.1108/} 13552541211193476.
+
+[44] T. LeBrun, T. Nakamoto, K. Horikawa, H. Kobayashi, Effect of retained austenite on subsequent thermal processing and resultant mechanical properties of selective laser melted 17-4 PH stainless steel, Mater. Des. 81 (2015) 44-53, \href{https://doi.org/}{https://doi.org/} 10.1016/j.matdes.2015.05.026.
+
+[45] A.M. Rubenchik, W.E. King, S. Wu, Scaling laws for the additive manufacturing, J. Mater. Process. Technol. (2018), \href{https://doi.org/10.1016/j.jmatprotec.2018.02}{https://doi.org/10.1016/j.jmatprotec.2018.02}. 034.
+
+[46] S. Chandrasekhar, Hydrodynamic and hydromagnetic stability, Courier Corporation (2013).
+
+
+\end{document}

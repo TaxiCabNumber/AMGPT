@@ -1,0 +1,452 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{3D multi-layer grain structure simulation of powder bed fusion additive manufacturing }
+
+
+\author{Johannes A. Koepf a, * , Martin R. Gotterbarm ${ }^{\text {b }}$, Matthias Markl a, Carolin Körner ${ }^{\text {a, b }}$\\
+${ }^{a}$ Chair of Materials Science and Engineering for Metals (WTM), Friedrich-Alexander-Universität Erlangen-Nürnberg, Martensstr. 5, 91058 Erlangen,\\
+Germany\\
+b Joined Institute of Advanced Materials and Processes (ZMP), Friedrich-Alexander-Universität Erlangen-Nürnberg Dr.-Mack-Str. 81, 90762 Fürth, Germany}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Full length article
+
+
+
+\section*{A R T I C L E I N F O}
+\section*{Article history:}
+Received 26 January 2018
+
+Received in revised form 11 April 2018
+
+Accepted 13 April 2018
+
+Available online 16 April 2018
+
+\section*{Keywords:}
+Grain structure
+
+Cellular automata
+
+Numerical modeling
+
+Grain growth
+
+Crystal growth
+
+Additive manufacturing
+
+\begin{abstract}
+A B S T R A C T In powder bed fusion (PBF) additive manufacturing, powder layers are locally melted with a laser or an electron beam to build a component. Hatching strategies and beam parameters as beam power, scan velocity and line offset significantly affect the grain structure of the manufactured part. While experiments reveal the result of specific parameter combinations, the precise impact of distinct parameters on the resulting grain structure is widely unknown. This knowledge is necessary for a reliable prediction of the microstructure and consequently the mechanical properties of the manufactured part.\\
+We introduce the adaption of a three-dimensional model for the prediction of dendritic growth for use with PBF. The heat input is calculated using an analytical solution of the transient heat conduction equation. Massively parallel processing on a high-performance cluster computer allows the computation of the grain structure on the scale of small parts within reasonable times.\\
+The model is validated by accurately reproducing experimental grain structures of Inconel 718 test specimens manufactured by selective electron beam melting. The grain selection zone within the first layers as well as the subsequent microstructure in several millimeters build height is modeled in unprecedented level of detail. This model represents the cutting-edge of grain structure simulation in PBF and enables a reliable numerical prediction of appropriate beam parameters for arbitrary applications. (C) 2018 Acta Materialia Inc. Published by Elsevier Ltd. This is an open access article under the CC BY-NCND license (\href{http://creativecommons.org/licenses/by-nc-nd/4.0/}{http://creativecommons.org/licenses/by-nc-nd/4.0/}).
+\end{abstract}
+
+\section*{1. Introduction}
+In powder bed fusion (PBF) additive manufacturing, a part is built in layers by successively consolidating small partitions of powder previously deposited in a powder bed [1]. The necessary energy for melting is provided either by a laser (Selective Laser Melting, SLM [2]) or an electron beam (Selective Electron Beam Melting, SEBM [3,4]). The resulting grain structure is of special interest not only because of its influence on the mechanical properties of the final part. Especially the possibility of grain selection for the growth as well as the repair of single crystals is highly favorable [5]. The dimension and geometry of the melt pool localize the solidification and growth of the grains. The resulting as-built grain structure neglecting recrystallization and solid phase
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail addresses: \href{mailto:johannes.koepf@fau.de}{johannes.koepf@fau.de} (J.A. Koepf), \href{mailto:martin.gotterbarm@fau.de}{martin.gotterbarm@fau.de} (M.R. Gotterbarm), \href{mailto:matthias.markl@fau.de}{matthias.markl@fau.de} (M. Markl), \href{mailto:carolin.koerner@fau.de}{carolin.koerner@fau.de} (C. Körner).
+}
+
+transformations is mainly influenced by the topology of the melt pool as well as the thermal gradient and the velocity of the solidification front [6-8].
+
+There are three major approaches for grain structure modeling resulting from a transient thermal gradient [8]. The phase field method describes the microstructure of a material by using a set of conserved and non-conserved field variables that are continuous across the liquid-solid-interface [9,10]. While this method shows remarkable results in modeling of dendritic growth [11,12], the requirement of extremely fine spatial resolutions almost prevents modeling of big domains with a huge number of grains $[8,13]$. Averaging methods try to overcome this limitation by coupling the microstructure formation to macroscopic continuity equations [14]. This approach enables modeling of microscopic phenomena of dendritic growth with computational costs several orders of magnitude lower than that of phase field methods [15-17], but they lack the prediction of grain competition. Cellular automata (CA) methods have been developed to resolve this issue [8,18,19], albeit with loss of detail. In their original formulation, these methods predict grain boundaries excluding the dendritic structure [20]. By\\
+coupling a numerical model solving solute diffusion, the dendritic morphology is included in two as well as three dimensions [20-22].
+
+The development of CA models substantially progressed in the last years, especially for two dimensions [23-26]. The requirement of one perpendicular growth direction to the simulation plane as well as the inability to model the grain selection out of this plane is limiting their usability. Enormous computational costs impeded the application of CA models in three dimensions until recently. Song et al. [27]. coupled a CA model with a proprietary casting code to determine the grain structure of ingot castings. Chen et al. $[28,29]$. coupled a finite element model for the heat input with a CA model to simulate the solidification grain structure in arc-welding. Low process velocities in combination with high powers allow the use of much coarser computational grids compared to PBF. Zinovieva et al. [30] recently applied CA models for the grain structure prediction in SLM within the first layers of a part made of Ti-6Al-4V. They reduced the computational costs by using a simplified model alleged to cause grid dependencies in the growth directions of the grains.
+
+The goal of our work is to predict the three-dimensional grain structure resulting from specific beam parameters of PBF processes on the scale of full sized parts. Previously we introduced an adaption of the model for the prediction of dendritic growth from Gandin and Rappaz [18] for PBF technologies [31]. In the current contribution, we extend this work by accurately reproducing the grain structure of an Inconel 718 test specimen consisting of hundreds of layers manufactured by SEBM. Each layer is formed by the superposition of multiple beam traversals, where the scanning direction is rotated every layer. The computational effort is distributed by Message Passing Interface (MPI) parallelization on a highperformance cluster computer with thousands of computational nodes. The fine temporal and spatial resolution, enabled by the efficient implementation and computational power, results in a degree of accuracy of the grain structure prediction unmatched in any work published so far.
+
+\section*{2. Model description}
+\subsection*{2.1. Hatching strategies}
+In PBF, a part is build layer-by-layer by successively melting powder. The build of each layer consists of four repetitive steps: Preheating, selective melting, lowering of the build platform and applying a new powder bed [32]. Crucial for the grain structure evolution is the melting step, where the desired area of the current layer is molten with a high-energy beam. The scanning pattern of the beam across the surface in this step is referred to as hatching strategy.
+
+Besides material properties like thermal conductivity or diffusivity, the hatching strategy as well as the beam parameters like the power $P$ or velocity $v$ influence the melt pool dimensions and thus the resulting microstructure [33-36]. The beam scans across the surface of the powder bed back and forth in a snake-like pattern. In a standard hatching strategy, the hatching direction is rotated every layer by $90^{\circ}$ (Fig. 1, left).
+
+An important parameter in characterizing different manufacturing conditions is the line energy $E_{1}$ [37]. It refers to the energy brought in per unit length $E_{1}=P / v$. When comparing different hatching strategies, the line energy is usually related to the line offset $l_{\text {off }}$, i.e. the distance between two lines resulting in the area energy $E_{\mathrm{A}}=E_{\mathrm{l}} / l_{\mathrm{off}}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3dcbe7431bd7efc1478ag-2}
+\end{center}
+
+Fig. 1. Illustration of the hatching strategy (left) and the analytical heat source model (right). The resulting thermal field is a superposition of individual heat sources positioned to meet at the turning point of the real beam.
+
+\subsection*{2.2. Thermal model}
+A reliable heat input model is prerequisite for predicting the grain structure. There is a variety of analytical as well as numerical approaches dealing with a thermal field resulting from a transient heat source [20-24]. While numerical solutions are indispensable for the computation of the thermal field resulting from complex beam paths, they are slow in comparison to analytical solutions. The applied analytical heat source model approximates the thermal field emerging from the hatching strategy (Fig. 1, left) with computational costs significantly smaller than numerical solutions.
+
+\subsection*{2.2.1. Single pass melting}
+The analytical heat source model is based upon Rosenthal's solution for the temperature distribution resulting from a point heat source traversing the surface with constant speed $v$ [38]. It assumes a quasi-stationary temperature distribution and uses a moving coordinate system centered at the origin of the beam. With the beam traversing in $x$-direction and the distance $\xi$ of any given point along the $x$-axis to the origin of the beam, the coordinate transformation from the fixed to the moving coordinate system is $\xi=x-v \cdot t$.
+
+This coordinate transformation is used in the analytical solution for the thermal field induced by a traversing beam [39].
+
+$T(\xi, y, z)=T_{0}+\frac{q / v}{2 \pi \lambda} \exp \left(-\frac{v \cdot(\xi+r(y, z))}{2 \alpha}\right)$.
+
+$T_{0}$ depicts the start temperature, $q$ and $v$ the power and velocity of the beam, $r(y, z)$ the distance from a given point to the beam and $\lambda$ the thermal conductivity. The thermal diffusivity $\alpha$ is calculated from the thermal conductivity $\lambda$, the density $\rho$ and the specific heat capacity $c_{p}$ by $\alpha=\lambda / \rho c_{p}$.
+
+\subsection*{2.2.2. Hatching}
+In the melting step, the beam scans the surface of the powder bed repeatedly in opposing directions (Fig. 1, left). Each scan line of the beam across the surface is calculated as an individual beam with its own time $t$. The total number of beams is computed by $n_{B}=$ $l_{\text {Build }} / l_{\text {off }}+1$, where $l_{\text {Build }}$ is the length of the build domain. The resulting thermal field is the superposition of all individual beams $T=\sum_{i=1}^{n_{B}} T\left(\xi_{i}, y, z\right)$.
+
+The calculation of the thermal field resulting from three scan lines of a cuboid simulation domain is depicted in Fig. 1 (right). The\\
+individual beams are started at times calculated in advance to ensure that two successive beams meet exactly at the turning point of the beam. The resulting thermal field is depicted in color only for the simulation domain. The outer regions are grayed for clarity. The inlet (right) shows the relationship of the individual beams with the hatching strategy (left).
+
+\subsection*{2.2.3. Reduced simulation domain}
+The high computational costs of the microstructure evolution model described below usually result in simulation domains being significantly smaller than the build domain. The simulation domain in these cases represents an arbitrarily positioned excerpt within the build domain. Fig. 2 depicts the case of a simulation domain located in the center of the build domain.
+
+When the simulation domain is significantly smaller than the build domain, the total number of beams $n_{B}$ can be reduced. Instead of considering the build length, the number of beams is calculated with the simulation length $l_{\operatorname{sim}}$ as well as the domain parameters $\zeta$ and $\eta$ according to $n_{S}=\left(l_{\text {Sim }}+\zeta+\eta\right) / l_{\text {off }}+1$.
+
+The domain parameters $\zeta$ and $\eta$ mimic an additional heating although the beam is scanning outside the simulation domain. This treatment ensures a stable melt pool as it is expected in the center of the build domain.
+
+\subsection*{2.3. Modeling microstructure evolution}
+Since the underlying model is well documented in literature $[18,40,41]$, the general procedure is only repeated in brief with an emphasis on the adaptions for PBF. Besides the heat input discussed in 2.2, these adaptions concern the grain initialization, the remelting of the grains as well as the layered buildup.
+
+\subsection*{2.3.1. Basic algorithm}
+The algorithm is based on a CA model reproducing the growth of fcc dendrites. The preferential $<100>$ growth direction is maintained by approximating the dendrite envelopes with octahedra, each of them coupled to a distinct cell. Each octahedron grows along its main diagonals corresponding to the $<100>$ crystallographic orientations of the dendrite [42]. The growth velocity depends on the undercooling of its cell approximated by a polynomial law [19].
+
+$v(\cdot T)=A \cdot \Delta T^{2}+B \cdot \Delta T^{3}$,
+
+where $\Delta T$ is the undercooling to the melting temperature and $A$ and $B$ are material dependent parameters. Once an octahedron comprises the center of an adjacent liquid cell, this cell is captured, i.e., it is associated with the grain properties of the capturing cell and a
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3dcbe7431bd7efc1478ag-3}
+\end{center}
+
+Fig. 2. Correlation of simulated and build domain. The amount of calculated beams can be reduced in cases where the simulated domain is significantly smaller than the build domain. new octahedron with the same orientation is initiated. Octahedra grow independently until all adjacent cells are captured. Cells with no liquid neighbors are no longer considered in the algorithm.
+
+\subsection*{2.3.2. Grain initialization}
+Unlike the model from Gandin and Rappaz [19,40], where individual grains nucleate from single cells and grow into an undercooled melt, a PBF process starts with solid particles forming a powder bed. These particles fill the volume only imperfectly leaving gaps in between. By concentrating on the repeatedly re-melted bulk material and leaving aside boundary effects, the powder bed is approximated as continuous media with material properties like density and thermal diffusivity based on that of the powder material.
+
+Multiple cells are combined and initialized as an individual grain reflecting the initial grain size within the powder particles. The octahedra of these cells share the same orientation, which is defined by three Euler angles [43]. Due to this definition, the rotation of the octahedron in any direction of the threedimensional space is possible. The three Euler angles are thereby randomly generated using a mersenne twister pseudo random generator [44].
+
+\subsection*{2.3.3. Re-melting}
+In PBF, solidified cells are repeatedly re-melted, i.e., an already solidified cell becomes liquid and capturable by adjacent cells again. While the octahedron of liquefied cells is deleted, that of solidified cells has to be stored and reactivated. There are three possibilities to modify the octahedron of a solid cell when a neighboring cell liquefies again: (a) Re-initialization to a negligible size; (b) Reactivation with the size when the cell became solid; (c) Dynamic size adaption depending on the current undercooling. These possibilities are summarized in
+
+$L_{\mu}^{0}=c(\Delta T) \cdot L_{\mu}^{t}$,
+
+where $L_{\mu}^{0}$ depicts the size of the re-initialized octahedron, $L_{\mu}^{t}$ its size at the time $t$ when it became solid and $c$ a weighting factor with $0 \leq$ $c \leq 1$ depending on the local undercooling $\Delta T$. Preliminary tests revealed this parameter is not negligible. The exact determination of this coefficient requires detailed investigations that will be subject to further studies. For all calculations in this paperc $=1$.
+
+\subsection*{2.3.4. Layered build-up}
+With a volume of several cube decimeters [45], the build domain in PBF exceeds the computational feasibility by magnitudes. However, crystal growth occurs only within the re-melted section, if solid phase transformations and recrystallization are disregarded. Consequently, only the re-melted section is relevant for the development of the microstructure of the build-up part.
+
+Instead of modeling the complete building tank, only the remelted zone at the top of the specimen is considered. After each layer, all cells corresponding to one layer thickness are stored, the cells above are shifted downwards and an equal number of new cells are initialized on top. By repeating this procedure each layer, an arbitrary build height with constant computational effort per layer is possible. After completion of calculation, the results are reassembled, i.e., the stored cells are merged showing the whole build volume again.
+
+\section*{3. Validation}
+The application of the basic algorithm described in 2.3.1 with transient thermal fields has already been demonstrated [28,29].
+
+Here, we focus on the usability of the thermal model described in section 2.2 for SEBM. Experimentally determined melt pool depths resulting from a wide range of beam power and velocity combinations are compared with numerical predictions.
+
+\subsection*{3.1. Single pass melting}
+Hartmann investigated the impact of line energies between $0.15 \mathrm{~J} / \mathrm{mm}$ and $2.4 \mathrm{~J} / \mathrm{mm}$ on the geometry of the melt pool of a single line using CMSX-4 [46]. The beam power ranged from $300 \mathrm{~W}$ up to $1200 \mathrm{~W}$ and the beam velocity from $0.5 \mathrm{~m} / \mathrm{s}$ to $2 \mathrm{~m} / \mathrm{s}$. The material properties of CMSX-4 used for the thermal model are listed in Table 1 [47]. All parameters are specified at the solidus temperature and are assumed temperature-independent.
+
+Fig. 3 depicts the melt pool depth predicted by the analytical solution compared with experimental data. The measurements show the nonlinear correlation between line energy and melt pool depth. Equal line energies result in different melt pool depths depending on the beam velocity and power. This phenomenon is not reproduced by the analytical solution due to restrictions on constant material parameters, the disregard of evaporation in congruent melt pools for distinct line energies and a seamless transition between different scan speeds (dotted line in Fig. 3). Due to the exclusion of the enthalpy of fusion, the melt pool depth is overestimated with decreasing line energies.
+
+\subsection*{3.2. Hatching}
+Helmer investigated the impact of different area energies on the melt pool depths analyzing additively build parts using Inconel 718 [48]. The measurements were performed with a standard hatching strategy, a line offset of $100 \mu \mathrm{m}$ and layer thickness of $50 \mu \mathrm{m}$. The beam power was adjusted in a range from $510 \mathrm{~W}$ to $855 \mathrm{~W}$ and the velocity from $3.0 \mathrm{~m} / \mathrm{s}$ to $4.5 \mathrm{~m} / \mathrm{s}$, resulting in area energies ranging from $1.6 \mathrm{~J} / \mathrm{mm}^{2}$ to $2.0 \mathrm{~J} / \mathrm{mm}^{2}$. The material properties of Inconel 718 and the simulation parameters used for the thermal model are listed in Table 2 and Table 3, respectively. The melt pool is measured after completion of the last layer.
+
+Fig. 4 shows a comparison of the calculated and measured maximum melt pool depths resulting from hatching a single layer. The discontinuous behavior of the melt pool depths is observable similar to the single line results. Hatching strategies with equal area energy but different velocities result in different melt pool depths. To ensure comparability, the powder shrinkage has to be considered. The effective melt pool depth has to be measured from the height of the rake and is adjusted by doubling the layer thickness. When comparing the analytical and the effective melt pool depths, the overestimation is similar to the single line investigation showed in 3.1.
+
+\section*{4. Results and discussion}
+The model verification is demonstrated by comparing the grain structure of additively build specimens and the simulated counterpart.
+
+Table 1
+
+Material properties of CMSX-4 used for thermal model [47].
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Quantity & value & unit \\
+\hline
+Liquidus temperature & 1,380 & ${ }^{\circ} \mathrm{C}$ \\
+Density $\rho$ & $8.1 \cdot 10^{3}$ & $\mathrm{~kg} / \mathrm{m}^{3}$ \\
+Thermal conductivity $\lambda$ & $4.5 \cdot 10^{1}$ & $\mathrm{~W} /(\mathrm{m} \cdot \mathrm{K})$ \\
+Thermal diffusivity $\alpha$ & $5.5 \cdot 10^{-6}$ & $\mathrm{~m}^{2} / \mathrm{s}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3dcbe7431bd7efc1478ag-4}
+\end{center}
+
+Fig. 3. Comparison of the melt pool depth of a single scan line predicted by the analytical solution (open symbols) with experimental data (filled symbols) [44]. The analytical solution shows a seamless transition between different scan speeds (dotted line) and overestimates the melt pool depth with decreasing line energy.
+
+Table 2
+
+Material properties of Inconel 718 used for thermal model.
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Quantity & value & unit \\
+\hline
+Liquidus temperature & 1340 & ${ }^{\circ} \mathrm{C}$ \\
+Density $\rho$ & 7700 & $\mathrm{~kg} / \mathrm{m}^{3}$ \\
+Specific heat capacity $c_{\mathrm{p}}$ & 650 & $\mathrm{~J} /(\mathrm{kg} \cdot \mathrm{K})$ \\
+Thermal conductivity $\lambda$ & 30 & $\mathrm{~J} /(\mathrm{m} \cdot \mathrm{K})$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 3
+
+Simulation parameters used for thermal model.
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Quantity & value & unit \\
+\hline
+Dimension & $1.0 \times 1.0 \times 0.4$ & $\mathrm{~mm}^{3}$ \\
+Line offset $\mathrm{l}_{\text {off }}$ & 100.0 & $\mu \mathrm{m}$ \\
+Line length $\mathrm{l}_{\text {Build }}$ & 15.0 & $\mathrm{~mm}$ \\
+Simulated length $\mathrm{l}_{\text {Sim }}$ & 1.0 & $\mathrm{~mm}$ \\
+Domain parameters $\zeta, \eta$ & 0.4 & $\mathrm{~mm}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{4.1. Experiments}
+Three samples were built on an Arcam $^{\mathrm{TM}}$ A2 SEBM machine using $60 \mathrm{kV}$ acceleration voltage. For each sample 25 supports where additively raised in a $5 \times 5$ matrix inside an Inconel 718 powder bed from a polycrystalline base plate of Inconel $718(17 \mathrm{~mm}$ thick and $136 \mathrm{~mm}$ in diameter).
+
+Based on the supports, a cuboid was built with the dimensions $15 \mathrm{~mm} \times 15 \mathrm{~mm} \times 20 \mathrm{~mm}$ using the hatching strategy depicted in Fig. 1 together with the build parameters stated in Table 4.
+
+The specimens were prepared by means of longitudinal microsections. Additionally, cross sections were taken in $5 \mathrm{~mm}$ steps beginning from bottom of the specimen. After cold mounting in Technovit 4071 and grinding with 320-2500 grit SiC-paper the samples were polished using first $3 \mu \mathrm{m}$ and $1 \mu \mathrm{m}$ diamond suspension and afterwards $0.04 \mu \mathrm{m}$ colloidal silica suspension. Finally, the microsections were etched $15 \mathrm{~s}$ using a mixture of $32 \% \mathrm{HCl}$ and $5 \% \mathrm{H}_{2} \mathrm{O}$.
+
+Fig. 5 shows details of the microsections, taken from the bottom (left) as well as from the top of the specimen (right). Obviously, the grain selection is finished within the first millimeter of the build.
+
+Melt pool depth $[\mu \mathrm{m}]$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3dcbe7431bd7efc1478ag-5(1)}
+\end{center}
+
+Fig. 4. Comparison of the maximum melt pool depth resulting from hatching predicted by the analytical solution (open symbols) with experimentally determined values (filled symbols). Considering the powder shrinkage, the measured melt pool depths were adjusted resulting in the effective depth.
+
+Table 4
+
+Build parameters for cuboid samples.
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Quantity & value & unit \\
+\hline
+Power P & 800 & $\mathrm{~W}$ \\
+Beam velocity v & 5 & $\mathrm{~m} / \mathrm{s}$ \\
+Line offset $\mathrm{l}_{\text {off }}$ & 100 & $\mu \mathrm{m}$ \\
+Preheat temperature $\mathrm{T}_{0}$ & 950 & ${ }^{\circ} \mathrm{C}$ \\
+Layer thickness & 50 & $\mu \mathrm{m}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Unfavorably orientated grains are quickly overgrown and above the first millimeter all grains are aligned in build direction with minimal misorientations. The width of the grains increases within the first millimeter to approximately $50 \mu \mathrm{m}$ and remains nearly constant dominating the microstructure throughout the specimen (Fig. 5, right).
+
+Based on the cross sections, EBSD measurements were carried out using a FEI Helios 600i dual-beam SEM. At the lower end of the\\
+Table 5
+
+Simulation Parameters used for grain structure calulation
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Quantity & value & unit \\
+\hline
+Grid size & $240 \times 240 \times 30$ & cells \\
+Cell size & 10 & $\mu \mathrm{m}$ \\
+Time step size & 1 & $\mu \mathrm{s}$ \\
+Initial grain size & 20 & $\mu \mathrm{m}$ \\
+Line length $\mathrm{l}_{\text {Build }}$ & 15 & $\mathrm{~mm}$ \\
+Domain length $\mathrm{l}_{\text {Sim }}$ & 2.4 & $\mathrm{~mm}$ \\
+Domain parameters $\zeta, \eta$ & 0.8 & $\mathrm{~mm}$ \\
+Growth parameter A & 0.0001 &  \\
+Growth parameter B & 0 &  \\
+Number of layers & 200 & $\mathrm{~mm}$ \\
+Final build height & 10 &  \\
+\hline
+\end{tabular}
+\end{center}
+
+longitudinal cross section, a variety of scans was conducted and combined in a $1.5 \times 5 \mathrm{~mm}^{2}$ EBSD image to visualize the grain selection process. $1.0 \times 1.0 \mathrm{~mm}^{2}$ images were taken from each transversal cross section for grain size measurements (see Fig. 5). The step size in all cases was $5 \mu \mathrm{m}$.
+
+\subsection*{4.2. Simulations}
+The simulations were carried out on a high performance cluster computer located at the Erlangen Regional Computing Center (RRZE). 720 computational cores required $200 \mathrm{~h}$ of computing time to simulate the first $10 \mathrm{~mm}$ of the build. A $2.4 \times 2.4 \mathrm{~mm}^{2}$ polycrystalline baseplate with random orientation was used for grain initialization. The details of the numerical setup are stated in Table 5. The material parameters of Inconel 718 used for the simulation are shown in Table 2.
+
+Fig. 6 depicts the simulated grain structure by cutting along the $x$ - and $y$-axis through the simulation domain. A comparison of the simulated grain structure with the EBSD measurements carried out on the longitudinal sections is shown on the right side of Fig. 6. The occurring grain selection as well as the columnar grain structure becomes apparent: The base is dominated by a wide variety of randomly orientated grains. Within the first $500 \mu \mathrm{m}$ of the build, misorientated grains are overgrown and a columnar grain structure evolves. This comparison confirms the simulation results in the height of the grain selection zone as well as in the columnar growth of the remaining grains.
+
+The accumulations of many small new grains observable in the EBSD-measurements originate from powder impurities or
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3dcbe7431bd7efc1478ag-5}
+\end{center}
+
+Fig. 5. Position of traversal and longitudinal cross section cuts. The microsections taken from the bottom (left) as well as the top (right) of the specimen show a uniform columnar grain structure.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_3dcbe7431bd7efc1478ag-6}
+
+Fig. 6. Three-dimensional view of the simulated grain structure with a build height of $10 \mathrm{~mm}$ (left) and comparison of a detailed two -dimensional view of the simulation results with EBSD-measurements taken from the first $5 \mathrm{~mm}$ of the longitudinal section cut (right).
+
+discrepancies in the powder deposition. These grains impede the growth of already well-oriented grains resulting in a very fine columnar microstructure. This phenomenon is not yet implemented in the numerical model and will be considered in further studies.
+
+The development of the microstructure is compared by transversal section cuts within the first millimeter (bottom) and after $10 \mathrm{~mm}$ (top) of the build in Fig. 7. In both cases, the simulated as well as the measured grain structure and orientation is depicted. Within the first millimeter, the randomly distributed orientations and nearly regular shaped grains are obvious. After $10 \mathrm{~mm}$, there is an excellent agreement of the size and shape of the grains as well as the orientation of the primary growth direction. Pole figures were derived from the simulation results using the matlab toolbox MTEX [49]. The corresponding pole figures confirm the completion of the grain selection according to the primary build direction leading to a strong (001)-fiber texture with no further grain coarsening.\\
+Additionally, the pole figures reveal a slight secondary anisotropy relating to the orientation of the crystallographic [100]- and [010]direction. However, there is an orientation discrepancy between the simulated and measured secondary anisotropy. The possibility of a correlation between this variance and the overestimation of the melt pool by the analytical heat model is currently investigated and will be addressed in future works.
+
+\section*{5. Conclusion and perspectives}
+The present work describes a three-dimensional crystal growth model for PBF processes. A thermal heat model based on an analytical solution for the transient heat source is presented that enables an efficient calculation of the beam induced thermal field. Validation with previously published experiments indicate the analytical solution to overestimate the depth of the melt pool by a constant factor. This effect mainly vanishes in simulations based on\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_3dcbe7431bd7efc1478ag-7}
+
+Fig. 7. Comparison of grain structure and orientation of the simulation (left) with EBSD measurements (right)
+
+the thermal model due to the iterative re-melting of already solidified regions verified by comparing numerical simulations with EBSD measurements. The grain selection at the bottom of the specimen was as accurately reproduced as the microstructure in several millimeters build height. This outstanding accuracy was enabled by a very fine spatial and temporal resolution as well as a massively parallelization. The execution on a high-performance cluster computer ensured the enormous computational load to finish in reasonable time.
+
+Simulations of microstructure prediction encompassing several millimeters build height in the presented level of detail are unreached by any grain structure simulation published so far. This predictive power enables a wide range of possibilities, beginning from tailoring the microstructure for specific applications to\\
+subsequent determination of the resulting mechanical properties or the analysis of process strategies. Finally, the beam parameters can be computationally optimized for any desired resulting microstructure. These applications will be addressed in future works.
+
+\section*{Declarations of interest}
+None.
+
+\section*{Acknowledgment}
+The authors want to thank the German Research Foundation (DFG) for funding the Collaborative Research Center 814 (CRC 814) - Additive Manufacturing, sub-project B4. The authors gratefully acknowledge the compute resources and support provided by the Erlangen Regional Computing Center (RRZE).
+
+\section*{References}
+[1] L.E. Murr, S.M. Gaytan, D.A. Ramirez, E. Ramirez, J. Hernandez, K.N. Amato, P.W. Shindo, F.R. Medina, R.B. Wicker, Metal fabrication by additive manufacturing using laser and electron beam melting technologies, J. Mater. Sci. Technol. 28 (2012) 1.
+
+[2] D. Gu, W. Meiners, K.R.P. Wissenbach, Laser additive manufacturing of metallic components: materials, processes and mechanisms, Int. Mater. Rev. 57 (2012) 133
+
+[3] S.M. Gaytan, L.E. Murr, F. Medina, E. Martinez, M.I. Lopez, R.B. Wicker, Advanced metal powder based manufacturing of complex components by electron beam melting, Mater. Technol. 24 (2009) 180.
+
+[4] C. Körner, Additive manufacturing of metallic components by selective electron beam melting - a review, Int. Mater. Rev. 61 (2016) 361.
+
+[5] M. Gäumann, S. Henry, F. Cleton, J.-D. Wagniere, W. Kurz, Epitaxial laser metal forming: analysis of microstructure formation, Mater. Sci. Eng. 271 (1999) 232.
+
+[6] R. Trivedi, W. Kurz, Solidification microstructures: a conceptual approach, Acta Metall. Mater. 42 (1994) 15
+
+[7] M.F. Zäh, S. Lutzmann, Modelling and simulation of electron beam melting, Prod. Eng. Res. Devel. 4 (2010) 15.
+
+[8] W.J. Böttinger, S.R. Coriell, A.L. Greer, A. Karma, W. Kurz, M. Rappaz, R. Trivedi, Solidification microstructures: recent developments, future directions, Acta Mater. 48 (2000) 43.
+
+[9] S.A. David, Vitek Jm, Correlation between solidification parameters and weld microstructures, Int. Mater. Rev. 34 (1989) 213
+
+[10] N. Moelans, B. Blanpain, P. Wollants, An introduction to phase-field modeling of microstructure evolution, Computer Coupling of Phase Diagrams ans Thermochemestry 32 (2008) 268.
+
+[11] D. Tourret, A. Karma, Growth competition of columnar dendritic grains: a phase-field study, Acta Mater. 82 (2015) 64.
+
+[12] S. Sahoo, K. CHou, Phase-field simulation of microstructure evolution of Ti$6 \mathrm{Al}-4 \mathrm{~V}$ in electron beam additive manufacturing process, Add. Man. 9 (2016) 14.
+
+[13] V. Plochikhine, Modelling of the Grain Structure Formation by Laser Beam Welding, 1998.
+
+[14] M. Rappaz, Modelling of microstructure formation in solidification processes, Int. Mater. Rev. 34 (1989) 93.
+
+[15] I. Steinbach, C. Beckermann, B. Kauerauf, Q. Li, J. Guo, Three- dimensional modeling of equiaxed dendritic growth on a mesoscopic scale, Acta Mater. 47 (1998) 971.
+
+[16] P. Thevoz, J.L. Desbiolles, M. Rappaz, Modeling of equiaxed microstructure formation in casting, Metall. Trans. A 20A (1989) 311.
+
+[17] C.Y. Wang, C. Beckermann, Equiaxed dendritic solidification with convection part i. multiscale/multiphase modeling, Metall. Mat. Trans. A 27A (1996) 2754.
+
+[18] C.-A. Gandin, M.A. Rappaz, 3D Cellular automaton algorithm for the prediction of dendritic grain growth, Acta Mater. 45 (1996) 2187.
+
+[19] C.-A. Gandin, M. Rappaz, R. Tintiller, 3- dimensional simulation of the grain formation in investment casting, Metall. Mat. Trans. A 25A (1994) 629.
+
+[20] W. Wang, P.D. Lee, M. McLean, A model of solidification microstructures in nickel-based superalloys: predicting primary dendrite spacing selection, Acta Mater. 51 (2003) 2971
+
+[21] R.C. Atwood, P.D. Lee, Simulation of the three-dimensional morphology of solidification porosity in an aluminium-silicon alloy, Acta Mater. 51 (2003) 5447 .
+
+[22] H.B. Dong, P.D. Lee, Simulation of the columnar-to-equiaxed transition in directionally solidified Al-Cu alloys, Acta Mater. 53 (2005) 659.
+
+[23] A. Rai, C. Körner, H. Helmer, Simulation of grain structure evolution during powder bed based additive manufacturing, Add. Manu. 13 (2017) 124.
+
+[24] H.W. Bergmann, S. Mayer, V.V. Ploshikin, Grian selection and texture evolution during solidification of laser beams welding, Mater. Sci. Forum 273-275 (1998) 345.
+
+[25] O. Zinovieva, A. Zinoviev, V.V. Ploshikhin, V. Romanova, R. Balokhonov, Two dimensional cellular automata simulation of grain growth during solidification and recrystallization, IOP Conf. Series: Mat. Sci. Eng. 71 (2015) p.1.
+
+[26] A. Rai, M. Markl, C. Körner, A coupled cellular automaton-lattice Boltzmann model for grain structure simulation during additive manufacturing, Comput Mater. Sci. 124 (2016) 37.
+
+[27] W. Song, J-m Zhang, S-x Wang, B. Wang, L-l. Han, Simulation of Solidification microstructure of Fe-6.5\% Si Alloy using cellular automton-finite element method, J. Cent. South Univ. vol. 23 (2016) 2156.
+
+[28] S. Chen, G. Guillemot, C.-A. Gandin, 3D coupled cellular automaton (CA)- finite element (FE) modeling for solidification grain structures in Gas Tungsten arc welding (GTAW), ISIL Intern. 54 (2014) 401.
+
+[29] S. Chen, G. Guillemot, C.-A. Gandin, Three-dimensional cellular automatonfinite element modeling of solidification grain structures for arc-welding processes, Acta Mater. 115 (2016) 448.
+
+[30] O. Zinovieva, A. Zinoviev, V. Ploshikhin, Three-dimensional modeling of the microstructure evolution during metal additive manufacturing, Comput Mater. Sci. 141 (2018) 207.
+
+[31] J. Koepf, A. Rai, M. Markl, C. Körner, in: I. Drstevensek, D. Drummer M. Schmidt (Eds.), 3D Grain Structure Simulation for Beam- Based Additive Manufacturing, 6th International Conference on Additive Technologies iCAT2016, Nuremberg, 2016.
+
+[32] P. Heinl, C. Körner, R.F. Singer, Selective electron beammelting of cellular titanium: mechanical properties, Adv. Eng. Mat. 10 (2008) 882.
+
+[33] H. Helmer, A. Bauereiß, R.F. Singer, C. Körner, Grain structure evolution in Inconel 718 during selective electron beam melting, Mat. Sci. Eng. A 668 (2016) 180.
+
+[34] N. Hrabe, T. Quinn, Effects of processing on microstructure and mechanical properties of a titanium alloy( $\mathrm{Ti}-6 \mathrm{Al}-4 \mathrm{~V})$ fabricated using electron beam melting (EBM), Part 2:Energy input, orientation, and location, Mat. Sci. Eng. A 573 (2013) 271
+
+[35] M. Markl, R. Ammer, U. Rüde, C. Körner, Numerical Investigations on hatching process strategies for powder bed based additive manufacturing using an electron beam, Int. J. Adv. Manuf. Technol. 78 (2014) 1.
+
+[36] L. Thijs, F. Verhaeghe, T. Craeghs, Humbeeck Jv, J.-P. Kruth, A study of the microstructural evolution during selective laser melting of $\mathrm{Ti}-6 \mathrm{Al}-4 \mathrm{~V}$, Acta Mater. 58 (2010) 3303.
+
+[37] C. Körner, E. Attar, P. Heinl, Mesoscopic simulation of selective beam melting processes, J. Mater. Process. Technol. 211 (2011) 978.
+
+[38] D. Rosenthal, The theory of moving sources of heat and its application of metal treatments, Trans. ASME 68 (1946) 849.
+
+[39] K. Easterling, Introduction to the Physical Metallurgy of Welding, Elsevier, 2013.
+
+[40] C.-A. Gandin, R.J. Schaefer, M. Rappaz, Analytical and numerical predictions of dendritic grain envelopes, Acta Mater. 44 (1996) 3339.
+
+[41] M. Rappaz, C.-A. Gandin, Probabilistic modelling of microstructure formation in solidification processes, Acta Metall. Mater 41 (1993) 345
+
+[42] C.-A. Gandin, J.-L. Desbiolles, M. Rappaz, P. Thevoz, A Three-dimensiona cellular automaton - finite element model for the prdiction of solidification grain structures, Metall. Mater. Trans. 30A (1999) 3153.
+
+[43] H. Goldstein, C. Poole, J. Safko, Classical Mechanics, 2000.
+
+[44] D.B. Thomas, W. Luk, P.H.W. Leong, J.D. Villasenor, Gaussian random number generators, ACM Comput. Surv. 39 (2007) 1.
+
+[45] W.E. Frazier, Metal additive manufacturing: a review, J. Mater. Eng. Perform. 23 (2014) 1917
+
+[46] O. Hartmann, Modellierung der Kornbildung vor der Erstarrungsfront bei der additiven Fertigung mit dem Elektronenstrahl, Chair of Materials Science and Engineering for Metals, Friedrich Alexander University Erlangen-Nürnberg, 2014.
+
+[47] K.C. Mills, Recommended Values of Thermophysical Properties for Selected Commercial Alloys, Woodhead Publishing, 2002.
+
+[48] H. Helmer, Additive Fertigung durch Selektives Elektronenstrahlschmelzen der Nickelbasis Superlegierung IN718: Prozessfenster, Mikrostruktur und mechanische Eigenschaften. Chair of Materials Science and Engineering fo Metals, vol. Dr.-Ing. Erlangen, Friedrich Alexander Iniversität Erlangen, Nürnberg, 2017.
+
+[49] A.D. Rollett, Texture Analysis with MTEX inside Matlab, 2016.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

@@ -1,0 +1,455 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Laser melting deposition of K403 superalloy: The influence of processing parameters on the microstructure and wear performance }
+
+
+\author{Heyu Song a, Jianbo Lei ${ }^{\text {a, }{ }^{*}}$, Jichang Xie ${ }^{\text {a }}$, Shikai Wu ${ }^{b}$, Letian Wang ${ }^{\text {, }}$, Wan Shou ${ }^{\text {d, ** }}$\\
+a Laser Technology Institute, Tianjin Polytechnic University, Tianjin, 300387, China\\
+b Beijing Engineering Researching Center of Laser Technology, Beijing University of Technology, Beijing, 100124, China\\
+c Department of Mechanical Engineering, University of California, Berkeley, CA, 94720-1740, USA\\
+${ }^{\mathrm{d}}$ Department of Mechanical and Aerospace Engineering, Missouri University of Science and Technology, Rolla, MO, 65401, USA}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+
+
+\section*{A R T I C L E I N F O}
+\section*{Article history:}
+Received 2 May 2019
+
+Received in revised form 8 July 2019
+
+Accepted 11 July 2019
+
+Available online 11 July 2019
+
+\section*{Keywords:}
+Laser melting deposition
+
+Superalloy
+
+Microstructure
+
+Wear mechanism
+
+\begin{abstract}
+A B S T R A C T K403 alloy is promising in aero-engine and gas turbine components due to its outstanding mechanical properties. Here, in order to investigate the manufacturability, K403 coating was prepared on casted K403 substrate by laser melting deposition (LMD). The microstructure, microhardness, and wear performance of the coatings were studied. The results showed that the coating mainly consists of $\mathrm{Ni}_{3}(\mathrm{Al}, \mathrm{Ti})$, $\mathrm{Co}_{3} \mathrm{Ti}$ and $\mathrm{Cr}_{3} \mathrm{Mo}$. The microstructure of the coating is closely dependent on laser power. Precipitates were formed in the coating due to these high melting point elements. The highest microhardness of K403 superalloy coating is $455 \mathrm{HV}_{0.2}$, which is $40 \%$ higher than that of casted $\mathrm{K} 403$ substrate. $\mathrm{K} 403$ superalloy coating also showed a better wear resistance than casted $\mathrm{K} 403$ substrate. The wear rate and friction coefficient of the $\mathrm{K} 403$ coating are only $41 \%$ and $70 \%$ of those of the casted $\mathrm{K} 403$, respectively. Furthermore, the formation of crack was discussed. We envision direct laser melting deposition of K403 superalloy can be an effective way to repair and enhance tribological performance of K403 superalloy components.
+\end{abstract}
+
+(C) 2019 Elsevier B.V. All rights reserved.
+
+\section*{1. Introduction}
+K403 nickel-based superalloy is extensively used as blade material of gas turbine and aero-engine [1,2]. It has good chemical and mechanical performance, such as high working temperature, decent oxidation resistance and thermal corrosion resistance [3,4]. It is reported that K403 superalloy can be used in turbine blades below $900{ }^{\circ} \mathrm{C}$ and aircraft guide blades below $1000^{\circ} \mathrm{C}$ [5,6]. It is known that aircraft guide blades are vulnerable to thermal exposure and stress damage due to the adverse working condition, and they are prone to crack and trigger other defects [7-9]. Once such blades are damaged, it is difficult to repair because of their complex structure and high precision requirements.
+
+Laser Melting Deposition (LMD) has been widely adopted in preparing coatings and repairing parts of refractory metals such as copper-iron alloy, titanium alloy and tungsten alloy [10-13]. It is also commonly used in nickel-based alloys [14,15] additive
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+** Corresponding author.
+
+E-mail addresses: \href{mailto:ljbtj@163.com}{ljbtj@163.com} (J. Lei), \href{mailto:ws9n5@mst.edu}{ws9n5@mst.edu} (W. Shou).
+}
+
+manufacturing. Therefore, laser melting deposition is expected to be a good candidate for $\mathrm{K} 403$ blades manufacturing and repairing.
+
+Extensive studies have been conducted to improve the properties of K403 superalloys, such as elevated temperature and laser shock processing. Liu et al. [16] carried out thermal compression and tensile simulating tests on K403 superalloy at different deformation temperatures. They found that the fracture mode of K403 changed from quasi-cleavage to inter-granular after reaching $900^{\circ} \mathrm{C}$. Wang et al. [17] showed that the surface hardness and residual stress of $\mathrm{K} 403$ alloy can be improved after laser surface strengthening due to the formation of a plastic deformation layer. Liu et al. [18] investigated the microstructure evolution of the K403 $\mathrm{Ni}$-based superalloy under thermal exposure at different temperature and time, which provided a good understanding on its high temperature performance. Zhang et al. [19] found hot isostatic pressing can reduce the casting defects, the stress concentration around the microvoids in polycrystalline, and the plastic deformation of the K403 alloy during fatigue test. Li et al. [20] laser cladded K403 coatings with different processing parameters and revealed that reducing the content of $\mathrm{B}$ and $\mathrm{Si}$ elements can possibly eliminate the generation of crack. Despite the aforementioned studies, little attention has been paid on friction and wear\\
+performance of $\mathrm{K} 403$ coating by laser melting deposition. This research aims to understand the influence of laser processing parameter on the microstructure and friction and wear properties of K403 superalloy coating. Additionally, the crack behavior during LMD was investigated to optimize the manufacturing process. We anticipate the results found in this study can not only be used for repairing damaged $\mathrm{K} 403$ components, but also for future 3D printing of K403 part.
+
+\section*{2. Materials and methods}
+\subsection*{2.1. Materials}
+In this study, casted K403 superalloy was used as the substrate for coating. The particle size of K403 superalloy powder distributes between 24 and $240 \mu \mathrm{m}$ (as shown in Fig. 1) with an average of $\sim 75 \mu \mathrm{m}$. The elemental compositions of the $\mathrm{K} 403$ powder are shown in Table 1, mainly consisted of Ni, $\mathrm{Cr}, \mathrm{Co}, \mathrm{Al}, \mathrm{W}, \mathrm{Mo}$, and Ti.
+
+\subsection*{2.2. Experimental processes}
+In this study, a LDM-8060 laser melting deposition (LDM) system (Raycham, China) was used to fabricate K403 superalloy coating. This system is mainly consisted of RC-PGF-D powder feeder (Raycham, China), laser setup (Laserline LDF 10000-100, Germany), and Argon chamber. The experiment was performed in argon atmosphere (oxygen content was less than $50 \mathrm{ppm}$ ). The distance between coaxial powder feeding head and the surface of the substrate was $15 \mathrm{~mm}$. The flow rate of the powder feeding gas (argon) was $10 \mathrm{~L} / \mathrm{min}$ and all the powder feeding rate was $25 \mathrm{~g} / \mathrm{min}$ in this work. The laser power of single-track coating varied from 1000 to $3000 \mathrm{~W}$ with scanning speed of $400 \mathrm{~mm} / \mathrm{min}$. Based on the single-track coating results and preliminary testing, $2000 \mathrm{~W}$ laser power and $400 \mathrm{~mm} / \mathrm{min}$ scanning speed was selected for multipletrack coating with an overlap ratio of $50 \%$.
+
+\subsection*{2.3. Mechanical testing and microstructure characterization}
+The coating was cut perpendicularly to the scanning direction to prepare metallographic specimens. After grinding and polishing, the cross-section was subjected to hardness test (HV-1000 micro
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_f5dbd05e4659a63b910ag-02}
+\end{center}
+
+Fig. 1. The diameter distribution of the K403 superalloy powder.\\
+Table 1
+
+Chemical composition of K403 superalloy powder (wt.\%).
+
+\begin{center}
+\begin{tabular}{llllllllll}
+\hline
+$\mathrm{C}$ & $\mathrm{Cr}$ & $\mathrm{Co}$ & $\mathrm{W}$ & $\mathrm{Mo}$ & $\mathrm{Al}$ & $\mathrm{Ti}$ & $\mathrm{B}$ & $\mathrm{Zr}$ & $\mathrm{Ni}$ \\
+\hline
+0.14 & 11.32 & 5.41 & 5.17 & 4.24 & 5.32 & 2.16 & 0.017 & 0.06 & Bal. \\
+\hline
+\end{tabular}
+\end{center}
+
+Vickers hardness tester) with a load of $0.2 \mathrm{Kg}$ and loading time of $10 \mathrm{~s}$.
+
+Optical microscope (Leica DVM6A), scanning electron microscope (ZEISS Sigma 300, equipped with X-ray energy spectrometer (EDS), accelerating voltage of $15 \mathrm{kV}$ ) and metallographic microscope (ShanYu CX40) were used to analyze the microstructure, element distribution, and crack distribution of the coating. The crystal structures were identified by X-ray diffraction (XRD) using D/max-2500 X-ray diffraction (XRD) (Cu target, $40 \mathrm{kV}, 140 \mathrm{~mA}$ ).
+
+Friction and wear testing were conducted using M - 2000 test block-ring wear tester. The grinding ring material was $\mathrm{GCr} 15$ with hardness of $60 \pm 2 \mathrm{HRC}$. The outer diameter of the grinding ring was $50 \mathrm{~mm}$ with thickness of $10 \mathrm{~mm}$. The size of the specimen was $12 \times 10 \times 10 \mathrm{~mm}$. The specimen was tested by dry sliding friction at room temperature with positive load of $150 \mathrm{~N}$; the speed of the grinding ring was $300 \mathrm{r} / \mathrm{min}$ and the wear time was $60 \mathrm{~min}$. Worn specimens were scanned by Phase Shift MicroXAM-3D to obtain the morphology of worn marks.
+
+\section*{3. Results and discussion}
+\subsection*{3.1. Overall macroscopic and microscopic features}
+\subsection*{3.1.1. Macroscopic morphology}
+Fig. 2a shows the macrostructure of the single-track coatings prepared with different powers by laser melting deposition of K403 powder on casted K403 substrate. The coating width increases with the laser power as the molten pool increases [21]. By depositing multiple single-track close to each other, continuous and uniform film with metallic luster can be formed, as displayed in Fig. 2b. Multi-layer coating can make the film thicker and more uniform.
+
+\subsection*{3.1.2. Microstructure}
+The schematic of the coating shown in Fig. 3a indicates all the measurement for analysis. Based on the cross section of $\mathrm{K} 403$ coating illustrated in Fig. 3, the measured melting depth and the height characteristics of the single-track coating are plotted in Fig. 4. Generally, with the increase of laser power, the coating width, height and melting depth almost increase linearly [22]. Fig. 3b-f shows that most of the cracks initiated from the heataffected zone, perpendicular to the coating/substrate interface, and gradually developed to the top of the coating (details will be discussed later).
+
+Fig. 5 shows the cross section of multi-track single-layer and double-layer coating. Both are compact and smooth. The boundary between the coating and the substrate is obvious (as indicated by white dash line), and there are obvious overlapping marks. The height of single-layer coating and double-layer coating are about 1.5 and $3.6 \mathrm{~mm}$, respectively. Scattered short cracks are observed in the middle and bottom of the single-layer coating along the grain boundary. These cracks are caused by anisotropic contraction results from the different crystal structure or lattice parameter [21]. In the double-layer coating, the pre-formed cracks elongate and further grow, penetrating from the coating-substrate interface to the coating surface. Such long crack is formed at the joining location of two tracks, which is due to the high accumulated residual stress during the solidification and thermal contraction [21].\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f5dbd05e4659a63b910ag-03}
+
+Fig. 2. Photograph of the coated $\mathrm{K} 403$ with different processing parameters: (a) different laser power, and(b) different layer number.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f5dbd05e4659a63b910ag-03(2)}
+
+Fig. 3. The cross section of $K 403$ superalloy coatings with different laser powers. (a) Schematic of coating, (b) $1000 \mathrm{~W}$, (c) $1500 \mathrm{~W}$, (d) $2000 \mathrm{~W}$, (e) $2500 \mathrm{~W}$, and (f) $3000 \mathrm{~W}$. (D, h, H and W denote weld pool depth, coating height, overall height, and coating width, respectively.)
+
+\subsection*{3.2. Single-track coating}
+\subsection*{3.2.1. Single-track coating microstructure}
+The cross-section of the single-track coating prepared by laser power of $1000 \mathrm{~W}$ is shown in Fig. 6. Due to the Gaussian distribution of laser beam and powder deposition, the coated outline is bumped instead of flat as shown in Fig. 6a. Magnified images in Fig. 6 b and $c$, show that some of the dendritic crystals formed at the top area grow irregularly, some grow directionally and some grow diffusely; while the dendrites at the bottom grow upward and the grains are relatively large (Fig. 6d). According to rapid solidification theory [24], the characteristics of the microstructure growth are related to the extent of constitutional supercooling ahead of the solidification interface. The relationship can be expressed by the following equation [25]:
+
+$G=\frac{2 k\left(T-T_{0}\right)^{2}}{\varepsilon P}$
+
+$R=V_{s} \cos \theta$
+
+$\bar{R}=\frac{2 k\left(T-T_{0}\right)^{2}}{\varepsilon P V_{s} \cos \theta}$
+
+Where $G$ is the temperature gradient, $R$ is the solidification velocity, $T$ is the liquid temperature of the alloy, $T_{0}$ is the initial temperature of the substrate, $\varepsilon$ is the absorption coefficient of the laser, $P$ is the laser power, $k$ is the thermal conductivity of coating, $V_{\mathrm{s}}$ is the laser scanning speed, and $\theta$ is the angle between $V_{\mathrm{s}}$ and $R$.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f5dbd05e4659a63b910ag-03(1)}
+
+Fig. 4. The influence of laser power on (a) coating width, and (b) coating height and molten pool depth.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f5dbd05e4659a63b910ag-04}
+
+Fig. 5. The cross section of K403 superalloy coating: (a) one layer and (b) two layers.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f5dbd05e4659a63b910ag-04(1)}
+
+Fig. 6. SEM image of cross section of single-track coating prepared by $1000 \mathrm{~W}$ laser power: (a) overview; (b) and (c) zoomed in image of the top area; (d) Bottom area of the coating.
+
+The extent of constitutional supercooling ahead of the solidification interface is inversely proportional to $G / R$. Planar, cellular, columnar dendritic and equiaxed dendritic crystals are sequentially formed as the degree of supercooling increases or the decrease of $\mathrm{G} / \mathrm{R}$ values $[21,26]$. In the melting zone of substrate, the temperature gradient $(G)$ in front of the solid-liquid interface is very large and the extent of constitutional supercooling is small. Thus, the molten metal near the bonding line tends to form planar crystal and grows up from the bottom of the molten pool [27], as indicated in Fig. $6 \mathrm{~d}$. With the increase of the distance from the bonding line, the temperature gradient decreases. Thus, the solid/liquid interface of the planar crystal becomes unstable when constitutional supercooling is greater than the front solidification speed, resulting in the transition of planar crystal to cellular crystals and dendrites [28]. In the top area (as shown in Fig. 6c), heat can be transferred to multiple directions in the surrounding environment, and solidification speed is large, therefore the microstructure is mainly constituted of equiaxed grains and dendrites. Such crystal distribution was also reported by Wang et al. during LMD of titanium alloy components [29]. From the point of crystallization, large planar and cellular grains result from the epitaxial grain growth from the pre-existed grains at the substrate, while fine equiaxed grains are newly nucleated near the surface.
+
+\subsection*{3.2.2. Effect of laser power on the single-track coating}
+ microstructureFig. $7 \mathrm{a}$ and $\mathrm{b}$ shows that there are many columnar dendritic crystals in the bottom area of the coating when laser power is no more than $1500 \mathrm{~W}$. Increasing the laser power to $2000 \mathrm{~W}$, a small amount of equiaxed crystals appear (Fig. 7c). Further increase the power to $2500 \mathrm{~W}$, uniform columnar dendritic crystals are formed at the bottom of the coating (Fig. 7d). Even higher power of $3000 \mathrm{~W}$ (Fig. 7e) coarsens the cellular crystals from $5.3 \mu \mathrm{m}$ (at $1000 \mathrm{~W}$ ) to $10.2 \mu \mathrm{m}$. With the increase of laser power, the value of GR (namely cooling rate) decrease, which explains that the dimension of cellular crystals increases with the increasing of laser power [21].
+
+Microstructures of the middle area of the coatings at different laser powers are shown in Fig. 8. When the power is $1000 \mathrm{~W}$, columnar dendritic crystals are produced in the middle area of the coating. A large number of equiaxed crystals are produced when the power is $2000 \mathrm{~W}$. When the power is 2500 and $3000 \mathrm{~W}$, the columnar dendritic crystals dominate the characterized area. Similar as the bottom area, with the increase of laser power, the grain size also increases; for instance, the crystal grain size increases from $6.5 \mu \mathrm{m}$ to $8.3 \mu \mathrm{m}$ as the laser power increases from $2500 \mathrm{~W}$ to $3000 \mathrm{~W}$. All the five cases show that crystals tend to grow upwards, which is aligned with heat flow direction. Such\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f5dbd05e4659a63b910ag-05}
+
+Fig. 7. SEM images of bottom area of single-track coatings at different power: (a) $1000 \mathrm{~W}$, (b) $1500 \mathrm{~W}$, (c) $2000 \mathrm{~W}$, (d) $2500 \mathrm{~W}$, and (e) $3000 \mathrm{~W}$.
+
+inclined grain orientations are location dependent, and also affected by the laser power [21].
+
+Fig. 9 shows the microstructure of top area in the coating at different laser powers, which are dominated by equiaxed crystals. A clear trend is observed that with the increase of laser power, the grain size of the equiaxed crystals becomes larger from $4.69 \mu \mathrm{m}$ at $1000 \mathrm{~W}$ to $11.7 \mu \mathrm{m}$ at $3000 \mathrm{~W}$; however, the orientations are random. Different from middle and bottom areas, the top area has a high chance to form heterogeneous nucleation, leading to the growth of equiaxed grains [28].
+
+Figs. 7-9 show that the grain size of the coating increases with the increase of laser power, which is associated with the cooling rate during processing [21,24]. Beside the form of GR, cooling rate, $\mathrm{dT} / \mathrm{dt}$, can also be estimated using the following Rosenthal solution for a moving point heat source $[30,31]$ :
+
+$\frac{d T}{d t}=-2 k \pi\left(\frac{V}{Q}\right) \Delta T^{2}$
+
+where $k$ is the thermal conductivity, $14.27 \mathrm{~W} /(\mathrm{mK})$, of $\mathrm{K} 403$ superalloy, $V$ is scanning velocity $(400 \mathrm{~mm} / \mathrm{min}), Q$ is laser power $(1000,1500,2000,2500$ and $3000 \mathrm{~W})$ and $\Delta T$ is the temperature change during cooling. In the calculation, the melting temperature of K403 alloy $\left(1260{ }^{\circ} \mathrm{C}\right)$ was assumed as the maximum temperature in the melting pool.
+
+Without heating, assuming that the temperature of the substrate is $298 \mathrm{~K}\left(25^{\circ} \mathrm{C}\right)$, the maximum cooling rate is calculated to be $911.97 \mathrm{~K} / \mathrm{s}$ (at $1000 \mathrm{~W}$ ) by Eq. (4). The cooling rate gradually decreases as the power increases, being $607.98 \mathrm{~K} / \mathrm{s}$ (at $1500 \mathrm{~W}$ ), $455.98 \mathrm{~K} / \mathrm{s}$ (at $2000 \mathrm{~W}$ ), and $364.79 \mathrm{~K} / \mathrm{s}$ (at $2500 \mathrm{~W}$ ), respectively. When the power is $3000 \mathrm{~W}$, the minimum cooling rate is $303.99 \mathrm{~K} /$ s. As the grain size is negatively related to the cooling rate, higher cooling rate leads to finer microstructural features, which agrees well with previous report [26].
+
+\subsection*{3.3. Microstructure of multi-track coating}
+\subsection*{3.3.1. Microstructure of multi-track single-layer coating}
+As shown in Fig. 10a, in the top area of the single-layer coating, precipitates are observed at the edge of grain boundary along with the cracks. Fig. 10b indicates that the precipitates are mainly polygonal blocks with a uniform length of about $1 \mu \mathrm{m}$. The EDS analysis of point 1 , point 2 , area 2 and area 3 at grain junction were carried out and listed in Table 2.
+
+Two kinds of precipitates can be observed in Fig. 10. One is a granular precipitate, as indicated in point 1 and 2 . The contents of $\mathrm{Ti}, \mathrm{Mo}$ and $\mathrm{W}$ in this kind are relatively high, while $\mathrm{Co}, \mathrm{Al}$ and $\mathrm{Ni}$ are very low. Further, EDS mapping of the coating (Fig. 11) confirms a high content of Ti and Mo in the precipitates, while the content of $\mathrm{Cr}$ and $\mathrm{Ni}$ is lower than surrounding areas. Element segregation occurs during solidification, where the high melting point elements W, Mo and Ti condense to form a particulate precipitate [32].
+
+The other kind is a flocculent precipitate distributed along the grain boundaries, as shown in area 3. It is observed from the EDS mapping of the coating (Fig. 11) that the distribution of Mo and $\mathrm{Cr}$ coincides with that of flocculent precipitates along the grain\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f5dbd05e4659a63b910ag-06}
+
+Fig. 8. Middle area of single-track coatings at different power: (a) $1000 \mathrm{~W}$, (b) $1500 \mathrm{~W}$, (c) $2000 \mathrm{~W}$, (d) $2500 \mathrm{~W}$, (e) $3000 \mathrm{~W}$.
+
+boundaries. According to the EDS results, the ratio of $\mathrm{Cr}$ and $\mathrm{Mo}$ atoms is 3:1 in the area 3. It is reported that $\mathrm{Mo}, \mathrm{Cr}$ can form $\mathrm{Cr}_{3} \mathrm{Mo}$ compounds at high temperatures [33]. Therefore, the flocculent precipitate of area 3 is inferred to be $\mathrm{Cr}_{3} \mathrm{Mo}$.
+
+As $\mathrm{W}$ has the highest melting point (so as well the highest solidification temperature) among the constitutional elements, it tends to be the condensation center during cooling. The Ti and Mo, surrounding the $\mathrm{W}$ gradually condense into high temperature precipitates. Precipitates are produced in the middle area of the coating, where no dendrites are observed. In the bottom of the coating, obvious equiaxed crystals are observed without any precipitates. The precipitate is formed by segregation of elements. Temperature plays an important role in atom diffusion and crystallization [34-36]. A different temperature gradient between the middle and the bottom of the coating leads to a different atomic diffusion flux $(J)$ during the heating process of the material. Here, $J$ can be expressed by the following equation [37]:
+
+$J=\frac{\pi M b D_{1}}{(1-\nu) k T}$
+
+where $M$ is the shear modulus, $b$ is the Berthner vector, $D_{1}$ is the intragranular diffusion coefficient, $v$ is the Poisson's ratio, $k$ is the Boltzmann constant, and $T$ is the absolute temperature. The relationship between the intragranular diffusion coefficient $\left(D_{1}\right)$ and the absolute temperature $(T)$ can be expressed as [38]: $D_{1}=D_{0} \exp \left(-\frac{Q}{R T}\right)$
+
+where $D_{0}$ is the diffusion factor, $Q$ is the diffusion activation energy, and $R$ is the gas constant.
+
+Thus, $J$ can be expressed as $J=\frac{\pi M b D_{0}}{(1-\nu) k T} \exp \left(-\frac{Q}{R T}\right)$
+
+It can be seen from Eq. (7) that the atomic diffusion flux (J) almost increases exponentially with the increase of temperature $(T)$. The high temperature caused by the high energy load greatly promotes the diffusion of tungsten atoms, as well as the nucleation rate and eventually forms fine precipitates.
+
+The temperature in the middle of the coating is high and the cooling rate is low, which facilitates the diffusion of elements. The $\mathrm{Ti}, \mathrm{Mo}$, and $\mathrm{W}$ elements in the molten pool are uniformly diffused. After the formation of the nuclei, Mo and Ti elements aggregate and form precipitates. The bottom temperature of the coating is low, and the cooling rate is high, so $\mathrm{W}, \mathrm{Mo}$, Ti cannot be diffused and segregation occurs at the bottom of the coating. Therefore, dendrites are formed under the rapid condensation in the bottom area of the coating without a large amount of precipitates. Double-layer coating is prepared on the basis of single-layer coating. Compared to the double-layer coating, the single-layer coating has a low substrate temperature and a high heat transfer rate, so the temperature $(T)$ is also low. It can be seen from Eq. (7) that the atomic\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f5dbd05e4659a63b910ag-07(1)}
+
+Fig. 9. SEM images of top area of single-track coatings at different power: (a) $1000 \mathrm{~W}$, (b) $1500 \mathrm{~W}$, (c) $2000 \mathrm{~W}$, (d) $2500 \mathrm{~W}$, and (e) $3000 \mathrm{~W}$.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f5dbd05e4659a63b910ag-07}
+
+Fig. 10. SEM image of (a) the top area of the coating, and (b) the intergranular precipitate.
+
+Table 2
+
+EDS analysis of the element content at different points and areas in Fig. 10 (wt.\%).
+
+\begin{center}
+\begin{tabular}{llllllll}
+\hline
+ & $\mathrm{Al}$ & $\mathrm{Ti}$ & $\mathrm{Cr}$ & $\mathrm{Co}$ & $\mathrm{Ni}$ & $\mathrm{Mo}$ & $\mathrm{W}$ \\
+\hline
+Point 1 & $\mathrm{N}$ & 26.72 & 4.47 & $\mathrm{~N}$ & 5.62 & 25.25 & 37.93 \\
+Point 2 & 0.55 & 29.11 & 4.02 & $\mathrm{~N}$ & 4.18 & 29.49 & 32.66 \\
+Area 2 & 5.70 & 2.32 & 11.14 & 5.95 & 63.64 & 5.35 & 5.90 \\
+Area 3 & 3.76 & 2.99 & 16.68 & 5.05 & 50.00 & 14.60 & 6.93 \\
+\hline
+\end{tabular}
+\end{center}
+
+diffusion flux $(J)$ of the double-layer coating is larger than that of the single-layer coating. Therefore, the precipitates formed in the two-layer coating are expected to be larger and scattered.
+
+\subsection*{3.3.2. Microstructure of multi-track double-layer coating}
+Fig. 12a shows that the top layer of the coating forms diffusive growth equiaxed crystals and oblique growth columnar dendritic crystals, while the columnar dendritic crystals length gradually increases as the coating approaches the substrate (Fig. 12b-d). Equiaxed crystal (Fig. 12b) appears in the upper and middle of the coating layer. A large number of columnar crystals (Fig. 12c) appear in the middle of the coating, which are orientated vertically towards the top of the coating. In the bottom of the coating (Fig. 12d), the dendrites near the interface (between the substrate and the coating layer) are slightly larger and relatively scattered cellular crystals, which are resulted from the epitaxial growth of the parent\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f5dbd05e4659a63b910ag-08}
+
+Fig. 11. SEM image of intergranular precipitates in coating (a) and its EDS mappings (b-f).\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f5dbd05e4659a63b910ag-08(1)}
+
+Fig. 12. The microstructure of double-layer coating from top (a) to middle (b)\&(c), to bottom (d).
+
+grains at the substrate [26]. The morphologies of different crystals in double-layer coating are similar to the single-track coating, as discussed in Section 3.2.1.
+
+During the LMD, the powders and substrate are heated to form molten pool, and solidify into the coating through dissipating heat into substrate and air. Dendrites in the coating are formed by continuous growth of columnar crystals after the inhomogeneous nucleation of $\gamma$ nuclei [39]. A large temperature gradient is formed at the bottom of the molten pool, which provides a thermodynamic condition for the growth of dendritic microstructure vertically. Heat transfers from the bottom of the molten pool to the substrate, and the microstructure growth tends to follow the direction of maximum heat flux [21]. Therefore, the dendrites in the bonding zone grow along the direction perpendicular to the planar crystal. As the temperature gradient in the middle and lower areas of the molten pool is lower, the solidification rate is also lower. The higher liquid temperature and longer solidification time provide a favorable thermodynamic condition for the directional growth of columnar dendrites. The columnar dendrites grow uniformly in the middle area of the coating. The top and bottom areas of the coating have larger temperature gradient and higher solidification rate, so no columnar dendrites are formed [39-41].
+
+Precipitates are observed in both single- and double-layer coatings, as shown in Fig. 13. However, the distribution of the precipitates are more uniform in the double-layer coating (Fig. 13a) compared with that in the single-layer coating (Fig. 13b), where the precipitates mainly concentrate on the grain boundary, and some of them even fill the intergranular gap. It is also observed that the precipitates become larger but more scattered in the double-layer coating in comparison to that in the single-layer coating.
+
+\subsection*{3.4. Phase composition analysis}
+The phase composition of the coated $\mathrm{K} 403$ alloy is analyzed using XRD spectra. The influence of laser power on the phase composition is displayed in Fig. 14a, covering $2 \theta$ from $20^{\circ}$ to $100^{\circ}$.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f5dbd05e4659a63b910ag-09(1)}
+
+Fig. 13. Distribution of intergranular precipitates in single-layer ( $a \& c$ ) and double-layer (b \& d) coating.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f5dbd05e4659a63b910ag-09}
+
+Fig. 14. (a) XRD pattern scaning from $20^{\circ}$ to $100^{\circ}$, and (b) Amplified XRD pattern between $42.5^{\circ}$ and $44.5^{\circ}$.
+
+The results show that the coatings are mainly composed of $\mathrm{Ni}_{3}(\mathrm{Al}$, $\mathrm{Ti}), \mathrm{CO}_{3} \mathrm{Ti}$ and $\mathrm{Cr}_{3} \mathrm{Mo}$ with same peak position. The change of laser power did not show any obvious effect on the phase composition of the coating. In order to further study the variation of phase composition at different powers, the XRD spectra in the range of $2 \theta=42.5^{\circ}-44.5^{\circ}$ were amplified (shown in Fig. 14b). With the increase of laser power, the center of the peak shifts. When the power is $1000 \mathrm{~W}$, the peak of the spectrum appears at $43.44^{\circ}$; when the power is $1500 \mathrm{~W}$, the peak becomes $43.52^{\circ}$; when the power gradually increases to $2500 \mathrm{~W}$, a positive shift of the diffraction peak is still observed, but the offset is small. However, further increase the power to $3000 \mathrm{~W}$, the peak negatively shifts to $43.34^{\circ}$. According to Bragg's Law [39],
+
+$2 d \sin \theta=n \lambda \quad(n=1,2,3, \quad)$
+
+where $\lambda$ is the wavelength of $\mathrm{X}$-ray radiation used, $\theta$ is the peak position of angle and $d$ is the inter-plane distance. With the increase of diffraction angle $(\theta)$, the inter-plane distance $(d)$ decreases [42]. Therefore, the spacing of crystal plane of laser melt deposited K403 coating decreases first and then increases with the power. The diffractive peaks become stronger gradually as the laser power increases, indicating that the amount of the given phase increases in the coating [43]. Meanwhile, it is observed the overall width of the peaks broaden with the laser power while the full width at half maximum (FWHM) of each peak actually decrease as laser power increases from 1000 to 3000 W. According to Ref. [43], the FWHM can be related to average grain size $(\beta)$ using formula (9):
+
+$\beta=K \lambda / F W H M \cos \theta$
+
+where $K$ is a constant. Thus, based on Fig. 14b, it is found that with the increase of laser power, the average grain size increases, which agrees well with the SEM images observation shown in Figs. 7-9.
+
+\subsection*{3.5. Crack analysis}
+In order to gain insight of crack formation, a clear crack observed in the LMD in single-track coating using $2000 \mathrm{~W}$ is analyzed. As shown in Fig. 15a, the cracks initiate from the heat-affected zone (HAZ) and gradually develop towards the top of the coating. A high magnification image of the crack, as indicated by dotted line in Fig. 15b, is a typical solidification cracking, which grows along the edge of the dendrite (or grain boundary) and penetrates the deposited layer. As shown in Fig. 15b, the left side of the crack are equiaxed crystals with relatively uniform distribution while uneven columnar dendritic crystals are formed on the right side. The crystal growth directions on both sides of the crack are also different, which are related to the favorable growth direction of local grain and the heat flow direction. It is believed that the anisotropic contraction due to the different crystal structure or lattice parameter can lead to the solidification cracking in this case [21].
+
+On the other hand, due to the high cooling rate during laser melting deposition, and the solidification of the molten pool can be considered as a typical non-equilibrium solidification. The compositional elements of K403 superalloy are very different, including high melting point elements of $\mathrm{W}$ and Mo, and low melting point elements of $\mathrm{Al}$ and Ti. Therefore, during solidification, $\mathrm{W}$ and Mo crystallize first as the temperature decreases; then $\mathrm{Al}$ and Ti tend to wrap outside of the crystallized W and Mo parts, which working as nucleus. Due to the fast solidification process, the molten compositions cannot diffuse completely, leading to the nonuniform distribution of each component in the crystal grain. Correspondingly, before complete solidification, the liquefied film (low melting point elements) is formed between the grain boundaries [45], and the liquid phase itself has a small deformation resistance. Due to the complex microstructure, the residual liquid phase between the grain boundaries is not free to flow and replenish. Consequently, the concentration of tensile stress on the liquefied film causes cracking, which is located between the grain boundaries. Such phenomenon was also reported by Xu et al. in laser solid forming of IN-738LC superalloy [44]. It is believed that preheating in combination of proper laser processing parameters can alleviate the cracking in the future for LMD of K403.
+
+\subsection*{3.6. Microhardness}
+In this section, microhardness of the coating was evaluated. $2000 \mathrm{~W}$ laser power and $400 \mathrm{~mm} / \mathrm{min}$ scanning speed was selected for single-layer and double-layer coating. As shown in Fig. 16a, the hardness of the single-layer coating is higher than that of the double-layer coating and the casted $\mathrm{K} 403$ by about $21.62 \%$ and $38.46 \%$, respectively, with variation between 425 and $525 \mathrm{HV}_{0.2}$. This can be explained by the fast cooling during laser melting deposition compared with casted K403 substrate, which refines the grain (as shown in Fig. 6c). According to the Hall-Petch relationship, in certain range hardness decreases with the increase of grain size [46]. Therefore, laser melting deposition can enhance the hardness of K403. During the deposition of the second layer, however, the first layer is re-melted and fine grains are coalesced to form large grains [47]. Meanwhile, due to the pre-heating of the first layer, during the coating of the second layer, the cooling rate decreases significantly, which also contribute to the grain growth [21]. Large grains consequently cause the decrease of hardness in the doublelayer coating compared with the single-layer coating [48]. Fig. 16b shows the influence of laser power on the microhardness of K403 single-track coating. It shows clearly that the coated K403 is harder than the casted K403 substrate. Overall, the microhardness first increases, and then decreases with the increase of laser power. The low microhardness at low laser power is probably due to low laser energy results in a low nucleation rate in recrystallization, and high hardness precipitate consisted of W, Mo, Ti is not formed. As the laser power increases, the microhardness increases because more precipitate is formed as the nucleation rate in recrystallization increases. However, when the power reaches $3000 \mathrm{~W}$, the microhardness decreases. This is because grain size increases significantly with the decrease of solidification rate, leading to the lowest hardness [49,50].
+
+\subsection*{3.7. Wear properties}
+Finally, the wear performance of the coating was characterized and compared with casted K403 substrate. Fig. 17 shows the change of friction coefficient and wear rate of K403 single-layer coating, double-layer coating and casted $\mathrm{K} 403$ substrate as a function of sliding cycle. The maximum friction coefficient is 0.36 resulting from casted K403. Compared with the substrate, the average friction coefficient of single- and double-layer coatings decreases to 0.268 and 0.251 . The friction coefficient curves of the three measured samples are smooth without significant fluctuation. Compared with the casted K403 substrate, both friction and wear characteristics of single-layer coating and double-layer coating are improved.
+
+In the early stage of friction and wear test, the friction coefficient of single-layer coating rises at first and then decreases gradually, while the double-layer coating decreases firstly and then rises rapidly. As show in Fig. 17a, with the friction time increases, the friction coefficients tend to stabilize. The friction coefficient curve of three samples can be divided into two stages: wearing-in stage and stable wearing stage. At the beginning of sliding between friction pairs, the interfacial film will be abraded and the coldwelding effect occurs in the contact point. Thus, a high shear force is needed to cut the "welded" point and subsequently the\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f5dbd05e4659a63b910ag-10}
+
+Fig. 15. (a) SEM image of the overall crack. (b) Zoom in of the crack.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f5dbd05e4659a63b910ag-11(2)}
+
+Fig. 16. (a) Comparison of microhardness between single-layer and double-layer coating. (b) The influence of laser power on the microhardness.
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_f5dbd05e4659a63b910ag-11}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_f5dbd05e4659a63b910ag-11(1)}
+\end{center}
+
+Fig. 17. (a) Friction coefficient and (b) wear rate of one-layer coating and two-layer coating.
+
+friction coefficient is much higher than that in the stable wearing stage. Since the grains in single-layer coating are denser than the two-layer coating, the cold-welding effect is aggravated and the friction coefficient is increased in the wear stage. In the stable wear phase, the K403 coating undergoes abrasive wear process,in which the particles worn off from friction pairs act as abrasive, thus lower friction coefficients are observed. As the temperature increases due to the friction, the particle wear of the friction pair is more easily cold-welded and transferred between the friction pairs. Therefore, the adhesive wear mechanism dominates in the later stage of the test [51].
+
+As shown in Fig. 17b, the calculated wear rate of casted K403, single-layer coating, and double-layer coating are about 0.039, 0.028 , and 0.016 respectively; among which the double-layer coating shows the smallest value. In addition, the surface of K403 coating has smaller friction coefficient and smaller wear rate than that of the casted $\mathrm{K} 403$, and its wear resistance has been greatly improved. The friction coefficient curve also indicates that the wear resistance of $\mathrm{K} 403$ coatings are better than that of casted $\mathrm{K} 403$, and the double-layer coating is better than the single-layer coating.
+
+Fig. 18 shows the morphology of the worn surface before and after dry sliding wear. Compared with the case before the wear test (Fig. 18a-c), a large number of spalling pits and ploughing groove appear on the worn surface, as show in Fig. 18d-f. The wear degree for K403 coating is significantly lower than that of casted $\mathrm{K} 403$ substrate. The Debris is pushed into the spalling pit and some sheet-like materials appear on the worn surfaces of the coatings (Fig. $18 \mathrm{~h}-\mathrm{g})$. Such phenomena indicate that adhesive wear and peeling wear occurred during the wear process [52].
+
+In the initial stage of the dry sliding wear, the contact part between the ring and the sample first experiences adhesive wear under the friction force. Due to the friction between the coating and the ring, debris falls from the surfaces of ring and coating (mostly from the sample surface, and a small amount from the rings). When the debris is produced, the debris will be mixed into the friction pair during the testing process, which changes the friction interface from the friction between the ring and the coating to the friction among the ring, the coating and the debris. During the friction, abrasive wear occurs on the contact surface, which produces the metal plastic deformation and ploughing grooves [53]. As the friction time increases, the friction work continues to increase the friction surface temperature, eventually forming a micro-cutting mechanism. Due to the micro-cutting mechanism under the action of friction, fragmentation and spalling occurred on the friction surface.
+
+After dry sliding wear, the wear marks on the surfaces are shown in Fig. 19. Light wear degree shows red, with the increase of wear depth, the color gradually turns to blue. All three wear\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f5dbd05e4659a63b910ag-12(1)}
+
+Fig. 18. Morphology of the sample surface before and after dry sliding wear. K403 substrate surface before (a) and after (d\&g) dry sliding wear. Single-layer coating surface before (b) and after (e\&h) dry sliding wear. Double-layer coating surface before (c) and after (f\&i) dry sliding wear.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_f5dbd05e4659a63b910ag-12}
+\end{center}
+
+Fig. 19. Surface morphology of wear marks (a) single-layer, (b) double-layer, and (c) substrate; (d) corresponding average depth of wear mark.
+
+specimens show less wear on both sides, but deeper wear marks in the middle. At first, the ring and the specimen are frictioned in line contact. With the surface peeling off, the spalling debris becomes a new friction pair. As a result, the friction pair increased gradually.\\
+The average wear mark depth of casted $\mathrm{K} 403$ substrate is $305 \mu \mathrm{m}$ and its width is $7.66 \mathrm{~mm}$, which is the largest wear volume of the three samples, as shown in Fig. 19d. The average wear mark depth of single-layer coating is $115 \mu \mathrm{m}$ and its width is $4.69 \mathrm{~mm}$. The\\
+average wear mark depth of the double-layer is $102 \mu \mathrm{m}$ and its width is $4.32 \mathrm{~mm}$. The wear and friction coefficient show that the K403 coating is stronger than the casted K403 substrate, and the wear resistance of double-layer coating is stronger than singlelayer coating, which are consistent with the observation.
+
+\section*{4. Conclusions}
+In this study laser melting deposition (LMD) was applied to fabricate K403 superalloy coating. The microstructure, microhardness and wear resistance of the coating were investigated with different laser processing parameters. The results showed that laser power has a critical influence on the microstructure and properties of the coating. The following conclusions can be drawn:
+
+\begin{enumerate}
+  \item As the laser power increases, the dimensions of the $\mathrm{K} 403$ coating increase; meanwhile the microstructure gradually coarsens and the growth direction becomes regular.
+
+  \item Microhardness test showed that single-layer coating is harder than double-layer coating. With the increase of laser power, the microhardness first increases, and then decreases with the increase of laser power.
+
+  \item Wear performance was significantly improved of the coating, where the best wear resistance was achieved in double-layer coating.
+
+\end{enumerate}
+
+\section*{Acknowledgments}
+This work was financially supported by the National Key R\&D Program of China (Grant No.2017YFB1103604), open project of Beijing Engineering Researching Center of Laser Technology (BG0046-2018-11), the Tianjin Municipal Special Program of Talents Development for Excellent Youth Scholars (TJTZJH-QNBJRC-215), and the National Natural Science Foundation of China (Grant No.61475117).
+
+\section*{References}
+[1] L. Jun, Y. He, S. Zhichao, T. Wenting, Effect of $950^{\circ} \mathrm{C}$ thermal exposure on microstructures and properties of Ni-based K403 alloys, Rare Metal Mater. Eng. 42 (2013) 1123-1126, \href{https://doi.org/10.1016/s1875-5372(13)60073-9}{https://doi.org/10.1016/s1875-5372(13)60073-9}.
+
+[2] X.Z. Zhang, L.W. Zhang, L. Xing, Study of thermal interfacial resistance between TC11/glass lubrication/K403 joint, Exp. Therm. Fluid Sci. 34 (2010) 48-52, \href{https://doi.org/10.1016/j.expthermflusci.2009.09.001}{https://doi.org/10.1016/j.expthermflusci.2009.09.001}.
+
+[3] C. Chen, Q. Cao, Q. Fei, M. Zhang, X. Xu, Application study of laser cladding on K403 Ni-based superalloy, Appl. Laser 31 (2011) 26-33, \href{https://doi.org/}{https://doi.org/} 10.3788/AL20113101.0026.
+
+[4] J. Wu, C. Li, Y. Liu, Y. Wu, Q. Guo, H. Li, H. Wang, Effect of annealing treatment on microstructure evolution and creep behavior of a multiphase $\mathrm{Ni} 3 \mathrm{Al}$-based superalloy, Mater. Sci. Eng. A 743 (2019) 623-635, \href{https://doi.org/10.1016}{https://doi.org/10.1016} j.msea.2018.11.126.
+
+[5] J. Liu, H. Yang, Z. Sun, W. Tang, High temperature tensile fracture behavior of K403 Ni-based superalloy, Ordnance Material Sci. Eng. 37 (2014) 4-7, https:// \href{http://doi.org/10.14024/j.cnki.1004-244x.2014.06.004}{doi.org/10.14024/j.cnki.1004-244x.2014.06.004}.
+
+[6] T.J. Carter, Common failures in gas turbine blades, Eng. Fail. Anal. 12 (2005) 237-247, \href{https://doi.org/10.1016/j.engfailanal.2004.07.004}{https://doi.org/10.1016/j.engfailanal.2004.07.004}.
+
+[7] H. Kim, Study of the fracture of the last stage blade in an aircraft gas turbine, Eng. Fail. Anal. 16 (2009) 2318-2324, \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} j.engfailanal.2009.03.017.
+
+[8] E. Silveira, G. Atxaga, A.M. Irisarri, Failure analysis of two sets of aircraft blades, Eng. Fail. Anal. 17 (2010) 641-647, \href{https://doi.org/10.1016}{https://doi.org/10.1016} j.engfailanal.2008.10.015.
+
+[9] C. Zhong, A. Gasser, T. Schopphoven, R. Poprawe, Experimental study of porosity reduction in high deposition-rate laser material deposition, Opt. Laser. Technol. 75 (2015) 87-92, \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} j.optlastec.2015.06.016,
+
+[10] Y. Chen, F. Lu, K. Zhang, P. Nie, S.R. Elmi Hosseini, K. Feng, Z. Li, Laser powder deposition of carbon nanotube reinforced nickel-based superalloy Inconel 718, Carbon N. Y. 107 (2016) 361-370, \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} j.carbon.2016.06.014.
+
+[11] S.L. Sing, Z.H. Liu, C.K. Chua, Z.L. Dong, D.Q. Zhang, C.Y. Yap, L.E. Loh, Review of selective laser melting: materials and applications, Appl. Phys. Rev. 2 (2015), 041101, \href{https://doi.org/10.1063/1.4935926}{https://doi.org/10.1063/1.4935926}.\\
+[12] Z. Liang, Z. Sun, W. Zhang, S. Wu, H. Chang, The effect of heat treatment on microstructure evolution and tensile properties of selective laser melted Ti6Al4V alloy, J. Alloy. Comp. 782 (2019) 1041-1048, \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} j.jallcom.2018.12.051.
+
+[13] X. Dai, M. Xie, S. Zhou, C. Wang, J. Yang, Z. Li, Formation and properties of a self-assembled $\mathrm{Cu}-\mathrm{Fe}-\mathrm{Ni}-\mathrm{Cr}-\mathrm{Si}$ immiscible composite by laser induction hybrid cladding, J. Alloy. Comp. 742 (2018) 910-917, \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} j.jallcom.2018.01.387.
+
+[14] D. Gu, W. Meiners, K. Wissenbach, R. Poprawe, Laser additive manufacturing of metallic components: materials, processes, and mechanisms, Int. Mater. Rev. 657 (2012) 163-180, \href{https://doi.org/10.1179/}{https://doi.org/10.1179/} 1743280411 Y.0000000014.
+
+[15] J. Yang, Z. Xiao, F. Yang, H. Chen, X. Wang, S. Zhou, Microstructure and magnetic properties of NiCrMoAl/WC coatings by laser cladding: effect of WC metallurgical behaviors, Surf. Coat. Technol. 350 (2018) 110-118, https:// \href{http://doi.org/10.1016/j.surfcoat.2018.07.021}{doi.org/10.1016/j.surfcoat.2018.07.021}.
+
+[16] J. Liu, W. Tang, J. Li, Deformation and fracture behaviors of K403 Ni-based superalloy at elevated temperatures, J. Alloy. Comp. 699 (2017) 581-590, \href{https://doi.org/10.1016/j.jallcom.2016.12.325}{https://doi.org/10.1016/j.jallcom.2016.12.325}.
+
+[17] C. Wang, X.J. Shen, Z.B. An, L.C. Zhou, Y. Chai, Effects of laser shock processing on microstructure and mechanical properties of K403 nickel-alloy, Mater. Des. 89 (2016) 582-588, \href{https://doi.org/10.1016/j.matdes.2015.10.022}{https://doi.org/10.1016/j.matdes.2015.10.022}.
+
+[18] J. Liu, J. Li, F.S. Hage, P. Ghosh, J. Li, W. Wang, Z. Chen, T. Wang, W. Tang, Q. Ramasse, P. Schumacher, Correlative characterization on microstructure evolution of Ni-based K403 alloy during thermal exposure, Acta Mater. 131 (2017) 169-186, \href{https://doi.org/10.1016/j.actamat.2017.04.006}{https://doi.org/10.1016/j.actamat.2017.04.006}.
+
+[19] C. Zhang, W. Hu, Z. Wen, H. Zhang, Z. Yue, Influence of hot isostatic pressing on fatigue performance of K403 nickel-based superalloy, J. Alloy. Comp. 655 (2016) 114-123, \href{https://doi.org/10.1016/j.jallcom.2015.09.165}{https://doi.org/10.1016/j.jallcom.2015.09.165}.
+
+[20] X. Li, W. Liu, M. Zhong, Research on laser cladding superalloy K403, Appl. Laser 22 (2002) 283-286.
+
+[21] T. Debroy, H.L. Wei, J.S. Zuback, T. Mukherjee, J.W. Elmer, J.O. Milewski, A.M. Beese, A. Wilson-heid, A. De, W. Zhang, Progress in Materials Science Additive manufacturing of metallic components - process , structure and properties, Prog. Mater. Sci. 92 (2018) 112-224, \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} j.pmatsci.2017.10.001.
+
+[22] U. de Oliveira, V. Ocelík, J.T.M. De Hosson, Analysis of coaxial laser cladding processing conditions, Surf. Coat. Technol. 197 (2005) 127-136, https:// \href{http://doi.org/10.1016/j.surfcoat.2004.06.029}{doi.org/10.1016/j.surfcoat.2004.06.029}.
+
+[24] W. Kurz, B. Giovanola, R. Trivedi, Theory of microstructural development during rapid solidification, Acta Metall. 34 (1986) 823-830, \href{https://doi.org/}{https://doi.org/} 10.1016/0001-6160(86)90056-8.
+
+[25] S. Zhou, Y. Huang, X. Zeng, Q. Hu, Microstructure characteristics of Ni-based WC composite coatings by laser induction hybrid rapid cladding, Mater. Sci. Eng. A 480 (2008) 564-572, \href{https://doi.org/10.1016/j.msea.2007.07.058}{https://doi.org/10.1016/j.msea.2007.07.058}.
+
+[26] S. Kou, Welding Metallurgy, John Wiley \& Sons, Inc., Hoboken, NJ, USA, 2002, \href{https://doi.org/10.1002/0471434027}{https://doi.org/10.1002/0471434027}.
+
+[27] G. Wang, J. Liang, Y. Zhou, T. Jin, X. Sun, Z. Hu, Prediction of dendrite orientation and stray grain distribution in laser surface-melted single crystal superalloy, J. Mater. Sci. Technol. 33 (2017) 499-506, \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} j.jmst.2016.05.007.
+
+[28] J. Lei, C. Shi, S. Zhou, Z. Gu, L.C. Zhang, Enhanced corrosion and wear resistance properties of carbon fiber reinforced Ni-based composite coating by laser cladding, Surf. Coat. Technol. 334 (2018) 274-285, \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} j.surfcoat.2017.11.051.
+
+[29] T. Wang, Y.Y. Zhu, S.Q. Zhang, H.B. Tang, H.M. Wang, Grain morphology evolution behavior of titanium alloy components during laser melting deposition additive manufacturing, J. Alloy. Comp. 632 (2015) 505-513, https:// \href{http://doi.org/10.1016/j.jallcom.2015.01.256}{doi.org/10.1016/j.jallcom.2015.01.256}.
+
+[30] V.K. Balla, J. Soderlind, S. Bose, A. Bandyopadhyay, Microstructure, mechanical and wear properties of laser surface melted Ti6Al4V alloy, J. Mech. Behav. Biomed. Mater. 32 (2014) 335-344, \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} j.jmbbm.2013.12.001.
+
+[31] S. Bontha, N.W. Klingbeil, P.A. Kobryn, H.L. Fraser, Thermal process maps for predicting solidification microstructure in laser fabrication of thin-wall structures, J. Mater. Process. Technol. 178 (2006) 135-142, \href{https://doi.org/}{https://doi.org/} 10.1016/j.jmatprotec.2006.03.155.
+
+[32] S. Zhou, X. Zeng, Growth characteristics and mechanism of carbides precipitated in WC-Fe composite coatings by laser induction hybrid rapid cladding, J. Alloy. Comp. 505 (2010) 685-691, \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} j.jallcom.2010.06.115.
+
+[33] P.E.A. Turchi, L. Kaufman, Z.K. Liu, Modeling of Ni-Cr-Mo based alloys: Part Iphase stability, Calphad Comput. Coupling Phase Diagrams Thermochem. 30 (2006) 70-87, \href{https://doi.org/10.1016/j.calphad.2005.10.003}{https://doi.org/10.1016/j.calphad.2005.10.003}.
+
+[34] S. Xiang, J. Li, H. Luan, A. Amar, S. Lu, K. Li, L. Zhang, X. Liu, G. Le, X. Wang, F. Qu, W. Zhang, D. Wang, Q. Li, Effects of process parameters on microstructures and tensile properties of laser melting deposited CrMnFeCoNi high entropy alloys, Mater. Sci. Eng. A 743 (2019) 412-417, \href{https://doi.org/}{https://doi.org/} 10.1016/j.msea.2018.11.110.
+
+[35] H. Zhang, C. Li, Y. Liu, Q. Guo, Y. Huang, H. Li, J. Yu, Effect of hot deformation on $\gamma^{\prime \prime}$ and $\delta$ phase precipitation of Inconel 718 alloy during deformation\&isothermal treatment, J. Alloy. Comp. 716 (2017) 65-72, \href{https://doi.org/}{https://doi.org/} 10.1016/j.jallcom.2017.05.042.
+
+[36] Y. Wu, Y. Liu, C. Li, X. Xia, J. Wu, H. Li, Coarsening behavior of $\gamma^{\prime}$ precipitates in the $\gamma^{\prime}+\gamma$ area of a Ni3Al-based alloy, J. Alloy. Comp. 771 (2019) 526-533,\\
+\href{https://doi.org/10.1016/j.jallcom.2018.08.265}{https://doi.org/10.1016/j.jallcom.2018.08.265}.
+
+[37] Y. Yuan, H. Greuner, B. Böswirth, K. Krieger, G.N. Luo, H.Y. Xu, B.O. Fu, M. Li, W. Liu, Recrystallization and grain growth behavior of rolled tungsten under VDE-like short pulse high heat flux loads, J. Nucl. Mater. 433 (2013) 523-530, \href{https://doi.org/10.1016/j.jnucmat.2012.04.022}{https://doi.org/10.1016/j.jnucmat.2012.04.022}.
+
+[38] D.A. Porter, K.E. Easterling, Phase Transformations in Metals and Alloys, third ed., Revised Reprint), CRC Press, Boca Raton, 2009 \href{https://doi.org/10.1201/}{https://doi.org/10.1201/} 9781439883570
+
+[39] Q. Jia, D. Gu, Selective laser melting additive manufacturing of Inconel 718 superalloy parts: densification, microstructure and properties, J. Alloy. Comp. 585 (2014) 713-721, \href{https://doi.org/10.1016/j.jallcom.2013.09.171}{https://doi.org/10.1016/j.jallcom.2013.09.171}.
+
+[40] J.Z. Lu, K.Y. Luo, Y.K. Zhang, C.Y. Cui, G.F. Sun, J.Z. Zhou, L. Zhang, J. You, K.M. Chen, J.W. Zhong, Grain refinement of LY2 aluminum alloy induced by ultra-high plastic strain during multiple laser shock processing impacts, Acta Mater. 58 (2010) 3984-3994, \href{https://doi.org/10.1016/j.actamat.2010.03.026}{https://doi.org/10.1016/j.actamat.2010.03.026}.
+
+[41] Y.Y. Gu, J.Z. Zhou, Y.F. Jiang, L. Zhang, X.D. Ren, J.Z. Lu, L.F. Zhang, A.X. Feng, K.Y. Luo, C.Y. Cui, G.F. Sun, K.M. Chen, Y.K. Zhang, X.C. Zhang, Grain refinement mechanism of multiple laser shock processing impacts on ANSI 304 stainless steel, Acta Mater. 58 (2010) 5354-5362, \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} j.actamat.2010.06.010,
+
+[42] G. Zhang, D. Gu, Synthesis of nanocrystalline TiC reinforced W nanocomposites by high-energy mechanical alloying: microstructural evolution and its mechanism, Appl. Surf. Sci. 273 (2013) 364-371, \href{https://doi.org/}{https://doi.org/} 10.1016/j.apsusc.2013.02.044.
+
+[43] Z. Jian, W. Hejing, The physical meanings of 5 basic parameters for an X-ray diffraction peak and their application, Chin. J. Geochem. 22 (2008) 38-44, \href{https://doi.org/10.1007/bf02831544}{https://doi.org/10.1007/bf02831544}.
+
+[44] J. Xu, X. Lin, P. Guo, H. Dong, X. Wen, Q. Li, The initiation and propagation mechanism of the overlapping zone cracking during laser solid forming of IN738LC superalloy, J. Alloy. Comp. 749 (2018) 859-870, \href{https://doi.org/}{https://doi.org/} 10.1016/j.jallcom.2018.03.366.
+
+[45] Z. Rutao, Xiong Zheng, Research on continuous/pulse laser cladding superalloy\\
+K403, Chin. J. Lasers 37 (2010) 852-857, \href{https://doi.org/10.3788/}{https://doi.org/10.3788/} CJL20103703.0852.
+
+[46] S. Takaki, K. Kawasaki, Y. Kimura, Mechanical properties of ultra fine grained steels, J. Mater. Process. Technol. 117 (2001) 359-363, \href{https://doi.org/}{https://doi.org/} 10.1016/S0924-0136(01)00797-X.
+
+[47] Y. Zhu, X. Tian, J. Li, H. Wang, The anisotropy of laser melting deposition additive manufacturing Ti-6.5Al-3.5Mo-1.5Zr-0.3Si titanium alloy, Mater. Des. 67 (2015) 538-542, \href{https://doi.org/10.1016/j.matdes.2014.11.001}{https://doi.org/10.1016/j.matdes.2014.11.001}.
+
+[48] Y. Chen, S. Zhang, X. Tian, H. Wang, Microstructure and microhardness of 4045 aluminum alloy fabricated by laser melting deposition, Chin. J. Lasers 42 (2015), 0303008, \href{https://doi.org/10.3788/cjl201542.0303008}{https://doi.org/10.3788/cjl201542.0303008}.
+
+[49] C. Hong, D. Gu, D. Dai, A. Gasser, A. Weisheit, I. Kelbassa, M. Zhong R. Poprawe, Laser metal deposition of TiC/Inconel 718 composites with tailored interfacial microstructures, Opt. Laser. Technol. 54 (2013) 98-109, \href{https://doi.org/10.1016/j.optlastec.2013.05.011}{https://doi.org/10.1016/j.optlastec.2013.05.011}.
+
+[50] J.Z. Lu, L.J. Wu, G.F. Sun, K.Y. Luo, Y.K. Zhang, J. Cai, C.Y. Cui, X.M. Luo, Microstructural response and grain refinement mechanism of commercially pure titanium subjected to multiple laser shock peening impacts, Acta Mater 127 (2017) 252-266, \href{https://doi.org/10.1016/j.actamat.2017.01.050}{https://doi.org/10.1016/j.actamat.2017.01.050}.
+
+[51] K. Feng, Y. Chen, P. Deng, Y. Li, H. Zhao, F. Lu, R. Li, J. Huang, Z. Li, Improved high-temperature hardness and wear resistance of Inconel 625 coatings fabricated by laser cladding, J. Mater. Process. Technol. 243 (2017) 82-91, \href{https://doi.org/10.1016/j.jmatprotec.2016.12.001}{https://doi.org/10.1016/j.jmatprotec.2016.12.001}.
+
+[52] J. Pereira, J. Zambrano, M. Licausi, M. Tobar, V. Amigó, Tribology and high temperature friction wear behavior of MCrAlY laser cladding coatings on stainless steel, Wear 330-331 (2015) 280-287, \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} j.wear.2015.01.048.
+
+[53] D. Jun, L. Yao-Hui, Y. Si-Rong, L. Wen-Fang, Dry sliding friction and wear properties of $\mathrm{Al} 2 \mathrm{O} 3$ and carbon short fibres reinforced $\mathrm{Al}-12 \mathrm{Si}$ alloy hybrid composites, Wear 257 (2004) 930-940, \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} j.wear.2004.05.009.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

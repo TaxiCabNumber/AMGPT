@@ -1,0 +1,279 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Processing parameter and transient effects on melt pool geometry in additive manufacturing of Invar 36 }
+
+
+\author{Chigozie Obidigbo $^{1} \cdot$ Eric-Paul Tatman $^{1} \cdot$ Joy Gockel $^{1}$ (1)}
+\date{}
+
+
+\begin{document}
+\maketitle
+Received: 13 May 2019 / Accepted: 31 July 2019 / Published online: 13 August 2019
+
+(C) Springer-Verlag London Ltd., part of Springer Nature 2019
+
+\begin{abstract}
+The use of additive manufacturing (AM) in tooling enables low production components to be fabricated with lower costs, reduced waste, increased design flexibility, and reduced lead time. Invar 36 is a popular metal tooling material known for its low coefficient of thermal expansion. This work uses thermal finite element modeling as a tool to determine the feasibility of using the Invar 36 in the AM and to investigate the transient effect from a common stripe scanning strategy used in laser powder bed fusion (LPBF) AM. Modeling results show that the steady-state melt pool dimensions behave similarly to traditional AM materials with the same base materials when varying process parameters within the range of LPBF. Single bead and multiple laser pass experiments were performed to compare to the modeling results and determine additional transient effects resulting from repeated scans. Results show that the Invar 36 is a suitable material for use in the AM, which will enable rapid tooling for composite structures.
+\end{abstract}
+
+Keywords Additive manufacturing $\cdot$ Modeling $\cdot$ Melt pool size $\cdot$ Invar $\cdot$ Steady state $\cdot$ Transient
+
+\section*{1 Introduction}
+The use of additive manufacturing (AM) technology has increased in applications because of the added advantages in design flexibility and complexity. One potential application of $\mathrm{AM}$ is in the manufacturing of tooling for use in processes such as composite fabrication. There is a demand for fiberreinforced composites in the aerospace industry, and as such, with a scale up of production demand, more efficient manufacturing processes become necessary. To make composite parts, tooling is used to help cure and form the primary materials into the final shapes and sizes [1]. Invar 36 is a common material that is used in tooling applications, because of its low coefficient of thermal expansion (CTE) and weldable properties [2]. Traditional methods for processing Invar 36 are expensive and time-consuming. Processing involves subtractive machining of bars, thus making the lead time for the production of an Invar composite tools significant. With the use of AM technology, there is the potential for a reduction
+
+Joy Gockel
+
+\href{mailto:joy.gockel@wright.edu}{joy.gockel@wright.edu}
+
+1 Mechanical and Materials Engineering, Wright State University, 3640 Colonel Glenn Hwy, Dayton, OH 45435, USA in lead time and reduced material waste through deposition of near net shapes.
+
+Laser powder bed fusion (LPBF) is an attractive process for composite tooling because of its ability to produce fine feature resolution and requiring less surface finishing. There are many parameters that can be adjusted in the LPBF process, with laser power and speed being the primary parameters that influence the formation of a melt pool. Limited experimental studies have been performed for the use of Invar in AM processes. Qiu et al. discussed the use of selective laser melting for the fabrication of Invar 36 components showing the microstructure for as-built and heat-treated parts. Parts built with scanning speeds under $3200 \mathrm{~mm} / \mathrm{s}$ showed very little porosity $(<0.5 \%)$ with increasing porosity above $3200 \mathrm{~mm} / \mathrm{s}$ at a power of $400 \mathrm{~W}$. The as-built component microstructure was dominated by columnar $\mathrm{\gamma}$ grains and nanosized $\alpha$ precipitates that did not change with heat treatment [3]. Yakout et al. created a processing map that showed the stable melting region exists within a range of processing parameters [4]. Harrison et al. investigated the retaining of the unique low thermal expansion property of invar after processing using selective laser AM process. A near-full-density component $(99.96 \%)$ was achieved having mechanical properties comparable with that of cold-drawn Invar 36. A lower value of the thermal coefficient of expansion was attributed to residual stress in the as-\\
+deposited parts, but with a non-conventional layer-based AM technique, the low thermal expansion was still maintained [5]. Yakout et al. showed that a critical energy density exists for Invar fabricated using AM and lower energy densities caused pores and a reduction in the coefficient caused by these pores [6]. There is a need to understand the impact of a wide range of processing parameters on the fundamental melt pool dimensions making up the final component with the processing parameters from these references used as a starting point for the work described herein.
+
+The melt pool dimensions are the most fundamental features guided by additional process parameters such as the layer thickness and hatch spacing between passes. Numerical simulations have become a powerful tool for thermal analysis, by assisting in the design and optimization of the AM thermal process. Modeling can be used to develop process parameter to melt pool size relationships, which will decrease the time to adoption of a new material for use in AM processes. Gockel et al. used finite element modeling to predict the melt pool dimensions and microstructure for multiple AM processes for Ti-6Al-4V at a steady state [7]. In this work, finite element modeling of single beads is used to determine the influence of processing parameters on the melt pool geometry in Invar 36. However, actual AM processes involve many short passes of the heat source to build the final structure. Modeling of many passes is computationally expensive, and simplified models may not capture the necessary physics for transient predictions. Plotkowski et al. developed a reduced order model for the prediction of transient effects in the AM. As successive passes are deposited, the melt pool size is shown to increase because of preheating from the prior pass [8]. However, with the addition of multiple passes, there is additional variation introduced because of partial overlap with the prior pass that is not captured in this simplified model. Single bead and multiple pass experiments are performed to determine the influence of successive passes on the melt pool dimensions, which gives insight for relating single pass studies to actual fabrication conditions in Invar components.
+
+\section*{2 Methods}
+\subsection*{2.1 Invar 36}
+Invar $36(\mathrm{Fe}-36 \mathrm{Ni})$ is an iron-nickel alloy containing $36 \%$ nickel known for its extremely low CTE. Guillaume, in 1897, in a quest for less expensive materials than the platinum-iridium alloy, that was then the standard for metrology, discovered that iron-nickel alloys containing about $36 \%$ of nickel have an extremely low CTE [9]. The low CTE makes it useful in fine watches, sensitive instrumentation, electronic applications, and tooling for other manufacturing processes where small differences in expansion may cause failure. The
+
+Invar 36 is one of the oldest of all nickel and cobalt-based alloys. Because the $36 \%$ alloy had such a low CTE at room temperature, the linear dimensions were almost invariable over ordinary changes in temperature [2]. The Invar 36 is weldable, strong, and ductile and possesses a useful degree of corrosion resistance. It can be hot- or cold-formed and machined using processes similar to austenitic stainless steels; however, extensive machining can be difficult. These properties make this alloy attractive for potential use in the AM.
+
+\subsection*{2.2 Processing parameters}
+The laser power and laser speed are chosen to be the main parameters modified in this study. The nominal powers and speeds used in this study are based on those used experimentally by Qiu et al. [3] to produce dense Invar material in the AM. A wide spread of processing parameters that are achievable in the LPBF process are chosen surrounding these nominal parameters. The optimal parameters for one process outcome does not necessarily mean they are optimal for another; therefore, it is necessary to have an understanding of the melt pool behavior for a wide range of parameters. The processing parameter combinations used in this study can be seen in Table 1. The power ranged from 200 to $300 \mathrm{~W}$ with speeds varying from 1600 to $2600 \mathrm{~mm} / \mathrm{s}$.
+
+\subsection*{2.3 Modeling approach}
+The finite element modeling package Abaqus was used for the thermal model in this research. A 3D model similar to that described by Gockel et al. [7] and Fox et al. [10] is used in the paper. It has been shown that conduction dominates the heat transfer in AM processes, so the model neglects convection and radiation to minimize computation time. The 3D model used for this work is shown in Fig. 1 with the thermal-physical material properties for the Invar 36 shown in Table 2. To reduce computation time, the model describes a half model of the heat deposited, with an assumption of thermal isolation in the plane of symmetry. Therefore, the heat
+
+Table 1 Processing parameters used in the experiments and numerical modeling
+
+\begin{center}
+\begin{tabular}{cc}
+\hline
+Power $(\mathrm{W})$ & Speed $(\mathrm{mm} / \mathrm{s})$ \\
+\hline
+200 & 1600 \\
+200 & 2000 \\
+200 & 2600 \\
+250 & 1600 \\
+250 & 2000 \\
+250 & 2600 \\
+300 & 1600 \\
+300 & 2000 \\
+300 & 2600 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cb41a6f8131a3be607cg-3}
+\end{center}
+
+Fig. 1 Numerical finite element model used to predict melt pool steadystate dimensions
+
+flux applied to the model is half of the total power. In order to maintain a consistent mesh resolution through the changing sizes of melt pool geometries, MATLAB is used to estimate the expected length, width, and depth of the melt pool using a derived closed form of the Rosenthal solution [13]. These initial melt pool dimensions are used as estimates to scale the entire 3D geometry for the expected changes.
+
+The temperature distribution within the substrate is an effect of the process parameters applied. The heat source is applied to the substrate moving at a constant speed. As the scan continues, heat builds up within the substrate until a point of steady state where equilibrium is reached. At this state, melt pool geometry data is extracted by measuring the isotherm corresponding to the melted region. The length of melt pool is the distance from the front of melt pool to the trailing tail of the melt pool, while the width of melt pool is twice the distance from the edge of the model to the widest distance on the surface of the melt pool because of the model symmetry, and the depth is the distance from the edge of the model to the depth distance of the melt pool. The model does not include the effects of powder or any porosity within the substrate material. Additionally, only one layer is modeled.
+
+\subsection*{2.4 Experimental procedure}
+Single and multiple pass experiments were performed to compare to the numerical results and to determine the applicability of steady-state modeling to understand transient effects present in actual AM scanning strategies. The experiments were performed using a custom-built AM machine at the University
+
+Table 2 Thermal properties of Invar 36 used in the model
+
+\begin{center}
+\begin{tabular}{lcc}
+\hline
+Property & Value & Units \\
+\hline
+Density & 8050 & $\mathrm{~kg} / \mathrm{m}^{3}$ \\
+Specific heat & 515 & $\mathrm{~J} / \mathrm{kgK}$ \\
+Thermal conductivity & 10.15 & $\mathrm{~W} / \mathrm{mK}$ \\
+Melting temperature & 1727 & $\mathrm{~K}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+of Dayton Research Institute (UDRI). This equipment has a YLR-AC 500-W laser head which is a single-mode continuous wave $(\mathrm{CW})$ ytterbium fiber laser with a modulating frequency range of between 0 and $50 \mathrm{kHz}$. The scan head is a ScanLab inteliSCAN20 with a positioning speed of $11 \mathrm{~m} / \mathrm{s}$.
+
+The experiments are performed as a laser glazing of an Invar 36 plate, as prior studies have shown limited impact to the melt pool dimensions from added powder to the melt pool dimensions [11]. Two experiments are performed. For the first experiment, the surface of the plate was left as received with slight machining marks. For the second experiment, the surface of the plate was slightly ground for a consistent surface finish. An example of a melt pool bead on each plate is shown in Fig. 2. The laser glazing was performed in a chamber with evacuated atmosphere and argon inert gas. The scans were performed on a $76.2 \times 76.2 \times 12.6-\mathrm{mm}$ Invar 36 plate at the range of processing parameters described in Table 1. The length of each single-laser pass is $5-\mathrm{mm}$ and having a $5-\mathrm{mm}$ distance between laser passes on the build plate to avoid heat buildup within
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cb41a6f8131a3be607cg-3(1)}
+\end{center}
+
+Fig. 2 Example of experimental single bead with plate 1 surface asreceived and plate 2 surface ground
+
+Fig. 3 Melt pool dimensions from numerical models as a function of process variables\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_1cb41a6f8131a3be607cg-4(1)}
+
+the plate effecting the thermal behavior from different parameters. The multiple laser pass section has a hatch spacing of $80 \mu \mathrm{m}$ for all parameter combinations. The scan pattern is bidirectional with the pass direction reversing with each succession. The multiple passes are performed in groups of 2, 3, and 4 passes. This division is to allow ex situ determination of the effect of each successive pass on the melt pool size of the final pass.
+
+Measurement of the bead width was performed in the ImageJ software. The image is first rotated slightly so the measured distance is perpendicular to the path direction. After image is rotated, the laser pass is measured. This value is recorded in pixels, and a conversion factor is applied to convert the bead width to micrometers. This process is performed at least five times along a single-laser pass. The values are then averaged, and standard deviation is calculated.
+
+\section*{3 Results and discussion}
+\subsection*{3.1 Steady-state modeling results}
+\subsection*{3.1.1 Relationship of processing parameters to melt pool dimensions}
+Melt pool formation and dimensional characteristics are fundamentally determined by the amount of absorbed energy by the substrate when the laser beam passes over the substrate. While the physics that are neglected in this approach (i.e., convection, melt pool dynamics) can cause small fluctuations, conduction-dominated thermal modeling can provide a reasonable approximation that can guide the starting point for process development. The melt pool width, depth, and length are extracted from the finite element models for all processing\\
+Fig. 4 Melt pool dimensions as a function of processing parameters\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_1cb41a6f8131a3be607cg-4}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cb41a6f8131a3be607cg-5}
+\end{center}
+
+Fig. 5 Melt pool width to depth ratio related to melt pool width
+
+parameter combinations when the melt pool has reached a steady state and are shown in Fig. 3.
+
+When increasing the power, the melt pool width and depth increase. With an increase in laser speed, the melt pool width and depth decrease. This behavior is typical of other traditional AM materials [26]. The melt pool width ranges approximately from 80 to $130 \mu \mathrm{m}$ and the length ranges $1000-1700 \mu \mathrm{m}$. These ranges are similar to those seen in Alloy 625, which is a common material used in the AM [11]. Because melt pool size is a large determinant for porosity such as lack of fusion, these results indicate that fully dense Invar is possible at a range of processing parameters.
+
+The melt pool dimensional characteristics are known to be related to the absorbed energy density. A simplified energy density equation is used by many investigators for correlating the process parameters to the density and strength of the produced part [12]:
+
+$E_{A}=\frac{P}{S H}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cb41a6f8131a3be607cg-5(1)}
+\end{center}
+
+Fig. 7 Comparison of numerical and experimental melt pool widths
+
+This equation represents the applied energy density, where $P$ is the laser power, $S$ is the scan speed, and $H$ is the hatch spacing between parallel scan lines. Since the models discussed in this section are for single scans, there is no hatch spacing and the relationship is further reduced to a linear energy density:
+
+$L E D=\frac{P}{S}$
+
+The melt pool width and depth are shown in Fig. 4 as a function of the LED. As the LED input into the system increases, so does the melt pool width and depth, in a linear fashion. Therefore, different combinations of processing parameters can produce similar effects. For example, the cases of power $=200 \mathrm{~W}$, speed $=1600 \mathrm{~mm} / \mathrm{s}$, and power $=250 \mathrm{~W}$, speed $=2000 \mathrm{~mm} / \mathrm{s}$ both have a similar LED. With both process conditions having a similar LED, this results in a similar melt pool depth and width.
+
+The length of the melt pool is considered herein as the entire melted distance from the tip to the trailing tail\\
+Fig. 6 Experimental melt pool widths as a function of processing condition laser power and speed\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_1cb41a6f8131a3be607cg-5(2)}
+
+Table 3 Comparison of both numerical and experimental widths
+
+\begin{center}
+\begin{tabular}{lcccc}
+\hline
+\begin{tabular}{l}
+Power \\
+$(\mathrm{W})$ \\
+\end{tabular} & \begin{tabular}{l}
+Speed $(\mathrm{mm} /$ \\
+$\mathrm{s})$ \\
+\end{tabular} & \begin{tabular}{l}
+Experimental mean width \\
+$(\mu \mathrm{m})$ \\
+\end{tabular} & \begin{tabular}{l}
+Numerical steady-state width \\
+$(\mu \mathrm{m})$ \\
+\end{tabular} & \begin{tabular}{l}
+Difference \\
+$(\%)$ \\
+\end{tabular} \\
+\hline
+200 & 1600 & 105.1 & 108.56 & +3.29 \\
+200 & 2000 & 100.782 & 98.385 & -2.38 \\
+200 & 2600 & 92.495 & 89.177 & -3.59 \\
+250 & 1600 & 115.641 & 117.77 & +1.841 \\
+250 & 2000 & 109.657 & 108.56 & -1.0004 \\
+250 & 2600 & 102.964 & 96.543 & -6.2362 \\
+300 & 1600 & 132.202 & 127.95 & -3.2163 \\
+300 & 2000 & 118.195 & 116.32 & -1.5864 \\
+300 & 2600 & 112.338 & 104.69 & -6.808 \\
+\hline
+\end{tabular}
+\end{center}
+
+of the melt pool. The length of the melt pool does not relate linearly to the LED; instead, the length is driven only by the input power [13]. Figure 4 shows that the melt pool length at steady state remains same for all cases with the same power, no matter what the laser speed. However, when increasing the laser power, the length of the melt pool increases.
+
+\subsection*{3.1.2 Effect of heat flux size}
+In the idealized case of a moving point heat source, the resulting shape of the melt pool cross section is a symmetric semicircle, where the melt pool width should be twice the depth [14]. However, in the actual LPBF process, the laser heat input is distributed on the surface over an area defined by the spot size of the laser. The heat flux in this model is defined over an area equivalent to the area of a laser spot diameter of $70 \mu \mathrm{m}$. Because the smallest melt pool widths are approaching the heat application size, the melt pool width to depth ratio is investigated. The width to depth ratio is plotted vs LED in Fig. 5. It has already been shown that the melt pool width and depth both decrease with a decreasing LED. In the idealized semicircular melt pool, the width is twice the depth. However, as the LED decreases, the width to depth ratio increases. This is because, with a distributed heat flux on the surface of the substrate, the heat is spread more in the width direction, thus forces the melt pool width to be larger. However, the melt pool size is controlled by the heat being input into the material. So, when the width of the melt pool is forced for be wider, the depth is shallower. When the melt pool width\\
+Fig. 8 Transient melt pool width response from experimental measurements for multiple passes\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_1cb41a6f8131a3be607cg-6(1)}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cb41a6f8131a3be607cg-6}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cb41a6f8131a3be607cg-7}
+\end{center}
+
+Fig. 9 Example of transient melt pool passes showing top bead with one, two, three, and four laser passes with the arrows indicating laser travel direction
+
+is small relative to the heat application size, it results in a wider, shallower melt pool. Therefore, adjacent melt pools within the same layer will require a smaller hatch spacing to fuze together, but there is more risk for delamination if the layers do not successfully fuse together $[15]$.
+
+\subsection*{3.2 Steady-state experimental results}
+The melt pool width is measured for all processing parameter combinations at several locations along the melt track, avoiding the beginning and end of the track to capture only the steady-state behavior. The melt pool width can be easily measured without destruction of the plate and provides a good indication of the overall melt pool behavior. Figure 6 a shows the melt pool width versus power, while Fig. $6 \mathrm{~b}$ shows the plot of width against speed. The melt pool width is seen to increase with an increase in power, while the increase in speed leads to a decrease the size of melt pool width, which is the same trend seen in the numerical results.
+
+The measured widths varied from measurement to measurement along the length of the melt scan. Some variation is expected because of the additional physics that are neglected in the modeling approach. This could be attributed to process instabilities as well as machining marks on the surface of the plate. Also, other melt poolforming factors like surface tension could contribute to the irregularities. The mean melt pool widths for the experimental analysis are taken as the melt pool width at steady state.
+
+\subsection*{3.3 Single pass modeling and experimental comparison}
+Comparing these values to the widths for both the numerical analysis and experimental analysis at steady state shows a close approximation of the melt pool geometry as shown in Fig. 7 and Table 3. The variation in the experimental measurements can be because of measurement errors as well as errors because of melt pool irregularities. These plots clearly show that the numerical prediction of melt pool behavior corresponds with the results obtained from the experiments for melt pool width.
+
+The largest percentage difference between the numerical and experimental analysis is less than seven percent (7\%). A point to note from Table 3 is that the high percentage difference between the numerical and experimental results occurred at high speeds. This could be as a result of inconsistencies in laser beam power and speed input during the experiment as the numerical analysis simulates a continuous uninterrupted laser power and speed. Therefore, the higher the laser speed, the more the inconsistency of the AM process between the numerical and experimental models. This shows that numerical models could be used to minimize cost for running actual experimental analysis by approximating the melt pool characteristics within a good range.
+
+\subsection*{3.4 Multiple pass experimental results}
+Multiple pass experiments were performed to determine the effect of heat buildup from side-by-side passes. The results from measurement of the melt pool width for various combinations of processing parameters is shown in Fig. 8. After a large number of passes, it is clear that the melt pool size does get approximately $10 \%$ larger. However, variation in the response is present. It was assumed based on prior literature [8] that as successive passes are deposited, the background heating increases and would lead to each pass having a larger melt pool width than the next. This behavior would also be expected in successive layers because of heat buildup from the prior layers. However, upon observation of graphs in multiple pass experimental result section, it is clear that this trend does not occur often. Images also include "washed out" sections of the pass where they melt pool appears to lose surface tension and melt more into previous as shown in Fig. 9.
+
+The transient region with a small number of passes shows a large amount of variability and non-intuitive response as shown in Fig. 9. This indicates that there is a large amount of process variation and possible instabilities, particularly in the cases with the highest power. Duplicate experiments have sometimes shown opposite trends, again indicating process variability. Because the largest variation from the expected trends is seen in the highest power cases, this indicates that a large melt pool may have the largest variation.
+
+\section*{4 Conclusions}
+The ability to predict what materials are suitable for the AM is useful to save costly experimental cost. This thesis uses a numerical modeling approach to assess the feasibility of fabricating the Invar 36 using an LPBF AM process. Additionally, a novel investigation into the transient effects of common scanning strategies shows the importance of considering scan strategy in process parameter development. The melt pool dimensions from the numerical modeling approach for the Invar 36 behave similarly to other nickle-based materials with the melt pool width and depth increasing with increasing power and decreasing with increasing speed. The melt pool length is constant with increasing speed and increases with increasing power, also agreeing with prior published literature. The experimental melt pool widths agree within $7 \%$ with the modeling results. This indicates that the numerical approach is able to predict process behavior and limit costly experiments. As successive passes are created, similar to scanning strategies seen in powder bed fusion processes, the melt pool size should increase. However, there is significant variation that needs to be further investigated. This work contributes to the current understanding of the LPBF and sets up future work to understand additional transient effects.
+
+Acknowledgments The authors would like to acknowledge Jared Speltz from the University of Dayton Research Institute, for assistance in completing the experiments and Luke Sheridan from Wright State University for capturing the melt pool images.
+
+Funding This paper was prepared with financial support from the State of Ohio through the Ohio Federal Research Network.
+
+\section*{Compliance with ethical standards}
+Disclaimer The content reflects the views of the author and does not purport to reflect the views of Wright State University, Wright State Applied Research Corporation or the State of Ohio.
+
+\section*{References}
+\begin{enumerate}
+  \item Morey B, (2010) "Tooling it up for composites," SME, 14
+
+  \item Davis JR, (2000) "Nickel, cobalt, and their alloys," ASM International.
+
+  \item Qiu C, Adkins NJE, Attallah MM (2016) Selective laser melting of Invar 36: Microstructure and properties. Acta Mater 103:382-395
+
+  \item Yakout M, Elbestawi MA, Veldhuis SC (2019) Density and mechanical properties in selective laser melting of Invar 36 and stainless steel 316L. Addit Manuf 266:397-420
+
+  \item Harrison N, Todd I, Mumtaz K (2017) Thermal expansion coefficients in Invar processed by selective laser melting. J Mater Sci 52(17):517-525
+
+  \item Yokout M, Elbestawi MA, Veldhuis SC (2018) A study of thermal expansion coefficients and microstructure during selective laser melting of Invar 36 and stainless steel 316L. Addit Manuf 24: 405-418
+
+  \item Gockel J, Beuth J, Taminger K (2014) Integrated control of solidification microstructure and melt pool dimensions in electron beam wire feed additive manufacturing of Ti-6Al-4V. Addit Manuf 1(1): 119-126
+
+  \item Plotkowski A, Kirka MM, Babu SS (2017) Verification and validation of a rapid heat transfer calculation methodology for transient melt pool solidification conditions in powder bed metal additive manufacturing. Addit Manuf 18:256-268
+
+  \item Guillaume CE, "Invar and elinvar," Nobel Lecture, 1920.
+
+  \item Fox J and Beuth J, (2013) "Process mapping of transient melt pool response in wire feed e-beam additive manufacturing of Ti-6Al-4V, " in Solid freeform fabrication conference, Austin.
+
+  \item Montgomery C, Beuth J, Sheridan L and Klingbeil N, (2015) "Process mapping of Inconel 625 in laser powder bed additive manufacturing," in Solid freeform fabrication proceedings.
+
+  \item Williams JD, Deckard CR (1998) Advances in modeling the effects of selected parameters on the SLS process. Rapid Prototyp J 4(2): $90-100$
+
+  \item Sheridan L, (2016) "An adapted approach to process mapping across alloy systems and additive manufacturing processes," Wright State University Master's Thesis.
+
+  \item Rosenthal D (1946) The theory of moving sources of heat and its application to metal treatments. Trans Am Soc Mech Eng 68:849-866
+
+  \item Francis Z, (2017) "The effects of laser and electron beam spot size in additive manufacturing processes," Carnegie Mellon University PhD Dissertation.
+
+\end{enumerate}
+
+Publisher's note Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations.
+
+
+\end{document}

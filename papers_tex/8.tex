@@ -1,0 +1,411 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{An investigation into the effect of process parameters on melt pool geometry, cell spacing, and grain refinement during laser powder bed fusion }
+
+
+\author{Ali Keshavarzkermani ${ }^{a}$, Ehsan Marzbanrad ${ }^{a}$, Reza Esmaeilizadeh ${ }^{a}$, Yahya Mahmoodkhani ${ }^{\text {a }}$,\\
+Usman Ali ${ }^{\mathrm{a}}$, Pablo D. Enrique ${ }^{\mathrm{a}}$, Norman Y. Zhou ${ }^{\mathrm{a}}$, Ali Bonakdar ${ }^{\mathrm{b}}$, Ehsan Toyserkani ${ }^{\mathrm{a}, *}$\\
+${ }^{a}$ University of Waterloo, 200 University Ave W, Waterloo, Ontario N2L 3G1, Canada\\
+biemens Canada Limited, 9545 Côte-de-Liesse, Montréal, Québec H9P 1A5, Canada}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Full length article
+
+
+
+\section*{H I G HLI G H T S}
+\begin{itemize}
+  \item Laser power to velocity ratio (LED) was investigated for various melt pool features.
+  \item Laser power has a higher effect than scanning velocity on the melt pool dimensions.
+  \item Same LED results in finer cell structure with lower power due to high cooling rate.
+  \item Due to wider melt pool cooler band, more grains are observed at higher laser power.
+  \item It is proposed that partially melted particles act as nuclei during solidification.
+\end{itemize}
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+Additive manufacturing
+
+Laser powder bed fusion
+
+Single track
+
+Laser energy density (LED)
+
+Microstructure
+
+Hastelloy $\mathrm{X}$
+
+\begin{abstract}
+A B S T R A C T An applied energy density approach defined as the ratio of laser power and scanning velocity is often used as a guideline for selecting appropriate process parameters in laser powder bed fusion (LPBF). In this study, amongst the many variables related to input energy, we investigate the effectiveness of laser energy density (LED) on the melt pool geometry and microstructure of Hastelloy X single tracks produced by fixed LED values at different laser powers and scanning velocities. The results reveal that for a fixed LED, the higher laser power has a higher effect on the melt pool depth. In addition, compared to the scanning velocity, laser power has a higher influence on the melt pool geometry. Moreover, it is proposed that the finer cell structure observed in the melt pool of high laser power is due to the higher cooling rates. Finally, the higher number of new grains observed in melt pools created with higher laser power and fixed LED are likely due to the grain detachment caused by the increase in the partially melted particles.
+\end{abstract}
+
+\section*{1. Introduction}
+Additive manufacturing (AM) of metallic parts has grown in popularity due to its ability to fabricate parts with complex designs [1]. Laser powder-bed fusion (LPBF) is one of several AM techniques that builds parts in a layer by layer fashion. This versatile powder bed process has been used to manufacture parts with adjustable parameters such as laser power, scanning velocity, and layer thickness that can be optimized to print defect-free parts. To achieve acceptable part quality with no porosity, it is necessary to have consolidated layers made of single lines. Thus, an in-depth understanding of the effect of process parameters on a single track melt pool and the subsequent fast solidification is required to produce condensed layers leading to high-quality parts with low porosity and high strength.
+\footnotetext{*Corresponding author.
+
+E-mail address: \href{mailto:ehsan.toyserkani@uwaterloo.ca}{ehsan.toyserkani@uwaterloo.ca} (E. Toyserkani).
+}
+
+Among all LPBF process parameters, energy input density has been considered as one of the most significant variables [2,3]. The energy input can be written as a function of laser power, scanning velocity, layer thickness, hatching distance, and other variables [1,4,5]. However, based on the previous studies [6-8], laser power and scanning velocity are considered as the most effective parameters. Some aspects of the single track formation (such as melt pool and bead geometry) under different sets of process parameters (laser power, scanning velocity, layer thickness, and hatching distance) have been studied for a few materials [2,3,9-11]. The laser energy density (LED) is one of the proposed energy input density functions and is defined as the ratio of laser power to scanning velocity $\frac{P}{V}\left(\frac{J}{m m}\right)[12]$. LED has been used to find the process window for deposition of different materials in the LPBF\\
+process $[2,6]$. In addition, LED has also been utilized to avoid balling, irregular and discontinuous track shapes in LPBF [9,12]. It has also been observed that incomplete melting can be the result of a low LED deposition, while a high LED deposition may introduce keyhole pores, which are detrimental for additively manufactured parts [10].
+
+Interaction of powder particles with laser irradiation during LPBF results in melting and solidification of molten metal. Similar to melting process, understanding the solidification of melted particles and microstructure formation in the melt pool is essential to reach the desired mechanical properties. Since the process parameters directly affect the geometry of the melt pool, changes in microstructure are expected to occur with different process parameters. Several studies have been conducted to evaluate the influence of process parameters on microstructure of LPBF parts [2,13-16]. Single track deposition of Inconel 718 showed that the beads produced with low LED result in columnar grains growing upwards, while high LED values lead to grains converging at the center of the bead $[13,15]$. These long columnar grains observed in the microstructure of LPBF parts highlight the re-melting of previous layers resulting in the continuation of the crystallographic grain growth from grains in the former layers [2,14]. In addition, it was reported that formation of slender columnar grains may be due to the high cooling rate during LPBF with different manufacturing conditions [16].
+
+In this study, the effect of laser power, scanning velocity, and LED values on the melt pool geometry and corresponding microstructure are investigated for Hastelloy X single tracks printed using a LPBF system. As discussed previously, LED values have been used as a guideline for printing effective LPBF parts. However, it has not been evaluated if the LED criterion is valid for different materials produced with different LED values. In addition, it is important to study the differences, if any, between the observed melt pool geometry and solidified microstructure at fixed LED values to evaluate the use of LED as a guideline for printing LPBF parts. To conduct this research, a series of single track depositions of Hastelloy X were performed to study the effect of changes in the laser power and scanning velocity with fixed LED values on the geometry and microstructure of melt pool. Results reveal that for a fixed LED, laser power has a higher influence on the melt pool dimensions (width and depth) while an increase in laser power has a higher effect on the melt pool depth. A finer cell structure is observed in the melt pool of high laser power and is thought to be due to the higher cooling rates observed at higher laser power. Finally, it is proposed that the grain detachment caused by the increase in number of partially melted particles (PMP) is the mechanism for the higher number of new grains observed in melt pools created with higher laser power.
+
+\section*{2. Materials and methods}
+Hastelloy X gas-atomized powder supplied by EOS GmbH, with the chemical composition listed in Table 1 was used to fabricate the LPBF parts with a $D_{10}, D_{50}$, and $D_{90}$ of $46.4 \mu \mathrm{m}, 30 \mu \mathrm{m}$ and $15.5 \mu \mathrm{m}$ respectively. As shown in Fig. 1, powder particles are mostly spherical in shape with attached satellite particles.
+
+The experimental study was designed to manufacture12 rectangular substrates of Hastelloy $X$ with base dimensions of $25 \mathrm{~mm} \times 17.5 \mathrm{~mm} \times 5 \mathrm{~mm}$. Six single laser scans were applied on top of the 3D printed substrates to form single tracks of length $25 \mathrm{~mm}$. Single tracks with varying laser scanning velocity and power were printed on different substrates while single tracks with the same laser scanning velocity and power but different nominal layer thickness were
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_829fb3f692a2db4864deg-2}
+\end{center}
+
+Fig. 1. SEM image of powder metal showing the spherical morphology of particles with attached satellites.
+
+printed on the same substrate. The 20, 40 and $60 \mu \mathrm{m}$ single tracks were printed with a base nominal layer thickness of $20 \mu \mathrm{m}$ where the laser irradiation was skipped for 1 and 2 layers for the 40 and $60 \mu \mathrm{m}$, single tracks. Every single track, with its respective dimensions, was printed twice adjacent to each other (Fig. 2) and parallel to the direction of the recoater movement.
+
+EOS M290, equipped with a Ytterbium fiber laser, was used for fabricating the substrates and single tracks. As the laser spot size is considered to be a major contributing parameter to melt pool formation $[18,19]$, it is important to mention the effective laser spot size of $80 \mu \mathrm{m}$ was utilized in this experiment. All substrates were designed with the same process parameters as default EOS Hastelloy X parameters. Printed substrates were double scanned on the last layer to get a smooth surface. After reviewing the process parameters used in available literatures for Hastelloy X [20-23], a specific range of laser power and scanning velocity were selected in this study. Three values of LED were chosen for single tracks at different laser powers and scanning velocities, as listed in Table 2. Design of experiments for single line tracks consisted of varying laser powers (from $150 \mathrm{~W}$ to $300 \mathrm{~W}$ ) and scanning speeds (from $600 \mathrm{~mm} / \mathrm{s}$ to $2000 \mathrm{~mm} / \mathrm{s}$ ). The laser power and velocity were selected based on different LED values as shown in the 1st column of Table 2. The completed specimens were cross-sectioned (4 repetitions at $2.5 \mathrm{~mm}$ offsets from the ends of substrate) using a Struers Accutom-50 precision cutter for a total of 4 cross-sections per single track condition.
+
+The samples were manually polished using progressively finer SiC grinding papers from 320 to 4000 grit sizes. Finally, the samples were polished with $1,0.1$ and $0.05 \mu \mathrm{m}$ alumina slurry and rinsed with ethanol to remove residual alumina from the surface of the samples. Polished samples were kept in Glyceregia [24] (HCl 50ml - - HNO3 10ml - Glycerol 10ml) solution for about one minute for etching. The melt pool observation of cross-sectioned parts was performed using a Keyence VK-X250 confocal laser microscope. A Zeiss ULTRA SEM equipped with an EDS detector was used to study the microstructure and chemical composition of deposited single tracks. Electron back scattering diffraction (EBSD) analysis was performed using a JEOL7000F SEM equipped with an Oxford EBSD detector to investigate the grain structure of the fabricated single tracks with different process parameters. Data collection during the EBSD analysis was performed using AZtecHKL and post processing for data analysis was performed with HKL Channel 5.
+
+Table 1
+
+Nominal composition (in wt.\%) of Hastelloy X gas-atomized powder used for selective laser melting process [17].
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+$\mathrm{Ti}$ & $\mathrm{Al}$ & $\mathrm{Cu}$ & Mn & $\mathrm{Si}$ & $\mathrm{C}$ & Co & $\mathrm{W}$ & Mo & $\mathrm{Fe}$ & $\mathrm{Cr}$ & $\mathrm{Ni}$ \\
+\hline
+$<0.15$ & $<0.5$ & $<0.5$ & $<1$ & $<1$ & $<0.1$ & $1.5 \pm 1$ & $0.6 \pm 0.4$ & $9 \pm 1$ & $18.5 \pm 1.5$ & $21.75 \pm 1.25$ & Balance \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_829fb3f692a2db4864deg-3}
+\end{center}
+
+Fig. 2. Printed substrate and location of laser path on top of the substrate to manufacture single tracks.
+
+\section*{3. Results and discussion}
+As mentioned previously, single tracks of Hastelloy $\mathrm{X}$ on the LPBFmade substrate were produced with the laser power range from 150 to $300 \mathrm{~W}$ with scanning velocities from 600 to $2000 \mathrm{~mm} / \mathrm{s}$ and layer thickness from 20 to $60 \mu \mathrm{m}$. Fig. 3(a) and 3(b) show the depth and width of the melt pool region as a function of laser power in which the red, green, and blue colors represent LED values of $0.25 \mathrm{~J} / \mathrm{mm}, 0.20 \mathrm{~J} /$ $\mathrm{mm}$, and $0.15 \mathrm{~J} / \mathrm{mm}$, respectively. Similarly, triangular, circular, and rectangular markers represent a layer thickness of $20 \mu \mathrm{m}, 40 \mu \mathrm{m}$ and $60 \mu \mathrm{m}$, respectively. Fig. 3(a) and 3(b) demonstrate that the width of the melt pool is increasing from $93 \pm 9 \mu \mathrm{m}$ to $121 \pm 8 \mu \mathrm{m}$ and depth of the melt pool is increasing from $41.8 \pm 6 \mu \mathrm{m}$ to $94 \pm 9 \mu$ mwhile the LED increased from $0.15 \mathrm{~J} / \mathrm{mm}$ to $0.25 \mathrm{~J} / \mathrm{mm}$ at a fixed laser power of $300 \mathrm{~W}$. A similar trend was also observed by Sadowski et al for LPBF of Inconel 718 [2]. However, here, a general upward trend for both width and depth of the melt pool is observed while increasing the laser power at a constant LED. For instance, at a constant LED of $0.25 \mathrm{~J} / \mathrm{mm}$, the melt pool depth and width change around $25 \%$ and $4 \%$, respectively with changing laser power from $150 \mathrm{~W}$ to $300 \mathrm{~W}$ and scanning speeds from $600 \mathrm{~mm} / \mathrm{s}$ to $1200 \mathrm{~mm} / \mathrm{s}$.
+
+The higher LED results in a higher energy input into the system, therefore it is expected to produce a bigger melt pool dimensions which can be confirmed by the data presented in Fig. 3(a) and 3(b). It is also reported by Aversa et al [3] that a higher LED value for a single line dramatically increases the depth of the melt pool of AlSi10Mg alloy. A lower LED with a shallower melt pool results in a smaller contact area between the molten metal and the substrate. As a result, there is less wetting of the molten metal on the surface and the tracks become more irregular or undergo balling before solidification [25]. To avoid this, process parameters need to be carefully selected to create an appropriate melt pool depth.
+
+Results in Fig. 3 can also be used to analyze the effect of layer thickness on the melt pool geometry of printed single tracks. However, it is in contrast to what has been observed in the literature where increasing layer thickness results to have shallower melt pools and more balling observed for single track [25]. Results from the current study show no specific deviation for the geometry of the melt pool when the nominal layer thickness changed from $20 \mu \mathrm{m}$ to $60 \mu \mathrm{m}$.
+
+As was observed in Fig. 3, melt pool dimensions do not show any significant change with the change in layer thickness. Insignificant changes in the melt pool dimensions of single tracks with respect to different layer thicknesses may be due to the fact that the effective powder layer thickness is much bigger than the nominal or build layer thickness as reported by Mahmoodkhani et al. [26]. The actual layer thickness in LPBF is not constant and increases from the beginning of the process to reach a steady state known as the effective layer thickness (ELT) [27,28]. In this study, since only the last deposited layer's nominal thickness was changed from 20 to $60 \mu \mathrm{m}$, the effective layer thickness from former layers appears to be dominant in terms of controlling the melt pool geometry.
+
+Insignificant changes in the melt pool size by changing the layer thickness could also be explained due to the surface roughness of the previous layer. It is well known that the rough surface of the last deposited layer makes height to be different at different locations on the top surface during LPBF manufacturing process [29]. This leads to a non-uniform powder layer added by the recoater for subsequent layers which may be greater than the nominal layer thickness thus negating the effect of changing layer thickness on melt pool dimensions. Fig. 4 demonstrates the height map of the top surface of the printed Hastelloy $\mathrm{X}$ substrate with printed single tracks. Measurement along the singletrack deposition (white line in Fig. 4) shows up to $80 \mu \mathrm{m}$ variation in height of the substrate, which is much larger than the maximum nominal layer thickness $(60 \mu \mathrm{m})$ used in this study. This variation in height affect the local layer thickness of powder during the next deposition step and therefore does not show any effect of layer thickness on melt pool dimensions of printed single tracks.
+
+Experimental results from melt pool dimensions with varying laser power and LED show the effect of melt pool width and depth with fixed LED. However, it is important to investigate the effect of laser power and velocity individually. Fig. 5 illustrates the effect of changing the LED from $0.15 \mathrm{~J} / \mathrm{mm}$ to $0.25 \mathrm{~J} / \mathrm{mm}$ on the melt pool dimensions at a
+
+Table 2
+
+Set of 12 groups of single tracks showing existing laser powers (P) and scanning velocity (V) for deposited tracks.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+LED (J/mm) & $\mathrm{P}=150 \mathrm{~W}$ & $P=200 W$ & $\mathrm{P}=250 \mathrm{~W}$ & $\mathrm{P}=300 \mathrm{~W}$ \\
+\hline
+$0.25 \pm 0.0(\mathrm{~J} / \mathrm{mm})$ & $\mathrm{V}=600 \mathrm{~mm} / \mathrm{s}$ & $\mathrm{V}=800 \mathrm{~mm} / \mathrm{s}$ & $\mathrm{V}=1000 \mathrm{~mm} / \mathrm{s}$ & $\mathrm{V}=1200 \mathrm{~mm} / \mathrm{s}$ \\
+\hline
+$0.20 \pm 0.01(\mathrm{~J} / \mathrm{mm})$ & $\mathrm{V}=700 \mathrm{~mm} / \mathrm{s}$ & $\mathrm{V}=1000 \mathrm{~mm} / \mathrm{s}$ & $\mathrm{V}=1200 \mathrm{~mm} / \mathrm{s}$ & $\mathrm{V}=1500 \mathrm{~mm} / \mathrm{s}$ \\
+\hline
+$0.15 \pm 0.006(\mathrm{~J} / \mathrm{mm})$ & $\mathrm{V}=1000 \mathrm{~mm} / \mathrm{s}$ & $\mathrm{V}=1300 \mathrm{~mm} / \mathrm{s}$ & $\mathrm{V}=1600 \mathrm{~mm} / \mathrm{s}$ & $\mathrm{V}=2000 \mathrm{~mm} / \mathrm{s}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\begin{tabular}{c}
+Layer \\
+thickness \\
+\end{tabular} & $20 \mu \mathrm{m}$ & $40 \mu \mathrm{m}$ & $60 \mu \mathrm{m}$ \\
+\hline
+LED $\sim 0.25$ & $\triangle$ & $\bigcirc$ & $\square$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\begin{tabular}{c}
+Layer \\
+thickness \\
+\end{tabular} & $20 \mu \mathrm{m}$ & $40 \mu \mathrm{m}$ & $60 \mu \mathrm{m}$ \\
+\hline
+LED $\sim 0.20$ & $\triangle$ & $\bigcirc$ & $\square$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\begin{tabular}{c}
+Layer \\
+thickness \\
+\end{tabular} & $20 \mu \mathrm{m}$ & $40 \mu \mathrm{m}$ & $60 \mu \mathrm{m}$ \\
+\hline
+LED 0.15 & $\Delta$ & $\bigcirc$ & $\square$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_829fb3f692a2db4864deg-4}
+\end{center}
+
+Fig. 3. (a) Depth and (b) width of melt pool as a function of laser power in three different LED values of $0.15,0.2$, and $0.25(\mathrm{~J} / \mathrm{mm})$.
+
+constant power or velocity. Results in Fig. 5(a) and (b) show that whilst keeping the scan velocity constant, decreasing the LED from $0.25 \mathrm{~J} / \mathrm{mm}$ to $0.15 \mathrm{~J} / \mathrm{mm}$ results in about a $65 \%$ and $30 \%$ decrease in melt pool depth and width, respectively. While with fixed power and decreasing LED from $0.25 \mathrm{~J} / \mathrm{mm}$ to $0.15 \mathrm{~J} / \mathrm{mm}$ results in about $38 \%$ and $13 \%$ reduction in melt pool depth and width correspondingly. Therefore, increasing the scanning velocity has a weaker influence on the melting regime compared to a proportional increase in laser power.
+
+As discussed previously, the impact of change in laser power is stronger than corresponding changes in scanning velocity on the melt pool geometry. It is also observed that the melt pool width is larger than the laser beam spot size $(80 \mu \mathrm{m})$ due to the heat dissipation from molten metal to solid material. Considering the Gaussian distribution of the laser heat source, the average laser radiation intensity at the center of the beam profile is considerably higher than the intensity at the edges $[28,30]$. In addition, due to the Gaussian distribution, the input energy at the edges is less sensitive to the laser power or scanning velocity changes than at the center. The higher intensity at the center of the laser beam leads to an increase in the surface temperature of the melting metal to the boiling temperature of the metal, which causes recoil pressure on the melt pool and leads to the surface depression in this area [31-33]. This depression, along with higher temperatures at the central zone of the melt pool, provides a driving force for the melt pool penetration while increasing the melt pool depth. This explains the greater sensitivity of the melt pool depth when compared to the width when input energy is changed either by the varying scanning velocity or laser power.
+
+It is well known that microstructure can be affected by variation in process parameter [11,13,34]. Fig. 6(a) and (b) show SEM images with LEDs of $0.25 \mathrm{~J} / \mathrm{mm}$ and $0.15 \mathrm{~J} / \mathrm{mm}$ at laser powers of $300 \mathrm{~W}$ and $150 \mathrm{~W}$ respectively. Results from Fig. 6(a) and (b) show the cellular structure of the melt pool area at low magnification from cross-sectioned deposited single tracks. Similar cellular structure is observed from Co-base and Ni-base LPBF parts with FCC crystal structure [35-38].
+
+SEM images at higher magnification were also captured to analyze the cellular spacing at fixed LED and varying laser power and velocity. Fig. 6(c) and (d) demonstrate the cellular microstructure of single tracks printed with a constant LED of $0.25 \mathrm{~J} / \mathrm{mm}$ with a laser power of $150 \mathrm{~W}$ and $300 \mathrm{~W}$, respectively. Comparing the microstructures reveals that at a fixed LED, the cell size increased from $0.285 \pm 0.05 \mu \mathrm{m}$ to $0.5 \pm 0.1 \mu \mathrm{m}$ when the laser power increases from $150 \mathrm{~W}$ to $300 \mathrm{~W}$. As cell size is directly related to mechanical properties such as hardness $[39,40]$, it is important to individually investigate the variation of cell spacing with respect to the fixed LED criteria. Reduction in cell spacing results in higher hardness $[39,40]$ due to higher number of cell boundaries enriched by dislocations [36,37].
+
+Cell spacing in the microstructure strongly depends on the cooling rate at the solid-liquid interface during solidification [34]. High temperature gradients (G) and high solidification rate (R) in the melt pool result in higher cooling rate. This higher cooling rate leads to a higher super-cooling and finer cellular structure [41]. As absorbed heat in the melt pool dissipates from the boundary of the melt pool to the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_829fb3f692a2db4864deg-4(1)}
+\end{center}
+
+Fig. 4. Line scanning of the substrate parallel to single track deposition from top view shows about $80 \mu \mathrm{m}$ difference in height of the last deposited layer which makes the variation of nominal layer thickness (from 20 to $60 \mu \mathrm{m}$ ) for the last layer deposition insignificant.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_829fb3f692a2db4864deg-5}
+
+Fig. 5. (a) Depth and (b) width of melt pool as a function of LED with two different passes of changing Velocity and laser power.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_829fb3f692a2db4864deg-5(1)}
+
+Fig. 6. SEM micrographs showing cell structure from the cross-section of deposited single tracks with (a) LED value and laser power of 0.25 (J/ $\mathrm{mm}$ ) and 300 (W) (b) LED value and laser power of $0.15(\mathrm{~J} / \mathrm{mm})$ and $150(\mathrm{~W})$. In higher magnification, SEM micrographs at melt pool boundaries show the microstructure created by an LED value of $0.25(\mathrm{~J} / \mathrm{mm})$ and laser power of (c) 150 (W) and (d) $300(\mathrm{~W})$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_829fb3f692a2db4864deg-5(2)}
+
+surrounding substrate, an approximation of the cooling rate can be established based on the ratio of the melt pool volume $\left(V_{s}\right)$ to boundary area $\left(S_{b}\right)$. A smaller $\frac{V_{s}}{S_{b}}$ would result in a faster heat dissipation to the substrate and hence, a higher cooling rate during the solidification. On the other hand, a larger $\frac{V_{s}}{S_{b}}$ would result in a lower cooling rate. To be able to compare the solidification condition of single tracks fabricated at equivalent LED values with different laser powers, Fig. 7 shows the $\frac{V_{s}}{S_{b}}$ ratio (which is estimated from the ratio of melt pool area to the melt pool boundary measured from the cross-sections considering a unit deep in the plate of single track images) as a function of laser power at constant LED of $0.25 \mathrm{~J} / \mathrm{mm}$. As observed, the higher laser power causes a larger $\frac{V_{s}}{S_{b}}$ ratio, which leads to lower cooling rates during solidification. Similarly, a lower $\frac{V_{s}}{S_{b}}$ ratio is observed at lower laser power which corresponds to higher cooling rates thus resulting in finer cellular structure compared to the higher laser power fabrication with an identical LED value (Fig. 6(c) and (d)).
+
+It has been established that the cooling rate changes with different process parameters at the same LED. In addition, as cooling rate is directly proportional to the temperature gradient and solidification rate ( $\dot{T}=G \times R$ ), a change in cooling rate, suggests a change in $G$ and $R$ at different process parameters for the same LED. Moreover, it is well known that $\frac{G}{R}$ can be employed to identify the solidification mode and resulting cellular, dendritic or equiaxed structures [34]. Hence, to investigate the possibility of changing solidification modes by varying process parameters of LPBF, two extremes of the current process window are selected (the lowest LED value with the lowest laser power and the highest LED value with the highest laser power). It is observed
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_829fb3f692a2db4864deg-6}
+\end{center}
+
+Fig. 7. The ratio of melt pool volume to the surface boundary as a function of laser power. Results measured from cross-sections of single tracks deposited with LED value of $0.25(\mathrm{~J} / \mathrm{mm})$.
+
+that a cellular structure is the dominant solidification mode of the LPBF process within the range of selected process parameters (as shown in Fig. 6(a) and (b)). It is worth mentioning that the cellular growth of crystals is not restricted to the melt pool boundary region and continues during solidification as shown in Fig. 6 for both extreme parameters, leading to a cellular structure for the entire melt pool. Therefore, it can be concluded that the change in cooling rate at different process parameters affects the temperature gradient and solidification rate on the printed single tracks. However, this change in cooling rate does not affect the final solidification mode as the $\frac{G}{R}$ is always in the range of cellular structure.
+
+The cellular structure of additively manufactured parts is also reported for Co-29Cr-6Mo alloy which has cellular structures throughout the melt pool where the cooling rate is estimated to be around $2.2 \times 10^{6} \mathrm{~K} / \mathrm{s}$ [38]. However, this is in contrast to what is observed at lower cooling rates of around $3.8 \times 10^{4} \mathrm{~K} / \mathrm{s}$ in AlSi12 alloy, which has a clear transition from a dendritic (at the boundary) to microcellular structure (in the middle of melt pool) in the deposited layer [42]. On the other hand, AlSi10 shows an almost completely cellular structure in the LPBF part with an estimated cooling rate of $2 \times 10^{6} \mathrm{~K} / \mathrm{s}$ [43]. This reveals that the solidification mode is material dependent, thus each material needs to be studied individually to analyze the associated microstructure. For Hastelloy X, the cooling rate can be estimated from $\lambda=97 \dot{T}^{-0.36}$ where $\lambda$ is primary cell spacing and $\dot{T}$ is the cooling rate $[35,38]$. Based on the current experiment, by changing the laser power at LED of $0.25 \mathrm{~J} / \mathrm{mm}$, the measured primary cell spacing changes from $0.285 \pm 0.05 \mu \mathrm{m}$ to $0.5 \pm 0.1 \mu \mathrm{m}$ (Figs. 6(c) and 5(d)) which lead to a cooling rate from $1.5 \times 10^{7} \mathrm{~K} / \mathrm{s}$ to $2.2 \times 10^{6} \mathrm{~K} / \mathrm{s}$. This decrease in the cooling rate of around $85 \%$ occurs when the ratio of $\frac{V_{s}}{S_{b}}$ increases by $\sim 20 \%$ at LED of $0.25 \mathrm{~J} / \mathrm{mm}$ and laser power of $150 \mathrm{~W}$ and $300 \mathrm{~W}$.
+
+Results from the cell structure analysis of single tracks at fixed LED shows the variation in cell spacing due to the difference in cooling rates. However, it is also important to study the effect, if any, on the grain morphology. This is important as grain morphology has been linked to material performance such as yield strength [40,44,45]. Fig. 8a-b shows inverse pole-figure maps of two cross-sectioned single tracks at a LED value of $0.25 \mathrm{~J} / \mathrm{mm}$ with laser power of $150 \mathrm{~W}$ and $300 \mathrm{~W}$. Melt pool boundaries have been detected from optical images of etched samples and superimposed on the EBSD maps. EBSD results in Fig. 8 show the melt pool and the bead area from the cross-sectioned single tracks. Melt pool IPF maps show the grain growth due to epitaxial growth of grains at the melt pool boundary for both cross-sections in the building direction. Similar results of epitaxial growth have also been observed by other research groups from microstructure of LPBF parts $[5,13,36]$. In addition, a few number of nucleated grains are also observed in the middle of the melt pool with misorientation of more than $15^{\circ}$ with neighboring grains. A total of 5 new grains (highlighted in Fig. 8(a)) were identified with the lower laser power ( $150 \mathrm{~W})$, whereas 11 new grains (highlighted in Fig. 8(b)) were observed with the higher laser power $(300 \mathrm{~W})$ at the same LED value. The average number for new grains, which are observed from different cross-sections, was calculated to be about $6 \pm 2$ and $11 \pm 1$ for laser power of $150 \mathrm{~W}$ and $300 \mathrm{~W}$, respectively. This difference in the number of grains, would result in a finer grain structure that would affect the mechanical properties of the printed parts.
+
+As grain nucleation is observed in the melt pools from EBSD results, it is important to identify the nucleation mechanisms for the presence of new grains. Four different nucleation mechanisms namely; dendrite fragmentation, surface, homogenous/heterogeneous nucleation, and grain detachment have been identified during rapid solidification of metallic alloys [34]. Due to the existence of cellular structure observed in the single tracks (Fig. 6), the possibility of dendrite defragmentation mechanism is very low. Also, since epitaxial grain growth is observed in the melt pool of single tracks, surface nucleation is not a viable option. If the solute partition coefficient of alloying elements is less than 1 , it is possible to have solute pile-up in front of the solid-liquid boundary during solidification, which results in the segregation of alloying elements [46]. Segregation in front of the solid-liquid interface can lead to the high constitutional undercooling, which should be followed by homogenous nucleation of equiaxed grains in the middle of the melt pool [47]. However, according to the EDS line scanning analysis for the single track deposition, it is shown in Fig. 9 that there is no significant segregation of main alloying elements along the melt pool depth. EDS line scanning of melt pools was repeated for two different cross-sections of single tracks with LED of $0.15 \mathrm{~J} / \mathrm{mm}$ and LED of $0.25 \mathrm{~J} / \mathrm{mm}$. Results from both extreme LED values shows lack of segregation in printed Hastelloy X samples. This lack of segregation may be attributed due to the rapid solidification of the melt pool region during the LPBF process [35]. EDS results (Fig. 9) show a lack of segregation in the concentration of alloying elements which would not change the undercooling temperature of the melted metal at the center of the melt pool. As homogeneous nucleation rate is linked to segregation of alloying elements [48], it can be concluded that the observed changes in nucleation rate in Hastelloy $\mathrm{X}$ is not due to this mechanism.
+
+Based on the discussion presented thus far, grain detachment might be the best explanation for nucleation of the grains in the melt pool during solidification. Due to the Bernoulli effect, metal evaporation during the LPBF process enables the flow of inert gas (argon) toward the middle of the melt pool [28]. With the help of high-speed imaging, it is shown that this inert gas flow from the surrounding is strong enough to start the flow of powder particles towards the melt pool [28]. Some of these particles become part of the melt pool while others attach to the periphery. The partially melted particles attach to the solidified metal and may act as nucleation sites for grain growth. On the other hand, molten metal from these PMPs could enter the melt pool to create a potential nuclei inside the melt pool causing grain detachment. SEM secondary mode image and EBSD IPF maps from a cross-sectioned single track is presented in Fig. 10. In addition to that, Fig. 10 shows three attached particles surrounding the bead region (shown by red areas of A, B, and C). These attached particles might have originated from adjacent powders or spatter particles produced during LPBF. As new grains formed around the periphery of the attached particles do not show epitaxial growth, it can be concluded that grain detachment is the dominant mechanism. Results from attached particle show a significant amount of new orientated grains in the solidified bead region. All the attached particles (A-C) show detached grain growth along with heat flow direction after reaching a substantial under cooling temperature. The bigger size of the attached particle B leads to have more newly orientated grains in the microstructure on the left side of the melt pool when compared to the particle C in Fig. 10.
+
+IPF maps shown above highlight the formation mechanism for new grains in the solidified single track. However, results in Fig. 8 show a
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_829fb3f692a2db4864deg-7(1)}
+\end{center}
+
+Fig. 8. EBSD inverse pole-figure map from deposited single tracks with LED value of $0.25(\mathrm{~J} / \mathrm{mm})$ and laser power of (a) 150 (W) and (b) 300 (W). Dashed lines correspond to melt pool boundaries which are detected from OM pictures of etched cross-sectioned samples (shown as inserts).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_829fb3f692a2db4864deg-7}
+\end{center}
+
+Fig. 9. EDS line scanning (counts versus depth distance) along with red line shown in the picture showing no specific amount of segregation of the main alloying element during the solidification of single track Hastelloy X. Analysis coming from cross-section of melt pool area deposited by LED value of 0.25 (J/ $\mathrm{mm}$ ) and laser power of $300(\mathrm{~W}$ ). (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)
+
+difference in the number of new grains between solidified melt pools from different laser powers at same LED. It is observed, that the melt pool width always exceeds the laser beam diameter and the melt pool width is proportional to the laser power (Fig. 5(b)). Therefore, a higher laser power creates a melt pool larger than the laser diameter. This area can be distributed into the hot and cold regions where the hot region corresponds to the area under direct laser irradiation while the cold region corresponds to the difference between the direct laser irradiation and the melt pool width (Fig. 11(a)). Any powder in the hot section would melt completely. However, powder in the cooler band may partially melt and remain in the melt pool as a PMP. However, this cooler band is directly proportional to the laser power. For example, a cooler band increase from $\sim 37 \mu \mathrm{m}$ to $\sim 45 \mu \mathrm{m}$ is observed when the laser power is increased from $150 \mathrm{~W}$ to $300 \mathrm{~W}$ at fix LED. As the cooler band increases with laser power, the amount of PMPs in the melt pool would also increase. As these particles have been shown to cause nucleation in the melt pool, a higher number of PMPs would result in more grains inside the melt pool as shown in Fig. 8. Moreover, while the laser irradiation is directly above the area of interest, Marangoni convection of surface molten metal flows from the center to the periphery of the melt pool [49]. This pushes PMPs to cooler bands until the laser beam passes. This results in an average of 5 more nucleated grains within the melt pool with higher laser power at constant LED (Fig. 8).
+
+The increase in PMP observed at higher power can also be attributed to the denudation zone created during laser irradiation [31]. It has been reported that higher laser power results in a wider denuded powder zone around the single track [50]. In addition, laser power has a higher effect than the scanning velocity on the denudation zone [50]. Based on this, higher laser power would result in addition of more powder particles in the melt pool which would increase the probability of existence of PMPs.
+
+\section*{4. Conclusion}
+In this work, independent of the laser power, scanning velocity and layer thickness, changing the LED (defined as the ratio of beam power to scanning velocity $\frac{P}{V}\left(\frac{\mathrm{J}}{\mathrm{mm}}\right)$ value) resulted in significant effects on the geometry of melt pool in Hastelloy X. However, keeping the LED constant at different laser powers and process speeds did not necessarily result in the same melt pool geometry or microstructure. The following points express the most important conclusions of this study:
+
+\begin{enumerate}
+  \item The laser power has a higher effect on the melt pool dimensions than the scanning velocity. Decreasing the laser power with fixed scanning velocity (LED from $0.25 \mathrm{~J} / \mathrm{mm}$ to $0.15 \mathrm{~J} / \mathrm{mm}$ ) results in about a $65 \%$ and $30 \%$ decrease in melt pool depth and width respectively. Similarly, increasing the scanning speed at a fixed power (LED from $0.25 \mathrm{~J} / \mathrm{mm}$ to $0.15 \mathrm{~J} / \mathrm{mm}$ ) results in about $38 \%$ and $13 \%$ reduction in melt pool depth and width respectively.
+
+  \item At fixed LEDs, variation in melt pool dimensions is unavoidable due to the stronger influence of the laser power on the melting regime. For example, at LED of $0.25 \mathrm{~J} / \mathrm{mm}$, increasing the laser power from $150 \mathrm{~W}$ to $300 \mathrm{~W}$ results in increasing the melt pool depth by $\sim 56 \%$.
+
+  \item It is proposed that the difference in average primary cell spacing (from $285 \mathrm{~nm}$ to $500 \mathrm{~nm}$ at LED of $0.25 \mathrm{~J} / \mathrm{mm}$ ) with an increase in laser power from $150 \mathrm{~W}$ to $300 \mathrm{~W}$ is linked with the cooling rate and can be explained by the change in the ratio of $\frac{\text { meltpoolvolume }}{\text { surfaceboundary }}$.
+
+  \item In general, the microstructure of the cross-section single track melt pools shows a cellular structure with epitaxial growth of grains at melt pool boundaries. However, at fixed LED of $0.25 \mathrm{~J} / \mathrm{mm}$ a $\sim 90 \%$ increase in new grains is observed in the solidified melt pool which results in a finer microstructure at laser power of $150 \mathrm{~W}$ and $350 \mathrm{~W}$ respectively.
+
+  \item Based on experimental EBSD results, it is proposed that the increase in the number of new grains observed in solidified melt pools is due to grain detachment caused by the higher number of survived\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_829fb3f692a2db4864deg-8(3)}
+
+\end{enumerate}
+
+IPF-Z colouring\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_829fb3f692a2db4864deg-8}
+
+Fig. 10. SEM secondary mode of imaging including EBSD inverse pole-figure map from highlighted areas of the single track deposited with an LED value of 0.25 (J/ $\mathrm{mm}$ ) and laser power of $300(\mathrm{~W})$. PMPs attached to single track show a significant amount of nucleation with new grains.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_829fb3f692a2db4864deg-8(2)}
+
+Detached particles acting\\
+as nucleation at the middle of melt pool
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_829fb3f692a2db4864deg-8(1)}
+\end{center}
+
+Fig. 11. Schematic overview of single track deposition with melt pool flow from (a) top view of single track and (b) longitudinal cross-section. (c) EBSD inverse-pole figure map showing random orientation of small crystals from PMP in the middle of melt pool region.
+
+partially melted particles (PMPs). The increase in the survived PMP at fixed LED of $0.25 \mathrm{~J} / \mathrm{mm}$ from $150 \mathrm{~W}$ to $300 \mathrm{~W}$ is probably due to the increase in the cooler band width (from $\sim 37 \mu \mathrm{m}$ to $\sim 45 \mu \mathrm{m}$ ) of molten metal that acts as nucleation sites during solidification.
+
+\section*{Acknowledgments}
+This work was supported by funding from the Natural Sciences and Engineering Research Council of Canada (NSERC), the Federal Economic Development Agency for Southern Ontario (FedDev Ontario) and Siemens Canada Limited. The authors would like to acknowledge the help from members of Canadian Center of Electron Microscopy (CCEM) at McMaster University for Electron Backscatter Diffraction experiments. The authors would also like to acknowledge the support from Jerry Ratthapakdee and Karl Rautenberg for helping with design and printing of LPBF parts.
+
+\section*{Appendix A. Supplementary material}
+Supplementary data to this article can be found online at https:// \href{http://doi.org/10.1016/j.optlastec.2019.03.012}{doi.org/10.1016/j.optlastec.2019.03.012}.
+
+\section*{References}
+[1] H. Fayazfar, M. Salarian, A. Rogalsky, D. Sarker, P. Russo, V. Paserin, E. Toyserkani, A critical review of powder-based additive manufacturing of ferrous alloys: process parameters, microstructure and mechanical properties, Mater. Des. 144 (2018) 98-128, \href{https://doi.org/10.1016/j.matdes.2018.02.018}{https://doi.org/10.1016/j.matdes.2018.02.018}.
+
+[2] M. Sadowski, L. Ladani, W. Brindley, J. Romano, Optimizing quality of additively manufactured Inconel 718 using powder bed laser melting process, Addit. Manuf. 11 (2016) 60-70, \href{https://doi.org/10.1016/j.addma.2016.03.006}{https://doi.org/10.1016/j.addma.2016.03.006}.
+
+[3] A. Aversa, M. Moshiri, E. Librera, M. Hadi, G. Marchese, D. Manfredi, M. Lorusso, F. Calignano, S. Biamino, M. Lombardi, M. Pavese, Single scan track analyses on aluminium based powders, J. Mater. Process. Technol. 255 (2018) 17-25, https:// \href{http://doi.org/10.1016/j.jmatprotec.2017.11.055}{doi.org/10.1016/j.jmatprotec.2017.11.055}.
+
+[4] J. Ciurana, L. Hernandez, J. Delgado, Energy density analysis on single tracks\\
+formed by selective laser melting with CoCrMo powder material, Int. J. Adv. Manuf. Technol. 68 (2013) 1103-1110, \href{https://doi.org/10.1007/s00170-013-4902-4}{https://doi.org/10.1007/s00170-013-4902-4}.
+
+[5] T. DebRoy, H.L. Wei, J.S. Zuback, T. Mukherjee, J.W. Elmer, J.O. Milewski, A.M. Beese, A. Wilson-Heid, A. De, W. Zhang, Additive manufacturing of metallic components - process, structure and properties, Prog. Mater. Sci. 92 (2018) 112-224, \href{https://doi.org/10.1016/j.pmatsci.2017.10.001}{https://doi.org/10.1016/j.pmatsci.2017.10.001}.
+
+[6] D. Gu, Y. Shen, Processing conditions and microstructural features of porous 316L stainless steel components by DMLS, Appl. Surf. Sci. 255 (2008) 1880-1887, \href{https://doi.org/10.1016/j.apsusc.2008.06.118}{https://doi.org/10.1016/j.apsusc.2008.06.118}.
+
+[7] B. Song, S. Dong, S. Deng, H. Liao, C. Coddet, Microstructure and tensile properties of iron parts fabricated by selective laser melting, Opt. Laser Technol. 56 (2014) 451-460, \href{https://doi.org/10.1016/j.optlastec.2013.09.017}{https://doi.org/10.1016/j.optlastec.2013.09.017}.
+
+[8] H. Gong, K. Rafi, H. Gu, T. Starr, B. Stucker, Analysis of defect generation in Ti-6Al$4 \mathrm{~V}$ parts made using powder bed fusion additive manufacturing processes, Addit. Manuf. 1 (2014) 87-98, \href{https://doi.org/10.1016/j.addma.2014.08.002}{https://doi.org/10.1016/j.addma.2014.08.002}.
+
+[9] I. Yadroitsev, A. Gusarov, I. Yadroitsava, I. Smurov, Single track formation in selective laser melting of metal powders, J. Mater. Process. Technol. 210 (2010) 1624-1631, \href{https://doi.org/10.1016/j.jmatprotec.2010.05.010}{https://doi.org/10.1016/j.jmatprotec.2010.05.010}.
+
+[10] K. Kempen, L. Thijs, J. Van Humbeeck, J.-P. Kruth, Processing AlSi10Mg by selective laser melting: parameter optimisation and material characterisation, Mater. Sci. Technol. 31 (2015) 917-923, \href{https://doi.org/10.1179/1743284714Y}{https://doi.org/10.1179/1743284714Y}. 0000000702 .
+
+[11] I. Yadroitsev, P. Krakhmalev, I. Yadroitsava, S. Johansson, I. Smurov, Energy input effect on morphology and microstructure of selective laser melting single track from metallic powder, J. Mater. Process. Technol. 213 (2013) 606-613, \href{https://doi.org/}{https://doi.org/} 10.1016/j.jmatprotec.2012.11.014
+
+[12] J.J.S. Dilip, A. Anam, D. Pal, B. Stucker, A short study on the fabrication of single track deposits in SLM and characterization, Solid Free. Fabr. Symp. 2016, pp. 1644-1659.
+
+[13] A. Keshavarzkermani, M. Sadowski, L. Ladani, Direct metal laser melting of Inconel 718: process impact on grain formation and orientation, J. Alloys Compd. 736 (2018) 297-305, \href{https://doi.org/10.1016/j.jallcom.2017.11.130}{https://doi.org/10.1016/j.jallcom.2017.11.130}.
+
+[14] X. Wang, K. Chou, electron backscatter diffraction analysis of Inconel 718 parts fabricated by selective laser melting additive manufacturing, JOM 69 (2017) 402-408, \href{https://doi.org/10.1007/s11837-016-2198-1}{https://doi.org/10.1007/s11837-016-2198-1}.
+
+[15] Q. Jia, D. Gu, Selective laser melting additive manufacturing of Inconel 718 superalloy parts: densification, microstructure and properties, J. Alloys Compd. 585 (2014) 713-721, \href{https://doi.org/10.1016/j.jallcom.2013.09.171}{https://doi.org/10.1016/j.jallcom.2013.09.171}.
+
+[16] X. Gong, X. Wang, J.V. Cole, Z. Jones, K. Cooper, K. Chou, Characterization of microstructure and mechanical property of Inconel 718 from Selective laser melting, Proc. ASME 2015 Int. Manuf. Sci. Eng. Conf. MSEC2015, 2015, \href{https://doi}{https://doi}. org/10.1115/MSEC20159317.
+
+[17] EOS GmbH - Electro Optical Systems, Material data sheet EOS NickelAlloy HX Material data sheet Technical data, 49 (2015) 1-5.
+
+[18] U. Scipioni Bertoli, A.J. Wolfer, M.J. Matthews, J.P.R. Delplanque, J.M. Schoenung, On the limitations of Volumetric Energy Density as a design parameter for Selective Laser Melting, Mater. Des. 113 (2017) 331-340, \href{https://doi.org/10.1016/j.matdes}{https://doi.org/10.1016/j.matdes}. 2016.10.037.
+
+[19] J. Ye, A.M. Rubenchik, M.F. Crumb, G. Guss, M.J. Matthews, Laser absorption and scaling behavior in powder bed fusion additive manufacturing of metals, Conf. Lasers Electro-Optics, 2018, \href{https://doi.org/10.1364/CLEO_AT.2018.JW2A}{https://doi.org/10.1364/CLEO\_AT.2018.JW2A}. 117 JW2A. 117.
+
+[20] D. Tomus, P.A. Rometsch, M. Heilmaier, X. Wu, Effect of minor alloying elements on crack-formation characteristics of Hastelloy-X manufactured by selective laser melting, Addit. Manuf. 16 (2017) 65-72, \href{https://doi.org/10.1016/j.addma}{https://doi.org/10.1016/j.addma}. 2017 05.006.
+
+[21] Q. Han, R. Mertens, M.L. Montero-Sistiaga, S. Yang, R. Setchi, K. Vanmeensel, B. Van Hooreweder, S.L. Evans, H. Fan, Laser powder bed fusion of Hastelloy X: effects of hot isostatic pressing and the hot cracking mechanism, Mater. Sci. Eng. A 732 (2018) 228-239, \href{https://doi.org/10.1016/j.msea.2018.07.008}{https://doi.org/10.1016/j.msea.2018.07.008}.
+
+[22] D. Tomus, Y. Tian, P.A. Rometsch, M. Heilmaier, X. Wu, Influence of post heat treatments on anisotropy of mechanical behaviour and microstructure of HastelloyX parts produced by selective laser melting, Mater. Sci. Eng. A 667 (2016) 42-53, \href{https://doi.org/10.1016/j.msea.2016.04.086}{https://doi.org/10.1016/j.msea.2016.04.086}.
+
+[23] Y. Tian, D. Tomus, P. Rometsch, X. Wu, Influences of processing parameters on surface roughness of Hastelloy X produced by selective laser melting, Addit. Manuf. 13 (2017) 103-112, \href{https://doi.org/10.1016/j.addma.2016.10.010}{https://doi.org/10.1016/j.addma.2016.10.010}.
+
+[24] G.F. Vander Voort, G.M. Lucas, E.P. Manilova, Metallography and microstructures of heat-resistant alloys, ASM Handb. Metallogr. Microstruct. 9 (2004) 820-859, \href{https://doi.org/10.1361/asmhba0003737}{https://doi.org/10.1361/asmhba0003737}.
+
+[25] R. Li, J. Liu, Y. Shi, L. Wang, W. Jiang, Balling behavior of stainless steel and nickel powder during selective laser melting process, Int. J. Adv. Manuf. Technol. 59 (2012) 1025-1035, \href{https://doi.org/10.1007/s00170-011-3566-1}{https://doi.org/10.1007/s00170-011-3566-1}.
+
+[26] Y. Mahmoodkhani, U. Ali, S. Imani Shahabad, A. Rani Kasinathan, R. Esmaeilizadeh, A. Keshavarzkermani, E. Marzbanrad, E. Toyserkani, On the measurement of effective powder layer thickness in laser powder-bed fusion additive manufacturing of metals, Prog. Addit. Manuf. (2018), \href{https://doi.org/10}{https://doi.org/10}. 1007/S40964-018-0064-0
+
+[27] P. Bidare, R.R.J. Maier, R.J. Beck, J.D. Shephard, A.J. Moore, An open-architecture metal powder bed fusion system for in-situ process measurements, Addit. Manuf. 16 (2017) 177-185, \href{https://doi.org/10.1016/j.addma.2017.06.007}{https://doi.org/10.1016/j.addma.2017.06.007}.
+
+[28] P. Bidare, I. Bitharas, R.M. Ward, M.M. Attallah, A.J. Moore, Fluid and particle dynamics in laser powder bed fusion, Acta Mater. 142 (2018) 107-120, \href{https://doi}{https://doi}. org/10.1016/j.actamat.2017.09.051.
+
+[29] R. Esmaeilizadeh, U. Ali, A. Keshavarzkermani, Y. Mahmoodkhani, E. Marzbanrad, E. Toyserkani, On the effect of spatter particles distribution on the quality of Hastelloy $\mathrm{X}$ parts made by laser powder-bed fusion additive manufacturing, $\mathrm{J}$. Manuf. Process. 37 (2019) 11-20, \href{https://doi.org/10.1016/j.jmapro.2018.11.012}{https://doi.org/10.1016/j.jmapro.2018.11.012}.
+
+[30] L. Ladani, J. Romano, W. Brindley, S. Burlatsky, Effective liquid conductivity for improved simulation of thermal transport in laser beam melting powder bed technology, Addit. Manuf. 14 (2017) 13-23, \href{https://doi.org/10.1016/j.addma}{https://doi.org/10.1016/j.addma}. 2016.12.004
+
+[31] S.A. Khairallah, A.T. Anderson, A. Rubenchik, W.E. King, Laser powder-bed fusion additive manufacturing: physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones, Acta Mater. 108 (2016) 36-45, \href{https://doi}{https://doi}. org/10.1016/j.actamat.2016.02.014.
+
+[32] S. Ly, A.M. Rubenchik, S.A. Khairallah, G. Guss, M.J. Matthews, Metal vapor microjet controls material redistribution in laser powder bed fusion additive manufacturing, Sci. Rep. 7 (2017) 1-12, \href{https://doi.org/10.1038/s41598-017-04237-z}{https://doi.org/10.1038/s41598-017-04237-z}.
+
+[33] U. Scipioni Bertoli, G. Guss, S. Wu, M.J. Matthews, J.M. Schoenung, In-situ characterization of laser-powder interaction and cooling rates through high-speed imaging of powder bed fusion additive manufacturing, Mater. Des. 135 (2017) 385-396, \href{https://doi.org/10.1016/j.matdes.2017.09.044}{https://doi.org/10.1016/j.matdes.2017.09.044}.
+
+[34] S. Kou, Welding Metall. (2002), \href{https://doi.org/10.1002/0471434027}{https://doi.org/10.1002/0471434027}.
+
+[35] N.J. Harrison, I. Todd, K. Mumtaz, Reduction of micro-cracking in nickel superalloys processed by Selective Laser Melting: a fundamental alloy design approach, Acta Mater. 94 (2015) 59-68, \href{https://doi.org/10.1016/j.actamat.2015.04.035}{https://doi.org/10.1016/j.actamat.2015.04.035}
+
+[36] V.D. Divya, R. Muñoz-Moreno, O.M.D.M. Messé, J.S. Barnard, S. Baker, T. Illston, H.J. Stone, Microstructure of selective laser melted CM247LC nickel-based superalloy and its evolution through heat treatment, Mater. Charact. 114 (2016) 62-74, \href{https://doi.org/10.1016/j.matchar.2016.02.004}{https://doi.org/10.1016/j.matchar.2016.02.004}.
+
+[37] X. Wang, L.N. Carter, B. Pang, M.M. Attallah, M.H. Loretto, Microstructure and yield strength of SLM-fabricated CM247LC Ni-Superalloy, Acta Mater. 128 (2017) 87-95, \href{https://doi.org/10.1016/j.actamat.2017.02.007}{https://doi.org/10.1016/j.actamat.2017.02.007}.
+
+[38] K. Darvish, Z.W. Chen, M.A.L. Phan, T. Pasang, Selective laser melting of Co-29Cr$6 \mathrm{Mo}$ alloy with laser power 180-360 W: cellular growth, intercellular spacing and the related thermal condition, Mater. Charact. 135 (2018) 183-191, \href{https://doi}{https://doi}. org/10.1016/j.matchar.2017.11.042.
+
+[39] C. Yan, L. Hao, A. Hussein, P. Young, J. Huang, W. Zhu, Microstructure and mechanical properties of aluminium alloy cellular lattice structures manufactured by direct metal laser sintering, Mater. Sci. Eng. A 628 (2015) 238-246, \href{https://doi}{https://doi}. org/10.1016/j.msea.2015.01.063.
+
+[40] J.S. Zuback, T. DebRoy, J.S. Zuback, T. DebRoy, The hardness of additively manufactured alloys, Materials (Basel) 11 (2018) 2070, \href{https://doi.org/10.3390/}{https://doi.org/10.3390/} ma11112070.
+
+[41] W. Kurz, R. Trivedi, Rapid solidification processing and microstructure formation, Mater. Sci. Eng. A 179-80 (1994) 46-51, \href{https://doi.org/10.1016/0921-5093(94)}{https://doi.org/10.1016/0921-5093(94)} 90162-7.
+
+[42] G.P. Dinda, A.K. Dasgupta, J. Mazumder, Evolution of microstructure in laser deposited Al-11.28\%Si alloy, Surf. Coatings Technol 206 (2012) 2152-2160, https:// \href{http://doi.org/10.1016/j.surfcoat.2011.09.051}{doi.org/10.1016/j.surfcoat.2011.09.051}.
+
+[43] M. Tang, P.C. Pistorius, S. Narra, J.L. Beuth, Rapid solidification: selective laser melting of AlSi10Mg, JOM 68 (2016) 960-966, \href{https://doi.org/10.1007/s11837015-1763-3}{https://doi.org/10.1007/s11837015-1763-3}.
+
+[44] A.S. Taha, F.H. Hammad, Application of the Hall-Petch relation to microhardness measurements on Al, Cu, Al-MD 105, and Al-Cu alloys, Phys. Status Solidi 119 (1990) 455-462.
+
+[45] M. Munawar, High-purity copper and aluminium, 82 (2002) 2071-2080.
+
+[46] M.H. Avazkonandeh-Gharavol, M. Haddad-Sabzevar, H. Fredriksson, Effect of partition coefficient on microsegregation during solidification of aluminium alloys, Int. J. Miner. Metall. Mater. 21 (2014) 980-989, \href{https://doi.org/10.1007/s12613014-0999-1}{https://doi.org/10.1007/s12613014-0999-1}.
+
+[47] Q. Zhang, J. Chen, X. Lin, H. Tan, W.D. Huang, Grain morphology control and texture characterization of laser solid formed Ti6Al2Sn2Zr3Mo1.5Cr2Nb titanium alloy, J. Mater. Process. Technol. 238 (2016) 202-211, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. jmatprotec.2016.07.011.
+
+[48] D. Montiel, L. Liu, L. Xiao, Y. Zhou, N. Provatas, Microstructure analysis of AZ31 magnesium alloy welds using phase-field models, Acta Mater. 60 (2012) 5925-5932, \href{https://doi.org/10.1016/j.actamat.2012.07.035}{https://doi.org/10.1016/j.actamat.2012.07.035}.
+
+[49] C. Zhao, K. Fezzaa, R.W. Cunningham, H. Wen, F. De Carlo, L. Chen, A.D. Rollett, T. Sun, Real-time monitoring of laser powder bed fusion process using high-speed Xray imaging and diffraction, Sci. Rep. 7 (2017) 1-11, \href{https://doi.org/10.1038/}{https://doi.org/10.1038/} s41598-017-03761-2.
+
+[50] M.J. Matthews, G. Guss, S.A. Khairallah, A.M. Rubenchik, P.J. Depond, W.E. King, Denudation of metal powder layers in laser powder-bed fusion processes, Addit. Manuf. Handb. Prod. Dev. Def. Ind. 114 (2017) 677-693, \href{https://doi.org/10.1201/}{https://doi.org/10.1201/} 9781315119106.
+
+
+\end{document}

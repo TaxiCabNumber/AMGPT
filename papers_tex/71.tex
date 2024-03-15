@@ -1,0 +1,369 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{multirow}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+
+\title{COMPUTATIONAL MODELLING AND EXPERIMENTAL VALIDATION OF SINGLE IN625 LINE TRACKS IN LASER POWDER BED FUSION }
+
+
+\author{J. Rosser ${ }^{1}$, M. Megahed ${ }^{2}$, H.-W. Mindt ${ }^{2}$, S.G.R. Brown ${ }^{1}$, N.P. Lavery ${ }^{1}$\\
+${ }^{1}$ College of Engineering, Bay Campus, Swansea University\\
+${ }^{2}$ ESI Group, Kruppstr. 90, 45145 Essen, Germany}
+\date{}
+
+
+\begin{document}
+\maketitle
+
+
+\begin{abstract}
+$\underline{\text { Abstract }}$ Laser track experiments are performed using INCONEL ${ }^{\circledR}$ nickel-based powder alloy, IN625, in a Powder Bed Fusion (PBF) system. Optical microscopy is used to obtain key track dimensions and morphology for various machine parameters, allowing direct validation of ESI Group's ICME suite of tools for modelling AM. The high-fidelity powder bed model simulates the melt pool formation based on solution of the Navier-Stokes equations and heat transfer, radiative powder-laser interaction, phase change, surface tension, Marangoni forces and recoil pressure. Models are enhanced by measured thermophysical material properties. Validation of the solidified melt geometry showing that conductive mode melting and instabilities such as balling can be captured with existing models and pave the way for models which capture the onset of keyholing. Examination of the melt track microstructures can also be used to determine local cooling rates, granting insight into the phase evolution differences between the alloys.
+\end{abstract}
+
+\section*{Introduction}
+Additive manufacturing (AM) is deemed a disruptive technology; a technological enabler for industry 4.0 [1], [2]. In particular, laser powder bed fusion (LPBF) has received great interest due to the production of highly functional and complex parts with $99.9 \%+$ densities without the need of additional post processing [3]-[9]. Furthermore, the resulting mechanical properties of LPBF are superior to parts produced by conventional manufacturing techniques [8]-[11]. This is a result of the unique thermal cycle involving steep thermal gradients and rapid cooling caused by rapid melting and high cooling rates (approx.105-106 ${ }^{\circ} \mathrm{C} . \mathrm{s}^{-1}$ ), with the potential of re-melting (location dependent) [12]. It is these primary variables that determine the characteristics of an alloy's final microstructure and the inherent defects that follow. The phenomena experienced presents an opportunity to create alloys with unique material properties that could not be reproduced by more conventional processing techniques such as casting. Such alloys that show great promise include nickel-chromium-based super alloy, Inconel 625 (IN625).
+
+IN625 is extensively used across a wide range of industries due to its high-performance capabilities during the application of elevated temperatures and pressures. Its strength is derived from the stiffening effect of alloy additions, Mo and Nb, within the Ni-Cr matrix. The combination of elements results in superior corrosion resistance properties and hightemperature effects such as carburization and oxidation [13].
+
+\section*{Background}
+Traditionally, trial-and-error approaches are employed to optimise the LPBF process which results in cost, material and time wastages thereby limiting the industrial application of this technique. To combat this multi-physics modelling techniques are utilised in aid of process and part optimisation [14]-[22]. Although, due to the enormous time- and length-scales\\
+involved, models are split into micro-, meso- and macroscale processes which include modelling of the spreading process, thermal history, residual stress and material melting/solidification [23]. ESI Group have produced a complete suite of tools capable of simulating the various physical phenomena that occur during the LPBF process to identify manufacturing defects and residual stresses input by this process.
+
+The focus of these works attempt to validate the melting and solidification module which uses information obtained via the powder coating module. The powder coating module utilizes a discrete element approach to simulate powder spreading onto a substrate. This can then be enhanced to simulate powder coating on previously consolidated layers, but for the purpose of this work only a single layer is modelled. The resulting geometry can then be imported into the high-fidelity melting module which determines laser-powder interaction, heat and fluid flow in the melt pool. For validation purposes, a single line study is presented in this document. Several authors have conducted similar strategies to investigate single track formation for parameter optimisation and model validation purposes [24]-[28]. Using various process parameter settings, single lines on top of a substrate are processed. The resulting line morphologies were unique to each specified setting applied. Using ESI-AM, similar lines were processed and compared to the physical result for model validation.
+
+\section*{Inconel 625 Powder}
+\section*{Materials and Methods}
+For the purpose of this study nitrogen gas atomised Inconel powder, IN625 (prepared by Sandvik Osprey, UK) was used; the chemical composition and powder morphology is shown in Table 1 and Figure 1 respectively. Particle size distribution (PSD) was first analyzed by using laser diffraction analysis (LDA) resulting in a D10, D50 and D90 of $24.5 \mu \mathrm{m}, 35.2 \mu \mathrm{m}$ and 57.2 $\mu \mathrm{m}$ respectively. The majority of the IN625 powder is spherical in shape with a smooth surface; a typical result of the gas atomisation process. At [x500] magnification some satellite formation can be observed, but this effect was minimal and posed no concern regarding powder rheology.
+
+Table 1. Limiting and actual chemical composition of IN625 (wt.\%) (prepared by Sandvik Osprey, UK) [13].
+
+\begin{center}
+\begin{tabular}{ccccccccccccc}
+\hline
+$\mathbf{N i}$ & $\mathbf{C r}$ & $\mathbf{M o}$ & $\mathbf{F e}$ & $\mathbf{N b}$ & $\mathbf{A l}$ & $\mathbf{C}$ & $\mathbf{S i}$ & $\mathbf{C o}$ & $\mathbf{M n}$ & $\mathbf{T i}$ & $\mathbf{P}$ & $\mathbf{S}$ \\
+\hline
+58 & $20.0-$ & $8.0-$ & 5.0 & $3.15-$ & 0.4 & 0.1 & 0.5 & 1.0 & 0.5 & 0.4 & 0.015 & 0.015 \\
+min. & 23.0 & 10.0 & max. & .15 & $\max$. & $\max$. & $\max$. & $\max$. & $\max$. & $\max$. & $\max$. & $\max$. \\
+\hline
+62.0 & 21.7 & 8.9 & 3.8 & 3.74 & 0.007 & 0.02 & 0.02 & $<0.01$ & 0.01 & $<0.01$ & $<0.003$ & $<0.001$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c8b4f6dc6a78404594a3g-02}
+\end{center}
+
+Figure 1. SEM images of IN625 powder at [x150] (left) and [x500] (right) magnification.
+
+Renishaw's AM400 [29] was used to manufacture the single line samples. The AM400 utilises a $400 \mathrm{~W}$ ytterbium fibre laser with a beam diameter of $70 \mu \mathrm{m}$. Its modulated mode of operation (depicted in Figure 2) applies the heat energy on a point-to-point basis. Heat is applied at a singular point for a specified exposure time, ET, and then moves a specified point distance, PD. This process is then repeated throughout the build over multiple layers to form the final part. The equivalent scan speed, V, was then calculated by dividing PD by ET. Argon gas was used to flood the build chamber; reducing the oxygen level to $<0.1 \%$ and forming a completely inert atmosphere. In addition to this, reduced build volume (RBV) auxiliary equipment was used in conjunction, enabling efficient part production and rapid material change-over.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c8b4f6dc6a78404594a3g-03}
+\end{center}
+
+Laser Direction
+
+Figure 2. Application of a modulated laser: Heat is applied at a singular point for a specified exposure time, ET, and then moves a specified point distance, PD. A laser spot size/beam diameter, $\sigma$, of $70 \mu m$ is kept constant whereas hatch spacing, $H S$, was varied.
+
+\section*{Process Parameter Optimisation}
+During the LPBF process, the amount and rate of energy transferred to the powder is governed by the process parameters applied. Laser power, scan speed (point distance / exposure time), hatch distance and layer thickness are among the most critical parameters to consider. The volumetric energy density (V.E.D) is the amount of energy input to the system per millimeter cubed (see Equation (1)) and describes the relationship between these parameters.
+
+
+\begin{equation*}
+V . E . D=\frac{P}{V . H S . L T}=\frac{P . E T}{P D . H S . L T} \tag{1}
+\end{equation*}
+
+
+The optimal parameter set for the alloy was determined by method of density analysis based on Archimedes principle. For this study density cubes were produced using various parameters sets determined by an L9 orthogonal array; layer thickness remained constant at 60 $\mu \mathrm{m}$ whereas laser power, point distance, exposure time and hatch spacing were varied as seen in Table 2. In addition to the resulting L9 configurations, a $10^{\text {th }}$ configuration was tested as suggested by Renishaw. The optimised configuration was used to manufacture the substrate, namely the crucible ('The Crucible Method' as first described in [30]), of which the single lines were processed on.
+
+Table 2. Parameter sets applied to each density cube sample to obtain the optimum parameter set for this alloy. The density of the resulting cubes was analysed based on Archimedes principle and compared to V.E.D to identify an optimum range.
+
+\begin{center}
+\begin{tabular}{ccccccc}
+\hline
+Sample Label & $\mathbf{P D}(\boldsymbol{\mu m})$ & HS $(\boldsymbol{\mu m})$ & $\mathbf{E T}(\boldsymbol{\mu})$ & $\mathbf{P}(\mathbf{W})$ & $\mathbf{V}(\mathbf{m} / \mathbf{s})$ & $\mathbf{V . E . D}\left(\mathbf{J} / \mathbf{m m}^{3}\right)$ \\
+\hline
+$\mathbf{A 1}$ & 70.00 & 70.00 & 45.00 & 300.00 & 1.56 & 45.92 \\
+\hline
+$\mathbf{A 2}$ & 70.00 & 80.00 & 60.00 & 350.00 & 1.17 & 62.50 \\
+\hline
+$\mathbf{A 3}$ & 70.00 & 90.00 & 75.00 & 400.00 & 0.93 & 79.37 \\
+\hline
+$\mathbf{A 4}$ & 80.00 & 70.00 & 60.00 & 400.00 & 1.33 & 71.43 \\
+\hline
+$\mathbf{A 5}$ & 80.00 & 80.00 & 75.00 & 300.00 & 1.07 & 58.59 \\
+\hline
+$\mathbf{A 6}$ & 80.00 & 90.00 & 45.00 & 350.00 & 1.78 & 36.46 \\
+\hline
+$\mathbf{A 7}$ & 90.00 & 70.00 & 75.00 & 350.00 & 1.20 & 69.44 \\
+\hline
+$\mathbf{A 8}$ & 90.00 & 80.00 & 45.00 & 400.00 & 2.00 & 41.67 \\
+\hline
+$\mathbf{A 9}$ & 90.00 & 90.00 & 60.00 & 300.00 & 1.50 & 37.04 \\
+\hline
+$\mathbf{R}$ & 70.00 & 70.00 & 40.00 & 400.00 & 1.75 & 54.42 \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{Single Line Setup}
+By varying both power and exposure time (and with point distance kept constant at 70 $\mu \mathrm{m}$ ), the applied line energy density (L.E.D) was manipulated as seen in Equation 2.
+
+
+\begin{equation*}
+\text { L. } E . D=\frac{P}{V}=\frac{P . E T}{P D} \tag{2}
+\end{equation*}
+
+
+Thirty single lines ( $22.5 \mathrm{~mm}$ in length) were produced with various L.E.Ds applied to promote a range of melt pool geometries for validation against results produced by the melting model later described. Three power settings were applied; $300 \mathrm{~W}, 350 \mathrm{~W}$ and $400 \mathrm{~W}$. For each power setting 10 exposure times were applied ranging between $23.33 \mu$ s and $233.33 \mu$ s (or 3.00 $\mathrm{m} / \mathrm{s}$ to $0.30 \mathrm{~m} / \mathrm{s}$ ). The resulting L.E.Ds varied from $100 \mathrm{~J} / \mathrm{m}$ to $1333.33 \mathrm{~J} / \mathrm{m}$. This is seen in Figure 3. A single power set (10 lines of varying exposure) was processed on top of a 'crucible' - a substrate manufactured by LPBF using the optimum settings for this powder. The Crucible Method's, crucible consists of a 3D tapered rectangular structure as detailed in Figure 4.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c8b4f6dc6a78404594a3g-04}
+\end{center}
+
+Figure 3. L.E.Ds applied to lines studied. A combination of 3 power setting and 10 exposure times (effective scan speeds) were applied resulting in a total of 30 parameter sets (i.e. 30 single lines).\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c8b4f6dc6a78404594a3g-05}
+
+Figure 4. Isometric view (left) and detailed engineering drawing (right, dimensions in mm) of substrate produced by LPBF, namely, the Crucible Method.
+
+\section*{Metallographic Preparation and Optical Analysis}
+Top-down images were taken using optical microscopy (Zeiss Smartzoom 5) to assess overall line morphology. Following this, each crucible was machined in half to expose the central cross section of each line. They were then mounted by compression mounting and polished according to Buehler's recommendation of Ni-based super alloys [31]. For microstructural characterisation, the crucibles were then electro-etched using $2 \% \mathrm{H}_{2} \mathrm{SO}_{4}$ and $\mathrm{H}_{2} \mathrm{O}$ under a voltage of $5 \mathrm{~V}$ for 5 to $15 \mathrm{~s}$. Using optical microscopy (Zeiss Observer), the melt pool of each line was characterised in terms of melt pool width (w), depth (d) and height (h) as depicted in Figure 5. The melt pool width was defined by the distance of the weld along the level of the substrate. The melt pool depth was defined by the vertical distance from substrate to the bottom of the weld. The melt pool height was defined by the distance from the substrate to the top of the weld. Three sets of measurements were taken by re-grounding, polishing and etching to obtain the average measurement of width, depth and height of each line processed.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c8b4f6dc6a78404594a3g-05(1)}
+
+Figure 5. Techniques used to characterise 3 types of melt pool formation; deep-weld (left), medium-weld (right) and a 'balled'-weld. This type of weld formation is relative to the parameter set applied as described later in this study.
+
+\section*{Spreading Model}
+The powder spreading model is used to analyse powder flowability which is dependent on the system geometry, material density and particle size distribution (PSD) applied. The resulting spread is then imported into the melting model to serve as a numerically produced powder bed. In this case, the spreading geometry (depicted in Figure 6) consisted of a layer thickness (LT) of $60 \mu \mathrm{m}$, spreader thickness (ST) of $100 \mu \mathrm{m}$, spreader length (LSpreader) of 4 $\mathrm{mm}$, table length ( $\mathrm{L}_{\text {Table }}$ ) of $4 \mathrm{~mm}$ and table width (w) of $1 \mathrm{~mm}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c8b4f6dc6a78404594a3g-06}
+\end{center}
+
+Figure 6. Spreading model setup and parameter definitions.
+
+PSD was analyzed by using laser diffraction analysis (LDA) resulting in a D10, D50 and D90 of $24.5 \mu \mathrm{m}, 35.2 \mu \mathrm{m}$ and $57.2 \mu \mathrm{m}$ respectively. The particles generated in the spreading model were based on 14 data points encompassing the range of particles measured w.r.t mass fraction. A solid density of $8400 \mathrm{~kg} / \mathrm{m}^{3}$ was also applied.
+
+\section*{Melting Model}
+Using the melting model, single lines were processed using a variety of settings which would result in a range of line L.E.Ds comparative to those applied in the physical experimentation. Initially 6 melting model cases (Table 3, models 1-6) were developed with L.E.Ds ranging from $107.14 \mathrm{~J} / \mathrm{mm}$ to $1400.0 \mathrm{~J} / \mathrm{mm}$. IN625 and Argon gas were selected as the powder and gas materials respectively (material data supplied by ESI Group). Due to the lack of time and computational resources available, a low-quality mesh was applied to models 1-6 with only a total 34,560 cells which encompassed the gas, powder and substrate domains. Due to the resulting cell size applied, the mesh generated failed to capture an accurate geometry of the powder bed. Following that, a $7^{\text {th }}$ model was simulated using a much higher quality mesh $(1,684,800$ cells) for comparison (Table 3, model 7). The meshes generated are shown in Figure 7. An arbitrary location was selected on the resulting powder bed to apply the melting domain with a length, height and depth of 900,460 and $400 \mu \mathrm{m}$ respectively. A time-step of 1E-7s was applied to each case.
+
+Table 3. Severn models were simulated with different parameter sets applied to apply various L.E.Ds in a single line model. Models 1 to 6 were deemed of low quality due to the application of a course mesh, but an addition $7^{\text {th }}$ model was created with the application if a high quality mesh. Throughout this study the point distance and time-step remained constant.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Model & L.E.D (J/m) & $\mathbf{P}(\mathbf{W})$ & ET $(\mu s)$ & PD $(\mu \mathrm{m})$ & $\mathbf{V}(\mathbf{m} / \mathbf{s})$ & No. Cells \\
+\hline
+1 & 107.14 & 300 & 25 & \multirow{7}{*}{70} & 2.80 & \multirow{6}{*}{34560} \\
+\hline
+2 & 600.00 & 400 & 105 &  & 0.67 &  \\
+\hline
+3 & 700.00 & 350 & 140 &  & 0.50 &  \\
+\hline
+4 & 792.86 & 300 & 185 &  & 0.38 &  \\
+\hline
+5 & 1000.0 & 350 & 200 &  & 0.35 &  \\
+\hline
+6 & 1400.0 & 400 & 245 &  & 0.29 &  \\
+\hline
+7 & 228.57 & 400 & 40 &  & 1.75 & 1684800 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c8b4f6dc6a78404594a3g-07(1)}
+\end{center}
+
+Figure 7. Mesh applied to models 1-6 (left) and 7 (right). Due to the large cell size applied to models 1-6, the resulting mesh generated failed to capture the powder bed geometry. By refining the mesh, the geometric curvature was captured resulting in a high-quality powder bed.
+
+\section*{Results and Discussion}
+\section*{Optimised Process Parameters}
+In order to obtain the optimum process conditions for alloy IN625, a density study was conducted using various parameter sets produced by implementation of an L9 orthogonal array. In addition to the 9 generated sets, a $10^{\text {th }}$ was added as recommended by the machine developers, Renishaw. Results are shown in Figure 8 below. The results of this study revealed a typical correlation between V.E.D applied and the resulting part density. As expected, maximum porosity was observed during an application of the lowest energy density. The density increases to $99 \%+$ with sample A1, with the exception of sample A9 which was deemed an error reading. Although the parameter set for A1 were efficient in this case, it was decided that Renishaw's suggested setting should be used. The optimum parameter sets used to manufacture the crucible (the substrate) are shown in Table 4.
+
+Table 4. Optimum parameter set found by means of density measurement analysis based on Archemedes principle. The optimum value is highlighted in red.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c8b4f6dc6a78404594a3g-07}
+\end{center}
+
+Figure 8. Resulting densities of parameter sets tested. Majority of V.E.Ds applied resulted in $99 \%+$ dense parts. Optimum result, $R$, highlighted in red.
+
+\section*{Single Line - Line Morphologies}
+Figure 9 gives an overview of each line processed on top of the crucible with a specific parameter set applied. From the top line to the bottom, L.E.D is decreased. During the application of a high L.E.D, lines appear to be thick and stable (e.g. $400 \mathrm{~W}, 0.30$ to $0.90 \mathrm{~m} / \mathrm{s}$ ). As the energy density is decreased instabilities result in track irregularities which causes balling (e.g. $400,1.50$ to $2.10 \mathrm{~m} / \mathrm{s}$ ). A further decrease resulted in little or no adherence due to insufficient power and/or exposure time to melt the powder (e.g. $300 \mathrm{~W}, 2.40$ to $3.00 \mathrm{~m} / \mathrm{s}$ ).
+
+In LPBF process parameters that result in stable and continuous tracks are desirable. Track irregularities can cause various defects such as porosity and may lead to part failure, it is therefore essential to provide enough energy to adequately melt the powder. Conversely, it is also evident that the spatter produced during processing is a function of energy density applied, this may also affect the building process and final part. This furthers the importance of parameter optimisation.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c8b4f6dc6a78404594a3g-08}
+\end{center}
+
+Figure 9. Top-down micrograph showing single line tracks as a function of scan speed $(\mathrm{m} / \mathrm{s})$ and power $(\mathrm{W})$. Both layer thickness and spot size remained constant at 60 and $70 \mu \mathrm{m}$ respectively.
+
+Single Line - Cross Section Morphology
+
+Track morphologies are shown in Figure 10 and the measured widths, depths and heights are shown in Figure 11, Figure 12 and Figure 13 respectively. Three repeat crosssectional measurements were taken for each track and the standard deviation is shown. Typically, application of a high line energy density resulted in stable and continuous tracks as seen in the top-down study (found in Figure 9). Both melt pool width and depth show similar trends and no key-hole welds were identified due to the lack of L.E.D applied. For each power setting, the largest widths and depths are seen during application of the lowest scan speed (i.e. highest energy density). Line instabilities and discontinuity become apparent as we see larger variations between each measurement taken in some parameter sets (e.g. $300 \mathrm{~W}, 2.10 \mathrm{~m} / \mathrm{s}$ ). As L.E.D was decreased, widths and depths values reduced until a point at which no fusion took place (e.g. $300 \mathrm{~W}, 2.10$ to $3.00 \mathrm{~m} / \mathrm{s}$ ).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c8b4f6dc6a78404594a3g-09(2)}
+\end{center}
+
+Figure 10. Micrograph show single line cross-sections as a function of power (W) and scan speed (m/s).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c8b4f6dc6a78404594a3g-09(1)}
+\end{center}
+
+Figure 11. Melt pool width as a function of power $(W)$ and scan speed $(\mathrm{m} / \mathrm{s})$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c8b4f6dc6a78404594a3g-09}
+\end{center}
+
+Figure 12. Melt pool depth as a function of power $(W)$ and scan speed $(\mathrm{m} / \mathrm{s})$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c8b4f6dc6a78404594a3g-10}
+\end{center}
+
+Figure 13. Melt pool height as a function of power $(W)$ and scan speed $(\mathrm{m} / \mathrm{s})$.
+
+\section*{Spreading Model}
+The results of the spreading model are depicted in Figure 14 below. The generation of particles (as seen in Figure 14 (A)) is governed by the experimental PSD data applied. Particles generated ranged from $14.5 \mu \mathrm{m}$ to $65.7 \mu \mathrm{m}$ in diameter as seen the temperature legend (see Figure 14 (E)). Once generated, the particles fall and are numerically spread across the baseplate lowered a distance equal to one-layer thickness (i.e. $60 \mu \mathrm{m}$ ); in this instance the substrate used was a flat surface. Once the rigid spreader has surpassed the length of the table and all particles meet equilibrium, this forms the final powder bed geometry as seen in Figure 14 (F).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c8b4f6dc6a78404594a3g-10(1)}
+\end{center}
+
+Figure 14. Particles are first generated (A) and then fall onto the spreading platform (B). After a pre-set time, the spread moves lineraly across the spreader and onto the build platform (C). The spread continues across the platform to completely disperse the powder (D). Once the powder has reached equilibiurm, this solid geometry was input into the melting model (E).
+
+\section*{Melting Model}
+ESI-AM's melting module produces a 3D-transient result that may be analysed at any time-step simulated. Seven cases were simulated with various parameter sets and model settings applied. Models 1 to 6 were deemed low-quality due to the course mesh applied to the geometry. Figure 15 shows some results from model 2; application of $400 \mathrm{~W}$ and $0.67 \mathrm{~m} / \mathrm{s}$, equating to a L.E.D of approx. $600 \mathrm{~J} / \mathrm{m}$. Within each $900 \mu \mathrm{m}$ domain (for all models) the modulated laser was applied 9 times with a point distance of $70 \mu \mathrm{m}$ to achieve a line length of $630 \mu \mathrm{m}$.
+
+When analyzing the results of models 1 to 6 , it was realised that a miscalculation in Gaussian Beam radius resulted in the application of a spot size equal to almost half of that used in physical experimentation. Due to this, the resulting melt pools displayed a large amount of key-hole melting (as seen in Figure 15). In addition to this, the uncompensated point distance of $70 \mu \mathrm{m}$ resulted in a huge amount of variation in melt pool depth as insufficient melting caused large gaps between welds (as seen in Figure 15 (B)). Throughout the laser application process a maximum temperature of $3466 \mathrm{~K}$ was reached in the centre of the melt pool as seen in Figure 15 (C). Following such high temperatures and with the application of recoil pressure and evaporation models, spatter formation was observed as material was ejected from the melt pool in various directions as identified in Figure 15 (D). In addition, the reduced spot sized applied and consequent key-hole mode of melting further increased the rate of spatter formation from the melt pool.
+
+Due to the mistaken spot size applied in models 1-6, the resulting melt pool widths were much smaller for each parameter set applied which saw further deviation as the L.E.D was increased (as seen in
+
+Figure 17 (D)). In the physical experimentation, a maximum depth in excess of $300 \mu \mathrm{m}$ was reached which surpassed the $200 \mu \mathrm{m}$ substrate domain applied to the model. The excessive key hole melting led to depths beyond this maximum which could not be assessed thereby reducing the average depth. Heights measured in each model were a lot lower than that of physical experimentation. Again, without the right spot size and mesh quality applied, it is hard to judge as to why this may be. Although, this should be investigated further as the mesh quality may prove adequate in melt pool analysis with the correct spot size applied.
+
+Unfortunately, only a single high-quality model (model 7) was simulated due to time and computational constraints. Model 7 was simulated using the optimum parameters found for this alloy (as seen in Table 4). As well as the highly refined mesh, the application of a $70 \mu \mathrm{m}$ spot size was applied by recalculating the Gaussian beam radius. By doing so, the melt pool width doubled to a value close to the experimental result. In addition, the variation of powder depth along the single line reduced dramatically to a similar variation to that found in physical experimentation. In this case the maximum temperature went beyond that which was estimated $(3500 \mathrm{~K})$ resulting in the lack of colour seen in the last weld of Figure 16 (C). Once again, both recoil pressure and evaporation model was applied resulting in the ejection of small particulates forming spatter Figure 16 (D). Both widths and depths measure in model 7 correlated well with the physical experimentation, but once again the height still seemed to be considerably smaller. Further studies must be conducted using a similar model setup (but various L.E.Ds applied) to further validate this model.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c8b4f6dc6a78404594a3g-12(1)}
+
+Figure 15. 3D transient results from model $2(400 \mathrm{~W}, 105 \mu \mathrm{s})$ : (A) top-down view of laser processing across powder bed, (B) side-view of melted cells, (C) temperature ditribution along melted track, (D) melted cells highlighting particle ejection due to material evaporation and (E) coloured legend indicating temperature range.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c8b4f6dc6a78404594a3g-12}
+
+Figure 16. 3D transient results from model 7 (400 W, $40 \mu \mathrm{s})$ : (A) top-down view of laser processing across powder bed, (B) side-view of melted cells, (C) temperature ditribution along melted track, (D) melted cells highlighting particle ejection due to material evaporation and $(E)$ coloured legend indicating temperature range.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c8b4f6dc6a78404594a3g-13(1)}
+\end{center}
+
+\begin{itemize}
+  \item Models 1-6 - Exp. Model 7 ......... Poly. (Models 1-6) ........ Poly. (Exp.)
+\end{itemize}
+
+Figure 17. Melt pool width as a fuction of L.E.D for models 1 to 7 and experimental results. Due to the application of an inncorrect spot size (approx. half the actual value) to models 1-6, large deviation is seen between the models and experimental data. Model 7 (highlighted) included the correct spot size and concequently produced a realistic value.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c8b4f6dc6a78404594a3g-13(2)}
+\end{center}
+
+Figure 18. Melt pool width as a fuction of L.E.D for models 1 to 7 and experimental results. The maximum achievable melt pool depth was limited by the boundary applied in the melting model $(200 \mu \mathrm{m})$. The combination of this and incorrect spot size led to a huge variation in depth in models 1 to 6. Model 7 (highlighted) included the correct spot size and concequently produced a similar value and variation to that found by physical experimentation.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c8b4f6dc6a78404594a3g-13}
+\end{center}
+
+\begin{itemize}
+  \item Models 1-6 Exp. Model 7 ......... Poly. (Models 1-6) ......... Poly. (Exp.)
+\end{itemize}
+
+Figure 19. Melt pool height as a fuction of L.E.D for models 1 to 7 and experimental results.
+
+\section*{Conclusion}
+IN625 was used to conduct a single line study in order to validate model results produced using ESI-AM's spreading and melting modules. Process parameters were first optimised for the alloy by method of density measurement based on Archimedes principle. Using the optimised results, a solid rectangular geometry, known as 'the crucible', was manufactured to serve as a substrate in which the single lines were processed on. Three power settings were applied; $300 \mathrm{~W}, 350 \mathrm{~W}$ and $400 \mathrm{~W}$. For each power setting 10 exposure times were applied ranging between $23.33 \mu$ s and $233.33 \mu \mathrm{s}$ (or $3.00 \mathrm{~m} / \mathrm{s}$ to $0.30 \mathrm{~m} / \mathrm{s}$ ). This resulted on the application of 30 L.E.Ds varying from $100 \mathrm{~J} / \mathrm{m}$ to $1333.33 \mathrm{~J} / \mathrm{m}$.
+
+Firstly, the line morphologies were studied to assess line quality. During the application of a high L.E.D, lines appear to be thick and stable. As the energy density is decreased instabilities result in track irregularities which caused balling. A further decrease resulted in little or no adherence due to insufficient power and/or exposure time to melt the powder.
+
+Secondly, melt pool morphologies were analysed along each line in 3 separate positions to obtain average width, depth and height measurements. Typically, application of a high L.E.D resulted in stable and continuous tracks as seen in the top-down study. Both melt pool width and depth show similar trends and no key-hole welds were identified due to the lack of L.E.D applied. For each power setting, the largest widths and depths are seen during application of the lowest scan speed (i.e. highest energy density). Line instabilities and discontinuity become apparent as we see larger variations between each measurement taken in some parameter sets. As L.E.D was further decreased, widths and depths values reduced until a point at which no fusion took place.
+
+Using the spreading module, a powder bed was numerically generated using details relating to material properties, spreading geometry and particle size distribution. Once the spreading process had complete and powder bed had reached equilibrium, this final geometry was imported into the melting module. Using the melting module, seven cases were simulated with various parameter sets and model settings applied. Models 1 to 6 were deemed low-quality due to the course mesh applied to the geometry and model 7 was deemed high-quality due to the refined mesh applied. Due to time and computation limitations, only one high quality model was simulated. In addition to the low quality of models 1-6, a miscalculation in Gaussian beam radius resulted in the application of a spot size half that applied in physical experimentation. Due to this, the results did not correlate well to that of the physical experimentation. Conversely, the single high-quality model simulated (model 7) showed promising results, although further simulations covering a range of L.E.Ds must be completed to fully validate the model.
+
+\section*{References}
+[1] F. Almada-Lobo, "The Industry 4.0 revolution and the future of Manufacturing Execution Systems (MES),” J. Innov. Manag., vol. 3, no. 4, pp. 16-21, 2016.
+
+[2] B. Berman, "3-D printing: The new industrial revolution," Bus. Horiz., vol. 55, no. 2, pp. 155-162, Mar. 2012.
+
+[3] W. Xu et al., "Additive manufacturing of strong and ductile Ti-6Al-4V by selective laser melting via in situ martensite decomposition," Acta Mater., vol. 85, pp. 74-84, Feb. 2015.
+
+[4] T. M. Mower and M. J. Long, "Mechanical behavior of additive manufactured, powderbed laser-fused materials," Mater. Sci. Eng. A, vol. 651, pp. 198-213, 2016.
+
+[5] L. Thijs, F. Verhaeghe, T. Craeghs, J. Van Humbeeck, and J.-P. Kruth, "A study of the microstructural evolution during selective laser melting of Ti-6Al-4V," Acta Mater., vol. 58, no. 9, pp. 3303-3312, May 2010.
+
+[6] Y. J. Liu et al., "Microstructure, defects and mechanical behavior of beta-type titanium porous structures manufactured by electron beam melting and selective laser melting," Acta Mater., vol. 113, pp. 56-67, 2016.
+
+[7] N. T. Aboulkhair, N. M. Everitt, I. Ashcroft, and C. Tuck, "Reducing porosity in AlSi10Mg parts processed by selective laser melting," Addit. Manuf., vol. 1, pp. 77-86, 2014.
+
+[8] N. Read, W. Wang, K. Essa, and M. M. Attallah, "Selective laser melting of AlSi10Mg alloy: Process optimisation and mechanical properties development," Mater. Des., vol. 65, pp. 417-424, 2015.
+
+[9] E. Liverani, S. Toschi, L. Ceschini, and A. Fortunato, "Effect of selective laser melting (SLM) process parameters on microstructure and mechanical properties of 316L austenitic stainless steel," J. Mater. Process. Technol., vol. 249, no. November 2016, pp. 255-263, 2017.
+
+[10] B. Vrancken, L. Thijs, J. P. Kruth, and J. Van Humbeeck, "Microstructure and mechanical properties of a novel $\beta$ titanium metallic composite by selective laser melting," Acta Mater., vol. 68, pp. 150-158, 2014.
+
+[11] K. Kempen, L. Thijs, J. Van Humbeeck, and J.-P. Kruth, "Processing AlSi10Mg by selective laser melting: parameter optimisation and material characterisation," Mater. Sci. Technol., vol. 31, no. 8, pp. 917-923, 2015.
+
+[12] M. Markl and C. Körner, "Multiscale Modeling of Powder Bed-Based Additive Manufacturing," Апnu. Rev. Mater. Res., vol. 46, no. 1, pp. 93-123, Jul. 2016.
+
+[13] S. M. Corporation, "Inconel Alloy 625," \href{http://www.Specialmetals.com}{www.Specialmetals.com}, vol. 625, no. 2, pp. 128, 2013.
+
+[14] H.-W. Mindt, M. Megahed, N. P. Lavery, A. Giordimaina, and S. G. R. Brown, "Verification of Numerically Calculated Cooling Rates of Powder Bed Additive Manufacturing," in TMS 2016: 145 th Annual Meeting \& Exhibition: Supplemental Proceedings, Hoboken, NJ, USA: John Wiley \& Sons, Inc., 2016, pp. 205-212.
+
+[15] A. M. Philo et al., "A pragmatic continuum level model for the prediction of the onset of keyholing in laser powder bed fusion," Int. J. Adv. Manuf. Technol., vol. 101, no. 14, pp. 697-714, Mar. 2019.
+
+[16] N. P. Lavery, S. G. R. Brown, J. Sienz, and J. Cherry, "A review of Computational Modelling of Additive Layer Manufacturing - multi-scale and multi-physics," Sustain. Des. Manuf., vol. 1, no. 1, pp. 651-673, 2014.
+
+[17] H. Mindt, M. Megahed, N. P. Lavery, M. A. Holmes, A. Giordimaina, and S. G. R. Brown, "Powder Bed Layer Characteristics - The Overseen First Order Process Input," Proc. TMS2016 (Metallurgical Mater. Trans. A), p. In press, 2016.
+
+[18] M. Megahed, H.-W. Mindt, B. Shula, A. Peralta, and J. Neumann, "Powder Bed Models - Numerical Assessment of As-Built Quality," in 57th AIAA/ASCE/AHS/ASC Structures, Structural Dynamics, and Materials Conference, 2016, no. January, pp. 1-7.
+
+[19] H.-W. Mindt, O. Desmaison, M. Megahed, A. Peralta, and J. Neumann, "Modeling of Powder Bed Manufacturing Defects," J. Mater. Eng. Perform., vol. 27, no. 1, pp. 32-43, Jan. 2018.
+
+[20] J. Zielinski, S. Vervoort, H.-W. Mindt, and M. Megahed, "Influence of Powder Bed Characteristics on Material Quality in Additive Manufacturing," BHM Berg- und Hüttenmännische Monatshefte, vol. 162, no. 5, pp. 192-198, May 2017.
+
+[21] J. Zielinski, H.-W. Mindt, J. Düchting, J. H. Schleifenbaum, and M. Megahed, "Numerical and Experimental Study of Ti6A14V Components Manufactured Using
+
+Powder Bed Fusion Additive Manufacturing," JOM, vol. 69, no. 12, pp. 2711-2718, Dec. 2017.
+
+[22] A. Rai, H. Helmer, and C. Körner, "Simulation of grain structure evolution during powder bed based additive manufacturing," Addit. Manuf., vol. 13, pp. 124-134, Jan. 2017.
+
+[23] M. Megahed, H.-W. Mindt, N. N'Dri, H. Duan, and O. Desmaison, "Metal additivemanufacturing process and residual stress modeling," Integr. Mater. Manuf. Innov., vol. 5, no. 1, p. 4, Dec. 2016.
+
+[24] A. Aversa et al., "Single scan track analyses on aluminium based powders," J. Mater. Process. Technol., vol. 255, no. September 2017, pp. 17-25, 2018.
+
+[25] P. Wei et al., "The AlSi10Mg samples produced by selective laser melting: single track, densification, microstructure and mechanical behavior," Appl. Surf. Sci., vol. 408, pp. 38-50, 2017.
+
+[26] H. Gong, D. Christiansen, J. Beuth, and J. J. Lewandowski, "Melt Pool Characterization for Selective Laser Melting of Ti-6Al-4V Pre-alloyed Powder," Solid Free. Fabr. Symp., no. July 2015, pp. 256-267, 2014.
+
+[27] A. M. Philo et al., "A Pragmatic Continuum Level Model for the Prediction of the Onset of Keyholing in Laser Powder Bed Fusion," Int. J. Adv. Manuf. Technol., 2018.
+
+[28] I. Yadroitsev, A. Gusarov, I. Yadroitsava, and I. Smurov, "Single track formation in selective laser melting of metal powders," J. Mater. Process. Technol., vol. 210, no. 12, pp. 1624-1631, 2010.
+
+[29] Renishaw, AM400 AM System Brochure. 2015.
+
+[30] A. Giordimaina, "Physical Verification of the Melt Pool in Laser Powder-Bed Fusion for Computational Validation," Swansea University, 2017.
+
+[31] Buehler, Buehler ${ }^{\circledR}$ SumMet ${ }^{T M}$ - A Guide to Materials Preparation and Analysis, 4th ed. Lake Bluff: Buehler, 2018.
+
+
+\end{document}

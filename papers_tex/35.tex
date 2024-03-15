@@ -1,0 +1,203 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Melt pool morphology in directed energy deposition additive manufacturing process }
+
+
+\author{Y Chen $^{1,2}$, S Clark ${ }^{1,2}$, A C L Leung ${ }^{1,2}$, L Sinclair ${ }^{1,2}$, S Marussi ${ }^{1,2}$, R Atwood ${ }^{1,2}$,\\
+T Connoley $^{3}$, M Jones ${ }^{4,5}$, G Baxter ${ }^{4}$ and P D Lee ${ }^{1,2}$\\
+${ }^{1}$ Department of Mechanical Engineering, University College London, WC1E 7JE, UK\\
+${ }^{2}$ Research Complex at Harwell, Harwell Campus, Didcot, OX11 0FA, UK\\
+${ }^{3}$ Diamond Light Source Ltd, Harwell Campus, Didcot, OX11 0DE, UK\\
+${ }^{4}$ University of Sheffield, Sir Robert Hadfield Building, Sheffield, S1 3JD, UK\\
+${ }^{5}$ Rolls-Royce plc, PO Box 31, Derby, DE24 8BJ, UK\\
+E-mail: yunhui.chen@ucl.ac.uk, peter.lee@ucl.ac.uk}
+\date{}
+
+
+\begin{document}
+\maketitle
+PAPER $\cdot$ OPEN ACCESS
+
+Melt pool morphology in directed energy deposition additive manufacturing process
+
+To cite this article: Y Chen et al 2020 IOP Conf. Ser.: Mater. Sci. Eng. $\mathbf{8 6 1} 012012$
+
+View the article online for updates and enhancements.\\
+Recent citations
+
+In situ X-ray Quantification of Melt Pool Behaviour during Directed Energy Deposition Additive Manufacturing of Stainless Steel Yunhui Chen et al
+
+In-situ Observations of Directed Energy Deposition Additive Manufacturing Using High-Speed X-ray Imaqing Sarah J. Wolff et al
+
+
+
+\begin{abstract}
+Directed Energy Deposition Additive Manufacturing (DED-AM) is one of the principal AM techniques being explored for both the repair of high value components in the aerospace industry as well as freeform fabrication of large metallic components. However, the lack of fundamental understanding of the underlying process-structure-property relationships hinders the utilisation of DED-AM for the production or repair of safety-critical components. This study uses in situ and operando synchrotron X-ray imaging to provide an improved fundamental understanding of laser-matter interactions and their influence on the melt pool geometry. Coupled with process modelling, these unique observations illustrate how process parameters can influence the DED-AM melt pool geometry. The calibrated simulation can be used for guidance in an industrial additive manufacturing process for microstructure and quality control.
+\end{abstract}
+
+\section*{1. Introduction}
+Directed Energy Deposition Additive Manufacturing (DED-AM) [1] is one of the most promising subsets of Laser Additive Manufacturing (LAM) and is considered a key technique for both the repair [2] of existing components [3] as well as freeform fabrication [4]. However, the lack of fundamental understanding of the underlying process-structure-property relationships hinders the utilisation of DEDAM for safety-critical components such as turbine aerofoil repair [2]. The ability to predict and control microstructure during the laser deposition process holds the key to realising a high-quality product. The thermal gradient at the solidification interface is a crucial parameter for controlling the final microstructure [5] and is directly related to the process parameters (e.g. laser power, spot size, traverse speed, etc). The reliance upon ex situ characterisation of the final microstructure $[1,6,7]$ and mechanical properties [8-11] of DED-AM deposits is an inefficient and costly means of process optimisation. Furthermore, it is unable to elucidate the mitigations to the aforementioned restraints on DED-AM utilisation.
+
+In situ and operando high-speed X-ray imaging enables researchers to characterise the time-transient phenomena in LPBF (Laser Powder Bed Fusion) [12-16] and the piezo-driven DED-AM process. Highbrilliance X-rays can penetrate through sufficient depths of dense, optically opaque metallic samples [17] with high spatial and temporal resolution [18]. Using synchrotron X-rays and image analysis, we can estimate the transient melt pool geometry, shape, and volume. These values determine the geometry\\
+and quality of the deposited track. The melt pool shape also directly relates to the microstructural and the mechanical performance of the build [19] as the melt pool geometry is a result of the thermal gradient and cooling rate introduced by the laser beam. The purpose of this study is to provide observations that can be used as standards for stainless steel and to aid the development and validation of advanced thermo-physical models.
+
+Rosenthal's analytical solutions [20] are well known for describing a moving point heat source traversing an infinite substrate. It has been widely used to calculate thermal process maps for controlling microstructure in the laser-based fabrication process [21]. A carefully calibrated Rosenthal solution for thin walls has been developed and applied to predict the microstructure, and thus the quality and performance of the deposit. The aim of this work is to study SS316 deposited using the DED-AM process and to capture the melt pool geometries in situ and operando using synchrotron X-ray radiography to elucidate the physical phenomena during DED-AM. These observations are then used to calibrate the Rosenthal solution, enabling the prediction of melt pool geometry at various combinations of process parameters not imaged. The simplified model of Rosenthal solution in this study could provide a fast way of process prediction in the industry. The results present in this work enable an enhanced understanding of DED-AM processes and facilitate improved manufacturing practice.
+
+\section*{2. Materials and Methods}
+\subsection*{2.1. Synchrotron $X$-ray imaging of $D E D$-AM process}
+The Blown Powder Additive Manufacturing Process Replicator (BAMPR) is developed to faithfully replicate a commercial DED-AM system. The instrument is designed to be integrated into synchrotron beamlines, e.g. I12: the Joint Engineering, Environmental, and Processing (JEEP) at Diamond Light Source, Harwell [22], as illustrated schematically in figure 1. The system is encased within a Class I laser enclosure and comprises an inert environment chamber, a high precision 3-axis platform (Aerotech, US), a coaxial DED nozzle and a laser system (SPI Lasers Ltd, UK). An industrial powder feeder (Oerlikon Metco TWIN-10-C) delivers powder to the system in a stream of argon gas. The laser is a $1070 \mathrm{~nm}$ Ytterbium-doped fibre laser (continuous-wave (CW) mode) with controllable laser power (P) of $200 \mathrm{~W}$. The laser is coupled with tuneable optics (Optogama, Lithuania) to facilitate a controllable focused spot size of between 200 and $700 \mu \mathrm{m}$. The laser is positioned to be concentric with the powder delivery stream blown from the nozzle and normal to the substrate plate in a carrier of 6 litres min-1 Argon gas. In this work, the build platform is able to translate through $25 \mathrm{~mm}$ in width, $50 \mathrm{~mm}$ in length, and $50 \mathrm{~mm}$ in height. A gas atomised SS316 powder is used for this study and its powder size distribution ranges from 45 to $90 \mu \mathrm{m}$ with a $\mathrm{d} 50$ of $70 \mu \mathrm{m}$. The substrate plate is positioned inside the environmental build chamber which has Kapton windows. Kapton is used due to its low X-ray absorption in the energy range of beamline I12: JEEP. The chamber is constantly flushed with a combined flowing argon atmosphere (powder + carrier gas and shielding gas) of $171 \mathrm{~min}-1$. The speed of the sample stages in both cases is controlled to be between 1 to $5 \mathrm{~mm} \mathrm{~s}-1$ to enable a continuous track to be formed, as indicated by preliminary laboratory trials. A monochromatic beam is used for all trials with an X-ray photon energy of $53 \mathrm{keV}$. The synchrotron X-rays are attenuated by the powder and the deposit and then are converted to visible light by a scintillator, lens-coupled to a high-speed CMOS camera (MIRO $310 \mathrm{M}$, Vision Research Inc.), recording at 200 - $5000 \mathrm{fps}$. The optical configuration provided an imaging resolution of approximately $6.67 \mu \mathrm{m}$ per pixel at $200 \mathrm{fps}$. The resulting radiographs (or movies) reveal the time-resolved multi-layer melt track morphology evolution of a SS316 track during DED-AM, as sequenced in figure $1(\mathrm{c})$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ca8b6aa40acf81c06720g-4}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ca8b6aa40acf81c06720g-4(2)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ca8b6aa40acf81c06720g-4(1)}
+\end{center}
+
+Figure 1. In situ and operando synchrotron X-ray imaging of DED-AM process. (a) Diamond Light Source (DLS) synchrotron facilities. Image credit to Diamond Light Source website. (b) BAMPR - DED-AM process replicator. (c) Radiographs acquired using in situ synchrotron X-ray technique. Scale bar $=500 \mu \mathrm{m}$.
+
+\subsection*{2.2. Thin-walled Rosenthal solution for laser heat conduction}
+The thin-walled Rosenthal solution [20] provides a quasi-steady-state solution to describe a moving point heat source moving within a thin-wall geometry and is expressed in dimensionless form as [23]
+
+
+\begin{equation*}
+\bar{T}=e^{-\bar{x}_{0}} K_{0}\left(\sqrt{\bar{x}_{0}^{2}+z_{0}^{2}}\right) \tag{1}
+\end{equation*}
+
+
+where $K_{0}$ is the modified Bessel function of the second kind, order zero. The dimensionless variables in equation (1) are defined in terms of the absorbed laser power $\alpha \mathrm{Q}$ and velocity $\mathrm{V}$
+
+
+\begin{equation*}
+\bar{T}=\frac{T-T_{0}}{\alpha Q / \pi k b}, \bar{x}_{0}=\frac{x_{0}}{2 k / \rho c V} \text {, and } \bar{z}_{0}=\frac{z_{0}}{2 k / \rho c V} \tag{2}
+\end{equation*}
+
+
+In the above normalisations, $\mathrm{T}$ is the temperature at a location $\left(x_{0}, z_{0}\right)$ relative to the moving point source and $T_{0}$ is the initial temperature of the wall. The thermo-physical properties $\rho, c$, and $k$ are the density, specific heat and thermal conductivity of the substrate material, respectively. They are assumed to be temperature-independent. $b$ is the thickness of the substrate.
+
+\section*{3. Results and Discussion}
+\subsection*{3.1. X-ray imaging of melt pool geometry in DED-AM process}
+Figure 2(a) shows a radiograph taken during the second layer build of the DED-AM process. The melt tracks were deposited with the substrate plate traversing bi-directionally by alternating the build direction through $180^{\circ}$. The laser beam is shown to partially consolidate the previous track and incorporate. New powder particles into a melt pool, forming a melt track and subsequently building the $3 \mathrm{D}$ component.
+
+The flow dynamics in the molten pool are a complex interplay of several phenomena, incorporating laser-induced buoyancy force and Marangoni flow, the quenching effect of powder particles fed into the melt pool and the traverse of the substrate [19]. As a result, the molten pool presents an elliptical-cap shape during the build process, as shown in figure 2(b). The depth and length of the melt pool are defined as the radius and the height of the elliptical cap respectively. A relatively smooth surface finish is achieved, although some un-melted powder particles are partially embedded into the melt track when it is semi-solidified.\\
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ca8b6aa40acf81c06720g-5}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ca8b6aa40acf81c06720g-5(2)}
+\end{center}
+
+Figure 2. In situ and operando X-ray imaging of the DED-AM process. (a) A typical radiograph acquired during DED of a multi-layer build of SS316 with parameters: $P=200 \mathrm{~W}, v=1.67 \mathrm{~mm} \mathrm{~s}^{-1}$ captured at $200 \mathrm{fps}$. Scale bar $=500 \mu \mathrm{m}$. (b) A schematic of the melt pool geometry measurement and the corresponding X-ray image of the melt pool. Measurements see figure 4. Scale bar $=500 \mu \mathrm{m}$.
+
+\subsection*{3.2. Thin-walled Rosenthal solution for melt pool geometry prediction}
+The volume and shape of the melt pool is determined by the thermal gradient and cooling rate. This determines the geometry and quality of the deposit, which in turn directly influences the microstructure and mechanical properties of the build [20]. The upper abutted spherical cap profile and the height of the deposited track are strongly dependent on the powder mass flow rate and thus also influence the thermal gradient in the melt pool [25]. The thin-walled Rosenthal solution was adopted to simulate the thermal gradient when the laser is moving within the bounds of a thin substrate plate, neglecting the effect of powder entering the melt pool. The melt pool is assumed to be the boundary where the temperature of the substrate is equal to the material's melting temperature $\left(T=T_{m}\right)$ see isothermal line in figure 3. The process parameters for SS316 used for the simulation are listed in table 1. The thickness of the substrate plate (b) is calibrated to be $0.5 \mathrm{~mm}$.
+
+Figure 3 shows the predicted profile of the melt pool in terms of depth and length variations across laser power and traverse speed measured using X-ray imaging and simulated via Rosenthal solution. With a decrease in the effective laser power density (either the decrease of laser power or the increase of traverse speed), the melt pool geometry decreases accordingly [24]. The increase of traverse speed also decreases the amount of powder deposited into the melt pool, which further decreases the size of the melt pool above the level of the previous layer. Increasing the traverse speed increases the surface area (per unit time) exposed to laser radiation, therefore, an increase in the melt pool length.
+
+Table 1. The parameters used for thin-walled Rosenthal solution.
+
+\begin{center}
+\begin{tabular}{|l|r|}
+\hline
+\multicolumn{1}{|c|}{Parameters} & \multicolumn{1}{|c|}{SS316} \\
+\hline
+Specific heat (c) & $490 \mathrm{~J} / \mathrm{kg} \cdot \mathrm{K}$ \\
+Thermal conductivity (k) & $13 \mathrm{~W} / \mathrm{m} \cdot \mathrm{K}$ \\
+Melting termperature (C) & $1371 \mathrm{C}$ \\
+Mass density $(\rho)$ & $8000 \mathrm{~kg} / \mathrm{m}^{3}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ca8b6aa40acf81c06720g-5(1)}
+\end{center}
+
+Figure 3. The resultant predicted melt pool geometry simulated using Rosenthal solution.
+
+After the thin wall thickness calibration, the simulated melt pool geometries follow the similar pattern as the experimental results, as shown in figure 4. The relationship between the experimental results and simulation is shown to be complex. However, the deviation is smaller at high thermal gradient conditions, i.e. higher laser power and lower traverse speed.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_ca8b6aa40acf81c06720g-6}
+
+Figure 4. Melt pool depths and lengths variations across laser power and traverse speed of DED-AM of SS316. (a) Melt pool depth across laser power. (b) Melt pool length across laser power. (c) Melt pool depth across traverse speed. (d) Melt pool depth across traverse speed.
+
+\section*{4. Conclusions}
+In summary, in situ and operando synchrotron X-rays and the thin-walled Rosenthal solution were used to understand the melt pool geometry in Directed Energy Deposition Additive Manufacturing (DEDAM) processing of SS316. An accurate characterisation of the melt pool morphology across building parameters was presented using radiographs. The analysis of the radiographs reveals the relationship between laser power, traverse speed, and the geometry of the melt pool. The results were used to calibrate the thin wall Rosenthal solution for melt pool geometry prediction. It is found that Rosenthal's solution can simulate the melt pool geometry but the requirement for the wall thickness to be known a priori is a significant limitation.
+
+\section*{Acknowledgments}
+This research is supported under MAPP: EPSRC Future Manufacturing Hub in Manufacture using Advanced Powder Processes (EP/P006566/1) and a Royal Academy of Engineering Chair in Emerging Technology. This research is also supported by Rolls-Royce plc. via the Horizon 2020 Clean Sky 2 WP5.8.1 and Strategic Partnership (WP2C) programmes. We also acknowledge the use of facilities and support provided by the Research Complex at Harwell and thank the Diamond Light Source for providing the beam-time (MT20096-1) and staff at the I12 beamline for their technical assistance.
+
+\section*{References}
+[1] Kumara C, Segerstark A, Hanning F, Dixit N, Joshi S, Moverare J and Nylén P 2019 Addit. Manuf. 25 357-64
+
+[2] Leino M, Pekkarinen J and Soukka R 2016 Phys. Procedia 83 752-60
+
+[3] Panesar A, Ashcroft I, Brackett D, Wildman R and Hague R 2017 Addit. Manuf. 16 98-106
+
+[4] Mazumder J 2016 Laser-aided direct metal deposition of metals and alloys (Elsevier Ltd)
+
+[5] Karagadde S et al. 2015 Nat. Commun. 6
+
+[6] Yan F, Xiong W and Faierson E J 2017 Materials 101260
+
+[7] Kistler N A, Corbin D J, Nassar A R, Reutzel E W and Beese A M 2019 J. Mater. Process. Tech. 264 172-81
+
+[8] Leuders S, Thöne M, Riemer A, Niendorf T, Tröster T, Richard H and Maier H J 2013 Int. J. Fatigue 48 300-7
+
+[9] Shamsaei N and Simsiriwong J 2017 Procedia Struct. Integr. 7 3-10
+
+[10] Alafaghani A, Qattawi A and Castañón M A G 2018 Int. J. Adv. Manuf. Technol. 99 2491-507
+
+[11] Arifin A, Sulong A B, Muhamad N, Syarif J and Ramli M I 2014 Mater. Des. 55 165-75
+
+[12] Zhao C, Fezzaa K, Cunningham R W, Wen H, De Carlo F, Chen L, Rollett A D and Sun T 2017 Sci. Rep. 73602
+
+[13] Leung C L A, Marussi S, Atwood R C, Towrie M, Withers P J and Lee P D 2018 Nat. Commun. 9 1-9
+
+[14] Calta N P et al. 2018 Rev. Sci. Instruments 89055101
+
+[15] Martin A A et al. 2019 Materials Today Adv. 1100002
+
+[16] Álvarez-Murga M et al. 2017 J. Synchrotron Radiat. 24 240-7
+
+[17] Nommeots-Nomm A, Ligorio C, Bodey A J, Cai B, Jones J R, Lee P D and Poologasundarampillai G 2019 Materials Today Adv. 2100011
+
+[18] Kareh K M, Lee P D, Atwood R C, Connolley T and Gourlay C M 2014 Nat. Commun. 5 1-7
+
+[19] Hofmeister W and Griffith M 2001 JOM 53 30-4
+
+[20] D. Rosenthal 1946 Trans. ASME 68 849-866
+
+[21] Bontha S and Klingbeil N W 2003 SFF Proc. 219-26
+
+[22] Drakopoulos M et al. 2015 J. Synchrotron Radiat. 22 828-38
+
+[23] Vasinonta A, Beuth J L and Ong R 2001 Proc. 12th Solid Free. Fabr. Symp. 432-40
+
+[24] Matys J, Dominiak M and Flieger R 2015 J. Clin. Diagn. Res. 9(12) ZL01-ZL2
+
+
+\end{document}

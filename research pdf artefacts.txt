@@ -1,0 +1,16 @@
+﻿* Headers (requires identifying a specific pattern in your documents).
+* Footers (similarly requires a specific pattern identification).
+* Acknowledgements section (assumes it starts with a heading and ends before the next major section, using lookahead to avoid removing the start of the next section).
+* Simple inline mathematical equations (converts them into LaTeX format, only works for equations delimited by $...$).
+* Reference markers in square brackets (e.g., [1], [1,2]).
+* Single reference markers in parentheses (e.g., (1)).
+* Attempt to remove superscript numbers (though this pattern may not accurately match superscript formatting).
+* Image captions that start with "Fig" or "Figure" followed by a number and any text until the end of the line.
+* Main body text that references figures or tables.
+* Hyperlinks (both HTTP and HTTPS URLs as well as www links).
+* DOI links that start with "doi:".
+* Text after "References" or "Bibliography" headings (only retains the part of the text before these headings).
+* Excess newline characters (consolidates multiple newline characters into a single newline to clean up the text)
+* Metadata: Remove document metadata that might be included in the text, such as author names, affiliations, or publication dates.
+* Page Numbers and Line Numbers: Remove page numbers and line numbers if they are included in the text and not relevant to the content.
+* Special Characters: Remove or normalize special characters and symbols that are not relevant to the text content.

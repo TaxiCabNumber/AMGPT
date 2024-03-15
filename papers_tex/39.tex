@@ -1,0 +1,310 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Frequency Domain Measurements of Melt Pool Recoil Force using Modal Analysis }
+
+
+\author{Tristan Cullom¹, Cody Lough'1, Nicholas Altese ${ }^{1}$, Douglas Bristow ${ }^{1}$, Robert\\
+Landers $^{1}$, Ben Brown'2, Troy Hartwig'2, Andrew Barnard ${ }^{3}$, Jason Blough',\\
+Kevin Johnson ${ }^{3}$, Edward Kinzel ${ }^{4, *}$}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Recoil pressure is a critical factor affecting the melt pool dynamics during Laser Powder Bed Fusion (LPBF) processes. Recoil pressure depresses the melt pool, providing layer-to-layer fusion without introducing porosity. If the recoil pressure is too low, the process operates in a conduction mode where layers will not properly fuse, while excessive recoil pressure leads to a keyhole mode, which results in gas porosity. Direct recoil pressure measurements are challenging because it is localized over an area proportionate to the laser spot size producing a force in the $\mathbf{m N}$ range. This paper reports a vibration-based approach to quantify the recoil force exerted on a part in a commercial LPBF machine. The measured recoil force is consistent with estimates from high speed synchrotron imaging of entrained particles, and the results show that the recoil force scales with applied laser power and is inversely related to the laser scan speed. These results facilitate further studies of melt pool dynamics and have the potential to aid process development for new materials.
+
+Understanding the complex melt pool dynamics in Laser Powder Bed Fusion (LPBF) processes is critical to maintaining quality of printed parts. Tight quality control is necessary as parts created by LPBF are used in demanding biomedical, aerospace, and defense applications. In the LPBF process a focused laser spot follows a computer generated path over a thin powder layer. The powder is heated by the absorbed laser irradiation to the point that it melts and fuses with the underlying part. Variations in the melt pool dynamics lead to changes in microstructure, notably porosity. Specifically, insufficient laser fluence produces a lack of fusion between layers while excessive power leads to gas entrapment as the melt pool solidifies. The influence of the recoil pressure can be seen with the different melt pool modes. If the recoil pressure is too low, heat transfer in the melt pool operates in the conduction mode ${ }^{1}$, leading to poor fusion between the molten material and the previous layer and resulting in brittle parts. Conversely, if the recoil pressure is too high, convection in the melt pool is the dominant heat transfer mode, depressing the melt pool into multiple previous layers and potentially creating keyhole porosity due to increased laser absorptivity and making the melt pool less stable ${ }^{2,3}$. This melt pool mode is referred to as the keyhole mode ${ }^{4}$. Since part quality is primarily driven by these defects, it is important to understand recoil pressure to operate the LPBF process between the conduction and keyhole modes, thus, minimizing the potential for these defects.
+
+For most commercial processes, the temperature of the top of the melt pool exceeds the vaporization point of the metal. This produces a recoil pressure that depresses the melt pool ${ }^{5}$ which drives the melt pool deeper and enhances the heat transfer allowing for adequate layer-to-layer fusion. The melt pool dynamics are driven by Marangoni ${ }^{6,7,8}$, capillary ${ }^{9,10}$ and buoyancy ${ }^{11}$ forces, in addition to the recoil pressure. These forces all significantly influence the shape of the melt $\mathrm{pool}^{7,8}$ as well as its stability ${ }^{6}$ and overall fluid transport. However, the recoil force magnitude is significantly greater than the other forces acting on the melt pool once it starts to vaporize. For example, using the definitions of these forces described in Heeling et al. ${ }^{12}$ and typical processing parameters for 304L stainless steel ${ }^{13}$, the recoil force is at least an order of magnitude larger than the net Marangoni force, and more than eight orders of magnitude larger than the capillary and buoyancy forces.
+\footnotetext{${ }^{1}$ Department of Mechanical and Aerospace Engineering, Missouri University of Science and Technology, Rolla, MO 65409. ${ }^{2}$ Kansas City National Security Campus, Kansas City, MO 64147. ${ }^{3}$ Department of Mechanical
+
+Engineering - Engineering Mechanics, Michigan Technological University, Houghton, MI 49931. ${ }^{4}$ Department of
+
+Aerospace and Mechanical Engineering, University of Notre Dame, Notre Dame, IN 46556
+
+*Correspondence to: \href{mailto:ekinzel@nd.edu}{ekinzel@nd.edu}
+}
+
+The effects of the recoil pressure in depressing the melt pool has been studied numerically ${ }^{7,14,15}$. While modeling recoil pressure is computationally expensive, an estimate for the recoil pressure can be made using the Clausius-Clapeyron model and via the simulation results in Khairallah et al. ${ }^{16}$. The recoil pressure was estimated to be $86 \mathrm{kPa}$ for a 316L stainless steel simulation with a laser power of $200 \mathrm{~W}$ and a scan speed of $1.5 \mathrm{~m} / \mathrm{s}$. Simulations have also shown that as material is vaporized, changes in the thermal and fluid transport within the melt pool lead to surface defects known as humps ${ }^{10,17}$. This is an effect of the backflow generated by the recoil pressure as the exposed area of the melt pool is displaced away from the center. In addition, the recoil pressure driven melt pool depression has been experimentally shown to be correlated with the formation of spatter ${ }^{18-24,32}$.
+
+Recently, there have been a few attempts to measure recoil pressure using particle tracking techniques. This requires in-situ high-speed imaging of the melt pool. Zhao et al. used a custom built 2D setup illuminated with synchrotron radiation to estimate an average pressure above the melt pool of $60 \mathrm{kPa}$ for Ti-6Al-4V powder melted with a laser power of $210 \mathrm{~W}$ and a scan speed $0.5 \mathrm{~m} / \mathrm{s}^{25}$. Yin et al. calculated a vapor pressure of $49 \mathrm{kPa}$ for Inconel powder processed with a laser power of $1150 \mathrm{~W}$, a scan speed of 1 $\mathrm{m} / \mathrm{s}$, and a spot size of $159 \mu \mathrm{m}$ by observing spatter tracks using high-speed visible camera imaging ${ }^{26}$. These studies pose instrumentation challenges and require the assumption that the particles are moving parallel to the imaging plane. In addition, significant complications arise with the presence of the gas that flows over the build plate (i.e., shielding gas) to create an inert atmosphere as it substantially modifies particle velocities. Shielding gas was present during the experiment in the Inconel study ${ }^{26}$ to prevent melt pool oxidation while the Ti-6Al-4V study was performed in vacuum ${ }^{25}$.
+
+A possible alternative to measuring the laser spatter trajectories is to directly measure the reaction force generated by the recoil pressure. Both experimental and numerical studies give an expectation for the recoil pressure on the order of $50-90 \mathrm{kPa}$. This is equivalent to a recoil force acting on the melt pool in the sub $\mathrm{mN}$ range. Measuring this force in the time domain is difficult given the noise inherent in LPBF environments (e.g., shielding gas, chiller). However, if the experiments can be conducted in the frequency domain, spectral filtering techniques can be employed to significantly improve the Signal to Noise Ratio (SNR). This paper presents a study in a commercial LPBF system using an accelerometer to measure part vibration and quantify recoil force in the frequency domain. Modal analysis is used in this study by exciting parts with a laser at resonance to calculate the recoil force. This approach is used to measure the recoil force for various ranges of process parameters to evaluate their relationship with recoil pressure. Finally, the dependence of the microstructure and melt-pool depth on recoil pressure for typical LPBF of SS304L parts is presented.
+
+Experimental Approach The experiments in this paper are conducted using a commercial LPBF machine (AM250, Renishaw). This machine stabilizes the melt pool using an Acousto-Optic Modulator (AOM) to pulse the laser. During processing, the laser is pulsed for duration $\tau_{\text {pulse }} \sim 85 \mu$ s while being held stationary at a point. At the conclusion of the pulse, galvo scanners move the beam along the scan path by a point distance, $P D^{27,28}$. The point distance and pulse duration can both be adjusted to provide an equivalent velocity, $V=P D / \tau_{\text {pulse }}$. Adjusting the pulse length corresponds to specifying the pulse repetition frequency (PRF) of the laser modulation, $1 / \tau_{\text {pulse }}$, and can be adjusted from $1-25 \mathrm{kHz}$ with $\tau_{\text {pulse }}$ adjustable in $10 \mu \mathrm{s}$ increments.
+
+Figure 1 shows a part being excited by the laser. In the LPBF process, the laser energy is absorbed by the layer of unfused powder on top of the part. The powder is melted and then vaporized. The metallic vapor exerts a recoil pressure on the melt pool, deforming it and producing a net force normal to the surface. In addition to the vaporized metal, particles can be entrained by the local pressure field and ejected away from the melt pool. This is depicted in Fig. $1 \mathrm{~b}$.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_4726529c9ddd3a76690dg-03}
+
+Figure 1: Illustrations of (a) laser excitation of tuning fork with accelerometer (Accel) mounted on tuning fork prong, (b) laser interaction with powder on top of tuning fork during laser excitation, and (c) example FRFs and mode shapes.
+
+The experiments conducted in this paper use 304L stainless steel powder. Tuning forks are printed directly on the build plate. After printing, the unfused powder is removed from the chamber and an accelerometer is fixed to the tuning forks as illustrated in Fig. 1a and shown in Fig. 2. Experiments show that the powder ordinarily surrounding the part increases structural damping by a factor of 14 , which would significantly lower the sensitivity of the experiment. After fixing the accelerometer to the tuning fork with superglue, a new $50 \mu \mathrm{m}$ thick layer of powder is placed on the top surface of the part. The force generated by the laser interaction at the melt pool produces a strong acceleration response when the part is forced at resonance. This requires both the force and the accelerometer to be coupled to a common resonant mode. To accomplish this, the tuning forks are printed at $60^{\circ}$ relative to horizontal so the laser would excite the bending modes and the parts could be printed without support structures. The force/acceleration coupling of the tuning forks was simulated using ANSYS as shown Fig. 1c and is quantified by the Frequency Response Function (FRF)
+
+
+\begin{equation*}
+F R F(f)=a(f) / F(f) \tag{1}
+\end{equation*}
+
+
+where $f$ is the frequency, $a$ is the part acceleration, and $F$ is the force applied to the part. The tuning fork modes in Figure 1c were determined using ANSYS. The accelerometer mass was not included in the ANSYS simulations.
+
+Experimentally, the force acting on the part consists of all of the melt pool forces; including capillary (i.e., surface tension), thermo-capillary (i.e., Marangoni), and recoil ${ }^{5,29,30}$. However, as discussed earlier, the recoil force magnitude is expected to dominate those of the other forces. The FRF of each tuning fork was measured experimentally with a modal impact test by striking each prong with an impact hammer and measuring the corresponding acceleration. The impact hammer strikes the same surface that is irradiated by the laser and as normal to the surface as possible (see Fig. 1a). This test occurs with the build plate inside the LPBF chamber. Powder is than added to the top surface of part, the chamber is evacuated and back filled with Argon, and the acceleration measured while the part is scanned by the laser with the accelerometer in the same position. After the test, the FRF was measured again to ensure that any changes resulting from the laser interaction (e.g., additional mass fused to the tip of the tuning fork) are negligible.
+
+Multiple tuning forks are fabricated in order to have resonant frequencies spanning a wide range of laser PRFs. Because the FRF of the individual parts are known (after modal impact hammer testing), the PRF used to excite an individual tuning fork is adjusted to match the tuning fork's resonant frequency. Figure 2 shows a photograph of 40 tuning forks, 12 of which used in the experiments. During the experiment, the accelerometer remained in the same location during the laser excitation and the impact test afterwards. Since the location of the accelerometer did not change during the test, the relative effect of the mass loading is effectively cancelled out. The tuning forks are printed using $P=175 \mathrm{~W}, V=0.8 \mathrm{~m} / \mathrm{s}$, exposure time of $75 \mu \mathrm{s}$, hatch spacing of $85 \mu \mathrm{m}$, and $P D=60 \mu \mathrm{m}$. The resonant frequencies of the 12 turning forks are given in Table I of the Methods section.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_4726529c9ddd3a76690dg-04}
+\end{center}
+
+Figure 2: Tuning fork build with arrows indicating beginning and ending tuning forks for each row, where tuning fork numbers linearly increment. Tuning forks used in experiments are tabulated in Table I in Methods section.
+
+The laser power modulation in the AM250 does not produce an ideal rectangular wave. Figure 3a shows the response from a photodiode exposed to scattered laser radiation. The measured laser/AOM response has rise and fall times of $\sim 10 \mu \mathrm{s}$. In the experiment shown in Fig. 3a, the laser is scanned over an alumina disk using $\tau_{\text {Pulse }}=100 \mu \mathrm{s}$. Between pulses, there is a delay time of $\tau_{\text {Delay }}=10 \mu \mathrm{s}$. The duty cycle is $1-$ $\tau_{\text {Delay }} / \tau_{\text {Pulse. }}$. The figure also shows that at $t=310 \mu$ s the effect of the laser as it reverses its travel as part of the raster scan process (scan path illustrated in the inset). This introduces a slightly longer delay ( $\tau_{\text {Delay+Corner }}$ $\sim 20 \mu \mathrm{s}$ ) before the next pulse. The variable $\tau_{\text {Delay }}$ is a function of the point distance but is constant for $\mathrm{PD}<$ $60 \mu \mathrm{m}$, while $\tau_{\text {Delay+Corner }}$ is a function of point distance and hatch spacing. Both $\tau_{\text {Delay }}$ and $\tau_{\text {Delay+Corner }}$ are kept constant in this paper. The addition of the intermittent delay associated with cornering introduces a phase delay in the frequency domain. Figure $3 \mathrm{~b}$ shows the Fourier transform of the measured laser/AOM response from a single line with and without cornering. The fundamental frequency without cornering occurs at $f_{0}=$ $10 \mathrm{kHz}$ with harmonics at integer multiples of the fundamental frequency (red curve). However, the Fourier transform of a waveform including raster scanning (i.e., with cornering) shows a shift in the fundamental frequency and a slight (0.5\%) decrease in magnitude. This energy loss is shifted to side bands (blue curve).\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_4726529c9ddd3a76690dg-04(1)}
+
+Figure 3: (a) Normalized experimental photodiode waveform with inset showing raster scan path for $\tau_{\text {Pulse }}$ $=100 \mu \mathrm{s}$ and (b) corresponding signal in the frequency domain with and without cornering.
+
+A range of laser powers, pulse durations, and scan paths were recorded. As Fig. 3b shows, much of the laser energy is outside of the measurement range. Assuming that the recoil force has the same frequency content as the laser/AOM response, the measured recoil force at the fundamental frequency can be scaled by the ratio of the laser energy at the fundamental frequency to the total laser energy. This fraction varies\\
+with the duty cycle and the scaling is described in the Methods section. Further, for the experiments conducted in this study, to prevent aliasing of the PRF peak magnitude, the frequency resolution, $d f$, is selected such that it is an integer multiple of the PRF, i.e., $\operatorname{rem}(\mathrm{PRF} / \mathrm{d} f)=0$.
+
+\section*{Results and Discussion}
+Single Line Scan Path without Powder. The simplest case occurs when no powder, i.e., $h=0$ $\mu \mathrm{m}$, is added to the exposed surface of the tuning fork and the scan path consists of a single line to avoid cornering. A laser PRF of $f_{0}=10 \mathrm{kHz}$ and a point distance of $P D=1 \mu \mathrm{m}$, corresponding to a scan speed of $V=10 \mathrm{~mm} / \mathrm{s}$, are used. This scan speed is well below the range typical for 304L stainless steel ${ }^{13,31}$; however, it was selected to gather sufficient data when processing a single line (i.e., the laser did not need to reverse its direction of travel). Figure 4 shows experimental results for Tuning Fork \#16 using various laser powers. Because of the atypically high laser fluence, the FRF was measured after each experiment to determine if the sample was physically modified (i.e., its frequency response changed). Figure 4a shows that the resonant frequency changed over a range of only $8.7 \mathrm{~Hz}$ during the five experiments. Further, the peak response at $f_{r}=10.03 \mathrm{kHz}$ is approximately $18 \mathrm{~dB}$ larger than the next highest peak, demonstrating that most of the energy is contained at this frequency. The measured acceleration during laser excitation is shown in Fig. 4b. While there is energy at other frequencies, this shows a very sharp peak at the excitation frequency which matched the resonant frequency of the part. The value of the acceleration also scales with the laser power, whereas the energy at other frequencies does not. This is due to the fact that the laser is only providing energy at $10 \mathrm{kHz}$ and the subsequent harmonics; therefore, the only portion of the acceleration that should be changing with laser power is at $10 \mathrm{kHz}$. Figure 4c shows the force response calculated by solving Eq. 1 for $F(f)$ using the measured FRF and acceleration. A Noise Equivalent Force (NEF), the ratio of the measured accelerometer noise to the difference between the FRF signal and the measured FRF noise as described in the Methods section, is used to calculate an equivalent Signal to Noise Ratio (SNR). Figure $4 \mathrm{c}$ shows that this is much higher near the part resonance and supports the confidence of the magnitude of the force at the laser PRF (more than five orders of magnitude greater SNR at $f=10 \mathrm{kHz}$ than $f=5.25 \mathrm{kHz}$ ).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_4726529c9ddd3a76690dg-06}
+\end{center}
+
+Figure 4: Results for Tuning Fork \#16 (a) measured FRFs for various laser powers, (b) measured acceleration spectrum with inset showing single line scanning strategy schematic, and (c) calculated forcing spectrum with SNR spectrum (gray line). $\mathrm{V}=10 \mathrm{~mm} / \mathrm{s}$.
+
+To examine the part independence of this result, the experiment is repeated with different tuning forks using the same laser powers. The different tuning forks have slightly different FRFs with resonant frequencies listed in Table I in the Methods section. Figure 5 shows the total recoil force as a function of laser power after correcting for the fraction of the force at the fundamental PRF frequency. The corrective measure for the fraction of force at the PRF frequency is shown in the Methods section in Figure 12. Figure 5 shows that the recoil force scales with the laser power with good agreement across multiple specimens. The increase in recoil force is due to the fact that as the laser power increases a greater amount of material will be vaporized.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_4726529c9ddd3a76690dg-07}
+\end{center}
+
+Figure 5: Recoil force versus applied laser power for single line scanning strategies using Tuning Forks \#15, \#16, \#17, and \#20.
+
+Rasters with Powder. The slow scan speed and the lack of powder in Figs. 4 and 5 does not correspond to typical LPBF processing conditions. Figure 6 shows the recoil force for a range of characteristic process parameters for 304L stainless steel ${ }^{34}$. Powder was spread across the surface of the tuning forks using two $50 \mu \mathrm{m}$ thick metal shims to create a uniform layer. The laser was rastered with scan speeds varied by changing the point distance. The higher scan speeds, compared to that used in the previous section, required rastering the laser; therefore, the recoil force was corrected using the measurement at the fundamental frequency to account for the delay time introduced by cornering. The force correction for the additional delay time is shown in the Methods section in Figure 12. Figure 6a shows the variance in the measured recoil force with respect to scan speed and laser power when the PRF is maintained at $6.25 \mathrm{kHz}$. The force magnitude is inversely proportional to scan speed, which agrees with the results in Figs. 4 and 5 where an order of magnitude slower scan speed produced recoil forces that were an order of magnitude higher. It is significant to note that the recoil force does not depend appreciably on the PRF. This is illustrated in Fig. 6b where the scan speed is constant while varying laser PRF and laser power and demonstrates that when the PRF is varied but the scan speed remains constant the material vaporization remains constant in the process parameter range considered in this study.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_4726529c9ddd3a76690dg-07(1)}
+
+Figure 6: (a) Recoil force as function of laser power and scan speed for constant PRF and (b) recoil force as function of applied laser power for constant scan speed. Uncertainty is detailed in Methods section.
+
+Figure 7 shows the data in Figs. 4-6 replotted as a function of the linear energy data, $P / V$. Single line scans at slow scan speeds with powder are also included in the figure. There is minimal recoil force at very low linear energy densities (notably, the data between $P / V=2$ and $5 \mathrm{~J} / \mathrm{mm}$ is generated using a laser power of $P=40 \mathrm{~W}$ ). However, lager linear energy densities, $P / V>9.2 \mathrm{~J} / \mathrm{mm}$, produce a significantly greater recoil force. This is consistent with models of the LPBF process in Trapp et $\mathrm{al} .^{3}$, predicting that the greater\\
+temperatures produced by higher linear energy densities increase the vaporization rate. The greater vaporization rate produces a higher recoil pressure, forming a cavity which traps more laser energy to further increase the absorptivity of the melt pool. This positive feedback on the recoil pressure leads to formation of keyholes. In general, the figure shows that the addition of powder increases the recoil force by a factor of 1.33 from the case without powder. This can be attributed to a greater absorptivity of the loose powder bed and the fact that isolated powder particles are more readily vaporized because of reduced thermal conductance to surrounding material.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_4726529c9ddd3a76690dg-08}
+
+Figure 7: (a) Recoil force as function of linear energy density for both powder and no powder and (b) recoil force magnitude comparison for both powder and no powder.
+
+Measurements of Melt Pool after Solidification. The recoil force significantly affects the melt pool morphology. Figure 8 shows melt pool metallographic micrographs for different process parameters obtained from an auxiliary set of experiments (different substrates but the same processing conditions as the samples in Figs. 2-7, see Methods section). The melt pool depth, $\delta$, and half-width, $w / 2$, are defined in the close up of the metallograph for $P=200 \mathrm{~W}$ and $V=200 \mathrm{~mm} / \mathrm{s}$ in Fig. 8. As expected, the melt pool width and depth increase with increasing laser powers and decrease with increasing scan speed. Most significantly, gas porosity can be seen with lower scan speeds. These are plotted as a function of fluence in Fig. 9. It is interesting to note that the melt pool dimensions produced in experiments with and without powder are linearly related. This is plotted in the insets of Fig. 9 where the melt pool depth for experiments with powder is 1.11 times the melt pool depth for experiments without powder, and the melt pool width for experiments with powder is 1.12 times the melt pool width for experiments without powder. This agrees with the increased recoil forces measured for experiments with powder. The results indicate that increasing melt pool dimensions without keyholing or significant recoil pressure for experiments with powder can be attributed to increased absorptance of the powder bed, which leads to greater heating, and thus size, of the melt pool.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_4726529c9ddd3a76690dg-09(1)}
+\end{center}
+
+Figure 8: Sample micrographs for different laser powers, scan speeds, and PRFs with melt pool dimensions annotated in side picture that is portion of melt pool indicated by dashed box.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_4726529c9ddd3a76690dg-09}
+
+Figure 9: Melt pool (a) depth and (b) width as function of laser fluence for experiments with powder and without powder. Insets show melt pool dimensions for experiments with powder versus experiments without powder.
+
+The melt pool aspect ratio (AR), $\delta / w$, has been shown to be correlated with different melting modes ${ }^{1,33}$. Specifically, Qi et al. ${ }^{33}$ gives ranges for the conduction, transition, and keyhole modes of $A R \leq 0.5,0.5<$ $A R<1.1$, and $1.1 \leq A R$, respectively. Figure 10 shows the measured aspect ratio as a function of the measured recoil forces. Vertical dashed lines show the ranges of recoil forces producing each mode. Again, this agrees with the metallography in Fig. 8 (close-ups shown in the insets of Fig. 10) showing the gas porosity resulting for slow scan speeds and void size scaling with laser power.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_4726529c9ddd3a76690dg-10}
+\end{center}
+
+Figure 10: Melt pool aspect ratio as function of recoil force with horizontal lines indicating dominant melting modes and vertical lines representing recoil force magnitudes at melting mode boundaries with insets showing micrographs that were collected at $V=120 \mathrm{~mm} / \mathrm{s}$ and $P R F=2 \mathrm{kHz}$.
+
+None of the process parameters produced $A R<0.5$, which corresponds to conduction mode. For process parameters with $A R \sim 0.5$, the recoil force was measured to be less than $0.5 \mathrm{mN}$. This appears to be a threshold between conduction and transition melting modes, and recoil forces between 0.5 and $8 \mathrm{mN}$ produced aspect ratios in the range between 0.5 and 1.1 ; therefore, these forces indicated the process was in the transition region. Beyond $10 \mathrm{mN}$, the melting mode is in the keyhole region. It is significant to note that the presence of powder during processing does not significantly appear to change these thresholds.
+
+\section*{Summary and Conclusions}
+This paper demonstrated a method to measure the recoil force produced by the recoil pressure in LPBF using a vibration response approach. While subject to well bounded error, the results correlate well with microstructure analysis. The following conclusions can be drawn from the study:
+
+\begin{itemize}
+  \item Recoil force is proportionate to the laser fluence past a threshold where the powder begins to be melted.
+  \item The recoil force increases by $33 \%$ with the addition of a $50 \mu$ m layer of powder on the part surface compared to a part surface without powder.
+  \item Melt pool depth and width scale with laser fluence for experiments both with and without powder.
+  \item The process is hypothesized to operate in the conduction, transition, and keyholing modes for recoil force values less than $0.5 \mathrm{mN}$, between 0.5 and $8 \mathrm{mN}$, and greater than $10 \mathrm{mN}$, respectively.
+\end{itemize}
+
+\section*{Methods}
+Equipment. The accelerometer used in this study was model 352C34 from PCB Piezotronics. The accelerometer bandwidth was $0.005-12 \mathrm{kHz}$. The impact hammer used to measure the sample FRFs was model 086E80 from PCB Piezotronics. This impact hammer is rated to typically excite frequencies up to $12 \mathrm{kHz}$ given a metal tip. The coherence spectrum to support this is shown in Figure 11, which was the coherence plot for the response from Tuning Fork \#15. The coherence response has notches which correlate to the anti-resonances in the FRF response. Aside from the anti-resonances, the magnitude of the coherence is above 0.95 , indicating good correlation between the impact and the resulting acceleration.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_4726529c9ddd3a76690dg-11}
+
+Figure 11: (a) Coherence spectrum and (b) FRF for tuning fork 15.
+
+The photodiode used to capture the waveforms was model PDA100A2 from Thorlabs. The bandwidth of the photodiode was $11 \mathrm{MHz}$.
+
+Tuning Fork Dimensions. The prong lengths and resonant frequencies of the samples used in the experiments are tabulated in Table I.
+
+Table I: Tuning forks used in experiments, resonant frequencies, and prong lengths.
+
+\begin{center}
+\begin{tabular}{cccc}
+\hline
+Tuning Fork & Resonant Frequency $[\mathrm{kHz}]$ & $L[\mathrm{~mm}]$ & Mode Number \\
+\hline
+15 & 10.05 & 35 & 7 \\
+16 & 10.03 & 36 & 8 \\
+17 & 9.930 & 37 & 12 \\
+20 & 9.800 & 41 & 12 \\
+27 & 6.300 & 49 & 11 \\
+29 & 6.300 & 51 & 10 \\
+30 & 6.175 & 52 & 10 \\
+31 & 11.02 & 53 & 14 \\
+32 & 5.200 & 54 & 11 \\
+33 & 5.490 & 56 & 9 \\
+34 & 6.256 & 57 & 12 \\
+39 & 2.050 & 62 & 7 \\
+\end{tabular}
+\end{center}
+
+Materials. The material used in this study was 304L stainless steel purchased from LPW Technology.
+
+Recoil Force Magnitude Correction. For most of the samples in Table I, the higher harmonics lie outside of the accelerometer bandwidth. The total energy can be inferred from the energy in the first harmonic assuming that the force response scales with the laser energy as measured by a photodiode\\
+response. This gives the fractional energy in the first harmonic a dependence on the duty cycle of the laser's pulse train. The fractional energy was calculated by taking the ratio of the magnitude at the fundamental frequency to the rms magnitude of the input signal i.e., $M_{\text {Fund }} / M_{\text {Input. }}$. Figure 12 shows the fraction of energy in the first harmonic relative to the total energy of the measured photodiode signal for various laser duty cycles.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_4726529c9ddd3a76690dg-12}
+\end{center}
+
+Figure 12: Percentage of energy located in fundamental frequency for various duty cycles and both straight (red) and raster (blue) paths.
+
+Using the data in Figure 12, the total estimated recoil force is
+
+
+\begin{equation*}
+F=\frac{a_{f_{1}}(f)}{F R F_{f_{1}}(f)} \frac{M_{\text {Input }}}{M_{\text {Fund }}} \tag{2}
+\end{equation*}
+
+
+where $a$ is the measured tuning fork acceleration magnitude during the laser excitation at the first harmonic, and FRF is the experimentally measured tuning fork FRF magnitude at the first harmonic.
+
+Uncertainty Calculation. The uncertainty in the recoil force measurements was defined using the following propagation of uncertainty
+
+
+\begin{equation*}
+F_{\text {Unc }}(f)=|F| \sqrt{\left(\frac{E_{\text {Accel }}(f)}{A(f)}\right)^{2}+\left(\frac{E_{\text {Force }}(f)}{F(f)}\right)^{2}} \tag{3}
+\end{equation*}
+
+
+where $E_{\text {accel }}$ and $E_{\text {Force }}$ are the margins of error for a 95\% confidence interval, defined below, for the measured FRFs and how the acceleration spectrums were processed. The margin of error is defined as
+
+
+\begin{equation*}
+E=Z_{\alpha / 2} \frac{\sigma}{\sqrt{N}}=1.96 \frac{\sigma}{\sqrt{N}} \tag{4}
+\end{equation*}
+
+
+where $Z$ is the normal distribution indexed at the confidence level of interest, $\sigma$ is the standard deviation of the FRFs, and $N$ is the number of FRFs taken.
+
+Auxiliary Experimental Procedure for Melt Pool Dimensions. Rectangular prisms were printed of dimensions $6.35 \times 3.85 \times 5 \mathrm{~mm}$. The process parameters used to print the specimens were $P=200$ $\mathrm{W}, V=0.8 \mathrm{~m} / \mathrm{s}$, exposure time of $75 \mu \mathrm{s}$, hatch spacing of $85 \mu \mathrm{m}$, and $P D=60 \mu \mathrm{m}$. After they were printed,\\
+their top surfaces were scanned with the same laser powers, scan speeds, and PRFs as the ones seen in Figures 6-8a. After scanning, the specimens were removed from the build plate, mounted using a Simplimet 1000, polished using an AutoMet 250 Grinder-Polisher, and then subsequently etched using a 40/60 nitric acid solution. The melt pool dimensions were measured using a Hirox KH-8700 digital microscope.
+
+\section*{References}
+\begin{enumerate}
+  \item King, W. E., Barth, H. D., Castillo, V. M., Gallegos, G. F., Gibbs, J. W., Hahn, D. E., Kamath, C. \& Rubenchik, A. M. Observation of keyhole-mode laser melting in laser powder-bed fusion additive manufacturing. J. Mater. Process. Technol. 214, 2915-2925 (2014).
+
+  \item Madison, J. D. \& Aagesen, L. K. Quantitative characterization of porosity in laser welds of stainless steel. Scr. Mater. 67, 783-786 (2012).
+
+  \item Trapp, J., Rubenchik, A. M., Guss, G. \& Matthews, M. J. In situ absorptivity measurements of metallic powders during laser powder-bed fusion additive manufacturing. Appl. Mater. Today 9, 341-349 (2017).
+
+  \item Rai, R., Elmer, J. W., Palmer, T. A. \& Debroy, T. Heat transfer and fluid flow during keyhole mode laser welding of tantalum, Ti-6Al-4V, 304L stainless steel and vanadium. J. Phys. D. Appl. Phys. 40, 5753-5766 (2007).
+
+  \item Mazumder, J., Ki, H. \& Mohanty, P. S. Role of recoil pressure, multiple reflections, and free surface evolution during laser keyhole welding. ICALEO 2002 - 21st Int. Congr. Appl. Laser Electro-Optics, Congr. Proc. 33, (2002).
+
+  \item Chen, Q., Guillemot, G., Gandin, C. A. \& Bellet, M. Numerical modelling of the impact of energy distribution and Marangoni surface tension on track shape in selective laser melting of ceramic material. Addit. Manuf. 21, 713-723 (2018).
+
+  \item Wu, Y. C., San, C., Chang, C., Lin, H., Marwan, R., Baba, S. \& Hwang, W. Numerical modeling of melt-pool behavior in selective laser melting with random powder distribution and experimental validation. J. Mater. Process. Technol. 254, 72-78 (2018).
+
+  \item Zhang, W. Probing Heat Transfer, Fluid Flow and Microstructural Evolution During Fusion Welding of Alloys. PhD Diss. 312 (2004).
+
+  \item Panwisawas, C., Qiu, C. L., Sovani, Y., Brooks, J. W., Attallah, M. M. \& Basoalto, H. C. On the role of thermal fluid dynamics into the evolution of porosity during selective laser melting. Scr. Mater. 105, 14-17 (2015).
+
+  \item Tang, C., Le, K. Q. \& Wong, C. H. Physics of humping formation in laser powder bed fusion. Int. J. Heat Mass Transf. 149, (2020).
+
+  \item Xiao, B. \& Zhang, Y. Marangoni and Buoyancy effects on direct metal laser sintering with a moving laser beam. Numer. Heat Transf. Part A Appl. 51, 715-733 (2007).
+
+  \item Heeling, T., Cloots, M. \& Wegener, K. Melt pool simulation for the evaluation of process parameters in selective laser melting. Addit. Manuf. 14, 116-125 (2017).
+
+  \item Lough, C. S., Wang, X., Smith, C. C., Landers, R. G., Bristow, D. A., Drallmeier, J. A., Brown, B. \& Kinzel, E. C. Correlation of SWIR imaging with LPBF 304 L stainless steel part properties. Addit. Manuf. 35, 101359 (2020).
+
+  \item Aggarwal, A., Patel, S. \& Kumar, A. Selective laser melting of 316L stainless steel: physics of melting mode transition and its influence on microstructural and mechanical behavior. Jom 71, 1105-1116 (2019).
+
+  \item Sharma, S., Mandal, V., Ramakrishna, S. A. \& Ramkumar, J. Numerical simulation of melt pool oscillations and protuberance in pulsed laser micro melting of SS304 for surface texturing applications. J. Manuf. Process. 39, 282-294 (2019).
+
+  \item Khairallah, S. A., Anderson, A. T., Rubenchik, A. \& King, W. E. Laser powder-bed fusion additive manufacturing: Physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones. Acta Mater. 108, 36-45 (2016).
+
+  \item Le, K. Q., Tang, C. \& Wong, C. H. On the study of keyhole-mode melting in selective laser melting process. Int. J. Therm. Sci. 145, (2019).
+
+  \item Zhang, M. J., Chen, G. Y., Zhou, Y., Li, S. C. \& Deng, H. Observation of spatter formation mechanisms in high-power fiber laser welding of thick plate. Appl. Surf. Sci. 280, 868-875 (2013).
+
+  \item Taheri Andani, M., Dehghani, R., Karamooz-Ravari, M. R., Mirzaeifar, R. \& Ni, J. Spatter formation in selective laser melting process using multi-laser technology. Mater. Des. 131, 460-469 (2017).
+
+  \item Ly, S., Rubenchik, A. M., Khairallah, S. A., Guss, G. \& Matthews, M. J. Metal vapor micro-jet controls material redistribution in laser powder bed fusion additive manufacturing. Sci. Rep. 7, 1-12 (2017).
+
+  \item Zhao, C., Fezzaa, K., Cunningham, R. W., Wen, H., Carlo, F. D., Chen. L., Rollett, A. D. \& Sun, T. Real-time monitoring of laser powder bed fusion process using high-speed X-ray imaging and diffraction. Sci. Rep. 7, 1-11 (2017).
+
+  \item Zhang, Y., Fuh, J. Y. H., Ye, D. \& Hong, G. S. In-situ monitoring of laser-based PBF via off-axis vision and image processing approaches. Addit. Manuf. 25, 263-274 (2019).
+
+  \item Taheri Andani, M., Dehghani, R., Karamooz-Ravari, M. R., Mirzaeifar, R. \& Ni, J. A study on the effect of energy input on spatter particles creation during selective laser melting process. Addit. Manuf. 20, 33-43 (2018).
+
+  \item Guo, Q., Zhao, C., Escano, L. I., Young, Z., Xiong, L., Fezzaa, K., Everhart, W., Brown, B., Sun, T. \& Chen. L. Transient dynamics of powder spattering in laser powder bed fusion additive manufacturing process revealed by in-situ high-speed high-energy x-ray imaging. Acta Mater. 151, 169-180 (2018).
+
+  \item Zhao, C., Guo, Q., Li, X., Parab, N., Fezzaa, K., Tan, W., Chen, L \& Sun, T. Bulk-explosion-induced metal spattering during laser processing. Phys. Rev. X 9, 21052 (2019).
+
+  \item Yin, J., Wang, D., Yang, L., Wei, H., Dong, P., Ke, L., Wang, G., Zhu, H. \& Zeng, X. Correlation between forming quality and spatter dynamics in laser powder bed fusion. Addit. Manuf. 31, 100958 (2019).
+
+  \item Fischer, P., Leber, H., Romano, V., Weber, H. P., Karapatis, N. P., Andre, C. \& Glardon, R. Microstructure of near-infrared pulsed laser sintered titanium samples. Appl. Phys. A Mater. Sci. Process. 78, 1219-1227 (2004).
+
+  \item Fischer, P., Romano, V., Weber, H. P., Karapatis, N. P., Boillat, E. \& Glardon, R. Sintering of commercially pure titanium powder with a Nd:YAG laser source. Acta Mater. 51, 1651-1662 (2003).
+
+  \item Qiu, C., Panwisawas, C., Ward, M., Basoalto, H. C., Brooks, J. W. \& Attallah, M. M. On the role of melt flow into the surface structure and porosity development during selective laser melting. Acta Mater. 96, 72-79 (2015).
+
+  \item Shrestha, S., Rauniyar, S. \& Chou, K. Thermo-fluid modeling of selective laser melting: single-track formation incorporating metallic powder. J. Mater. Eng. Perform. 28, 611-619 (2019).
+
+  \item West, B. M., Capps, N. E., Urban, J. S., Pribe, J. D., Hartwig, T. J., Lunn, T. D., Brown, B., Bristow, D. A., Landers, R. G. \& Kinzel, E. C. Modal analysis of metal additive manufactured parts. Manuf. Lett. 13, 30-33 (2017).
+
+  \item Sutton, A. T., Kriewall, C. S., Leu, M. C., Newkirk, J. W. \& Brown, B. Characterization of laser spatter and condensate generated during the selective laser melting of 304L stainless steel powder. Addit. Manuf. 31. (2020).
+
+  \item Qi, T., Zhu, H., Zhang, H., Yin, J., Ke, L. \& Zeng, X. Selective laser melting of Al7050 powder: Melting mode transition and comparison of the characteristics between the keyhole and conduction mode. Mater. Des. 135, 257-266 (2017).
+
+  \item Lough, C. S., Wang, X., Smith, C. C., Landers, R. G., Bristow, D. A., Drallmeier, J. A., Brown, B., \& Kinzel, E. C. Correlation of SWIR imaging with LBPF 304L stainless steel part properties. Addit. Manuf. 35. (2020).
+
+\end{enumerate}
+
+\section*{Acknowledgements}
+This work was funded by Honeywell Federal Manufacturing \& Technologies under Contract No. DENA0002839 with the U.S. Department of Energy. The United States Government retains and the publisher, by accepting the article for publication, acknowledges that the United States Government retains a nonexclusive, paid up, irrevocable, world-wide license to publish or reproduce the published form of this manuscript, or allow others to do so, for the United States Government purposes.
+
+
+\end{document}

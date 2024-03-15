@@ -1,0 +1,528 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Finite element simulation of laser additive melting and solidification of Inconel 718 with experimentally tested thermal properties ${ }^{\text {th }}$ }
+
+
+\author{Richard Andreotta ${ }^{\mathrm{a}}$, Leila Ladani ${ }^{\mathrm{b}, *}$, William Brindley ${ }^{\mathrm{c}}$\\
+${ }^{\text {a Excel Technologies, Inc., Hartford, CT, USA }}$\\
+b Institute for Predictive Performance Methodologies and Mechanical and Aerospace Engineering, University of Texas at Arlington, Arlington, TX, USA\\
+' Pratt \& Whitney, 400 Main Street, East Hartford, CT 06118, USA}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+A R T I C L E I N F O
+
+\section*{Keywords:}
+Laser melting
+
+Powder bed
+
+Finite element
+
+Transient thermal analysis
+
+Computational fluid dynamics Inconel 718
+
+\begin{abstract}
+A B S T R A C T Powdered metal additive manufacturing technology shows great promise in the aerospace industry. Accurately simulating the associated processes will allow process windows and physical phenomena to be thoroughly investigated without the need for costly and time consuming experiments. The authors have expanded upon previous thermal finite element models by including mass and momentum balance equations which allow for the direct simulation of fluid flow in addition to thermal transport. This is accomplished by the incorporation of the forced rigidity method which utilizes a temperature dependent dynamic viscosity to model melting, flow, and subsequent solidification in all three spatial dimensions. This work includes a sophisticated finite element model that is validated with in-house experiments, as well as experimental determination of thermal conductivity of gas-atomized Inconel 718 powder particles. Through simulation and experimental findings a novel method of modeling the complete physics associated with powder bed additive manufacturing processes is presented.
+\end{abstract}
+
+\section*{1. Introduction}
+The field of additive manufacturing is relatively young with the first serious investigation into the technology taking place in the 1970s using fused deposition and plastic materials [1]. The ability to create three dimensional objects with a single stream of deposited material was seen as a rapid prototyping tool due to its ability to create physical models of a design in hours opposed to days. Additional benefits of additive manufacturing were soon discovered including the ability to create internal features which contributed to the consensus that additive manufacturing could one day be used for rapid tooling and rapid manufacturing [2]. The advantages seen in plastic parts soon drove researchers to create deposition methods to additively fabricate metal parts; however these methods encountered difficulties in achieving accurate deposition of layered base material [3]. It was from these difficulties that a new variety of processes focused on metallic powder beds emerged. The powder bed processes can be categorized into laser and electron beam processes. The former imparts energy onto the powder optically while the later uses a kinetic energy transfer mechanism. This work will focus only on the laser beam powder bed processes.\\
+Fig. 1 portrays an overview of the processes that are simulated in the finite element model. Energy is deposited onto the powder bed under the beam spot of the source beam which moves linearly along the longest dimension of the block. The amount of generated heat is dependent on the optical properties of the laser beam as well as the absorbance of the melt pool and powder particles. The thermal gradients are then neutralized through conduction into previously solidified layers and the build plate, as well as Marangoni driven convection within the melt pool. The powder bed surface undergoes radiative and convective cooling, however this study treats convective cooling at the surface as negligible which is in accordance with previous works [4,5]. Marangoni convection is modeled in three dimensions but is portrayed in two dimensions in Fig. 1 for simplicity. The conductivity of the metallic powder bed is considerably less than that of the metallic solid due to voids filled with low conductivity Nitrogen or Argon.
+
+In order to accurately model the process of laser beam powder beam melting process, several thermo-physical parameters are needed including the powder conductivity. Powder conductivity plays an important role in conducting the heat away from the heated region. Due to the fact that the intention is to sustain the melt pool and keep
+\footnotetext{Abbreviations: TPS, Transient Plane Source; LRF, Laser Rapid Forming; SLM, Selective Laser Melting; SMD, Shaped Metal Deposition; DLD, Direct Laser Deposition; CFD, Computational Fluid Dynamics
+
+Funding: This work was supported by Pratt \& Whitney, a subsidiary of United Technologies Corporation.
+
+\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail addresses: \href{mailto:richard.andreotta@uconn.edu}{richard.andreotta@uconn.edu} (R. Andreotta), \href{mailto:leila.ladani@uta.edu}{leila.ladani@uta.edu} (L. Ladani), \href{mailto:william.brindley@pw.utc.com}{william.brindley@pw.utc.com} (W. Brindley).
+}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_81e84634f20468bea1dag-2}
+\end{center}
+
+Fig. 1. Process overview.
+
+the heat within the heated region, conductivity becomes significantly important in a feasibility of the process. Due to the fact that multiple phases of material are involved in this process, thermal conductivity of power, molten metal and solid metal become important. Thermal conductivity is a parameter that is temperature dependent and it varies at higher temperatures. Measurement of this property becomes cumbersome in higher temperatures involved with laser processes which typically go beyond melting temperature of metal. Due to the lack of availability of this parameter experimentally, several methods have been proposed to calculate this parameter for powder material numerically including the initial work done by Hadley [6]. Derivations of an effective conductivity have been proposed [7]. Authors developed an approach to calculate effective conductivity of molten material in a previous work [8]. Extensive theoretical and computational work on different physics of powder interaction with each other has been developed by Zohdi [9-12].
+
+In order to accurately model the process in this work, authors chose to obtain the temperature dependent thermal conductivity of the powder materials experimentally in the laboratory. A transient plane source (TPS) instrument is used to conduct the experiments. The TPS method utilizes a sensor element made of a $10 \mu \mathrm{m}$ thick Nickel-metal double spiral, which acts both as a heat source for increasing the temperature of the sample and a resistance thermometer for recording the time dependent temperature increase. Gas atomized Inconel 718 powder is tested up to temperatures of $1000 \mathrm{~K}$ at 3 different packing densities, with higher temperature values extrapolated.
+
+Other material properties were taken from Mills [13]. There are many simulation and experimental works in the literature dealing with the use of Inconel alloys as additive manufacturing materials. Studies performed by Zhao et al. [14], Jia and Gu [15], Baufeld [16], and Blackwell [17] investigate the microstructural and mechanical properties of additively fabricated Inconel 718 parts. Zhao et al. examined the mechanical properties of parts built with laser rapid forming (LRF), a laser deposition process. It was concluded that through heat treatment the tensile strength of the additively built samples was comparable with wrought Inconel 718, however the LRF parts were significantly less ductile regardless of heat treatment. It was also found that Microporous coalescence is the main fracture mechanism due the porosities that are introduced from the gas atomized powders. Jia and Gu reported on the microstructure and laser power densification relation of selective laser melting (SLM) Inconel 718 parts. It was found that at low laser energy densities the densification was restricted due to the occurrence of pores and balling effects. At a laser energy density of $330 \mathrm{~J} / \mathrm{m}$ a near full density of $98.4 \%$ was achieved. The microstructure was also found to be dependent on laser energy density, changing from coarsened columnar dendrites - clustered dendrites - slender and uniformly distributed columnar dendrites, as laser energy density was increased. Baufeld investigated the mechanical properties of Inconel\\
+718 parts built by shaped metal deposition (SMD). Baufeld found that the tensile strength of SMD produced parts is comparable with those built by other additive manufacturing techniques, and that no strain rate dependence exists for the ultimate tensile strength. Blackwell looked at parts built with direct laser deposition (DLD) and found strong anisotropic properties, appearing to be associated with a lack of bonding between layers. These anisotropic properties disappeared after a hot isostatic pressing operation which also erased any evidence of lack of bonding between layers. Studies by Foroozmehr [18], Romano [19], Roberts [5], and Fu [20] investigated the SLM process through various finite element modeling techniques. Foroozmehr investigated the optical penetration depth of the laser beam and its dependence on powder size. Simulation results were then compared to experimental results where good agreement was found in melt pool depth for 80, 100 , and $150 \mathrm{~mm} / \mathrm{s}$ scan speeds. Romano created a thermal model to predict melt pool geometries and used a correction factor based on linear regression between simulated and experimental results to tune the model. Roberts used element birth and death to simulate the buildup of successive layers. A recoat time of $1 \mathrm{~s}$ was used which resulted in a small but steady build up in baseplate temperature as successive layers were scanned. Fu used a surface heat source to represent the laser beam and found that melted powder takes only a few milliseconds to cool back down to ambient temperature. Some of these efforts made assumptions to account for Marangoni flow within the melt pool and some of them neglected it entirely, however none of these models directly simulated flow within the melt pool. This work aims to break the trend of modeling efforts that neglect Marangoni flow by coupling computational fluid dynamics (CFD) with heat transfer physics to simulate all active physical phenomena within the melt pool. By coupling fluid flow and heat transfer physics a state of the art model of the SLM process is developed.
+
+\section*{2. Modeling setup}
+The simulation presented in this thesis is the result of two separate models developed using Comsol Multiphysics. The first model compromises the bulk of this work's innovation and couples fluid flow and heat transfer physics to model the SLM process in three spatial dimensions. The second model is used to relate the first model's results to a fully formed bead shape cross section so experimental and simulation bead geometries can be compared. It is two-dimensional and uses the level set method to simulate the formation of the final bead shape under surface tension and gravity forces. The geometry of the molten bead and the solidification time are imported from the first model. Model number two starts as the melt pool approaches melting temperature and ends when it drops below melting temperature. By using temperature dependent dynamic viscosity the solidification is modeled.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_81e84634f20468bea1dag-3(1)}
+\end{center}
+
+Fig. 2. Model one set up. Dimensions in $\mathrm{mm}$.
+
+Table 1
+
+Dimensions of domains in model one.
+
+\begin{center}
+\begin{tabular}{llll}
+\hline
+Domain & $\mathbf{X}(\mathbf{m m})$ & $\mathbf{Y}(\mathbf{m m})$ & $\mathbf{Z}(\mathbf{m m})$ \\
+\hline
+Powder & 9 & 3 & .04 \\
+Solid & 9 & 3 & .9 \\
+Build plate & 9 & 3 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_81e84634f20468bea1dag-3}
+\end{center}
+
+\section*{Nitrogen Atmosphere}
+Fig. 3. Model two setup.
+
+All equations were taken directly from the COMSOL Multiphysics user's manual [21]. Model one consists of three rectangular boxes which make up a powder, solid, and build plate domain. Fig. 2 depicts the model setup with the powder domain stacked on top of the solid domain which is stacked on top of the build plate. The dimensions of each domain are specified in Table 1, where the Y-dimension is halved in the model's geometry due to planar symmetry. The powder domain, solid domain, and build plate domain represent the fresh powder layer, previously built layers, and the build plate, respectively. The laser is represented by moving Gaussian distrusted volumetric heat source that decays linearly with depth [22]. All side walls and the bottom of the build plate were given an adiabatic boundary condition because a single line laser scan is a highly localized event and the block dimensions are large enough that no heat reaches the side or bottom boundaries. The top surface was given a diffuse surface boundary condition to represent heat loss due to radiation. Boundary conditions can be seen in Fig. 3,\\
+Table 2
+
+Boundary conditions and corresponding equations [21].
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Boundary condition & Governing equation \\
+\hline
+Adiabatic & $-\boldsymbol{n} \cdot \boldsymbol{q}=0$ \\
+Diffuse furface & $-\boldsymbol{n} \cdot \boldsymbol{q}=\varepsilon \sigma\left(T_{a m b}^{4}-T^{4}\right)$ \\
+Slip & $\boldsymbol{u} \cdot \boldsymbol{n}=0$ \\
+ & $\boldsymbol{K}-(\boldsymbol{K} \cdot \boldsymbol{n}) \boldsymbol{n}=\boldsymbol{0}, \boldsymbol{K}=\left[\boldsymbol{\mu}\left(\nabla \boldsymbol{u}+(\nabla \boldsymbol{u})^{\boldsymbol{T}}\right)\right] \boldsymbol{n}$ \\
+Marangoni force & $\boldsymbol{F}=\operatorname{test}(\mathbf{u}) * \gamma * T_{x}+\operatorname{test}(\mathbf{v}) * \gamma * T_{y}$ \\
+\end{tabular}
+\end{center}
+
+where slip refers to a boundary velocity condition. The slip condition is somewhat arbitrary due to the high dynamic viscosity of all elements near the boundary. The equations governing each boundary condition are shown in Table 2 and make use of the following variables: $\boldsymbol{n}$ : Vector normal to surface, $\boldsymbol{q}$ : Heat flux, $\varepsilon$ : Emissivity, $\sigma$ : Stefan-Boltzmann constant, $\boldsymbol{u}$ : Velocity, $\boldsymbol{K}$ : Viscous stress tensor, $\gamma$ : Surface Tension Coefficient, $T_{x}$ and $T_{y}: \mathrm{X}$ and $\mathrm{Y}$ partial derivatives of temperature, $\mathbf{u}$ and $\mathbf{v}: \mathrm{X}$ and $\mathrm{Y}$ components of velocity. The mesh consists of cubic elements with $20 \mu \mathrm{m}$ side length along the lasers path and large tetrahedral elements away from the laser. The completed mesh consists of 168,000 elements.
+
+The temperature, velocity, and pressure fields are calculated using an energy balance, momentum balance, and mass balance, respectively. The energy balance is given by Eq. 1 where the conductive heat flux, $\boldsymbol{q}$, is given by $\boldsymbol{q}=-k \nabla \boldsymbol{T}$.
+
+$\rho C_{p} \frac{\partial \boldsymbol{T}}{\partial t}+\rho C_{p} \boldsymbol{u} \cdot \nabla \mathbf{T}+\nabla \cdot \mathbf{q}=\mathbf{Q}$
+
+Eq. 1 includes the following parameters and variables: $\boldsymbol{u}$ : The velocity field, $\mathbf{Q}$ : The heat source, $\mathbf{T}$ : The temperature field, $\rho$ : The density, $C_{p}$ : The heat capacity. The velocity term comes from the mass and momentum balances while the heat source represents the laser beam. The heat source was specified as a three dimensional function that decays radially outward from the center and linearly in the direction parallel to the beam. The radial decay was specified by a Gaussian distribution with a standard deviation equal to one third of the effective beam radius, which ensures $99.7 \%$ of the laser energy is accounted for. The linear decay was specified by a linear function valued one at the surface and zero at the penetration depth. The momentum and mass balance are represented below by Eqs. 2 and 3 .
+
+$\rho \frac{\partial \boldsymbol{u}}{\partial t}+\rho(\boldsymbol{u} \cdot \nabla) \boldsymbol{u}=\nabla \cdot\left[-p \boldsymbol{I}+\mu\left(\nabla \boldsymbol{u}+(\nabla \boldsymbol{u})^{T}\right)\right]+\boldsymbol{F}$\\
+$\rho \nabla \cdot(\boldsymbol{u})=0$
+
+Eqs. 2 and 3 make use of the following variables and parameters: $\mu$ : The dynamic viscosity, $p$ : The pressure, $\boldsymbol{I}$ : The identity matrix. In Eq. 2 the $\boldsymbol{F}$ term allows for the inclusion of surface and body forces, which is where surface tension gradient driven Marangoni forces were specified as a weak contribution to the source term as shown in Table 2. The test functions are the heart of the weak form, which turns differential equations into integral equations. The test functions sample values at infinitesimal intervals to negate the need for second derivative continuous dependent variables. Integrations by parts is then used to reduce the order of integration and provide a numerical advantage [21].
+
+Model two is two dimensional and consists of two domains which represent the ambient atmosphere and the molten bead cross section, as shown in Fig. 3.
+
+Molten region geometry was imported from model one and the level set method was used to track the free surface of the bead as it forms into its equilibrium state under gravity and surface tension forces. Solidification time was also computed using temperature history from model one and is incorporated into model two with a time dependent dynamic viscosity. Model two includes the same mass and momentum balances from model one, as well as Eqs. 4 through 6, which solve for the initial interface position and track its evolution.
+
+$\nabla G l \cdot \nabla G l+\sigma_{w} G l(\nabla \cdot \nabla G l)=\left(1+2 \sigma_{w}\right) G l^{4}$
+
+$l_{w}=\frac{1}{G l}-\frac{l_{r e f}}{2}$
+
+$\frac{\partial \phi}{\partial t}+\nabla \cdot(\boldsymbol{u} \phi)=\lambda \nabla \cdot\left(\epsilon_{l s} \nabla \phi-\phi(1-\phi) \frac{\nabla \phi}{|\nabla \phi|}\right)$
+
+Eqs. 4 through 6 make use of the following variables and parameters: $G l$ : Reciprocal interface distance, $\sigma_{w}$ : Surface tension coefficient, $l_{w}$ : Initial interface distance, $l_{\text {ref }}$ : Reference length $u$ : The velocity field, $\lambda$ : Reinitialization parameter, $\epsilon_{l s}$ : Parameter controlling interface thickness, $\phi$ : The level set variable. For each time step the level set variable is solved for both domains. The value of the level set variable in each domain is one or zero, and 0.5 over the interface. The contact angle between both fluids and the underlying substrate is inputted as is required by the level set method. Contact angle was calculated by taking an average of experimental tracks formed by and EOSINT M 280 for each set of process parameters. Fig. 4 shows the contact angle analysis and Fig. 5 shows an example of a cross section being measured. The average of the two contact angles of each cross section was used. In certain experimental tracks contact angle could not be determined due to damage while cross sectioning. A contact angle of pi/2 was assumed for these cases.
+
+Fig. 6 shows the mesh density analysis for model one. An average mesh density of 4834 elements per cubic millimeter was used since
+
+\section*{Contact Angle vs Laser Power}
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_81e84634f20468bea1dag-4(1)}
+\end{center}
+
+Fig. 4. Contact angle of experimental tracks.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_81e84634f20468bea1dag-4(2)}
+\end{center}
+
+Fig. 5. Example of contact angle measurement.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_81e84634f20468bea1dag-4}
+\end{center}
+
+Fig. 6. Mesh density analysis.
+
+increasing the mesh density yielded no significant change in maximum temperature. Refining the mesh in model two did not change results.
+
+\section*{3. Material properties}
+\subsection*{3.1. Thermal conductivity}
+Thermal conductivity was measured with a TPS 2200 scientific instrument. The instrument is designed to non-destructively measure the thermal properties of solid, liquid, paste, and powdered materials. It claims accuracy of $2 \%$ for thermal conductivity. The instrument relies on a method which utilizes a sensor element in the shape of a double spiral which simultaneously supplies heat to the sample and measures the time dependent temperature increase. The sensor is made of a 10 um thick Nickel-metal double spiral encapsulated by Mica, which electrically insulates the spiral and provides it with mechanical strength. The TPS 2200 was used with a $4 \mathrm{~L}$ muffle furnace to make measurements at $50^{\circ}$ intervals up to $1000 \mathrm{~K}$. Five measurements were taken at each temperature, and powder mass and chamber volume were measured after each run to calculate packing density. The values obtained with a packing density consistent with a 0.3 porosity assumption were the ones ultimately used in simulations. Results are shown in Fig. 7. Only one run was measured all the way to $1000 \mathrm{~K}$ because it was found that the sensor rapidly decays after $750 \mathrm{~K}$.
+
+The thermal conductivity showed a non-monotonic relationship with temperature which differs from the thermal conductivity of solid Inconel 718. However pure Nickel which constitutes 50\% of Inconel 718 also behaves non-monotonically and experiences a local minimum in thermal conductivity between 600 and $800 \mathrm{~K}$, so this researcher feels the results are valid.
+
+\subsection*{3.2. Heat capacity}
+Heat capacity values were taken directly from Mills [13]. Latent
+
+\section*{Thermal Conductivity vs Temperature at Various Packing Densities}
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_81e84634f20468bea1dag-5(2)}
+\end{center}
+
+Fig. 7. Experimentally determined thermal conductivity of Inconel 718 powder.
+
+Table 3
+
+Summary of apparent heat capacity method.
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Specific heat & Temperature range \\
+\hline
+$C_{p}=C_{p}(T)$ & $0 \leq T \leq T_{\text {sol }}$ \\
+$C_{p}=C_{p}(T)+\frac{L_{f}}{\Delta T}$ & $T_{\text {sol }} \leq T \leq T_{\text {sol }}+\Delta T$ \\
+$C_{p}=C_{p}(T)$ & $T_{\text {liq }} \leq T$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_81e84634f20468bea1dag-5}
+\end{center}
+
+Fig. 8. Heat capacity of Inconel 718 [13].
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_81e84634f20468bea1dag-5(1)}
+\end{center}
+
+Fig. 9. Apparent heat capacity of Inconel 718
+
+heat of fusion is included by the apparent heat capacity method [21]. The method is summarized in Table 3 and Figs. 8 and 9. In the following table $C_{p}$ is the specific heat and $L_{f}$ is the latent heat of fusion of Inconel 718. The temperature transition zone is defined as $\Delta T=T_{l i q}-T_{\text {sol }}$. From Mills [7], $T_{\text {sol }}=1443 \mathrm{~K}$ and $T_{\text {liq }}=1609 \mathrm{~K}$.
+
+The method works by distributing the latent heat of fusion in the form of an increase to heat capacity over the state transition zone.
+
+\subsection*{3.3. Density}
+Density values of solid Inconel 718 were taken directly from Mills [13], and the powder values were obtained by assuming a porosity of 0.3 .
+
+\subsection*{3.4. Dynamic viscosity}
+Dynamic viscosity values were calculated using a parameterized equation proposed by Andon and Day [23], which is labeled Eq. 7 and shown below. Temperature is in Kelvin.
+
+$\mu(m P a * s)=0.196 e^{\frac{5848}{T}}$
+
+The dynamic viscosity of elements below $1443 \mathrm{~K}$ was set to $10^{8} \mathrm{~Pa}^{*} \mathrm{~S}$ which forces those elements to behave as a solid. Once the melting temperature is reached the dynamic viscosity switches to Eq. 7 which allows melt pool flow to develop.
+
+\subsection*{3.5. Absorptivity}
+A value of $48 \%$ was used, as experimentally determined by Haq, Shah, and Khan [24].
+
+\subsection*{3.6. Emissivity}
+A predictive model proposed by Sih and Barlow [25] was used to predict effective emissivity of the powder bed. The model consists of three equations, labeled Eqs. 8, 9, and 10.
+
+$\varepsilon=A_{h} \varepsilon_{h}+\left(1-A_{h}\right) \varepsilon_{h}$
+
+$A_{h}=\frac{.908 p^{2}}{1.908 p^{2}-2 p+1}$
+
+$\varepsilon_{h}=\frac{\varepsilon_{s}\left[2+3.082\left(\frac{1-p}{p}\right)^{2}\right]}{\varepsilon_{s}\left[1+3.082\left(\frac{1-p}{p}\right)^{2}\right]+1}$
+
+The previous equations include the following parameters: $\varepsilon$ : The effective emissivity, $\varepsilon_{h}$ : The emissivity of the cavities, $\varepsilon_{s}$ : The emissivity of the bulk material, $A_{h}$ : The area fraction of surface occupied by cavities, $p$ : The powder bed porosity. A porosity of $30 \%$ is assumed in accordance with the literature, and a solid emissivity of $85 \%$ is used as reported by Greene and Finfrock [26]. The resulting effective emissivity is $87 \%$.
+
+\section*{4. Results}
+The simulation results were compared to experimental single line scans formed by an EOS M 280 SLM machine. Scans were made at the combinations of laser power and scan speed detailed in Table 4. The scans were made at an ambient temperature of $298 \mathrm{~K}$ and were originally planned to use a layer thickness of $0.04 \mathrm{~mm}$, however the machine operators did two scans with recoat for each line with a layer thickness of $0.02 \mathrm{~mm}$. This difference must be noted as simulations were run using a single scan and a layer thickness of $0.04 \mathrm{~mm}$. Ten lines were formed at each combination of scan speed and laser power and average measurements were compared to simulated results.
+
+An example of a simulated bead cross section and an experimental cross section is shown in Fig. 10.
+
+An example of the simulated Marangoni flow within the melt pool is
+
+Table 4
+
+Process parameters considered.
+
+\begin{center}
+\begin{tabular}{lllll}
+\hline
+ & $\mathbf{1 0 0} \mathbf{W}$ & $\mathbf{1 5 0} \mathbf{W}$ & $\mathbf{2 0 0} \mathbf{W}$ & $\mathbf{3 0 0} \mathbf{W}$ \\
+\hline
+$\mathbf{2 0 0} \mathbf{~ m m} / \mathrm{s}$ & Yes & Yes & Yes & Yes \\
+$\mathbf{7 0 0} \mathbf{~ m m} / \mathbf{s}$ &  & Yes & Yes & Yes \\
+$\mathbf{1 2 0 0} \mathbf{~ m m} / \mathbf{s}$ &  & Yes & Yes & Yes \\
+$\mathbf{2 2 0 0} \mathbf{~ m m} / \mathrm{s}$ &  &  &  & Yes \\
+$\mathbf{2 5 0 0} \mathbf{~ m m} / \mathbf{s}$ &  &  &  & Yes \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_81e84634f20468bea1dag-6(2)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_81e84634f20468bea1dag-6}
+\end{center}
+
+(b)
+
+Fig. 10. Simulated vs experimental cross sections.
+
+shown in Fig. 11.
+
+In Fig. 11 the melt pool and un-melted materials are separated by a line. It is clear that the forced rigidity method works as there is only flow inside the melt pool. The simulated Marangoni flow is directed outwards towards the boundary of the melt pool as expected.
+
+The model offered good predictions for melt pool width as can be seen in Fig. 12 and Table 5 below.
+
+The model performed best at higher scan speeds achieving an average error of $10.03 \%$ at scan speed of $700 \mathrm{~mm} / \mathrm{s}$ or higher. Even when all scan speeds are considered the model predicts melt pool width with a reasonable average error of $14 \%$. Similar figures and tables for melt pool depth are shown below.
+
+Table 6 and Fig. 13 show reasonable agreement between simulation and experimental results except at a scan speed of $200 \mathrm{~mm} / \mathrm{s}$ where the error is more pronounced. At a $700 \mathrm{~mm} / \mathrm{s}$ scan speed the average error is $7.77 \%$. The average error for all scan speeds except $200 \mathrm{~mm} / \mathrm{s}$ is $24.27 \%$. This is in stark contrast to the average error at scan speeds of $200 \mathrm{~mm} / \mathrm{s}$ which is $46.1 \%$. The consistently high errors at scan speeds of $200 \mathrm{~mm} / \mathrm{s}$, as well as the relatively large penetration depths of experimentally formed scans at that scan speed leads this researcher to
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_81e84634f20468bea1dag-6(3)}
+\end{center}
+
+Fig. 11. Melt pool flow in $\mathrm{m} / \mathrm{s}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_81e84634f20468bea1dag-6(1)}
+\end{center}
+
+Fig. 12. Average melt pool width vs laser power.
+
+Table 5
+
+Comparison of experimental and simulation results for average melt pool width.
+
+\begin{center}
+\begin{tabular}{lllll}
+\hline
+Simulation (um) &  &  &  &  \\
+\hline
+Average width & $\mathbf{1 0 0} \mathbf{~ W}$ & $\mathbf{1 5 0} \mathbf{~ W}$ & $\mathbf{2 0 0} \mathbf{~ W}$ & $\mathbf{3 0 0} \mathbf{~ W}$ \\
+\hline
+$200 \mathrm{~mm} / \mathrm{s}$ & 184 & 231 & 290 & 370 \\
+$700 \mathrm{~mm} / \mathrm{s}$ &  & 124 & 132 & 194 \\
+$1200 \mathrm{~mm} / \mathrm{s}$ &  & 113 & 118 & 146 \\
+$2200 \mathrm{~mm} / \mathrm{s}$ &  &  &  & 116 \\
+$2500 \mathrm{~mm} / \mathrm{s}$ &  &  &  & 112 \\
+ &  &  &  &  \\
+Experiment (um) &  & $\mathbf{1 5 0} \mathbf{~ W}$ & $\mathbf{2 0 0} \mathbf{~ W}$ & $\mathbf{3 0 0} \mathbf{~ W}$ \\
+Average width & $\mathbf{1 0 0} \mathbf{~ W}$ & $118 \pm 5.1$ & $144.5 \pm 9.2$ & $185 \pm 12.1$ \\
+$200 \mathrm{~mm} / \mathrm{s}$ & $154.2 \pm 14.6$ & $204.3 \pm 11$ & $132 \pm 10.6$ &  \\
+$700 \mathrm{~mm} / \mathrm{s}$ &  & $97 \pm 8.1$ & $113.6 \pm 11.9$ & $134 \pm 9$ \\
+$1200 \mathrm{~mm} / \mathrm{s}$ &  &  &  & $94 \pm 16.9$ \\
+$2200 \mathrm{~mm} / \mathrm{s}$ &  &  &  &  \\
+$2500 \mathrm{~mm} / \mathrm{s}$ &  & $\mathbf{1 5 0} \mathbf{~ W}$ & $\mathbf{2 0 0} \mathbf{~ W}$ & $\mathbf{3 0 0} \mathbf{~ W}$ \\
+ &  & $-13.07 \%$ & $-29.87 \%$ & $-25.38 \%$ \\
+Percent difference (\%) & $-5.08 \%$ & $8.65 \%$ & $-4.86 \%$ &  \\
+Average width & $\mathbf{1 0 0} \mathbf{~ W}$ & $-16.49 \%$ & $-3.87 \%$ & $-10.61 \%$ \\
+$200 \mathrm{~mm} / \mathrm{s}$ & $-19.33 \%$ &  & $-11.54 \%$ &  \\
+$700 \mathrm{~mm} / \mathrm{s}$ &  &  & $-19.15 \%$ &  \\
+$1200 \mathrm{~mm} / \mathrm{s}$ &  &  &  &  \\
+$2200 \mathrm{~mm} / \mathrm{s}$ &  &  &  &  \\
+$2500 \mathrm{~mm} / \mathrm{s}$ &  &  &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+believe that a peculiarity of the particular machine these experimental tracks were formed on could be partly to blame for the error. This assertion is supported by the high standard deviation of the $200 \mathrm{~mm} / \mathrm{s}$ $300 \mathrm{~W}$ scan as can be seen in Table 6. It is known that the random packing of powder particles causes some natural deviation, however
+
+Table 6
+
+Comparison of experimental and simulation results for melt pool depth.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multicolumn{5}{|l|}{Simulation (um)} \\
+\hline
+Melt pool depth & $100 \mathrm{~W}$ & $150 \mathrm{~W}$ & $200 \mathrm{~W}$ & $300 \mathrm{~W}$ \\
+\hline
+$200 \mathrm{~mm} / \mathrm{s}$ & 87 & 115 & 134 & 165 \\
+\hline
+$700 \mathrm{~mm} / \mathrm{s}$ &  & 42 & 60 & 93 \\
+\hline
+$1200 \mathrm{~mm} / \mathrm{s}$ &  & 10.5 & 41 & 66 \\
+\hline
+$2200 \mathrm{~mm} / \mathrm{s}$ &  &  &  & 37 \\
+\hline
+$2500 \mathrm{~mm} / \mathrm{s}$ &  &  &  & 19 \\
+\hline
+\multicolumn{5}{|l|}{Experiment (um)} \\
+\hline
+Melt pool depth & $100 \mathrm{~W}$ & $150 \mathrm{~W}$ & $200 \mathrm{~W}$ & $300 \mathrm{~W}$ \\
+\hline
+$200 \mathrm{~mm} / \mathrm{s}$ & \begin{tabular}{l}
+$148.1+-$ \\
+40.3 \\
+\end{tabular} & \begin{tabular}{l}
+$215.7+-$ \\
+67.5 \\
+\end{tabular} & \begin{tabular}{l}
+$280.5+-$ \\
+48.6 \\
+\end{tabular} & \begin{tabular}{l}
+$299.1+-$ \\
+149 \\
+\end{tabular} \\
+\hline
+$700 \mathrm{~mm} / \mathrm{s}$ &  & \begin{tabular}{l}
+$48.2+-$ \\
+11.3 \\
+\end{tabular} & \begin{tabular}{l}
+$64.4+-$ \\
+18.2 \\
+\end{tabular} & $96.5+-24.7$ \\
+\hline
+$1200 \mathrm{~mm} / \mathrm{s}$ &  & $34+-14.2$ & $41.5+-9.8$ & \begin{tabular}{l}
+$101.1+-$ \\
+37.2 \\
+\end{tabular} \\
+\hline
+$2200 \mathrm{~mm} / \mathrm{s}$ &  &  &  & $42.7+-8.8$ \\
+\hline
+$2500 \mathrm{~mm} / \mathrm{s}$ &  &  &  & $39.9+-14.8$ \\
+\hline
+\multicolumn{5}{|c|}{Percent difference (\%)} \\
+\hline
+Melt pool depth & $100 \mathrm{~W}$ & $150 \mathrm{~W}$ & $200 \mathrm{~W}$ & $300 \mathrm{~W}$ \\
+\hline
+$200 \mathrm{~mm} / \mathrm{s}$ & $41.26 \%$ & $46.69 \%$ & $52.23 \%$ & $44.83 \%$ \\
+\hline
+$700 \mathrm{~mm} / \mathrm{s}$ &  & $12.86 \%$ & $6.83 \%$ & $3.63 \%$ \\
+\hline
+$1200 \mathrm{~mm} / \mathrm{s}$ &  & $69.12 \%$ & $1.20 \%$ & $34.72 \%$ \\
+\hline
+$2200 \mathrm{~mm} / \mathrm{s}$ &  &  &  & $13.35 \%$ \\
+\hline
+$2500 \mathrm{~mm} / \mathrm{s}$ &  &  &  & $52.38 \%$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_81e84634f20468bea1dag-7}
+\end{center}
+
+Fig. 13. Melt pool depth vs laser power.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_81e84634f20468bea1dag-7(1)}
+\end{center}
+
+Fig. 14. Bead height vs laser power.
+
+these experimental averages were taken from measurements of 10 individual scans and a standard deviation that is $50 \%$ of the mean is unusually high [27]. The large percent difference could also be due to the experimental tracks being formed by two scans with a layer thickness of $0.020 \mathrm{~mm}$ instead of a single scan with a layer thickness of $0.040 \mathrm{~mm}$. This discrepancy in procedure may be more pronounced at lower scan speeds where more total energy is imparted onto the powder bed.\\
+Experimental measurements of bead height were only available for 4 sets of process parameters due to defects introduced in the cross section and polishing process. A comparison of experimental and simulation results for bead height is shown in Fig. 14.
+
+It is clear from Fig. 14 that the model offered no useful prediction regarding the bead height of experimentally formed tracks at $200 \mathrm{~mm} /$ s. This is most likely a combination of the previously discussed discrepancy between simulated and experimental procedure and the powder that falls into the melt pool that was neglected in this model. It is reasonable to assume that this additional powder is more significant during a double scan than during a single scan. The literature consistently shows that bead height is very close to the layer thickness and is at most double the layer thickness, which is supported by the simulated results.
+
+\section*{5. Conclusion}
+A sophisticated multiphysics model of the powder bed laser melting additive manufacturing process is presented. This work transcends existing modeling efforts by incorporating a set of Navier-Stokes equations in addition to an energy balance to simultaneously simulate fluid flow and thermal transport. This technique allows for the heat transfer due to Marangoni flow to be modeled explicitly which negates the need for theoretically derived effective thermal conductivities. This work comprises a novel approach to modeling all active physics of the SLM process and offers a framework for subsequent studies to be based upon. A second, complementary model is also introduced which utilizes the level set method to offer predictions for final bead geometry after solidification.
+
+The models are validated by simulating single line scans of Inconel 718 powder at various combinations of process parameters. Simulated results are compared to experimental tracks formed using and EOSINT 280 and use thermal conductivity values determined using TPS technique. The results demonstrate that the forced rigidity method paired with the incorporation of coupled fluid flow and heat transfer physics is a promising step towards building more complete and accurate finite element models.
+
+\section*{Funding}
+This work was supported in part by Pratt \& Whitney and the United Technologies Research Center, East Hartford, CT.
+
+\section*{Acknowledgements}
+The authors would like to express their deepest gratitude to Dr. William Brindley and other associates at Pratt \& Whitney and the United Technologies Research Center in East Hartford, CT for their guidance and funding through this work.
+
+\section*{References}
+[1] D.L. Bourell, J.J. Beaman, M.C. Leu, D.W. Rosen, A brief history of additive manufacturing and the 2009 roadmap for additive manufacturing: looking back and looking forward, US-TURKEY Work. Rapid Technol., Sept. 24, 2009, pp. 5-11.
+
+[2] N. Guo, M.C. Leu, Additive manufacturing: technology, applications and research needs, Front. Mech. Eng. 8 (3) (2013) 215-243.
+
+[3] J.-P. Kruth, M.C. Leu, T. Nakagawa, Progress in additive manufacturing and rapid prototyping, CIRP Ann. - Manuf. Technol. 47 (2) (1998) 525-540.
+
+[4] N. Shen and K. Chou, Numerical Thermal Analysis in Electron Beam Additive, Proceedings ASME International Manuf. Sci. Eng. Conference, 2012, pp. 774-784.
+
+[5] I.A. Roberts, C.J. Wang, R. Esterlein, M. Stanford, D.J. Mynors, A three-dimensional finite element analysis of the temperature field during laser melting of metal powders in additive layer manufacturing,, Int. J. Mach. Tools Manuf. 49 (12-13) (. 2009) 916-923.
+
+[6] G.R. Hadley, Thermal conductivity of packed metal powders, Int. J. Heat Mass Transf. 29 (6) (1986) 909-920.
+
+[7] N.K. Tolochko, M.K. Arshinov, A.V. Gusarov, V.I. Titov, T. Laoui, L. Froyen, Mechanisms of selective laser sintering and heat transfer in Ti powder, Rapid Prototyp. J. 9 (5) (2003) 314-326.
+
+[8] L. Ladani, J. Romano, W. Brindley, S. Burlatsky, Effective liquid conductivity for improved simulation of thermal transport in laser beam melting powder bed technology, Addit. Manuf. 14 (2017) 13-23.
+
+[9] T.I. Zohdi, Rapid simulation of laser processing of discrete particulate materials, Arch. Comput. Methods Eng. Dord. (2013) 309-325.
+
+[10] T.I. Zohdi, A direct particle-based computational framework for electrically enhanced thermo-mechanical sintering of powdered materials, Math. Mech. Solids 19 (1) (2014) 93-113.
+
+[11] T.I. Zohdi, Additive particle deposition and selective laser processing-a computational manufacturing framework,, Comput. Mech. 54 (2014) 171-191.
+
+[12] T.I. Zohdi, Modeling and simulation of cooling-induced residual stresses in heated particulate mixture depositions in additive manufacturing, Comput. Mech. 56 (4) (2015) 613-630.
+
+[13] K.C. Mills, Recommended Values of Thermophysical Properties for Selected Commercial Alloys, Woodhead Publishing, 2002.
+
+[14] X. Zhao, J. Chen, X. Lin, W. Huang, Study on microstructure and mechanical properties of laser rapid forming Inconel 718, Mater. Sci. Eng. A 478 (1-2) (2008) 119-124.
+
+[15] Q. Jia, D. Gu, Selective laser melting additive manufacturing of Inconel 718 superalloy parts: densification, microstructure and properties, J. Alloy. Compd. 585 (2014) 713-721.
+
+[16] B. Baufeld, Mechanical properties of INCONEL 718 parts manufactured by shaped metal deposition (SMD), J. Mater. Eng. Perform. 21 (7) (2012) 1416-1421.
+
+[17] P.L. Blackwell, The mechanical and microstructural characteristics of laserdeposited IN718, J. Mater. Process. Technol. 170 (1-2) (2005) 240-246.
+
+[18] A. Foroozmehr, M. Badrossamay, E. Foroozmehr, S. Golabi, Finite element simulation of selective laser melting process considering optical penetration depth of laser in powder bed, Mater. Des. 89 (2015) 255-263.
+
+[19] J. Romano, L. Ladani, M. Sadowski, Laser additive melting and solidification of Inconel 718: finite element simulation and experiment, J. Miner. 68 (3) (2016) 967-977.
+
+[20] C.H. Fu, Y.B. Guo, 3-dimensional finite element modeling of selective laser melting Ti-6Al-4V alloy, Solid Free. Fabr. Symp. (2014) 1129-1144.
+
+[21] Comsol, Comsol Multiphysics User's Guid, no. 4, 2012, p. 3.\\
+[22] J. Romano, L. Ladani, M. Sadowski, Thermal modeling of laser based additive manufacturing processes within common materials, Procedia Manuf. 1 (2015) 238-250.
+
+[23] R.F. Brooks, A.P. Day, R.J.L. Andon, L.A. Chapman, K.C. Mills, P.N. Quested, Measurement of viscosities of metals and alloys with an oscillating viscometer, High. Temp.-High. Press. 33 (1) (2001) 73-82.
+
+[24] K. Shah, I.U. Haq, S.A. Shah, F. U. Khan, M.T. Khan, and S. Khan, Experimental Study of Direct Laser Deposition of Ti-6Al-4V and Inconel 718 by Using Pulsed Parameters, vol. 2014, 2014.
+
+[25] S. Sumin Sih, J.W. Barlow, The prediction of the emissivity and thermal conductivity of powder beds, Part. Sci. Technol. 22 (3) (2004) 291-304.
+
+[26] G.A. Greene, C.C. Finfrock, T.F. Irvine, Total hemispherical emissivity of oxidized Inconel 718 in the temperature range 300-1000??C, Exp. Therm. Fluid Sci. 22 (34) (2000) 145-153.
+
+[27] I. Yadroitsev, I. Yadroitsava, P. Bertrand, I. Smurov, Factor analysis of selective laser melting process parameters and geometrical characteristics of synthesized single tracks, Rapid Prototyp. J. 18 (3) (2012) 201-208.
+
+Richard Andreotta is an engineer with Excel Technologies Inc. His main contribution was building the model and acting as the lead author of this paper. His interests are finite element method, additive manufacturing, and material preparation \& analysis techniques.
+
+Doctor Leila Ladani a professor of Mechanical and Aerospace Engineering at University of Texas at Arlington and also a lead scientist in Institute for Predictive Performance Methodologies and University of Texas at Arlington Research Institute. She generated the idea and provided step-by-step guidance and supervision for modeling and experimental tasks. She also assisted with writing the paper and provided technical corrections and revisions to the paper.
+
+Doctor William Brindley is the technology manager of manufacturing and aftermarket technology at Pratt and Whitney. He provided insight based on his technical research experience at Pratt \& Whitney and also helped to revise this paper.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

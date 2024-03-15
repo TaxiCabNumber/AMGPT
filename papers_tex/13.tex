@@ -1,0 +1,247 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+
+\title{MELT POOL GEOMETRY SIMULATIONS FOR POWDER-BASED ELECTRON BEAM ADDITIVE MANUFACTURING }
+
+
+\author{Bo Cheng and Kevin Chou\\
+Mechanical Engineering Department\\
+The University of Alabama\\
+Tuscaloosa, AL 35487}
+\date{}
+
+
+\begin{document}
+\maketitle
+Accepted August 16th 2013
+
+\begin{abstract}
+It is known that the melt pool geometry and dynamics strongly affect the build part properties in metal-based additive manufacturing (AM) processes. Thus, process temperature predictions may offer useful information of the melt pool evolution during the heating-cooling cycle. A transient thermal modeling for powder-based electron beam additive manufacturing (EBAM) process has been developed for process temperature simulations, considering temperature and porosity dependent thermal properties. In this study, the thermal model is applied to evaluate, for the case of Ti-6Al-4V in EBAM, the process parameter effects, such as the beam speed, on the temperature profile along the melt scan and the corresponding melt pool geometric characteristics such as the lengthdepth ratio and the cross-sectional area. The intent is to establish a process envelop for part quality control.
+\end{abstract}
+
+Keywords: Design of experiments, Electron beam additive manufacturing, Melt pool geometry, Process parameters, Thermal modeling
+
+\section*{1. Introduction}
+In recent years, one additive-layered manufacturing process is the powder-based electron beam additive manufacturing (EBAM), developed and commercialized by Arcam AB, which provides an effective alternative for processing of titanium (Ti) alloy parts used in different industries. EBAM is essentially electron beam melting in a vacuum environment where metallic powders are selectively melted by given electron beam scanning and rapidly solidified to form complex-shaped and custom-designed components in a layer-building fashion [1]. The general procedures for EBAM of metal components are described in literature, e.g., [2].
+
+Although EBAM has advantages over conventional manufacturing technologies in many aspects, there are several process difficulties such as melt ball formation and layer delamination [3]. To better understand the process physics of electron beam additive manufacturing, an accurate thermal model is necessary to investigate the thermal process phenomena and workpiece interactions. In fact, with a continuous growing interest in additive manufacturing (AM) technologies, there have been increased research publications focused on AM, including many application-based studies such as build part microstructure, metallic powder properties, and part mechanical properties. However,\\
+there has been relatively less literature in process simulations of EBAM. Due to complex heat transport and interactions among the thermal, mechanical, and metallurgical phenomena, the simulation of the thermal phenomenon in EBAM is still a challenging task [4]. Zah and Lutzmann [3] developed a simplified mathematical-physical model in terms of the temperature distributions during electron beam scanning. It is based on the general heat conduction equation and modified by the formulation of a mathematically abstract heat source model. Then, various combinations of the most important process parameters such as the beam scan speed and the beam power have been investigated to determine the shape of resultant molten melt pools, which are related to final part microstructures. Of a laser-based AM study, Kumar and Roy [5] developed a numerical heat transfer model incorporating Marang-oni-Rayleigh-Benard convection to investigate the influence of input parameters such as the laser power and the scanning speed to the melt pool dimensions and melt pool average temperature. Shen and Chou [6] developed a finite element (FE) model to simulate the transient heat transfer in a part during EBAM subject to a moving heat source with a Gaussian volumetric distribution. The developed model was examined against literature data and used to evaluate the powder porosity and the beam size effects on the high temperature penetration volume (melt pool size). It has been found that melt pool size is larger with a higher maximum temperature in the powder layer than solid layer. And temperatures are higher in the melt pool with the increase of the porosity. Moreover, a larger electron-beam diameter will reduce the maximum temperature in the melt pool and temperature gradients could be much smaller, giving a lower cooling rate. Chou [7] employed the developed FE model in [6] to explore the thermal effects during the EBAM process from different thermal properties. The results show the melting temperature of work materials is intuitively the most dominant factor to the melt pool size. However, a high thermal conductivity, (e.g., greater than $100 \mathrm{~W} / \mathrm{m}-\mathrm{K}$ ), will become the dominant factor, exceeding the melting temperature effect, for the melt pool size. The latent heat of fusion and the specific heat may also affect the shape of the melt pool to some extent.
+
+Because the melt pool geometry strongly affects the build part microstructures in the melting-solidification of metal processing, a method to control the melt pool geometry is of a great interest to researchers. The cross-sectional area (Ax) and the length-to-depth ( $1 / \mathrm{d})$ ratio are considered two key parameters for the melt pool geometry [8]. Their characteristics can help better control the build part quality. In a wire-feed EBAM, Soylemez and Beuth [8] presented analytical and numerical methods to develop a map of curves of constant melt pool Ax and constant $1 / \mathrm{d}$ ratios over a range of the electron beam power and the beam velocity. Such a process map may ensure engineers to choose a beam power and a travel speed for user-specified values of a deposition rate, a melt pool cross sectional area and a melt pool length-depth ratio. According to the authors, experimental results demonstrated an ability to maintain melt pool Ax over a wide range of practical powers.
+
+Based on Soylemez and Beuth's study [8], studies of process parameters and part microstructures may offer useful information of the melt pool evolution during the heating-cooling cycle. In this study, an FE model incorporating a moving conical volumetric heat source with Gaussian distribution horizontally and decaying linearly [9-
+
+11], temperature-dependent thermal properties, and latent heat effect, was applied for process temperature simulations. The detailed modeling and validations can be found in an earlier study [4]. The thermal model was used to evaluate, for the case of Ti-6Al-4V in EBAM, three process parameter effects (beam velocity, power and diameter) on the melt pool geometry. The design of experiments approach was used, with analysis of variance (ANOVA), to evaluate the characteristics of melt pool shapes for different conditions. The objective of this study is to establish a process envelope for part quality control.
+
+\section*{2. FE Simulations and Design of Experiments}
+In this study, a simplified simulation process has been introduced for thermal modeling. On top of the substrate a thin powder layer has been modeled and been considered the latest added powder layer. The substrate base material is considered the solid material since it has been deposited in this model. The electron beam heating starts at the top powder layer surface and scans along the x-direction with a given constant velocity. The convection between the workpiece and environment is not considered, since the AM process is in a vacuum environment, only the radiation is considered for the heat transfer between the part and surroundings. Initial thermal conditions are also considered in this thermal process study, a uniform temperature distribution of $T_{\text {preheat }}$ has been assigned to the solid substrate and top powder layer as the thermal initial condition. The solid substrate bottom has been confined to a constant temperature, $T_{\text {bottom. }}$. The detailed FE modeling procedure, using ABAQUS, has been described in [6].
+
+A design of experiments (DOE) approach was conducted in simulating the melt pool geometry in EBAM. Three process parameters, namely, the beam-scanning velocity $(\mathrm{V})$, the beam power $(\mathrm{P})$ and the beam diameter $(\mathrm{D})$, are considered and four levels of each parameter were designated as shown in Table 1 below. A full factorial study with a total of 64 sets of simulation was conducted. For each set, other process parameters such as the powder porosity and the powder layer thickness were the same, shown in Table 2. Three simulation results of the melt pool geometry, namely, the length (1), the width (w) and the depth (d), were considered the thermal responses.
+
+Table 1. Four levels of three factors for simulations.
+
+\begin{center}
+\begin{tabular}{c|c|c|c|c}
+\hline
+Parameter & Level 1 & Level 2 & Level 3 & Level 4 \\
+\hline
+Scanning velocity, $\boldsymbol{V}(\mathbf{m m} / \mathbf{s})$ & 100 & 400 & 700 & 1000 \\
+Beam power, $\boldsymbol{P}(\mathbf{W})$ & 120 & 240 & 300 & 360 \\
+Beam diameter, $\boldsymbol{D}(\mathbf{m m})$ & 0.4 & 0.6 & 0.8 & 1.0 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 2. Other process parameters used in simulations [6].
+
+\begin{center}
+\begin{tabular}{l|r}
+\hline
+Parameter & Value \\
+\hline
+Absorption efficiency & 0.9 \\
+Powder layer thickness $(\mathrm{mm})$ & 0.1 \\
+Porosity & 0.45 \\
+Beam penetration depth $(\mathrm{mm})$ & 0.1 \\
+Preheat temperature, $\mathrm{T}_{\text {preheat }}\left({ }^{\circ} \mathrm{C}\right)$ & 730 \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{3. Results and Discussion}
+\section*{Typical Examples of Melt Pool Geometry}
+Figure 1 below shows three typical examples of simulated melt pool geometry, by three sets of different combinations of $(\mathrm{V}, \mathrm{D}, \mathrm{P})$. Figure 2 is a schematic diagram illustrating the viewing of the simulated results. It is interesting to note from Figure 2 that different combinations of $(\mathrm{V}, \mathrm{D}, \mathrm{P})$ can result in similar melt pool dimensions. Thus, manipulating process parameters may provide a possible way to acquire constant melt pool geometry, which can be very important for part quality control.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_41c3fdf34e0bde6bf44eg-04}
+
+Figure 1. Examples of simulated melt pool results.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_41c3fdf34e0bde6bf44eg-05}
+\end{center}
+
+Figure 2. Schematic diagram showing viewing of simulated part domain.
+
+\section*{Process Parameter Effects on Melt Pool Geometry}
+After the completion of each simulation, thermal responses (melt pool dimensions) were extracted and analyzed. Figure 3 shows an example of the plotted melt pool depth related to three process parameters. For the range of process parameters tested, the effects of process parameters on melt pool geometry have several characteristics:
+
+\begin{itemize}
+  \item The melt pool geometry varies very noticeably; e.g., the melt pool length changes from $40 \mu \mathrm{m}$ to about $1750 \mu \mathrm{m}$; the melt pool width changes from $26 \mu \mathrm{m}$ to about 870 $\mu \mathrm{m}$; and the melt pool depth changes from $2.5 \mu \mathrm{m}$ to about $326 \mu \mathrm{m}$.
+
+  \item At the same velocity and power, the melt pool length generally decreases with the increase of the beam diameter.
+
+  \item With a given diameter, when beam power $\geq 240 \mathrm{~W}$, the melt pool length increases for the velocity from $100 \mathrm{~mm} / \mathrm{s}$ to $400 \mathrm{~mm} / \mathrm{s}$, then the length decreases while velocity continues to increase. The maximum melt pool length was obtained with a velocity of $400 \mathrm{~mm} / \mathrm{s}$ and a power of $360 \mathrm{~W}$, for each given diameter.
+
+  \item For a constant diameter, the melt pool width generally increases with a decrease of the beam velocity and with an increase of the beam power.
+
+  \item Under the same velocity and power, the melt pool width increases for a beam diameter of $0.4 \mathrm{~mm}$ to $0.6 \mathrm{~mm}$, then the width decreases while the diameter continues to increase. The maximum melt pool width was obtained with a velocity of $100 \mathrm{~mm} / \mathrm{s}$ and a power of $360 \mathrm{~W}$, for each diameter.
+
+  \item The melt pool depth generally decreases with an increase of the beam diameter and the beam velocity, but increases with an increase of the beam power.
+
+\end{itemize}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_41c3fdf34e0bde6bf44eg-06(1)}
+\end{center}
+
+Figure 3. Melt pool depth as a function of beam velocity and power at different beam diameters.
+
+\section*{V-P Plot for Constant Ax}
+Since the simulated melt pool dimensions (length, width and depth) will be changed with three input process parameters simultaneously, the results versus the beam velocity and the power for a constant diameter can be used to make a 3D surface plot. This gives a more direct observation of the thermal responses. Figure 4 shows an example of a surface plot of the melt pool depth at a beam diameter of $0.4 \mathrm{~mm}$. The surface plot shows patch-like shape due to discrete input/output values simulated used.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_41c3fdf34e0bde6bf44eg-06}
+\end{center}
+
+Figure 4. surface plot melt pool depth (beam diameter $=0.4 \mathrm{~mm}$ ).
+
+Since $A x$ and $1 / d$ are two important variables, they were attempted for surface plots first; the values for different cases can be obtained from length/width/depth results. Ax can be estimated assuming a half-ellipse shape of a melt pool, and $1 / d$ ratios can be directly calculated from the length and depth values. Then the results versus velocity and power under a constant diameter can be obtained as in Figure 4. MATLAB curve fitting (linear cubic method) was further used to smooth the surface plot, and a plane of a constant value of Ax or 1/d can be used to "intercept" the surface plot resulting in a curve that gives the specified value for different combinations of the beam velocity and power. Figure 5 shows the $1 / \mathrm{d}$ ratio and $\mathrm{Ax}$ for the case of $0.4 \mathrm{~mm}$ beam diameter. It can be observed that for a given curve, the beam power and the velocity increase or decrease simultaneously to maintain a constant Ax. Meanwhile, the beam power needs to increase, while velocity decreases to maintain a fixed $1 / \mathrm{d}$ ratio. A similar trend was also found in a previous study [8].
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_41c3fdf34e0bde6bf44eg-07}
+\end{center}
+
+Figure 5. V-P plane for constant $1 / \mathrm{d}$ and Ax plots for $0.4 \mathrm{~mm}$ beam diameter.
+
+Figure 6 shows the 1/d ratio and Ax for different beam diameters. Generally speaking, for a diameter between $0.4 \mathrm{~mm}$ and $0.8 \mathrm{~mm}$, to maintain a given $1 / \mathrm{d}$ ratio, the beam power needs to decrease, while the velocity increases. However, for $\mathrm{D}=1.0 \mathrm{~mm}$, to maintain a given $1 / \mathrm{d}$ ratio, both of the beam power and the velocity need to increase or decreased simultaneously. To maintain Ax, the beam power and the velocity increase or decrease at the same time while staying on a given curve.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_41c3fdf34e0bde6bf44eg-08}
+\end{center}
+
+(a) Constant $1 / \mathrm{d}$ ratio
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_41c3fdf34e0bde6bf44eg-08(1)}
+\end{center}
+
+(b) Constant Ax
+
+Figure 6. V-P plane for (a) constant 1/d and (b) constant Ax plot for different beam diameters.
+
+\section*{Melt Pool Geometric Characteristics}
+Since both experiments and FE simulations to obtain melt pool control parameters are time consuming, all simulation results from the DOE approach were evaluated by ANOVA to identify significant factors and interactions between the parameters. ANOVA with the multiple linear regression method was applied using Minitab16 software. In addition to significant factors, prediction equations for $A x$ and $1 / d$ were also obtained. The significant factors identified by ANOVA are listed in Table 3, with the factors listed for each analysis in a descending order of significance. Since the significant factor is defined as $\mathrm{p}$-value is less than 0.05 , it can be noted that:
+
+\begin{itemize}
+  \item $\mathrm{V}$ and $\mathrm{D}$ are significant factors for both $\mathrm{l} / \mathrm{d}$ and $\mathrm{Ax}$,
+
+  \item V, D and P are significant factors for both $1 / \mathrm{d}$ and Ax,
+
+  \item Secondary interactions of $(\mathrm{V}, \mathrm{P})$ and $(\mathrm{D}, \mathrm{P})$ pairs are significant for $\mathrm{l} / \mathrm{d}$, and
+
+  \item Secondary interactions of $(\mathrm{V}, \mathrm{D})$ and $(\mathrm{V}, \mathrm{P})$ pairs are significant for Ax.
+
+\end{itemize}
+
+Table 3. Factors and interactions for $1 / \mathrm{d}$ ratio and $\mathrm{Ax}$.
+
+\begin{center}
+\begin{tabular}{l|l|l|r}
+\hline
+\multicolumn{2}{c||}{$l / \boldsymbol{d}$} & \multicolumn{2}{c}{$\boldsymbol{A x}$} \\
+\hline
+\multicolumn{2}{c|}{All Factors} & \multicolumn{2}{c}{All Factors} \\
+\hline
+Factor & p-value & Factor & p-value \\
+\hline
+$D$ & 0.000 & $D$ & 0.000 \\
+$V$ & 0.000 & $V$ & 0.000 \\
+$D^{* P}$ & 0.000 & $P$ & 0.000 \\
+$V^{*} P$ & 0.005 & $V^{*} D$ & 0.000 \\
+$P$ & 0.011 & $V^{*} P$ & 0.000 \\
+$D^{* V}$ & 0.631 & $D^{* P}$ & 0.864 \\
+\hline
+$\boldsymbol{R}^{\mathbf{2}} \mathbf{( \% )}$ & 97.29 & $\boldsymbol{R}^{\mathbf{2}} \mathbf{( \% )}$ & 99.73 \\
+\hline\hline
+\end{tabular}
+\end{center}
+
+Based on the results from ANOVA, two prediction equations have been obtained by multiple linear regressions for the two melt pool shape characteristics. All factors shown in Table 3 were initially considered in these equations so to provide a broad consideration of the variable influence to the thermal responses. The two equations are listed below:
+
+
+\begin{align*}
+& l / d=-2.7196+10.3029 D+0.0038 V+0.0209 P-0.0303 D \cdot P+0.0019 V \cdot D+5 \times 10^{-6} V \cdot P  \tag{1}\\
+& A x=65160-71786 D-66.7911 V+475.978 P+9.2354 D \cdot P+64.388 V \cdot D-0.3846 V \cdot P \tag{2}
+\end{align*}
+
+
+The prediction equations were employed to estimate the melt pool shape characteristics and then compared with the simulation results. The average error for $1 / \mathrm{d}$ is $13.13 \%$, but the maximum error is $57.35 \%$. Two very large errors for Ax, over $100 \%$, occurred for the cases of small cross-sectional areas, indicating the limitation. The rest of cases show an average error of $29.02 \%$ and a maximum error of $65.46 \%$. Future work will investigate different regression approaches to increase the prediction accuracy, especially for the small cross-sectional area cases.
+
+\section*{5. Conclusion}
+In this study, a transient thermal model for powder-based electron beam additive manufacturing (EBAM) process is applied to evaluate, for the case of Ti-6Al-4V, process parameter effects, such as the beam speed, on melt pool geometric characteristics, which strongly influence part microstructures. Knowing the relationship between process parameters and the melt pool geometry may establish a process envelope for part quality control. A design of experiments approach with 3 factors, 4 levels and full factorial\\
+testing is employed to systematically investigate. $2 \mathrm{D} \mathrm{V}-\mathrm{P}$ plots for constant $1 / \mathrm{d}$ ratio and Ax at different beam diameters have been obtained from 3D surface plots (variable vs. parameters). ANOVA is then used to capture process parameters considered to be of significance to the melt pool $1 / \mathrm{d}$ ratio and Ax. ANOVA was also used to develop the prediction equations of $1 / d$ ratio and Ax linked with the process parameters. The major findings can be summarized as follows.
+
+\begin{itemize}
+  \item 2D V-P plots for constant $1 / d$ ratio and Ax with different beam diameters have been established for melt pool geometry control.
+
+  \item For a constant beam diameter, the beam power and velocity need to increase or decrease simultaneously to maintain an $1 / d$ ratio. On the other hand, to maintain a given Ax, the beam power and the velocity need to be changed oppositely, one increasing and the decreasing, or vice versa.
+
+  \item For beam diameters between $0.4 \mathrm{~mm}$ and $0.8 \mathrm{~mm}$, to maintain an $1 / \mathrm{d}$ ratio, the beam power needs to decrease while velocity increases (or vice versa), and for $\mathrm{D}=1.0 \mathrm{~mm}$, to maintain an $1 / \mathrm{d}$ ratio, the beam power and velocity both need to increase or decrease simultaneously. To keep a constant Ax, the beam power and the velocity need to increase or decrease at the same time.
+
+  \item All 3 process parameters are significant factors for AX; on the other hand, the beam diameter and velocity are significant factors for $1 / d$ ratio. Interactions of $(V, P)$ and $(D$, $\mathrm{P})$ pairs are of secondary significance for $1 / \mathrm{d}$ and interactions of $(\mathrm{V}, \mathrm{D})$ and $(\mathrm{V}, \mathrm{P})$ are of secondary significance for Ax.
+
+  \item Comparing between actual thermal simulations and regression-predicted estimates, the average error for $1 / \mathrm{d}$ is $13.13 \%$ with the maximum error is $57.35 \%$. For Ax, two cases with small cross-sectional areas have very large deviation, $100 \%$, while the rest shows an average error of $29.02 \%$.
+
+\end{itemize}
+
+Future work will investigate different regression approaches to improve the accuracy of prediction equations.
+
+\section*{Acknowledgment}
+This research is supported by NASA, No. NNX11AM11A, and is in collaboration with Marshall Space Flight Center (Huntsville, AL), Advanced Manufacturing Team.
+
+\section*{References}
+[1] \href{http://www.arcam.com/}{http://www.arcam.com/}, accessed June 21, 2013.
+
+[2] Heinl, P., Korner, C., Singer, R. F.,2008, "Selective Electron Beam Melting of Cellular Titanium: Mechanical Properties," Advanced Engineering Materials, 9(10), pp. 882-888.
+
+[3] Zäh, M. F., Lutzmann, S., 2010, "Modelling and Simulation of Electron Beam Melting," Production Engineering, 4(1), pp. 15-23.
+
+[4] Shen, N., Chou, K., 2012, "Numerical Thermal Analysis in Electron Beam Additive Manufacturing with Preheating Effects," Proceedings of 2012 SFF Symposium, Austin, TX, August 6-8, 2012.
+
+[5] Kumar, A., Roy, S., 2009, "Effect of three-dimensional melt pool convection on process characteristics during laser cladding," Computational Materials Science, 2(46), pp. 495-506.
+
+[6] Shen, N., Chou, K., 2012, "Thermal Modeling of Electron Beam Additive Manufacturing Process-Powder Sintering Effect," Proceedings of ASME 2012 International Manufacturing Science and Engineering Conference (MSEC), Notre Dame, IN, June 4-8, 2012.
+
+[7] Chou, K., 2013, "Numerical Evaluations of Thermal Property Effects in Electron Beam Additive Manufacturing," Proceedings of NAMRI/SME, (41), Madison, WI, June 10-14, 2013.
+
+[8] Soylemez, E., Beuth, J. L., 2010, "Controlling Melt Pool Dimensions Over A Wide Range of Material Deposition Rates in Electron Beam Additive Manufacturing," Proceedings of 21st Solid Freeform Fabrication Symposium, Austin, TX, August 911, 2010, pp. 571-582.
+
+[9] Rouquette, S., Guo, J., Le Masson, P., 2007, "Estimation of the parameters of a Gaussian heat source by the Levenberg-Marquardt method: Application to the electron beam welding," International Journal of Thermal Sciences, 46(2), pp. 128138 .
+
+[10] Tsirkas, S.A., Papanikos, P., Kermanidis,Th., 2003, "Numerical simulation of the laser welding process in butt-joint specimens," Journal of Materials Processing Technology, 1(134), pp. 59-69.
+
+[11] Taylor, G. A., Hughes, M., Strusevich, N., Pericleous, K., 2002, "Finite volume methods applied to the computational modelling of welding phenomena," Applied Mathematical Modelling, 26(2), pp. 311-322.
+
+
+\end{document}

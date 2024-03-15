@@ -1,0 +1,172 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+
+\title{In situ X-ray quantification of melt pool behaviour during directed energy deposition additive manufacturing of stainless steel }
+
+\author{}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Yunhui Chen a,b,*, Samuel J. Clark ${ }^{a, b}$, Yuze Huang ${ }^{\text {a,b }}$, Lorna Sinclair ${ }^{\text {a,b }}$, Chu Lun Alex Leung a,b, Sebastian Marussi ${ }^{\mathrm{a}, \mathrm{b}}$, Thomas Connolley ${ }^{\mathrm{c}}$, Oxana V. Magdysyuk ${ }^{\mathrm{c}}$, Robert C. Atwood ${ }^{\mathrm{c}}$, Gavin J. Baxter ${ }^{\mathrm{d}}$, Martyn A. Jones ${ }^{\mathrm{d}}$, Iain Todd ${ }^{\mathrm{e}}$, Peter D. Lee ${ }^{\mathrm{a}, \mathrm{b}, *}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a7d14e012dddd57a2b1fg-1}
+\end{center}
+
+${ }^{\mathrm{b}}$ Research Complex at Harwell, Rutherford Appleton Laboratory, Oxfordshire OX11 OFA, UK
+
+${ }^{\mathrm{c}}$ Diamond Light Source, Harwell Campus, Oxfordshire OX11 ODE, UK
+
+${ }^{\mathrm{d}}$ Rolls-Royce Plc, PO Box 31, Derby DE24 8BJ, UK
+
+${ }^{\mathrm{e}}$ Department of Materials Science and Engineering, Sir Robert Hadfield Building, Mappin Street, Sheffield S1 3JD, UK
+
+\section*{A R T I C L E I N F O}
+\section*{Article history:}
+Received 29 September 2020
+
+Received in revised form 11 November 2020
+
+Accepted 8 December 2020
+
+Available online 13 December 2020
+
+\section*{Keywords:}
+Directed energy deposition
+
+In situ synchrotron X-ray imaging
+
+Laser additive manufacturing
+
+\begin{abstract}
+A B S T R A C T The Directed Energy Deposition Additive Manufacturing (DED-AM) of SS316L was studied using in situ and operando synchrotron X-ray imaging to quantitively understand the effect of processing parameters on the melt-pool morphology and surface quality. It was found that surface roughness of DED-AM builds can result from melt pool surface perturbations caused by changes in the melt flow and build stage motion perturbations. Process maps are developed that quantitatively correlate build quality to process parameters including powder feed rate, laser power and traverse speed. How the AM process parameters control build efficacy is clarified, and the processing conditions required to dampen surface perturbations leading to roughness were determined.
+\end{abstract}
+
+(C) 2021 Published by Elsevier B.V.
+
+\section*{1. Introduction}
+Directed Energy Deposition (DED-AM) [1] is one of the most promising methods in Laser Additive Manufacturing (LAM). It has the capability to produce large near-net-shape components [2] and is commonly used to repair [3] or add additional material to existing components [4]. However, the lack of fundamental understanding of the underlying process-structure-property relationships can hinder the utilisation of DED-AM for aerospace production. Potentially detrimental features such as lack of fusion, balling and high surface roughness can be present in current DEDAM products [5].
+
+A post-build characterisation of microstructure and mechanical properties of DED builds is normally used to understand the relationship of process conditions and final build quality [6]. However, a fundamental understanding of how transient mechanisms during the AM process (including melt the pool dynamics and defect formation) influence the final product is missing. High-flux, high
+\footnotetext{\begin{itemize}
+  \item Corresponding authors.
+\end{itemize}
+
+E-mail addresses: \href{mailto:yunhui.chen@ucl.ac.uk}{yunhui.chen@ucl.ac.uk} (Y. Chen), \href{mailto:peter.lee@ucl.ac.uk}{peter.lee@ucl.ac.uk} (P.D. Lee).
+}
+
+energy third-generation synchrotron radiation sources [7] allow fast (millisecond to microsecond) X-ray imaging of the lasermatter interactions, which enables the investigation of phenomena occurring on the time and length scales associated with DED-AM [8]. In situ and operando high-speed X-ray investigations have enabled researchers to characterise the time-transient phenomena in the Laser Powder Bed Fusion (LPBF) process [9]. However, due to the larger length scales of the deposits, limited attention has been given for DED-AM process. Wolff et al. [10] mimicked some aspects of a DED-AM process by adopting a vibration-assisted device to deliver gravitational powder flow to a finely focused laser. Chen et al. $[8,11]$ developed a DED-AM process replicator that faithfully replicates a commercial DED-AM system whilst operating at a synchrotron, which is used in this study.
+
+The aim of this work is to directly capture the laser-matter interaction during DED-AM builds of SS316 using in situ and operando synchrotron X-ray radiography. These results reveal the physical phenomena controlling the DED-AM of SS316, and quantify their impact on melt pool morphology, build efficiency and surface roughness. The results presented in this work enable an enhanced understanding of DED-AM processes and facilitate improved manufacturing practice.
+
+\section*{2. Experimental methods}
+A Blown Powder Additive Manufacturing Process Replicator (BAMPR) was developed to faithfully replicate a commercial DED-AM system whilst operating at a synchrotron [8]. The X-ray images were captured to quantify the time-resolved multi-layer melt track morphology evolution of SS316L tracks on SS304 substrates for a wide range of processing parameters (laser power 100-200 W, powder feed rate $1-3 \mathrm{~g} / \mathrm{min}$, substrate traverse speed $0.833-3.34 \mathrm{~mm} / \mathrm{s}$ ), during DED-AM builds [for details of the methodology see Supplementary information].
+
+\section*{3. Results \& discussion}
+\subsection*{3.1. In situ melt pool \& melt track morphology}
+The complete imaging of 10 layers of deposition is shown in Supplementary Video 1; selected radiographs from near the centre of each track during this build are shown in Fig. 1 for layers 1, 3, 5, and 7. Note, the melt tracks were deposited with the substrate plate traversing in an alternating bi-directional strategy, but the images are mirrored for better comparison. Inspecting the radiographs in Fig. 1(a) (and Supplementary Video), the laser beam can be seen to melt the substrate plate surface in layer 1, forming a melt pool into which the blown powder jet melts, forming an additive melt track.
+
+The dynamics of flow in the molten pool is complex, incorporating several phenomena including buoyancy, surface tension (including induced Marangoni flow), the quenching effect of powder particles hitting the melt pool surface and melting, and the traverse of the substrate. As a result of all these varying forces, the molten pool surface oscillates during the build process. The jogging motion of the stage exacerbates the oscillation and generates the final surface finish (Supplementary Fig. 2). During the first build layer, a relatively smooth surface finish is formed and some unmelted powder particles can be seen on the newly formed melt track. In later layers, the laser beam re-melts the previous layer preferentially, depending on the prior layer's height, changing the pool size and hence the amount of powder incorporated. A composite image of the entire build of Layer 7's melt track is shown in Fig. 1(b). These results demonstrate the melt pool shape is strongly dependent upon the conditions of the surface it is built upon, not just the processing parameters.
+
+\subsection*{3.2. Surface quality}
+High dimensional accuracy and surface quality are often requirements of DED applications, and excessive surface roughness will necessitate significant post-machining. It is therefore important to understand the relationship between the different DED process parameters and changes in surface topology. Using in situ observation we can capture the dynamics of how surface roughness develops. Fig. 2(a) \& (b) shows how the process parameters of laser power, powder feed rate and traverse speed influence surface topology (see Supplementary info for the $R_{a}$ measurement method and other details). All conditions show a minimum fine scale roughness, or a $R_{a}$ of ca. $100 \mu \mathrm{m}$. Higher laser powder, traverse speed and lower powder feed rate lead to lower $R_{a}$. The synchrotron images show that this fine roughness arises from the presence of partially melted embedded particles, generating a roughness on the order of the particle size. However, if the processing conditions are non-ideal, strong melt pool flows (either buoyancy or Marangoni flow), irregular wetting, or turbulence in the powder conveyance, can create much greater surface roughness approaching the scale of the melt pool, or a $R_{a}$ of greater than $150 \mu \mathrm{m}$ for the worst case.
+
+The height and cross-sectional profile of the deposited track are strongly dependent on the powder mass flow rate as it affects the thermal gradient in the melt pool. Fig. 3 shows the melt pool volume, morphology and profile (depth and length) as a function of the processing parameters of: powder feed rate, laser power and traverse speed. The measurement details can be found in Supplementary Information. Radiographs of typical pool profiles are also inset to show the overall profile. The melt-pool volume, depth and length all increase with increasing powder feed rate at a laser power of $200 \mathrm{~W}$, illustrating that sufficient power density enables all the powder deposited into the melt pool to be melted. With decreasing areal laser power density or increasing traverse speed, the melt pool volume decreases, as expected. Increasing traverse speed also decreases the amount of powder depositing into the melt pool, further decreasing the melt pool volume. Increasing traverse speed increases pool length, as expected since more surface is heated in the traverse direction per unit time.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a7d14e012dddd57a2b1fg-2(1)}
+\end{center}
+
+b
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a7d14e012dddd57a2b1fg-2}
+\end{center}
+
+Fig. 1. In situ and operando X-ray imaging of DED-AM. Laser power $200 \mathrm{~W}$, scan speed $1.67 \mathrm{~mm} \mathrm{~s}^{-1}$, powder feed rate $2 \mathrm{~g} / \mathrm{min}$, captured at $200 \mathrm{fps}$. Laser beam diameter is $200 \mu \mathrm{m}$. (a) Still radiographs from the time-series during DED-AM (See Supplementary Video) showing the change in pool shape in subsequent layers during DED-AM of a SS316 multi-layer build. Scale bar $=500 \mu \mathrm{m}$. (b) Composite radiograph assembled from the time series of layer 7, track length $50 \mathrm{~mm}$. Scale bar $=3 \mathrm{~mm}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a7d14e012dddd57a2b1fg-3}
+\end{center}
+
+Fig. 2. Surface topology measurements. (a) Post-mortem assembly of the X-ray radiographs reveals surface topology varies over different DED parameters. Scale bar $=5000$ um. (b) Surface roughness $\left(R_{a}\right)$ measurements as a function of the DED process parameters after layer 10. Error bars indicate SD.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_a7d14e012dddd57a2b1fg-4}
+
+Fig. 3. Melt pool volume, morphology and profile variation as a function of: (a) powder feed rate, (b) laser power, and (c) traverse speed. Representative radiographs of DED AM of SS316. Error bars indicate SD. Scale bar $=500 \mu \mathrm{m}$. Laser power is $200 \mathrm{~W}$ for (a) and (c). Powder feed rate is $5 \mathrm{~g} / \mathrm{min}$ for (b) and (c). Traverse speed is $1.67 \mathrm{~mm} / \mathrm{s}$ for (a) and (b). The radiograph is processed by background subtraction, as detailed in [11].
+
+\section*{4. Conclusions}
+In situ and operando synchrotron X-rays imaging was used to gain an improved fundamental understanding of build efficacy and roughness during the Directed Energy Deposition Additive Manufacturing (DED-AM) of SS316. Fine surface roughness of DED-AM builds is a result of partially melted particles embedded into the semi-solid rear of the melt pool, whilst at the larger scale surface perturbations can become amplified layer to layer, especially if the powder feed rate is higher than can easily be captured and melted by the pool. An accurate definition of the melt pool morphology across building parameters was quantified using in situ imaging. The analysis of the radiographs revealed the relationship between powder feed rate, laser power and traverse speed and the quality of the build.
+
+\section*{Declaration of Competing Interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Acknowledgements}
+This research was supported under MAPP: EPSRC Future Manufacturing Hub in Manufacture using Advanced Powder Processes (EP/P006566/1), a Royal Academy of Engineering Chair in Emerging Technology (CiET1819/10), and Rolls-Royce plc. via the Horizon 2020 Clean Sky 2 WP5.8.1 programmes and through support of LS's studentship. SC was supported by the Office for Naval Research under grant number N62909-19-1-2109.The provision of materials and technical support from Rolls-Royce plc is gratefully acknowledged. Laboratory space and facilities were provided by the Research Complex at Harwell. The authors also thank Diamond Light Source for providing beam-time (MT20096) and the staff at I12 beamline for technical assistance.
+
+\section*{Appendix A. Supplementary data}
+Supplementary data to this article can be found online at \href{https://doi.org/10.1016/j.matlet.2020.129205}{https://doi.org/10.1016/j.matlet.2020.129205}.
+
+\section*{References}
+[1] C. Kumara, A. Segerstark, F. Hanning, N. Dixit, S. Joshi, J. Moverare, P. Nylén, Microstructure modelling of laser metal powder directed energy deposition of alloy 718, Addit. Manuf. 25 (2019) 357-364, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. addma.2018.11.024.
+
+[2] T.B. Sercombe, Rapid Manufacturing of Aluminum Components, Science 301 (5637) (2003) 1225-1227, \href{https://doi.org/10.1126/science:1086989}{https://doi.org/10.1126/science:1086989}.
+
+[3] M. Leino, J. Pekkarinen, R. Soukka, The Role of Laser Additive Manufacturing Methods of Metals in Repair, Refurbishment and Remanufacturing - Enabling Circular Economy, Physics Procedia 83 (2016) 752-760, \href{https://doi.org/}{https://doi.org/} 10.1016/j.phpro.2016.08.077.
+
+[4] A. Panesar, I. Ashcroft, D. Brackett, R. Wildman, R. Hague, Design framework for multifunctional additive manufacturing: Coupled optimization strategy for structures with embedded functional systems, Addit. Manuf. 16 (2017) 98106, \href{https://doi.org/10.1016/j.addma.2017.05.009}{https://doi.org/10.1016/j.addma.2017.05.009}.
+
+[5] S.M.J. Razavi, G.G. Bordonaro, P. Ferro, J. Torgersen, F. Berto, Fatigue Behavior of Porous Ti-6Al-4V Made by Laser-Engineered Net Shaping, Mater. (Basel, Switzerland). 11 (2018). doi:10.3390/ma11020284.
+
+[6] S. Leuders, M. Thöne, A. Riemer, T. Niendorf, T. Tröster, H.A. Richard, H.J. Maier, On the mechanical behaviour of titanium alloy TiAl6V4 manufactured by selective laser melting: Fatigue resistance and crack growth performance, Int. J. Fatigue 48 (2013) 300-307, \href{https://doi.org/10.1016/j.ijfatigue.2012.11.011}{https://doi.org/10.1016/j.ijfatigue.2012.11.011}.
+
+[7] M. Drakopoulos, T. Connolley, C. Reinhard, R. Atwood, O. Magdysyuk, N. Vo, M. Hart, L. Connor, B. Humphreys, G. Howell, S. Davies, T. Hill, G. Wilkin, U. Pedersen, A. Foster, N. De Maio, M. Basham, F. Yuan, K. Wanelik, I12: the Joint
+
+Engineering, Environment and Processing (JEEP) beamline at Diamond Light Source, J. Synchrotron. Rad. 22 (3) (2015) 828-838, \href{https://doi.org/10.1107/}{https://doi.org/10.1107/} S1600577515003513.
+
+[8] Y. Chen, S.J. Clark, L. Sinclair, C.L.A. Leung, S. Marussi, T. Connolley, O. V. Magdysyuk, R.C. Atwood, G.J. Baxter, M.A. Jones, D.G. McCartney, I. Todd, P. D. Lee, In situ and Operando X-ray Imaging of Directed Energy Deposition Additive Manufacturing, ArXiv. (2020) 1-31. \href{http://arxiv.org/abs/}{http://arxiv.org/abs/} 2006.09087.
+
+[9] C.L.A. Leung, S. Marussi, R.C. Atwood, M. Towrie, P.J. Withers, P.D. Lee, In situ Xray imaging of defect and molten pool dynamics in laser additive manufacturing, Nat. Commun. 9 (2018) 1-9, \href{https://doi.org/10.1038/s41467018-03734-7}{https://doi.org/10.1038/s41467018-03734-7}.
+
+[10] S.J. Wolff, H. Wu, N. Parab, C. Zhao, K.F. Ehmann, T. Sun, J. Cao, In-situ highspeed X-ray imaging of piezo-driven directed energy deposition additive manufacturing, Sci. Rep. 9 (2019) 1-14, \href{https://doi.org/10.1038/s41598-01836678-5}{https://doi.org/10.1038/s41598-01836678-5}.
+
+[11] Y. Chen, S. Clark, A.C.L. Leung, L. Sinclair, S. Marussi, R. Atwood, T. Connoley, M. Jones, G. Baxter, P.D. Lee, Melt pool morphology in directed energy deposition additive manufacturing process, IOP Conf. Ser. Mater. Sci. Eng. 861 (2020) 012012. doi:10.1088/1757-899x/861/1/012012.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

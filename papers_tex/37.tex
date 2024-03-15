@@ -1,0 +1,352 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Dimensionless Enthalpy as Characteristic Factor for Process Control in Laser Powder Bed Fusion }
+
+
+\author{Theresa Hanemann ${ }^{* 1,2}$, Christoph Seyfert ${ }^{1}$, Peter Holfelder ${ }^{1}$, Astrid Rota $^{1}$ and Martin Heilmaier ${ }^{2}$\\
+${ }^{1}$ EOS Electro Optical Systems GmbH, Krailling, Germany\\
+${ }^{2}$ Institute for Applied Materials (IAM-WK), Karlsruhe Institute of Technology (KIT), Karlsruhe,\\
+Germany\\
+*Corresponding author's e-mail: theresa.hanemann@eos.info}
+\date{}
+
+
+\begin{document}
+\maketitle
+
+
+\begin{abstract}
+In laser powder bed fusion (LPBF) melt pool morphology plays an important role in generating part quality and microstructural properties. Therefore, it is of interest to correlate the melt pool dimensions with processing parameters. To overcome the drawback of current energy input equations, like volume energy density, lacking the inclusion of material thermophysical properties, in this investigation dimensionless enthalpy is used as characteristic factor to predict melt pool dimensions of single scan lines. The relation between dimensionless enthalpy and melt pool morphology is investigated for a nickel base alloy and a maraging tool steel. It is shown that melt pool width can be predicted successfully for both materials, while for the prediction of melt pool depth dimensionless enthalpy alone is not sufficient. To account for a deviation in heat loss between the two materials the Fourier number was included in the enthalpy relation. Furthermore, the influence of scan direction and baseplate location on melt pool morphology was evaluated. While a significant dependence on scan direction could not be shown, melt pool depth is found to dependent on part location on the base plate. This dependence has been attributed to the combined effect of laser angle deviation and shielding gas flow.
+\end{abstract}
+
+DOI: $10.2961 / \mathrm{jlmn} .2020 .03 .2017$
+
+Keywords: laser powder bed fusion, melt pool analysis, dimensionless enthalpy, direct metal laser sintering, base plate homogeneity
+
+\section*{1. Introduction}
+In laser powder bed fusion (LPBF) three dimensional parts are build layerwise by successive melting of powder in multiple scan tracks [1]. As LPBF evolves from a rapid prototyping to serial production technology requirements on part quality and reproducibility increase. In addition, there is high interest for an extension of the portfolio of available alloys for LPBF. To satisfy those demands suitable processing parameters have to be developed for new alloy systems and existing processes have to be improved for the refined requirements. Due to the complexity of the LPBF process, development of processing windows is often done on a trial and error basis, especially for new alloy systems. This can be time and cost intensive. To reduce the initial range of processing parameters to a suitable processing window single scan lines or single layers can be scanned with varying processing parameters, such as laser power and scan speed, and evaluated before continuing to multilayer specimens [2]. Although this methodology can already reduce development time, single scan track experiments would have to be repeated for different alloys and different manufacturing systems. Furthermore, the obtained processing window contains multiple processing parameter combinations, which might result in different melt pool morphologies although all being suitable for production of stable scan tracks and dense single layers. As a single scan track is the basic processing unit its melt pool morphology is of special interest for process control. For example, melt pool width determines the maximum hatch spacing between neighboring tracks that will still result in a strong connection between single scan tracks. By increasing melt pool width at constant scan speed, hatch spacing can be increased and therefore processing time decreases. However, a wider melt pool will result in a loss of resolution for thin details. Thus, depending on part geometry and application requirements it might be beneficial to apply different processing parameters to different subsections of a part. Beside geometry and processing time, the melt pool morphology influences part microstructure and, as a consequence physical and mechanical properties $[3,4]$.
+
+An extensive amount of literature exists correlating melt pool dimensions, like melt pool width and melt pool depth, to single processing parameters $[5,6,7]$. To enable scan track morphologies to be comparable for different applied laser power and scan speeds it would be beneficial to have a combined factor including those two crucial variables. Bertoli et al. [8] evaluated the suitability of a volume energy density equation including laser power, scan speed, layer thickness and beam diameter to describe melt pool dimensions. However, this density formulation was not found suitable to correlate melt pool depth with energy density, while a good correlation was observed for melt pool width. Inconsistency when describing melt pool depth with volume energy density was also observed by Metelkova et al. [9]. A comparable energy density equation was used by Attar et al. [10] exchanging beam diameter by hatch spacing to correlate part density and by Prashanth et al. [11] to correlate mechanical properties. However, similar energy densities resulted in varying relative part densities and varying tensile properties. Those studies show that existing energy density formula-\\
+tions cannot consistently describe melt pool dimensions. Another drawback of the energy density equations mentioned afore is that material specific physical properties are not included. Therefore, these equations can only be assumed valid for comparing alloys with similar thermodynamic properties. To overcome this disadvantage the energy input should be related to the energy needed for melting. Using dimensional analysis Hann et al. [12] investigated the influence of process parameters on melt pool depth for laser welding. They found that dimensionless melt pool depth, i.e. melt pool depth normalized by laser beam diameter, when plotted over energy input normalized by energy necessary for melting falls within a combined curve for different materials (stainless steels, Ti-6Al-4V, vanadium) and varying processing parameters. The according energy equation can be formulated as following. A laser with a power $\boldsymbol{P}$ irradiates a specific area $\boldsymbol{\pi} \boldsymbol{d}_{\boldsymbol{\sigma}}^{2} / \mathbf{4}$ during the dwell time $\boldsymbol{d}_{\boldsymbol{\sigma}} / \boldsymbol{u}$ with the beam diameter $\boldsymbol{d}_{\boldsymbol{\sigma}}$ and scan speed $\boldsymbol{u}$. During this dwell time the heat is conducted within a distance $\sqrt{\boldsymbol{D} \boldsymbol{d}_{\boldsymbol{\sigma}} / \boldsymbol{u}}$ from the top of the irradiated surface with thermal diffusivity $\boldsymbol{D}$. Combining the absorbed energy and the absorbing volume one gets the absorbed energy density
+
+
+\begin{equation*}
+\Delta H=\frac{4 A P}{\pi \sqrt{\text { Dud }_{\sigma}^{3}}} \tag{1}
+\end{equation*}
+
+
+with absorptivity $A$. The energy necessary for melting is defined by the enthalpy at melting $h_{\mathrm{s}}$. Dividing the absorbed energy input by the enthalpy at melting yields the dimensionless enthalpy
+
+
+\begin{equation*}
+\frac{\Delta H}{h_{s}}=\frac{4 A P}{\pi \rho h_{\mathrm{s}} \sqrt{D u a^{3}}} \tag{2}
+\end{equation*}
+
+
+with density $\rho$. In this investigation enthalpy at melting $h_{\mathrm{s}}$ is defined as
+
+$h_{s}=C_{\mathrm{p}}\left(T_{\text {solidus }}-T_{0}\right)+h_{f}$
+
+with specific heat capacity $C_{p}$, temperature at solidus $T_{\text {solidus }}$, initial temperature $T_{0}$ and heat of fusion $h_{f}$. The first part of Equation (3) represents the energy needed to heat the material up to $T_{\text {solidus }}$, while the second part is the energy input necessary for phase transformation. In this paper the mean value of $C_{p}$ from $T_{0}$ to $T_{\text {solidus }}$ is used for the calculation. With enthalpy at melting defined as in Equation (3) the formula for dimensionless enthalpy $H^{*}$ used in the present work is\\
+Using dimensionless enthalpy has two main benefits. It includes material thermophysical properties and should therefore be able to describe melt pool morphology for different materials with the same relation within its applicable boundary conditions. Second, it is non dimensional meaning that processes can be compared independent of the exact parameter values. However, dimensionless enthalpy was introduced for laser welding with applied laser beam size and power one order of magnitude larger and scan speeds of one to two orders of magnitude slower compared to LPBF. The question arises whether this equation can also be applied to describe melt pool morphology in LPBF.
+
+Dimensionless enthalpy was used by King et al. [13] to predict the threshold for transition from conduction to keyhole melting in LPBF of stainless steel independent of actual processing parameters and manufacturing system. A good correlation of dimensionless enthalpy and melt pool depth, which was normalized with thermal diffusion length, was also observed by Ye et al. [14] and Rubenchik et al. [15] Thus, recent studies indicate that dimensionless enthalpy can be used to predict melt pool depth in LPBF. However, those studies are only concerned with melt pool depth, despite melt pool width being an important melt pool characteristic as well. Furthermore, the powder bed in LPBF with parts arranged in different locations of the build chamber as well as the different shielding gas flow represent further boundary conditions compared to laser welding. There has been little research so far on how those boundary conditions will influence the correlation of dimensionless enthalpy and melt pool dimensions $[9,14]$.
+
+This study therefore investigates if dimensionless enthalpy can be used as a characteristic factor to predict melt pool dimensions in LPBF for different materials. Experimental results are compared for a nickel base alloy and a maraging steel. Furthermore, the influence of peculiarities of the LPBF process, such as scan orientation and part location, on the correlation of dimensionless enthalpy and melt pool morphology have been investigated.
+
+\section*{2. Experimental setup}
+In this study the correlation of melt pool morphology and dimensionless enthalpy was evaluated for two different alloys. Powders used were EOS IN718 (EN 2.4668), nickel base alloy, with a median particle size of $33 \mu \mathrm{m}$ and EOS MS1 (EN 1.2709), maraging steel, with a median particle size of $35 \mu \mathrm{m}$ purchased from EOS GmbH. The two materials were selected for comparison as their bulk thermophysical properties are within a similar range (see Table 1).
+
+$H^{*}=\frac{\Delta H}{h_{\mathrm{s}}}=\frac{4 A P}{\pi \rho\left(C_{p}\left(T_{\text {solidus }}-T_{0}\right)+h_{\mathrm{f}}\right) \sqrt{\operatorname{Dud}_{\sigma}^{3}}}$
+
+Table 1 Values for material physical properties used to calculate dimensionless enthalpy [16,17], * Absorptivity from [14]
+
+\begin{center}
+\begin{tabular}{cccccc}
+\hline
+ & Density @ RT & Melting range & Enthalpy @ $\mathrm{T}_{\text {liq }}$ & \begin{tabular}{c}
+Thermal conductivity \\
+@ \\
+\end{tabular} & \begin{tabular}{c}
+$\mathrm{T}_{\text {liq }}$ \\
+\end{tabular} \\
+ & $\left[\mathrm{kg} / \mathrm{m}^{3}\right]$ & $[\mathrm{K}]$ & $\left[\mathrm{J} / \mathrm{m}^{3}\right] * 10^{6}$ & $[\mathrm{~W} / \mathrm{mK}]$ & $\left[\mathrm{T}_{1 \mathrm{iq}}\right.$ \\
+\hline
+IN718 & 8260 & $1528-1610$ & 7996 & 26.8 & 4.5445 \\
+MS1 & 8209 & $1659-1714$ & 9202 & 31.4 & 0.3 \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{2.1 Production of single scan lines}
+Single scan tracks were produced using two EOS M290 LPBF systems, one system for each material set investigated. Both machines have a $400 \mathrm{~W}$ Yb fiber laser with a wavelength of $1070 \mathrm{~nm}$ which is operated in continuous wave mode. To represent the boundary conditions on a single scan track during actual processing of a part a cuboid with dimensions $20 \times 37 \times 10 \mathrm{~mm}$ (width $\mathrm{x}$ length $\mathrm{x}$ height) was built as a substrate for single line scans to be scanned on top. For MS1 the substrate cuboid height was $15 \mathrm{~mm}$. The substrate cuboids were processed with EOS developed standard parameters for each material without upskin exposure to enable the substrate surface to be representative of the actual in process surface morphology. All samples were built under Argon atmosphere with residual oxygen content of $0.1 \%$ and a baseplate temperature of $80^{\circ} \mathrm{C}$. Layer thickness was set to $40 \mu \mathrm{m}$. Single scan tracks of $10 \mathrm{~mm}$ length were produced with varying laser power in the range of $100 \mathrm{~W}$ to $300 \mathrm{~W}$ and scan speed from $100 \mathrm{~mm} / \mathrm{s}$ to $1500 \mathrm{~mm} / \mathrm{s}$. Two lines were scanned for each set of processing parameters to ensure repeatability. The scan tracks were set $1 \mathrm{~mm}$ apart to reduce the influence of the heat input from the neighboring track. A schematic image of a substrate cuboid with single scan tracks is shown in Fig. 1.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_86321d69945ec7bf172dg-03}
+\end{center}
+
+Fig. 1 Schematic drawing of a substrate cuboid with single scan tracks, different parameter sets are indicated by different colors
+
+Three different experiments were performed with 12 processing parameter sets each. The investigated combinations of scan speed and laser power as well as resulting dimensionless enthalpy calculated by Equation (4) using the thermophysical material properties in Table 1 are shown in Table 2 and Table 3. The laser spot diameters were measured prior to each experiment using a Primes FocusMonitor FMW+. The beam diameters were calculated based on the $86.5 \%$ power aperture method [18]. Measurements were done at $40 \mathrm{~W}$ and $200 \mathrm{~W}$ and the mean was taken as the laser beam diameter. The variation in measured diameter for the two power levels was less than $2 \mu \mathrm{m}$. This variation would lead to a maximum deviation in calculated enthalpy values of $4.2 \%$ at a beam diameter of $74 \mu \mathrm{m}$ and decreases for larger beam diameters. The result of the laser beam diameter measurements for each experiment can be found in Table 2 and Table 3. All calculations consider the corresponding beam diameter according to the experiment and material.\\
+Table 2 Processing parameters and calculated dimensionless enthalpy $\mathrm{H}^{*}$ based on Equation (4) for IN718 experiments
+
+\begin{center}
+\begin{tabular}{lcccc}
+\hline
+$\mathrm{Nr}$ & \begin{tabular}{c}
+Power \\
+$[\mathrm{W}]$ \\
+\end{tabular} & \begin{tabular}{c}
+Speed \\
+$[\mathrm{mm} / \mathrm{s}]$ \\
+\end{tabular} & \begin{tabular}{c}
+$H^{*}$ IN718\_1 \\
+$d_{\sigma}=74 \mu \mathrm{m}$ \\
+\end{tabular} & \begin{tabular}{c}
+$H^{*}$ IN718\_2 \\
+$d_{\sigma}=78 \mu \mathrm{m}$ \\
+\end{tabular} \\
+\hline
+1 & 200 & 100 & 22.3 & 20.6 \\
+2 & 200 & 250 & 14.1 & 13.0 \\
+3 & 200 & 500 & 10.0 & 9.2 \\
+4 & 200 & 1000 & 7.0 & 6.5 \\
+5 & 250 & 100 & 27.8 & 25.7 \\
+6 & 250 & 250 & 17.6 & 16.3 \\
+7 & 250 & 500 & 12.4 & 11.5 \\
+8 & 250 & 1000 & 8.8 & 8.1 \\
+9 & 250 & 1500 & 7.2 & 6.6 \\
+10 & 300 & 100 & 33.4 & 30.9 \\
+11 & 300 & 150 & 27.3 & 25.2 \\
+12 & 300 & 250 & 21.1 & 19.5 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 3 Processing parameters and calculated dimensionless enthalpy $\mathrm{H}^{*}$ based on Equation (4) for MS1 experiments
+
+\begin{center}
+\begin{tabular}{lccc}
+\hline
+$\mathrm{Nr}$ & \begin{tabular}{c}
+Power \\
+$[\mathrm{W}]$ \\
+\end{tabular} & \begin{tabular}{c}
+Speed \\
+$[\mathrm{mm} / \mathrm{s}]$ \\
+\end{tabular} & \begin{tabular}{c}
+$H^{*} \mathrm{MS} 1$ \\
+$d_{\sigma}=80 \mu \mathrm{m}$ \\
+\end{tabular} \\
+\hline
+1 & 200 & 170 & 11.9 \\
+2 & 200 & 250 & 9.8 \\
+3 & 200 & 385 & 7.9 \\
+4 & 200 & 750 & 5.7 \\
+5 & 250 & 270 & 11.8 \\
+6 & 250 & 500 & 8.7 \\
+7 & 250 & 600 & 7.9 \\
+8 & 250 & 750 & 7.1 \\
+9 & 250 & 1200 & 5.6 \\
+10 & 300 & 550 & 10.0 \\
+11 & 300 & 730 & 8.6 \\
+12 & 300 & 1100 & 7.0 \\
+\hline
+\end{tabular}
+\end{center}
+
+In LPBF parts are scanned with a scanning pattern, which is rotated with every layer. Thus, each layer is scanned with a different direction to the shielding gas flow, which is guided over the baseplate from one side to the other. As scanning with the flow might result in a higher probability for laser-smoke interaction the laser scanning to flow direction might influence melt pool morphology. To investigate this effect in close to neutral welding position scan tracks are scanned with different orientations to the shielding gas flow direction at the center of the baseplate (Fig. 2). The tracks were scanned in three directions, (i) with the shielding gas flow, (ii) against it and (iii) orthogonal to it (Fig. 2(A)). Besides scanning direction part location on the base plate might influence the relation of dimensionless enthalpy and melt pool morphology. Scanning the outer edges of the baseplate will result in a deviation of the angle with which the laser hits the powder layer compared to the center. Two effects are induced. First, the laser spot is stretched to an ellipse, changing the irradiated area, which can be accounted for by a correction factor in the enthalpy equation.
+
+(A)
+
+Scan to flow orientation
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_86321d69945ec7bf172dg-04}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_86321d69945ec7bf172dg-04(2)}
+\end{center}
+
+Fig. 2 Schematic drawing of build plate with laser angle deviation and shielding gas flow, (A) experimental setup for scan direction experiment with definition of scan to shielding gas flow orientation, (B) and (C) experimental setup for part location influence showing orientation of laser to shielding gas flow, inset in (B) shows micrograph of tilted melt pool
+
+However, for the experiments in this study the difference between the uncorrected and angle corrected dimensionless enthalpy for samples at the rim of the baseplate is less than $2 \%$ and is therefore neglected. Second, a keyhole possibly created at high enthalpy will be oriented towards the laser, resulting in a tilt compared to the substrate surface. To account for the tilt the depth of tilted melt pools was measured as maximum distance from the surface along the weld center line. The keyhole can be tilted towards the shielding gas flow direction or away from the shielding gas direction depending on part location on the baseplate (Fig. 2(B) and (C)). To analyze the influence of laser tilt angle in combination with shielding gas flow similar samples were placed at the outer edges of the baseplate near the shielding gas inlet, shielding gas outlet and the baseplate center. A schematic drawing describing the experimental setup to evaluate the influence of scan orientation and sample location is shown in Fig. 2.
+
+To further account for the effect of possible different shielding gas flow profiles for different shielding gas inlet nozzles the first IN718 experiment performed with a perforated plate nozzle was repeated with a grid nozzle. Both nozzle types are in use for EOS standard processes. Each nozzle has its own previously optimized differential shielding gas pressure. For the experiments the differential pressures of $0.56 \mathrm{mbar}$ for the perforated plate nozzle and $0.79 \mathrm{mbar}$ for the grid nozzle were used for IN718 and 0.58 mbar was used for the perforated plate with MS1. Images of the two different types of nozzles are shown in Fig. 3.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_86321d69945ec7bf172dg-04(1)}
+\end{center}
+
+Fig. 3 Photographs of the perforated plate nozzle (a) and grid nozzle (b) mounted inside the build chamber
+
+\subsection*{2.2 Characterization of single scan lines}
+The substrates with single scan tracks were sectioned orthogonal to the scanning direction. Both parts of the cross section were embedded to generate four melt pool cross sections to be analyzed for each processing parameter set. The metallographic samples were ground and polished to OPS finish. IN718 samples were etched with Aqua Regia (1 part $65 \%-\mathrm{HNO}_{3}$ : with 3 parts $37 \%-\mathrm{HCl}$ ) for $30 \mathrm{~s}$, while $\mathrm{MS} 1$ was etched with Nital $\left(3 \%-\mathrm{HNO}_{3}\right.$ in ethanol) for $2 \mathrm{~min}$. Micrographs of melt pools were recorded using an Olympus DP27 optical microscope with Olympus Stream Software (Version 2.2). Melt pool width and melt pool depth were analyzed for each melt pool as illustrated in Fig. 4(c). To account for the slightly different beam sizes used for the experiments all measured values are nondimensionalized by dividing the measured values by their according beam size.
+
+\section*{3. Results and discussion \\
+ 3.1 Correlation of dimensionless enthalpy and melt pool dimensions}
+The nondimensionalized melt pool dimensions, $\mathrm{d}^{*}$ and $\mathrm{w}^{*}$, in relation to dimensionless enthalpy $\mathrm{H}^{*}$ for IN718 and MS1 produced with two different machines, but similar experimental boundary conditions are shown in Fig. 4(a) and (b). Additionally, the melting mode is indicated as being conduction or keyholing, which is defined by the ratio of melt pool depth to melt pool width. If the ratio is greater than one half the scan track is labeled as keyholing. Both melt pool dimensions increase with increasing enthalpy as expected. For both alloys, a good correlation between $\mathrm{H}^{*}$ and $\mathrm{d}^{*}$ as well as $\mathrm{H}^{*}$ and $\mathrm{w}^{*}$ can be observed. However, $\mathrm{d}^{*}$ increases more strongly with $\mathrm{H}^{*}$ compared to $\mathrm{w}^{*}$. Thus, it can be deduced that energy input predominantly influences melt penetration. This is similar to observations by Trapp et al. [19] and Keshavarzkermani et al. [20] who both observed a stronger increase in depth compared to width with increasing energy input. Additionally, Metelkova et al. [9] observed a stronger dependence of depth on defocusing distance compared to width. The higher sensitivity of melt pool depth compared to melt pool width can be explained by the Gaussian distribution of the laser beam in combination with the formation of a melt pool depression. As the highest intensity of the Gaussian beam is in the center, the melt pool center will experience the highest temperature which might lead to material evaporation and the formation of a depression. Due to multi-scattering within the depression even more energy will be distributed in the center of the melt pool which drives the increase of the melt pool depth and the formation of a deep keyhole. In contrast, the width is more influenced by heat conduction. The variation in melt pool morphology with increasing $\mathrm{H}^{*}$ is also indicated by the micrographs in Fig. 4(c) corresponding to the marked data points in Fig. 4(a), It can be seen that melt pools with similar dimensionless enthalpy obtain similar melt pool dimensions and shapes despite being scanned with different processing parameters. However, one has to note that the deviation of melt pool dimensions between melt pools with similar dimensionless enthalpy increases with increasing dimensionless enthalpy. This is also indicated by the increasing standard deviations at higher dimensionless enthalpy in Fig. 4(a) and (b). The increased scatter can be attributed to the transition from cup shaped to deep keyhole melt pools as illustrated by the micrographs in Fig. 4(c). In laser welding five different processing regimes in keyhole welding mode can be distinguished and result in different melt pool shapes [21]. From low to high scanning speeds these regimes are the Rosenthal, single-wave, elongated keyhole, pre-humping and humping\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_86321d69945ec7bf172dg-05}
+
+Fig. 4 Dimensionless enthalpy versus dimensionless melt pool depth (a) and dimensionless melt pool width (b) for IN718 and MS1, selected micrographs for samples indicated in (a) are shown in (c) for IN718 (A)-(E) and MS1 (F)-(I), (A) is illustrating the definition of melt pool width and depth\\
+regime. As indicated in the graphs all data points except the two lowest enthalpies are in the keyhole regime and thus the melt pool shapes are compared to these weld regimes. For low dimensionless enthalpy ((B), (C), (F) and (G)) the melt pool shape indicates a mixed mode of prehumping and elongated keyhole regime, while melt pools scanned at high dimensionless enthalpy ((D), (E), (H) and (I)) clearly fall into the Rosenthal regime. The single wave regime could not be detected from micrographs and a direct transition from elongated keyhole to Rosenthal regime occurred. From welding it is known that melt pools in the Rosenthal regime have a tendency for instabilities, which could explain the scatter in melt pool depth observed at high dimensionless enthalpies.
+
+Comparing data for IN718 and MS1 in Fig. 4 a difference in the correlation between dimensionless enthalpy and melt pool dimensions can be observed. While data for dimensionless width is in a similar range for both alloys, the data for dimensionless depth splits into two curves. The MS1 data shows a steeper slope with dimensionless enthalpy compared to IN718. This behavior can also be seen in the micrographs showing that the MS1 scan lines with a dimensionless enthalpy of 12 are already in the Rosenthal regime, while IN718 samples with a slightly lower enthalpy of 10 are still in the prehumping regime. Additionally, the keyhole threshold seems to be shifted to lower enthalpy values. This could explain the steeper slope of MS1 values compared to IN718. At enthalpies above the keyhole threshold a depression will form in the melt pool, leading to an increase in absorptivity due to multi-scattering and in turn an increase in keyhole depth. For the calculation of $\mathrm{H}^{*}$ a constant absorptivity was used. In the keyhole regime this assumption is not physically correct [19]. However, Ye et al. [14] observed a similar dependence of absorptivity and energy input above the keyhole threshold for different materials and different processing parameters. Therefore, a similar increase in absorptivity is assumed for both alloys in the keyhole regime. The shift in keyhole threshold was unexpected as the dimensionless enthalpy had been successfully used to predict the onset of keyhole mode melting [12, 13]. However, dimensionless enthalpy as derived in Equation (4) does not account for heat loss due to heat flow in $y$-x directions or due to convection. Therefore, the correlation of dimensionless enthalpy and melt pool depth might not be applicable for materials with significantly different thermal properties. As an example, Hann et al. [12] observed a similar behavior of dimensionless enthalpy and dimensionless melt pool depth for stainless steel, Ti-6Al-4V and vanadium, while the relationship differed for tantalum which was explained by a difference in Fourier number $\boldsymbol{F} \boldsymbol{o}$. The Fourier number describes the relation of heat loss to heat storage and is defined as $\boldsymbol{F o}=\boldsymbol{D} /\left(\boldsymbol{d}_{\boldsymbol{\sigma}} \boldsymbol{u}\right)$. Although this effect was not expected to impact the relation for MS1 and IN718, the slight difference in thermal properties might already influence the correlation of dimensionless enthalpy and dimensionless melt pool depth. This could account for a shift in keyhole threshold. To investigate the influence of Fourier number on the evolution of melt pool depth data from [22] with constant dimensionless enthalpy of 9.5 but varying Fo was plotted in Fig. 5. Melt pool depth increases with increasing Fo, except one outlier, and seems to follow a root type relation. Although, the best fit of the data gave an order of 0.4 for the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_86321d69945ec7bf172dg-06}
+\end{center}
+
+Fig. 5 Influence of Fourier number on dimensionless depth for constant $\mathrm{H}^{*}$ of 9.5, data from [22]
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_86321d69945ec7bf172dg-06(1)}
+\end{center}
+
+Fig. 6 Comparison of dimensionless melt pool depth versus dimensionless enthalpy multiplied by the square root of Fourier number for IN718 and MS1
+
+Fourier number the dependence $\mathrm{H}^{*}$ is corrected by multiplication with $\sqrt{\boldsymbol{F o}}$ which corresponds to the thermal diffusion length $\sqrt{\boldsymbol{D} \boldsymbol{d}_{\boldsymbol{\sigma}} / \boldsymbol{u}}$ normalized by the beam diameter $\boldsymbol{d}_{\boldsymbol{\sigma}}$. The data from Fig. 4(a) is replotted in Fig. 6 accordingly. The data for IN718 and MS1 now falls on the same curve and both materials show the same keyhole threshold. Thus, the relation between dimensionless melt pool depth and the adapted dimensionless enthalpy can be used to predict melt pool depths using the same relation for the two materials investigated. This observation is in accordance with Rubenchik et al. [15] and Ye et al. [14], who both included the same Fourier number dependence in their analysis. To investigate the material dependence in more detail further experiments will be done with materials having significantly different thermal properties and melt pool dynamics such as aluminum based alloys.
+
+\subsection*{3.2 Influence of scan orientation}
+In LPBF scan tracks can be arranged with different orientations in relation to the shielding gas flow direction. The main purpose of the shielding gas flow is to transport evaporated material and spatter away from the laser interaction region. However, it also creates a phase boundary with the melt pool, which provides cooling and possible transaction
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_86321d69945ec7bf172dg-07(1)}
+\end{center}
+
+Fig. 7 Mean value plot with standard deviation for dimensionless melt pool depth and width for scan tracks with different scan directions to shielding gas flow, samples were placed in the base plate center, IN718
+
+of momentum. Therefore, it was investigated whether the orientation of the scan direction to shielding gas flow direction has an influence on the melt pool morphology. Single tracks were scanned against the shielding gas flow direction, in shielding gas flow direction and orthogonal to it (as illustrated in Fig. 2(A)). The results for IN718 samples scanned in the center of the baseplate using the perforated plate nozzle are shown in Fig. 7 as mean value plots. The scan direction to shielding gas flow orientation does not have a significant effect on dimensionless melt pool depth, nor dimensionless melt pool width. Similar results were observed for MS1 as well as IN718 samples built using the grid nozzle. From the results it can be deduced that scan orientation can be neglected when comparing scan tracks in the central location of the base plate. However, this behavior might change for scan tracks with higher laser incidence angle corresponding to the edges and corners of the base plate. The influence of the plate location on melt pool morphology will be discussed in the following section.
+
+\subsection*{3.3 Influence of baseplate location}
+As schematically illustrated in Fig. 2 with increasing distance from the laser center, the laser incidences on the powder with a different angle. If the laser energy is high enough to create a keyhole the drilled keyhole is then tilted towards the laser center compared to the substrate plane. This is exemplarily shown in Fig. 8 for two samples built at the outer locations of the baseplate. The measured tilt angles of the keyholes are in good agreement with the calculated angle of $81^{\circ}$. Since keyhole formation is based on material evaporation vapor is streaming out of the keyhole in a respective angle. The vaporized material could interact with the laser decreasing the effective energy input and leading to defects. The shielding gas flow should transport the evaporated material away preventing interaction with the laser. However, the tilting of the keyhole to the laser center results in different directions of vapor flow versus shielding gas flow. While the vapor stream is tilted away from the shielding gas flow direction for samples scanned near the gas inlet, close to the gas outlet, the vapor stream is tilted towards the shielding gas flow direction as schematically shown in Fig. $2 \mathrm{~B}$ and $\mathrm{C}$. The mean values for the melt pool dimensions for samples built near the gas inlet, gas outlet and the center of
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_86321d69945ec7bf172dg-07}
+\end{center}
+
+Fig. 8 Micrographs of samples built at outer locations of the base plate with indicated tilt angle of the keyhole
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_86321d69945ec7bf172dg-07(2)}
+\end{center}
+
+Fig. 9 Mean value plot with standard deviation for dimensionless melt pool depth and width at different sample locations on the baseplate, IN718, tracks were scanned orthogonal to flow
+
+the base plate are compared in Fig. 9. The results shown are for IN718 samples built with the perforated plate nozzle.
+
+From Fig. 9 it can be seen that the relation of dimensionless enthalpy and dimensionless depth is dependent on the sample location on the base plate, while for dimensionless melt pool width no effect is observed. For samples built at the base plate center and near the gas outlet the mean values for $d^{*}$ are comparable. Samples built near the gas inlet show a decrease in depth. As samples near the gas inlet and the gas outlet were placed with similar distance to the laser center the difference in their behavior cannot solemnly be explained by laser angle deviation. Therefore, it is assumed that shielding gas flow additionally contributes to the difference in melt pool depth observed. This assumption is encouraged plotting the evolution of melt pool depth with $\mathrm{H}^{*}$ for those three locations in Fig. 10. It is visible that the deviation between samples produced at the plate center and gas outlet locations and the gas inlet location increases with $\mathrm{H}^{*}$. Thus, this indicates that a more pronounced keyhole and vapor plume formation leads to a decreased depth for samples near the gas inlet. A possible explanation might be that the shielding gas could drag the vapor expulsed by the keyhole away from the keyhole opening for samples near the gas inlet as the vapor flow and shielding gas flow share the same direction.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_86321d69945ec7bf172dg-08}
+\end{center}
+
+Fig. 10 Dependence on part location on the base plate for dimensionless melt pool depth, IN718
+
+In contrast, for samples near the gas outlet the shielding gas would press the evaporated material back onto the melt pool. Due to the heat of the evaporated gas this could lead to a cooling effect when the vapor is expulsed and a heating effect when the vapor is pressed back onto the melt pool. Furthermore, it is known that directly behind the shielding gas inlet, which is positioned slightly above the base plate, there is a zone where there is less shielding gas flow before it contacts the baseplate. It might also be that vapor in this region is not sufficiently removed and therefore laser vapor interactions could occur. A possible interaction is shielding of the laser by plasma formation, however a highly ionized plasma is only observed for intensities greater than $10^{9} \mathrm{~W} / \mathrm{cm}^{2}$ which is two to three orders of magnitude higher than intensities commonly used in LPBF (maximum intensity in this work is in the order of $10^{7} \mathrm{~W} / \mathrm{cm}^{2}$ ) [23]. Therefore, no plasma shielding is expected. However, even without ionization the metal vapor has a different optical density and will refract the laser radiation, hence decreasing the effective power input into the material [24]. Additionally, the expulsion of the vapor plume creates an inwards and upwards drag onto surrounding powder particles as well as it created melt spatter, which could then also scatter the laser radiation [25]. Therefore, an ineffective removal of the vapor plume and spatter by the shielding gas flow can lead to a decrease in effective energy input and thus shallower melt pool depths. However, both theories would have to be investigated more thoroughly by including further plate locations, such as the edges of the base plate on the left and right side from the center. There laser incidence angle and shielding gas flow should be similar, and no low flow zone should occur.
+
+Results of the investigation of the sample location dependence for MS1 are shown in Fig. 11. Compared to IN718 the dependence of sample location on $\mathrm{d}^{*}$ is not as pronounced. The mean values indicate that there might be a similar dependence of decreased melt pool depth near the gas inlet compared to the center and gas outlet locations, however, the standard deviations overlap. Dimensionless melt pool widths show no significant correlation with base plate location as observed for IN718. Possibly the deviation in melt pool depth is not as visible as the deviation increases with dimensionless enthalpy and only enthalpy values below 15 were investigated for MS1. As the plate location dependence is believed to be caused by the shielding gas flow the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_86321d69945ec7bf172dg-08(1)}
+\end{center}
+
+Fig. 11 Mean value plot with standard deviation for dimensionless melt pool depth and width at different sample locations on the baseplate, MS1, tracks were scanned orthogonal to flow
+
+question arises whether this correlation can be reproduced with a different shielding gas inlet nozzle. Therefore, the results of the IN718 perforated plate nozzle experiments are compared to the IN718 grid nozzle investigations in the next section.
+
+\subsection*{3.4 Influence of shielding gas inlet nozzle}
+The results for the perforated plate and grid nozzle for scan tracks produced at the central plate location orthogonal to the shielding gas flow are compared in Fig. 12. Both melt pool dimensions, $\mathrm{d}^{*}$ and $\mathrm{w}^{*}$, show similar correlations to dimensionless enthalpy independent of nozzle type. Each nozzle was operated at its previously optimized differential gas pressure, which is $0.56 \mathrm{mbar}$ for the perforated plate nozzle and 0.79 mbar for the grid nozzle. This could indicate that both nozzles result in a comparable flow profile in the center location of the baseplate when both are operated at the according differential pressures. As mentioned in the last section there exists a low flow zone between the gas inlet and the point of first contact of shielding gas flow on the base plate. The grid nozzle was designed to reduce this zone. It was therefore expected that the dependence of melt pool depth on part location observed for the perforated plate nozzle would be reduced. However, similar experiments as for the perforated plate nozzle performed using the grid nozzle show a similar dependence on sample location. The mean value plots for the relationship of $\mathrm{d}^{*}$ and $\mathrm{w}^{*}$ with sample location are shown in Fig. 13. As for the perforated plate nozzle shallower melt pools can be observed near the gas inlet, while melt pool depth at the center and near the gas outlet is similar. No significant dependence can be observed for $\mathrm{w}^{*}$. This indicates that the low flow zone close to the gas inlet is not exclusively responsible for the shallower melt pools observed. Since results are similar despite different nozzle types it is assumed that the major reason for the observed location dependence is the orientation of the keyhole to the shielding gas flow. However, further investigations have to be done to explain the effect of shielding gas flow and laser angle in more detail.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_86321d69945ec7bf172dg-09(1)}
+
+Fig. 12 Comparison of perforated plate and grid nozzle results for IN718 experiments, dimensionless melt pool depth (a) and dimensionless melt pool width (b)
+
+\section*{4. Conclusion}
+In this study the correlation of dimensionless enthalpy and dimensionless melt pool dimensions has been investigated for two different alloy powders used in LPBF. Additionally, the influence of different boundary conditions, such as scan direction and part location on the base plate was analyzed. The following points had been shown:
+
+\begin{enumerate}
+  \item The correlation of melt pool dimensions with dimensionless enthalpy had been verified for IN718 and MS1. Melt pool width can be predicted using the same relation for both materials, which could be used to estimate hatch spacing for the process parameter development for new materials. However, to predict dimensionless melt pool depth with the same relation for IN718 and MS1 the heat loss of the different materials has to be taken into account correcting the dimensionless enthalpy by including the Fourier number. The resulting correlation can be used to predict a suitable processing window to achieve a desirable welding regime.
+
+  \item A dependence of melt pool dimensions on orientation of scan direction to shielding gas flow direction could not be observed for samples scanned close to the laser center. Further experiments are necessary to validate this result independent of plate location.
+
+\end{enumerate}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_86321d69945ec7bf172dg-09}
+\end{center}
+
+Fig. 13 Mean value plot with standard deviation for dimensionless melt pool depth and width at different sample locations for IN718 built with grid nozzle, results for perforated plate nozzle from Fig. 9 are included for comparison, tracks were scanned orthogonal to flow
+
+\begin{enumerate}
+  \setcounter{enumi}{2}
+  \item It has been shown that melt pool depth varies depending on sample location on the baseplate. Shallower melt pools were observed near the gas inlet while melt pools close to the gas outlet and in the base plate center showed similar depths. The location dependence is assumed to result from the combined effect of laser angle deviation and shielding gas flow. However, further experiments are necessary to validate this hypothesis.
+\end{enumerate}
+
+The presented results were evaluated for single scan tracks, while parts in LPBF consist of multiple neighboring tracks and layers. It would be of great interest to transition the results observed to patches of multiple scan tracks.
+
+\section*{References}
+[1] T. DebRoy, H. L. Wei, J. S. Zuback, T. Mukherjee, J. W. Elmer, J. O. Milewski, A. M. Beese, A. WilsonHeid, A. De, and W. Zhang: Prog.Mater. Sci., 92, (2018) 112.
+
+[2] I. Yadroitsev and I. Smurov: Phys. Procedia, 5, (2010) 551.
+
+[3] T. Niendorf, S. Leuders, A. Riemer, H. A. Richard, T. Tröster, and D. Schwarze: Metall. Mater. Trans. B, 44B, (2013) 794.
+
+[4] A. F. Frey, C. Seyfert, and P. J. Holfelder: Mater. Sci. Technol. Addit. Manuf., (2020). (accepted manuscript)
+
+[5] J. J. S. Dilip, S. Zhang, C. Teng, K. Zeng, C. Robinson, D. Pal, and B. Stucker: Prog. Addit. Manuf., 3, (2017) 157.
+
+[6] J. Mutua, S. Nakata, T. Onda, and Z.-C. Chen: Mater. Des., 139, (2018) 486.
+
+[7] H. Gong, H. Gu, K. Zeng, J. J. S. Dilip, D. Pal, B. Stucker, D. Christiansen, J. Beuth, and J. J. Lewandowski: Proc. Solid freeform fabrication symp., Austin, (2014) p. 256.
+
+[8] U. S. Bertoli, A. J. Wolfer, M. J. Matthews, J.-P. R. Deplanque, and J. M. Schoenung: Mater. Des., 113, (2017) 331 .
+
+[9] J. Metelkova, Y. Kinds, K. Kempen, C. de Formanoir, A. Witvrouw, and B. Van Hooreweder: Addit. Manuf., 23, (2018) 161.
+
+[10] H. Attar, M. Calin, L. C. Zhang, S. Scudino, and J. Eckert: Mater. Sci. Eng. A, 593, (2014) 170.
+
+[11] K. G. Prashanth, S. Scudino, T. Maity, J. Das, and J. Eckert: Mater. Res. Lett., 6, (2017) 386.
+
+[12] D. B. Hann , J. Iammi, and J. Folkes: J. Phys. D Appl. Phys., 44, (2011) 445401.
+
+[13] W. E. King, H. E. Barth, V. M. Castillo, G. F. Gallegos, J. W. Gibbs, D. E. Hahn, K. Chandrika, and A. M. Rubenchik: J. Mater. Process. Technol., 12, (2014) 2915.
+
+[14] J. Ye, S. A. Khairallah, A. M. Rubenchik, M. F. Crumb, G. Guss, J. Belak, and M. J. Matthews: Adv. Eng. Mater., 7, (2019) 1900185.
+
+[15] A. M. Rubenchik, W. E. King, and S. Wu: J. Mater. Process. Technol., 257, (2018) 234.
+
+[16] N. Saunders, U. K. Z. Guo, A. P. Miodownik, and J.P. Schillé: JOM, 55, (2003) 60.
+
+[17] G. Pottlacher, H. Hosaeus, . B. Wilthan, E. Kaschnitz, and A. Seifter: Thermochim. Acta, 382, (2002) 255 (in German).
+
+[18] International Organization for Standardization: ISO/TR 11146-3:2004-02(E), (Geneva, 2004).
+
+[19] J. Trapp, A. M. Rubenchik, G. Guss, and M. J. Matthews: Appl Mater Today, 9, (2017) 341.
+
+[20] A. Keshavarzkermani, E. Marzbanrad, R. Esmaeilizadeh, Y. Mahmoodkhani, U. Ali, P. D. Enrique, N. Y. Zhou, A. Bonakdar, and E. Toyserkani: Opt Laser Technol, 116, (2019) 83.
+
+[21] R. Fabbro: J. Phys. D Appl. Phys., 43, (2010) 445.
+
+[22] D. S. Jansen: "Quantification of the influence of powder layer thickness on the DMLS process" Master Thesis, (Munich, 2020).
+
+[23] E. Beyer: "Schweißen mit Lasern" ed. by G. Herziger and H. Weber (Springer, Aachen, 1995) p.75. (in German)
+
+[24] C. Dowding: "Laser beam plume shielding contributions" ed by J. lawrence, J. Pou, D.K.Y. Low, and E. Toyserkani in "Advances in laser materials processing", (Cambridge, Woodhead Publishing, 2010) p. 592.
+
+[25] P. Bidare, I. Bitharas, R. M. Ward, M. M. Attallah, and A. J. Moore: Acta Mater, 142 (2018) 107.
+
+(Received: June 26, 2020, Accepted: December 9, 2020)
+
+
+\end{document}

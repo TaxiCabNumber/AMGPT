@@ -1,0 +1,673 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Controlling crack formation and porosity in laser powder bed fusion: Alloy design and process optimisation }
+
+
+\author{Hossein Eskandari Sabzi ${ }^{\mathrm{a}}$, Suhyun Maeng ${ }^{\mathrm{a}, \mathrm{b}}$, Xingzhong Liang ${ }^{\mathrm{a}, \mathrm{c}}$, Marco Simonelli ${ }^{\mathrm{d}}$,\\
+Nesma T. Aboulkhair ${ }^{\mathrm{d}}$, Pedro E.J. Rivera-Díaz-del-Castillo ${ }^{\mathrm{a}, *}$\\
+${ }^{a}$ Department of Engineering, Engineering Building, Lancaster University, LA1 4YW, United Kingdom\\
+${ }^{\mathrm{b}}$ The Wolfson School of Mechanical, Electrical and Manufacturing Engineering, Loughborough University, LE11 3TU, United Kingdom\\
+${ }^{\mathrm{c}}$ Department of Engineering, University of Leicester, Leicester LE1 7RH, UK\\
+${ }^{\mathrm{d}}$ Centre for Additive Manufacturing (CFAM), Faculty of Engineering, University of Nottingham, NG8 1BB, United Kingdom}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+Additive manufacturing
+
+Laser powder bed fusion
+
+Solidification cracking
+
+Porosity
+
+Austenitic stainless steel
+
+\begin{abstract}
+A B S T R A C T A computational method is presented to design alloys of lower susceptibility to solidification cracking, while preventing the formation of porosity and defects during laser powder bed fusion (LPBF). The method is developed for austenitic stainless steels, on which a wealth of data are available as various conditions for crack and pore/defect formation have been reported. The model is based on an alloy design approach combining thermodynamic calculations with a genetic algorithm to discover novel austenitic stainless steel compositions; the new alloys are expected to be crack-free whilst showing improved strength. A new crack prevention factor is proposed to relate composition to solidification crack formation. The factor incorporates quantitative criteria for the solidification temperature range, the performance index (ratio between yield stress and coefficient of thermal expansion) and the solidification path. Overall, the design methodology is validated by literature data on 316L austenitic stainless steel. Although cracking is not an issue during LPBF of 316L stainless steel, this material is a good choice to show under which conditions the cracks form. As for porosity and defect prevention, it is shown how this can be achieved by providing a sufficient amount of energy to melt the powder bed, and by controlling the melt pool geometry; such criteria are dissimilar to those reported in the literature. Process maps have been developed to show the effects of process parameters on the formation of pores and defects based on the proposed criteria. The model is applied to optimise such parameters to produce 316L austenitic stainless steel, and it is shown that a defect-free LPBFed stainless steel can be achieved, performing better under tensile testing compared to its wrought counterpart. The conditions for the application of such model to other alloy families displaying cracking, such as marageing steels and nickel alloys, are discussed.
+\end{abstract}
+
+\section*{1. Introduction}
+Austenitic stainless steels have widespread usage in marine, energy, aerospace, nuclear and medical devices as they exhibit attractive strength and corrosion resistance [1]. Laser powder bed fusion (LPBF) is a type of additive manufacturing (AM) process with great potential for the production of austenitic stainless steel components, as there is a wide availability of relatively inexpensive feedstock of such materials for AM [2]. However, it is challenging to produce crack- and porosityfree austenitic stainless steel components via LPBF, due to the complex thermal cycles of its associated processing, which lead to high residual stresses, variations in the settings of the different LPBF machines as well as a range of powder characteristics, which can affect the formation of cracks and porosity [3-7]. The presence of defects (cracks and pores) has the most adverse effect on mechanical properties [4]. The challenges to reduce them in LPBF as-built parts comes from the variability of different machines, complex processing conditions and variance in local thermal histories that can have a significant impact on defect formation $[8,9]$.
+
+A key challenge for researchers working on LPBF of austenitic stainless steels is to determine key process parameters to reduce the probability of the formation of defects. Experimental advances have been achieved via trial and error approaches, which are expensive and time consuming. One approach is the in situ detection of defect formation, using imaging techniques as a strategy to monitor the LPBF process [10]. This approach may be useful to detect crack and porosity
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail address: \href{mailto:p.rivera1@lancaster.ac.uk}{p.rivera1@lancaster.ac.uk} (P.E.J. Rivera-Díaz-del-Castillo).
+}
+formation, but it neglects the impact of variations in process parameters in LPBF machines and in feedstock compositions, which have been adjusted by trial and error. An attractive alternative to such approach is to predict the formation of defects using numerical models that consider both the properties of the material and the process parameters, as this leads to cost reduction.
+
+Cracks developing during LPBF of austenitic stainless steels form in the presence of liquid films [11,12]. The combination of liquid films and thermal stresses arising from LPBF leads to the development of solidification cracks [13]. Therefore, not only process parameters can affect cracking but also the solidification sequence. It follows that optimisation of the chemical composition of the alloy can lead to a reduction in solidification cracking susceptibility in austenitic stainless steels. In contrast with nickel superalloys that are susceptible to more cracking variations such as liquation cracking or environmentally-assisted cracking (such as oxygen-induced cracks) [14,15], solidification cracking is the only crack type that has been observed during LPBF of austenitic stainless steels.
+
+It is customary to adopt the concept of volumetric energy to estimate the heat input transferred to the melt pool by a scanning laser [16]. The volumetric energy is defined as
+
+$E_{v}=\frac{P}{v \cdot h \cdot t}$
+
+where $P$ is the laser power, $v$ is the laser scan speed, $h$ is the hatch distance and $t$ is the layer thickness. Several attempts have been made to correlate $E_{v}$ with the defect density [6,17-19]. However, it has been proved that such estimation is not precise as it does not consider process parameters such as the laser spot size, the materials properties related to melting or the powder absorptivity [20]. Thomas et al. [21] normalised each parameter in Eq. (1) proposing dimensionless process parameters. Based on these parameters, a process map was developed to predict the formation of defects in general. Nevertheless, such maps cannot exactly predict the conditions leading to the presence of cracks and porosity.
+
+Process-induced defects such as pores in LPBF can be categorised as lack of fusion, keyhole, and balling [22]. Each defect and pore type has a different origin dictated by the melt pool geometry [23,24]. Numerous attempts have been made to simulate and predict the melt pool geometry using computational approaches such as the finite element method (FEM) [24-26]. Using FEM provides a simplified and efficient approach to the problem of finding a solution for a single energy-balance equation. However, some of its disadvantages include that assumptions and simplifications have to be made about how the laser heat source is mathematically described; in addition, only a rough approximation of the melt pool and the convective flow is possible [27]. Moreover, it is a significant challenge to simulate the whole process due to its complexity and the associated computational cost [28]. Therefore, most of the associated studies are limited to a single track build [29].
+
+There are some analytical models such as the Rosenthal solution [30] and the Eagar-Tsai model [31] that have originally been developed to describe fusion welding, and can be used for AM technology as well. Although due to the many simplifying assumptions followed by them, their accuracy is not sufficient to predict the melt pool geometry precisely, they can be used as efficient means to estimate the boundaries for melt pool geometry. In this paper, we combine a collection of computationally efficient models to estimate the melt pool geometry in order to predict the formation of different types of defects and porosity. In our model it has been assumed that the powder layer is spread homogeneously so its impact on the formation of defects is neglected. Heat input, which can be determined by the process parameters and the material's properties, has a major impact on the melt pool geometry. Insufficient laser power or high scan speeds can lead to Plateau-Rayleigh instability, which results in balling formation [11]. If the heat input is low, lack of fusion occurs [32]. On the other hand, above a certain heat input threshold, the laser melting changes from conduction to keyhole mode [33]. In here, the concept of normalised enthalpy has been applied to measure the heat input transferred to the powder bed by the laser beam.
+
+It has been reported that the presence of pores and defects deteriorate the mechanical properties of the as-built parts both in powder bed fusion and directed energy deposition (DED) processes. Mierzejewska showed that changing the LPBF process parameters will lead to a change in the volume fraction of pores in Ti-6Al-4V. They found that reducing the porosity percentage to $0.16 \%$ leads to superior mechanical properties compared to the wrought counterparts [34]. Reduction in porosity and defects also improve the fatigue behaviour of the LPBF as-built components [35]. The same type of improvements in mechanical properties and fatigue behaviour are also reported by a reduction in crack and pore contents during the DED process $[36,37]$.
+
+A less developed, but more promising approach from a materials point of view is to design alloys less susceptible to LPBF variations, and subsequently less prone to defect formation. In this paper, we firstly propose a framework to design alloys of optimised solidification and controlled thermal stress formation. For this purpose, a number of metallurgical criteria for crack prevention have been introduced. This resulted in a crack prevention factor to define safe regions in compositional space for microcrack prevention upon austenitic stainless steels LPBF. A genetic algorithm (GA), combined with thermodynamic calculations was used to optimise and choose the new alloys. Then, a comprehensive analytical model is proposed to estimate safe process parameters for defect-free LPBF. This incorporates the material properties to avoid the formation of process-induced porosity in the as-built part. The methodology presented in this work can be considered as one more contribution to a growing body of literature [24,22,38] aimed at addressing the important problems of cracking, defects and porosity in metal AM.
+
+Following this, the application of the proposed models will be compared with the existing data on LPBF of 316L alloy in literature for crack prevention. The defect and porosity prevention model is validated for LPBF to describe the conditions leading to crack resistant 316L stainless steels. The effect of using optimised processing parameters on the production of a defect-free LPBF part is discussed. In the last part of this work, the mechanical properties of a defect-free LPBF-produced 316L stainless steel will be compared to those containing defects, and also to wrought alloys to show the effectiveness of the suggested approach.
+
+\section*{2. Modelling}
+\subsection*{2.1. Alloy design for crack prevention}
+The microstructural and mechanical requirements for austenitic stainless steels and their relation with alloy composition are firstly discussed. Solidification cracking occurs when an insufficient amount of liquid in the melt pool covers the space between the solidifying metal as a result of high residual stresses [39]. Three criteria to decrease the occurrence of solidification cracks during LPBF are outlined next.
+
+\subsection*{2.1.1. Solidification temperature range (STR)}
+Composition affects solidification cracking through the solidification temperature range (STR), defined as the liquidus and solidus temperature difference for a given alloy composition. As low melting point constituents are rejected by solidifying dendrites, a thin film of solute-rich liquid remains even at low temperatures. When this cannot bear the shrinkage strain, a crack is formed [40]. Some elements such as $\mathrm{S}, \mathrm{P}, \mathrm{Si}$ and $\mathrm{N}$ can increase the solidification cracking likelihood by increasing the STR [41-43]. Therefore, the alloy composition should be optimised to minimise STR.
+
+\subsection*{2.1.2. Performance index (PI)}
+The layer-by-layer nature of the LPBF imposes severe temperature\\
+variations from the melting region to the far-field powder bed temperature; therefore, as-built components are subjected to the effects of strong thermal stresses. The contraction resulting from thermal stresses leads to deformation and the formation of residual stresses, which can cause microcracks in the as-built part [44]. Thermal stresses generated during LPBF can be estimated via Eq. (2) [45]:
+
+$\sigma_{\text {Thermal }}=\left[\frac{E \cdot \alpha_{\text {CTE }}}{2(1-v)}\right] \Delta T$
+
+where $E$ is the Young's modulus, $\alpha_{C T E}$ is the coefficient of thermal expansion near the melting point of the alloy, $\nu$ is the Poisson's ratio, and $\Delta T$ is the temperature difference between the melt pool and the powder bed. The purpose of the proposed model is alloy design through composition tailoring. Changes in composition of the alloy reflect only moderately in the variation of the modulus. In contrast with this, in the thermal stress generation during LPBF, the coefficient of thermal expansion has a much larger influence in performance index changes. Therefore, the alloys with lower $\alpha_{C T E}$ induce lower thermal stress. Conversely, alloys with higher yield strength $\left(\sigma_{y}\right)$ at high temperature perform better under high cooling and heating rates. Performance index thus shows the ability of different alloys to endure cracking; therefore, maximising $P I$ is the second criterion for LPBF alloy design:
+
+$\mathrm{PI}=\frac{\sigma_{y}}{\alpha_{\mathrm{CTE}}}$
+
+\subsection*{2.1.3. Solidification path}
+The solidification path of austenitic stainless steels also varies with alloy composition. The alloys undergoing the reaction $L \rightarrow \delta+\gamma$, display a primary phase formed from the liquid transforming into austenite or $\delta$-ferrite, which chiefly depends on the ratio between chromium and nickel contents. Multicomponent systems adopt the ratio of chromium and nickel equivalent, $C r_{e q}$ and $N i_{e q}$, respectively, as criterion for solidification path. The expressions for $\mathrm{Cr}_{e q}$ and $\mathrm{Ni}_{e q}$ have been presented by Hull [46]:
+
+
+\begin{align*}
+\mathrm{Cr}_{\mathrm{eq}}= & W_{\mathrm{Cr}}+1.21 W_{\mathrm{Mo}}+0.48 W_{\mathrm{Si}}+0.14 W_{\mathrm{Nb}}+2.2 W_{\mathrm{Ti}}+0.72 W_{\mathrm{W}} \\
+& +0.21 W_{\mathrm{Ta}}+2.27 W_{\mathrm{V}}+2.48 W_{\mathrm{Al}}  \tag{4}\\
+\mathrm{Ni}_{\mathrm{eq}}= & W_{\mathrm{Ni}}+0.11 W_{\mathrm{Mn}}+24.5 W_{\mathrm{C}}+18.4 W_{\mathrm{N}}+0.44 W_{\mathrm{Cu}}+0.41 W_{\mathrm{Co}} \tag{5}
+\end{align*}
+
+
+where $W_{i}$, with $i=\mathrm{Cr}$, Mo, $\mathrm{Si}, \mathrm{W}, \mathrm{Nb}, \ldots$ is the wt.\% of element $i$.
+
+Even small amounts of $\delta$-ferrite in the austenite matrix are known to alleviate the deleterious effects of impurity elements such as Si, P, and $\mathrm{S}$, which have a higher solubility in $\delta$-ferrite than in austenite; this results in lower segregation to grain boundaries once solidification is completed [47]. Moreover, $\delta$-ferrite pins the austenite grain boundaries making the potential paths for cracking more complicated than in fully austenitic structures [48]. A two-phase solidification front of $\delta$-ferrite/ austenite essentially increases the interphase interfaces between austenite and ferrite, while it minimises the area of austenite/austenite and ferrite/ferrite grain boundaries during solidification. As austenite and ferrite have different crystal structures, the phase boundaries between them are not wetted by liquid as easily as grain boundaries between two similar lattices such as austenite/austenite boundaries. Therefore, crack propagation in a material solidifying in a ferritic-austenitic mode is more difficult than in a material with austenitic mode of solidification [49]. These beneficial effects of $\delta$-ferrite is the basis of the third criterion for alloy design against cracking.
+
+As seen in Fig. 1, which shows a $70 \mathrm{wt}$ \% iron isopleth of the ternary system of $\mathrm{Fe}-\mathrm{Cr}-\mathrm{Ni}$, the solidifying paths of austenitic stainless steels are divided into four modes: austenitic (A), austenitic-ferritic or primary austenite (AF), ferritic-austenitic or primary ferritic (FA), and ferritic (F). Although, LPBF kinetics do not follow the equilibrium conditions, a threshold for the presence of $\delta$-ferrite during solidification can be approximated from Fig. 1. For $\mathrm{Cr}_{e q} / N i_{e q}<1.3$, mode A is activated. When $C r_{e q} / N i_{e q}>1.3$, the presence of $\delta$-ferrite is ensured [50]. It should be noted that the presence of more than $60 \%$ of $\delta$-ferrite is undesired for crack prevention [49]. The very fast cooling rates of LPBF, originally increase the stability of austenite during solidification [51], therefore, no upper limit for $\mathrm{Cr}_{e q} / N i_{e q}$ is applied in the alloy design methodology. Therefore the third criterion for alloy design is that $\mathrm{Cr}_{e q} / N i_{e q}>1.3$.
+
+\subsection*{2.1.4. Computational alloy design approach}
+The computational alloy design approach is summarised here. This study employed ThermoCalc software coupled with the TCFE9 database accessed through TC Matlab toolbox [52]. The optimisation algorithm used ThermoCalc as input to limit the composition of alloys and keep their constitution within design specifications. A multiobjective genetic algorithm has been used to optimise composition. GA works with a population of individuals (alloy compositions), whereby each represents a potential solution. A randomly generated population of individuals (alloys), undergoes a repeated process of selection, crossover and mutation. Each cycle leads to a new generation. The objective is to find the individuals that, over a certain number of generations, approach an optimal solution [53].
+
+STR and PI constitute the fitness scores. To find metrics for these scores to be applied as constraints for our alloy design approach, compositions of printed 316L austenitic stainless steels reported in the literature are listed in Table 1. However, this methodology can be applied to other alloying systems such as marageing steels and high carbon steels, which are prone to crack formation during LPBF. The first three alloys (shown in bold) display microcracks in the as-built part as is shown in Fig. 2. However, the rest have been printed successfully by modifying the chemical composition using a trial and error approach. The minimum STR that has been obtained is $32 \mathrm{~K}$, and the maximum PI is $1.46 \times 10^{6} \mathrm{MPa} \mathrm{K}$. Therefore, for each candidate solution: (1) STR (as calculated by ThermoCalc) should be less than $32 \mathrm{~K}$; (2) PI (Eq. (3)) should be higher than $1.46 \times 10^{6} \mathrm{MPa} \mathrm{K}$ and (3) $\mathrm{Cr}_{e q} / \mathrm{Ni}_{e q}$ (Eqs. (4) and (5)) should be higher than 1.3. These criteria have been defined as go/ no-go. The algorithm of the model rooted in these considerations is presented in Fig. 3. It should be noted that Thermo-Calc databases can also be used for prediction of presence of $\delta$-ferrite instead of using Eqs. (4) and (5) for $C r_{e q} / N i_{e q}$ calculation. However, this leads to a much longer computation time; with the current algorithm it already takes the optimisation more than three days to be completed.
+
+In order to calculate the PI, the yield strength and the coefficient of thermal expansion for each alloy should be calculated. $\sigma_{y}$ is expressed as:
+
+$\sigma_{y}=\Delta \sigma_{\mathrm{gb}}+\Delta \sigma_{\mathrm{pr}}+\Delta \sigma_{\mathrm{ss}}$
+
+where $\sigma_{g b}$ is the grain boundary strengthening, which depends on the grain size, $\sigma_{p r}$ is the precipitation hardening, and $\sigma_{s s}$ is the solid solution strengthening. In the absence of precipitates and for coarse grain sizes upon solidification, the most important term for alloy design is $\sigma_{s s}$, which is calculated via Eq. (7) [65]:
+
+$\Delta \sigma_{\mathrm{ss}}=\left[\sum_{i}\left(k_{\mathrm{ss}, i}^{3 / 2} c_{i}\right)\right]^{2 / 3}$
+
+where $k_{s s, i}$ is the coefficient of solid solution strengthening for element $i$, and $c_{i}$ is its concentration. $k_{s s}$ for different elements in the austenitic matrix is shown in Table 2 [66]. $\alpha_{C T E}$ of the alloy can be calculated from a rule of mixtures [67]. $\alpha_{\text {CTE }}$ values for different elements near their melting points are also shown in Table 2.
+
+The alloy system considered in the calculations is based on 10 alloying elements: C, Cr, Ni, Mn, Mo, Si, W, N, P, and S, where P and S amounts are fixed. The concentration ranges employed for each element in the optimisation procedure are in Table 3. The model scans the full composition ranges in Table 3, employing the optimisation criteria presented in this section.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_6467a9d8d19c4db3d666g-04}
+\end{center}
+
+Fig. 1. Pseudobinary section of the Fe-Cr-Ni ternary phase diagram at $70 \mathrm{wt} \%$ iron, showing different solidification paths (A, AF, FA, and F), based on the relevant $C r_{e q} / N i_{e q}$ values [52].
+
+\subsection*{2.1.5. Crack prevention factor}
+Based on the factors affecting solidification cracking in austenitic stainless steels, a crack prevention factor $(F)$ is defined and calculated for the alloys reported in literature and shown in Table 1:
+
+$F=\sqrt{1500\left(\mathrm{STR}^{-1}\right)^{2}+\mathrm{PI}^{2}}$.
+
+This is, based on a Pythagorean relationship between the reciprocal of the STR (as lower STRs are more favourable) and the PI. This relationship has been proposed to fit the data from literature (Table 1), and to provide a rule of the thumb approach to alloy selection for printability. Based on Eq. (8), a material less prone to crack formation will be obtained by maximising the crack prevention factor. Based on the experimental results on LPBF of 316L stainless steels (Table 1), a threshold value $F=1.6$ for crack susceptibility resistance is suggested. Austenitic stainless steels with $F>1.6$ produced by LPBF are crackfree. However, in addition to this, the solidification path plays an important role in crack resistance. Alloys that have an $F<1.6$, but $\mathrm{Cr}_{e q} /$ $N i_{e q}>1.69$ prevent crack formation upon LPBF. Therefore, a process map for $F$ vs. $\mathrm{Cr}_{e q} / N i_{e q}$ from literature data (Table 1) is presented in Fig. 4. The alloy that will be used in this study to validate this approach is highlighted in Fig. 4.
+
+Table 1
+
+Chemical compositions of 316L stainless steel in wt.\%, produced by LPBF. The units of STR and PI are K and MPa K, respectively. Fe value are balanced. $F$ is the crack prevention factor.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+$\mathrm{Cr}$ & $\mathrm{Ni}$ & $\mathrm{Mn}$ & Mo & C & $\mathrm{N}$ & $\mathrm{Si}$ & $\mathrm{P}$ & $S$ & STR & $P I \times 10^{6}$ & $C r_{e q} / N i_{e q}$ & $F$ & Ref. \\
+\hline
+16.17 & 12.57 & 0.23 & 2.33 & 0.09 & - & 0.6 & 0.014 & 0.014 & 50 & 1.32 & 1.28 & 1.53 & $[5]$ \\
+\hline
+17 & 12 & 2 & 2.5 & 0.03 & 0.1 & 1 & 0.045 & 0.03 & 60 & 1.45 & 1.51 & 1.58 & $[6]$ \\
+\hline
+17.26 & 11.48 & 1.41 & 2.32 & 0.01 & - & 0.71 & 0.01 & 0.01 & 39 & 1.19 & 1.68 & 1.54 & [7] \\
+\hline
+17.34 & 10.74 & 1.14 & 2.28 & 0.01 & 0.1 & 0.63 & 0.026 & 0.014 & 43 & 1.36 & 1.57 & 1.63 & [54] \\
+\hline
+17.5 & 11.5 & 2 & 2.25 & 0.03 & 0.11 & 1 & 0.045 & 0.03 & 57 & 1.45 & 1.54 & 1.6 & [55] \\
+\hline
+17.42 & 12.53 & 0.6 & 2.36 & 0.02 & 0.06 & 0.51 & 0.01 & 0.01 & 32 & 1.36 & 1.45 & 1.82 & [56] \\
+\hline
+17 & 12 & 1 & 2.5 & 0.01 & 0.05 & 0.5 & 0.023 & 0.01 & 38 & 1.35 & 1.51 & 1.69 & [57] \\
+\hline
+17.75 & 12.75 & 1.5 & 2.4 & 0.02 & - & - & 0.01 & 0.001 & 33 & 1.24 & 1.49 & 1.7 & [58] \\
+\hline
+16.7 & 11.9 & 0.6 & 2.5 & 0.02 & - & 0.6 & 0.01 & 0.02 & 33 & 1.22 & 1.61 & 1.69 & [59] \\
+\hline
+16.7 & 10.3 & 0.99 & 2.2 & 0.01 & - & 0.69 & 0.02 & 0.05 & 37 & 1.12 & 1.85 & 1.53 & [60] \\
+\hline
+17.9 & 12.8 & 1.15 & 2.35 & 0.01 & 0.09 & 0.66 & 0.01 & 0.004 & 33 & 1.42 & 1.4 & 1.82 & [61] \\
+\hline
+17.5 & 11.2 & 2.2 & 2.3 & 0.03 & - & - & 0.05 & 0.03 & 61 & 1.22 & 1.67 & 1.37 & [62] \\
+\hline
+16.3 & 10.3 & 1.31 & 2.09 & 0.02 & - & 0.49 & 0.026 & 0.006 & 44 & 1.14 & 1.72 & 1.44 & [63] \\
+\hline
+18.43 & 12.2 & 1.86 & 2.46 & 0.02 & - & 0.75 & 0.032 & 0.01 & 54 & 1.26 & 1.69 & 1.44 & [64] \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_6467a9d8d19c4db3d666g-05}
+\end{center}
+
+Fig. 2. Microstructures of the samples underwent cracking during LPBF of 316L stainless steels [5-7].
+
+\subsection*{2.2. Model for defect and porosity prevention}
+\subsection*{2.2.1. Keyholes}
+Keyholes are caused by a high laser energy input on a small volume, this results in the formation of a melt pool with a narrow and deep shape. The melt pool geometry criterion for keyhole prevention is $W /$ $D>2$, where $W$ is the melt pool width and $D$ is the melt pool depth [69]. Moreover, the energy transferred to melt the powder should be optimised: low energies lead to lack of fusion, whilst high energies lead to keyhole formation. A way to consider both LPBF process parameters and the material's properties to optimise the energy is to adopt the normalised enthalpy concept, introduced by King et al. [70]:
+
+$\frac{\Delta H}{h_{s}}=\frac{\mathrm{AP}}{h_{s} \sqrt{\pi \mathrm{dv} \sigma^{3}}}$
+
+where $\frac{\Delta H}{h_{s}}$ is the normalised enthalpy, $A$ is the absorptivity, $h_{s}$ is the enthalpy at the melting temperature, $d$ is the thermal diffusivity and $\sigma$ is the laser spot size. The condition for preventing keyhole formation adopting the normalised enthalpy concept for 316-type of stainless steels is:
+
+$\frac{\Delta H}{h_{s}} \leq \frac{\pi T_{b}}{T_{m}}=5.5$
+
+where $T_{b}$ is the boiling temperature and $T_{m}$ is the melting temperature of the alloy.\\
+Table 2
+
+Coefficients of solid solution strengthening for different elements (i) in austenitic matrix [65] and their thermal expansion coefficient near their melting points [68].
+
+\begin{center}
+\begin{tabular}{lllllllll}
+\hline
+$i$ & $\mathrm{Cr}$ & $\mathrm{Ni}$ & $\mathrm{Mo}$ & $\mathrm{W}$ & $\mathrm{C}$ & $\mathrm{N}$ & $\mathrm{Si}$ & $\mathrm{Fe}(\mathrm{FCC})$ \\
+\hline
+$k_{s s, i}\left[\mathrm{MPa} \mathrm{Ma}^{-3 / 2}\right]$ & 101.71 & 112 & 637 & 826 & 1984 & 1984 & - & - \\
+$\alpha_{C T E}\left[10^{-6} \mathrm{~K}^{-1}\right]$ & 19 & 20.3 & 16.5 & 11.6 & - & - & 3.8 & 23.3 \\
+\end{tabular}
+\end{center}
+
+Table 3
+
+Concentration ranges of all components employed in the optimisation (wt.\%).
+
+\begin{center}
+\begin{tabular}{lllllllllll}
+\hline
+ & $\mathrm{Cr}$ & $\mathrm{Ni}$ & $\mathrm{Mo}$ & $\mathrm{W}$ & $\mathrm{C}$ & $\mathrm{N}$ & $\mathrm{Si}$ & $\mathrm{Mn}$ & $\mathrm{P}$ & $\mathrm{S}$ \\
+\hline
+Min & 12 & 8 & 0.3 & 0 & 0.01 & 0 & 0.1 & 0.2 & 0.03 & 0.001 \\
+Max & 21 & 13 & 2.5 & 1 & 0.03 & 0.11 & 0.5 & 2.2 & 0.03 & 0.001 \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{2.2.2. Lack of fusion}
+Lack of fusion signals insufficient melting between two adjacent layers, both in the width and height directions. Two criteria have therefore been proposed [22,16] to avoid lack of fusion based on the melt pool geometry: (1) $D / t>1.5$ and (2) $h / W<1$ (where $D$ is the melt pool depth, $t$ is the layer thickness, $h$ is the hatch distance and $W$ is the melt pool width). In order to predict the maximum hatch distance for LPBF process, the width of the melt pool can be estimated via [69]:
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_6467a9d8d19c4db3d666g-05(1)}
+\end{center}
+
+Fig. 3. Algorithm of the thermodynamic calculations and criteria evaluation.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_6467a9d8d19c4db3d666g-06}
+\end{center}
+
+Fig. 4. The process map, showing the safe region from solidification cracks for LPBF produced austenitic stainless steels. The alloy used in this study is also shown. The red triangles show the alloys that underwent solidification cracking during LPBF and the green circles show no-crack alloys; references shown in Table 1.
+
+$W=\sqrt{\frac{8}{\pi \cdot e} \frac{\mathrm{AP}}{\rho C_{p} v\left(T_{m}-T_{0}\right)}}$
+
+where $\rho$ is the density, $C_{p}$ is the heat capacity and $T_{0}$ is the powder bed temperature. As mentioned in Section 2.2.1, in order to prevent the formation of keyholes, the maximum depth of the melt pool must not exceed half of the melt pool width. Therefore, the maximum layer thickness can also be predicted based on the first criterion defined for lack of fusion.
+
+\subsection*{2.2.3. Balling}
+Balling is caused by the laser energy inducing a non-stabilised melt pool. Balling defects are believed to form both in low and high laser energies. They may result in the formation of discontinuous scan lines, which will significantly affect the melt pool overlapping between such scan lines. The melt pool geometry criterion for balling prevention is $L /$ $W<2.3$, where $L$ is the melt pool length and $W$ is the melt pool width [22]. For melt pool length prediction, Rubenchik et al. [71] presented a numerical equation. The melt pool length is a function of the laser spot size and two dimensionless parameters ( $a$ and $b$ ), which depend on the materials properties. The dimensionless parameter of $a$ is defined as the ratio between thermal diffusivity, laser scan speed and laser spot size:
+
+$a=\sqrt{\frac{d}{v \sigma}}$
+
+For $a<1$ the thermal diffusion depth $(D / v)$ during the laser dwell time is smaller than the beam size. Therefore, the melt pool is shallow and elongated. This condition is typical of materials with low thermal conductivity such as stainless steels. For these materials, $b$ is a fraction of the normalised enthalpy:
+
+$b=\frac{\Delta H}{2^{3 / 4} \pi h_{s}}$.
+
+The melt pool length $(L)$ is estimated from [71]:
+
+
+\begin{align*}
+L= & \frac{\sigma}{a^{2}}\left[0.0053-0.21 a+1.3 a^{2}+(-0.11-0.17 b) a^{2} \ln a\right. \\
+& \left.+b\left(-0.0062+0.23 a+0.075 a^{2}\right)\right] \tag{14}
+\end{align*}
+
+
+\section*{3. Experimental procedure}
+The material used for model validation is a crack resistant 316L stainless steel. The pre-alloyed powder was produced by gas atomisation and provided by Carpenter Additive. The chemical composition of the powder used for LPBF is reported in wt.\% in Table 4. The STR, PI, and $\mathrm{Cr}_{e q} / \mathrm{Ni}_{e q}$ for this commercial alloy are $44 \mathrm{~K}, 1.48 \times 10^{6} \mathrm{MPa} \mathrm{K}$, and\\
+Table 4
+
+Chemical composition of the powders used in the present investigation in wt.\%.
+
+\begin{center}
+\begin{tabular}{lllllllllll}
+\hline
+$\mathrm{Fe}$ & $\mathrm{Cr}$ & $\mathrm{Ni}$ & $\mathrm{Mo}$ & $\mathrm{Mn}$ & $\mathrm{Si}$ & $\mathrm{P}$ & $\mathrm{S}$ & $\mathrm{N}$ & $\mathrm{C}$ & $\mathrm{Cu}$ \\
+\hline
+Bal. & 17.75 & 12.75 & 2.38 & 2 & 0.75 & 0.025 & 0.01 & 0.1 & 0.03 & 0.5 \\
+\hline
+\end{tabular}
+\end{center}
+
+1.35, respectively. It locates in the safe region from cracking ("This study" in Fig. 4). The as-received powder exhibits mostly a spherical morphology with some satellites. Particles have an average size of $D_{90}=38 \mu \mathrm{m}$.
+
+The physical properties of the alloy used in this study have been calculated using ThermoCalc software making use of the TCFE9 database dedicated to steels and $\mathrm{Fe}$ alloys at the melting temperature (liquidus temperature) and provided in Table 5.
+
+Tensile samples with dimensions shown in Fig. 5 were built in a Renishaw plc (UK) AM125 LPBF machine with a laser spot size of $35 \mu \mathrm{m}$. All the samples were built at $5^{\circ}$ over the substrate (ISO/ASTM 52921 standard [72]) to minimise the scan vector length and for support application. The platform is equipped with a $200 \mathrm{~W}$ D-series redPOWER ytterbium fibre continuous wavelength (CW) laser from SPI laser (UK) with a near infrared wavelength of $1070 \mathrm{~nm}$. The AM125 has a build volume of $125 \mathrm{~mm}^{3}$ with a base plate heater, set to $80^{\circ} \mathrm{C}$, which was maintained throughout the build process. A vacuum and argon purge was performed in order to keep oxygen content below a maximum of $900 \mathrm{ppm}$; however, in the actual processing conditions, the oxygen content was below 100 ppm. Mild steel (304 stainless steel) was used as substrate.
+
+Three different sets of experiments have been carried out with different processing parameters, which are shown in Table 6. The first batch parameter set was intuitively chosen to promote keyhole and lack of fusion defects. The second batch is produced with a layer thickness slightly larger than the predicted optimised maximum layer thickness.
+
+\section*{Table 5}
+Material properties used in the physical model for porosity prevention in 316L stainless steel. All the thermophysical properties have been calculated using ThermoCalc at liquidus temperature [52].
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Material properties & Value at liquidus temperature \\
+\hline
+$A$ & 0.36 \\
+$h_{s}\left(\mathrm{~J} / \mathrm{m}^{3}\right)$ & $7.764 \times 10^{9}$ \\
+$d\left(\mathrm{~m}^{2} / \mathrm{s}\right)$ & $6.052 \times 10^{-6}$ \\
+$T_{b}(\mathrm{~K})$ & 2885 \\
+$T_{m}(\mathrm{~K})$ & 1647 \\
+$\rho\left(\mathrm{kg} / \mathrm{m}^{3}\right)$ & 6922 \\
+$C_{p}(\mathrm{~J} / \mathrm{kg} \mathrm{K})$ & 663.614 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_6467a9d8d19c4db3d666g-07(1)}
+\end{center}
+
+Fig. 5. The geometry of the tensile specimens produced by LPBF. All the values shown are in $\mathrm{mm}$.
+
+Table 6
+
+LPBF main process parameters that have been used for 316L stainless steel builds.
+
+\begin{center}
+\begin{tabular}{lllll}
+\hline
+ & $P(\mathrm{~W})$ & $v(\mathrm{~m} / \mathrm{s})$ & $h(\mu \mathrm{m})$ & $t(\mu \mathrm{m})$ \\
+\hline
+Batch 1 & 200 & 1 & 110 & 50 \\
+Batch 2 & 100 & 1 & 70 & 30 \\
+Batch 3 & 100 & 1 & 70 & 20 \\
+\hline
+\end{tabular}
+\end{center}
+
+The third batch has been produced with the optimised process parameters, based on what will be discussed in the next section. The scan strategy used in this study was meander, with $67^{\circ}$ rotation at each layer, to minimise residual stresses.
+
+For cracks/porosity characterisation, the longitudinal section of the as-built samples were ground on $\mathrm{SiC}$ paper with increasingly finer grit, followed by mechanical polishing. Optical microscopy images were acquired using Leica DFC295. The porosity measurements have been performed by image analysis using ImageJ software [73], over micrographs taken from different locations for each sample.
+
+To investigate the mechanical properties of the LPBF-produced 316L and compare the results with the wrought 316L alloy, tensile tests were performed at room temperature using an Instron 3382 universal testing machine at a strain rate of $10^{-4} \mathrm{~s}^{-1}$ [74], with the load axis parallel to the building direction.
+
+\section*{4. Results and discussion}
+\subsection*{4.1. Crack-free high strength austenitic stainless steels}
+Three new austenitic stainless steels are proposed, aimed at solidification within lower temperature ranges, displaying higher strengths and lower thermal expansion, whilst solidifying with the appropriate solidification path. Within these properties and characteristics, the designed alloys should offer improved performance compared with the most common austenitic stainless steel, namely 316L, which is the baseline alloy. After running GA optimisation for Table 3 compositional changes, 38 optimised alloys are obtained. Fig. 6 shows a comparison between the optimised alloys and the three 316L stainless steels that have been printed with microcracks in the literature [5-7], from the point of view of the three criteria mentioned before. All the designed alloys have STR lower than $32 \mathrm{~K}$ and a PI higher than $1.46 \times 10^{6} \mathrm{MPa} \mathrm{K}$, and solidify in ferrite + austenite manner; therefore, they should act better compared with the three typical existing 316L alloys. Within these 38 optimum alloys, three alloy examples are proposed: (i) Alloy 1 optimised for the minimum STR; (ii) Alloy 2: optimised for the maximum PI; (iii) Alloy 3: optimised for a compromise between the three criteria. The compositions of each of the proposed alloys are provided in Table 7.
+
+In order to clarify the impact of each of the three criteria provided in this paper on crack susceptibility resistance, Scheil simulations have been carried out for the designed alloys and three cracked 316L alloy to show the solidification path, assuming constitutive segregation (Fig. 7).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_6467a9d8d19c4db3d666g-07}
+\end{center}
+
+Fig. 6. Comparison between the optimal space and the baseline alloys. Three proposed alloys have been shown as alloys 1-3. Alloys [5-7] show cracking as depicted in Fig. 2.
+
+In these simulations, $\mathrm{C}$ and $\mathrm{N}$ are considered as the fast diffusers. Considering the effects of element segregation, the STR is expanded to bigger ranges. The STR for alloys 1-3 are 147, 157, and $153 \mathrm{~K}$ respectively. The STR for the three variations of $316 \mathrm{~L}$, is $143 \mathrm{~K}$ for [5], $172 \mathrm{~K}$ for [6], and $113 \mathrm{~K}$ for [7].
+
+For [5], despite the fact that the STR in paraequilibrium conditions is lower than the designed alloys, the solidification mode is mainly dominated by austenite phase (because its $\mathrm{Cr}_{e q} / N i_{e q}$ is less than 1.3). Moreover, the detrimental MnS phase will be stable for more than $100 \mathrm{~K}$ during solidification, which cannot be dissolved very well in austenite. For 316L alloy printed by [6], the STR is very high both in equilibrium and non-equilibrium conditions, and this cannot be compensated by high values for $\mathrm{Cr}_{e q} / \mathrm{Ni}_{e q}$. Therefore, it led to the formation of cracks during LPBF. The third alloy, which was printed by [7], presents a very low STR in non-equilibrium condition. However, it is very low PI $\left(1.19 \times 10^{6} \mathrm{MPaK}\right)$ is the reason for formation of cracks during LPBF. Therefore, to reach a crack-free austenitic stainless steel there should be a compromise between the criteria proposed here. Although the STR in non-equilibrium condition is not very low for the three designed alloys, their higher performance index, and the lower stability of MnS during solidification of these alloys, make them more resistant to crack formation during LPBF.
+
+Phase field (PF) modelling can also be performed and it may lead to more precise results, but as our aim is alloy design and several of the PF variables have unknown compositional dependence such as the interfacial energy or the diffuse interface thickness, PF may not constitute a computationally feasible tool for alloy design.
+
+\subsection*{4.2. Porosity-free $316 \mathrm{~L}$ stainless steel}
+To produce a part without defects and porosity, the first step is to find the right normalised enthalpy (the energy transferred to the powder bed) for different laser powers, and scan speeds to find the safe regions without the formation of keyholes. Using Eq. (9), with the material properties input from Table 5, two areas of safe and keyhole regions can be determined and shown in Fig. 8. The normalised enthalpy threshold for this 316L alloy is about 5.5 (based on Eq. (10)). This shows that all the combinations of $P$ and $v$ which result in normalised enthalpies less than 5.5, are safe from keyhole formation for a constant laser spot size of $35 \mu \mathrm{m}$. A wide range of laser powers $(100-300 \mathrm{~W})$ and scan speeds $(0.1-2.5 \mathrm{~m} / \mathrm{s})$ have been used for plotting the process maps. Using higher powers and lower scan speeds increases
+
+Table 7
+
+Composition of the designed alloys. All the contents are provided in wt.\%. In all three alloys, P and S are 0.03 and 0.001 wt.\%, respectively. STR and PI are in K and MPa K, respectively.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+Alloy & $\mathrm{C}$ & $\mathrm{Cr}$ & $\mathrm{Ni}$ & Mn & Mo & $\mathrm{Si}$ & $\mathrm{W}$ & $\mathrm{N}$ & STR & $P I \times 10^{6}$ & $C r_{e q} / N i_{e q}$ \\
+\hline
+Alloy 1 & 0.02 & 14.50 & 10.37 & 1.08 & 0.88 & 0.43 & 0.36 & 0.07 & 28.13 & 1.68 & 1.31 \\
+\hline
+Alloy 2 & 0.01 & 15.03 & 10.88 & 1.92 & 1.45 & 0.23 & 0.92 & 0.06 & 31.64 & 2.11 & 1.40 \\
+\hline
+Alloy 3 & 0.02 & 15.83 & 11.23 & 1.06 & 1.09 & 0.3 & 0.44 & 0.07 & 29.88 & 1.87 & 1.35 \\
+\hline
+\end{tabular}
+\end{center}
+
+the possibility of formation of keyholes due to overheating, which makes the temperature of the powder bed exceed the boiling temperature of the alloy. Based on Fig. 8, laser powers exceeding $150 \mathrm{~W}$ cannot be used for LPBF of 316L stainless steel for a machine with spot size of $35 \mu \mathrm{m}$. In order to increase the productivity of the process (using higher laser powers), machines with higher spot size should be used. In here, the first experimental set were chosen to be in the keyhole region $(P=200 \mathrm{~W}$ and $v=1 \mathrm{~m} / \mathrm{s})$. The second and third batches have been produced with a safe combination of $P$ and $v(100 \mathrm{~W}$ and $1 \mathrm{~m} / \mathrm{s}$, respectively).
+
+The second step is to avoid lack of fusion defects, which depends on the hatch distance and layer thickness of the process. Based on the second criterion for lack of fusion prevention, the maximum hatch distance $(h)$ of the process is the melt pool width $(W)$. Therefore, using Eq. (11), the maximum $h$ for different combinations of $P$ and $v$ is presented in Fig. 9a. It can be seen that using higher powers and lower scan speeds, the hatch distance can be larger. However, in here, for the first batch, the maximum hatch distance is calculated to be $105 \mu \mathrm{m}$. To induce lack of fusion in this sample, the experimental $h$ is chosen to be $110 \mu \mathrm{m}$. Reducing $P$ to $100 \mathrm{~W}$ for the next two batches, decreases the maximum $h$ to $75 \mu \mathrm{m}$. Therefore, for these two batches, a hatch distance of $70 \mu \mathrm{m}$ has been used. Based on the first criterion for lack of fusion, an optimum layer thickness should be chosen by knowing the depth of the melt pool. Based on the criterion for keyhole formation, $W / D$ should be higher than 2. Therefore, the maximum $D$ is half $W$. As $D / t$ should be higher than 1.5, the maximum layer thickness for LPBF of 316L in this study for a machine with laser spot size of $35 \mu \mathrm{m}$ is plotted for different combinations of $P$ and $v$ and shown in Fig. 9b. Clearly, layer thicknesses lower than $80 \mu \mathrm{m}$ are suitable for laser power of $100 \mathrm{~W}$. In here, for $P=200 \mathrm{~W}$ (first batch), the maximum allowable layer thickness is $35 \mu \mathrm{m}$. Therefore, a $t=50 \mu \mathrm{m}$ has been used for this batch to induce lack of fusion. For $P=100 \mathrm{~W}$ (second and third batches), the maximum $t$ is $25 \mu \mathrm{m}$. For second batch, a $t=30 \mu \mathrm{m}$ is used to induce lack of fusion but without keyhole formation, and for the third batch, a $t=20 \mu \mathrm{m}$ is used to guarantee sufficient melting.
+
+The third step is to ensure balling prevention. Balling occurs when $L / W$ is higher than 2.3. Fig. 10a shows the predicted melt pool length $(L)$ for the different combinations of $P$ and $v$. $L$ decreases with increasing the scan speed and decreasing the laser power. The balling criterion for the different combinations of $P$ and $v$ is also presented in Fig. 10b. Balling is thus not a serious problem during LPBF of 316L using a machine with $\sigma=35 \mu \mathrm{m}$. Even at high powers and scan speeds, the melt pool stability is high enough to prevent any balling defects. Therefore, the process parameters remain the same as introduced\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_6467a9d8d19c4db3d666g-08}
+
+Fig. 7. (a)-(c) Scheil simulation for the designed, and (d)-(f) for three cracked 316L stainless steels. In all simulations, C and N are assumed as fast diffusers. Calculations performed using ThermoCalc, relying on TCFE9 database.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_6467a9d8d19c4db3d666g-09}
+\end{center}
+
+Fig. 8. Keyhole/safe regions for different combinations of $P$ and $v$ with a laser spot size of $35 \mu \mathrm{m}$ for the experimental 316L stainless steel.
+
+before for the three mentioned batches.
+
+It should be noted that as the powder was gas atomised with argon, internal porosity in the powder particles is often observed. If argon is given enough time to escape from the melt, this type of porosity can be eliminated [75]. However, as these types of pores have no detrimental effects on mechanical properties [76], in the present work no attempts have been made to describe the formation of these type of pores.
+
+After building the samples using LPBF, optical microscopy is used to reveal the crack/porosity contents. Using ImageJ software, a black and white contrast of the optical micrographs are provided and shown in Fig. 11. The micrographs show no solidification cracks after LPBF, as was expected from the high $F(F=1.72)$ of the alloy. As expected, the micrographs from the sample built in batch one with unoptimised process parameters indicate the presence of keyholes and lack of fusion defects (Fig. 11a). The average porosity content in this specimen is $1.11 \pm 0.4 \%$. The normalised enthalpy for this set of experiment is 10.2, which is higher than the threshold value for keyhole formation (the threshold is 5.5). This leads to overheating of the powder bed and\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_6467a9d8d19c4db3d666g-09(1)}
+
+Fig. 9. (a) Maximum hatch distance, and (b) maximum layer thickness for the experimental 316L stainless steel for different combinations of $P$ and $v$ with a laser spot size of $35 \mu \mathrm{m}$.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_6467a9d8d19c4db3d666g-10}
+
+Fig. 10. (a) Melt pool length and (b) balling criterion for different combinations of $P$ and $v$ with a laser spot size of $35 \mu \mathrm{m}$ for the experimental $316 \mathrm{~L}$ stainless steel.
+
+evaporation of some of alloying elements with lower boiling points such as $\mathrm{Mn}, \mathrm{Cr}$, and Ni. This is the cause for the formation of keyholes. The smallest detected keyhole, based on its near-circular morphology is about $3 \mu \mathrm{m}$. It was also expected to produce some lack of fusion defects with layer thickness and hatch distances higher than the maximum values predicted by our model. The smallest lack of fusion defect that has been characterised in this work is about $10 \mu \mathrm{m}$. As lack of fusion defects are bigger than keyholes, it is expected that they have more detrimental effects on mechanical properties. Gas entrapment pores are also characterised in this sample and they are much smaller, about $1 \mu \mathrm{m}$. As shown in Figs. 10b and c, there is no evidence of keyholes by optimising the process parameters and reducing the normalised enthalpy value to 5.1. The average porosity levels in both samples from batch two and three is $0.03 \pm 0.02 \%$, which is lower than any reported before in 316 LPBF processing. In Fig. 11b, some lack of fusion defects are recognisable, which is because of the unoptimised layer thickness that had been chosen for production of this batch. However, that unoptimised layer thickness did not cause any changes in total population of pores and can be neglected. Looking into Fig. 11c reveals that the only pores that are present in the as-built part are gas-entrapped pores that could be related to the powder atomisation method. Using the full optimised process parameters by this method presented here, leads to production of porosity-free components, for a variety of machine parameters and alloy compositions.
+
+This study also shows that the volumetric energy (heat input) is not a proper tool to predict the density of the LPBF-produced parts, However, it can be used as a good means for quantitatively estimating the heat input for the as-built bulk, as it considers the effects of layer thickness and hatch distance. Using Eq. (1), the $E_{v}$ for the batches 1-3 produced in here are $36,47.61$, and $71.42 \mathrm{~J} / \mathrm{mm}^{3}$, respectively. The least heat input estimated by this approach leads to evaporation and formation of the keyholes. Moreover, the average porosity contents in batches two and three are the same, however, the $E_{v}$ is totally different for these two conditions. These show that to reach fully-dense LPBF asbuilt parts, the proposed model works well in comparison with previous approaches reported in the literature $[77,78,20]$.
+
+\subsection*{4.3. Mechanical properties}
+Fig. 12 shows the tensile properties of the LPBF-built 316L samples, varying the process parameters. The mechanical properties requirements for 316L stainless steels in two states of cold-finished wrought (black dashes in Fig. 12) and hot-finished wrought (blue dashes in Fig. 12) based on ASM standard [79] are also shown in Fig. 12. It is worth noting that samples with similar void density have very close tensile performances. Among the samples, the sample from batch 1 has the lowest yield and tensile strength and elongation values owing to its relatively high porosity. However, its yield and ultimate tensile strength meets the requirements for 316L standard, but its elongation is poor (10\% lower than the cold-finished wrought and $32.5 \%$ lower than the hot-finished wrought alloy). Interestingly, the fully dense samples from batch two and three exhibit higher strength and comparable ductility, even with the hot-finished wrought samples. These samples also have better strength and ductility compared to the high porosity sample. The yield and ultimate tensile strength is increased in fully dense LPBF-built samples compared to the wrought samples by $47 \%$ and $12 \%$. It is also interesting that the ductility values for full dense LPBF-built samples are even better than the cold-finished wrought alloy and is slightly lower than the hot-finished wrought alloy.
+
+The present study reveals that the formability of 316L stainless steel\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_6467a9d8d19c4db3d666g-11(3)}
+
+(b)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_6467a9d8d19c4db3d666g-11(2)}
+
+(c)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_6467a9d8d19c4db3d666g-11}
+
+Fig. 11. Micrographs from three different locations of the tensile samples: (a) sample from batch 1, showing keyholes and lack of fusion defects, (b) sample from batch two, showing some lack of fusion defects, (c) sample from batch three, showing neither keyholes nor lack of fusion defects. The only type of pores in this sample are gas-entrapped pores.
+
+can be enhanced via LPBF processing using the optimised compositions for the alloy and optimised process parameters. The yield strength of the both defect-free and high porosity samples produced by LPBF is better than that of the wrought alloys, due to a higher dislocation density resulting from the high cooling rates and thermal strain during LPBF [80]. Solidification-enabled cellular structures with average submicron sizes that could develop during LPBF is another possible reason for the superior yield strength of the LPBF components [80]. Moreover, it was expected to obtain high yield strength, due to usage of a high PI alloy in this study. The ultimate tensile strength and ductility of the defect-free LPBF-built samples are better than the sample with porosity. The presence of keyholes and lack of fusion are assumed to be detrimental to both tensile strength and ductility of the material. Moreover, the presence of pores led to a decrease in the yield strength of the LPBF-built samples. Comparing the samples from batch two and three reveals the effects of lack of fusion on mechanical properties. Even low contents of lack of fusion (less than $0.03 \%$ ) can lead to a decrease in the yield and ultimate tensile strength, as well as strain hardening capacity, but it does not change the elongation in such low contents.
+
+Comparing the formability index (ultimate tensile strength $\times$ elongation) [81] of the LPBF-built samples with the wrought alloy also shows a significant increase from 18,690 to $19,200 \mathrm{MPa} \%$ for wrought alloys to $27,800-28,280 \mathrm{MPa} \%$ for batches two and three, respectively.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_6467a9d8d19c4db3d666g-11(1)}
+\end{center}
+
+Fig. 12. Engineering stress-strain graphs for various LPBFbuilt 316L samples. The requirements for the tensile properties (the yield strength, ultimate tensile strength, and elongation) for cold-finished and hot-finished wrought samples are indicated in black and blue dashes, respectively. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.)
+
+It is believed that the deformation mechanism of the wrought $316 \mathrm{~L}$ alloys is governed by dislocation slip and deformation twinning, due to its moderate stacking fault energy [82]. In here, although formation of deformation twins does not lead to high strain hardening rate, the high ductility of full-dense LPBF-built samples can be attributed to the deformation twins. This significant increase in formability index shows the effectiveness of optimisation of both composition and process parameters of LPBF can lead to production of remarkably better alloys and reduce the cost of heat treatments and forming processes significantly.
+
+\subsection*{4.4. Novelty of the new crack and defect prevention criteria}
+This work combines a number of factors to prevent crack formation. The performance index, $P I$ has been proposed by Hunt et al. [45], and the solidification temperature range STR has been proposed in welding literature [43]; in the present work, the values of $P I=1.46 \times 10^{6} \mathrm{MPa} \mathrm{K}$ and $S T R=32 \mathrm{~K}$ are for the first time proposed for 316L. Moreover, the relationship for $F=\left(1500\left(\mathrm{STR}^{-1}\right)^{2}+\mathrm{PI}^{2}\right)^{1 / 2}$ is new and shows a compromise in $\mathrm{F}-\mathrm{Cr}_{e q} / N i_{e q}$ space which has not been envisioned before; this indicates a trade between the ability to prevent cracks and the need to follow a certain solidification path.
+
+Referring to defect prevention, the geometry constraints listed in Section 2.2 are listed below and contrasted with previous literature:
+
+\begin{itemize}
+  \item For keyhole formation $\Delta H / h_{s}$, the proposed threshold value of 5.5 is significantly lower than that of $30 \pm 4$ reported by King et al. [70]. The value of $W / D>2$ differs that the values of 1.5 suggested in [22].
+  \item Lack of fusion includes criteria for $D / t>1.5$ are similar to previous values of 1.0, 1.1 and 1.2 suggested by Mukherjee et al. [24] and 1.5 as proposed by Johnson et al. [22]. $h / W<1$, it comes from the work of Tang et al. [16] and has never been used before in combination with $D / t$.
+\end{itemize}
+
+\subsection*{4.5. Application to other alloy systems}
+Marageing steels are another family of alloys on which increasing attention is being focused. Two grades are worth of notice:
+
+\begin{itemize}
+  \item 17-4 precipitation hardened stainless steel, where the compromise of ( $F$ ) with $C r_{e q} / N i_{e q}$ can be adopted, but a different value for $F$ is to be considered and $C r_{e q} / N i_{e q}$ would be different as $\delta$-ferrite is undesired if produced under LPBF due to the rapid solidification.
+
+  \item The recently patented Formetrix family of steels [83], where the crack prevention-solidification path has to be reviewed, and the precipitate hardening capability has to be reviewed as part of postprocessing schedules.
+
+\end{itemize}
+
+Nickel alloys such as IN738 or CM247 require further attention, as the modelling strategy suggested in this work has to be complemented to incorporate the effects of liquation and strain-age cracking [84-86].
+
+\section*{5. Conclusions}
+A general theory-guided computational alloy design methodology is presented, together with a physics-based model, to predict printability of austenitic stainless steels. Three variables have been controlled to prevent the formation of solidification cracks: solidification temperature range, performance index and the solidification path. Three austenitic stainless steels were designed to minimise the formation of solidification cracks during laser powder bed fusion and compared to the existing 316L alloys. Moreover, a new crack prevention factor has been defined to predict the susceptibility to crack formation.
+
+To prevent formation of defects and porosity during laser powder bed fusion, physics-based models have been combined to estimate the melt pool geometry, and optimise the process parameters, considering the physical properties of the material. Process maps have been drawn to indicate the safe regions from different types of pores and defects in different combinations of laser powder bed fusion process parameters. The value of the proposed parameters is contrasted with those proposed in the literature.
+
+A 316L alloy with an optimised composition (high crack prevention factor) has been chosen to validate the printability model. It has been shown that the formability of the defect-free selective laser melted 316L alloy has been significantly improved compared to samples with pores and wrought versions of the same alloy. The findings of the present work will be of significance to laser powder bed fusion of other types of metallic parts into high-performance parts. Optimisation of chemical composition of the alloy as well as optimisation of process parameters is a promising method to overcome the long-standing strength-ductility dilemma in metallic materials. With enhanced formability capacity, the metallic parts or components produced by laser powder bed fusion will become safer when used in heavy load-bearing structures, and less material without the post-processing cost will be needed to achieve the same goal. This paper can help metal additive manufacturing find broader industrial applications.
+
+The conditions to extend this strategy to other alloying systems such as marageing steels and nickel alloys have been overviewed.
+
+\section*{Authors' contribution}
+Pedro E.J. Rivera: conceptualisation, methodology, supervision and administration. writing and reviewing and editing. Hossein Eskandari: experimental data interpretation, metallography, writing original draft. Suhyun Maeng: computational modelling. Nesma Abulkhair, Marco Simonelli: printing of specimens. Xingzhong Liang: mechanical testing.
+
+\section*{Data availability}
+The raw and processed data required to reproduce these findings cannot be shared at this time as the data also forms part of an ongoing study.
+
+\section*{Conflict of interest}
+None declared.
+
+\section*{Acknowledgment}
+The authors are grateful to Carpenter additive for useful discussions, and to the Royal Academy of Engineering for chair funding (RCSRF1718/5/32), and to theEPSRCfor funding via DARE grant (EP/ L025213/1). The authors are also grateful to Dr. Will Herbert from Carpenter Additive for useful discussions.
+
+\section*{References}
+[1] G.T. Gray III, V. Livescu, P. Rigg, C.P. Trujillo, C.M. Cady, S.-R. Chen, J.S. Carpenter, T.J. Lienert, S.J. Fensin, Structure/property (constitutive and spallation response) of additively manufactured 3161 stainless steel, Acta Mater. 138 (2017) 140-149.
+
+[2] H.D. Carlton, A. Haboub, G.F. Gallegos, D.Y. Parkinson, A.A. MacDowell, Damage evolution and failure mechanisms in additively manufactured stainless steel, Mater. Sci. Eng. A 651 (2016) 406-414.
+
+[3] C. Teng, D. Pal, H. Gong, K. Zeng, K. Briggs, N. Patil, B. Stucker, A review of defect modeling in laser material processing, Addit. Manuf. 14 (2017) 137-147.
+
+[4] S.A. Khairallah, A.T. Anderson, A. Rubenchik, W.E. King, Laser powder-bed fusion additive manufacturing: physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones, Acta Mater. 108 (2016) 36-45.
+
+[5] A. R\&ldquo;ottger, K. Geenen, M. Windmann, F. Binner, W. Theisen, Comparison of microstructure and mechanical properties of 3161 austenitic steel processed by selective laser melting with hot-isostatic pressed and cast material, Mater. Sci. Eng. A 678 (2016) 365-376.
+
+[6] Z. Sun, X. Tan, S.B. Tor, W.Y. Yeong, Selective laser melting of stainless steel 3161 with low porosity and high build rates, Mater. Des. 104 (2016) 197-204.
+
+[7] W. Chen, G. Yin, Z. Feng, X. Liao, Effect of powder feedstock on microstructure and mechanical properties of the 3161 stainless steel fabricated by selective laser melting, Metals 8 (9) (2018) 729.
+
+[8] J.J. Lewandowski, M. Seifi, Metal additive manufacturing: a review of mechanical properties, Annu. Rev. Mater. Res. 46 (2016) 151-186.
+
+[9] G. Tapia, W. King, L. Johnson, R. Arroyave, I. Karaman, A. Elwany, Uncertainty propagation analysis of computational models in laser powder bed fusion additive manufacturing using polynomial chaos expansions, J. Manuf. Sci. E-Trans. ASME 140 (12) (2018) 121006.
+
+[10] S.K. Everton, M. Hirsch, P. Stravroulakis, R.K. Leach, A.T. Clare, Review of in-situ process monitoring and in-situ metrology for metal additive manufacturing, Mater. Des. 95 (2016) 431-445.
+
+[11] J.-P. Kruth, L. Froyen, J. Van Vaerenbergh, P. Mercelis, M. Rombouts, B. Lauwers, Selective laser melting of iron-based powder, J. Mater. Process. Technol. 149 (1-3) (2004) 616-622.
+
+[12] M. Zhang, C.-N. Sun, X. Zhang, P.C. Goh, J. Wei, D. Hardacre, H. Li, Fatigue and fracture behaviour of laser powder bed fusion stainless steel 3161: influence of processing parameters, Mater. Sci. Eng. A 703 (2017) 251-261.
+
+[13] P. Kontis, E. Chauvet, Z. Peng, J. He, A.K.d. Silva, D. Raabe, C. Tassin, J.-J. Blandin, S. Abed, R. Dendievel, et al., Atomic-scale grain boundary engineering to overcome hot-cracking in additively-manufactured superalloys, Acta Mater. (2019).
+
+[14] Y. Tian, J. Mu niz-Lerma, M. Brochu, Nickel-based superalloy microstructure obtained by pulsed laser powder bed fusion, Mater. Charact. 131 (2017) 306-315.
+
+[15] D. Hickman, I. Ashcroft, S. Sharma, X. Wang, B. Szost, D. Johns, A. Clare, et al., Oxide and spatter powder formation during laser powder bed fusion of hastelloy $\mathrm{x}$, Powder Technol. 354 (2019) 333-337.
+
+[16] M. Tang, P.C. Pistorius, J.L. Beuth, Prediction of lack-of-fusion porosity for powder bed fusion, Addit. Manuf. 14 (2017) 39-48,
+
+[17] J. Cherry, H. Davies, S. Mehmood, N. Lavery, S. Brown, J. Sienz, Investigation into the effect of process parameters on microstructural and physical properties of 3161 stainless steel parts by selective laser melting, Int. J. Adv. Manuf. Technol. 76 (5-8) (2015) 869-879.
+
+[18] E. Liverani, S. Toschi, L. Ceschini, A. Fortunato, Effect of selective laser melting (slm) process parameters on microstructure and mechanical properties of 3161 austenitic stainless steel, J. Mater. Process. Technol. 249 (2017) 255-263.
+
+[19] J.H. Tan, W.L.E. Wong, K.W. Dalgarno, An overview of powder granulometry on feedstock and part performance in the selective laser melting process, Addit. Manuf. 18 (2017) 228-255.
+
+[20] U.S. Bertoli, A.J. Wolfer, M.J. Matthews, J.-P.R. Delplanque, J.M. Schoenung, On the limitations of volumetric energy density as a design parameter for selective laser melting, Mater. Des. 113 (2017) 331-340.
+
+[21] M. Thomas, G.J. Baxter, I. Todd, Normalised model-based processing diagrams for additive layer manufacture of engineering alloys, Acta Mater. 108 (2016) 26-35.
+
+[22] L. Johnson, M. Mahmoudi, B. Zhang, R. Seede, X. Huang, J.T. Maier, H.J. Maier, I. Karaman, A. Elwany, R. Arróyave, Assessing printability maps in additive man ufacturing of metal alloys, Acta Mater. 176 (2019) 199-210.
+
+[23] L. Ladani, J. Romano, W. Brindley, S. Burlatsky, Effective liquid conductivity for improved simulation of thermal transport in laser beam melting powder bed technology, Addit. Manuf. 14 (2017) 13-23.
+
+[24] T. Mukherjee, J.S. Zuback, A. De, T. DebRoy, Printability of alloys for additive manufacturing, Sci. Rep. 6 (1) (2016) 19717.
+
+[25] B. Schoinochoritis, D. Chantzis, K. Salonitis, Simulation of metallic powder bed additive manufacturing processes with the finite element method: a critical review Proc. Inst. Mech. Eng. B J. Eng. Manuf. 231 (1) (2017) 96-117.
+
+[26] W.E. King, A.T. Anderson, R. Ferencz, N. Hodge, C. Kamath, S. A. Khairallah, A.M. Rubenchik, Laser powder bed fusion additive manufacturing of metals: physics, computational, and materials challenges, Appl. Phys. Rev. 2 (4) (2015) 41304.
+
+[27] M.A. Wahab, M. Painter, M. Davies, The prediction of the temperature distribution and weld pool geometry in the gas metal arc welding process, J. Mater. Process. Technol. 77 (1-3) (1998) 233-239.
+
+[28] H. Bikas, P. Stavropoulos, G. Chryssolouris, Additive manufacturing methods and modelling approaches: a critical review, Int. J. Adv. Manuf. Technol. 83 (1-4) (2016) 389-405
+
+[29] A. Klassen, T. Scharowsky, C. K\&rdquo;orner, Evaporation model for beam based additive manufacturing using free surface lattice Boltzmann methods, J. Phys. D 47 (27) (2014) 275303
+
+[30] D. Rosenthal, The theory of moving sources of heat and its application of metal treatments, Trans. ASME 68 (1946) 849-866.
+
+[31] T. Eagar, N. Tsai, Temperature fields produced by traveling distributed heat sources, Weld J. 62 (12) (1983) 346-355.
+
+[32] J. Metelkova, Y. Kinds, K. Kempen, C. de Formanoir, A. Witvrouw, B. Van Hooreweder, On the influence of laser defocusing in selective laser melting of 3161, Addit. Manuf. 23 (2018) 161-169.
+
+[33] T. Heeling, M. Cloots, K. Wegener, Melt pool simulation for the evaluation of process parameters in selective laser melting, Addit. Manuf. 14 (2017) 116-125.
+
+[34] Z.A. Mierzejewska, Effect of laser energy density, internal porosity and heat treat ment on mechanical behavior of biomedical ti6al4v alloy obtained with DMLS technology, Materials 12 (14) (2019) 2331.
+
+[35] N. Larrosa, W. Wang, N. Read, M. Loretto, C. Evans, J. Carr, U. Tradowsky, M. Attallah, P. Withers, Linking microstructure and processing defects to mechanical properties of selectively laser melted AlSi10Mg alloy, Theor. Appl. Fract. Mech. 98 (2018) 123-133.
+
+[36] S.M.J. Razavi, G. Bordonaro, P. Ferro, J. Torgersen, F. Berto, Porosity effect on tensile behavior of Ti-6Al-4V specimens produced by laser engineered net shaping technology, Proc. Inst. Mech. Engrs. Part C: J. Mech. Eng. Sci. (2018) 0954406218813384\\
+[37] S. Razavi, G. Bordonaro, P. Ferro, J. Torgersen, F. Berto, Fatigue behavior of porous Ti-6Al-4V made by laser-engineered net shaping, Materials 11 (2) (2018) 284.
+
+[38] R. Seede, D. Shoukr, B. Zhang, A. Whitt, S. Gibbons, P. Flater, A. Elwany, R. Arroyave, I. Karaman, An ultra-high strength martensitic steel fabricated using selective laser melting additive manufacturing: densification, microstructure, and mechanical properties, Acta Mater. 186 (2020) 199-214.
+
+[39] V. Ploshikhin, A. Prikhodovsky, M. Makhutin, A. Ilin, H.-W. Zoch, Integrated mechanical-metallurgical approach to modeling of solidification cracking in welds, Hot Cracking Phenomena in Welds, Springer, 2005, pp. 223-244.
+
+[40] T. Soysal, S. Kou, A simple test for assessing solidification cracking susceptibility and checking validity of susceptibility prediction, Acta Mater. 143 (2018) 181-197.
+
+[41] J. Yu, M. Rombouts, G. Maes, Cracking behavior and mechanical properties of austenitic stainless steel parts produced by laser metal deposition, Mater. Des. 45 (2013) 228-235,
+
+[42] R. Saluja, K. Moeed, The emphasis of phase transformations and alloying constituents on hot cracking susceptibility of type 3041 and 3161 stainless steel welds, Int. J. Eng. Sci. Technol, 4 (5) (2012) 2206-2216.
+
+[43] V. Shankar, T. Gill, S. Mannan, S. Sundaresan, Solidification cracking in austenitic stainless steel welds, Sadhana 28 (3-4) (2003) 359-382.
+
+[44] M. Alimardani, E. Toyserkani, J.P. Huissoon, A 3d dynamic numerical approach for temperature and thermal stress distributions in multilayer laser solid freeform fabrication process, Opt. Laser. Eng. 45 (12) (2007) 1115-1130.
+
+[45] J. Hunt, F. Derguti, I. Todd, Selection of steels suitable for additive layer manufacturing, Ironmak. Steelmak. 41 (4) (2014) 254-256.
+
+[46] F. Hull, Delta ferrite and martnesite formation in stainless steels, Weld. J. 52 (5) (1973) 193.
+
+[47] K.-H. Tseng, C.-Y. Hsu, Performance of activated tig process in austenitic stainless steel welds, J. Mater. Process. Technol. 211 (3) (2011) 503-512.
+
+[48] T. Zhou, R.J. O'malley, H.S. Zurob, Study of grain-growth kinetics in delta-ferrite and austenite with application to thin-slab cast direct-rolling microalloyed steels, Metall. Mater. Trans. A 41 (8) (2010) 2112-2120.
+
+[49] V. Kujanp\&ldquo;a\&rdquo;a, N. Suutala, T. Takalo, T. Moisio, Solidification cracking, Met. Const. 6 (1980) 282.
+
+[50] R. Faulkner, J. Williams, E.G. Sanchez, A. Marshall, Influence of Co, Cu and W, (2003), pp. 347-354.
+
+[51] J. Elmer, S. Allen, T. Eagar, Microstructural development during solidification of stainless steel alloys, Metall. Trans. A 20 (10) (1989) 2117-2131.
+
+[52] J.-O. Andersson, T. Helander, L. Höglund, P. Shi, B. Sundman, Thermo-calc \& dictra, computational tools for materials science, Calphad 26 (2) (2002) 273-312.
+
+[53] C.M. Fonseca, P.J. Fleming, Multiobjective genetic algorithms, IEE Colloquium on Genetic Algorithms for Control Systems Engineering (1993) 1-6.
+
+[54] U.S. Bertoli, B.E. MacDonald, J.M. Schoenung, Stability of cellular microstructure in laser powder bed fusion of 3161 stainless steel, Mater. Sci. Eng. A 739 (2019) 109-117.
+
+[55] C. Elangeswaran, A. Cutolo, G.K. Muralidharan, C. de Formanoir, F. Berto, K. Vanmeensel, B. Van Hooreweder, Effect of post-treatments on the fatigue behaviour of 3161 stainless steel manufactured by laser powder bed fusion, Int. J. Fatig. 123 (2019) 31-39.
+
+[56] M.A. Obeidi, E. McCarthy, B. O'Connell, I. Ul Ahad, D. Brabazon, Laser polishing of additive manufactured 3161 stainless steel synthesized by selective laser melting, Materials 12 (6) (2019) 991
+
+[57] R. Shrestha, J. Simsiriwong, N. Shamsaei, Fatigue behavior of additive manufactured 3161 stainless steel parts: effects of layer orientation and surface roughness, Addit. Manuf. 28 (2019) 23-38.
+
+[58] Y. Yang, Y. Zhu, M. Khonsari, H. Yang, Wear anisotropy of selective laser melted 3161 stainless steel, Wear 428 (2019) 376-386.
+
+[59] Y. Yin, J. Sun, J. Guo, X. Kan, D. Yang, Mechanism of high yield strength and yield ratio of 3161 stainless steel by additive manufacturing, Mater. Sci. Eng. A 74 (2019) 773-777.
+
+[60] W. Harun, R. Asri, F. Romlay, S. Sharif, N. Jan, F. Tsumori, Surface characterisation and corrosion behaviour of oxide layer for slmed-3161 stainless steel, J. Alloys Compd. 748 (2018) 1044-1052.
+
+[61] M.H. Kunkel, A. Gebhardt, K. Mpofu, S. Kallweit, Statistical assessment of mechanical properties of selective laser melted specimens of stainless steel, Int. J. Adv. Manuf. TechNOL. 98 (5-8) (2018) 1409-1431.
+
+[62] M. Lodhi, K. Deen, W. Haider, Corrosion behavior of additively manufactured 316 stainless steel in acidic media, Materialia 2 (2018) 111-121.
+
+[63] F. Yan, W. Xiong, E. Faierson, G.B. Olson, Characterization of nano-scale oxides in austenitic stainless steel processed by powder bed fusion, Scr. Mater. 155 (2018) 104-108.
+
+[64] S.M. Yusuf, M. Nie, Y. Chen, S. Yang, N. Gao, Microstructure and corrosion performance of 3161 stainless steel fabricated by selective laser melting and processed through high-pressure torsion, J. Alloys Compd. 763 (2018) 360-375.
+
+[65] I. Toda-Caraballo, P.E. Rivera-Díaz-del Castillo, Modelling solid solution hardening in high entropy alloys, Acta Mater. 85 (2015) 14-23.
+
+[66] Y. Mishima, S. Ochiai, N. Hamao, M. Yodogawa, T. Suzuki, Solid solution hardening of nickel-role of transition metal and b-subgroup solutes-, Trans. Jpn. Inst. Met. 27 (9) (1986) 656-664.
+
+[67] I. Toda-Caraballo, E.I. Galindo-Nava, P.E. Rivera-Díaz-del Castillo, Unravelling the materials genome: symmetry relationships in alloy properties, J. Alloys Compd. 566 (2013) 217-228.
+
+[68] F. Cverna, et al., ASM Ready Reference: Thermal Properties Of Metals, ASM International, 2002.
+
+[69] P. Promoppatum, S.-C. Yao, P.C. Pistorius, A.D. Rollett, A comprehensive comparison of the analytical and numerical prediction of the thermal history and solidification microstructure of inconel 718 products made by laser powder-bed fusion,
+
+Engineering 3 (5) (2017) 685-694.
+
+[70] W.E. King, H.D. Barth, V.M. Castillo, G.F. Gallegos, J.W. Gibbs, D.E. Hahn, C. Kamath, A.M. Rubenchik, Observation of keyhole-mode laser melting in laser powder-bed fusion additive manufacturing, J. Mater. Process. Technol. 214 (12) (2014) 2915-2925.
+
+[71] A.M. Rubenchik, W.E. King, S.S. Wu, Scaling laws for the additive manufacturing, J. Mater. Process. Technol. 257 (2018) 234-243.
+
+[72] I. 52921, Standard Terminology for Additive Manufacturing-Coordinate Systems and Test Methodologies.
+
+[73] C.A. Schneider, W.S. Rasband, K.W. Eliceiri, NIH image to imagej: 25 years of image analysis, Nat. Methods 9 (7) (2012) 671.
+
+[74] ASTM, ASTM E8, 2008.
+
+[75] R. Cunningham, S.P. Narra, C. Montgomery, J. Beuth, A. Rollett, Synchrotron-based X-ray microtomography characterization of the effect of processing variables on porosity formation in laser power-bed additive manufacturing of Ti-6Al-4V, JOM 69 (3) (2017) 479-484.
+
+[76] A.M. Beese, B.E. Carroll, Review of mechanical properties of Ti-6Al-4V made by laser-based additive manufacturing using powder feedstock, JOM 68 (3) (2016) 724-734.
+
+[77] H. Fayazfar, M. Salarian, A. Rogalsky, D. Sarker, P. Russo, V. Paserin, E. Toyserkani, A critical review of powder-based additive manufacturing of ferrous alloys: process parameters, microstructure and mechanical properties, Mater. Des. 144 (2018) 98-128.
+
+[78] H. Choo, K.-L. Sham, J. Bohling, A. Ngo, X. Xiao, Y. Ren, P.J. Depond, M.J. Matthews, E. Garlea, Effect of laser power on defect, texture, and microstructure of a laser powder bed fusion processed 3161 stainless steel, Mater. Des. 164 (2019) 107534.
+
+[79] A.H. Committee, et al., Properties and selection: stainless steels, tool materials and special-purpose metals, Metals Handbook, 9th ed., (1980), p. 3.
+
+[80] D. Wang, C. Song, Y. Yang, Y. Bai, Investigation of crystal growth mechanism during selective laser melting and mechanical property characterization of 3161 stainless steel parts, Mater. Des. 100 (2016) 291-299.
+
+[81] H.E. Sabzi, A.Z. Hanzaki, H. Abedi, R. Soltani, A. Mateo, J. Roa, The effects of bimodal grain size distributions on the work hardening behavior of a transformation-twinning induced plasticity steel, Mater. Sci. Eng. A 678 (2016) 23-32.
+
+[82] Z. Sun, X. Tan, S.B. Tor, C.K. Chua, Simultaneously enhanced strength and ductility for 3d-printed stainless steel 3161 by selective laser melting, NPG Asia Mater. 10 (4) (2018) 127.
+
+[83] C.D. Tuffile, H. Lemke, 3d printable hard ferrous metallic alloys for powder bed fusion, US Patent App. 16/393,194 (2019).
+
+[84] S. Catchpole-Smith, N. Aboulkhair, L. Parry, C. Tuck, I. Ashcroft, A. Clare, Fractal scan strategies for selective laser melting of 'unweldable'nickel superalloys, Addit. Manuf. 15 (2017) 113-122.
+
+[85] J.H. Boswell, D. Clark, W. Li, M.M. Attallah, Cracking during thermal post-processing of laser powder bed fabricated cm247lc ni-superalloy, Mater. Des. 174 (2019) 107793.
+
+[86] C. Qiu, H. Chen, Q. Liu, S. Yue, H. Wang, On the solidification behaviour and cracking origin of a nickel-based superalloy during selective laser melting, Mater. Charact. 148 (2019) 330-344.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

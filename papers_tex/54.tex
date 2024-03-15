@@ -1,0 +1,738 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{multirow}
+
+\title{Three-dimensional semi-elliptical modeling of melt pool geometry considering hatch spacing and time spacing in metal additive manufacturing }
+
+\author{}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+\textbackslash author\{\\
+Elham Mirkoohi ${ }^{\mathrm{a}, *}$, Daniel E. Sievers ${ }^{\mathrm{b}}$, Hamid Garmestani ${ }^{\mathrm{c}}$, Kuoning Chiang ${ }^{\mathrm{d}}$, Steven Y. Liang ${ }^{\mathrm{a}}$ \\
+ ${ }^{\text {a Woodruff School of Mechanical Engineering, Georgia Institute of Technology, Atlanta, GA, 30332, USA }}$ \\
+ ${ }^{\mathrm{b}}$ Boeing Research and Technology, Ceramics, Extreme Environments \& Metals, Huntsville, Al, 35824, USA
+
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-01} \\
+ ${ }^{\mathrm{d}}$ Department of Power Mechanical Engineering, National Tsing Hua University, Hsinchu, 30013, Taiwan\\
+\}
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+Additive manufacturing
+
+Melt pool geometry
+
+Temperature prediction
+
+Hatch spacing
+
+Material properties
+
+Semi-elliptical moving heat source
+
+\begin{abstract}
+A B S T R A C T A semi-elliptical moving heat source approach is used to predict the in-process temperature profile inside the build part during laser-based metal additive manufacturing (AM) processes. The laser has a constant heat strength which releases its energy continuously on the semi-infinite medium. It is assumed that the medium is initially at room temperature. In the proposed analytical model, some details are considered to predict the melt pool geometry more accurately and realistically. The thermal material properties are considered to be temperature dependent since the existence of the steep temperature gradient affects the magnitude of the thermal conductivity and specific heat, and as a result, it changes the heat transfer mechanisms. Moreover, the melting/ solidification phase change is considered using the modified heat capacity. The multi-layer aspect of the metal AM part is considered in the modeling of the temperature profile, since the thermal interaction of the successive layers has an influence on heat transfer mechanisms. The prediction of the temperature profile of an AM part is the building block for the prediction of the thermal stress, residual stress, part distortion, and microstructure evolution. Adding more details of the AM processes to the analytical models will help to increase the accuracy of the results. In this paper, the effect of time spacing (time delay between two irradiations) and hatch spacing on thermal material properties and melt pool geometry are studied. The effect of the number of scans on melt pool geometry is also investigated. The proposed model can be used to predict the temperature profile and melt pool geometry in laser-based metal additive manufacturing configurations of either direct metal deposition (DMD) or selective laser melting (SLM). In order to validate that the proposed model can capture the physical aspects of both powder bed systems, such as SLM, and powder feed systems, such as DMD, two sets of parts are chosen which are built using SLM and DMD processes and the predicted melt pool size is compared to experimental values.
+\end{abstract}
+
+\section*{1. Introduction}
+Due to the fast rate of development of metal additive manufacturing, many researchers have tried to understand the physical phenomena behind the AM process in order to enhance the quality of the final product. AM is becoming one of the major techniques for producing final parts and assemblies without doing extensive postprocessing. A wide range of metal systems can be used in AM processes which lead to a wide variety of applications in metal AM [1,2]. Additive manufacturing processes can be the pillar of the next industrial revolution since it offers 3D complex shapes, lower cost due to the reduced material requirement, and design flexibility [3].
+
+The majority of the metal AM systems employ powder bed and powder feed fusion systems. Powder bed systems such as selective laser melting (SLM) utilizes the high energy of the beam to selectively melt and sinter the metallic powders together. The result is a wide range of durable, high precision, fully dense, and functional end-use parts and prototypes [4,5].
+
+Powder feed systems, such as direct metal deposition (DMD), use the power of a laser to melt the surface of the target area while a stream of powdered metal is delivered onto the small targeted area creating a melt pool. Compared to processes that use powder beds, such as selective laser melting (SLM), objects created with DMD can be substantially larger [6].
+
+Due to repeated heating and cooling during AM processes, and the existence of the steep temperature gradient, undesirable thermal stress,
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail address: \href{mailto:elham.mirkoohi@gatech.edu}{elham.mirkoohi@gatech.edu} (E. Mirkoohi).
+}
+residual stress, and distortion build up. All these heating and cooling cycles have a substantial influence on microstructure evolution [7]. The knowledge of the prediction of the temperature in metal AM could help to control and optimize the abovementioned difficulties in metal AM [8]. As a result, the most important part of metal additive manufacturing process modeling and prediction is the prediction of temperature induced by the laser.
+
+Several researchers have worked on the prediction of temperature in metal AM. Roberts \href{http://et.al}{et.al} employed the finite element analysis to model the three-dimensional temperature field during laser melting of metallic powders in additive layer manufacturing. They have considered heat loss from the surface due to convection and radiation. They have also considered the temperature dependent material properties. In their modeling, they have not considered the layering aspect of metal AM [9]. Qi et al developed a self-consistent three-dimensional model for a coaxial laser powder cladding process. The heat transfer, phase change, and fluid flow in the molten pool are simulated with a control volume finite difference method. They concluded that the numerical model predicts higher melt pool size (about $22 \%$ ) compared to experimental values [10]. Lee et al. conducted a numerical transport simulation to simulate multilayer single-track laser additive manufacturing deposition of IN718. The simulation accurately predicted melt pool peak temperature and deposit geometry. The peak temperature prediction error is less than $2.5 \%$ and build geometry prediction error is less than $12 \%$ in both height and width [11]. Kumar et al. developed a finite element model to investigate the influence of scan strategy on melt pool size [12]. Manvatkar et al. developed a three-dimensional heat transfer and material flow model to numerically simulate the temperature and velocity fields during additive manufacturing of SS316 [13]. Cheng et al. developed a transient thermal analysis to predict the melt pool size, numerically. They have concluded that for a given power, as the scanning speed increases, the melt pool depth decreases [14]. Pinkerton et al. proposed a numerical model in order to predict the melt pool geometry. The model considers the pool boundaries orthogonal to the direction of motion as arcs of a circle reflecting the dominance of surface tension forces and accounts for elongation of the pool with increasing traverse speed [15].
+
+Carcel et. al predicted the temperature in metal AM experimentally. A pyrometer is used to predict the temperature. They have concluded that the cooling rate decreases with the number of layers, the cooling rate is significantly faster as the interval time between layers increases, and the maximum temperature increases for subsequent layers [16]. Cheng \href{http://et.al}{et.al} used thermal imaging technology to capture the transient thermal response in the SLM process. Using an infrared (IR) camera they have measured the melt pool size for different process conditions [17].
+
+Mirkoohi et al. proposed a two-dimensional analytical solution for temperature prediction in metal AM. They have considered the effects of build layers, latent heat, and temperature sensitivity of material properties in the modeling of temperature distribution. The predicted temperature using an analytical solution is compared to numerical simulations and experimental values [18]. In another work, they have proposed five different heat source solutions to predict the temperature field analytically. In this work, the applicability of each heat source model under different range of laser power and scan speed is investigated [32].
+
+The existence of temperature gradient in metal AM process influences the melt pool geometry, thermal stress, residual stress, microstructure, fatigue and etc. [19]. As a result, it is crucial to adopt a reliable and accurate model for the prediction of the temperature field. In these days, the accessible knowledge and technology on metal AM processes are broken into empirical or numerical observations [9,20-22], and essentially limited to macroscopic analysis in nature $[17,18]$, hence, limiting the full capability potential of the AM process. Considerable accuracy is obtained in prediction of the temperature profile during AM processes using finite element analysis (FEA).\\
+However, considering complex physical aspects of the AM process using FEA is computationally expensive and quite challenging,. As a result, calculation of the temperature field numerically involved various simplifications and assumptions to make the simulation time-tractable $[23,24]$. Experimental work is also expensive and arduous if one needs to capture all the physical aspects of metal AM. On the other hand, the analytical model provides accurate results since it allows to consider most of the main physical aspects of the AM process that would be too intricate to cope with by the majority of other studies. High computational efficiency is the other advantage of an analytical model for the additive manufacturing process modeling. Consequently, due to the high computational efficiency, the complete modeling of build process is time-tractable [25-27]. Moreover, the closed-form physics-based analytical solutions can eliminate arduous experimentation [28], inefficient FE simulations and also can be used as a complete model to real-time prediction of temperature during an AM process.
+
+In this work, research is conducted to investigate the effect of time spacing and hatch spacing on melt pool geometry. To the best of our knowledge, no work has been accomplished on exploring the effect of time spacing (time delay between two irradiations) and hatch spacing (distance between two scans) on melt pool geometry and evolution of the material properties during the AM process. Solving the problem, considering the time spacing and hatch spacing which are among the typical aspects of metal additive manufacturing, is of great importance since the thermal interaction inside the build part has a significant influence on the thermal material properties and, as a result, affects the melt pool geometry. The magnitude of the time spacing and hatch spacing impacts the governing heat transfer mechanisms which then have an influence on the thermal stress induced by the temperature gradient, melt pool geometry, residual stress, and part distortion in metal AM. The experimental values on melt pool size from literature are used to validate the proposed model.
+
+The outline of the paper is as follows: Section 2 presents the mathematical details of the analytical model. Section 3.1 presents the detailed explanation of the independent experimental reports which are gathered from the literature. Section 3.2 presents the validation of the analytical modeling with experiments. Section 3.3 presents the effect of time spacing and hatch spacing on thermal material properties. Section 3.4.1 presents the effect of two consecutive irradiation on the melt pool size and shape. Section 3.4.2 presents the effect of time spacing on melt pool geometry. Section 3.4 .3 presents the effect of the number of scans on melt pool geometry. Section 3.4.4 presents the effect of hatch spacing on melt pool geometry. Last, but not least, section 4 presents the conclusion of this research.
+
+\section*{2. Approach and methodology}
+A three-dimensional semi-elliptical moving heat source model is used to predict the melt pool geometry. As the laser moves along the surface, it deposits some energy on the control volume. The movement of the laser is simulated using the moving heat source approach. The laser thermal energy deposited into a control volume is absorbed by the material thermodynamic latent heat, conducted through the contacting solid and liquid boundaries, and convected/radiated through the open surfaces as shown in Fig. 1. The deposited energy causes the metallic powders to melt and create a melt pool geometry.
+
+The general convection-diffusion equation can be written as
+
+$\frac{\partial u \rho}{\partial t}+\frac{\partial \rho h v}{\partial x}=\nabla .(k \nabla T)+\dot{q}$
+
+where $u$ is the internal energy, $h$ is the enthalpy, $\rho$ is the density, $k$ is the conductivity, $\dot{q}$ is a volumetric heat source, $\mathrm{T}$ is the temperature and $v$ is the speed of either the heat source or the medium.
+
+The $x$ direction corresponds to the constant speed of a moving heat source. $y$ is directed inside the processed material, and $z$, the direction perpendicular to $x$ in the plane of the processed material surface. The
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-03(1)}
+\end{center}
+
+Fig. 1. 3D heat transfer model in metal additive manufacturing processes.
+
+first term in Eq. (1) on the left-hand side represents the change of internal energy and the second is a convective term. On the right-hand side, there is the conductive term and a heat source or sink. For $v=0$, this equation becomes the heat conduction equation, given that $d u=C$ $d T$, with $C$ being the heat capacity
+
+$C \frac{\partial \rho T}{\partial t}+\frac{\partial \rho h v}{\partial x}=\nabla .(k \nabla T)+\dot{q}$
+
+The steady state equation with constant velocity $v$, can be simplified using the continuity equation
+
+$C \frac{\partial \rho}{\partial t}+\frac{\partial \rho v}{\partial x}=0$
+
+Resulting in
+
+$\rho C(T) v \frac{\partial T}{\partial x}+\frac{\partial \rho h v}{\partial x}=\nabla .(k(T) \nabla T)+\dot{q}$
+
+given that $d u=d h=C d T$.
+
+A well tested, three-dimensional (3D) ellipsoidal heat transfer model is used to predict the temperature field and melt pool geometry in metal AM processes. The proposed model can be used to predict the temperature in laser-based metal additive manufacturing configurations of either direct metal deposition or selective laser melting.
+
+The 3D ellipsoidal heat source model is introduced by Godak et al. [29] where the heat flux can be calculated as
+
+$Q(x, y, z)=\frac{6 \sqrt{3} A P}{a b c \pi \sqrt{\pi}} \exp \left(-\frac{3 x^{2}}{c^{2}}-\frac{3 y^{2}}{a^{2}}-\frac{3 z^{2}}{b^{2}}\right)$
+
+where $P$ is the laser power, $A$ is laser absorptivity, $a, b$, and $c$ are the heat source geometry parameters, as shown in Fig. 2.
+
+The solution of temperature for ellipsoidal moving heat source from $t^{\prime}=0$ to $t$ for a semi-infinite body in a dimensionless form is given as [30]
+
+$\frac{\theta}{n}=\frac{1}{\sqrt{2 \pi}} \int_{0}^{\frac{v^{2} t}{2 k}} \frac{d \tau}{\sqrt{\tau+u_{a}^{2}} \sqrt{\tau+u_{b}^{2}}}\left(\frac{A_{1}}{\sqrt{\tau+u_{c}^{2}}}\right)$
+
+where
+
+$A_{1}=\exp \left(-\frac{(\xi+\tau)^{2}}{2\left(\tau+u_{c}^{2}\right)}-\frac{\psi^{2}}{2\left(\tau+u_{a}^{2}\right)}-\frac{\lambda^{2}}{2\left(\tau+u_{b}^{2}\right)}\right)$
+
+The dimensionless parameters are defined as
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-03}
+\end{center}
+
+Fig. 2. Heat source geometry. $\xi=\frac{v x}{2 \alpha}, \psi=\frac{v y}{2 \alpha}, \lambda=\frac{v z}{2 \alpha}$
+
+Where $v$ is scan speed, and $\alpha$ is thermal diffusivity which can be calculated as
+
+$\alpha(T)=\frac{k(T)}{\rho C_{p}^{m}(T)}$
+
+During the metal AM processes, the laser power melts the metallic powders, as a result there is a repeated melting-solidification phase change. This is considered using modified heat capacity.
+
+$C_{p}^{m}=C_{p}(T)+L_{f} \frac{\partial f}{\partial T}$
+
+In which $C_{p}(T)$ is temperature dependent specific heat, $L_{f}$ is latent heat of fusion, and $f_{l}$ is liquid fraction which can be calculated from
+
+$f_{l}=\left\{\begin{array}{c}0, T<T_{s} \\ \frac{T-T_{s}}{T_{L}-T_{s}}, T_{s}<T<T_{L} \\ 1, T>T_{L}\end{array}\right.$
+
+Where, $T_{S}$ is solidus temperature and $T_{L}$ is liquidus temperature.
+
+$\tau=\frac{v^{2}\left(t-t^{\prime}\right)}{2 \alpha}$
+
+$u_{a}=v a 2 \sqrt{6} \alpha, u_{b}=v b 2 \sqrt{6} \alpha, u_{c}=v c 2 \sqrt{6} \alpha$
+
+$n=\frac{A P v}{4 \pi \alpha^{2} \rho C\left(T_{m}-T_{0}\right)}$
+
+For a given melting temperature the melt pool length can be calculated as
+
+$U=\left\{p \mid p_{T}=T_{m}\right\}$
+
+$L_{\text {melt pool }}=\max \left|a_{x}-b_{x}\right|, \forall a \in U, b \in U$
+
+where $\mathrm{p}$ represents the point in the medium, $p_{T}$ indicates the temperature at point $\mathrm{p}$, and $\mathrm{U}$ is a set of points where their temperatures are equal to melting temperature. $a$ and $b$ indicates all the points that belong to U.
+
+Similarly, the melt pool width and depth can be calculated as
+
+$W_{\text {melt pool }}=\max \left|a_{y}-b_{y}\right|, \forall a \in A, b \in A$
+
+$D_{\text {melt pool }}=\max \left|a_{z}-b_{z}\right|, \forall a \in A, b \in A$
+
+It should be noted that the SLM is based on a powder bed system, however, the DMD process uses the feed nozzle to deliver the metallic powders to the targeted area. As a result, the boundary condition would be different in these two processes. In the SLM process, the heat losses are due to the convection, radiation and also conduction through the powders from the lateral faces [31]. In the DMD process, the heat losses are due to the convection and radiation. However, in the current study, the medium is considered to be semi-infinite, and the heat loss due to the convection and radiation is not considered. As a result, there is no difference between SLM and DMD process in this study. The independent experimental reports of the melt pool geometry are used for both SLM and DMD process to prove that the proposed model works well to predict the temperature profile and melt pool geometry in laserbased metal additive manufacturing configurations of either direct metal deposition (DMD) or selective laser melting (SLM).
+
+\section*{3. Modeling results and experimental comparison}
+In order to predict the melt pool geometry, the general convectiondiffusion equation of heat conduction in a 3D plane is used as a starting point to obtain the explicit solution of temperature for the ellipsoidal moving heat source. The explicit and closed-form solution of temperature is explained in Section 2. To consider the movement of the\\
+heat source, it is assumed that the coordinate system moves with the heat source. Due to the high temperature gradient in this process, the material properties could vary significantly. Thus, in the modeling of temperature distribution, the material properties are assumed to be temperature dependent. Furthermore, due to the repeated melting and solidification, material experience phase change. Thus, the energy needed for the solid state phase change is considered by modefying the specific heat using latent heat of fusion. Moreover, the effect of build layers is also considered which is explained in previous works [18,32]. In this work, the basic premise is that the powder is situated in the desired location relative to the melt pool. In other words, there is no moment and mass transfer; only heat transfer. A unidirectional scan path is assumed for this analysis.
+
+\subsection*{3.1. Experimental procedure}
+Two different materials are chosen from independent experimental reports by Peyre et al. [34] and Cheng et al. [17]. The Ti-6Al-4 V parts are made using the DMD process (Sample 4 in Table 2), and IN 718 parts are made using the SLM process (Samples 5, 6 and 7 in Table 2). These two different additive manufacturing processes are selected to validate that the proposed model works well for laser-based metal additive manufacturing configurations of either direct metal deposition or selective laser melting. The material properties are assumed to be temperature dependent as listed in Table 1 [33]. Different process parameters, such as laser power and scanning speed, are used to predict the melt pool geometry as listed in Table 2 .
+
+A high-speed C-Mos camera (Fastcam Photron) is used to measure the melt pool size of the Ti-6Al-4 V part which is built into the DMD process, as shown in Fig. 2 [34]. The laser power and scan speed are $600 \mathrm{~W}$, and $6 \mathrm{~mm} / \mathrm{s}$, respectively. The laser beam radius is $0.8 \mathrm{~mm}$, and the absorptivity is $50 \%$ as reported in the work of Peyre [34]. The scan direction is unidirectional. The reported melt pool depth and length by Peyre are $1.2 \mathrm{~mm}$ and $2.6 \mathrm{~mm}$, respectively, as shown in Fig. 3.
+
+On the other hand, the IN 718 parts are made using the SLM process. A MCS640 LumaSense thermal imager was used to obtain radiant signal of the laser scanning process. The melt pool dimension is measured using the liquidus-solidus transition location. The detailed explanation of the experimental setup can be found in the work of Cheng et al. [17]. In order to measure the melt pool size, the infrared (IR) camera is used for the case of IN 718 [17]. Fig. 4 shows the IR images for three different scanning conditions. Since the IR images do not have a good resolution, they used binary images which have been created from multiple contour scanning images collected by camera to better capture the melt pool geometry. In these experiments, the radius of the laser is $0.35 \mathrm{~mm}$,the hatch spacing is $102.7 \mu \mathrm{m}$., and the scan direction is unidirectional.
+
+\subsection*{3.2. Validation of the analytical model with experiments}
+An semi-elliptical moving heat source approach is used to predict the melt pool geometry of the Ti-6Al-4 V sample (sample 4 in Table 2). The laser power is $600 \mathrm{~W}$ and scan speed is $6 \mathrm{~mm} / \mathrm{s}$. The predicted melt pool length and depth are $2.8 \mathrm{~mm}$ and $1.1 \mathrm{~mm}$, respectively as shown in Fig. 5. The size and geometry of the predicted melt pool (Fig.5), and experimental measurements (Fig. 3) are quite similar and the maximum obtained error between the experiments and the model is less than $7.7 \%$. In this work, it is assumed that the dimension of the laser is $\mathrm{a}=\mathrm{c}=0.8 \mathrm{~mm}, \mathrm{~b}=0.02 \mathrm{~mm}$.
+
+For further validation, three different scanning strategies are selected from the work of Cheng et al [14]. In their work, a simulation framework is used to predict the melt pool geometry for powder-based electron beam additive manufacturing (EBAM). The selected material is Ti-6Al-4 V. The laser power of $240 \mathrm{~W}, 300 \mathrm{~W}$, and $360 \mathrm{~W}$ with the fixed scan speed of $100 \mathrm{~mm} / \mathrm{s}$ are chosen. The diameter of the laser in the simulations is $0.7 \mathrm{~mm}$. Fig. 6 shows the predicted melt pool depth for the abovementioned process parameters in additive manufacturing of Ti-6Al-4 V. For the laser power of $240 \mathrm{~W}, 300 \mathrm{~W}$, and $360 \mathrm{~W}$, the predicted melt pool depth is $201 \mu m, 275 \mu m$, and $330 \mu m$, respectively. The simulated values are $200 \mu m, 270 \mu m$, and $330 \mu m$, respectively as reported in the work of Cheng et al. [14].
+
+A comparison of the predicted melt pool size using the proposed analytical model with the experimental values of Ti-6Al- $4 \mathrm{~V}$ is conducted as shown in Fig. 7. The maximum obtained error between predicted and experimental values of the melt pool depth is $16 \%$ as shown in Table 3.
+
+Three different process parameters are selected for the prediction of the melt pool geometry in SLM processing of the IN 718. Three different scan speeds of $400 \mathrm{~mm} / \mathrm{s}, 600 \mathrm{~mm} / \mathrm{s}$, and $800 \mathrm{~mm} / \mathrm{s}$ with a fixed laser power of $180 \mathrm{~W}$ are selected. The dimensions of the laser in the analytical modeling is $\mathrm{a}=\mathrm{c}=0.35 \mathrm{~mm}, \mathrm{~b}=0.01 \mathrm{~mm}$. The length and width of the melt pools are predicted analytically as shown in Figs. 8 and 9, respectively. The obtained results show that for a given laser power, as the scan speed increases, the melt pool length and with decreases. The main reason is that the material has less time to absorb the energy, as a result, the melt pool size decreases.
+
+For the laser power of $180 \mathrm{~W}$, and scanning speed of $400 \mathrm{~mm} / \mathrm{s}$, $600 \mathrm{~mm} / \mathrm{s}$, and $800 \mathrm{~mm} / \mathrm{s}$, the predicted melt pool length is $400 \mu \mathrm{m}$, $360 \mu \mathrm{m}, 350 \mu \mathrm{m}$, respectively. Also, the predicted melt pool width is $235 \mu \mathrm{m}, 220 \mu \mathrm{m}, 170 \mu \mathrm{m}$, respectively.
+
+The comparison of predicted and measured melt pool length and width of IN718 specimens are conducted as shown in Fig. 10. The obtained results are within the range of the experimental values. The variation of the melt pool length and width come from different camera settings as explained in [17].
+
+\subsection*{3.3. Effect of time spacing and hatch spacing on material properties}
+In this section, the effect of time spacing and hatch spacing on material properties are investigated. As shown in Fig. 11, at time step $t_{1}$, the laser creates a thermal profile inside the build part. At the next time step $t_{2}$, the laser creates another thermal profile, but the second thermal
+
+Table 1
+
+Thermal material properties of Ti-6Al-4 V and IN 718 [33].
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Properties & Ti-6Al-4V & IN 718 \\
+\hline
+Liquidus temperature $\left({ }^{\circ} \mathrm{C}\right)$ & 1655 & 1336 \\
+\hline
+Solidus temperature $\left({ }^{\circ} \mathrm{C}\right)$ & 1605 & 1260 \\
+\hline
+\begin{tabular}{l}
+Thermal conductivity \\
+$\qquad(W / m)^{\circ} \mathrm{C}$ \\
+\end{tabular} & $\left\{\begin{array}{cc}K_{s}=1.57+1.6 \times 10^{-2} T-1 \times 10^{-6} T^{2} & 995<T<1655 \\ K_{l}=33.4 & T=1655 \\ K_{l}=34.6 & T=1655\end{array}\right.$ & $\left\{\begin{array}{cc}K_{S}=0.56+2.9 \times 10^{-2} T-7 \times 10^{-6} T^{2} & 900<T<1336 \\ K_{l}=29.6 & T>1336\end{array}\right.$ \\
+\hline
+Specific heat $\mathrm{J} / \mathrm{Kg}\left({ }^{\circ} C\right)$ & $\left\{\begin{array}{cc}C_{p}=492.4+0.025 T-4.18 \times 10^{-6} T^{2} & 995<T<1655 \\ C_{p}=830 & T>1655\end{array}\right.$ & $\left\{\begin{array}{cc}C_{p}=360.24+0.026 T-4 \times 10^{-6} T^{2} & 900<T<1336 \\ C_{p}=650 & T>1336\end{array}\right.$ \\
+\hline
+Density $\left(\mathrm{Kg} / \mathrm{m}^{3}\right)$ & 4420 & 8200 \\
+\hline
+Latent heat $(\mathrm{J} / \mathrm{g})$ & 286 & 210 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 2
+
+Selected process parameters.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+\multirow[t]{2}{*}{Material} & \multicolumn{4}{|l|}{Ti-6Al-4V} & \multicolumn{3}{|l|}{IN 718} \\
+\hline
+ & Sample 1 [14] & Sample 2 [14] & Sample 3 [14] & Sample 4 [34] & Sample 5 [17] & Sample 6 [17] & Sample 7 [17] \\
+\hline
+Power [W] & 240 & 300 & 360 & 600 & 180 & 180 & 180 \\
+\hline
+Scan speed $[\mathrm{mm} / \mathrm{s}]$ & 100 & 100 & 100 & 6 & 400 & 600 & 800 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-05(1)}
+\end{center}
+
+Fig. 3. Experimental measurement of melt pool size in DMD of Ti-6Al-4 V with $\mathrm{P}=600 \mathrm{~W}$ and $\mathrm{V}=6 \mathrm{~mm} / \mathrm{s}$ [34].
+
+profile will be different from the first step, since the created heat affected zone at time step $t_{1}$ causes the material property to behave differently at time step $t_{2}$. In order to calculate the effect of time spacing and hatch spacing on material properties, the superposition of the material properties at points in which the temperature profiles at time $t_{1}$ and $t_{2}$ have overlap are used. The material properties can be obtained as
+
+$K_{t}=K(T)+K_{t-1}$
+
+$C_{t}=C(T)+C_{t-1}$
+
+Where, $K_{t-1}$ and $C_{t-1}$ would be zero if there is no overlap between two consecutive irradiations.
+
+As shown in Fig. 12, the material properties illustrate the same trend at different time spacing. The maximum material properties occur at the location of the laser. Also, the same trend is obtained for both thermal conductivity and specific heat at different time spacing. This
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-05}
+\end{center}
+
+Fig. 5. Predicted melt pool geometry in DMD of Ti-6Al-4 V with $P=600 \mathrm{~W}$, $\mathrm{V}=6 \mathrm{~mm} / \mathrm{s}$.
+
+means that the time spacing does not have an influence on thermal material properties. The laser power is $180 \mathrm{~W}$ and the scan speed is $400 \mathrm{~mm} / \mathrm{s}$ for both Figs. 12 and Fig.13. The layer thickness is 100 $\mu m$,and the hatch spacing is $103 \mu m$. It should be noted that the constraint of the maximum conductivity is removed in Figs. 12 and 13 to better illustrate the effects of time spacing and hatch spacing on thermal material properties.
+
+The effect of hatch spacing on thermal conductivity and specific heat is shown in Fig. 13. As illustrated in this figure, for a given laser power and scan speed, as the hatch spacing increases, the thermal conductivity, and specific heat decreases.
+
+To summarize, based on our observation, for a given laser power and scan speed, the thermal material properties have the same trend at different time spacing, and the maximum values are obtained at the\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_057c35388968611d1536g-05(2)}
+
+Fig. 4. IR images for $\mathrm{P}=180 \mathrm{~W}$ and different scanning speed for IN 718 [17], the unit of the temperature in the palette bar is in ${ }^{\circ} \mathrm{C}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-06(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-06(2)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-06}
+\end{center}
+
+(c)
+
+Fig. 6. Predicted melt pool depth in EBAM of Ti-6Al-4 V for (a) $\mathrm{P}=240 \mathrm{~W}$, $\mathrm{V}=100 \mathrm{~mm} / \mathrm{s}$, (b) $\mathrm{P}=300 \mathrm{~W}, \mathrm{~V}=100 \mathrm{~mm} / \mathrm{s}$, (c) $\mathrm{P}=360 \mathrm{~W}, \mathrm{~V}=100 \mathrm{~mm} / \mathrm{s}$.
+
+location of the laser. Also, as the hatch spacing increases, the thermal material properties decrease.
+
+\subsection*{3.4. Effect of two consecutive irradiation on melt pool geometry}
+In this section, the effect of time spacing and hatch spacing on melt pool geometry is analyzed. First, a comparison of the melt pool geometry is conducted in Section 3.4.1 between considering the effect of time spacing and hatch spacing, and not considering them. This comparison is conducted to emphasize the importance of considering these two effects on the modeling of melt pool geometry in metal additive manufacturing process. The predicted temperature at time $t+\Delta t$ will be the materials-response-coupled superposition considering the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-06(3)}
+\end{center}
+
+Fig. 7. Comparison of the predicted melt pool depth and simulated values in EBAM of Ti-6Al-4 V.
+
+Table 3
+
+List of predicted melt pool size, simulated values and obtained error for Ti-6Al$4 \mathrm{~V}$.
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+Sample & P[W] & V[mm/s] & Depth (Exp) & Depth (Predicted) & Error\% \\
+\hline
+1 & 240 & 100 & 240 & 201 & $16 \%$ \\
+2 & 300 & 100 & 270 & 275 & 1.85 \\
+3 & 360 & 100 & 330 & 330 & 0.00 \\
+\hline
+\end{tabular}
+\end{center}
+
+temperature sensitivity of thermal properties at time $\mathrm{t}$ and $\mathrm{t}+\Delta t$. In Section 3.4.2, the effect of time spacing on melt pool geometry is compared to experimental values. In Section 3.4.3, the effect of the number of scans on melt pool geometry is investigated. In Sction 3.4.4, the effect of hatch spacing on melt pool geometry is explained. Fig. 14 is an illustration of the layer thickness, hatch spacing, and time spacing.
+
+The temperature profile can be obtained for a given hatch spacing $(\delta h)$ and time spacing $(\delta \mathrm{t})$ as follows:
+
+$T$
+
+$$
+\begin{aligned}
+& =\frac{P v}{\sqrt{2 \pi} 4 \pi \alpha^{2} \rho c} \iint_{0}^{\frac{v^{2} t}{2 k}} \frac{d \tau}{\sqrt{\tau+u_{a}^{2}} \sqrt{\tau+u_{b}^{2}}} \\
+& \left(\frac{\exp \left(-\frac{\left(\frac{v^{2} \delta t}{2 \alpha}+\tau\right)^{2}}{2\left(\tau+u_{c}^{2}\right)}-\frac{\left(\frac{v \delta h}{2 \alpha}\right)^{2}}{2\left(\tau+u_{a}^{2}\right)}-\frac{\left(\frac{v z}{2 \alpha}\right)^{2}}{2\left(\tau+u_{b}^{2}\right)}\right)}{\sqrt{\tau+u_{c}^{2}}}\right)+T_{0}
+\end{aligned}
+$$
+
+3.4.1. Effect of considering the influence of two consecutive irradiation on melt pool size and shape
+
+In order to consider the effect of two consecutive irradiations, the superposition of temperature dependent material properties at time $t$ and $t+\Delta t$, where the two thermal histories have overlap, is considered as explained in Section 3.3. IN718 samples are chosen for experimental validation. Fig. 15 shows the comparison of the melt pool geometries; Figs. Fig. 1515(a-c) illustrate the predicted temperature field by considering the effect of two consecutive irradiations and Figs. Fig. 1515(df) illustrate the predicted temperature field without consideringthe effect of two consecutive irradiations on material properties.
+
+As shown in Fig. 15, the predicted melt pool geometry is decreased along the scan direction (x-direction) when the effect of two consecutive irradiations is considered. In this case, the thermal
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-07(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-07}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-07(4)}
+\end{center}
+
+(c)
+
+Fig. 8. Predicted melt pool length for IN718 for (a) $P=180 \mathrm{~W}, \mathrm{~V}=400 \mathrm{~mm} / \mathrm{s}$, (b) $P=180 \mathrm{~W}, \mathrm{~V}=600 \mathrm{~mm} / \mathrm{s}$, (c) $\mathrm{P}=180 \mathrm{~W}, \mathrm{~V}=800 \mathrm{~mm} / \mathrm{s}$.
+
+conductivity and specific heat would have a higher amount compared to the case that the effect of two consecutive irradiations is not considered. An increase in thermal material properties induced by the effect of two consecutive irradiations cause more heat to be conducted through the solid and as a result, the surface temperature would decrease. The effect of layer addition is also considered as explained in previous work [10]. The layer thickness is $100 \mu \mathrm{m}$ for all the simulations in this section. The hatch spacing is $103 \mu \mathrm{m}$. The consideration of two consecutive irradiations do not have an influence on the melt pool depth since the melt pool depth is mostly affected by the magnitudes of the laser power and scan speed.
+
+Fig. 16 illustrates the comparison of the melt pool width and length
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-07(5)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-07(2)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-07(3)}
+\end{center}
+
+(c)
+
+Fig. 9. Predicted melt pool width for IN718 for (a) $P=180 \mathrm{~W}, \mathrm{~V}=400 \mathrm{~mm} / \mathrm{s}$, (b) $\mathrm{P}=180 \mathrm{~W}, \mathrm{~V}=600 \mathrm{~mm} / \mathrm{s}$, (c) $\mathrm{P}=180 \mathrm{~W}, \mathrm{~V}=800 \mathrm{~mm} / \mathrm{s}$.
+
+for three different cases. The yellow bar shows the melt pool size with considering the effect of two consecutive irradiations; blue bar shows the melt pool size for the case that the effect of the two consecutive irradiations is not considered, and the red error bar shows the experimental values. As it is shown in these figures, the predicted melt pool length and width are within the range of experimental measurements. When the effect of two consecutive irradiations are considered, the analytical modeling predicts the lower limit of the melt pool width and higher limit of the melt pool length. Also, while the predicted melt pool width and length in both cases (considering the effect two consecutive irradiations and not considering it) are within the range of the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-08(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-08}
+\end{center}
+
+(b)
+
+Fig. 10. Comparison of predicted and measured melt pool (a)width, (b) length for IN 718 parts made with SLM process.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-08(4)}
+\end{center}
+
+Fig. 11. An illustration of the effect of time spacing on thermal history.
+
+experimental measurements, the predicted melt pool width considering the effect of two consecutive irradiations are lower than the predicted melt pool width without considering the effect of two consecutive irradiations. However, the predicted melt pool length considering the effect of two consecutive irradiations is higher than the predicted melt pool length without considering the effect of two consecutive irradiations. The variation of the melt pool length and width come from the different camera settings as explained in [17].
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-08(2)}
+\end{center}
+
+(a)
+
+\subsection*{3.4.2. Effect of time spacing on melt pool geometry}
+In this section, the effect of time spacing on melt pool geometry is investigated. Time spacing is the time delay between two irradiations. The schematic of the time spacing is shown in Fig. 14. Fig. 17 and Fig. 18 illustrate the effect of time spacing on melt pool geometry for IN718. The laser power is fixed at $180 \mathrm{~W}$ and the scan speed is $400 \mathrm{~mm} /$ $\mathrm{s}$ and $600 \mathrm{~mm} / \mathrm{s}$, respectively. As the time spacing increases, the melt pool length increases, since the thermal conductivity of the material decreases. As listed in Table 4, and Table 5, the melt pool depth and width are unaffected by the time spacing. Based on our results in Sction 3.3, the thermal material properties do not change in the XY plane and cause the width to stay unchanged. The melt pool depth is only affected by the magnitude of the laser power and scan speed as explained before.
+
+\subsection*{3.4.3. Effect of number of scans on melt pool geometry}
+In this section, the effect of the number of scans on melt pool geometry is investigated. As shown in Tables 6 and 7, as the number of scans increases, the melt pool width increases and melt pool length and depth are unaffected by the scan number. The main reason is that as the number of scans increase, more residual heat remains in the build part from the previous tracks. Therefore, heat build-up results in a bigger melt pool width since the laser moves in the XY plane, which is illustrated as the melt pool width. The material is IN 718. The laser power is $180 \mathrm{~W}$ and the scan speed is $400 \mathrm{~mm} / \mathrm{s}$ and $600 \mathrm{~mm} / \mathrm{s}$, respectively.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-08(3)}
+\end{center}
+
+(b)
+
+Fig. 12. Effect of time spacing on (a) thermal conductivity and (b) specific heat for $\mathrm{P}=180 \mathrm{~W}, \mathrm{~V}=400 \mathrm{~mm} / \mathrm{s}$.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_057c35388968611d1536g-09(1)}
+
+Fig. 13. Effect of hatch spacing on (a) thermal conductivity and (b) specific heat for $P=180 \mathrm{~W}, V=400 \mathrm{~mm} / \mathrm{s}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-09}
+\end{center}
+
+Fig. 14. Illustration of the layer thickness, hatch spacing and time spacing.
+
+The layer thickness is $100 \mu m$,and the hatch spacing is $103 \mu m$. This should be noted that the increase in the number of scans affect the melt pool depth and length in the order of sub-micron. This sub-micron change on the melt pool depth and length is ignored in this study.
+
+Fig. 19 illustrates the effect of the number of scans on melt pool width for IN 718 with the laser power of $180 \mathrm{~W}$; scan speed is $400 \mathrm{~mm} / \mathrm{s}$ and $600 \mathrm{~mm} / \mathrm{s}$. For a given laser power and scan speed; as the number of scans increases the melt pool width increases. Also, as the scan speed increases, the melt pool width decreases since the material has less time to absorb the energy.
+
+\subsection*{3.4.4. Effect of hatch spacing on melt pool size}
+In all the above-mentioned analysis the hatch spacing was fixed at $103 \mu \mathrm{m}$. In this section, the effect of hatch spacing on the melt pool size is investigated. As listed in Table 8, as the hatch spacing increases the melt pool width increases, however, the melt pool length shows the opposite trend. The main reason is that based on our observations, the thermal conductivity decreases in the XY plane, resulting in less heat conduction through the solid. Consequently, the surface temperature increases and causes the melt pool width to increase. On the other hand, based on our observations, as the hatch spacing increases, the thermal conductivity in the XZ plane increases. Consequently, the surface temperature decreases and causes the melt pool length to decrease. In this analysis, the laser power is $180 \mathrm{~W}$, and the scan speed is $400 \mathrm{~mm} / \mathrm{s}$. Also, the material is IN 718.
+
+\section*{4. Conclusion}
+A 3D semi-elliptical moving heat source analysis is proposed to predict the melt pool geometry in metal additive manufacturing processes. The general convection-diffusion formula is used to obtain the explicit solution of the 3D semi-elliptical moving heat source. The material properties are considered to be temperature dependent. The layer addition which is the typical aspect of metal additive manufacturing is considered. Moreover, the melting/solidification phase change is considered for the prediction of the temperature field and melt pool geometry. In this work, the effect of time spacing and hatch spacing on melt pool geometry and thermal material properties are investigated. Two different additive manufacturing processes are analyzed to prove that the proposed model works well for both SLM and DMD processes. The predicted melt pool geometry for these two AM processes are compared to experimental measurements.
+
+The effect of time spacing and hatch spacing on thermal material properties such as thermal conductivity and specific heat are analyzed. Investigation of effect time spacing on material properties showed that the material properties illustrate the same trend for different time spacing. In other words, the time spacing does not have an influence on the evolution of the thermal material properties. Moreover, the investigation of effect of hatch spacing on thermal material properties showed that for a given laser power and scan speed, as the hatch spacing increases, the thermal conductivity and specific heat decrease.
+
+The effect of two consecutive irradiations on melt pool geometry is investigated. In order to analyze the effect of two consecutive irradiations, the superposition of the material properties in which their thermal histories have an overlap is proposed. The predicted melt pool geometry is decreased in the XY plane as a result of this consideration. The main reason is that the thermal conductivity increases, as a result, more heat would be conducted through the solid, which causes the melt pool geometry to decrease. The predicted melt pool width and length is then validated with experimental measurements.
+
+The effect of time spacing on melt pool geometry is also investigated. The results showed that as the time spacing increases, the melt pool length increases since the thermal conductivity of the material decreases in the scan direction.
+
+The effect of the number of scans on melt pool geometry is also explained. The results showed that as the number of scans increases, the melt pool width increases and melt pool length and depth are unaffected by the number of scans. The main reason is that an increase in the number of scans would increase the residual heat in the previous tracks and causes the melt pool width to increase.
+
+The effect of hatch spacing on melt pool geometry is also considered. The results illustrate that as the hatch spacing increases, the melt pool width increases, however, the melt pool length shows the opposite trend. This is related to the behavior of the thermal material properties which alter the heat transfer mechanisms.
+
+The summary of the major findings are as follows
+
+\begin{itemize}
+  \item The 3D semi-elliptical moving heat source model can predict the melt pool geometry with the error less than $8 \%$.
+\end{itemize}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-10(2)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-10(5)}
+\end{center}
+
+(d)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-10(1)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-10(3)}
+\end{center}
+
+(e)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-10}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-10(4)}
+\end{center}
+
+(f)
+
+Fig. 15. (a-c) Effect of two consecutive irradiations on melt pool geometry, (d-f) melt pool geometry without considering the Effect of two consecutive irradiation for IN 718.
+
+\begin{itemize}
+  \item The proposed model can be used to predict the temperature profile and melt pool geometry in laser-based metal additive manufacturing configurations of either powder bed such as SLM or powder feed such as DMD.
+
+  \item For a given laser power, as the scan speed increases the melt pool size decreases since the material has less time to absorb the energy.
+
+  \item Based on our observation, for a given laser power and scan speed, the thermal material properties have the same trend at different timings, and the maximum values is obtained at the location of the laser.
+
+  \item For a given laser power and scan speed, as the hatch spacing increases the thermal material properties decreases.
+
+  \item For a given laser power and scan speed, as the time spacing increases, the melt pool length decreases.
+
+  \item For a given laser power and scan speed, as the number of scans increases, the melt pool width increases.
+
+  \item For a given laser power and scan speed, as the hatch spacing increases, the melt pool width increases and melt pool length
+
+\end{itemize}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-11}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-11(1)}
+\end{center}
+
+(b)
+
+Fig. 16. Comparison of the melt pool (a) width and (b) length for the cases which the effect of two consecutive irradiations is considered, the effect of two consecutive irradiations is not considered, and experimental measurements for IN 718, $\mathrm{P}=180 \mathrm{~W}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-11(2)}
+\end{center}
+
+Fig. 17. Predicted melt pool length as a function of scan speed for $\mathrm{P}=180 \mathrm{~W}$, $\mathrm{V}=400 \mathrm{~mm} / \mathrm{s}$ for $\mathrm{IN} 718$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-11(3)}
+\end{center}
+
+Fig. 18. Predicted melt pool length as a function of scan speed for $\mathrm{P}=180 \mathrm{~W}$, $\mathrm{V}=600 \mathrm{~mm} / \mathrm{s}$ for IN 718 .
+
+decreases.
+
+\begin{itemize}
+  \item Melt pool depth is mostly affected by the magnitude of the laser power and scan speed, and the magnitude of the hatch spacing and\\
+Table 4
+\end{itemize}
+
+Predicted melt pool width, length and depth for $\mathrm{P}=180 \mathrm{~W}, \mathrm{~V}=400 \mathrm{~mm} / \mathrm{s}$ for IN 718.
+
+\begin{center}
+\begin{tabular}{llll}
+\hline
+Time(ms) & Width $\mu m$ & Length $\mu m$ & Depth $\mu m$ \\
+\hline
+0.8 & 177 & 328 & 83 \\
+1.2 & 177 & 380 & 83 \\
+1.6 & 177 & 398 & 83 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 5
+
+Predicted melt pool width, length and depth for $\mathrm{P}=180 \mathrm{~W}, \mathrm{~V}=600 \mathrm{~mm} / \mathrm{s}$ for IN 718.
+
+\begin{center}
+\begin{tabular}{llll}
+\hline
+Time (ms) & Width $\mu m$ & Length $\mu m$ & Depth $\mu m$ \\
+\hline
+0.5 & 135 & 325 & 65 \\
+0.8 & 135 & 390 & 65 \\
+1.1 & 135 & 400 & 65 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 6
+
+. Predicted melt pool size for different number of scans with the $\mathrm{P}=180 \mathrm{~W}$, $\mathrm{V}=400 \mathrm{~mm} / \mathrm{s}$ for IN 718 .
+
+\begin{center}
+\begin{tabular}{llll}
+\hline
+Scan $\#$ & Width $(\mu m)$ & Length $(\mu m)$ & Depth $(\mu m)$ \\
+\hline
+3 & 177 & 400 & 83 \\
+4 & 180 & 400 & 83 \\
+6 & 190 & 400 & 83 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 7
+
+Predicted melt pool size for different number of scans with the $\mathrm{P}=180 \mathrm{~W}$, $\mathrm{V}=600 \mathrm{~mm} / \mathrm{s}$ for IN 718 .
+
+\begin{center}
+\begin{tabular}{llll}
+\hline
+Scan \# & Width $(\mu m)$ & Length $(\mu m)$ & Depth $(\mu m)$ \\
+\hline
+3 & 135 & 400 & 65 \\
+4 & 136.3 & 400 & 65 \\
+6 & 164 & 400 & 65 \\
+\hline
+\end{tabular}
+\end{center}
+
+time spacing do not have an influence on it.
+
+\section*{Author contributions}
+E.M conceived and developed the proposed analytical model, extracted and analyzed the data, and wrote the paper. S. Y. L provided general guidance and proofread the manuscript writing. D.S, H.G, and K.N.C provided general help.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_057c35388968611d1536g-12}
+\end{center}
+
+Fig. 19. Effect of number of scans on melt pool width for a fixed laser power of $180 \mathrm{~W}$, and scan speed of $400 \mathrm{~mm} / \mathrm{s}$ and $600 \mathrm{~mm} / \mathrm{s}$.
+
+Table 8
+
+Predicted melt pool size for different hatch spacing for.
+
+\begin{center}
+\begin{tabular}{llll}
+\hline
+Hatch spacing $(\mu m)$ & Width $(\mu m)$ & Length $(\mu m)$ & Depth $(\mu m)$ \\
+\hline
+33.3 & 157 & 402 & 83 \\
+55.6 & 171.4 & 399.4 & 83 \\
+71.4 & 190 & 399 & 83 \\
+100 & 208 & 397 & 83 \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{Declaration of Competing Interest}
+The authors declare no conflict of interest.
+
+\section*{References}
+[1] Murr LE, et al. Metal fabrication by additive manufacturing using laser and electron beam melting technologies. J Mater Sci Technol 2012;28(1):1-14.
+
+[2] Gibson I, Rosen DW, Stucker B. Additive manufacturing technologies. Springer; 2014.
+
+[3] Lewis GK, Schlienger E. Practical considerations and capabilities for laser assisted direct metal deposition. Mater Des 2000;21(4):417-23.
+
+[4] Olakanmi EO, Cochrane R, Dalgarno K. A review on selective laser sintering/ melting (SLS/SLM) of aluminium alloy powders: processing, microstructure, and properties. Prog Mater Sci 2015;74:401-77.
+
+[5] Van Elsen M. Complexity of Selective Laser Melting: a new optimisation approach. Diss. Katholieke Universiteit Leuven; 2007.
+
+[6] Dinda G, Dasgupta A, Mazumder J. Laser aided direct metal deposition of Inconel 625 superalloy: microstructural evolution and thermal stability. Mater Sci Eng A 2009;509(1-2):98-104.
+
+[7] Tabei A, Mirkoohi E, Garmestani H, Liang S. Modeling of texture development in additive manufacturing of Ni-based superalloys. Int J Adv Manuf Technol 2019:1-10.
+
+[8] Galjaard S, Hofman S, Ren S. New opportunities to optimize structural designs in metal by using additive manufacturing. Advances in architectural geometry. Springer; 2015. p. 79-93. 2014.
+
+[9] Roberts IA, Wang C, Esterlein R, Stanford M, Mynors D. A three-dimensional finite element analysis of the temperature field during laser melting of metal powders in additive layer manufacturing. Int J Mach Tools Manuf 2009;49(12-13):916-23.
+
+[10] Qi H, Mazumder J, Ki H. Numerical simulation of heat transfer and fluid flow in coaxial laser cladding process for direct metal deposition. J Appl Phys 2006;100(2):024903.
+
+[11] Lee Y, Farson DF. Simulation of transport phenomena and melt pool shape for multiple layer additive manufacturing. J Laser Appl 2016;28(1):012006.
+
+[12] Kumar A, Roy S. Effect of three-dimensional melt pool convection on process characteristics during laser cladding. Comput Mater Sci 2009;46(2):495-506.
+
+[13] Manvatkar V, De A, DebRoy T. Spatial variation of melt pool geometry, peak temperature and solidification parameters during laser assisted additive manufacturing process. Mater Sci Technol 2015;31(8):924-30.
+
+[14] Cheng B, Chou K. Melt pool geometry simulations for powder-based electron beam additive manufacturing. 24th Annual International Solid Freeform Fabrication Symposium-An Additive Manufacturing Conference 2013:644-54.
+
+[15] Pinkerton AJ, Li L. Modelling the geometry of a moving laser melt pool and deposition track via energy and mass balances. J Phys D Appl Phys 2004;37(14):1885.
+
+[16] Carcel B, Sampedro J, Perez I, Fernandez E, Ramos JA. Improved laser metal deposition (lmd) of nickel base superalloys by pyrometry process control. XVIII International Symposium On Gas Flow, Chemical Lasers, and High-Power Lasers 2010;7751. 775123 .
+
+[17] Cheng B, Lydon J, Cooper K, Cole V, Northrop P, Chou K. Melt pool sensing and size analysis in laser powder-bed metal additive manufacturing. J Manuf Process 2018;32:744-53.
+
+[18] Mirkoohi E, Ning J, Bocchini P, Fergani O, Chiang K-N, Liang S. Thermal modeling of temperature distribution in metal additive manufacturing considering effects of build layers, latent heat, and temperature-sensitivity of material properties. J Manuf Mater Process 2018;2(3):63.
+
+[19] Bian L, Thompson SM, Shamsaei N. Mechanical properties and microstructural features of direct laser-deposited Ti-6Al-4V. Jom 2015;67(3):629-38.
+
+[20] Michaleris P. Modeling metal deposition in heat transfer analyses of additive manufacturing processes. Finite Elem Anal Des 2014;86:51-60.
+
+[21] Krol T, Seidel C, Zaeh M. Prioritization of process parameters for an efficient optimisation of additive manufacturing by means of a finite element method. Procedia Cirp 2013;12:169-74.
+
+[22] Hu D, Kovacevic R. Sensing, modeling and control for laser-based additive manufacturing. Int J Mach Tools Manuf 2003;43(1):51-60.
+
+[23] Mirkoohi E, Bocchini P, Liang SY. An analytical modeling for designing the process parameters for temperature specifications in machining ed: Preprints 2018.
+
+[24] Mirkoohi E, Bocchini P, Liang SY. An analytical modeling for process parameter planning in the machining of Ti-6Al-4V for force specifications using an inverse analysis. Int J Adv Manuf Technol 2018;98(9-12):2347-55.
+
+[25] Mirkoohi E, Malhotra R. Effect of particle shape on neck growth and shrinkage of nanoparticles. ASME 2017 12th International Manufacturing Science and Engineering Conference Collocated With the JSME/ASME 2017 6th International Conference on Materials and Processing 2017. pp. V002T01A026-V002T01A026.
+
+[26] Mirkoohi E, Bocchini P, Liang SY. An analytical modeling for designing the process parameters for temperature specifications in machining. 2018.
+
+[27] Mirkoohi E, Bocchini P, Liang SY. Analytical temperature predictive modeling and non-linear optimization in machining. Int J Adv Manuf Technol 2019;102(58):1557-66.
+
+[28] Mirkoohi E, Bocchini P, Liang SY. Inverse analysis of residual stress in orthogonal cutting. J Manuf Process 2019;38:462-71.
+
+[29] Goldak J. A double ellipsoid finite element model for welding heat sources. IIW Doc. No. 1985;212.
+
+[30] Nguyen N, Ohta A, Matsuoka K, Suzuki N, Maeda Y. Analytical solutions for transient temperature of semi-infinite body subjected to 3-D moving heat sources. Weld J.-New York 1999;78. pp. 265-s,.
+
+[31] Ning J, Mirkoohi E, Dong Y, Sievers DE, Garmestani H, Liang SY. Analytical modeling of 3D temperature distribution in selective laser melting of Ti-6Al-4V considering part boundary conditions. J Manuf Process 2019;44:319-26.
+
+[32] Mirkoohi E, Seivers DE, Garmestani H, Liang SY. Heat source modeling in selective laser melting. Materials 2019;12(13):2052.
+
+[33] Furrer D, Semiatin S. ASM handbook W. 2010.
+
+[34] Peyre P, Aubry P, Fabbro R, Neveu R, Longuet A. Analytical and numerical modelling of the direct metal deposition laser process. J Phys D Appl Phys 2008;41(2):025403.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

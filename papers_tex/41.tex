@@ -1,0 +1,451 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Single-track investigation of IN738LC superalloy fabricated by laser powder bed fusion: Track morphology, bead characteristics and part quality }
+
+
+\author{Chuan Guo ${ }^{\text {a,b,c }}$, Zhen Xu ${ }^{\text {a,b }}$, Yang Zhou ${ }^{\text {a,b }}$, Shi Shi ${ }^{\text {d }}$, Gan Li ${ }^{\text {a,b }}$, Hongxing Lu ${ }^{\text {a,b }}$, Qiang Zhu ${ }^{\text {a, b, *, }}$\\
+R. Mark Ward ${ }^{\mathrm{C}, * *}$\\
+a Department of Mechanical and Energy Engineering, Southern University of Science and Technology, Shenzhen 518055, PR China\\
+${ }^{\mathrm{b}}$ Shenzhen Key Laboratory for Additive Manufacturing of High-Performance Materials, Shenzhen 518055, PR China\\
+c School of Metallurgy and Materials, University of Birmingham, Edgbaston, Birmingham B152TT, UK\\
+${ }^{\mathrm{d}}$ College of Civil and Transportation Engineering, Shenzhen University, Shenzhen, 518060 Guangdong, PR China}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+
+
+\section*{A R T I C L E I N F O}
+Associate Editor: M. Merklein
+
+\section*{Keywords:}
+Single-track experiment
+
+Laser powder bed fusion
+
+Track morphology
+
+Bead characteristics
+
+Part quality
+
+\begin{abstract}
+A B S T R A C T Single-track experiments were performed to investigate how the scan speed and the laser power affected the behavior of the single tracks during laser powder bed fusion, including the track stability, the melt pool dimension and the bead mode, using the nickel-based superalloy IN738LC. The processing parameters had an evident effect on the track morphology and the bead features in the experimental conditions investigated. The balling phenomenon was studied by a competitive model between the spread and the solidification of droplets. The analysis and experimental results clearly demonstrated that the track lost its stability when the droplets solidified before they spread out on the substrate with a contact angle greater than $90^{\circ}$. The keyhole mode was investigated by establishing the relationship between the normalized enthalpy and the normalized bead depth. The conduction mode would convert to the keyhole mode as normalized enthalpy was greater than $\sim 50$. Finally, bulk samples were built with the same parameters as the single-track testing. It can be seen that the parts with high porosity appeared at both low and high energy input densities due to the un-melted powders and the keyhole pores, respectively.
+\end{abstract}
+
+\section*{1. Introduction}
+Additive manufacturing (AM) has become an advanced manufacturing technology, attracting increasing attention from both enterprise and educational circles. Laser powder bed fusion (LPBF), also known as selective laser melting (SLM), is the most widely used technology in the metallic additive manufacturing process, where a component with complex geometry can be nearly net-shaped formed using metallic powders in a layer by layer manner. The process of LPBF is schematically illustrated in Fig. 1(a). A 3D CAD model of the objective is prepared and sliced into a sequence of $2 \mathrm{D}$ profiles with a certain thickness, which acts as the source file input into the computer control system. A laser beam with high scan speeds passes through a beam expander, a scanning galvanometer and lenses, and irradiates on the powder bed selectively according to the current slice of the input 3D CAD model. Subsequently, the powders melt to form a strong metallurgical bond within a layer during a rapid cooling process. After the current layer is finished, the building station piston drives the substrate to lower down by the thickness of a layer in the building chamber. Simultaneously, the powder bed in the powder supply chamber rises a certain height, and another layer of powder is added to the building chamber with a recoater. This process is repeated until the whole part is completed. The whole fabrication work is conducted in an argon-filled atmosphere.
+
+$\mathrm{Ni}$-based superalloys are widely used in the energy, aerospace and automobile industries since they have excellent creep property and oxidation resistance at high temperatures. Inconel 738LC (IN738LC) is one of the most capable superalloys to be used for turbine blades, discs and other applications in the aero-engine system. It is primarily strengthened by $\gamma^{\prime}$ precipitates with $\mathrm{L1}_{2}$ crystal structure and $\mathrm{Ni}_{3}(\mathrm{Al}, \mathrm{Ti})$ basic composition. However, a relatively large amount of $\mathrm{Al}$ and $\mathrm{Ti}$ $(\mathrm{Al}+\mathrm{Ti}>6 \%)$ in this alloy indicates that it is difficult to be welded and LPBFed due to a strong cracking tendency, as reported by Rickenbacher et al. (2013). Some internal defects like pores and cracks are believed to
+\footnotetext{\begin{itemize}
+  \item Corresponding author at: Department of Mechanical and Energy Engineering, Southern University of Science and Technology, Shenzhen 518055, PR China.
+\end{itemize}
+
+$* *$ Corresponding author at: School of Metallurgy and Materials, University of Birmingham, Edgbaston, Birmingham B152TT, UK.
+
+E-mail addresses: \href{mailto:zhuq@sustech.edu.cn}{zhuq@sustech.edu.cn} (Q. Zhu), \href{mailto:R.M.Ward@bham.ac.uk}{R.M.Ward@bham.ac.uk} (R.M. Ward).
+}
+greatly restrict its application in fabricating parts requiring nearly full density and excellent mechanical performance. In order to study the formation mechanism of these defects in the LPBF process, investigation of the solidification behavior and the fluid dynamics of the local melt is highly necessary. Heat transportation phenomena (including heat conduction, convection and radiation), metallurgical phenomena (including melting, solidification, re-melting and re-solidification), laser-matter interaction phenomena (including recoil pressure, vapor and plasma) and melt flowing phenomena (including fluid dynamics and wetting behavior) determine the complexity of the reaction between the powder bed and the laser beam, posing the major hurdles to study the LPBF process.
+
+Most researches have focused on the parameter control and the posttreatment, etc., of the IN738LC alloy during LPBF. However, there are very few investigations on the fluid dynamics and the solidification behavior in bulk printed parts of IN738LC. This is mainly because little information can be revealed due to the overlapping between the previously fabricated tracks and layers. In this case, it is even difficult to measure the geometry of the melt pools. Therefore, a single-track experiment method is necessarily applied in order to directly reveal the printing behavior and the reaction between the powder bed and the laser beam. Yadroitsev et al. (2010) investigated the single-track formation using the SS grade $904 \mathrm{~L}$ alloy in the process of LPBF. They remarked that low scan speed led to the instability of the laser track to form irregularities and distortions, and considerably high speed was favorable for the formation of balling. Sadowski et al. (2016) tried to optimize the quality of Inconel 718 in the LPBF process using a single-track method. Laser energy density was used to analyze the effects of scan speed and laser power. The energy density $>0.21 \mathrm{~J} / \mathrm{mm}$ was found to be desired for a continuous and filled track. Mumtaz and Hopkinson (2009) used side and top surfaces' roughness to characterize the quality of the single track of Inconel 625 using LPBF. They reported that both top and side roughness tended to reduce with increasing the laser power. Wang et al. (2012) found 4 different track types associated with different energy inputs, including regularly thin track, regularly thick track, regularly broken track and irregularly pre-balling track in the LPBFed $316 \mathrm{~L}$ stainless steel process. They also suggested that the shape of regular and thin track was considered to be desirable for LPBF fabrication with adequate overlapping referred to the fabrication efficiency.
+
+Since the heat history in the bulk sample printing process is complex, the single-track method was also widely used in numerical modeling in some previous studies. Matthews et al. (2016) performed finite element model simulations of Ti6Al4V alloy in a single-track process and found that the melt pools tended to direct vapor backward and normal to the laser scanning direction, which was consistent with observation using high-speed imaging. Gusarov and Smurov (2010) numerically simulated the heat transfer in the interaction region between the laser beam and the powder bed by the proposed model to correlate radiation and heat transfer with the LPBFed single-track method. They remarked that the thermal conductivity and radiative properties of the powders significantly depended on the size distribution of the powders. The relationship between spatter and scan speed in LPBF of Ti6Al4V was established by Qiu et al. (2015) using single-track computational fluid dynamics (CFD) calculation. Higher laser scan speed increased the Marangoni force and the instability of the melt flow, thus enhancing the spatter of the powders. In more recent work of Rubenchik et al. (2018), the linear energy density concept has been extended to include the effects of the thermal diffusivity and enthalpy of the material, helping to normalize the results from a range of materials and increase the predictive power of the criterion for predicting keyhole formation in a single-track thermal model.
+
+In the present work, single tracks of IN738LC with different scan speeds and laser powers were used to understand how the processing parameters influence the track morphology, the bead dimension and the bead mode. In addition, bulk samples were built with the same parameters as the single-track testing in order to associate the track behavior with the printed part quality. Results would be helpful in selecting suitable parameters to fabricate not only IN738LC but also other alloys using LPBF.
+
+\section*{2. Material and experiment method}
+\subsection*{2.1. IN738LC powder}
+The mean size of the gas atomized IN738LC powders from SNDVARY POWDER Co., Lt was $\mathrm{D}_{50}=30.7 \mu \mathrm{m}$. The powder morphology was observed using a scanning electron microscope (ZEISS Merlin SEM), as presented in Fig. 1(b). Table 1 lists the chemical components of the powders. The flowability was measured through the Hall cup technique, and the time for $50 \mathrm{~g}$ powders to flow from the Hall cup was $14.3 \pm 0.5 \mathrm{~s}$.
+
+\subsection*{2.2. Experiment setup}
+The LPBF experiment was performed by a BLT-S200 system with a continuous laser mode. The maximum power could reach $400 \mathrm{~W}$, and the scan speed ranged from $100 \mathrm{~mm} / \mathrm{s}$ to $7000 \mathrm{~mm} / \mathrm{s}$. The size of the substrate was $105 \mathrm{~mm} \times 105 \mathrm{~mm}$, and the capacity of building depth was $200 \mathrm{~mm}$. Since the machine had no function to directly scan single tracks, a block substrate was fabricated firstly in order to hold the single tracks on its top. The block substrates were fabricated as cubes with side length $10 \mathrm{~mm}$, and a single layer with a hatching space of $400 \mu \mathrm{m}$ and a thickness of $30 \mu \mathrm{m}$ was scanned on the top of the block substrates to attain single tracks, as shown in Fig. 2(a). Fig. 2(b) is a schematic diagram of the building part to exhibit that a single layer was deposited. Fig. 2(c) is an example of a printed part, where the bright single tracks can be seen on the top.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b157ebe2add5a8848f75g-02}
+\end{center}
+
+Fig. 1. (a) Schematic diagram of the LPBF process, (b) SEM image showing the morphology of the powders.
+
+Table 1
+
+Chemical components of the IN738LC powders (wt\%).
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+$\mathrm{Ni}$ & $\mathrm{Cr}$ & Co & $\mathrm{Ta}$ & W & $\mathrm{Al}$ & $\mathrm{Ti}$ & $\mathrm{Nb}$ & Mo & B & $\mathrm{Zr}$ & C \\
+\hline
+Bal. & 15.83 & 8.47 & 1.63 & 2.67 & 3.36 & 3.41 & 0.74 & 1.71 & 0.009 & 0.03 & 0.1 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b157ebe2add5a8848f75g-03(1)}
+\end{center}
+
+(b)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_b157ebe2add5a8848f75g-03}
+
+Fig. 2. (a) Illustration showing the LPBF process to obtain the single tracks, (b) schematic diagram of the block substrate and the single tracks, (c) an example of the printed single tracks.
+
+Table 2 presents the details of the parameters for the single-track testing (P1 referred to the sample with the first group of parameters, and so on). All the block substrates were manufactured using the same parameters (scan speed $2000 \mathrm{~mm} / \mathrm{s}$, laser power $250 \mathrm{~W}$, hatching space $50 \mu \mathrm{m}$, layer thickness $30 \mu \mathrm{m}$ ). The $90^{\circ}$ raster scan strategy was used to build them, as shown in Fig. 2(a). Secondly, in order to directly reflect the relationship between the printing quality and the single tracks, bulk cubic samples with side length $10 \mathrm{~mm}$ were fabricated using the same parameters (scan speed and laser power) as the various single tracks. Other parameters used to build the bulk samples were hatching space $50 \mu \mathrm{m}$, layer thickness $30 \mu \mathrm{m}$ and $90^{\circ}$ raster scan strategy.
+
+\subsection*{2.3. Analysis procedure}
+The morphology of the tracks was observed by an Axio Observer 3.0 Optical microscope (OM). The single tracks and the bulk samples were cut vertically to the tracks and parallel to the building direction, respectively, using a wire-electrode cutting machine. The cut sections were hot mounted by conductive resin powders and ground by 400 grit 1500 grit abrasive paper. Finally, they were finely polished in $0.5 \mu \mathrm{m}$ diamond and $0.04 \mu \mathrm{m}$ colloidal silica suspension. All the track sections were etched electrolytically in a $10 \%$ phosphoric acid solution under $4 \mathrm{~V}$ for $10 \mathrm{~s}$ to reveal the melt pools. Dimensions of the melt pools were measured by an Axio Vision SE64 Rel. 4.9 software. The final results of the dimensions were the average by measuring 8 different melt pools with the same parameter. The details of the melt pools were observed using SEM. Porosity measurements were performed by an image threshold method using software Image $\mathrm{J}$ in the bulk samples, and 5 sections were measured to obtain the averages.
+
+\section*{3. Results}
+\subsection*{3.1. Single-track morphology}
+The morphology of the tracks built with the different parameters on
+
+Table 2
+
+Parameters used for the single-track and bulk-sample testing.
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+ & $500 \mathrm{~mm} / \mathrm{s}$ & $1000 \mathrm{~mm} / \mathrm{s}$ & $1500 \mathrm{~mm} / \mathrm{s}$ & $2000 \mathrm{~mm} / \mathrm{s}$ & $2500 \mathrm{~mm} / \mathrm{s}$ \\
+\hline
+$370 \mathrm{~W}$ & P21 & P22 & P23 & P24 & P25 \\
+$290 \mathrm{~W}$ & P16 & P17 & P18 & P19 & P20 \\
+$210 \mathrm{~W}$ & P11 & P12 & P13 & P14 & P15 \\
+$130 \mathrm{~W}$ & P6 & P7 & P8 & P9 & P10 \\
+$50 \mathrm{~W}$ & P1 & P2 & P3 & P4 & P5 \\
+\hline
+\end{tabular}
+\end{center}
+
+the block substrates is shown in Fig. 3. According to the morphology, the tracks could be classified into 4 types, i.e., the wide-continuous track (WCT), the narrow-continuous track (NCT), the fluctuating track (FT) and the balling track (BT). The summary of the track types vs. the processing parameters within the current processing conditions investigated is mapped in Fig. 4.
+
+The track with a width larger than $200 \mu \mathrm{m}$ was defined as WCT. It exhibited a continuous and straight morphology, i.e., with almost uniform width along the whole scanning direction. At high magnification, as presented in Fig. 5, a clear ripple shape going against the direction of the laser beam was visible. Mumtaz and Hopkinson (2009) suggested that the ripple morphology was primarily attributed to the surface tension exerting a resultant shear force on the melt pool, which was affected by the processing parameters and the atmosphere in the building chamber. The WCT appeared at high laser powers, i.e., $370 \mathrm{~W}$ and $290 \mathrm{~W}$ with low scan speeds, i.e., from $500 \mathrm{~mm} / \mathrm{s}$ to $1500 \mathrm{~mm} / \mathrm{s}$.
+
+The NCT covered a large range of the processing parameters in the left top of the track type map in Fig. 4. The width of the track in this type was relatively small $\sim 100 \mu \mathrm{m}$. The track showed a continuous and straight morphology deposited on the block substrate without any ripple trace on the surface.
+
+The FT only occurred at the combinations of the laser power of $290 \mathrm{~W}$ and the scan speed of $2500 \mathrm{~mm} / \mathrm{s}$ (P20), the laser power of $210 \mathrm{~W}$ and the scan speed of $1500 \mathrm{~mm} / \mathrm{s}$ (P13). In this type, the track started to fluctuate with a non-uniform width along the whole track length. Discontinuity of the track was also observed occasionally, as shown in Fig. 6. Gunenthiram et al. (2017) remarked that the track lost its stability through the humping phenomenon due to the periodic shrinkage of the track caused by the lateral surface tension of the molten liquid.
+
+A very low energy input density (laser power/scan speed), i.e., extremely low laser power and/or extremely high scan speed, was favorable for the formation of BTs, as shown in the right bottom corner of Fig. 4. In this instance, the BT tended to break up into small droplets, leading to a severe discontinuity of the track, as shown in Fig. 3.
+
+\subsection*{3.2. Bead morphology}
+The bead type was classified according to the cross-sections of the tracks, as shown in Fig. 7. The shape, the dimension and the wetting behavior of the beads varied obviously as the different parameters were applied. With the decrease of the laser power and/or the increase of the scan speed, the bead shape changed from a smooth morphology to necking down, balling, and finally, the bead detached from the block\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_b157ebe2add5a8848f75g-04(1)}
+
+Fig. 3. OM images of the 25 single tracks made by the laser powers of $50 \mathrm{~W}-370 \mathrm{~W}$ and the scan speeds of $500 \mathrm{~mm} / \mathrm{s}-2500 \mathrm{~mm} / \mathrm{s}$, showing the 4 types of tracks, $\mathrm{i}$. e., the wide-continuous track (WCT), the narrow-continuous track (NCT), the fluctuating track (FT) and the balling track (BT).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b157ebe2add5a8848f75g-04}
+\end{center}
+
+Fig. 4. Map of the track types vs. the processing parameters.
+
+substrate. These beads could be classified into 4 types, i.e., the widekeyhole bead (WKB), the narrow-keyhole bead (NKB), the conduction bead (CB) and the shallow-ball bead (SBB), as shown in Fig. 7. Figs. 8 and 9 summarize the bead type vs. the laser power and the scan speed within the current processing conditions investigated.
+
+The WKBs occurred at high laser powers i.e., $210 \mathrm{~W}-370 \mathrm{~W}$ with the minimum scan speed of $500 \mathrm{~mm} / \mathrm{s}$. In this type, the whole melt pool could be separated into 2 parts. The width of the upper part was $\sim 150 \%$ greater than that of the lower part, and the lower part was a keyhole with a relatively deep and narrow morphology, as shown in Fig. 7(a).
+
+The NKB was observed at the maximum laser power, i.e., $370 \mathrm{~W}$ with the scan speeds of $1000 \mathrm{~mm} / \mathrm{s}-2000 \mathrm{~mm} / \mathrm{s}$, or when the scan speed was low, i.e., $1000 \mathrm{~mm} / \mathrm{s}$ with the laser powers of $210 \mathrm{~W}-370 \mathrm{~W}$. The bead in this type had a depth similar to that of the WKB and could also be separated into 2 parts, as shown in Fig. 7(b). The difference from the WKB was that the edge of the upper part of the NKB was nearly tangent to the lower part with the top having a width of no more than $150 \%$ of the lower part.
+
+The CB appeared when the scan speed and the laser power were combined to give a moderate energy input density, i.e., high laser power with high scan speed or low laser power with low scan speed. The melt pool in the CB type was nearly elliptic with a short longitudinal length and a larger width, as shown in Fig. 7(c).
+
+The occurrence of SBB was associated with relatively low energy input density, i.e., low laser power with the combination of high scan speed, as depicted in Fig. 8. Fig. 7(d) shows that the bead in this type had a round shape with a poor wettability with the block substrate. The "ball" touched the block substrate with a relatively small area, resulting in a rather shallow and narrow melt pool. And the bead tended to break away from the block substrate at the laser power of $50 \mathrm{~W}$ and the scan speed of $2500 \mathrm{~mm} / \mathrm{s}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b157ebe2add5a8848f75g-05(1)}
+\end{center}
+
+Fig. 5. OM image at high magnification of the WCT (P21) showing the ripple morphology on the surface of the track.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b157ebe2add5a8848f75g-05}
+\end{center}
+
+Fig. 6. OM image of the FT (P13) showing the humping phenomenon and the discontinuity of the track.
+
+\subsection*{3.3. Bead dimension}
+Fig. 10(a) shows the bead width as a function of the processing parameters. The bead width is the distance between the 2 contact points of the melt pool edge and the block substrate, indicated by the insert picture of Fig. 10(a). It is apparent that the bead width was positively correlated to the laser power and negatively correlated to scan speed. It is worth noting that the bead width was considerably large when the laser powers were $290 \mathrm{~W}$ and $370 \mathrm{~W}$ at the scan speed of $500 \mathrm{~mm} / \mathrm{s}$. This was consistent with the WKB, whose upper part was extremely large in width.\\
+The bead depth is the length from the top of the block substrate to the deepest point of the bead. Fig. 10(b) shows that the bead depth increased with the increase of the laser power and decreased with the increase of the scan speed. The bead depth at low scan speed was much larger than that at high scan speed, especially for the moderate laser power $(210 \mathrm{~W}$, 290 W), which was attributed to the keyhole formation in the lower part of the WKB and the NKB in these conditions.
+
+The bead height is the length from the top of the block substrate to the top of the bead. Fig. 10(c) suggests that there was no distinct relationship between the bead height and the processing parameters.
+
+The contact angle is the average of the 2 angles between the block substrate surface and the bead edge, as indicated by the insert picture of Fig. 10(d). It is evident that the contact angle increased with increasing the scan speed and decreased with increasing the laser power. The contact angles were larger than $90^{\circ}$ at low laser power with the combination of high scan speed, indicating a poor wettability of the bead with the occurrence of the SBB type. It is worthy of note that the maximum contact angle was $180^{\circ}$ at the laser power of $50 \mathrm{~W}$ and the scan speed of $2500 \mathrm{~mm} / \mathrm{s}$, where the bead left from the block substrate. The smallest contact angle was attained at the laser power of $370 \mathrm{~W}$ and the scan speed of $500 \mathrm{~mm} / \mathrm{s}$, and the corresponding value was $\sim 26^{\circ}$.
+
+\subsection*{3.4. Porosity of bulk samples}
+The processing parameters had a great impact on the pore condition in the printed bulk samples, as shown in Fig. 11. The pores with a regularly round shape appeared in the left top corner of the parameter map, i.e., high laser power combined with low scan speed (marked with yellow blocks). It is worth mentioning that the sample at the scan speed of $500 \mathrm{~mm} / \mathrm{s}$ and the laser power of $370 \mathrm{~W}$ failed to be fabricated due to severe warping on the substrate. The maximum porosity was $10.929 \%$ at the scan speed of $500 \mathrm{~mm} / \mathrm{s}$ and the laser power of $290 \mathrm{~W}$ among this condition. Green blocks had marked off the parts of high quality with nearly full density in Fig. 11, which were obtained at relatively moderate energy input densities, i.e., high scan speed combined with high laser power or low scan speed combined with low laser power. More than half the parameter map was occupied by the parts with irregularshaped pores in the right bottom corner (marked with red blocks). In this instance, parts were unable to be built at high scan speeds $(1500 \mathrm{~mm} / \mathrm{s}-2500 \mathrm{~mm} / \mathrm{s})$ with the minimum laser power, i.e., $50 \mathrm{~W}$. Relatively low porosity of $0.103 \%$ was attained at $500 \mathrm{~mm} / \mathrm{s}$ with the combination of $130 \mathrm{~W}$. While the part density at the scan speed of $1000 \mathrm{~mm} / \mathrm{s}$ and the laser power of $50 \mathrm{~W}$ was almost only half $(100 \%$ $45.716 \%=54.284 \%$ ).
+
+\section*{4. Discussion}
+\subsection*{4.1. Effect of parameters on track stability}
+Track characteristics can reflect the flowing behavior of the melt in the LPBF process, which can directly determine the quality of the printed components. In the current work, the relationship between the track stability and the processing parameters was studied. It is apparent in Fig. 3 that the straight track fluctuated and tended to break into small droplets with the decrease of the laser power and/or the increase of the scan speed. It is described as balling in the LPBF process. Rombouts et al. (2006) thought that there were 2 potential causes for the balling known as the Rayleigh instability and the Marangoni convection regarding the melt flow process.
+
+In the Rayleigh instability theory, the melt track is regarded as a liquid cylinder, and the critical condition for the instability is described as the wavelength of the axial harmonic disturbance being larger than the circumference of the cylinder, i.e., $L / W>\pi$, as shown in Fig. 12(a), where $W$ is the diameter, and $L$ is the wavelength. Under this unstable condition, Tian et al. (2017) found that the cylinder would break up into metallic droplets to reduce the surface energy, leading to the balling
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b157ebe2add5a8848f75g-06}
+\end{center}
+
+Fig. 7. OM images showing the 4 types of beads, namely (a) the wide-keyhole bead (WKB), (b) the narrow-keyhole bead (NKB), (c) the conduction bead (CB) and (d) the shallow-ball bead (SBB).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b157ebe2add5a8848f75g-06(1)}
+\end{center}
+
+Fig. 8. OM images of the 25 beads made by the laser powers of $50 \mathrm{~W}-370 \mathrm{~W}$ and the scan speeds of $500 \mathrm{~mm} / \mathrm{s}-2500 \mathrm{~mm} / \mathrm{s}$.
+
+phenomenon, as depicted in Fig. 12(b). Rombouts et al. (2006) remarked that increasing the scan speed could increase the length to width ratio of the melt pool, and the trend of the Rayleigh instability was further enhanced. For example, P14 was in the BT type, and its scan speed was higher than that of P13, while P13 was in the FT type. In addition, by comparing P20 (FT, 290 W @ 2500 mm/s) with P15 (BT, $210 \mathrm{~W} @ 2500 \mathrm{~mm} / \mathrm{s})$, it is apparent that decreasing the laser power also favored the formation of the Rayleigh instability. This is ascribed to
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b157ebe2add5a8848f75g-07(1)}
+\end{center}
+
+Fig. 9. Map of the bead types vs. the processing parameters.
+
+the decrease in track width $W$ with decreasing the laser power (Fig. 10 (a)), inducing an increase of $L / W$ and accordingly aggravating the Rayleigh instability.
+
+Apart from the Rayleigh instability, Zhou et al. (2015) believed that the Marangoni convection also contributed to the balling phenomenon. The surface tension of a liquid varies with temperature, and if there is a temperature gradient across its surface, the resultant variation in surface tension force will drive the Marangoni convection. Because the spatial derivative of temperature drives this, additive manufacturing processes with their extremely high local energy density can create strong Marangoni flow. Rombouts et al. (2006) reported the direction of the Marangoni convection was from the low surface tension region to the high surface tension region, determined by the gradient of the surface tension to the temperature $d \gamma_{L V} / d T$. Generally, the value of $d \gamma_{L V} / d T$ is negative, implying that high temperature leads to low surface tension. A higher\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_b157ebe2add5a8848f75g-07}
+
+temperature is normally obtained in the center of the melt pool as a Gaussian-profile laser beam is applied. In this case, the melt will flow from the center to the edge of the melt pool, and the mass transfer of the melt to the neighboring tracks is correspondingly formed in most cases, as reported by Guo et al. (2020). On the contrary, if the Marangoni convection flows reversely, the resultant big agglomeration of the melt leads to an obvious stacking of materials on the melt pool, leading to the balling phenomenon, as depicted in Fig. 13(a). The directional change of the Marangoni flow is crucially caused by the high contents of surface-active elements, which can significantly reduce the surface intension, making $d \gamma_{L V} / d T$ change to a positive value. Li and Gu (2014) showed that the thermal gradient would increase along the building direction when a high scan speed was applied, and Tan et al. (2018) argued that a higher thermal gradient can result in a higher gradient of the surface tension, implying the Marangoni convection could be enhanced at high scan speed. An apparent trace of the Marangoni convection in the melt pool was visible at a relatively high scan speed (P20, scan speed 2500 mm/s) in this investigation, as presented in Fig. 13(b).
+
+\subsection*{4.2. Effect of parameters on bead dimension}
+Fig. 8 shows that as the scan speed increased and/or the laser power decreased, the penetration of the bead became less, and then lateral shrinking happened. Finally, the bead no longer penetrated the block substrate at the maximum scan speed combined with the minimum laser power.
+
+As seen in Fig. 10(a) and (b), both bead depth and width were positively correlated to the laser power and negatively correlated to the scan speed. This is ascribed to that the combination of low scan speed and high laser power induced a higher energy input per unit length, increasing the working temperature, thus favoring the formation of a broader and deeper melt pool.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_b157ebe2add5a8848f75g-07(2)}
+
+Fig. 10. (a) The bead width, (b) the bead depth, (c) the bead height and (d) the contact angle as a function of the laser power and the scan speed.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b157ebe2add5a8848f75g-08(3)}
+\end{center}
+
+Fig. 11. OM images of the metallographs displaying the pore condition vs. the processing parameters and the corresponding porosity.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b157ebe2add5a8848f75g-08(2)}
+\end{center}
+
+(b)
+
+Fig. 12. Schematic diagram showing the development process of the Rayleigh instability.
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b157ebe2add5a8848f75g-08(1)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b157ebe2add5a8848f75g-08}
+\end{center}
+
+Fig. 13. (a) Schematic diagram showing the formation process of the balling attributed to the Marangoni convection, (b) SEM image of the Marangoni convection trace in the melt pool (P20, laser power $290 \mathrm{~W}$, scan speed $2500 \mathrm{~mm} / \mathrm{s}$ ).
+
+For bead height, low laser power and high scan speed are unfavorable for a good wettability of the bead with the block substrate, as studied by Tian et al. (2017), contributing to a large bead height. However, when the laser power is low and the scan speed is high, a relatively small number of the powders are melted by the laser beam due to the low energy input density, leading to a decrease in the bead height. Due to the opposite effects of these 2 factors, the bead height was independent of the processing parameters.
+
+The contact angle can directly reflect the wettability of the bead. At low laser power and/or high scan speed, the contact angle increases, indicating a poor wettability of the bead. The working temperature in the melt pool decreases with decreasing the energy input density. The viscosity of the melt in the pool is temperature-dependent. Xia et al. (2017) believed that a low energy input density was likely to lead to cooler liquid with a higher viscosity, in turn inducing a poor flowability of the melt, and a high contact angle could be obtained. In addition, by comparing Fig. 4 and Fig. 9, it is evident that the BTs always presented accompanied by the SBBs with the contact angles larger than $90^{\circ}$, implying that the track lost its stability by the balling phenomenon. This is consistent with the investigation of Schiaffino and Sonin (1997). They suggested that the molten droplet was unstable at the contact angle greater than $90^{\circ}$. It is worth noting that the FTs had the contact angles slightly larger than $90^{\circ}$. For instance, the contact angles of P13 and P20 were $91.66^{\circ}$ and $91.32^{\circ}$, respectively. It indicates that the fluctuation of the track was a transitionally unstable condition before the balling phenomenon occurred.
+
+\subsection*{4.3. Spreading vs. solidification}
+The balling phenomenon can be considered as a competitive process between the spread and the solidification of molten liquid, which is controlled by the capillary force and the heat loss during LPBF. Fig. 14 demonstrates that a droplet attaches to a solid surface with the irradiation of a laser beam. The droplet solidifies with a solidification angle $\theta_{a}$, and spreads with a spread angle $\theta_{b}$ on a solid basis. As the wetting behavior continues, $\theta_{b}$ decreases because the droplet tends to spread out on the solid surface, and $\theta_{a}$ correspondingly increases due to that the melt is solidifying. It stops when $\theta_{a}$ is equal to $\theta_{b}$, and the whole bead is formed. It is reasonable to infer that if the melt can spread out on the block substrate before it solidifies, then the balling may be avoided, and a smooth surface and a stable track can be obtained. It requires the solidification time to be greater than the spread time.
+
+The model of the time for a droplet to spread on a surface is reported by Zhou et al. (2015):
+
+$t=\left(\frac{\rho_{m} a^{3}}{\sigma}\right)^{0.5}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b157ebe2add5a8848f75g-09}
+\end{center}
+
+Fig. 14. Schematic diagram demonstrating the competitive relationship between the spread and the solidification of a droplet. where $\rho_{m}$ is the melting density, $a$ is the radius of the droplet, and $\sigma$ is the surface tension. For alloys that have high viscosity near their liquidus, it may be useful to add a viscosity term into this in the future. The solidification time of the droplet can be calculated based on the investigation of Gao and Sonin (1994) as:
+
+$\tau=2\left(\frac{a^{2}}{3 \alpha}\right) \ln \left(\frac{T_{p}-T_{t}}{T_{f}-T_{t}}\right)$
+
+where $a$ is the radius of the droplet, $\alpha$ is the thermal diffusivity, $T_{p}$ is the superheat temperature, $T_{f}$ is the fusion temperature, also known as liquidus temperature, and $T_{t}$ is the ambient temperature. Note that this doesn't include the increasing ease of heat loss as the droplet spreads out, but it's a useful approximation. $T_{p}$ can be obtained by the wellknown Rosenthal equation from Rosenthal (1946), which is related to a point heat source to move in the $\mathrm{x}$-direction as:
+
+$T_{p}(x, R)=T_{0}+\frac{A P}{2 \pi k}\left(\frac{1}{R}\right) \exp \left[-\frac{v}{2 \alpha}(R+x)\right]$
+
+where $T_{0}$ is the initial temperature, $A$ is the absorptivity of powder, $k$ is the thermal conductivity, $P$ is the laser power, $v$ is the scan speed, and $R$ is the distance from the beam location to the point of interest as $R=$ $\sqrt{x^{2}+y^{2}+z^{2}}$. In the model, $a$ is usually $\sim 50 \mu \mathrm{m}$. The average peak temperature point is selected right between the laser beam and the droplet edge, i.e., $R=x=25 \mu \mathrm{m}$. $T_{0}$ is equal to $T_{f}$ showing that the laser beam irradiates on melt as it moves in the scanning direction during the wetting process. The other relevant material properties and temperatures are given in Table 3. The calculated solidification time vs. the contact angle is shown in Fig. 15.
+
+References for constants: ${ }^{a}$ Quested et al. (2013), ${ }^{b}$ Ragnhild et al. (2005), ${ }^{\text {C}}$ Tolochko et al. (2000).
+
+It can be found that the contact angle increased with decreasing the solidification time, implying that the time for a molten droplet to spread on the block substrate is reduced. Using Eq. (1), the spread time was calculated to be $22.25 \mu$ s. Fig. 15 demonstrates that the predicted solidification times of the FTs and the BTs were less than $22.25 \mu$ s, indicating the droplets under these parameters solidified before they spread out on the block substrate, thus losing their stability by fluctuating or balling. The solidification time and the contact angle are significantly influenced by the temperature and the fluid dynamic behavior in the melt pool. By carefully selecting the processing parameters, a stable track can be obtained in order to avoid defects such as balling, low overlapping and pores in printed components.
+
+\subsection*{4.4. Keyhole and conduction mode transition}
+The keyhole phenomenon was widely studied in the welding processes of metals, such as Fabbro (2010). Kasperovich et al. (2016) believed that the keyhole occurred when the energy input was high enough to form material vaporization, and a cavity was generated in the molten material exerted by the recoil force. Rai et al. (2007) thought that the formation of the keyhole could improve the efficiency of the laser beam due to the multiple reflections in the cavity. However, King et al. (2014) believed that it was an unstable condition of the melt pool and a cause of pores, as indicated by the circle in Fig. 7(a), which should be prevented in this case. The formation mechanism of the keyhole pore is schematically presented in Fig. 16. A considerably high working temperature induced by high energy density causes substantial metallic vaporization, and the recoil pressure can be generated towards the melt
+
+Table 3
+
+Constants used to calculate the solidification time and the spread time.
+
+\begin{center}
+\begin{tabular}{lllllll}
+\hline
+$\rho_{m}\left(\mathrm{~kg} / \mathrm{m}^{3}\right)^{\mathrm{a}}$ & $\sigma(\mathrm{N} / \mathrm{m})^{\mathrm{b}}$ & $\alpha\left(\mathrm{m}^{2} / \mathrm{s}\right)^{\mathrm{a}}$ & $k\left(\mathrm{~W} / \mathrm{m} \mathrm{K}^{\mathrm{a}}\right.$ & $A^{\mathrm{c}}$ & $T_{f}(\mathrm{~K})^{\mathrm{a}}$ & $T_{t}(\mathrm{~K})$ \\
+\hline
+7324 & 1.85 & $4.87 \times 10^{-6}$ & 24.9 & 0.72 & 1628 & 298 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b157ebe2add5a8848f75g-10}
+\end{center}
+
+Fig. 15. Relationship between the solidification time and the contact angle, the spread time and the critical contact angle are marked with dotted lines.
+
+pool, as shown in Fig. 16(a). Once the recoil pressure exceeds the hydrostatic pressure and the surface tension, the molten liquid is pressed downward to the melt pool bottom. As a result, the melt pool is relatively deep and narrow, as depicted in Fig. 16(b). Subsequently, the downwards flow driven by the recoil pressure and the gravity and the upwards flow driven by the surface tension collide, inducing the inward collapse to be generated with the participation of the hydrostatic pressure at the waist of the keyhole, as shown in Fig. 16(c). The collapses the molten liquid on both sides joint together, and strong metallic bonding is formed after solidification, leaving a large void with vapor entrapping at the bottom of the keyhole, see Fig. 16(d). This process is also clearly elucidated by Tan et al. (2020) in the LPBFed $2024 \mathrm{Al}$ alloy.
+
+By investigating different materials and welding parameters, Hann et al. (2011) found that the normalized bead depth was a function of the normalized energy density, which was given by Rubenchik et al. (2018) as:
+
+$\frac{\Delta H}{h_{s}}=\frac{2^{3 / 4} A P}{h_{s} \sqrt{\pi \alpha v d^{3}}}$
+
+where $\Delta H$ is the deposited energy density, $A$ is the absorptivity of powder, $\alpha$ is the thermal diffusivity, $P$ is the laser power, $v$ is the scan speed, $d$ is the laser beam spot size, and $h_{s}$ is the enthalpy at melting. The normalized bead depth is $D /(a d / v)^{1 / 2}$, and $D$ is the bead depth. Other relevant material properties and the laser beam size are listed in Table 4. Similar to Hann et al. (2011), the normalized bead depth vs. the normalized enthalpy is shown in Fig. 17. It can be seen that the SBBs had
+
+Table 4
+
+Constants used to calculate the normalized enthalpy.
+
+\begin{center}
+\begin{tabular}{lllll}
+\hline
+$\rho\left(\mathrm{kg} / \mathrm{m}^{3}\right)^{\mathrm{a}}$ & $\alpha\left(\mathrm{m}^{2} / \mathrm{s}\right)^{\mathrm{a}}$ & $h_{s}(\mathrm{~J} / \mathrm{g})^{\mathrm{b}}$ & $A^{\mathrm{c}}$ & $d(\mu \mathrm{m})$ \\
+\hline
+8177 & $4.87 \times 10^{-6}$ & 1071.8 & 0.72 & 30 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b157ebe2add5a8848f75g-10(1)}
+\end{center}
+
+Fig. 16. Schematic diagram showing the formation mechanism of the keyhole pore.\\
+a relatively low normalized bead depth below 10 , and the corresponding normalized enthalpy was also at a low level. When the value of normalized enthalpy increased gradually to $\sim 50$, the bead would convert from the conduction type to the keyhole type. Hence, when the deposited energy was $\sim 50$ times larger than the enthalpy for melting, the keyhole mode occurred for IN738LC in the LPBF process.
+
+References for constants: ${ }^{a}$ Quested et al. (2013), ${ }^{\text {b }}$ Chapman et al. (2008), ${ }^{\text {c }}$ Tolochko et al. (2000).
+
+\subsection*{4.5. Track behavior vs. part quality}
+High laser power companying with low scan speed was found to lead to stable and continuous tracks (Fig. 3). Given such tracks (WCTs and NCTs), with sufficient overlap between them, it should be possible to produce dense solid using raster scanning. However, it can be seen in Fig. 4 and Fig. 9 that a large proportion of the continuous tracks included keyhole beads (WKBs, NKBs). In this case, a large number of keyhole pores appeared, and would likely be presented in the raster-scanned solid, as shown in Fig. 11. On the contrary, low power and high scan speed resulted in BTs and SBBs. Low bead width and track instability could induce low overlapping between tracks, and the balling hindered the continuity of the melt within a single laser track, both of which led to irregular-shaped pores attributed to un-melted powders or lack of fusion. The parts with the highest quality were obtained in the overlap of NCTs and CBs in Fig. 4 and Fig. 9, such as P6 and P18. Among these parameters, moderate energy input density favored the stability of the melt track, and the keyhole pores and the lack of fusion could be effectively avoided. Considering the part quality and the fabrication efficiency, the parameters with higher scan speed like P19 (290 W @ $2000 \mathrm{~mm} / \mathrm{s}$ ) and P25 (370 W @ $2500 \mathrm{~mm} / \mathrm{s}$ ) might be more desirable for the part fabrication in the current LPBF system.
+
+\section*{5. Conclusion}
+Single-track experiments using IN738LC processed by LPBF were performed to investigate the relationship between the track morphology, bead characteristics and the printed part quality:
+
+\begin{itemize}
+  \item The tracks could be classified into 4 types, namely the widecontinuous track, the narrow-continuous track, the fluctuating track and the balling track regarding their morphology and stability. The continuous (stable) tracks appeared at high energy input density. On the contrary, when energy input density was low, the track started to fluctuate and broke into metallic droplets.
+  \item The bead width and depth increased with increasing the laser power and decreased with increasing the scan speed due to the different energy input densities. The bead height was largely independent of the processing parameters. The contact angle decreased with increasing the energy input density, indicating a good wettability. The contact angle for the fluctuating and balling track was greater than $90^{\circ}$
+  \item A model for a competitive process between the spread and the solidification of the melt was proposed to justify the relationship between the balling and the processing parameters. It suggested that if the solidification time was less than the spread time, the molten droplet would solidify before it spreads out on the block substrate. In this case, the balling was correspondingly formed.
+  \item The beads were classified into 4 types, namely the wide-keyhole bead, the narrow-keyhole bead, the conduction bead and the shallow-ball bead. The normalized bead depth was found to increase with the normalized enthalpy. When the deposited energy was $\sim 50$ times greater than the enthalpy for melting, the bead changed from the conduction mode to the keyhole mode.
+  \item Both high and low energy densities could lead to high porosity in bulk samples due to the keyhole pores and the un-melted powders, respectively.
+\end{itemize}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b157ebe2add5a8848f75g-11}
+\end{center}
+
+Fig. 17. Relationship between the normalized enthalpy and the bead depth normalized by beam size, the critical value for the occurrence of the keyhole is marked with a dotted line.
+
+\section*{CRediT authorship contribution statement}
+Chuan Guo: Conceptualization, Data curation, Investigation, Methodology, Writing - original draft. Zhen Xu: Data curation, Resources. Yang Zhou: Data curation, Formal analysis. Shi Shi: Writing review \& editing, Methodology. Gan Li: Conceptualization, Writing review \& editing. Hongxing Lu: Conceptualization, Writing - review \& editing. Qiang Zhu: Project administration, Supervision, Funding acquisition, Writing - review \& editing, Methodology. R. Mark Ward: Project administration, Supervision, Writing - review \& editing, Methodology.
+
+\section*{Declaration of Competing Interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Acknowledgments}
+National Natural Science Foundation of China (No.91860131), National Key Research and Development Program of China (No. 2017YFB0702901), Shenzhen Science and Technology Innovation Commission (No.JCYJ20170817111811303, No.KQTD20170328154443162, No.ZDSYS201703031748354), and dual-education Ph.D. project (No. FEFE/GAS1792) financially supported this investigation.
+
+\section*{References}
+Chapman, L., Morrell, R., Quested, P.N., Brooks, R.F., 2008. Properties of alloys and moulds relevant to investment casting. NPL Report MATC 141
+
+Fabbro, R., 2010. Melt pool and keyhole behaviour analysis for deep penetration laser welding. Journal of Physics D: Appl. Phys. 43 (44).
+
+Gao, F., Sonin Ain, A., 1994. Precise deposition of molten microdrops: the physics of digital microfabrication. Proc. R. Soc. Lond. A 444, 533-554.
+
+Gunenthiram, V., Peyre, P., Schneider, M., Dal, M., Coste, F., Fabbro, R., 2017. Analysis of laser-melt pool-powder bed interaction during the selective laser melting of a stainless steel. J. Laser Appl. 29 (2).
+
+Guo, C., Li, S., Shi, S., Li, X., Hu, X., Zhu, Q., Ward, R.M., 2020. Effect of processing parameters on surface roughness, porosity and cracking of as-built IN738LC parts fabricated by laser powder bed fusion. J. Mater. Process. Technol. 285, 116788.
+
+Gusarov, A.V., Smurov, I., 2010. Modeling the interaction of laser radiation with powder bed at selective laser melting. Phys. Procedia 5 (Part B), 381-394.
+
+Hann, D.B., Iammi, J., Folkes, J., 2011. A simple methodology for predicting laser-weld properties from material and laser parameters. J. Phys. D-Appl. Phys. 44 (44), 445401.
+
+Kasperovich, G., Haubrich, J., Gussone, J., Requena, G., 2016. Correlation between porosity and processing parameters in TiAl6V4 produced by selective laser melting. Mater. Des. 105, 160-170.
+
+King, W.E., Barth, H.D., Castillo, V.M., Gallegos, G.F., Gibbs, J.W., Hahn, D.E., Kamath, C., Rubenchik, A.M, 2014 Observation of keyhole-mode laser melting in laser powder-bed fusion additive manufacturing. J. Mater. Process. Technol. 214 (12), 2915-2925.
+
+Li, Y., Gu, D., 2014. Thermal behavior during selective laser melting of commercially pure titanium powder: numerical simulation and experimental study. Addit. Manuf. $1-4,99-109$.
+
+Matthews, M.J., Guss, G., Khairallah, S.A., Rubenchik, A.M., Depond, P.J., King, W.E., 2016. Denudation of metal powder layers in laser powder bed fusion processes. Acta Mater. 114, 33-42.
+
+Mumtaz, K., Hopkinson, N., 2009. Top surface and side roughness of Inconel 625 parts processed using selective laser melting. Rapid Prototyp. J. 15 (2), 96-103.
+
+Qiu, C., Panwisawas, C., Ward, M., Basoalto, H.C., Brooks, J.W., Attallah, M.M., 2015. On the role of melt flow into the surface structure and porosity development during selective laser melting. Acta Mater. 96, 72-79.
+
+Quested, P.N., Brooks, R.F., Chapman, L., Morrell, R., Youssef, Y., Mills, K.C., 2013. Measurement and estimation of thermophysical properties of nickel based superalloys. Mater. Sci. Technol. 25 (2), 154-162.
+
+Ragnhild, E.A., Livio, B., Brooks, R., Ivan, E., Hans-Jörg, F., Jean-Paul, G., et al., 2005. Thermophysical properties of IN738LC, MM247LC and CMSX-4 in the liquid and high temperature solid phase. In: 6th International Superalloys Symposium. Pittsburgh, pp. 625-706.
+
+Rai, R., Elmer, J.W., Palmer, T.A., DebRoy, T., 2007. Heat transfer and fluid flow during keyhole mode laser welding of tantalum, Ti-6Al-4V, 304L stainless steel and vanadium. J. Phys. D-Appl. Phys. 40 (18), 5753-5766.
+
+Rickenbacher, L., Etter, T., Hövel, S., Wegener, K., 2013. High-temperature material properties of IN738LC processed by selective laser melting (LPBF) technology. Rapid Prototyp. J. 19 (4), 282-290.
+
+Rombouts, M., Kruth, J.P., Froyen, L., Mercelis, P., 2006. Fundamentals of Selective Laser Melting of alloyed steel powders. Cirp Ann-Manuf. Techn. 55 (1), 187-192.
+
+Rosenthal, D., 1946. The theory of moving source of heat and its application to metal treatments. Transactions of the American Society of Mechanical Engineering Nov 1964, 849-866.\\
+Rubenchik, A.M., King, W.E., Wu, S.S., 2018. Scaling laws for the additive manufacturing. J. Mater. Process. Technol. 257, 234-243.
+
+Sadowski, M., Ladani, L., Brindley, W., Romano, J., 2016. Optimizing quality of additively manufactured Inconel 718 using powder bed laser melting process. Addit. Manuf. 11, 60-70.
+
+Schiaffino, S., Sonin, A.A., 1997. Formation and stability of liquid and molten beads on a solid surface. J. Fluid Mech. 343, 95-110.
+
+Tan, C., Zhou, K., Ma, W., Min, L., 2018. Interfacial characteristic and mechanical performance of maraging steel-copper functional bimetal produced by selective laser melting based hybrid manufacture. Mater. Des. 155, 77-85.
+
+Tan, Q., Liu, Y., Fan, Z., Zhang, J., Zhang, M.X., 2020. Effect of processing parameters on the densification of an additively manufactured $2024 \mathrm{Al}$ alloy. J. Mater. Sci. Technol. 58, 34-45.
+
+Tian, Y., Tomus, D., Rometsch, P., Wu, X., 2017. Influences of processing parameters on surface roughness of Hastelloy X produced by selective laser melting. Addit. Manuf. 13, 103-112.
+
+Tolochko, N.K., Khlopkov, Y.V., Mozzharov, S.E., Ignatiev, M.B., Laoui, T., et al., 2000. Absorptance of powder materials suitable for laser sintering. Rapid Prototyp. J. 6 (3), 155-161.
+
+Wang, D., Yang, Y., Su, X., Chen, Y., 2012. Study on energy input and its influences on single-track,multi-track, and multi-layer in SLM. Int. J. Adv. Manuf. Tech. 58 (9-12), 1189-1199.
+
+Xia, M., Gu, D., Yu, G., Dai, D., Chen, H., Shi, Q., 2017. Porosity evolution and its thermodynamic mechanism of randomly packed powder-bed during selective laser melting of Inconel 718 alloy. Int. J. Mach. Tool. Manu. 116, 96-106.
+
+Yadroitsev, I., Gusarov, A., Yadroitsava, I., Smurov, I., 2010. Single track formation in selective laser melting of metal powders. J. Mater. Process. Technol. 210 (12), 1624-1631.
+
+Zhou, X., Liu, X., Zhang, D., Shen, Z., Liu, W., 2015. Balling phenomena in selective laser melted tungsten. J. Mater. Process. Technol. 222, 33-42.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

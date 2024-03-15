@@ -1,0 +1,615 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+
+\title{Laser powder bed fusion of titanium aluminides: An investigation on site-specific microstructure evolution mechanism }
+
+
+\author{Xing Zhang ${ }^{\text {a }}$, Bo Mao ${ }^{\text {b, }}$, Leslie Mushongera ${ }^{\text {c,* }}$, Julia Kundin ${ }^{\text {d }}$, Yiliang Liao ${ }^{\text {a,* }}$\\
+a Department of Industrial and Manufacturing Systems Engineering, Iowa State University, Ames, IA 50011, USA\\
+${ }^{\mathrm{b}}$ Department of Mechanical Engineering, University of Nevada, Reno, Reno, NV 89557, USA\\
+c Department of Chemical and Materials Engineering, University of Nevada, Reno, Reno, NV 89557, USA\\
+${ }^{\mathrm{d}}$ Interdisciplinary Centre for Advanced Materials Simulation (ICAMS), Ruhr-University Bochum, D-44801 Bochum, Germany}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\DeclareUnicodeCharacter{0131}{$\imath$}
+
+\begin{document}
+\maketitle
+
+
+\section*{H I G H L I G H T S}
+\begin{itemize}
+  \item Mechanisms of site-specific microstructure evolution during laser powder bed fusion of titanium aluminides are studied.
+
+  \item A modeling framework integrating a finite element thermal model with a highly efficient phase-field method is developed.
+
+  \item Microstructure evolution is more sensitive to the cooling rate than to the temperature gradient.
+
+  \item The site locations, processing parameters and misorientation angle together determine the microstructure variation.
+
+\end{itemize}
+
+\section*{A R T I C L E I N F O}
+\section*{Article history:}
+Received 3 December 2020
+
+Received in revised form 6 January 2021
+
+Accepted 17 January 2021
+
+Available online 20 January 2021
+
+\section*{Keywords:}
+Laser powder bed fusion
+
+Titanium aluminides
+
+Phase-field modeling Cellular structure
+
+\section*{GR A P H I C A L A B S T R A C T}
+\includegraphics[max width=\textwidth, center]{2024_03_10_1cc02a52e1af6a2c8452g-01}
+\footnotetext{\begin{itemize}
+  \item Corresponding authors.
+\end{itemize}
+
+E-mail addresses: \href{mailto:Imushongera@unr.edu}{Imushongera@unr.edu} (L. Mushongera), \href{mailto:leonl@iastate.edu}{leonl@iastate.edu} (Y. Liao).
+}
+
+\section*{1. Introduction}
+Titanium aluminides (TiAl-based alloys) have emerged as a new class of high-temperature alloys for applications in aircraft engines,\\
+gas turbines, advanced reactor systems, etc. [1]. This is attributed to the remarkable properties of TiAl-based alloys at the elevated temperature, including high specific strength, high elastic modulus, and excellent creep and oxidation resistance [2,3]. However, conventional manufacturing of TiAl components using machining and forming encounters specific difficulties due to their poor room-temperature ductility and formability, leading to restrictions in further applications [4,5].
+
+The design and manufacturing freedoms of metal additive manufacturing (AM) [6-8] offer the singular opportunity to improve the design flexibility of TiAl components [9-15]. Li et al. [12] employed laser powder bed fusion (LPBF) to process a Ti-45Al-2Cr-5Nb (at.\%, Ti4525) alloy and obtained a microstructure with $\gamma$-TiAl and $B_{2}$ phases randomly distributed in the $\alpha_{2}-\mathrm{Ti}_{3} \mathrm{Al}$ matrix. It was found that by increasing the laser scanning velocity, the content of $\alpha_{2}$ phase decreased while $\gamma$ and $B_{2}$ phases increased due to the restriction of peritectic reaction $L+\beta-\mathrm{Ti} \rightarrow \alpha$-Ti, which together with the reduced grain size led to the greater hardness, higher compressive strength, and increased ultimate strain. A different microstructure, consisted of equiaxed $\gamma$ grains with a $\gamma / \alpha_{2}$ lamellar colony structure, was reported by Murr et al. [9] using electron beam melting (EBM) to fabricate Ti-4525. This was attributed to the pre-heating process during EBM which led to a significant reduction in the cooling rate as compared with LPBF. In addition, Löber et al. [13] studied the microstructure evolution during LPBF of a TNM $^{\mathrm{TM}}$ alloy (Ti-28.9Al-9.68Nb-2.26Mo-0.024B in wt.\%). Due to the presence of the high-content niobium ( $\mathrm{Nb}$ ), a lamellar $\beta$-Ti grain structure was obtained in as-built samples. These experimental investigations demonstrated that the microstructural features and properties of AM-built TiAl are highly sensitive to the chemical compositions and the complicated thermal history during AM. However, due to the complexity and limitations of in-situ characterization of AM processing, a comprehensive investigation on the site-specific thermal and microstructure evolutions during AM remains a grand challenge.
+
+Compared to cost- and time-consuming experimental studies, computational modeling strategies including stochastic analysis, cellular automaton and phase-field (PF) have proved to be effective methods to bridge the process-microstructure relationship of metal AM processes. Among these methods, PF modeling has recently attracted significant attention due to its capability of realistically describing complex grain morphologies without the need to explicitly track interfaces $[16,17]$. Moreover, the interface dynamics is driven only by the minimization of free energy functional, and thus is not limited to the equilibrium chemical partitioning. Pioneering efforts in recent years have applied PF method to simulate AM of a variety of metallic materials such as Inconel 718 [18] and AlSi10Mg [19]. These efforts demonstrated the feasibility of PF modeling of grain development during AM. A recent trend has seen the direct coupling of the PF models to CALPHAD e.g., via the TQ-interface, which has improved the simulation accuracy but has led to relatively low computational efficiency. In addition, the site-specific evolution across the melt pool in terms of thermal profile, solidification front dynamics, and grain growth is not fully investigated. Critical requirements for effective PF modeling of metal AM include: integrated models capable of describing the dependency of microstructure variations across the melt pool on the complex site-specific thermal conditions; quantitative prediction of site-specific solidification microstructures and microsegregations as affected by individual processing parameters; and simplified modeling strategies with a high computational efficiency.
+
+In order to reveal underlying mechanisms responsible for the sitespecific thermal history and grain evolution during LPBF of TiAl-based alloys, in this work, a multiphysics modeling framework is proposed by integrating a finite element thermal model with a highly efficient PF method that is capable of predicting solidification microstructures and non-equilibrium chemical partitioning during LPBF processing. The applied PF model is based on a minimalistic parabolic form of the free energy density using thermodynamic factors to improve the computational efficiency [20], as compared with the models which use free energies directly obtained from the CALPHAD database. A Ti-45Al (at.\%) alloy (a binary approximation of the Ti-4525 alloy) is used for both modeling and experimental efforts. The mechanism of sitespecific grain evolution in terms of primary dendrite arm spacing (PDAS) and microsegregation is elucidated. Emphasis is put on the effects of laser power and scanning velocity on site-specific microstructure evolution across the melt pool. The influence of misorientation angle between the preferred crystalline orientation and the temperature gradient direction is investigated. We envision that the knowledge gained in this work will benefit the development of AM processing routine for fabrication of high-performance TiAl-based alloys towards extensive applications such as turbine blades, turbocharger wheels and exhaust valves.
+
+\section*{2. Methodology}
+In the present study, the proposed modeling framework is applied to study the microstructure evolution during LPBF of a Ti-45Al (at. \%) alloy (a binary approximation of the Ti-4525 alloy) with BCC $\beta$-Ti phase and liquid phase. First, the temperature evolutions obtained from the thermal model are used to estimate the transient local solidification conditions including cooling rate $V_{c}$ and temperature gradient $G$ across the melt pool. Next, by using the simulated thermal variables and the thermodynamic properties of Ti-45Al as the inputs, PF simulations with the consideration of the dependency of tip undercooling on solidification conditions and solute partitioning are carried out to obtain the evolution of solute concentration field.
+
+\subsection*{2.1. Finite element thermal modeling}
+To simulate the temperature evolution during LPBF, a threedimensional (3D) thermal model (Fig. 1) is employed [21]. The temperature distribution $T(x, y, z, t)$ can be obtained by solving a general heat conduction equation:
+
+$\rho \frac{\partial C_{p} T}{\partial t}=\frac{\partial}{\partial x}\left(k \frac{\partial T}{\partial x}\right)+\frac{\partial}{\partial y}\left(k \frac{\partial T}{\partial y}\right)+\frac{\partial}{\partial z}\left(k \frac{\partial T}{\partial z}\right)$
+
+where $t$ is the time, $\rho$ is the material density, $k$ is the thermal conductivity, and $C_{p}$ is the specific heat capacity. The initial condition is defined as: $T(x, y, z, 0)=T_{0}$, where $T_{0}$ is the environment temperature. The adiabatic boundary condition is applied to all surfaces except the top one, where the heat influx via laser irradiation and the heat loss induced by thermal convection and radiation are taken into account by:
+
+$-k \frac{\partial T_{s}}{\partial z}=Q+h_{c}\left(T_{0}-T_{s}\right)+\varepsilon \sigma\left(T_{0}^{4}-T_{s}^{4}\right)$
+
+where $T_{s}$ is the temperature of the top surface, $h_{c}$ is the heat convection coefficient, $\varepsilon$ is the surface emissivity, and $\sigma$ is the Stefan-Boltzmann constant. The laser energy flux $Q$ follows a Gaussian distribution in space:
+
+$Q=(1-R) \frac{2 P}{\pi r^{2}} \exp \left(-2 \frac{(x-v t)^{2}+y^{2}}{r^{2}}\right)$
+
+where $R$ is the material reflectivity, $P$ is the laser power, $r$ is the laser beam radius, and $v$ is the scanning velocity.
+
+In the thermal analysis, a 3D model with dimensions of $3 \times 2 \times 1 \mathrm{~mm}^{3}$ is employed, which consists of a $0.9-\mathrm{mm}$-thick deposited bulk and a $0.1-\mathrm{mm}$-thick Ti-45Al powder layer. The effective conductivity of powder bed can be estimated by: $k=k_{b}(1-\mu)$ for powder material and $k=k_{b}$ for melt [22], where $k_{b}$ is the thermal conductivity of the bulk material and $\mu$ is the powder bed porosity. The value of temperaturedependent thermal conductivity $k_{b}$ and heat capacity $C_{p}$ of Ti-45Al can be found in Ref. $[23,24]$. The reflectivity and emissivity are calculated\\
+based on the volume fraction of Ti and Al using data from Ref. [25, 26]. The related material properties used for the thermal modeling are listed in Table 1. In this work, single-track LPBF simulations with the laser powers of 100,150, 200 and $250 \mathrm{~W}$, the scanning velocities of 100 , $200,300,400 \mathrm{~mm} / \mathrm{s}$ and a beam diameter of $200 \mu \mathrm{m}$ were carried out. The thermal variables including temperature gradient $G$ and cooling rate $V_{c}$ were extracted from the resulting temperature profiles by:
+
+$G=\sqrt{\left(\partial_{x} T\right)^{2}+\left(\partial_{y} T\right)^{2}+\left(\partial_{z} T\right)^{2}}, V_{c}=\mathrm{d} T / \mathrm{d} t$
+
+Note that, the fundamental understanding of process mechanism via single-track LPBF simulation and experiment provides the foundation for a fully controlled and optimized LPBF process design. To achieve that, the thermal effect of layer-by-layer printing pattern of AM needs to be considered, and will be investigated and reported in our next effort.
+
+\subsection*{2.2. Phase-field modeling of microstructure evolution}
+To simulate microstructure evolution and the accompanying microsegregation during LPBF of Ti-45Al, a PF model with the free energy density function written in a simplified parabolic form $[20,27,28]$ is adopted. The model is formulated based on the thin interface analysis with a non-conserved order parameter $\varphi(x, z, t)$ and a conserved concentration field $c(x, z, t)$. The value of $\varphi$ is given as 0 in the liquid phase and 1 in the solid phase, and varies smoothly across the interface which is smeared over a finite distance. In this model, the driving force for solidification is determined from the chemical free energy density as [20]:
+
+$\Delta g_{c h}(\varphi, c)=\frac{\chi_{L}\left(c_{s}^{e q}-c_{l}^{e q}\right)\left(c-c^{e q}\right)}{\varphi+(1-\varphi) k_{l s}}$
+
+The parameter $\chi_{L}$ is the so-called thermodynamic factor of the liquid phase and is defined as the second derivative of free energy function from the database with respect to the solute equilibrium concentration. Such formulation based on the parabolic free energy model avoids the intensive computation of driving force at each time-iteration using TQ-interface or extrapolation scheme [27], and its incorporation of derived thermodynamic factors eliminates the necessity for using unrealistic interpolate free energy functions [29]. As a result, this PF method simultaneously guaranties the simulation accuracy and improves the modeling efficiency, especially for multi-phase or multi-component systems. In this investigation, it is assumed that $\chi_{L}$ is a constant within the freezing range for further simplification. The parameters $c_{s}^{e q}$ and $c_{l}^{e q}$ are the equilibrium concentrations in the solid and liquid phases at a certain temperature $T$, respectively, which can be calculated by:
+
+$c_{s / l}^{e q}=c_{s / l}^{e q}\left(T_{L}\right)+\frac{T-T_{L}}{m_{s / l}}$
+
+where $T_{L}$ is the liquidus temperature. The parameters $m_{s}$ and $m_{l}$ are the solidus and liquidus slopes obtained from the phase diagram, respectively, and $k_{l s}=m_{l} / m_{s}$ is the isothermal partition coefficient. The mean equilibrium concentration $c^{e q}$ is defined as:
+
+$c^{e q}=\varphi c_{s}^{e q}+(1-\varphi) c_{l}^{e q}$
+
+The temporal and spatial evolution of $\varphi$ and $c$ represent the microstructure evolution, and are governed by the PF equation and the solute diffusion equation [28]:
+
+
+\begin{equation*}
+\frac{\tau_{0}}{W^{2}} a(\theta)^{2} \frac{\partial \varphi}{\partial t}=\vec{\nabla}\left[a(\theta)^{2} \vec{\nabla} \varphi\right]+\partial_{x}\left[|\vec{\nabla} \varphi|^{2} a(\theta) \frac{\partial a(\theta)}{\partial\left(\partial_{x} \varphi\right)}\right]+\partial_{z}\left[|\vec{\nabla} \varphi|^{2} a(\theta) \frac{\partial a(\theta)}{\partial\left(\partial_{z} \varphi\right)}\right]-\frac{1}{W^{2}} \frac{\partial h(\varphi)}{\partial \varphi}+\frac{a_{1}}{W \sigma} \frac{\partial g(\varphi)}{\partial \varphi} \Delta g_{c h} \tag{8}
+\end{equation*}
+
+
+PF model is modified to: $\frac{\partial c}{\partial t}=\vec{\nabla}\left[\left(D_{s}+D_{l}(1-\varphi)\right) \vec{\nabla} \frac{c-c^{e q}}{\varphi+(1-\varphi) k_{l s}}+J_{a t}\right]$
+
+The parameters $\tau_{0}, W$, and $\sigma$ are the relaxation time, interface width and interface energy, respectively. $h(\varphi)=\varphi^{2}(1-\varphi)^{2}$ is the double well function that guarantees that the free energy functional has two equilibrium states, at $\varphi=0$ and $\varphi=1$ corresponding to the bulk phases. $g(\varphi)$ is the typical interpolation function and we choose as $g(\varphi)=\varphi^{3}(10-$ $\left.15 \varphi+6 \varphi^{2}\right)$ since this is the minimal polynomial expression satisfying the necessary interpolation condition, $h(0)=1, h(1)=1$, and having also vanishing slope at $\varphi=0$ and $\varphi=1$, in order to not shift the bulk states. The term $a(\theta)=1+\varepsilon \cos 4\left(\theta+\theta_{0}\right)$ describes the four-fold surface energy anisotropy (for BCC/FCC metals), where $\varepsilon$ is the anisotropy strength, $\theta=\arctan \left(\partial_{z} \varphi / \partial_{x} \varphi\right)$ is the angle between the interface normal and the $x$ axis, and $\theta_{0}$ is the misorientation angle between preferred crystalline orientation and temperature gradient direction. The parameters $D_{s}$ and $D_{l}$ are the solute diffusion coefficients in solid and liquid, respectively. $J_{a t}$ is the anti-trapping current used to eliminate spurious solute-trapping effects at the interface and is expressed as:
+
+$J_{a t}=\frac{W}{\sqrt{2}}\left(c_{s}^{e q}-c_{l}^{e q}\right) \frac{\vec{\nabla} \varphi}{|\vec{\nabla} \varphi|} \frac{\partial \varphi}{\partial t}$
+
+The relaxation time $\tau_{0}$ is linked to the physical quantities by:
+
+$\tau_{0}=\frac{a_{1} a_{2} W^{3} \chi_{L}\left(c_{s}^{e q}-c_{l}^{e q}\right)^{2}}{\sigma D_{l}}$
+
+where $a_{1}=0.2357$ and $a_{2}=2.35$ [30] are the numerical constants.
+
+To conveniently apply the PF solver to rapid solidification and obtain steady-state solutions, a shifting simulation box along $z$ direction (temperature gradient direction) is used. As a characteristic length scale of the resulting solidification patterns, the non-linearly selected cell tip radius that can be easily measured during simulation run-time is used as a length-scale. The size of the simulation box is related to this dynamic length-scale such that independent of the current interface position, undercooling conditions are always finite. To be specific, this frame is shifted in $z$ direction once the solidification reached $3 / 4$ of the simulation domain height $Z$. As a result, the temperature field in the proposed
+
+$T(x, z, t)=T_{L}-\Delta T+G\left(z-\frac{3}{4} Z\right)-V_{c} t+G n_{s} l_{s}$
+
+where $n_{s}$ is the number of shifts and $l_{s}$ is the shift length. The tip undercooling, $\Delta T$, consisted of solute undercooling and curvature undercooling is written as:
+
+$\Delta T=m_{l}\left(c_{s}^{e q}-c_{l}^{e q}\right) \Omega$
+
+The supersaturation $\Omega$ can be linked to the local thermal conditions by [28]:
+
+$\Omega=\left(\frac{\pi^{4} R d_{0}}{820 \varepsilon D_{l}}\right)^{1 / 5.4}$
+
+where $R=V_{c} / G$ is the solidification rate and $d_{0}$ is the chemical capillary length that can be calculated by:
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-04}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-04(1)}
+\end{center}
+
+Fig. 1. Schematic illustrations of (a) the 3D thermal model and (b) the two-dimensional (2D) transverse section ( $x z$-plane) of the melt pool. The specific simulation sites across the melt pool are defined using a $\left(x^{\prime}, z^{\prime}\right)$ Cartesian coordinate system with the origin $(0,0)$ located at the bottom of the melt pool. The center of melt pool is located at $\left(0, h_{m}\right)$, where $h_{m}$ is the melt pool depth.
+
+$d_{0}=\frac{\sigma}{\chi_{L}\left(c_{s}^{e q}-c_{l}^{e q}\right)^{2}}$
+
+\subsection*{2.3. Phase-field simulation geometry and modeling parameters}
+The PF simulations were carried out in a 2D computational domain of $4 \times 6 \mu \mathrm{m}^{2}$, with zero-flux boundary conditions applied for all fields in all directions except for a constant concentration $c_{0}$ set at the top of the domain. A grid spacing of $d x=d z=0.5 W$ and a time step of $d t=0.016 \tau_{0}$ were used. The interface thickness $W$ was chosen to be $10 \mathrm{~nm}$, which was much smaller than the microstructure scale. The simulations were initialized with a set of randomly distributed nuclei at the bottom of the domain, and the solute concentration field was set to be $c_{S}^{e q}\left(T_{L}\right)$ in the solid and $c_{l}^{e q}\left(T_{L}\right)$ in the liquid. A Guassian noise from Ref. [20] was added to Eq. (8) to introduce interface perturbations during microstructure evolution. The thermodynamic properties of Ti$45 \mathrm{Al}$ were obtained from the results in Ref. [31]. The deduced material properties and modeling parameters used for the microstructure evolution of Ti-45Al are listed in Table 2.
+
+\subsection*{2.4. Experimental procedure}
+In addition to the simulation work, single-track LPBF experiments of Ti-45Al alloy were carried out. Ti powder with an average particle size of $45 \mu \mathrm{m}$ and $\mathrm{Al}$ powder with an average particle size of $30 \mu \mathrm{m}$, both provided by US Nano Inc., were mixed together with an atomic ratio of 55:45 using a planetary ball mill (Retsch PM100) for $4 \mathrm{~h}$. The rotation speed was $200 \mathrm{rpm}$ and ball-to-powder ratio was 5:1. The powder mixture was then uniformly dispersed on the substrate $\left(25 \times 15 \times 5 \mathrm{~mm}^{3}\right)$ to form a $150-\mu m$-thick powder layer. LPBF experiments were carried out using an Ytterbium fiber laser (YLR-500, IPG) with a wavelength of $1070 \mathrm{~nm}$ and a beam radius of $200 \mu \mathrm{m}$. Argon was used as the protective gas to prevent the mixed powder from oxidation. After laser processing, the samples were cross-sectioned and polished, followed by etching with Kroll's etchant. Secondary electron (SE) and backscattered
+
+Table 1
+
+Material properties used for the thermal modeling $[22,25,26]$.
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Properties & Powder bed & Bulk \\
+\hline
+Density, $\rho\left(\mathrm{kg} / \mathrm{m}^{3}\right)$ & 1860 & 3720 \\
+Reflectivity, $R$ & 0.5714 & 0.76 \\
+Emissivity, $\varepsilon$ & 0.33 &  \\
+Convection coefficient, $h\left(\mathrm{~W} / \mathrm{m}^{2} \cdot \mathrm{K}\right)$ & 15 &  \\
+\hline
+\end{tabular}
+\end{center}
+
+electron (BSE) analyses were performed to determine the macromorphology and microstructure of the as-built tracks, respectively, using a scanning electron microscope (SEM, JEOL JSM-7100FT) at an operating voltage of $10 \mathrm{kV}$.
+
+\section*{3. Results and discussion}
+\subsection*{3.1. Cellular solidification and microsegregation characteristics}
+The feasibility of proposed PF model is firstly evaluated at a given cooling rate of $5 \times 10^{5} \mathrm{~K} / \mathrm{s}$ and a temperature gradient of $10^{7} \mathrm{~K} / \mathrm{m}$, which are within the reasonable range of thermal variables during LPBF processing [35]. Fig. 2(a) shows the simulated temporal evolution of microstructures, where cellular structures in LPBF-built parts [36-38] are obtained and represented by $\mathrm{Al}$ concentration variations. At the beginning of solidification, with the growth of initial nuclei, the solute is rejected into the liquid and starts to accumulate at the solid-liquid interface because of different solute diffusivities in solid and liquid phases. As a result, the liquidus temperature varies at the interface with the solute concentration. Since the given thermal parameters in the current case satisfies the criterion: $G / R\left(2 \times 10^{8} \mathrm{~K} / \mathrm{m}^{2} \cdot \mathrm{s}\right)<\Delta T_{f} / D_{l}\left(2.73 \times 10^{10} \mathrm{~K} /\right.$ $\mathrm{m}^{2} \cdot \mathrm{s}$ ), the variation of liquidus temperature leads to the constitutional undercooling [39]. This induces local perturbations (instabilities) at the interface, which later on are amplified and evolve into protrusions along the temperature gradient direction. As the microstructure evolves, the solutes rejected in the lateral direction by these protrusions slow down the growth of the regions between them, resulting in the formation of the initial cellular structure. As the solidification fronts reaches $3 / 4$ of domain size at $t=0.05 \mathrm{~ms}$, a frame that shifts at the same velocity with the fronts is activated to examine the moving interface. At $t=0.25 \mathrm{~ms}$, the simulation approaches the steady-state growth, where the front velocity/solidification rate $R$ is a constant ( $R$ tends to $V_{c}$ / $G=0.05 \mathrm{~m} / \mathrm{s}$ ), as shown in Fig. 2(b). During this intermediate stage, the
+
+Table 2
+
+Material parameters used for the PF modeling [31-34].
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Parameters & Values \\
+\hline
+Solidus temperature, $T_{S}(\mathrm{~K})$ & 1776 \\
+Liquidus temperature, $T_{L}(\mathrm{~K})$ & 1858 \\
+Equilibrium concentration in solid, $c_{S}^{e q}\left(T_{L}\right)$ & 0.399 \\
+Equilibrium concentration in lqiuid, $c_{l}^{e q}\left(T_{L}\right)$ & 0.45 \\
+Solidus slope, $m_{s}(\mathrm{~K} /$ at. $)$ & 1803 \\
+Liquidus slope, $m_{l}(\mathrm{~K} / \mathrm{at})$. & 1404 \\
+Diffusivity of solid, $D_{S}\left(\mathrm{~m}^{2} / \mathrm{s}\right)$ & $3 \times 10^{-12}$ \\
+Diffusivity of liquid, $D_{l}\left(\mathrm{~m}^{2} / \mathrm{s}\right)$ & $3 \times 10^{-9}$ \\
+Thermodynamic factor of liquid, $\chi_{L}\left(\mathrm{~J} / \mathrm{mol} / \mathrm{at}^{2}{ }^{2}\right)$ & $1.71 \times 10^{5}$ \\
+Interfacial energy, $\sigma\left(\mathrm{J} / \mathrm{m}^{2}\right)$ & 0.17 \\
+\hline
+\end{tabular}
+\end{center}
+
+(a)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_1cc02a52e1af6a2c8452g-05(5)}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-05(2)}
+\end{center}
+
+(d)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-05(3)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-05(6)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-05}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-05(1)}
+\end{center}
+
+(e)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-05(4)}
+\end{center}
+
+Fig. 2. Microstructure evolution during rapid solidification of Ti-45Al at a cooling rate of $5 \times 10^{5} \mathrm{~K} / \mathrm{s}$ and a temperature gradient of $10^{7} \mathrm{~K} / \mathrm{m}$. (a) Evolution of cellular structure at different solidification times, represented by solute concentration (at.\% Al). (b) Temporal evolution of solidification rate $R$. (c), (d), and (e): microsegregation examined by Al concentration variations along lines A, B, and C in Fig. 2(a), respectively.
+
+initial cellular structure adjusts itself via a series of dynamic events including cessation, merging and splitting of some cells, in order to reduce the interfacial energy and achieve stable cell tips. Finally, after $t=$ $0.45 \mathrm{~ms}$, the number and geometrical features of primary cells remain the same as solidification proceeds, achieving the final steady cellular structure. Note that interface instabilities are not observed at the sides of cells in this case, which could be caused by the significantly reduced constitutional undercooling at the intercellular regions due to the small area of these regions and the employed large $G / R$. By decreasing the value of $G / R$, it is possible to initiate the instabilities at the cell sides and obtain cellular-dendritic structure (or even equiaxed dendrites) [40]. In this study, we focus on the evolution of cellular structure which is the dominant microstructural feature given the thermal conditions during LPBF.
+
+Moreover, the average cell size (PDAS), calculated by the width of simulation domain divided by the number of cells in the final steady cellular structure (Fig. 2(a)), is predicted to be around $0.54 \mu \mathrm{m}$, which is close to the experimental measurement $(0.68 \mu \mathrm{m})$ by Liu et al. [41] using similar thermal conditions for the rapid solidification of a Ti-48Al-2Cr-2Nb (Ti-4822) alloy. In addition, microsegregation, an important phenomenon during solidification that may cause interfacial instability, secondary phases, cracks and embrittlement, is simulated as shown in Fig. 2. Since Al has a lower diffusivity in solid Ti than that in liquid Ti $\left(D_{s}<D_{l}\right)$, as the solidification proceeds, the solute redistribution at the interface controlled by the Fickian diffusion flux (the first term on the right-hand side in Eq. (9)) results in the $\mathrm{Al}$ being rejected from the solidified cells into the liquid. This results in the formation of $\mathrm{Al}$ enriched intercellular regions that solidifies later than the cells. The concentration variations between the cells and intercellular regions, also known as microsegregation, can be related to the partition coefficient. In a normal solidification process like casting, where the solidification front advances at a much slower velocity (order of $\mu \mathrm{m} / \mathrm{s}$ [42]) compared to the interface diffusion rate $V_{D}(0.1-1 \mathrm{~m} / \mathrm{s}$ [43]), the complete solute redistribution occurs, and the interface can reach a local equilibrium\\
+concentration following the phase diagram. However, for the rapid solidification in Fig. 2, the solidification front advances with a velocity of $0.05 \mathrm{~m} / \mathrm{s}$ that is comparable to the $V_{D}$, leading to insufficient time for solute redistribution or reaching the local equilibrium state. As a result, the solute-trapping effect can accumulate over time, leading to an unphysically high solute levels in the liquid near the interface. To mitigate this effect, the anti-trapping current $J_{a t}$ (the second term on the right-hand side in Eq. (9)) is thus introduced in the PF model. Additionally, circular droplets pinched off from the bottom of the intercellular regions can be observed at $t=0.25 \mathrm{~ms}$ in Fig. 2(a), which are formed to maintain the intercellular spacing. Despite that these droplets are eliminated in the final stages of solidification via the aforementioned dynamic events, they may survive at certain thermal conditions and become highly Al enriched. Eventually, $\gamma$-TiAl $\left(\gamma_{\text {seg }}\right)$ may precipitate directly from the liquid phase in these solute enriched intercellular regions, a phenomena which was experimentally observed in Kenel's work [44,45].
+
+To quantitatively investigate the microsegregation behavior during LPBF of Ti-45Al, the Al concentration variations along three lines (A, B, $\mathrm{C}$ in Fig. 2(a)) were extracted. Fig. 2(c) shows the Al concentration profile across the cell tip (line A). It can be observed that the Al concentration through the cell core, $c_{s}^{*}$, remains almost constant due to the small rate of solute diffusion in solid phase. A sharp rise of solute concentration can be found near the cell tip due to the rejection of $\mathrm{Al}$ at the solid-liquid interface. Consequently, the Al concentration reaches a maximum value $c_{\max }$ within the interface, then decreases rapidly, and finally reaches the far-field liquid concentration $c_{0}$. The partition coefficient at the cell tip under the given conditions can be calculated by $k_{\mathrm{LPBF}}=c_{s}^{*} / c_{\max }=0.915$, which is higher than the value (0.874-0.887 at $1776-1858 \mathrm{~K})$ measured during conventional solidification process. This is because the solute does not have enough time to diffuse during rapid solidification to reach the local equilibrium state. Fig. 2(d) demonstrates the solute concentration variation along intercellular regions (line B). It is found that with the increase of $z$, the Al concentration decreases linearly in the solid phase with a slope of $0.70 \% / \mu \mathrm{m}$, then decreases more steeply at the solid-liquid interface, and eventually reaches the far-field liquid composition $c_{0}$. The slope (concentration gradient) in the solid phase can also be estimated by an analytical solution: $d c_{\mathrm{Al}} / d z=G / m_{l}$. With the temperature gradient $G=10^{7} \mathrm{~K} / \mathrm{m}$ and the liquidus slope $m_{l}=1404 \mathrm{~K} / \mathrm{at} . \%$, the ascalculated concentration gradient is $0.71 \% / \mu \mathrm{m}$, which is in good agreement with the modeling results. Fig. 2(e) depicts the $\mathrm{Al}$ concentration profile across multiple cells along $x$ direction at $z=2 \mu \mathrm{m}$ (line C). The solute microsegregation pattern with a typical U-shape profile can be observed, where the higher and lower area represent the intercellular regions and cells, respectively. Note that the maximum concentration in this profile is around 0.504 , which is higher than $c_{\max }$ because intercellular regions have more time for the diffusion of Al compared to the cell tips as the solidification proceeds. In addition, from this figure, the average deviation of the solute concentration $\Delta c_{\mathrm{Al}}$ after complete solidification can be obtained, which can provide significant information for predicting the final microstructure and mechanical properties.
+
+\subsection*{3.2. Site-specific cooling rate and temperature gradient as affected by LPBF parameters}
+During rapid solidification, the evolution of the microstructure is significantly affected by thermal variables including cooling rate $V_{c}$, temperature gradient $G$ and solidification rate $R$. For instance, the morphology of liquid-solid interface can be modified by changing the ratio of $G / R$ [46]. The PDAS and the chemical/phase distribution can be tuned by changing $V_{c}$ [47]. Therefore, understanding of site-specific thermal distribution across the melt pool is essential to investigate the microstructure evolution as affected by key LPBF parameters. To demonstrate such spatial variations, a $\left(x^{\prime}, z^{\prime}\right)$ Cartesian coordinate system is introduced with the origin $(0,0)$ located at the bottom of the melt pool, and the center of melt pool is defined at $\left(0, h_{m}\right)$, where $h_{m}$ is the melt pool depth, as illustrated in Fig. 1(b). Fig. 3 depicts the simulated cooling rate and temperature gradient at ( $0 \mu \mathrm{m}, 15 \mu \mathrm{m})$ as affected by the laser power, $P$, and scanning velocity, $v$. It is observed that, given a scanning velocity of $250 \mathrm{~mm} / \mathrm{s}$, the cooling rate decreases linearly from $6.6 \times 10^{5}$ to $4.5 \times 10^{5} \mathrm{~K} / \mathrm{s}$ while the thermal gradient increases from $8.8 \times 10^{6}$ to $10.7 \times 10^{6} \mathrm{~K} / \mathrm{m}$ as the laser power increases from 100 to $250 \mathrm{~W}$ (Fig. 3(a)). In addition, given a laser power of $150 \mathrm{~W}$, by decreasing the scanning velocity from 400 to $100 \mathrm{~mm} / \mathrm{s}$, the cooling rate decreases from $11.3 \times 10^{5}$ to $2.4 \times 10^{5} \mathrm{~K} / \mathrm{s}$ while the thermal gradient increases from $8.1 \times 10^{6}$ to $10.3 \times 10^{6} \mathrm{~K} / \mathrm{m}$. It is also found that the cooling rate is more sensitive to the scanning velocity than to the laser power by comparing the trends in the two figures. For instance, to increase the cooling rate from $4.5 \times 10^{5}$ to $6.6 \times 10^{5} \mathrm{~K} / \mathrm{s}$, the laser power is decreased by a factor of 2.5 from 250 to $100 \mathrm{~W}$; however, the scanning velocity only needs to be increased by a factor of 1.58 from $\sim 170$ to $\sim 270 \mathrm{~mm} / \mathrm{s}$. Clearly, LPBF parameters have different impacts on the thermal variables, which determine the microstructure evolution mechanism.
+
+Moreover, due to the Gaussian attenuation of laser beam energy and the non-isothermal boundary conditions, the cooling rate and temperature gradient vary across the melt pool during solidification. Given a laser power of $150 \mathrm{~W}$ and scanning speed of $200 \mathrm{~mm} / \mathrm{s}$, Fig. 4 demonstrates the site-specific cooling rate and temperature gradient as functions of the distance along different directions. It can be seen that the cooling rate decreases when moving away from the center $\left(0, h_{m}\right)$ along both $x^{\prime}$ and $z^{\prime}$ directions, while the temperature gradient presents an opposite trend. As a result, site-specific microstructural features are expected within the melt pool. This notion is supported by a number of studies. For instance, Tao et al. [48] observed a transition of grain morphology from the fine cellular structure to coarse cellular-dendrites within the melt pool during LPBF of an Inconel 718 superalloy.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_1cc02a52e1af6a2c8452g-06}
+
+Fig. 3. Cooling rate $V_{c}$ and temperature gradient $G$ at $\left(x^{\prime}, z^{\prime}\right)=(0 \mu \mathrm{m}, 15 \mu \mathrm{m})$ : (a) the effect of laser power, given a scanning velocity of $250 \mathrm{~mm} / \mathrm{s}$, and (b) the effect of scanning speed, given a laser power of $150 \mathrm{~W}$.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_1cc02a52e1af6a2c8452g-07(2)}
+
+Fig. 4. Site specific cooling rate $V_{c}$ and temperature gradient $G$ varying along (a) $x^{\prime}$ direction at $z^{\prime}=h_{m}$ and (b) $z^{\prime}$ direction at $x^{\prime}=0$ under a laser power of $150 \mathrm{~W}$ and a scanning speed of $200 \mathrm{~mm} / \mathrm{s}$.
+
+Nevertheless, the aforementioned trends may change depending on the material. Liu et al. [49] claimed that the cooling rate during LPBF of a AlSi10Mg alloy decreased first and then increased along the $z$ ' direction. In our study, the center of the melt pool has the highest cooling rate and lowest temperature gradient during solidification, because the heat is majorly dissipated through the top surface by convection and radiation due to the low thermal conductivity of TiAl substrates (around $22 \mathrm{~W} /$ $\mathrm{m} \cdot \mathrm{K}[50]$ as compared to the AlSi10Mg of $100-200 \mathrm{~W} / \mathrm{m} \cdot \mathrm{K}$ [49]). Additionally, the variations in thermal variables are more pronounced along $z^{\prime}$ direction compared with those along $x^{\prime}$ direction. For instance, when $x^{\prime}$ shifts $40 \mu \mathrm{m}$ from the center, the cooling rate is reduced by $6 \%$ from $8.6 \times 10^{5}$ to $8.1 \times 10^{5} \mathrm{~K} / \mathrm{s}$; on the other hand, when $z^{\prime}$ shifts $40 \mu \mathrm{m}$ from the center, it is decreased by $52 \%$ from $8.6 \times 10^{5}$ to $4.1 \times 10^{5} \mathrm{~K} / \mathrm{s}$. Hence, we expect that a more significant change of microstructure can be observed along $z^{\prime}$ direction rather than along $x^{\prime}$ direction.
+
+\subsection*{3.3. Site-specific microstructure evolution within the melt pool}
+Microstructural features of LPBF of TiAl vary spatially within the melt pool due to the site-specific thermal effect. Fig. 5(a) demonstrates the temperature distribution during the single-track LPBF under a laser power of $150 \mathrm{~W}$ and a scanning velocity of $200 \mathrm{~mm} / \mathrm{s}$. Based on this simulation result, we divided the melt pool area ( $T>1858 \mathrm{~K}$ ) into discrete regions with a dimension of $20 \times 10 \mu \mathrm{m}^{2}$, and extracted cooling rate $V_{c}$ and temperature gradient $G$ at the center of each region. Consequently, a site-specific PDAS map across the melt pool (Fig. 5(b)) can be obtained by applying site-specific thermal variables in the PF model. The predicted PDAS ranges from 0.165 to $1.765 \mu \mathrm{m}$, indicating that a significant microstructural change can take place within a single melt pool.
+
+To understand the microstructural evolution mechanism, the KurzFisher model [43] is introduced here:
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-07}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-07(1)}
+\end{center}
+
+Fig. 5. (a) Simulated temperature distribution across the transverse section of the melt pool during LPBF of Ti-45Al. The melt pool boundary is marked by the isotherm at $1858 \mathrm{~K}$. (b) Sitespecific PDAS across the melt pool.
+
+PDAS $=4.3(1-\Omega)^{0.5}\left(\frac{\Gamma \Delta T_{f} D_{l} k_{l s}}{G V_{c}}\right)^{0.25}$
+
+where $\Gamma$ is the Gibss-Thomson coefficient and $\Delta T_{f}=T_{L}-T_{S}$ is the freezing range. In a number of studies [51,52], the term $(1-\Omega)^{0.5}$ is ignored by assuming the cell/dendrite tip temperature is close to liquidus temperature ( $\Omega$ tends to 0 ), therefore, the temperature gradient and cooling rate have the equivalent impact on the PDAS by: PDAS $\sim G^{-0.25} V_{c}^{-0.25}$. However, during rapid solidification, the tip temperature may quickly decrease to the solidus temperature, resulting in a high undercooling ( $\Omega$ tends to 1 ) that is also a function of $G$ and $V_{c}$ according to Eq. (14). This weakens the influence of temperature gradient on the growth of PDAS. For instance, Kundin et al. [53] found that the PDAS of LPBFbuilt manganese steel was related to the thermal parameters by: PDAS $\sim G^{-0.095}$ at a constant cooling rate and $\sim V_{c}^{-0.47}$ at a constant temperature gradient. Clearly, the value of PDAS during rapid solidification is highly dependent on the cooling rate rather than the temperature gradient. On the other hand, increasing the cooling rate reduces the concentration of rejected solutes in the lateral direction because of less diffusion time, and thus require a smaller PDAS to avoid constitutional undercooling [39]. As a result, PDAS increases when moving from the center to the boundary of melt pool mainly due to the change in the cooling rate as discussed in Section 3.2. Nevertheless, PDAS may not vary within a large area for a real scenario, because the cellular grains can continuously grow out of the small discrete regions. Additionally, it is found that the microstructural change along $x^{\prime}$ direction is less pronounced compared with that along $z$ ' direction. For example, starting from the center of melt pool, PDAS increases from 0.165 to $0.965 \mu \mathrm{m}$ along $x^{\prime}$ direction, while to $1.765 \mu \mathrm{m}$ along $z^{\prime}$ direction. This phenomenon is attributed to the less thermal variations in $x^{\prime}$ direction.
+
+\subsection*{3.4. Effects of laser processing parameters on the microstructure evolution}
+Site-specific microstructure evolution during LPBF is strongly influenced by processing parameters, in particular the laser power and scanning velocity. In this section, the effects of laser power and scanning velocity on the microstructural features of PDAS and microsegregation are investigated. Fig. 6(a) presents the simulated steady-state microstructure at $(0 \mu \mathrm{m}, 15 \mu \mathrm{m})$ under different laser powers and a constant scanning velocity of $250 \mathrm{~mm} / \mathrm{s}$. It can be seen that the predicted PDAS increases with increasing the laser power. For instance, the PDAS increases from 0.387 to $0.613 \mu \mathrm{m}$ as the applied laser power increases from 150 to $250 \mathrm{~W}$. Such trend can also be observed at simulation sites with different values of $z^{\prime}$, as shown in Fig. 6(b), which is majorly attributed to the reduction of cooling rate illustrated in Fig. 3(a).
+
+Similar analysis was conducted to investigate the influence of scanning velocity on the microstructure evolution, as shown in Fig. 7. It can be observed that given a laser power of $150 \mathrm{~W}$, the predicted PDAS at the same height decreases with the increase of scanning velocity. Moreover, by comparing Fig. 6(b) and Fig. 7(b), it is found that PDAS is more sensitive to the scanning velocity rather than the laser power. For instance, given a site location ( $0 \mu \mathrm{m}, 15 \mu \mathrm{m}$ ), to reduce the PDAS from 0.55 to $0.36 \mu \mathrm{m}$, the laser power needs to be decreased by a factor of 2 from 200 to $100 \mathrm{~W}$; however, the scanning velocity only needs to be increased by a factor of 1.4 from 200 to $\sim 280 \mathrm{~mm} / \mathrm{s}$. This is attributed to the higher sensitivity of cooling rate to the scanning velocity as compared with that to the laser power, as stated in Section 3.2. In addition, even though a number of researchers [54] employed the energy density, $E=P / v$, for process optimization and microstructure prediction, our simulation results show that the microstructural features can be different at the same energy density. For instance, the predicted PDAS at $(0 \mu \mathrm{m}, 15 \mu \mathrm{m})$ is estimated to be $\sim 0.86 \mu \mathrm{m}$ with $P=150 \mathrm{~W}$ and $v=$ $150 \mathrm{~mm} / \mathrm{s}(E=1 \mathrm{~J} / \mathrm{mm})$, whereas it is $0.613 \mu \mathrm{m}$ with $P=250 \mathrm{~W}$ and $v=250 \mathrm{~mm} / \mathrm{s}(E=1 \mathrm{~J} / \mathrm{mm})$. Hence, it is necessary to investigate the effects of individual LPBF parameters and their interactions on the microstructure evolution.
+
+Furthermore, microsegregation as affected by the scanning velocity was studied. Fig. 8(a)-(d) presents the Al concentration profiles across multiple cells along $x^{\prime}$ direction extracted from Fig. 7(a). It can be seen that the U-shape profiles become finer and closer with the increase of scanning velocity, indicating a decrease in $\Delta \mathrm{c}_{\mathrm{Al}}$ and a weaker microsegregation effect. The $\mathrm{Al}$ microsegregation within the intercellular regions at $v=100,200,300$ and $400 \mathrm{~mm} / \mathrm{s}$ are around 51.1, 50.4, 49.8 , and 47.8 at.\%, respectively. Therefore, it is less possible to form $\gamma$ TiAl directly from the liquid phase in the intercellular regions at a higher $v$ due to the reduction of $\mathrm{Al}$ concentration. On the other hand, the Al concentration within the supersaturated cells is found to be increased with increasing the scanning velocity, which may promote the formation of $\alpha_{2} / \gamma$ lamellar structure by solid-state phase transformation $\left(\beta \rightarrow \alpha \rightarrow \alpha_{2}+\gamma\right)[45]$.
+
+Similar observations can be found in Fig. 8(e) that shows the Al concentration variations across the cell tips extracted from Fig. 7(a). In specific, the solute concentration at the cell cores $\left(c_{s}^{*}\right)$ increases and its maximum value ( $c_{\max }$ ) at the interface decreases with the increase of (a)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_1cc02a52e1af6a2c8452g-08}\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_1cc02a52e1af6a2c8452g-08(2)}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-08(1)}
+\end{center}
+
+Fig. 6. (a) Al concentration maps near $\left(x^{\prime}, z^{\prime}\right)=(0 \mu \mathrm{m}, 15 \mu \mathrm{m})$ under different laser powers and a fixed scanning velocity of $250 \mathrm{~mm} / \mathrm{s}$. (b) Site-specific PDAS as affected by laser power.\\
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-09(1)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-09(2)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-09(4)}
+\end{center}
+
+Fig. 7. (a) Al concentration maps near $\left(x^{\prime}, z^{\prime}\right)=(0 \mu \mathrm{m}, 15 \mu \mathrm{m})$ under different scanning velocities and a fixed laser power of $150 \mathrm{~W}$. (b) Site-specific PDAS as affected by scanning velocity.
+
+scanning velocity. This phenomenon is induced by the shorter time duration for Al diffusion at a higher scanning velocity, leading to the increase of partition coefficient $k_{\mathrm{LPBF}}$, as shown in Fig. $8(\mathrm{f})$. Complete solute trapping can be achieved at $k_{\text {LPBF }}=1$, where uniform distribution of chemical composition occurs. Aziz [55] obtained an analytical solution for the partition coefficient $k_{\text {num }}$ during rapid solidification by:
+
+$k_{\text {num }}=\frac{k_{e}+R / V_{D}}{1+R / V_{D}}$
+
+where $k_{e}$ is the partition coefficient at local equilibrium state, and the interface diffusion velocity $V_{D}$ is estimated by $V_{D}=D_{l} / W_{0}$ in this study.\\
+The comparison between $k_{\mathrm{LPBF}}$ and $k_{\text {num }}$ at different scanning velocities in Fig. 8(f) shows insignificant discrepancy, indicating the feasibility of simulating the non-equilibrium solidification during LPBF by the proposed PF model.
+
+\subsection*{3.5. Effect of grain orientation on the microstructure evolution}
+During LPBF process, solidification mostly takes place in the form of epitaxial growth of the previous/as-solidified layer, meaning that the primary cells tend to grow along the preferred crystalline orientation $\overrightarrow{O_{P}}$, e.g., BCC and FCC metals prefer to grow along $\langle 100\rangle$ directions, (a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-09(3)}
+\end{center}
+
+(d)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-09}
+\end{center}
+
+(b)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_1cc02a52e1af6a2c8452g-09(6)}\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_1cc02a52e1af6a2c8452g-09(5)}
+
+Fig. 8. Al concentration variations along line C shown in Fig. 2(a) at a scanning velocity of (a) 100 , (b) 200 , (c) 300 , and (d) 400 mm/s. (e) Al concentration variations along line A shown in Fig. 2(a). (f) Comparison of numerical results and simulation results. The dash line represents partition coefficient $k_{e}$ at local equilibrium state.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_1cc02a52e1af6a2c8452g-10(1)}
+
+Fig. 9. Predicted microstructure with different misorientation angles at a cooling rate of $5 \times 10^{5} \mathrm{~K} / \mathrm{s}$ and a temperature gradient of $10^{7} \mathrm{~K} / \mathrm{m}$.
+
+rather than the temperature gradient direction $\overrightarrow{O_{G}}$. Hence, in addition to the laser power and scanning velocity, the grain orientation in terms of the misorientation angle $\theta_{0}$ between $\overrightarrow{O_{P}}$ and $\overrightarrow{O_{G}}$ plays another critical role on the microstructure evolution during LPBF of metallic materials.
+
+The effect of misorientation is investigated at a cooling rate of $5 \times 10^{5} \mathrm{~K} / \mathrm{s}$ and a temperature gradient of $10^{7} \mathrm{~K} / \mathrm{m}$, as shown in Fig. 9 . The black, red and white arrows represent $\overrightarrow{O_{G}}, \overrightarrow{O_{P}}$ and the actual growth direction $\overrightarrow{O_{A}}$, respectively. The angle between $\overrightarrow{O_{A}}$ and $\overrightarrow{O_{G}}$ is indicated by symbol $\Phi$. According to Deschamps et al. [56], the relation between $\theta_{0}$ and $\Phi$ can be described as:
+
+$\Phi=\theta_{0}-\frac{\theta_{0}}{1+a(P e)^{e}}$
+
+where $a \leq 1.2$ and $b=1.25$ are constant fitting parameters, and $P e$ is the Péclet number related to solidification rate $R$ and the PDAS, $\Lambda$, as $\mathrm{Pe}=R N / D$. On the basis of this equation, Li et al. [57] conducted PF simulations on the directional solidification, and identified a positive correlation between $\Phi$ and $R$. To be specific, given a constant $\theta_{0}$ of $30^{\circ}, \Phi$ increased from $22.1^{\circ}$ to $26.5^{\circ}$ as $R$ increased from 60 to $300 \mu \mathrm{m} / \mathrm{s}$. In our study, it is found that the actual grain growth direction almost lies on the preferred crystalline orientation, i.e., $\theta_{0} \approx \Phi$. During LPBF, the high solidification rate $(R>0.01 \mathrm{~m} / \mathrm{s})$ results in a large Péclet number ( $>50$ ), and thus the second term in Eq. (18) approaches zero, leading to the grain growth on the preferred crystalline orientation. Moreover, it can be seen that as the misorientation angle increases to $45^{\circ}$, the cellular interface becomes unstable, contributing to the formation of cellular-dendritic structure. During solidification, the interface stability can be controlled by the ratio of $G / R$ or $G^{2} / V_{c}$. Increasing the misorientation angle leads to the decrease of temperature gradient along the grain growth direction $\left(G_{\phi}=G \times \cos \Phi\right)$. As a result, the value of $G / R$ is reduced and the interface instability is enhanced, leading to the sidebranches growing out of the cellular interface. Accordingly, we expect that decreasing the laser power or increasing the scanning velocity will also contribute to the reduction of $G / R$, promoting the cellular to cellular-dendritic transition.
+
+Fig. 10 presents the predicted PDAS as a function of $\theta_{0}$. It is found that PDAS generally increases with the increase of $\theta_{0}$, e.g., PDAS is increased by $39.5 \%$ from 0.48 to $0.67 \mu \mathrm{m}$ as $\theta_{0}$ increases from $5^{\circ}$ to $20^{\circ}$, and a sharp increase occurs after $\theta_{0}$ reaches $35^{\circ}$, which is similar to the trend observed in the work of Gandin et al. [58]. The fluctuation of PDAS at $\theta_{0} \leq 35^{\circ}$ is induced by the weak selection of primary cells, and the sharp increase at $\theta_{0}>35^{\circ}$ is caused by the significant reduction in temperature gradient along the grain growth direction. It is also worth mentioning that grains with large misorientation angles rarely survive the initial competitive growth stage during rapid solidification [59], hence the sharp increase in PDAS is barely observed in realistic LPBF processing. Despite that, the misorientation greatly affects the microstructural features and needs to be carefully considered when constructing the process-microstructure map.
+
+\subsection*{3.6. Experimental results}
+LPBF of Ti-45Al was conducted to experimentally understand the microstructure evolution mechanism and validate the modeling results. In specific, the dimensions of melt pool and the grain size were measured and compared with modeling predictions. As observed in Fig. 11, both experimental measurements and modeling results exhibit the same qualitative trends showing the effect of laser power on the melt pool width and depth. Moreover, the predicted dimensions of melt pool are quantitatively in good agreement with the experimental measurements, indicating that the proposed thermal model is capable of providing appropriate thermal variables for PF modeling. Note that the measurement of actual temperature distributions, which could help modify the thermal model and improve its accuracy, is not carried out in the current study. Temperature measurement during LPBF of TiAl-based alloys will be reported in our next effort using the infrared thermal camera [60] or two-wavelength pyrometer [61].
+
+Site-specific microstructural features in terms of PDAS were characterized using SEM and compared with modeling results. As shown in Fig. 12, given a laser power of $150 \mathrm{~W}$ and a scanning velocity of $20 \mathrm{~mm} / \mathrm{s}$, the cellular structures along the melt pool boundary exhibit the as-measured PDAS of $2.075,1.775,1.448$, and $0.91 \mu \mathrm{m}$ at sitespecific regions D, E, F, and J (marked in Fig. 11(b)), respectively. It can be concluded that PDAS decreases when moving away from the bottom of the melt pool and reaches a minimum value at the center as
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-10}
+\end{center}
+
+Fig. 10. The effect of misorientation angle on the average PDAS at a cooling rate of $5 \times 10^{5} \mathrm{~K} / \mathrm{s}$ and a temperature gradient of $10^{7} \mathrm{~K} / \mathrm{m}$.\\
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-11(9)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-11(7)}
+\end{center}
+
+Fig. 11. (a) Comparison of thermal model predictions with experimental measurements regarding the width and depth of melt pool at different laser powers (125-200 W) and a constant scanning velocity of $20 \mathrm{~mm} / \mathrm{s}$. (b) Cross-sections from experiment and simulation at a laser power of $150 \mathrm{~W}$ and a scanning velocity of $20 \mathrm{~mm} / \mathrm{s} \mathrm{showing}$ the measurements of melt pool width and depth, where D, E, F, and J denote site-specific regions used for microstructure characterization in Figs. 12 and 13.
+
+expected, which is majorly attributed to the increased cooling rate and the larger thermal variations along vertical direction compared to that along transverse direction. By incorporating the thermal variations and misorientation angles, the PF simulations present site-specific PDAS of $2.03,1.6,1.35$, and $0.81 \mu \mathrm{m}$ at D, E, F, and J regions, respectively, which demonstrates a good consistency with experimental measurements. This site-specific microstructure variation may cause nonuniform strength within the melt pool due to the Hall-Petch relationship, as experimentally proved in the work of Liu et al. [41] through nano-indentation of rapid solidified Ti-4822. It is also expected that the different microsegregation behaviors across the melt pool have significant impacts on the final distribution of $\gamma$ and $\alpha_{2}$ phases by affecting the direct formation of $\gamma_{\text {seg }}$ during solidification and the decomposition of supersaturated $\alpha_{2}$ via solid-state phase transformation $\alpha_{2} \rightarrow \alpha_{2}+\gamma$ during subsequent thermal cycles or post heat treatments. Additionally, the effect of laser power on the PDAS is also studied. It is found that the as-measured PDAS near ( $0 \mu \mathrm{m}, 15 \mu \mathrm{m})$ are 1.791, 2.155 and $2.382 \mu \mathrm{m}$ at a laser power of 125,175 and $200 \mathrm{~W}$, respectively, indicating a larger PDAS at a higher laser power caused by the reduced cooling rate. The PF simulations show similar PDAS values of 1.6, 2.1 and $2.25 \mu \mathrm{m}$ at given conditions. The small discrepancy between the above predictions and experimental results demonstrates that the proposed modeling framework has the great potential to quantitatively investigate the site-specific microstructure evolution during LPBF in terms of PDAS and solute microsegregation. It is also worth mentioning that by using the output profiles of $\mathrm{Al}$ concentration from the current integrated model, it is possible to apply another PF model [62] to simulate the growth of $\alpha_{2}$ and $\gamma$ phases via the subsequent solid-state phase transformations such as $\beta \rightarrow \alpha \rightarrow \alpha_{2}+\gamma$ or $\beta \rightarrow \alpha \rightarrow \gamma$. Additionally, the developed research methodology holds a great potential to be applied to analyze other modern manufacturing technologies, such as laser cladding, EBM, hybrid manufacturing, etc. (a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-11(5)}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-11(3)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-11(6)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-11}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-11(8)}
+\end{center}
+
+(d)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-11(1)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-11(4)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-11(2)}
+\end{center}
+
+Fig. 12. BSE images and modeling results showing PDAS across a single melt pool at a laser power of $150 \mathrm{~W}$ and a scanning velocity of $20 \mathrm{~mm} / \mathrm{s}$ for site-specific regions: (a) D, (b) E, (c) F, and (d) J marked in Fig. 11(b). Temperature gradient directions were extracted from Fig. 11(b).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_1cc02a52e1af6a2c8452g-12}
+\end{center}
+
+Fig. 13. SEM images and modeling results showing site-specific PDAS near ( $0 \mu \mathrm{m}, 15 \mu \mathrm{m})$ : the effect of laser power input, given a constant scanning velocity of $20 \mathrm{~mm} / \mathrm{s}$.
+
+\section*{4. Conclusion}
+In this study, the underlying mechanisms responsible for the sitespecific thermal history and grain evolution during LPBF of a Ti-45Al alloy are investigated. A multiphysics modeling framework is developed to simulate the solidification microstructure during LPBF with the consideration of microstructural sensitivity to spatial variation, processing parameters, and grain orientations. In addition, LPBF experiments are carried out to validate the modeling results. According to the integrated computational and experimental effort, the major conclusions can be drawn as follows:
+
+(1) LPBF of Ti-45Al alloy leads to the site-specific cellular structure across the melt pool. For instance, given a laser power of $150 \mathrm{~W}$ and a scanning velocity of $200 \mathrm{~mm} / \mathrm{s}$, the PDAS of as-solidified cellular structure varies significantly from 0.165 to $1.765 \mu \mathrm{m}$ at different sites within the melt pool.
+
+(2) The site-specific microstructure variations along vertical direction is more significant than that along transverse direction since thermal variations are more pronounced at the vertical direction.
+
+(3) The microstructure evolution is more sensitive to the cooling rate than to the temperature gradient during LPBF processing. As a result, finer structures are found at sites closer to the center of melt pool due to increased cooling rate despite the decreased temperature gradient.
+
+(4) Given the same site location $\left(x^{\prime}, z^{\prime}\right)$, the increase of scanning velocity or decrease of laser power leads to a finer cellular structure with less solute microsegregation due to a higher cooling rate. Moreover, changing the scanning velocity is more effective to tune microstructural features of LPBF-built parts as compared with changing the laser power because of its greater impact on the cooling rate.
+
+(5) The increase of misorientation angle between the preferred crystalline orientation and the temperature gradient direction results in the increase of PDAS and interface instability owing to the reduced temperature gradient along grain growth direction.
+
+The present work demonstrates the great potential of this modeling framework to quantitatively predict the site-specific microstructure evolution during metal AM processing, providing significant insights into the process optimization and alloy design. Future work will focus on extending the current framework to consider the accumulative thermal effect of layer-by-layer printing pattern of AM, and investigate the multi-component or multi-phase systems to determine the relative roles of minor elements, such as $\mathrm{Cr}$ and $\mathrm{Nb}$, and possible peritectic phases during AM of titanium aluminides. We envision that the findings in the present work will advance the progress of AM processing routine for fabrication of high-performance TiAl-based alloys towards a variety of applications including turbine blades, turbocharger wheels and exhaust valves.
+
+\section*{Author statement}
+Xing Zhang: Conceptualization, Formal analysis, Investigation, Validation, Writing - original draft; Bo Mao: Data curation, Visualization; Leslie Mushongera: Resources, Software, Writing - review \& editing; Julia Kundin: Software, Writing - review \& editing; Yiliang Liao: Funding acquisition, Supervision, Writing - review \& editing.
+
+\section*{Declaration of Competing Interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Acknowledgements}
+Y. Liao gratefully acknowledges the faculty startup support provided by College of Engineering at the Iowa State University. LT. Mushongera acknowledges funding by College of Engineering at the University of Nevada, Reno.
+
+\section*{References}
+[1] W. Chen, Z. Li, Additive manufacturing of titanium aluminides, Additive Manufacturing for the Aerospace Industry, Elsevier 2019, pp. 235-263.
+
+[2] Y.-W. Kim, Intermetallic alloys based on gamma titanium aluminide, JOM 41 (7) (1989) 24-30
+
+[3] S.J. Qu, S.Q. Tang, A.H. Feng, C. Feng, J. Shen, D.L. Chen, Microstructural evolution and high-temperature oxidation mechanisms of a titanium aluminide based alloy, Acta Mater. 148 (2018) 300-310.
+
+[4] Y. Chen, H. Yue, X. Wang, Microstructure, texture and tensile property as a function of scanning speed of Ti-47Al-2Cr-2Nb alloy fabricated by selective electron beam melting, Mater. Sci. Eng. A 713 (2018) 195-205.
+
+[5] H. Yue, Y. Chen, X. Wang, S. Xiao, F. Kong, Microstructure, texture and tensile properties of Ti-47Al-2Cr-2Nb alloy produced by selective electron beam melting, J. Alloys Compd. 766 (2018) 450-459.
+
+[6] D. Cheng, L. Li, An overview of laser-based multiple metallic material additive manufacturing: from macro-to micro-scales, Int. J. Extreme Manuf. 3 (2020) 012003.
+
+[7] X. Zhang, C.J. Yocom, B. Mao, Y. Liao, Microstructure evolution during selective laser melting of metallic materials: a review, J. Laser Appl. 31 (3) (2019) 031201.
+
+[8] C. Zhang, J. Zhu, H. Zheng, H. Li, S. Liu, G.J. Cheng, A review on microstructures and properties of high entropy alloys manufactured by selective laser melting, Int. J. Extreme Manuf. 2 (3) (2020) 032003.
+
+[9] L.E. Murr, S.M. Gaytan, A. Ceylan, E. Martinez, J.L. Martinez, D.H. Hernandez, B.I. Machado, D.A. Ramirez, F. Medina, S. Collins, Characterization of titanium aluminide alloy components fabricated by additive manufacturing using electron beam melting, Acta Mater. 58 (5) (2010) 1887-1894.
+
+[10] V. Juechter, M.M. Franke, T. Merenda, A. Stich, C. Körner, R.F. Singer, Additive manufacturing of Ti-45Al-4Nb-C by selective electron beam melting for automotive applications, Addit. Manuf. 22 (2018) 118-126.
+
+[11] J. Gussone, G. Garces, J. Haubrich, A. Stark, Y.-C. Hagedorn, N. Schell, G. Requena, Microstructure stability of $\gamma$-TiAl produced by selective laser melting, Scr. Mater. 130 (2017) 110-113.
+
+[12] W. Li, J. Liu, Y. Zhou, S. Li, S. Wen, Q. Wei, C. Yan, Y. Shi, Effect of laser scanning speed on a Ti-45Al-2Cr-5Nb alloy processed by selective laser melting: microstructure, phase and mechanical properties, J. Alloys Compd. 688 (2016) 626-636.
+
+[13] L. Löber, F.P. Schimansky, U. Kühn, F. Pyczak, J. Eckert, Selective laser melting of a beta-solidifying TNM-B1 titanium aluminide alloy, J. Mater. Process. Technol. 214 (9) (2014) 1852-1860
+
+[14] M. Reith, M. Franke, M. Schloffer, C. Körner, Processing 4th generation titanium aluminides via electron beam based additive manufacturing-characterization of microstructure and mechanical properties, Materialia 14 (2020) 100902
+
+[15] X. Zhang, B. Mao, Y. Liao, Y. Zheng, Selective laser melting of graphene oxidereinforced $\mathrm{Ti}-48 \mathrm{Al}-2 \mathrm{Cr}-2 \mathrm{Nb}$ : improved manufacturability and mechanical strength, J. Mater. Res. 35 (15) (2020) 1998-2005.
+
+[16] L.-Q. Chen, Phase-field models for microstructure evolution, Annu. Rev. Mater. Res. 32 (1) (2002) 113-140.
+
+[17] K. Karayagiz, L. Johnson, R. Seede, V. Attari, B. Zhang, X. Huang, S. Ghosh, T. Duong, I. Karaman, A. Elwany, Finite interface dissipation phase field modeling of $\mathrm{Ni}-\mathrm{Nb}$ under additive manufacturing conditions, Acta Mater. 185 (2020) 320-339.
+
+[18] C. Kumara, D. Deng, F. Hanning, M. Raanes, J. Moverare, P. Nylén, Predicting the microstructural evolution of electron beam melting of alloy 718 with phase-field modeling, Metall. Mater. Trans. A 50 (5) (2019) 2527-2537.
+
+[19] J. Park, J.-H. Kang, C.-S. Oh, Phase-field simulations and microstructural analysis of epitaxial growth during rapid solidification of additively manufactured AlSi10Mg alloy, Mater. Des. 195 (2020) 108985
+
+[20] J. Kundin, J.L.L. Rezende, H. Emmerich, Phase-field modeling of the coarsening in multi-component systems, Metall. Mater. Trans. A 45 (2) (2014) 1068-1084
+
+[21] X. Zhang, Y. Liao, A phase-field model for solid-state selective laser sintering of metallic materials, Powder Technol. 339 (2018) 677-685.
+
+[22] A. Hussein, L. Hao, C. Yan, R. Everson, Finite element simulation of the temperature and stress fields in single layers built without-support in selective laser melting, Mater. Des. 52 (2013) 638-647.
+
+[23] H. Clemens, S. Mayer, Design, processing, microstructure, properties, and applications of advanced intermetallic TiAl alloys, Adv. Eng. Mater. 15 (4) (2013) 191-215.
+
+[24] I. Egry, R. Brooks, D. Holland-Moritz, R. Novakovic, T. Matsushita, E. Ricci, S. Seetharaman, R. Wunderlich, D. Jarvis, Thermophysical properties of $\gamma$-titanium Aluminide: the European IMPRESS project, Int. J. Thermophys. 28 (3) (2007) 1026-1036.\\
+[25] C. Boley, S. Mitchell, A. Rubenchik, S. Wu, Metal powder absorptivity: modeling and experiment, Appl. Opt. 55 (23) (2016) 6496-6500.
+
+[26] M. Dal, P. Peyre, Multiphysics simulation and experimental investigation of aluminum wettability on a titanium substrate for laser welding-brazing process, Metals 7 (6) (2017) 218.
+
+[27] A. Choudhury, M. Kellner, B. Nestler, A method for coupling the phase-field model based on a grand-potential formalism to thermodynamic databases, Curr. Opin. Solid State Mater. Sci. 19 (5) (2015) 287-300
+
+[28] J. Kundin, L. Mushongera, H. Emmerich, Phase-field modeling of microstructure formation during rapid solidification in Inconel 718 superalloy, Acta Mater. 95 (2015) 343-356.
+
+[29] J. Kundin, R. Siquieri, Phase-field model for multiphase systems with different thermodynamic factors, Physica D 240 (6) (2011) 459-469.
+
+[30] J. Kundin, I. Steinbach, Comparative study of different anisotropy and potential formulations of phase-field models for dendritic solidification, Comput. Mater. Sci. 170 (2019) 109197.
+
+[31] Y. Zhang, Y. Chi, C. Hu, Phase-field simulation of solidification dendritic segregation in Ti-45Al alloy, China Foundry 14 (3) (2017) 184-187.
+
+[32] W. Kuangfei, L. Shan, M. Guofa, L.C. a F. Hengzhi, Simulation of microstructural evolution in directional solidification of Ti-45at.\% Al alloy using cellular automaton method, Res. Dev. 7 (1) (2010) 47-51.
+
+[33] K. Keşlıoğlu, M. Gündüz, H. Kaya, E. Çadırlı, Solid-liquid interfacial energy in the AlTi system, Mater. Lett. 58 (24) (2004) 3067-3073.
+
+[34] M. Zhang, Y. Zhou, Q. Xue, J. Li, Y. Xi, Simulation on dendrite growth during solidification of Ti-45\% Al alloy in the weld Pool, Int. J. Metall. Met. Phys. 2 (2017) 009.
+
+[35] J.D. Roehling, A. Perron, J.-L. Fattebert, T. Haxhimali, G. Guss, T.T. Li, D. Bober, A.W. Stokes, A.J. Clarke, P.E. Turchi, Rapid solidification in bulk Ti-Nb alloys by singletrack laser melting, JOM 70 (8) (2018) 1589-1597.
+
+[36] W.H. Yu, S.L. Sing, C.K. Chua, C.N. Kuo, X.L. Tian, Particle-reinforced metal matrix nanocomposites fabricated by selective laser melting: a state of the art review, Prog. Mater. Sci. 104 (2019) 330-379.
+
+[37] L. Thijs, K. Kempen, J.-P. Kruth, J. Van Humbeeck, Fine-structured aluminium products with controllable texture by selective laser melting of pre-alloyed AlSi10Mg powder, Acta Mater. 61 (5) (2013) 1809-1819.
+
+[38] J. Marattukalam, D. Karlsson, V. Pacheco, P. Beran, U. Wiklund, U. Jansson, B. Hjörvarsson, M. Sahlberg, The effect of laser scanning strategies on texture, mechanical properties, and site-specific grain orientation in selective laser melted 316L SS, Mater. Des. (2020) 108852.
+
+[39] D.A. Porter, K.E. Easterling, M. Sherif, Phase Transformations in Metals and Alloys, CRC Press, 2009
+
+[40] D.M. Stefanescu, R. Ruxanda, Fundamentals of solidification, ASM Handbook 2004, pp. 71-92.
+
+[41] S. Liu, H. Ding, J. Guo, H. Zhang, Z. Chen, Q. Wang, R. Chen, H. Fu, Rapid cellular crystal growth of TiAl-based intermetallic without Peritectic reaction by meltquenching in Ga-in liquid, Cryst. Growth Des. 17 (4) (2017) 1716-1728.
+
+[42] T. Kobayashi, Strength and toughness of materials, Springer Science \& Business Media, 2012.
+
+[43] W. Kurz, D.J. Fisher, Fundamentals of Solidification, Trans Tech Publications, 1989.
+
+[44] C. Kenel, D. Grolimund, J.L. Fife, V.A. Samson, S. Van Petegem, H. Van Swygenhoven, C. Leinenbach, Combined in situ synchrotron micro X-ray diffraction and high-speed imaging on rapidly heated and solidified Ti-48Al under additive manufacturing conditions, Scr. Mater. 114 (2016) 117-120.
+
+[45] C. Kenel, C. Leinenbach, Influence of cooling rate on microstructure formation during rapid solidification of binary TiAl alloys, J. Alloys Compd. 637 (2015) 242-247.
+
+[46] J. Dupont, Fundamentals of Weld Solidification, ASM International, 2011.
+
+[47] Y. Zhang, B. Huang, J. Li, Microstructural evolution with a wide range of solidification cooling rates in a Ni-based superalloy, Metall. Mater. Trans. A 44 (4) (2013) 1641-1644.
+
+[48] P. Tao, H. Li, B. Huang, Q. Hu, S. Gong, Q. Xu, The crystal growth, intercellular spacing and microsegregation of selective laser melted Inconel 718 superalloy, Vacuum 159 (2019) 382-390.
+
+[49] S. Liu, H. Zhu, G. Peng, J. Yin, X. Zeng, Microstructure prediction of selective laser melting AlSi10Mg using finite element analysis, Mater. Des. 142 (2018) 319-328.
+
+[50] P. Bartolotta, J. Barrett, T. Kelly, R. Smashey, The use of cast Ti-48Al- 2Cr- 2Nb in jet engines, Jom 49 (5) (1997) 48-50.
+
+[51] Z. Gan, Y. Lian, S.E. Lin, K.K. Jones, W.K. Liu, G.J. Wagner, Benchmark study of thermal behavior, surface topography, and dendritic microstructure in selective laser melting of Inconel 625, Integr. Mater. Manuf. Innovation 8 (2) (2019) 178-193.
+
+[52] N. Raghavan, Understanding Process-Structure Relationship For Site-Specific Microstructure Control in Electron Beam Powder Bed Additive Manufacturing Process Using Numerical Modeling, University of Tennessee, 2017.
+
+[53] J. Kundin, A. Ramazani, U. Prahl, C. Haase, Microstructure evolution of binary and multicomponent manganese steels during selective laser melting: phase-field modeling and experimental validation, Metall. Mater. Trans. A 50 (4) (2019) 2022-2040.
+
+[54] M. Guo, D. Gu, L. Xi, L. Du, H. Zhang, J. Zhang, Formation of scanning tracks during selective laser melting (SLM) of pure tungsten powder: morphology, geometric features and forming mechanisms, Int. J. Refract. Met. Hard Mater. 79 (2019) 37-46.
+
+[55] M.J. Aziz, Model for solute redistribution during rapid solidification, J. Appl. Phys. 53 (2) (1982) 1158-1168.
+
+[56] J. Deschamps, M. Georgelin, A. Pocheau, Growth directions of microstructures in directional solidification of crystalline materials, Phys. Rev. E Stat. Nonlinear Soft Matter Phys. 78 (2008), 011605. .
+
+[57] J. Li, Z. Wang, Y. Wang, J. Wang, Phase-field study of competitive dendritic growth of converging grains during directional solidification, Acta Mater. 60 (4) (2012) 1478-1493.
+
+[58] C.A. Gandin, M. Eshelman, R. Trivedi, Orientation dependence of primary dendrite spacing, Metall. Mater. Trans. A 27 (9) (1996) 2727-2739.
+
+[59] F. Yu, Y. Wei, Y. Ji, L.-Q. Chen, Phase field modeling of solidification microstructure evolution during welding, J. Mater. Process. Technol. 255 (2018) 285-293.
+
+[60] Z. Xia, J. Xu, J. Shi, T. Shi, C. Sun, D. Qiu, Microstructure evolution and mechanical properties of reduced activation steel manufactured through laser directed energy deposition, Addit. Manuf. 33 (2020) 101114.\\
+[61] D.A. Kriczky, J. Irwin, E.W. Reutzel, P. Michaleris, A.R. Nassar, J. Craig, 3D spatial reconstruction of thermal characteristics in directed energy deposition through optical thermal imaging, J. Mater. Process. Technol. 221 (2015) 172-186.
+
+[62] R. Shi, S. Khairallah, T.W. Heo, M. Rolchigo, J.T. McKeown, M.J. Matthews, Integrated simulation framework for additively manufactured Ti-6Al-4V: melt pool dynamics, microstructure, solid-state phase transformation, and microelastic response, JOM 71 (10) (2019) 3640-3655.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

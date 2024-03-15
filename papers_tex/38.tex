@@ -1,0 +1,250 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{multirow}
+
+\title{From Melt Pool to Microstructure to Mechanical Properties: A Simulative Approach to L-PBF Processed Material Behaviour }
+
+
+\author{Jonas Zielinskii, ${ }^{1,4}$, Guillaume Boussinot ${ }^{2}$, Gottfried Laschet ${ }^{2}$, Markus Apel ${ }^{2}$, and\\
+Johannes Henrich Schleifenbaum ${ }^{1,3}$\\
+1Digital Additive Production DAP, RWTH Aachen University, University, Germany\\
+${ }^{2}$ Access e.V., Intzestraße 5, 52072 Aachen, Germany\\
+${ }^{3}$ Fraunhofer Institute for Laser Technology ILT, Steinbachstr 15, 52074 Aachen, Germany\\
+${ }^{4}$ Aachen, Germany}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Received February 7, 2020; accepted February 10, 2020; published online February 28, 2020
+
+\begin{abstract}
+An important goal for the additive manufacturing (AM) community is to predict the material-dependent effective mechanical properties of a build-up specimen. In this work three coupled simulations to calculate the mechanical properties of laser-power bed fusion (L-PBF) processed IN718 are used. These values are compared to experimental data from literature. In the future, this approach is going be used for newly designed materials to estimate the expected mechanical properties and the resulting microstructure (As an extra step, the thermophysical properties of the new alloy have to be calculated in advance). The simulation chain to solve this challenge involves the simulation of the melt pool behaviour during the L-PBF process to obtain the solidification conditions. These are required to then calculate the microstructural growth behaviour with the phasefield method. The resulting microstructure is homogenized to obtain the final effective mechanical properties of the L-PBF processed material. The simulation results are compared with according results from experiments at each step to verify the approach and each simulation result.
+\end{abstract}
+
+Keywords: Simulation, Solidification conditions, Phase field method, Homogenization, Effective elastic properties, Laser Powder Bed Fusion, Inconel718
+\footnotetext{J. Zielinski, \href{http://M.Sc}{M.Sc}. ( $\boxtimes)$
+
+Campus Boulevard 73
+
+52074 Aachen, Germany
+
+\href{mailto:Jonas.Zielinski@dap.rwth-aachen.de}{Jonas.Zielinski@dap.rwth-aachen.de}
+}
+
+Vom Schmelzbad zur Mikrostruktur zu den mechanischen Eigenschaften: Ein simulationsbasierter Ansatz zur Berechnung von LPBF prozessierten Material Eigenschaften
+
+Zusammenfassung: Ein wichtiges Ziel im Bereich der Additiven Fertigung (AM) ist die Vorhersage der effektiven mechanischen Eigenschaften der gefertigten Bauteile.
+
+In dieser Arbeit wird eine dreigliedrige Simulationskette vorgestellt. mit deren Hilfe die mechanischen Eigenschaften von mittles Laser Powder Bed Fusion (LPBF) bearbeitetem Inconel718 vorhergesagt und mit Literaturewerten verglichen werden. Zukünftig soll der präsentierte Ansatz dazu dienen neue, bisher noch nicht additiv verarbeitete/ qualifizierte Materialien vorab zu untersuchen und Aussagen über die entstehende Mikrostruktur und die zu erwartenden mechanischen Eigenschaften zu treffen. (Für unbekannte Materialen müssen die thermophysikalischen Eigenschafte vorab noch berechnet werden, z. B. mit ThermoCalc).
+
+Die erste Simulation löst das thermische Problem beim LPBF, und das Ergebnis sind die örtlich- und zeitlich aufgelösten Erstarrungsbedingungen, welche wiederum eine Eingangsgröße für die zweite Simulation sind. Bei dieser wird mittels der Phasenfeldmethode die Erstarrungsphase aufgelöst nachmodelliert, um eine 3D Mikrostruktur zu erhalten. Im dritten Schritt wird diese homogenisiert, und aus den Phaseneigeschaften werden die mechanischen Eigenschaften des LPBF prozessierten IN718 berechnet. Jeder Simulationsschritt wird anhand von experimentell gewonnenen Daten überprüft.
+
+Schlüsselwörter: Simulation, Erstarrungsbedingungen, Phasenfeldmethode, Homogenisierung, Effektive elastische Eigenschaften, Laser Powder Bed Fusion, Inconel 718
+
+\section*{1. Introduction}
+Over the course of the last years, Additive Manufacturing (AM), especially the Laser Powder Bed Fusion process (LPBF), has secured its place in the manufacturing industry. The advantages of AM include fast production-design cycles, rapid prototyping, function integration, and a vast freedom of design regarding the complexity and finesse of small features.
+
+Current challenges in the research field of $A M$ are the qualification of new materials (for example high entropy alloy development by mixing elemental powders) and AM specific alloy design. The rapid cooling rate causes changes in the microstructure, and the layer-wise manufacturing causes anisotropy in the build direction, thus changing the mechanical properties of an additively manufactured product in comparison to conventional manufacturing. For an increased material development speed, it would be a large advantage if the properties could be calculated beforehand.
+
+The scientific goal, pursued in this paper, is to calculate the microstructure and the resulting mechanical properties starting only with the process parameters (like laser power, scanning velocity, and more). In the presented approach, three consecutive simulations are coupled to obtain the final mechanical properties. The first is a model of the L-PBF process that simulates the melt pool behaviour regarding energy absorption and the solidification process. The outputs of this simulation are the solidification conditions of the process. The second model describes the resulting microstructure (starting from the solidification conditions) by solving the interface evolution during the solidification near the solid-liquid phase front. The phase field model has proven its efficiency in reproducing the evolution of the solid liquid interface during solidification conditions in weakly out-of-equilibrium conditions. In this case, linear kinetic effects are present at the interface, with fluxes and driving forces being proportional through the Onsager relations. Within the sharp-interface approach (transport equations in the bulk supplemented by boundary conditions at the interface), this proportionality is defined by the kinetic coefficients. A formal link between the latter and the parameters of the phase field model may be found using the so-called thin-interface limit. In L-PBF the thermal conditions during solidification are in general far from the local equilibrium ( $\dot{T} / \mathrm{G}>\sim 100 \mathrm{~mm} / \mathrm{s}$ ). For this regime, the reduction of the phase field equations to a sharp interface description is insufficient [10, 11]. In our former work, we already showed that the strongly-out-of-equilibrium conditions can be described by the model [3]. It was shown that the microstructure features, such as interdendritic spacing, compare well to experimental data.
+
+The third model determines the effective material properties from the heterogeneous phases of the calculated microstructure. The asymptotic homogenization method [4] is adopted here to predict the effective elastic properties of the superalloy IN718, produced by L-PBF.
+
+\section*{2. Melt Pool Model}
+For the calculation of the solidification conditions, the heat Eq. 1 and the energy input by the laser radiation (2) have to be taken into account.
+
+
+\begin{equation*}
+\rho(T) c_{p}(T) \frac{\partial T(t)}{\partial t}=\lambda(T)\left(\frac{\partial^{2} T}{\partial x^{2}}+\frac{\partial^{2} T}{\partial y^{2}}+\frac{\partial^{2} T}{\partial z^{2}}\right) \tag{1}
+\end{equation*}
+
+
+Where $\rho, c_{p}, \lambda$ are the temperature dependent material properties: density, heat capacity. and heat conductivity.
+
+The measured beam profile of the EOSM 290 is fitted to a super Gaussian distribution to obtain the laser radiation intensity distribution in the working plane $(x, y)$.
+
+
+\begin{align*}
+I(x, y \rightarrow r)= & I_{0} \cdot\left(\exp \left(-f(n) \cdot\left(\frac{r}{r_{0}}\right)^{n}\right)\right. \\
+& \left.-\exp \left(-f(n) \cdot\left(\frac{r_{\text {Limit }}}{r_{0}}\right)^{n}\right)\right) \tag{2}
+\end{align*}
+
+
+Where $I_{0}, f(n), r_{\text {Limit }}$ and $r_{0}$ are the fitting parameters to describe the laser irradiation. In this work the parameters fitted are: $n=2, r_{0}=42 \mu \mathrm{m}, r_{\text {Limit }}=100 \mu \mathrm{m}\left(I_{0}, f(n)\right.$ are normalization factors calculated in a way to ensure $1 \mathrm{~W}$ of laser beam power). The base absorption for the IN718 value is taken from literature $\left(\alpha_{0}=35 \%\right)$. The increased absorption with an increased meltpool depth ( $\left.d_{m p}\right)$ keyhole formation is taken into account. With an increasing melt depth, the effective absorption is increased up to a factor $\left(\alpha_{\text {key }}\right)$ of $\sim 2$ caused by multiple reflections in the keyhole [1].
+
+The energy absorption model coupled to the simulation as a Dirichlet boundary condition on the materials surface (3):
+
+
+\begin{equation*}
+-\lambda(T) \frac{\partial T}{\partial z} \cdot \widehat{n}=I_{0}(\vec{r}) \cdot P_{L} \cdot \alpha_{0} \cdot \alpha_{\text {key }}\left(d_{m p}\right) \tag{3}
+\end{equation*}
+
+
+To model the keyhole behaviour, the material that reaches evaporation temperature $\left(T_{\text {eva }}=3200^{\circ} \mathrm{C}\right)$ is assumed to be transparent for the laser radiation. This leads to the formation of the keyhole in the simulations. A similar model was proposed by Philo [2].
+
+The model has been verified for single track experiments with IN718 for different parameter settings of $P_{L}$ and $v_{\mathrm{S}}$ and powder layer heights $h_{L}$ (for $h_{L}=0 \mu \mathrm{m}$ see Fig. 1).
+
+For the microstructure calculation, only the EOS IN718 default parameter is used $\left(P_{L}=285 \mathrm{~W}, v_{S}=960 \frac{\mathrm{mm}}{\mathrm{s}}\right.$ ). The solidification conditions are extracted in the lower third of the melt pool (see Fig. 2).
+
+The solidification conditions extracted for the EOS default parameter are $\Delta T \approx 46000 \frac{\mathrm{K}}{\mathrm{mm}}, \dot{T} \approx 10^{8} \mathrm{~K} / \mathrm{s}$. Those values vary strongly along the solidification front, especially with the depth at which they are taken (measure point see Fig. 2).\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_e849ff8355828b550513g-3(2)}
+
+Fig. 1: a Different combinations of $P_{L}$ and $v_{S}$ investigated and their respective line energy; $\mathbf{b}$ Comparison of calculated melt pool depth with melt pool depth from experiments
+
+\section*{3. Microstructure Simulation}
+In [3], we have presented phase field simulations of IN718 directional solidification under LPBF conditions. During our investigations, we varied the solidification speed over a wide range, i.e. from $V_{g}=100 \frac{\mathrm{mm}}{\mathrm{s}}$ to $V_{g}=1200 \frac{\mathrm{mm}}{\mathrm{s}}$. The latter value is still about $1 / 4$ of the solidification speed that may be extracted from the finite-element calculations where, as seen in Fig. 2, the slope of the isotherms dz/dx is approximately uniform in the orange encircled area. Our phase field simulations are, however, useful to apprehend the type of solidification microstructure corresponding to such conditions, and especially to such large solidification speeds. We recall that solidification experiments that are explained using commonly accepted solidification theories are performed at sub- $\frac{m m}{s}$ solidification speeds.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e849ff8355828b550513g-3(1)}
+\end{center}
+
+Fig. 2: Calculated temperature distribution for the quasi-stationary L-PBF process with the EOS default parameters for the material IN718, the solidification conditions are extracted from the orange encircled area\\
+The phase field simulations are performed using the MICRESS software, based on a multi-component phase field model [13] that is coupled to the TCNI8 ThermoCalc database. The composition of the alloy was chosen as follows, in wt\%: $17.64 \mathrm{Fe}, 19.00 \mathrm{Cr}, 5.13 \mathrm{Nb}, 3.05 \mathrm{Mo}$ with $\mathrm{Ni}$ as balance. We simulate only the primary solidification, without precipitation of additional solid phases from the primary $\gamma$ phase at a low temperature. The discretization grid spacing is $20 \mathrm{~nm}$. The thermal gradient $\mathrm{G}$ is considered homogeneous in space and constant in time (so-called frozen temperature approximation), and diffusion is neglected in the solid phase. Fig. 3 shows a top view (thermal gradient pointing towards the reader) of a three-dimensional simulation where the growth velocity is $V_{g}=40 \mathrm{~mm} / \mathrm{s}$ and $\mathrm{G}=10^{4}$ $\mathrm{K} / \mathrm{mm}$. Here, the crystalline axis of the superalloy form Euler angles $\left(\phi=5^{\circ}, \theta=5^{\circ}, \psi=5^{\circ}\right)$ with respect to the thermal gradient.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e849ff8355828b550513g-3}
+\end{center}
+
+Fig. 3: Top view (thermal gradient pointing towards the reader) of the three-dimensional simulation of IN718 solidification under LPBF conditions
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e849ff8355828b550513g-4}
+\end{center}
+
+Fig. 4: a two-dimensional cut perpendicular to the thermal gradient of the $\mathrm{Nb}$ concentration field; $\mathbf{b}$ binarized image with a $4 \mathrm{wt} \% \mathrm{Nb}$ threshold
+
+We identify fingers with their tip in red colour. The morphology of the growing phase has been investigated in [3], and corresponds to a hybrid structure resulting from a solidification regime denoted as Strongly Out-of-Equilibrium (SOE). The fingers are unbranched dendrites, to which it is tempting to associate a cellular nature. Yet, they grow along a cubic direction of the crystal, in virtue of a selected growth direction determined by the anisotropy of solid-liquid interface energy, which is then contradictory with the cellular nature (let us note that here in Fig. 3 the dendrites therefore grow with a slight misorientation with respect to the thermal gradient). This hybrid feature, i.e. dendritic/ cellular, of the microstructure pertains to the particular relations in the SOE regime between the different length scales, i.e. the dendrite tip radius, the diffusion length, and the distance between tips (tips spacing). On the theoretical level, these three length scales are of the same order. The main characteristics of the growth morphology may then be understood as follows: since the tip radius is not much smaller than the tips spacing, no side arms develop, and since the diffusion length is not much larger than the tips spacing, the interaction between tips is strongly reduced, yielding a poor organization of the finger array and a growth direction prescribed by the crystallography and not by the thermal gradient direction.
+
+The three-dimensional calculation presented in Fig. 3 is performed until completion of the solidification. The final microstructure with fingers and interstice regions present, within the $\gamma$ phase, strong micro-segregations of chemical elements like Nb, as shown in Fig. 4a. Eventually, the predicted solidified microstructure is transferred to the homogenization tool HOMAT $[4,5]$ via the standardized VTK exchange format.
+
+\section*{4. Homogenization of the Solidified Microstructure}
+\subsection*{4.1 Definition of the Homogenization Model}
+In order to derive effective elastic properties of the solidified microstructure, presenting strong micro-segregation of chemical elements, we have developed the homogenization scheme presented in this chapter. As Nobium $(\mathrm{Nb})$ is the chemical element which partitions mostly at the solid-liquid interface, we select this element and perform a concentration threshold for it in order to binarize the microstructure and to produce a pseudo two-phase microstructure for the homogenization runs. Then, for each of these two phases, the specific elastic properties are assigned and the effective properties are calculated of the binarized microstructure using HOMAT. Fig. 4a illustrates a two-dimensional cut perpendicular to the thermal gradient of the $\mathrm{Nb}$ concentration. In Fig. 4b, the corresponding binarized microstructure, with a $\mathrm{Nb}$ threshold of a $4 \mathrm{wt} \%$, is shown. The dendrites appear in white, while the interdendritic region appears in blue.
+
+To assign specific elastic properties for each pseudophase, it is essential to determine at first the average concentration of $\mathrm{Nb}$ in each of these phases. An average of $2.75 \mathrm{wt} \%$ within the dendrites and $7.8 \mathrm{wt} \%$ in the interdendritic region was found. These values correspond to a dendritic fraction of $53 \%$ and to an inter-dendritic region fraction of $47 \%$, yielding the nominal $\mathrm{Nb}$ concentration in IN718, i.e. $5.13 w t \%$.
+
+Single crystal elastic constants of the $\gamma$ phase of nominal IN718 at room temperature are taken from the literature [6, 7]: $\mathrm{C}_{11}=245.4 \mathrm{GPa} ; \mathrm{C}_{12}=162.05 \mathrm{GPa} ; \mathrm{C}_{44}=113.4 \mathrm{GPa}$. They present a pronounced Zener anisotropy: $A^{Z}=\frac{2 C_{44}}{C_{11}-C_{12}}=$ 2.72. The specification of the $\mathrm{Nb}$ concentration dependence of these SX crystal elastic properties is delicate. In the literature, only the first principles simulations of different $\mathrm{Nb}$ doped $\mathrm{Ni}$ systems have been performed recently in order to determine the effect of the $\mathrm{Nb}$ concentration on the elastic properties of these systems [7]. But, for industrial superalloys like IN718, no study has been found. Song et al. [8] show that the shear modulus $\mathrm{C}_{44}$ decreases quasi linearly with the $\mathrm{Nb}$ content with a slope of $-6.08 \mathrm{GPa}$ per wt\% $\mathrm{Nb}$. Adopting this slope the following values are obtained: $\mathrm{C}_{44}=127.08 \mathrm{GPa}$ for the finger phase and $\mathrm{C}_{44}=96.32 \mathrm{GPa}$ for the interstice. Assuming the same stiffness ratio $\mathrm{C}_{12} / \mathrm{C}_{44}$ and Zener anisotropy for the nominal IN718 single crystal, both variants produce the elastic constants at RT outlined in Table 1.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+Phase & $\mathrm{T}\left[{ }^{\circ} \mathrm{C}\right]$ & $\mathrm{Nb}[\mathrm{wt} \%]$ & $\mathrm{C}_{11}[\mathrm{GPa}]$ & $\mathrm{C}_{12[\mathrm{GPa}]}$ & $\mathrm{C}_{44[\mathrm{GPa}]}$ \\
+\hline
+\multirow[t]{2}{*}{Finger} & $20^{\circ}$ & \multirow[t]{2}{*}{2.75} & 275.041 & 181.598 & 127.081 \\
+\hline
+ & $700^{\circ}$ &  & 227.973 & 155.929 & 103.635 \\
+\hline
+\multirow[t]{2}{*}{Interstice} & $20^{\circ}$ & \multirow[t]{2}{*}{7.81} & 231.076 & 137.634 & 96.315 \\
+\hline
+ & $700^{\circ}$ &  & 191.532 & 118.179 & 78.545 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{|llllllllll}
+\hline
+\multicolumn{2}{|l}{TABLE 2} &  &  &  &  &  &  &  &  \\
+Effective Young modules, shear modules (in [GPa]) and Poisson coefficients at $\mathbf{2 0}$ and $700^{\circ} \mathrm{C}$ &  &  &  &  &  &  &  &  &  \\
+\hline
+$\mathrm{T}$ & $\mathrm{E}_{X}$ & $\mathrm{E}_{Y}$ & $\mathrm{E}_{Z}$ & $\mathrm{G}_{X Y}$ & $\mathrm{G}_{X Z}$ & $\mathrm{G}_{Y Z}$ & $v_{X Y}$ & $v_{X Z}$ & $v_{Y Z}$ \\
+\hline
+$20^{\circ} \mathrm{C}$ & 134.69 & 137.15 & 130.69 & 96.83 & 112.48 & 107.80 & 0.3564 & 0.4066 & 0.3967 \\
+\hline
+$700^{\circ} \mathrm{C}$ & 105.56 & 107.58 & 102.27 & 78.08 & 91.74 & 87.67 & 0.3639 & 0.4164 & 0.4061 \\
+\hline
+\end{tabular}
+\end{center}
+
+Moreover, the effective elastic properties of the solidified microstructure are predicted not only at room temperature but also at a service temperature, namely $700^{\circ} \mathrm{C}$. Taking the same stiffness reduction factors $\left(s^{\top}{ }_{-} C_{11}=0.829\right.$; $\left.s^{\top}{ }^{\top} C_{12}=0.859 ; s^{\top}{ }^{\top} C_{44}=0.816\right)$ as Hermann et al. [9] have measured experimentally for SX IN738LC, the elastic constants at $700^{\circ} \mathrm{C}$ for both pseudo-phases (see Table 1) are obtained.
+
+\subsection*{4.2 Homogenization Results}
+The predicted effective Hooke matrices of the IN718 microstructure at $700^{\circ} \mathrm{C}$ (see expression (4)) is full anisotropic with noticeable extension-shear coupling terms $\left(\mathrm{H}_{\mathrm{ij}}\right.$ with $i=1,2,3$ and $j=4,5,6)$. These extension-shear couplings are induced by the small Euler angles between temperature gradient and crystal orientation of the finger network. It should be noted that, at room temperature, a similar full anisotropic equivalent behaviour is predicted, with, of course, higher stiffness terms.
+
+$\mathrm{H}_{700^{\circ} \mathrm{C}}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e849ff8355828b550513g-5}
+\end{center}
+
+The elastic engineering constants are determined by inverting the Hooke matrices at both temperatures (outlined in Table 2). The effective Young modules are rather isotropic: only a maximum deviation of $-2.73 \%$ from the mean value 105.14 GPa is noted for Young modulus in finger direction $\mathrm{Z}$ at $700^{\circ} \mathrm{C}$. The effective shear modules present a more pronounced orthotropy with $\mathbf{G}_{\mathbf{X Y}}<\mathbf{G}_{\mathbf{y z}}<\mathbf{G}_{\mathbf{X z}}$. Mainly the shear modulus in the plane perpendicular to the finger structure is reduced: $\Delta G_{X Y, m}=-9 . \%$. As expected, this tendency is the same at $\mathrm{RT}: \Delta \mathrm{G}_{X Y, \mathrm{~m}}=-8.4 \%$. Eventually, the effective Poisson coefficients present the same orthotropy tendency as the shear modulus: $v_{X Y}<v_{Y Z}<v X Z$, and we observe a reduction of $v_{X Y}$ by nearly $\Delta v_{X Y, m}=-8 . \%$ at both temperatures. Yet, the values are slightly larger at $700^{\circ} \mathrm{C}$ than at $20^{\circ} \mathrm{C}$. Moreover, the Zener anisotropy coefficient of the homogenized microstructure, expressed by the mean value of the elastic constants, reduces compared to $S X$ value 2.72: $A^{z}=2.14$ at $R T$ and $A^{z}=2.22$ at $700^{\circ} \mathrm{C}$.
+
+It should be noted that, in the present homogenization runs, the generated implicit forces, induced by the jump of the Hooke matrix at the finger-interstice interfaces, are rather small. Therefore, HOMAT applies only small corrections to the volume averaging expressions, which are accurate enough for this case. This behaviour differs strongly from the homogenization of partially solidified microstructures, where huge jumps exist at the finger/melt interfaces, leading to large corrections of the volume averaged Hooke matrix.
+
+\section*{5. Conclusions and Outlook}
+In this paper three coupled simulations are used to calculate the mechanical properties of L-PBF processed IN718.
+
+The melt pool shape, the resulting microstructure, and the mechanical properties have been calculated (the latter at room temperature and at an estimated operating temperature $\left(700^{\circ} \mathrm{C}\right)$.
+
+The melt pool shape is within the reasonable range of the experimental values (less than $10 \%$ deviation). The microstructure, with the solidification conditions from the meltpool simulation as an input, reproduces the patterns observed in experiments (readers interested in additional details may be referred to [3]).
+
+Then the resulting microstructure is reduced to two single crystalline phases, and for the homogenized microstructure, the mechanical properties are calculated. The Young's Modulus for L-PBF manufactured IN718 samples is around $200 \mathrm{GPa}$ (varying in a small margin in dependence of the build direction) [12]. Our calculated Young's Modulus is roughly $105 \mathrm{GPa}$. The wide gap between these results originates in our single crystalline approach to calculate the properties. L-PBF samples normally are polycrystalline. This significant difference dictates the next step: extend the model to handle polycrystalline phases.
+
+Acknowledgements. We acknowledge funding by the German Federal Ministry of Education and Research in the framework of the "Forschungscampus Digital Photonic Production: DPP Direct," FKZ Grant No. 13N13709.
+
+\section*{References}
+\begin{enumerate}
+  \item Zielinski, J.; Düchting, J.; Schleifenbaum, J. H.: Measurement of the Effective Absorption of Laser Radiation for Different States Relevant in the SLM Process on the Example of Ti6AI4V, DDMC 2018 : Fraunhofer Direct Digital Manufacturing Conference proceedings, Direct Digital Manufacturing Conference, Berlin, March 14-15, 2018, Fraunhofer Generativ, 2018
+
+  \item Philo, A.M.; Mehraban, S.; Holmes, M.; et al.: A pragmatic continuum level model for the prediction of the onset of keyholing in laser powder bed fusion, The International Journal of Advanced Manufacturing Technology, 101 (2019), pp 697-714, \href{https://doi.org/}{https://doi.org/} 10.1007/s00170-018-2770-7
+
+  \item Boussinot, G.; Apel, A.; Zielinski, J.; Hecht, J.; Schleifenbaum, J. H.: Strongly Out-of-Equilibrium Columnar Solidification During Laser Powder-Bed Fusion in Additive Manufacturing, PHYSICAL REVIEW APPLIED, 11 (2019), p 014025, \href{https://doi.org/10.1103/}{https://doi.org/10.1103/} PhysRevApplied. 11.014025
+
+  \item Laschet, G.; Apel, M.: Thermo-elastic homogenization of a 3-D steel microstructure simulated by the phase field method, Steel Res. Int., 81 (2010), p 637
+
+  \item Laschet, G.; Kashko, T.; Benke, S.; Öte, M.; Bobzin, K: Prediction of effective properties, in Schmitz, G. J.; Prahl, U. (Eds): Integrated Compuational Materials Engineering-Concepts and Application of a Modular Platform, Weinheim, Germandy: Wiley-VCH, 2012, pp 81-115
+
+  \item Martin, G.; Ochoa, N.; Sai, K.; Hervé-Luanco, E.; Cailletaud, G: A multicale model for the elastoviscoplastic behaviour of directionally solidified alloys: application to FE structural computations, Int. Jnl. Solids Struct., 51 (2014), p 1175
+
+  \item Kumara, C.; Deng, D.; Moverare, J.; Nylen, P.: “Modelling of anisotropic elastic properties in alloy 718 build by electron beam melting", Mater. Scien. \& Technology, 34 (2018), p 529
+
+  \item Song, J.; Gao, Z.; Zhang, L.; Wu, W.; He, B.; Lu, L.: "rediction on elastic properties of $\mathrm{Nb}$-doped $\mathrm{Ni}$ systems, Molecular Simulation, 45 (2019), p 935
+
+  \item Hermann, W.; Sockel, H.; Han, J.; Bertram, A.: Elastic properties and determination of elastic constants of Nickel-base superalloys by a free-free beam technique, Proc. of Superalloys, 1996, pp 229-238a, \href{https://doi.org/10.7449/1996/Superalloys_1996_229_238}{https://doi.org/10.7449/1996/Superalloys\_1996\_229\_238}
+
+  \item Tegze, G.; Tóth, G. I.; Gránásy, L.: Faceting and Branching in 2D Crystal Growth, Phys. Rev. Lett., 106 (2011), p 195502
+
+  \item Ghosh, S.; Ofori-Opoku, N.; Guyer, J. E.: Simulation and analysis of $\gamma$-Ni cellular growth during laser powder deposition of Ni-based superalloys, Comp. Mat. Sc., 144 (2018), p 256
+
+  \item Gong, X.; Wang, X.; Jones, Z.: Characterization of Microstructure and Mechanical Property of Inconel 718 from Selective Laser Melting, Conference Paper, ASME 2015, International Manufacturing Science and Engineering Conference, Houston, Texas USA, 2015
+
+  \item Eiken, J.; Böttger, B.; Steinbach, I.: Multiphase-field approach for multicomponent alloys with extrapolation scheme for numerical application, Phys. Rev. E, 73 (2006), p 066122
+
+\end{enumerate}
+
+Publisher's Note. Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations.
+
+
+\end{document}

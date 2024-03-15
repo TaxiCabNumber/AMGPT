@@ -1,0 +1,447 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Mitigation of lack of fusion defects in powder bed fusion additive manufacturing }
+
+
+\author{T. Mukherjee, T. DebRoy*\\
+Department of Materials Science and Engineering, The Pennsylvania State University, University Park, PA, 16802, USA}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+Powder bed fusion
+
+Lack of fusion defect
+
+Heat transfer and fluid flow
+
+Marangoni convection
+
+Non-dimensional temperature
+
+\begin{abstract}
+A B S T R A C T Components manufactured by additive manufacturing often exhibit improper fusion among layers and hatches. Currently, there is no practical way to select process parameters and alloy systems based on scientific principles to mitigate these defects. Here, we develop, test and demonstrate a methodology to predict and prevent these defects based on a numerical heat transfer and fluid flow model for the laser powder bed fusion (PBF) additive manufacturing (AM). These defects are avoidable by adjusting laser power, scanning speed, layer thickness and hatch spacing. An easy to use parameter is proposed for practical use in shop floors. Relative susceptibilities of three widely used AM alloys are demonstrated using this parameter.
+\end{abstract}
+
+\section*{1. Introduction}
+In laser-assisted powder bed fusion (L-PBF) additive manufacturing (AM), components are made of multiple thin layers and hatches. The soundness of the component depends on the fusion bonding among successive layers and hatches [1,2]. Lack of fusion is detrimental to the mechanical properties of the component, and in extreme cases leads to part rejection [1,3]. Improper selection of laser power, scanning speed, laser spot radius, layer thickness, hatch spacing and alloy affect the formation of this defect [4]. Because of the involvement of many process parameters and alloys, currently there is no generally available methodology to guide engineers to avoid this defect.
+
+Several attempts have been made to understand the effects of different process parameters on the lack of fusion defect for different alloy systems and significant volume of experimental data have been reported in the literature. Experimentally, lack of fusion defect was found to be reduced with increasing laser power for stainless steel [5], titanium alloys [4,6,7], aluminum alloys [8-10] and CoCrMo alloy [11]. Slower scanning speed was also found to reduce lack of fusion defect for titanium alloys [4,6,7,12,13] and aluminum alloys [8-10]. Thinner layer and small hatch spacing were proved to reduce this defect for stainless steel [5], titanium alloys [14] and aluminum alloys [8-10]. However, in these experiments, one process variable was varied while other parameters were kept constant. The brute force approach to evaluate a parameter space for avoiding such defects through empirical testing needs to be repeated for every alloy. Because of the involvement of many process parameters, experimental evaluation of the roles of process parameters on the prevalence of defects by trial and error is time consuming and expensive.
+
+A recourse is to develop, test and validate a science based, easy to use methodology of avoiding these defects using heat transfer considerations. Heat conduction models $[15,16]$ were used to calculate the molten pool shape and size based on which the extent of lack of fusion voids were estimated. However, these models neglect the effect of molten metal convection that is often the main mechanism of heat transfer inside the pool [1]. Neglecting molten metal convection results in inaccurate molten pool shape and size [17] and thus introduces uncertainty in the lack of fusion defects. In short, the existing powder bed fusion literature does not provide any rigorous methodology for selecting process parameters and alloy system to minimize lack of fusion defect. A quantitative understanding of the effects of process parameters and alloy properties on lack of fusion defect and a practical means to mitigate this problem based on scientific principles are needed but not currently available.
+
+Here, we show, for the first time, how the lack of fusion defects during PBF can be minimized by using heat transfer and fluid flow calculations. To quantify the lack of fusion defect, we propose a dimensionless number that involves common process parameters such as laser power, scanning speed, spot radius, layer thickness and hatch spacing and different alloy properties such as density, thermal conductivity, specific heat and latent heat of fusion. The dimensionless number also includes molten pool dimensions calculated using a welltested, three dimensional, transient heat transfer and fluid flow model of L-PBF process. This non-dimensional number provides a relative
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail address: \href{mailto:rtd1@psu.edu}{rtd1@psu.edu} (T. DebRoy).
+}
+
+Table 1
+
+Thermo-physical properties of SS 316, Ti-6Al-4 V and AlSi10Mg [23]. Here 'T' represents temperature in $\mathrm{K}$ ranging from ambient to the solidus temperature.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Properties & SS 316 & Ti-6Al-4V & AlSi10Mg \\
+\hline
+Liquidus temperature $(\mathrm{K})$ & 1733 & 1928 & 867 \\
+\hline
+Solidus temperature $(\mathrm{K})$ & 1693 & 1878 & 831 \\
+\hline
+Thermal conductivity (W/m K) & $11.82+1.06 \times 10^{-2} \mathrm{~T}$ & $1.57+1.6 \times 10^{-2} \mathrm{~T}-1 \times 10^{-6} \mathrm{~T}^{2}$ & $113+1.06 \times 10^{-5} \mathrm{~T}$ \\
+\hline
+Specific heat (J/kg K) & $330.9+0.563 \mathrm{~T}-4.015 \times 10^{-4} \mathrm{~T}^{2}+9.465 \times 10^{-8} \mathrm{~T}^{3}$ & $492.4+0.025 \mathrm{~T}-4.18 \times 10^{-6} \mathrm{~T}^{2}$ & $536.2+0.035 \mathrm{~T}$ \\
+\hline
+Density $\left(\mathrm{kg} / \mathrm{m}^{3}\right)$ & 7800 & 4000 & 2670 \\
+\hline
+Latent heat of fusion $(\mathrm{J} / \mathrm{kg})$ & $272 \times 10^{3}$ & $284 \times 10^{3}$ & $423 \times 10^{3}$ \\
+\hline
+Viscosity $(\mathrm{kg} / \mathrm{m} \mathrm{s})$ & $7 \times 10^{-3}$ & $4 \times 10^{-3}$ & $1.3 \times 10^{-3}$ \\
+\hline
+$\mathrm{d} \gamma / \mathrm{dT}(\mathrm{N} / \mathrm{m} \mathrm{K})$ & $-0.40 \times 10^{-3}$ & $-0.26 \times 10^{-3}$ & $-0.35 \times 10^{-3}$ \\
+\hline
+Absorption coefficient in liquid $\left(\eta_{1}\right)$ & 0.3 & 0.3 & 0.3 \\
+\hline
+Absorption coefficient in powder $\left(\eta_{\mathrm{P}}\right)$ & 0.7 & 0.7 & 0.7 \\
+\hline
+Volumetric expansion coefficient $(/ \mathrm{K})$ & $5.85 \times 10^{-5}$ & $2.5 \times 10^{-5}$ & $2.4 \times 10^{-5}$ \\
+\hline
+Young's modulus (GPa) & 206 & 110 & 68 \\
+\hline
+\end{tabular}
+\end{center}
+
+scale to compare different alloys based on their susceptibility to the lack of fusion defect over a wide range of process parameters. The effects of all thermophysical properties of the alloys are considered during heat transfer and fluid flow calculations which is required for the lack of fusion number. Since the volume of the fusion zone depends on the processing parameters, thermophysical properties of the alloy and the geometry of the component, all of these factors have to be taken into account in the modeling to estimate the lack of fusion defect. In addition, the important non-dimensional numbers that are important in LPBF such as Marangoni number and non-dimensional temperature are correlated with the occurrence of lack of fusion defect. Based on these findings we provide recommendations to mitigate lack of fusion defects in components. Although, the results presented here are for L-PBF process, the proposed lack of fusion number is applicable to all AM processes since it is formulated based on the underlying principles of the lack of fusion void formation that are similar in all AM processes.
+
+\section*{2. Heat transfer and fluid flow model of PBF}
+A well-tested, three-dimensional, transient heat transfer and fluid flow model of L-PBF is used to calculate the temperature field and molten pool dimensions. The model solves the following equations of conservation of mass, momentum and energy [18-20]:
+
+$\frac{\partial u_{i}}{\partial x_{i}}=0$
+
+$\rho \frac{\partial u_{j}}{\partial t}+\rho \frac{\partial\left(u_{i} u_{j}\right)}{\partial x_{i}}=\frac{\partial}{\partial x_{i}}\left(\mu \frac{\partial u_{j}}{\partial x_{i}}\right)+S_{j}$
+
+where $\rho$ and $\mu$ are the density and the viscosity of the alloy, respectively, $u_{i}$ and $u_{j}$ are the velocity components along the $i$ and $j$ directions, respectively, $x_{i}$ is the distance along the $i$ direction and $S_{j}$ is the source term for $j$ th momentum conservation equation. The energy conservation equation is written as [18-20]:
+
+$\frac{\partial h}{\partial t}+\frac{\partial\left(u_{i} h\right)}{\partial x_{i}}=\frac{\partial}{\partial x_{i}}\left(\alpha \frac{\partial h}{\partial x_{i}}\right)-\frac{\partial \Delta H}{\partial t}-\frac{\partial\left(u_{i} \Delta H\right)}{\partial x_{i}}+S_{v}$
+
+where $h$ denotes the sensible heat, $t$ is the time, $\alpha$ and $\Delta H$ are the thermal diffusivity and the latent heat of fusion of the alloy, respectively, $u_{i}$ is the velocity components along the $i$ direction and $S_{v}$ is the source term for the volumetric heat source and is represented as [1]:
+
+$S_{v}=\frac{\xi \eta P}{\pi r^{2} t} \exp \left[-\frac{\xi\left(x_{b}^{2}+y_{b}^{2}\right)}{r^{2}}\right]$
+
+where $P$ is laser power, $r$ is laser beam radius, $\xi$ is power distribution factor varies between 1 and 3 [1], $x_{b}$ and $y_{b}$ are the distances from the laser beam axis along $\mathrm{X}$ and $\mathrm{Y}$ directions, respectively and $t$ is the powder layer thickness.
+
+The solution domain consists of substrate, deposited layers and hatches, powder bed, and shielding gas. The substrate material is same as the alloy powder. Convective and radiative boundary conditions are applied to all surfaces of the solution domain as [1]:
+
+$-k \frac{\partial T}{\partial z}=\sigma \varepsilon\left(T^{4}-T_{A}^{4}\right)+h_{c}\left(T-T_{A}\right)$
+
+where $k$ is the thermal conductivity of alloy, $\sigma$ is the Stefan-Boltzmann constant $\left(5.67 \times 10^{-8} \mathrm{Wm}^{-2} \mathrm{~K}^{-4}\right), \varepsilon$ is the emissivity, $T_{A}$ is the ambient temperature and $h_{c}$ is the convective heat transfer coefficient.
+
+The convective flow of the molten metal is primarily driven by the surface tension variation on the top surface of the molten pool resulting from the spatial gradient of temperature. The resulting stress on the top surface of the molten pool, called Marangoni shear stress [20-22] along $\mathrm{X}$ and $\mathrm{Y}$ directions can be written as,
+
+$\tau_{x}=\mu \frac{d u}{d z}=-\frac{d \gamma}{d T} G_{x}$
+
+$\tau_{y}=\mu \frac{d v}{d z}=-\frac{d \gamma}{d T} G_{y}$
+
+where $\mu$ is the viscosity of the liquid metal, $G_{x}$ and $G_{y}$ are the two components of temperature gradient along $\mathrm{X}$ and $\mathrm{Y}$ directions and $d \gamma / d T$ represents the surface tension gradient with respect to temperature that has a negative value for most commonly used alloys that do not contain any surface active element [1]. Temperature dependent thermo-physical properties of the alloy powders [23] are provided in Table 1.
+
+More details about the implementation of this model for L-PBF are described in our previous publication [24] and are not repeated here. Only the salient features are indicated here. The conservation equations of mass, momentum and energy are discretized in the 3D Cartesian coordinate using the control volume method. All discretized equations are solved simultaneously to obtain enthalpy, velocity and pressure fields using the tri-diagonal matrix algorithm (TDMA) [25]. The temperature field is obtained from the enthalpy field by using temperature dependent specific heat of the alloy. The calculation procedure continues until all the hatches and layers are completed. These calculations are performed using an in-house Fortran code compiled using an Intel Fortran compiler. The process parameters used for the calculations are given in Table 2. The calculation time is approximately $5 \mathrm{~h}$ for a $20 \mathrm{~mm}$ long, 5 layers, 5 hatches build in a personal computer with a $3.40 \mathrm{GHz}$ i7 processor and 8 GB RAM.
+
+\section*{3. Results and discussions}
+Fig. 1(a) shows the three-dimensional temperature and velocity fields calculated using the heat transfer and fluid flow model during the building of first layer first hatch of a SS 316 build. The temperature and velocity fields on top (XY), transverse (YZ) and longitudinal (XZ) planes are shown in Fig. 1(b)-(d) respectively. The region bounded by the liquidus temperature isotherm ( $1733 \mathrm{~K}$ ) of SS 316 represents the fusion
+
+Table 2
+
+Process parameters used for calculations. Packing efficiency is a measure of extent of voids in the powder bed and is adapted from the literature [24].
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Laser power, $\mathrm{W}$ & 60 \\
+\hline
+Scanning speed, $\mathrm{mm} / \mathrm{s}$ & $250-1000$ \\
+Laser spot radius, $\mathrm{mm}$ & 0.050 \\
+Layer thickness, $\mathrm{mm}$ & 0.030 \\
+Hatch spacing, $\mathrm{mm}$ & 0.035 \\
+Build length, $\mathrm{mm}$ & 20 \\
+Substrate dimensions, $\mathrm{mm} \times \mathrm{mm} \times \mathrm{mm}$ & $22 \times 5 \times 2$ \\
+Packing efficiency & 0.5 \\
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_2939f98f4c531399bef9g-3(3)}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_2939f98f4c531399bef9g-3}
+\end{center}
+
+(d)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_2939f98f4c531399bef9g-3(1)}
+\end{center}
+
+Fig. 1. Temperature and velocity distributions for 1 st hatch and 1 st layer of a $20 \mathrm{~mm}$ long SS 316 build on a $24 \mathrm{~mm}$ long SS 316 substrate using $60 \mathrm{~W}$ laser power and $500 \mathrm{~mm} / \mathrm{s}$ scanning speed on (a) 3D isometric section (b) top (c) longitudinal and (c) transverse planes. The length of the build is from $x=2.0 \mathrm{~mm}$ to $22.0 \mathrm{~mm}$. Other process conditions are mentioned in Table 2. Scanning direction of the laser beam is along the positive $\mathrm{x}$-axis.
+
+zone of the molten pool. The light blue region within the liquidus and the solidus temperature ( $1693 \mathrm{~K}$ ) isotherms represents the mushy zone. Therefore, the $1693 \mathrm{~K}$ isotherm represents the molten pool boundary. The velocity vectors are represented by the black arrows whose magnitude can be found by comparing their length with the reference\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_2939f98f4c531399bef9g-3(2)}
+
+Fig. 2. Comparison between the calculated and experimentally observed (a) width and (b) depth of the molten pool of a single layer single hatch builds of SS 316, Ti-6Al-4 V and AlSi10Mg at different linear heat inputs. The experimentally measured width and depth for SS 316 are adapted from Di et al. [5] and Li et al. [27], respectively. The experimental results for Ti-6Al-4 V and AlSi10Mg are taken from Gong et al. [12] and Kempen et al. [26], respectively. Gong et al. [12] and Kempen et al. [26] provided the macrograph from which Tang et al. [15] measured the dimensions.
+
+vector provided. The velocity vectors are radially outwards because molten metal flows from the high temperature to the low temperature. The laser beam travels in the direction of positive X-axis. Therefore, the molten pool is elongated in the opposite direction (negative X-axis). The molten pool exhibits a teardrop shape that is attributed to rapid scanning speed of the PBF process [1]. The track width is determined from the solidus isotherms on the transverse sections as shown in Fig. 1(d).
+
+Fig. 2(a) and (b) compare the calculated molten pool width and depth, respectively, and their variations with linear heat input (laser power/scanning speed) with independent experimental observations $[5,12,15,26,27]$ for single layer single hatch builds of SS 316, Ti-6Al$4 \mathrm{~V}$ and AlSi10Mg. For all three alloys, track width and depth increase with heat input as expected. Fair agreements between calculated and experimental results for all three alloys considered here provide us the confidence to use the model to predict the molten pool dimensions to
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_2939f98f4c531399bef9g-4}
+\end{center}
+
+Lack of fusion voids\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_2939f98f4c531399bef9g-4(1)}
+
+Fig. 3. Transverse sectional view of the molten pools for 3 layers 5 hatches builds of (a) SS 316 (b) Ti-6Al-4 V and (c) AlSi10Mg using $60 \mathrm{~W}$ laser power, $1000 \mathrm{~mm} / \mathrm{s}$ scanning speed and $90 \mu \mathrm{m}$ hatch spacing. Other process conditions are mentioned in Table 2.
+
+evaluate lack of fusion defect.
+
+Figs. 3(a-c) show the computed shapes and sizes of the molten pool transverse sections (YZ plane) for different hatches and layers of five hatches, three layers, builds of SS 316, Ti-6Al-4 V and AlSi10Mg, respectively. For the SS 316 and Ti-6Al-4 V builds, unmelted regions between the molten pools indicating improper fusional bonding among layers and hatches represent the lack of fusion voids. For the same processing conditions, molten pools in AlSi10Mg build are the largest due to its lowest density. Therefore, AlSi10Mg does not exhibit any lack of fusion voids at the processing condition considered. Figs. 4 (a-c) show the computed shapes and sizes of the molten pool transverse sections (YZ plane) for different hatches and layers of five hatches, three layers, builds of SS 316 at different heat inputs. Lack of fusion voids observed in Fig. 4 (a) are eliminated by increasing laser power and decreasing scanning speed, as shown in Fig. 4 (b) and (c), respectively.
+
+From Fig. 4 it is clear that the lack of fusion defect depends on both laser power and scanning speed. Figs. 5 (a) and (b) show the relation of experimentally measured [5,11] lack of fusion void fraction with laser power and scanning speed, respectively. In these plots the experimental data are taken from the independent literature [5,11]. It has been found that the amount of lack of fusion voids is inversely proportional to the laser power and directly proportional to the scanning speed. Apart from these two process conditions, layer thickness and hatch spacing also play important role in determining lack of fusion defect. Figs. 6 (a) and (b) show the relation of experimentally measured [14,28] lack of fusion void fraction with layer thickness and hatch spacing, respectively. In these plots the experimental data are taken from the independent literature [14,28]. It has been found that amount of the lack of fusion voids is directly proportional to both the layer thickness and hatch spacing.
+
+From Figures (3-6) it is clear that the lack of fusion defect depends on alloy properties and process parameters such as laser power, scanning speed, layer thickness and hatch spacing. However, other process parameters such as laser spot radius, absorptivity of the laser beam at the powder bed, molten pool width and depth and rate of heat transfer also govern lack of fusion defect in PBF [4,15]. Therefore, to quantify and provide better understanding of the effects of these governing factors on the lack of fusion defect in PBF, a non-dimensional lack of fusion number $\left(L_{F}\right)$ is proposed and used here. This number, $L_{F}$ consists of all important process parameters and alloy properties and is represented as:
+
+$L_{F}=\frac{\rho\left(C_{P} \Delta T+L\right)}{\frac{\eta P}{\pi r^{2} v}} F \frac{t}{d}\left(\frac{h}{w}\right)^{2}$
+
+All the symbols used in this equation are described along with their units and dimensions in Table 3. Eq. (8) clearly indicates that the lack of fusion defect is proportional directly to scanning speed, layer thickness and hatch spacing and inversely to laser power as shown in Fig. 5 and 6. Molten pool width and depth and Fourier number used in this equation are calculated using the heat transfer and fluid flow model. Recently,
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_2939f98f4c531399bef9g-5}
+\end{center}
+
+\section*{Lack of fusion voids}
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_2939f98f4c531399bef9g-5(1)}
+\end{center}
+
+Fig. 4. Transverse sectional view of the molten pools for 3 layers 5 hatches SS 316 builds using (a) $60 \mathrm{~W}$ power and $1000 \mathrm{~mm} / \mathrm{s}$ speed (b) $100 \mathrm{~W}$ power and $1000 \mathrm{~mm} / \mathrm{s}$ speed and (c) $60 \mathrm{~W}$ power and $250 \mathrm{~mm} / \mathrm{s}$ speed. All three results are using $90 \mu \mathrm{m}$ hatch spacing. Other process conditions are mentioned in Table 2.
+
+we have shown how the molten pool dimensions vary with layers and hatches $[24,29]$. The dimensions do not change significantly after the $2^{\text {nd }}$ hatch and the layer where the temperature field reaches steady state $[24,29,30]$. Therefore, molten pool dimensions used in Eq. (8) are taken at $2^{\text {nd }}$ hatch after they reach the steady state. Since wider and deeper molten pool ensures proper fusional bonding among successive layers and hatches, both pool width and depth are in the denominator of Eq. (8). Other important material properties that affect pool dimensions and thus the lack of fusion defect such as viscosity and coefficient of surface tension are considered by including their effects during pool depth and width predictions. Fourier number indicates faster diffusive heat transfer relative to heat accumulation [31]. A high rate of heat transfer reduces the pool size and thus increases the lack of fusion defect. The term $\rho\left(C_{P} \Delta T+L\right)$ denotes the amount of heat needed to melt per unit volume of material. For a given heat input, an alloy with high energy required for melting exhibits smaller molten pool that increases the susceptibility of lack of fusion defect.
+
+Fig. 7 shows that the experimentally measured $[5,15,28,13]$ lack of fusion void fraction $\left(V_{E}\right)$ for three commonly used alloys follows a linear relationship with corresponding $L_{F}$, which is estimated using Eq. (8). A sample calculation for the estimation of the $L_{F}$ for SS 316 is shown in the Supplementary document. Based on the trend of the data points presented in Fig. 7, the lack of fusion void fraction $\left(V_{E}\right)$ can be expressed as:
+
+$V_{E}=15.3 L_{F}$\\
+All statistical data to qualify this linear fit are summarized in Table 4. Eq. (9) is valid for the heat input range of $0.05-1.00 \mathrm{~J} / \mathrm{mm}$, which is widely used for major L-PBF applications [1]. In this equation, when $L_{F}$ is zero there are no lack of fusion voids observed. To include a new alloy, the correlation in Eq. (9) needs to be updated by including new experimental data for that alloy in Fig. 7. However, the lack of fusion number is applicable for any alloy for a wide range of processing conditions.
+
+The lack of fusion number, $L_{F}$, provides a usable scale to estimate and compare the amount of lack of fusion void in L-PBF of different alloys. Fig. 8 compares three commonly used alloys based on their vulnerability to the lack of fusion defect at three different scanning speeds. SS 316 is the most susceptible to lack of fusion defect because of its smallest molten pool attributed to its relatively high density. Since rapid scanning reduces the pool size, amount of lack of fusion voids enhances with increasing scanning speed as shown in Fig. 8.
+
+Lack of fusion defect depends largely on the molten pool shape and size governed by the flow of liquid metal driven primarily by the spatial gradient of interfacial tension, also known as the Marangoni stress [20-22]. Effects of Marangoni stress is quantified by the Marangoni number $[31,32]$ :
+
+$M a=-\frac{d \gamma}{d T} \frac{\delta \Delta T}{\mu \alpha}$
+
+where $\mu$ is the dynamic viscosity, $\alpha$ is the thermal diffusivity of the\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_2939f98f4c531399bef9g-6(1)}
+
+Fig. 5. Relation of experimentally measured void fraction with (a) laser power and (b) scanning speed. The data to plot the figures (a) and (b) are taken from Darvish et al. [11] and Di et al. [5], respectively. The results at the figures (a) and (b) are for CoCrMo alloy and SS 316, respectively. The linearity of the plots is indicated by the correlation coefficients of 0.95 and 0.99 for figures (a) and (b), respectively.
+
+alloy, $\delta$ is the characteristic length of the molten pool, which is taken as the width of the molten pool, $\Delta T$ is the difference between the peak temperature inside the pool and the solidus temperature of an alloy, and $\frac{d \gamma}{d T}$ is the surface tension gradient with respect to temperature. For most alloys that do not contain any surface active elements, this quantity is negative [1]. The peak temperature and pool width required for the calculations are estimated using the heat transfer and fluid flow model. Higher Marangoni number indicates vigorous flow of liquid metal inside the pool that increases the molten pool width and ensures proper fusional bonding among successive layers and hatches. Therefore, lack of fusion defect decreases when hatch spacing and layer thickness are constant for processes with higher Marangoni number as shown in Fig. 9.
+
+Assuming a constant cross section, hatch spacing, and layer thickness, higher molten pool peak temperature may indicate heat accumulation and consequentially a larger molten pool which facilitates better bonding of the depositing metal with the previously deposited metal. Therefore, monitoring of peak temperature during AM can be used as an indicator of the extent of lack of fusion defect. A non-dimensional temperature $\mathrm{T}^{*}$ can reveal the change in the amount of lack of fusion voids due to rise in peak temperature [32]:\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_2939f98f4c531399bef9g-6}
+
+Fig. 6. Relation of experimentally measured void fraction with (a) layer thickness and (b) hatch spacing. The data to plot the figures (a) and (b) are taken from Qiu et al. [14] and Aboulkhair et al. [28], respectively. The results at the figures (a) and (b) are for Ti-6Al-4 V and AlSi10Mg, respectively. The linearity of the plots is indicated by the correlation coefficients of 1.00 and 0.94 for figures (a) and (b), respectively.
+
+Table 3
+
+Variables used in the lack of fusion number $\left(L_{F}\right)$ in the MLT $\theta$ system.
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Variable & S.I. unit & Dimension \\
+\hline
+Density of alloy, $\rho$ & $\mathrm{kg} / \mathrm{m}^{3}$ & $\mathrm{ML}^{-3}$ \\
+\hline
+Specific heat of alloy, $C_{P}$ & $\mathrm{~J} / \mathrm{kg} \mathrm{K}$ & $\mathrm{L}^{2} \mathrm{~T}^{-2} \theta^{-1}$ \\
+\hline
+\begin{tabular}{l}
+Temperature gradient, $\Delta T=T_{L}-T_{S}$, where $T_{L}$ and $T_{S}$ \\
+refer respectively to liquidus and solidus temperature \\
+\end{tabular} & K & $\theta$ \\
+\hline
+Latent heat of fusion of alloy, $L$ & $\mathrm{~J} / \mathrm{kg}$ & $\mathrm{L}^{2} \mathrm{~T}^{-2}$ \\
+\hline
+Absorptivity of laser beam, $\eta$ & - & $\mathrm{M}^{\circ} \mathrm{L}^{\circ} \mathrm{T}^{0} \theta^{0}$ \\
+\hline
+Laser beam power, $P$ & $\mathrm{~W}$ & $\mathrm{ML}^{2} \mathrm{~T}^{-3}$ \\
+\hline
+Laser scanning speed, $v$ & $\mathrm{~m} / \mathrm{s}$ & $\mathrm{LT}^{-1}$ \\
+\hline
+Laser beam radius, $r$ & $\mathrm{~m}$ & $\mathrm{~L}$ \\
+\hline
+\begin{tabular}{l}
+Fourier number, $F$ denoted by $F=\alpha / v l$ where $\alpha$ is the \\
+thermal diffusivity of alloy and $l$ is the molten pool \\
+length \\
+\end{tabular} & - & $\mathrm{M}^{\circ} \mathrm{L}^{\circ} \mathrm{T}^{0} \theta^{0}$ \\
+\hline
+Layer thickness, $t$ & $\mathrm{~m}$ & $\mathrm{~L}$ \\
+\hline
+Hatch spacing, $h$ & $\mathrm{~m}$ & $\mathrm{~L}$ \\
+\hline
+Molten pool depth, $d$ & $\mathrm{~m}$ & $\mathrm{~L}$ \\
+\hline
+Molten pool half-width, $w$ & $\mathrm{~m}$ & $\mathrm{~L}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+$T^{*}=\frac{T_{P}}{T_{L}}$
+
+where $T_{P}$ and $T_{L}$ are the peak temperature and liquidus temperature of
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_2939f98f4c531399bef9g-7(2)}
+\end{center}
+
+Fig. 7. Values of experimental void fraction $\left(\mathrm{V}_{\mathrm{E}}\right)$ as a function of the lack of fusion number $\left(L_{F}\right)$ for AlSi10Mg [28], Ti-6Al-4 V [15,13] and SS 316 [15,5] showing a linear relationship. Experimentally measured void fraction values are directly taken from the literature. $L_{F}$ values are calculated using corresponding process parameters and alloy properties.
+
+Table 4
+
+Statistical data about the linear fit presented in Fig. 7.
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Coefficient of determination & 0.82 \\
+\hline
+Standard deviation & 0.025 \\
+p-value & Negligible (in the order of $10^{-8}$ ) \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_2939f98f4c531399bef9g-7(1)}
+\end{center}
+
+Fig. 8. Values of the calculated lack of fusion number $\left(L_{F}\right)$ calculated for SS 316, Ti6Al4V and AlSi10Mg builds. The symbol (a), (b) and (c) denote the scanning speed of $500 \mathrm{~mm} / \mathrm{s}, 750 \mathrm{~mm} / \mathrm{s}$ and $1000 \mathrm{~mm} / \mathrm{s}$ scanning speed, respectively. All calculations are done at $60 \mathrm{~W}$ laser power and other processing conditions are provided in Table 2.
+
+the alloy, respectively. The peak temperature required for the calculations may be either estimated from the heat transfer and fluid flow model or determined with a thermo-camera. Fig. 10 shows that the lack of fusion defect decreases with an increase in peak temperature. The peak temperatures for the parameter range considered here are below the boiling point of the alloys and keyholes do not form during the process. However, instabilities in the keyholes formed at very high power density may result in porosity that are different from the lack of fusion voids described here [1,33]. Fig. 9 and 10 show that the lack of fusion voids can be effectively minimized by enhancing Marangoni number and non-dimensional temperature during the process by
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_2939f98f4c531399bef9g-7}
+\end{center}
+
+Fig. 9. Variation of the calculated lack of fusion number $\left(L_{F}\right)$ as a function of Marangoni number for different heat inputs per unit length. The processing conditions for these results are provided in Table 2. The coefficient of determination of this quadratic fit is 0.82 .
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_2939f98f4c531399bef9g-7(3)}
+\end{center}
+
+Fig. 10. Variation of the calculated lack of fusion number $\left(L_{F}\right)$ as a function of non-dimensional temperature for different heat inputs per unit length. The processing conditions for these results are provided in Table 2.
+
+adjusting different processing conditions.
+
+\section*{4. Summary and conclusions}
+A well-tested, three-dimensional, transient heat transfer and fluid flow model is used to calculate the temperature and pool dimensions used for the dimensionless calculations. The results presented here provide, for the first time, a quantitative basis for minimizing lack of fusion defect in components made by L-PBF based on scientific principles. Below are the specific findings.
+
+\begin{enumerate}
+  \item A non-dimensional number that considers $A M$ process parameters and alloy properties is developed and tested for preventing lack of fusion defects for a wide range of process conditions and three commonly used alloys.
+
+  \item Among the three commonly used AM alloys considered, the biggest molten pool of AlSi10Mg for a given set of AM process parameters minimizes lack of fusion defect. Under the same processing conditions, AlSi10Mg and SS 316 are the least and most vulnerable to the\\
+lack of fusion defect.
+
+  \item A larger heat input per unit length obtained by reduction of scanning speed or an increase in laser power or both results is larger liquid pool and lower occurrence of lack of fusion defect.
+
+  \item A high value of Marangoni number that indicates vigorous circulation of the liquid metal inside the molten pool correlated well with the reduction of the lack of fusion defects.
+
+  \item High values of peak temperature also correlated well with the reduction of the occurrence of lack of fusion defects. Since the temperature can be monitored during deposition, this correlation can be used to reduce lack of fusion defects.
+
+\end{enumerate}
+
+\section*{Acknowledgements}
+One of the authors (T.M.) acknowledges support of an American Welding Society research fellowship, grant number 179466. We also acknowledge helpful discussions with J.S. Zuback and G.L. Knapp of Penn State University and Prof. A. De from IIT Bombay and Prof. H.L. Wei from Nanjing University of Science and Technology for their interest in this research.
+
+\section*{Appendix A. Supplementary data}
+Supplementary material related to this article can be found, in the online version, at doi:\href{https://doi.org/10.1016/j.jmapro.2018.10.028}{https://doi.org/10.1016/j.jmapro.2018.10.028}.
+
+\section*{References}
+[1] DebRoy T, Wei HL, Zuback JS, Mukherjee T, Elmer JW, Milewski JO, et al. Additive manufacturing of metallic components - process, structure and properties. Prog Mater Sci 2018;92:112-224.
+
+[2] El-Desouky A, Michael C, Mohamad M, Alaa E, Saniya L. Influences of energy density on microstructure and consolidation of selective laser melted bismuth telluride thermoelectric powder. J Manuf Process 2017;25:411-7.
+
+[3] Mukherjee T, Zuback JS, De A, DebRoy T. Printability of alloys for additive manufacturing. Sci Rep 2016;6:19717.
+
+[4] Thijs L, Verhaeghe F, Craeghs T, Van Humbeeck J, Kruth JP. A study of the mi crostructural evolution during selective laser melting of Ti-6Al-4V. Acta Mater 2010;58(9):3303-12.
+
+[5] Di W, Yang Y, Su X, Chen Y. Study on energy input and its influences on singletrack, multi-track, and multi-layer in SLM. Int J Adv Manuf Technol 2012;58(9-12). 1189-99.
+
+[6] Cunningham R, Narra SP, Montgomery C, Beuth J, Rollett AD. Synchrotron-based Xray microtomography characterization of the effect of processing variables on porosity formation in laser power-bed additive manufacturing of Ti-6Al-4V. JOM 2017;69(3):479-84.
+
+[7] Tammas-Williams S, Zhao H, Léonard F, Derguti F, Todd I, et al. XCT analysis of the influence of melt strategies on defect population in Ti-6Al-4V components manufactured by Selective Electron Beam Melting. J Miner Mater Charact Eng 2015;102:47-61
+
+[8] Buchbinder D, Schleifenbaum HB, Heidrich S, Meiners W, Bültmann J. High power selective laser melting (HP SLM) of aluminum parts. Phys Proced 2011;12:271-8.
+
+[9] Olakanmi EO, Cochrane RF, Dalgarno KW. Densification mechanism and microstructural evolution in selective laser sintering of Al-12Si powders. J Mater Process Technol 2011;211(1):113-21.
+
+[10] Olakanmi EO. Selective laser sintering/melting (SLS/SLM) of pure $\mathrm{Al}, \mathrm{Al}-\mathrm{Mg}$, and Al-Si powders: effect of processing conditions and powder properties. J Mater Process Technol 2013;213(8):1387-405.
+
+[11] Darvish K, Chen ZW, Pasang T. Reducing lack of fusion during selective laser melting of CoCrMo alloy: Effect of laser power on geometrical features of tracks. Mater Des 2016;112:357-66.
+
+[12] Gong H, Gu H, Zeng K, Dilip JJS, Pal D, Stucker B, et al. Melt pool characterization for selective laser melting of Ti-6Al-4V pre-alloyed powder. In Solid Freeform\\
+Fabrication Symposium. 2014. p. 256-67.
+
+[13] Gong H, Rafi K, Gu H, Starr T, Stucker B. Analysis of defect generation in Ti-6Al-4V parts made using powder bed fusion additive manufacturing processes. Additive Manuf 2014;1:87-98.
+
+[14] Qiu C, Panwisawas C, Ward M, Basoalto HC, Brooks JW, Attallah MM. On the role of melt flow into the surface structure and porosity development during selective laser melting. Acta Mater 2015;96:72-9.
+
+[15] Tang M, Pistorius PC, Beuth JL. Prediction of lack-of-fusion porosity for powder bed fusion. Additive Manuf 2017;14:39-48.
+
+[16] Teng C, Gong H, Szabo A, Dilip JJS, Ashby K, Zhang S, et al. Simulating melt pool shape and lack of fusion porosity for selective laser melting of cobalt chromium components. J Manuf Sci Eng 2017;139(1):011009.
+
+[17] Arrizubieta JI, Lamikiz A, Klocke F, Silvia M, Kristian A, Eneko U. Evaluation of the relevance of melt pool dynamics in Laser Material Deposition process modeling. Int J Heat Mass Transf - Theory Appl 2017;115:80-91.
+
+[18] Mukherjee T, Zhang W, DebRoy T. An improved prediction of residual stresses and distortion in additive manufacturing. Comput Mater Sci 2017;126:360-72.
+
+[19] Manvatkar V, De A, DebRoy T. Spatial variation of melt pool geometry, peak temperature and solidification parameters during laser assisted additive manufacturing process. Mater Sci Technol 2015;31(8):924-30.
+
+[20] Knapp GL, Mukherjee T, Zuback JS, Wei HL, Palmer TA, De A, et al. Building blocks for a digital twin of additive manufacturing. Acta Mater 2017;135:390-9.
+
+[21] Mukherjee T, Zuback JS, Zhang W, DebRoy T. Residual stresses and distortion in additively manufactured compositionally graded and dissimilar joints. Comput Mater Sci 2018;143:325-37.
+
+[22] Manvatkar V, De A, DebRoy T. Heat transfer and material flow during laser assisted multi-layer additive manufacturing. J Appl Phys 2014;116(12):124905.
+
+[23] Mills KC. Recommended values of thermo-physical properties for selected commercial alloys. Cambridge: Woodhead Publishing; 2002.
+
+[24] Mukherjee T, Wei HL, De A, DebRoy T. Heat and fluid flow in additive manufacturing — part I: modeling of powder bed fusion. Comput Mater Sci 2018;150:304-13.
+
+[25] Patankar SV, Heat Numerical. Transfer and fluid flow. New York: McGraw-Hill; 1982.
+
+[26] Kempen K, Thijs L, Van Humbeeck J, Kruth JP. Processing AlSi10Mg by selective laser melting: parameter optimisation and material characterisation. Mater Sci Technol 2015;31(8):917-23,
+
+[27] Li R, Shi Y, Wang Z, Wang L, Liu J, Jiang W. Densification behavior of gas and water atomized 316L stainless steel powder during selective laser melting. Appl Surf Sci 2010;256(13):4350-6.
+
+[28] Aboulkhair NT, Everitt NM, Ashcroft I, Tuck C. Reducing porosity in AlSi10Mg parts processed by selective laser melting. Additive Manuf 2014;1:77-86.
+
+[29] Mukherjee T, Wei HL, De A, DebRoy T. Heat and fluid flow in additive manufacturing - part II: powder bed fusion of stainless steel, and titanium, nickel and aluminum base alloys. Comput Mater Sci 2018;150:369-80.
+
+[30] Craeghs T, Clijsters S, Yasa E, Bechmann F, Berumen S, Kruth JP. Determination of geometrical factors in Layerwise Laser Melting using optical process monitoring. Opt Laser Eng 2011;49(12):1440-6.
+
+[31] Mukherjee T, Manvatkar V, De A, DebRoy T. Dimensionless numbers in additive manufacturing. J Appl Phys 2017;121(6):064904.
+
+[32] Mukherjee T, Manvatkar V, De A, DebRoy T. Mitigation of thermal distortion during additive manufacturing. Scripta Mater 2017;127:79-83.
+
+[33] King WE, Barth HD, Castillo VM, Gallegos GF, Gibbs JW, Hahn DE, et al. Observation of keyhole-mode laser melting in laser powder-bed fusion additive manufacturing. J Mater Process Technol 2014;214(12):2915-25.
+
+Mr. T. Mukherjee is a doctoral student of Materials Science and Engineering at The Pennsylvania State University. His research interests include additive manufacturing, welding, numerical modeling, heat and mass transfer. He was awarded by American Welding Society Graduate Research fellowship and Robert E. Newnham Research Excellence Award by Penn State University.
+
+Dr. T. DebRoy is Professor of Materials Science and Engineering at The Pennsylvania State University. His publications at the cross roads of metallurgy, welding, additive manufacturing and numerical heat transfer have been cited more than 15,000 times in the literature (Google scholar). His awards include the UK Royal Academy of Engineering's Distinguished Visiting Fellowship, a Fulbright Distinguished Chair in Brazil, The Arata Award of the International Institute of Welding (IIW), France, Easterling Award of the University of Graz, Austria, and Penn State's Faculty Scholar Medal. He serves as a Founding Editor of "Science and Technology of Welding and Joining."
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

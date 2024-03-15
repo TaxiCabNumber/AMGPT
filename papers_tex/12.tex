@@ -1,0 +1,446 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{In-situ characterization and quantification of melt pool variation under constant input energy density in laser powder bed fusion additive manufacturing process }
+
+
+\author{Qilin Guo ${ }^{\mathrm{a}, \mathrm{b}}$, Cang Zhao ${ }^{\mathrm{c}}$, Minglei Qu ${ }^{\mathrm{a}, \mathrm{b}}$, Lianghua Xiong ${ }^{\mathrm{a}, \mathrm{b}}$, Luis I. Escano ${ }^{\mathrm{a}}$,\\
+S. Mohammad H. Hojjatzadeh ${ }^{\mathrm{a}, \mathrm{b}}$, Niranjan D. Parab ${ }^{\mathrm{c}}$, Kamel Fezzaa ${ }^{\mathrm{c}}$, Wes Everhart ${ }^{\mathrm{d}}$, Tao Sun ${ }^{\mathrm{c}, * *}$,\\
+Lianyi Chen ${ }^{\mathrm{a}, \mathrm{b}, *}$}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\DeclareUnicodeCharacter{0131}{$\imath$}
+
+\begin{document}
+\maketitle
+Full Length Article
+
+${ }^{\text {a }}$ Department of Mechanical and Aerospace Engineering, Missouri University of Science and Technology, Rolla, MO 65409, USA
+
+${ }^{\mathrm{b}}$ Department of Materials Science and Engineering, Missouri University of Science and Technology, Rolla, MO 65409, USA
+
+${ }^{c} X$-ray Science Division, Argonne National Laboratory, Lemont, IL 60439, USA
+
+${ }^{\mathrm{d}}$ Department of Energy's Kansas City National Security Campus Managed by Honeywell FM\&T, Kansas City, MO 64147, USA
+
+\section*{A R T I C LE I N F O}
+\section*{Keywords:}
+Additive manufacturing
+
+Laser powder bed fusion
+
+Melt pool
+
+Energy absorption
+
+X-ray imaging
+
+\begin{abstract}
+A B S T R A C T Size and shape of a melt pool play a critical role in determining the microstructure in additively manufactured metals. However, it is very challenging to directly characterize the size and shape of the melt pool beneath the surface of the melt pool during the additive manufacturing process. Here, we report the direct observation and quantification of melt pool variation during the laser powder bed fusion (LPBF) additive manufacturing process under constant input energy density by in-situ high-speed high-energy x-ray imaging. We show that the melt pool can undergo different melting regimes and both the melt pool dimension and melt pool volume can have orders-of-magnitude change under a constant input energy density. Our analysis shows that the significant melt pool variation cannot be solely explained by the energy dissipation rate. We found that energy absorption changes significantly under a constant input energy density, which is another important cause of melt pool variation. Our further analysis reveals that the significant change in energy absorption originates from the separate roles of laser power and scan speed in depression zone development. The results reported here are important for understanding the laser powder bed fusion additive manufacturing process and guiding the development of better metrics for processing parameter design.
+\end{abstract}
+
+\section*{1. Introduction}
+Input energy density (IED) is widely used as a metric when designing processing parameters for additive manufacturing or expressing properties of additively manufactured materials, which can be defined as laser power, $P$, over the product of laser scan speed, $v$, and the laser beam diameter, $d$, i.e., $I E D=P /(v \cdot d)$ with a unit of $\mathrm{J} / \mathrm{cm}^{2}[1-3]$. IED can also appear in the forms of linear energy density, $I E D=P / v$ with a unit of $\mathrm{J} / \mathrm{cm}$ [4]; or volumetric energy density, IED $=P /\left(v \cdot d^{2}\right)$ with a unit of $\mathrm{J} / \mathrm{cm}^{3}$ [5]. Once the laser beam size is fixed, the same IED can be obtained by simultaneously changing laser power $(P)$ and scan speed $(v)$. Since the same amount of energy is supplied from the heat source under the same $I E D$, sometimes, similar as-built part properties (e.g., density, hardness) are expected with the same IED [2,6-27].\\
+However, recently, significant microstructure and property variations were observed in the parts produced under a constant IED, e.g., variations in crystalline phases and grains [28-30], porosity and density [28,31,32], surface and melt track morphology [33,34], temperature history [3,35], residual stress [36], and mechanical properties [37]. Recent research results show that these microstructure and property variations are associated with the variations in melt pool size and geometry under the same IED [3,34,38-41]. In the welding community, different scaling laws are proposed about the relationship between melt pool dimension and laser power and scan speed, some of which are in scale with $P / v$ while some others are not [42,43]. Compared with laser welding, the laser additive manufacturing process exhibits more variations due to the involvement of the metallic powder layer and the high laser scan speed. Whether/how the melt pool
+\footnotetext{*Corresponding author at: Department of Mechanical and Aerospace Engineering, Missouri University of Science and Technology, Rolla, MO 65409, USA.
+
+** Corresponding author.
+
+E-mail addresses: \href{mailto:taosun@aps.anl.gov}{taosun@aps.anl.gov} (T. Sun), \href{mailto:chenliany@mst.edu}{chenliany@mst.edu} (L. Chen).
+}
+dimensions systematically evolve with $P / v$ in laser additive manufacturing is still unclear. Thus, it is critical to experimentally quantify melt pool variation under a constant IED and understand the underlying mechanisms.
+
+Extensive work, based on data obtained by ex-situ methods, has been done on estimating the melt pool dimensions (length, width, depth) from the solidified melt track [2,12,29,34,44] and the volumetric melting rate from the product of laser scan speed and the crosssection area of the melt track [45,46]. However, the accurate characterization of a melt pool's dimension, geometry, and volume by exsitu methods is challenging, because the solid-liquid interface is inherently difficult to observe by ex-situ methods (no liquid exists under an ex-situ condition). It is also very challenging to observe the solidliquid interface beneath the surface of the melt pool during laser melting by in-situ techniques. Conventional in-situ characterization tools, such as visible light radiography and thermography, cannot receive signals from the interior of metals. Due to the low density difference between solid and liquid phases, it is also very difficult to clearly see the solid-liquid interface by a lab or mid-energy synchrotron $x$-ray facility, owing to the limited flux of x-ray photons, even though the depression zone, pores, and spatters during laser melting can be observed $[47,48]$.
+
+Currently, how the melt pool varies under a constant IED during laser powder bed fusion (LPBF) process has not been fully quantified, and the mechanism underlying the melt pool variation is not clear. In this work, we quantitatively reveal melt pool evolution under constant IEDs during the LPBF additive manufacturing process, by using the high-speed high-energy x-ray imaging technique with high flux and high resolutions, and uncover the mechanisms underlying these variations.
+
+\section*{2. Materials and methods}
+\subsection*{2.1. Experimental approach and materials}
+In-situ high-speed high-energy $x$-ray imaging is used to reveal the dynamic changes in the melt pool and depression zone during laser
+
+scanning, as schematically shown in Fig. 1(a). The synchrotron x-ray facility locates at beamline 32-ID-B, Advanced Photon Source, Argonne National Laboratory [49,50]. The x-ray can penetrate through metal samples. A downstream detection system can convert the x-ray signal into visible light by a scintillator (LuAG:Ce, $100 \mu \mathrm{m}$ thickness). The converted signal is then recorded by a high-speed camera (Photron FastCam SA-Z). The capacity of the x-ray imaging system has been detailed in our previous publication [51]. In this work, the recording frame rate is up to $45 \mathrm{kHz}$. The spatial resolution of the image is $2 \mu \mathrm{m}$ per pixel.
+
+A laser beam, with a wavelength of $1070 \mathrm{~nm}$ and a maximum output power of $520 \mathrm{~W}$, is applied from the top of a powder bed (the sample). The beam has a Gaussian profile and a D4 $\sigma$ diameter of about $100 \mu \mathrm{m}$. The powder bed is spread manually on a substrate (build plate), as displayed in Fig. 1(a), by using a wiper made of weighing paper. Two glassy carbon sheets clamping on the substrate are used to hold the powders. The layer thickness, determined by the difference in height between the substrate and the glassy carbon sheets, is fixed at $100 \mu \mathrm{m}$ for all of the experiments. AlSi10Mg alloy is used in this work for both the powder bed and substrate. The chemical compositions are tested by inductively coupled plasma mass spectrometry (ICP-MS) and listed in Table 1. The morphology and size distribution of the powder are shown in Fig. 1(b, c). The thickness of the substrate is fixed at $0.5 \mathrm{~mm}$ for all of the experiments to ensure better x-ray transparency. More details about the experimental setup can be found in [51].
+
+ImageJ is used to process all the images to enhance the contrast of the solid-liquid interface. As illustrated in Fig. 1(d-e), the liquid-gas interface (i.e., depression zone boundary) clearly shows up in the original $\mathrm{x}$-ray images, while the solid-liquid interface is not as obvious. After dividing the intensity at each pixel of Frame i by the intensity of corresponding pixels in Frame i+2, the solid-liquid interface is more clearly revealed, as shown in Fig. 1(f). However, the post-processed images will lose the features of the substrate and powder bed. Moreover, the clarity of depression zone boundary suffers from the superposition of two frames. To keep all the information, we present our data by displaying original x-ray images with highlighted melt pool boundaries.
+
+(a)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c7b73532b88866540ccdg-02(1)}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c7b73532b88866540ccdg-02}
+\end{center}
+
+Fig. 1. Experimental approach and image processing method. (a) Schematic showing in-situ x-ray imaging setup for laser powder bed fusion process. (b) SEM image showing the morphology of feedstock Alsi10Mg powder. (c) Particle size distribution of feedstock AlSi10Mg powder (number percentage). (d) X-ray image before image processing at Frame i. (e) X-ray image before image processing at Frame $\mathrm{i}+2$. (f) X-ray image after image processing through dividing the brightness at each pixel of Frame $i$ by the brightness of corresponding pixels in Frame i+2.
+
+Table 1
+
+Composition of AlSi10Mg powder and substrate.
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Element & Powder, mass (\%) & Substrate, mass (\%) \\
+\hline
+$\mathrm{Al}$ & Balance & Balance \\
+$\mathrm{Si}$ & 9.908 & 9.304 \\
+$\mathrm{Mg}$ & 0.309 & 0.358 \\
+$\mathrm{Fe}$ & 0.138 & 0.104 \\
+$\mathrm{Ti}$ & 0.009 & 0.005 \\
+$\mathrm{Ca}$ & 0.010 & 0.005 \\
+$\mathrm{~V}$ & 0.011 & 0.008 \\
+$\mathrm{Zn}$ & 0.007 & 0.003 \\
+$\mathrm{Mn}$ & 0.041 & 0.002 \\
+$\mathrm{Ni}$ & 0.006 & 0.005 \\
+$\mathrm{Cr}$ & 0.001 & 0.005 \\
+$\mathrm{Cu}$ & 0.002 & 0.003 \\
+$\mathrm{Zr}$ & 0.002 & 0.003 \\
+$\mathrm{~Pb}$ & $<0.001$ & $<0.001$ \\
+$\mathrm{Sn}$ & $<0.001$ & $<0.001$ \\
+\hline
+\end{tabular}
+\end{center}
+
+The reported values of melt pool depth and length as well as the depression zone width and depth are the averages of the measurements from multiple frames. Depending on the laser scan speed (i.e. the period that the melt pool stays in the view), the number of images measured varies from 18 to 98 . The corresponding standard deviations are also calculated and displayed as error bars when applicable. Since the apparent melt pool boundary and depression zone boundary in x-ray images have a width of 2 pixels ( $4 \mu \mathrm{m}$ ), all of the measurements exhibit an inherent error of $\pm 2 \mu \mathrm{m}$. The melt pool width is measured from the top view of a solidified track taken by a scanning electron microscope (Hitachi-S4700). A reported melt pool width is the average of 20 measurements along the solidified track (uniformly spaced, and leaving out $0.5 \mathrm{~mm}$ length at the beginning and the ending of the $2.5 \mathrm{~mm}$-long track).
+
+\subsection*{2.2. Experiment design}
+To study melt pool variations under a constant IED level, laser single-track scan tests were carried out on an AlSi10Mg powder bed with five different combinations of laser power and laser scan speed under a constant IED level. The laser power increased from $104 \mathrm{~W}$ to $520 \mathrm{~W}$ with an increment of $104 \mathrm{~W}$. Suitable laser scan speeds were calculated to maintain a constant IED. A total of three IED levels ( $260 \mathrm{~J} /$ $\mathrm{cm}^{2}, 520 \mathrm{~J} / \mathrm{cm}^{2}$, and $1040 \mathrm{~J} / \mathrm{cm}^{2}$ ) were tested to validate the phenomena. Detailed processing parameters and corresponding IED levels are listed in Table 2. To study the separate roles of laser power and laser scan speed, five laser single-track scan tests were conducted with a constant laser scan speed of $0.6 \mathrm{~m} / \mathrm{s}$ and different laser powers of $208 \mathrm{~W}, 260 \mathrm{~W}, 312 \mathrm{~W}, 364 \mathrm{~W}$, and $416 \mathrm{~W}$. Four laser single-track scan tests were carried out with a constant laser power of $416 \mathrm{~W}$ and different laser scan speeds of $0.4 \mathrm{~m} / \mathrm{s}, 0.8 \mathrm{~m} / \mathrm{s}, 1.2 \mathrm{~m} / \mathrm{s}$, and $1.6 \mathrm{~m} / \mathrm{s}$.
+
+\section*{3. Results}
+\subsection*{3.1. Melting regime change under a constant IED level}
+X-ray images, showing melt pool variations under three constant IED levels, are displayed in Fig. 2. (Please refer to Supplementary
+
+Table 2
+
+Processing parameters for laser single-track scan tests as functions of input energy density.
+
+\begin{center}
+\begin{tabular}{cccccc}
+\hline
+IED $\left(\mathrm{J} / \mathrm{cm}^{2}\right)$ & \multicolumn{5}{c}{Laser power $(\mathrm{W}) /$ laser scan speed (m/s)} \\
+\hline
+1040 & $104 / 0.1$ & $208 / 0.2$ & $312 / 0.3$ & $416 / 0.4$ & $520 / 0.5$ \\
+520 & $104 / 0.2$ & $208 / 0.4$ & $312 / 0.6$ & $416 / 0.8$ & $520 / 1.0$ \\
+260 & $104 / 0.4$ & $208 / 0.8$ & $312 / 1.2$ & $416 / 1.6$ & $520 / 2.0$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Figure 1 for better understanding of how the melt pool information is projected into x-ray images.) The images, labeled from (a) to (o), display tests that were carried out with parameters arranged in the same order as in Table 2. The horizontal axis shows laser power, while the vertical axis shows the IED level. The corresponding scan speeds of each test are indicated at the bottom-left corner of the images. Outlines of the melt pool and the depression zone (cavity induced by the recoil pressure of metal vaporization) are highlighted by yellow dashed lines and red dashed lines, respectively. According to the presence and the geometry of the melt pool and depression zone, four regimes can be identified: (1) Neither the melt pool nor the depression zone appear, hereinafter referred to as no melt pool regime, as marked by green in Fig. 2; (2) Only the melt pool appears, hereinafter referred to as melt pool regime (namely "conduction regime" in the welding community), as marked by yellow; (3) Both the melt pool and the depression zone appear, and the (W/2)/D (half width over depth) ratio of the depression zone is over 1, hereinafter referred to as shallow depression zone regime (namely "transition regime" [52,53] in the welding community), as marked by orange; (4) Both the melt pool and the depression zone appear, and the $(W / 2) / D$ ratio of the depression zone is less than 1 , hereinafter referred to as the deep depression zone regime (namely "keyhole regime" in the welding community), as marked by blue. The no melt pool regime is located in the bottom-left corner of the figure. The absence of the melt pool and the depression zone in the no melt pool regime indicates that the energy absorbed by the material is insufficient under these conditions. The keyhole regime, located in the top-right corner of the figure, indicates that the absorbed energy is sufficient and generates a deep depression zone. Below the keyhole regime, the transition regime is found in the bottom-right side of the figure, where the absorbed energy is relatively lower than that in the keyhole regime and results in a shallower depression zone. A conduction regime is mainly located on the left side of the area, surrounding the no melt pool regime, where the absorbed energy is intermediate, and only the melt pool appears.
+
+For each IED level, two or more melting regimes are observed. With simultaneously increasing laser power and scan speed, the melt regime changes from no melt pool regime to conduction regime to transition regime under the $I E D$ level of $260 \mathrm{~J} / \mathrm{cm}^{2}$, and changes from conduction regime to keyhole regime under IED levels of $520 \mathrm{~J} / \mathrm{cm}^{2}$ and $1040 \mathrm{~J} /$ $\mathrm{cm}^{2}$. The change in the melt regime indicates that a significant different amount of energy is used for melting material under different combinations of laser power and scan speed within a constant IED.
+
+Besides the melting regime variation within constant IED levels, the depression zone also undergoes variations in both size and shape under different processing conditions. From the nine images in transition regime and keyhole regime, the depression zone grows deeper at higher laser powers, while has a tendency of becoming wider at higher scan speeds.
+
+\subsection*{3.2. Melt pool dimension change under a constant IED level}
+The melt pool dimensions (length, depth, and width) and dimension ratios (length/width, length/depth, and width/depth) were measured and calculated for experiments conducted under various constant IED levels, as shown in Figs. 3 and 4, respectively. For each IED level, the laser power varies in a range of $104 \mathrm{~W}-520 \mathrm{~W}$ with an increment of $104 \mathrm{~W}$. The laser scan speed was altered simultaneously to maintain constant IED levels in a range of $0.1 \mathrm{~m} / \mathrm{s}-2 \mathrm{~m} / \mathrm{s}$.
+
+The results show that all of the three dimensions of the melt pool exhibited a trend to increase, while the laser power and laser scan speed within the same IED are simultaneously increased, as depicted in Fig. 3. The trend was confirmed under multiple IED levels $\left(260 \mathrm{~J} / \mathrm{cm}^{2}, 520 \mathrm{~J} /\right.$ $\mathrm{cm}^{2}, 1040 \mathrm{~J} / \mathrm{cm}^{2}$ ). The length/width ratio and length/depth ratio, shown in Fig. 4, indicate a trend to increase, indicating that the melt pool prefers to elongate along the laser scan direction rather than spread in the transverse plane. This is because less time is permitted for
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c7b73532b88866540ccdg-04(1)}
+\end{center}
+
+Fig. 2. X-ray images showing melt pool variation under constant IED levels. Three IED levels are studied: $260 \mathrm{~J} / \mathrm{cm}, 520 \mathrm{~J} / \mathrm{cm}$, and $1040 \mathrm{~J} / \mathrm{cm}$. Five combinations of laser power and laser scan speed were studied under each IED level. The images are organized as functions of laser power (104 W, $208 \mathrm{~W}, 312 \mathrm{~W}, 416 \mathrm{~W}, 520 \mathrm{~W}$ ). The corresponding laser scan speeds are noted at the bottom-left corner of each image. The outline of the melt pool and the depression zone are highlighted by yellow and red dashed lines, respectively. The position of the laser is indicated by a green arrow. According to the appearance and the geometry of the melt pool and depression zone, the laser melting behavior can be categorized into four regimes: (1) No melt pool, (2) melt pool only (conduction regime), (3) Shallow depression zone (transition regime), and (4) deep depression zone (keyhole regime). All of the images share the same scale bar, as shown in (o). (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)
+
+heat transfer across the transverse direction at a higher laser scan speed. The width/depth ratio in Fig. 4 exhibits a general trend to decrease at the conduction-transition regime $(208 \mathrm{~W}-520 \mathrm{~W}$ for the IED of $260 \mathrm{~J} /$ $\mathrm{cm}^{2}, 104 \mathrm{~W}-312 \mathrm{~W}$ for IEDs of $520 \mathrm{~J} / \mathrm{cm}^{2}$ and $1040 \mathrm{~J} / \mathrm{cm}^{2}$ ), indicating that the melt pool prefers to pierce into the material rather than extend along the transverse direction, when the laser power and laser scan speed within the same IED are simultaneously increased, and the ratio remains stable in the keyhole regime ( $312 \mathrm{~W}-520 \mathrm{~W}$ for IEDs of $520 \mathrm{~J} /$ $\mathrm{cm}^{2}$ and $1040 \mathrm{~J} / \mathrm{cm}^{2}$ ). The overall trend for the width/depth ratio to decrease is mainly because the emerging of the depression zone will
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c7b73532b88866540ccdg-04}
+\end{center}
+
+Fig. 3. The melt pool dimensions as functions of processing parameters under constant IED levels. The measured melt pool dimensions include melt pool length ( $1^{\text {st }}$ row), depth ( $2^{\text {nd }}$ row), and width ( $3^{\text {rd }}$ row). Three IED levels were studied: 260 $\mathrm{J} / \mathrm{cm}^{2}$ (1 $1^{\text {st }}$ column), $520 \mathrm{~J} / \mathrm{cm}^{2}$ (2 $2^{\text {nd }}$ column), and $1040 \mathrm{~J} / \mathrm{cm}^{2}$ ( $3^{\text {rd }}$ column). All of the data points were plotted as functions of laser power (bottom x-axis) and laser scan speed (top xaxis).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c7b73532b88866540ccdg-05(3)}
+\end{center}
+
+Fig. 4. The melt pool dimension ratios as functions of processing parameters under constant IED levels. The melt pool dimension ratios include melt pool length/width ( $1^{\text {st }}$ row), length/depth ( $2^{\text {nd }}$ row), and width/depth ( $3^{\text {rd }}$ row). Three IED levels were studied: $260 \mathrm{~J} / \mathrm{cm}^{2}$ (1 $1^{\text {st }}$ column), $520 \mathrm{~J} / \mathrm{cm}^{2}\left(2^{\text {nd }}\right.$ column), and $1040 \mathrm{~J} / \mathrm{cm}^{2}$ (3 $3^{\text {rd }}$ column). All of the data points were plotted as functions of laser power (bottom $\mathrm{x}$-axis) and laser scan speed (top x-axis). extend more energy beneath the surface.
+
+The significant variations in the melt pool dimensions and dimension ratios imply that a simultaneous change in laser power and scan speed under a constant IED would lead to a preferential dimension development rather than maintain a consistent melt pool size or shape.
+
+The data in Figs. 3 and 4 were also re-plotted out as functions of laser power, scan speed, and IED, respectively, in SupplementaryFigs. 2to 8, for readers who are interested in melt pool evolution as a function of laser power, scan speed, and IED.
+
+\subsection*{3.3. Melt pool volume change under a constant IED level}
+To investigate a melt pool volume change under a constant IED level, we constructed a model to calculate the melt pool volume, based on melt pool dimension measurements from x-ray images. To simplify the calculation of melt pool volume, the melt pool was divided into three regions, as shown in Fig. 5(a): top melt pool (above the substrate, purple area), bottom melt pool (below the substrate, yellow area), and depression zone (orange area). The melt pool volume is the sum of the top and bottom melt volume minus the volume of the depression zone. To measure the melt pool volume from x-ray images, the top and bottom melt pool are treated as rectangular pyramids, as shown schematically in Fig. 5(b). The shape of the depression zone depends on the width/depth ratio: when the W/D $\geq 1$, the depression zone is treated as a rectangular pyramid; when the W/D $<1$, the depression zone is treated as a cylinder. Note that this approximation is only made for the convenience of calculation. Actually, the depression zone volume only takes less than $6 \%$ (below $2 \%$ in most cases, up to $5.7 \%$, as shown in Supplementary Figure 9) of the melt volume, so the geometry assumption of the depression zone does not have great impact on the melt\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c7b73532b88866540ccdg-05(2)}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c7b73532b88866540ccdg-05(1)}
+\end{center}
+
+(d)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c7b73532b88866540ccdg-05}
+\end{center}
+
+Fig. 5. Schematic model for calculating melt pool volume. (a) X-ray image showing the three regions in the melt pool. (b) Schematic showing the three-dimensional simplified model of melt pool geometry. The simplified geometry of the depression zone depends on the width/depth ratio. (c) Two-dimensional schematic showing the required dimensions for calculating the melt pool volume. (d) SEM images showing the top-view of three laser single scan track obtained with an energy density of $260 \mathrm{~J} / \mathrm{cm}^{2}$, with different combinations of laser power and scan speed.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c7b73532b88866540ccdg-06}
+
+Fig. 6. Melt pool volume as a function of processing parameters under constant IED levels. The melt pool volume is calculated and plotted as a function of laser power (bottom $\mathrm{x}$-axis) and laser scan speed (top x-axis) under IED levels of (a) $260 \mathrm{~J} / \mathrm{cm}^{2}$, (b) $520 \mathrm{~J} / \mathrm{cm}^{2}$, and (c) $1040 \mathrm{~J} / \mathrm{cm}^{2}$, respectively. The percentage of change under each processing condition with respect to the condition of $104 \mathrm{~W}$ is also calculated based on the equation noted in (b) and plotted with hollow square. The percentage of change is not calculated in (a) due to the lack of melt pool under $104 \mathrm{~W}$. pool volume calculation. Most of the dimension values can be directly measured on the projection view of the sample provided by the x-ray images, including the length $\left(L_{\mathrm{up}}\right.$ ) and height $(H)$ of the top melt pool, length $\left(L_{\text {down }}\right)$ and depth $\left(D_{\mathrm{m}}\right)$ of the bottom melt pool, width $\left(W_{\mathrm{d}}\right)$ and depth $\left(D_{\mathrm{d}}\right)$ of the depression zone, as illustrated in Fig. 5(c). The width of the top melt pool and the bottom melt pool, $W_{\mathrm{m}}$, are assumed to be the same, which is measured from the SEM images (top view) of the laser scanned track, as shown in Fig. 5(d). Therefore, the melt pool volume $(V)$ can be expressed by:
+
+
+\begin{align*}
+V= & V_{\text {top }}+V_{\text {bottom }}-V_{\text {depression }}=\frac{1}{3} W_{m} L_{u p} H+\frac{1}{3} W_{m} L_{\text {down }} D_{m} \\
+& -\frac{1}{3} W_{d}^{2} D_{d}, \text { when } \mathrm{W} / \mathrm{D} \geq 1 \tag{1}
+\end{align*}
+
+
+or
+
+$V=\frac{1}{3} W_{m} L_{u p} H+\frac{1}{3} W_{m} L_{\text {down }} D_{m}-\pi\left(\frac{W_{d}}{2}\right)^{2} D_{d}$, when $\mathrm{W} / \mathrm{D}<1$
+
+The calculated melt pool volume, as a function of laser power under constant IEDs, is displayed in Fig. 6. The result shows that the melt pool volume has an increasing tendency toward higher laser power at each IED level. The percentage of change in melt pool volume, with respect to the first condition ( $104 \mathrm{~W}$ ), was also calculated and plotted, and the equation is noted in Fig. 6(b). The melt pool volume exhibits up to three orders-of-magnitude change within the experimental conditions.
+
+Since a constant IED does not deliver the same melt volume, the final additive manufactured parts, built with various combinations of laser power and scan speed under the same IED, will be unlikely to have the same properties. This is because different melt volumes could affect a series of dynamic processes during laser scanning, such as the solidification rate (that will lead to different microstructures and phases), residual stress distribution, and melt pool-powder bed interaction (that may lead to different spattering patterns, denudation area, and material deposition rate).
+
+\section*{4. Discussions}
+\subsection*{4.1. Origin of melt pool variation under a constant IED level}
+We have revealed that the melt pool volume undergoes orders-ofmagnitude change within the same IED, which indicates simultaneously increasing laser power and laser scan speed can significantly increase the amount of energy for melting the material. The energy variation for melting is a consequence of two competing factors: the energy absorption and the energy dissipation. Since a constant IED level ensures the same amount of energy being supplied from the heat source, the variation of energy dissipation within a constant IED level seems to account for energy variation. With the consideration of energy dissipation, a normalized enthalpy model that can predict the onset of keyholing has been proposed by King et al. [54] based on the work of Hann et al. [55], and was later validated by [56,57] and further developed by [5,40,58]. Bertoli et al. [34] has also shown that the normalized enthalpy model can predict the keyholing threshold and the melt pool depth under a constant IED.\\
+It is easy to understand why the same IED can have different energy dissipation rates [35]. By definition, the same IED means the same amount of energy is applied in certain area. However, the time for energy dissipation differs for different laser-matter interaction time. When the laser scan speed is high, the shorter energy dissipation time will conserve more energy for melting. Our calculation shows that within our experimental parameter range, where the laser scan speed increases by five times, the melting efficiency (the ratio of energy used for melting over the energy absorbed by the material) is estimated to have up to five times increase, as illustrated in SupplementaryFig. 10 and Supplementary Note 1. However, this amount of increase is insufficient to account for the orders-of-magnitude change of melt pool volume, which brings our attention back to examine the energy absorption variation within a constant IED level.
+
+\subsection*{4.2. Laser absorptivity variation under a constant IED level}
+Absorbed energy usually originates from the primary energy transfer through direct laser-material interaction (Fresnel absorption) and the secondary energy transfer through plasma or metal vapor-material interaction $[59,60]$. Since the thermal effect of plasma is rather small under additive manufacturing conditions [45,61-63], we assume that the energy absorbed by the material is totally constituted by the Fresnel absorption.
+
+Once a keyhole is generated, the laser beam will undergo multiple reflections in the keyhole. The Fresnel absorptivity can be reasonably calculated by considering the transverse-electric (TE) and transversemagnetic (TM) polarization and multiple reflections of the laser beam inside the keyhole. Therefore, we constructed a ray-tracing model to calculate the laser absorptivity in different keyhole geometries through all the parameters under constant IEDs. The dimensions of the depression zone were measured from $\mathrm{x}$-ray images. The schematic of the model and detailed method of calculation can be found in Supplementary Figure 11 and Supplementary Note 2.
+
+The calculated absorptivity, as a function of laser power under constant IEDs, is shown in Fig. 7. The error bars show the standard deviation of measurements of the dynamic depression zone at different moments in the $x$-ray imaging video. Note that the data points highlighted by red dashed circles, at $104 \mathrm{~W}$ and $208 \mathrm{~W}$ laser power, are not calculated by the ray-tracing model due to the absence of a depression zone under those processing conditions. For comparison purposes, the absorptivity of liquid aluminum with a flat surface is plotted at these conditions, because most of the laser beam interacts with the melt during laser scanning [64]. In general, absorptivity increases with increasing laser power for each of the three IED levels. A big jump in absorptivity occurs through conduction-keyhole transition (208 W $312 \mathrm{~W}$ ) for IEDs of $520 \mathrm{~J} / \mathrm{cm}^{2}$ and $1040 \mathrm{~J} / \mathrm{cm}^{2}$, as a consequence of keyhole formation. The absorptivity in the keyhole regime becomes quite consistent as a function of laser power for each IED level, but still undergoes a slow growth.
+
+The above results show that, despite the output of the same amount of energy from the heat source, the amount of energy absorbed by the material can be very different under a constant IED level. Laser\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c7b73532b88866540ccdg-07}
+
+Fig. 7. Laser absorptivity as a function of processing parameters under constant IED levels. The absorptivity is plotted as a function of laser power (bottom $\mathrm{x}$-axis) and laser scan speed (top x-axis) under constant IED levels. The experiments were conducted under three IED levels: (a) $260 \mathrm{~J} / \mathrm{cm}^{2}$, (b) $520 \mathrm{~J} /$ $\mathrm{cm}^{2}$, and (c) $1040 \mathrm{~J} / \mathrm{cm}^{2}$. The absorptivity for laser powers equal or greater than $312 \mathrm{~W}$ were calculated based on the dimension of depression zones through a ray-tracing model. Data points circled by red dashed lines are the laser absorptivity of liquid aluminum with flat surface, due to the lack of depression zone under those conditions. The data point of $104 \mathrm{~W}$ in (a) is missing due to the lack of melt pool. The percentage of change under each processing condition with respect to the condition of $208 \mathrm{~W}$ is plotted with hollow square. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)
+
+absorptivity increases with increasing laser power under constant IEDs.
+
+\subsection*{4.3. Separate roles of laser power and laser scan speed in depression zone development}
+Although we have shown that different processing conditions under the same IED level have different energy absorption, the cause for this phenomena is unclear. To be specific, since a higher laser power dumps more energy into the material, while a higher laser scan speed brings down the energy density outputted to the material, why simultaneously increasing laser power and laser scan speed (under a constant IED) cannot maintain a constant energy absorption, but increase it instead?
+
+In practice, since the Fresnel laser absorptivity of the material is mainly determined by the shape and dimension of the depression zone, the fact that different combinations of processing parameters (with the same IED) lead to different absorptivity implies that laser power and laser scan speed each may have a separate impact on depression zone development. Therefore, the respective effects of laser power and laser scan speed on depression zone development were examined, as described below.
+
+\subsection*{4.3.1. Effect of laser power on depression zone development}
+To investigate the effect of laser power on depression zone development, the variation in dimensions of the depression zone, as a function of laser power, are depicted in Fig. 8. The experiments were carried out with a constant laser scan speed of $0.6 \mathrm{~m} / \mathrm{s}$, and the laser power varying in a range of $208 \mathrm{~W}-416 \mathrm{~W}$, with an increment of $52 \mathrm{~W}$. The width and depth of the depression zone are displayed in Figs. 8(a) and (b), while the width/depth ratio is shown in Fig. 8(c). As can be seen in Fig. 2, the depression zone is not exactly on the same axis as the incident laser beam, but has a little backward tilt angle, with reference to the axial direction of the beam. The tilt angle of the front depression wall (schematically illustrated by $\alpha$ in Fig. 5(c)), as a function of laser power, is also measured and plotted in Fig. 8(d).
+
+The general change in the dimension of the depression zone exhibits a tendency to increase with increasing laser power, especially for the depth of the depression zone (Fig. 8(b)). During the stage of $208 \mathrm{~W}-$ $312 \mathrm{~W}$, the width of the depression zone increases with the increase of laser power. Note that the melting regime under $208 \mathrm{~W}$ is the conduction regime, where the depression zone is absent. At the stage of $364 \mathrm{~W}$ $-416 \mathrm{~W}$, the laser power is high enough to promote the drilling effect so the depression zone grows deeper at higher laser power, while the width of depression zone remains constant. The tilt angle of the front depression wall decreases from $24^{\circ}$ to $13^{\circ}$ when laser power increases from $260 \mathrm{~W}$ to $416 \mathrm{~W}$, as shown in Fig. 8(d). The tilt angle has impact on the laser absorptivity in terms of affecting the reflection times of the laser beam on the depression walls.
+
+Despite some fluctuations in the width of the depression zone, with an increasing laser power, the depression zone has a tendency to drill into the material. Increasing the laser power has a positive effect on the\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c7b73532b88866540ccdg-07(1)}
+
+Fig. 8. The depression zone dimensions as functions of laser power with a constant laser scan speed of $0.6 \mathrm{~m} / \mathrm{s}$. (a), Width versus laser powder. (b), Depth versus laser power. (c), The ratio of width over depth versus laser power. (d), The tilt angle of front depression zone wall versus laser power.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c7b73532b88866540ccdg-08}
+
+Fig. 9. The depression zone dimensions as functions of laser scan speed with a constant laser power of 416 W. (a), Width versus laser powder. (b), Depth versus laser power. (c), The ratio of width over depth versus laser power. (d), The tilt angle of front depression zone wall versus laser scan speed.
+
+depth of the depression zone.
+
+\subsection*{4.3.2. Effect of laser scan speed on depression zone development}
+To investigate the effect of laser scan speed on the development of the depression zone, experiments were carried out with laser scan speeds that varied in a range of $0.4 \mathrm{~m} / \mathrm{s}-1.6 \mathrm{~m} / \mathrm{s}$, with an increment of $0.4 \mathrm{~m} / \mathrm{s}$. The laser power was kept constant at $416 \mathrm{~W}$. Results are shown in Fig. 9(a)-(d).
+
+Compared with the effect of laser power, laser scan speed has a different influence on changing the dimensions of the depression zone. Based on the width/depth ratio, as shown in Fig. 9(c), the melting regimes of $0.4 \mathrm{~m} / \mathrm{s}$ and $0.8 \mathrm{~m} / \mathrm{s}$ are keyhole regime, while the rest are transition regime. The shape of the width/depth ratio curve in Fig. 9(c) is the inverse of that in Fig. 8(c). When the laser scan speed shifts from the keyhole regime into the transition regime $(0.8 \mathrm{~m} / \mathrm{s}-1.2 \mathrm{~m} / \mathrm{s})$, the depression zone width starts to increase, which may be caused by the moving speed of the rear depression wall cannot effectively catches up the laser scan speed (i.e., the moving speed of the front depression wall). However, the width increase ceases when the laser scan speed increases to a certain level $(1.2 \mathrm{~m} / \mathrm{s})$, at which the input energy density is insufficient to sustain the expansion of the depression zone. This explains the drop in the depression zone width and width/depth ratio between $1.2 \mathrm{~m} / \mathrm{s}$ and $1.6 \mathrm{~m} / \mathrm{s}$.
+
+The wider depression zone, higher width/depth ratio (about oneorder of magnitude higher than Fig. 8(c)), and large tilt angle induced by high laser scan speed indicate that the laser scan speed has a major influence on the width of the depression zone.
+
+The results shown in this section suggest that laser power and laser scan speed have different roles in determining the size and shape of the depression zone. Under the experimental conditions, depression zone depth development relies more on laser power, while the width of the depression zone is more sensitive to laser scan speed. Therefore, laser power and laser scan speed should be tuned separately during the LPBF additive manufacturing process to optimize the processing condition.
+
+\subsection*{4.4. Importance of considering absorptivity variation}
+To show the importance of considering absorptivity variation, a model established by R. Fabbro [42] is discussed below. The model is to predict the depression zone depth with the consideration of different processing parameters under low scan speeds $(<0.33 \mathrm{~m} / \mathrm{s})$ and uniform laser intensity profile, in the form of:
+
+$e=\frac{4 k A}{\pi} \frac{P}{d \cdot v}$
+
+where $e$ is the depression zone depth, $k$ is a factor that mainly depends on the thermal properties of the material, $A$ is the laser absorptivity, $P$ is the laser power, $d$ is the laser spot size, $v$ is the laser scan speed. To be noticed, $P /(d \cdot v)$ is the IED. $k$ is constant when the material is chosen. In the reference paper, the laser absorption is assumed to be constant. Therefore, Eq. (3) can be rewritten into $e=$ constant $\cdot$ IED, which means $e$ should be constant for a fixed IED level. However, from our measurements displayed in Fig. 8(b) and Fig. 9(b), it is clear that depression zone depth varies in a wide range under a constant IED. Therefore, with the assumptions of constant laser absorptivity, low scan speed, and uniform laser intensity profile, the prediction from Eq. (3) is not consistent with our experimental results.
+
+Once considering the variation of laser absorptivity in the Eq. (3), which can be rewritten as $e=$ constant $\cdot A \cdot I E D$, the change of $e$ will solely rely on the variation of laser absorptivity $(A)$ under a constant IED. This trend is verified in Fig. 10, where the variation of depression zone depth and calculated laser absorptivity as a function of laser power (Fig. 10(a)) and laser scan speed (Fig. 10(b)) were plotted together, respectively. Since the absorptivity variation has a similar trend as the depression zone depth variation, it can be expected that the predicted depression zone depth $e$ will also have a similar trend as the experimental measurements. Hence, the Eq. (3) have the potential to be extended to the processing conditions of high scan speeds ( $\geq 0.4 \mathrm{~m} / \mathrm{s}$ ) and Gaussian laser intensity profile, with the consideration of variation in laser absorptivity.
+
+\section*{5. Conclusion}
+This work presents the direct observation and quantification of melt pool variation during the LPBF additive manufacturing process through in-situ high-speed high-energy x-ray imaging and uncovers the mechanism of melt pool variation under a constant IED level. The major conclusions are as follows:\\
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c7b73532b88866540ccdg-09}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c7b73532b88866540ccdg-09(1)}
+\end{center}
+
+Fig. 10. The comparison of the trend between depression zone depth and laser absorptivity variations. (a) Comparison under a constant laser scan speed of $0.6 \mathrm{~m} / \mathrm{s}$. (b) Comparison under a constant laser power of $416 \mathrm{~W}$.
+
+(1) Under a constant IED level, different melting regimes, melt pool dimensions, and melt pool volumes were observed under different combinations of laser power and laser scan speed under LPBF conditions. When simultaneously increasing laser power and laser scan speed, with a constant IED level, the melting regime can shift in sequence from a no melt pool regime to the conduction regime, transition regime, and keyhole regime. All three dimensions of the melt pool increase; and the melt pool volume exhibits up to three orders of magnitude increase.
+
+(2) The energy dissipation variation is deemed to be insufficient to account for the significant melt pool change under a constant IED. We found that the energy absorption changes under a constant IDE level, which is an important factor that induces the variations in the melt pool. Energy absorption exhibits a trend to increase when laser power and laser scan speed are simultaneously increased under a constant IED level.
+
+(3) The variation in energy absorption, with a constant IED level, exists because laser power and laser scan speed play different roles in the development of the depression zone. Under the experimental conditions of this work, laser power is found to have a greater impact on the depth of the depression zone, while laser scan speed affects the width of the depression zone more. Therefore, instead of using IED to evaluate the combined effect of laser power and laser scan speed, these two factors should be tuned separately to achieve an optimized processing condition in LPBF process.
+
+\section*{Acknowledgements}
+The authors would like to acknowledge Alex Deriy at the Advanced Photon Source for his help on the beamline experiments. This work is supported by Honeywell Federal Manufacturing \& Technologies (FM\& $\mathrm{T}$, also known as the Kansas City National Security Campus), National Science Foundation, University of Missouri Research Board (UMRB), Intelligent Systems Center at Missouri S\&T, and Laboratory Directed Research and Development (LDRD) funding from Argonne National Laboratory, provided by the Director, Office of Science, of the U.S. Department of Energy under Contract No. DE-AC02-06CH11357. This research used resources of the Advanced Photon Source, a U.S. Department of Energy (DOE) Office of Science User Facility operated for the DOE Office of Science by Argonne National Laboratory under Contract No. DE-AC02-06CH11357. All data prepared, analyzed and presented has been developed in a specific context of work and was prepared for internal evaluation and use pursuant to that work authorized under the referenced contract. Reference herein to any specific commercial product, process or service by trade name, trademark, manufacturer, or otherwise, does not necessarily constitute or imply its endorsement, recommendation, or favoring by the United States Government, any agency thereof or Honeywell Federal Manufacturing \& Technologies, LLC. This publication has been authored by Honeywell Federal Manufacturing \& Technologies under Contract No. DENA0002839 with the U.S. Department of Energy. The United States Government retains and the publisher, by accepting the article for publication, acknowledges that the United States Government retains a nonexclusive, paid up, irrevocable, world-wide license to publish or reproduce the published form of this manuscript, or allow others to do so, for the United States Government purposes.
+
+\section*{Appendix A. Supplementary data}
+Supplementary material related to this article can be found, in the online version, at doi:\href{https://doi.org/10.1016/j.addma.2019.04.021}{https://doi.org/10.1016/j.addma.2019.04.021}.
+
+\section*{References}
+[1] J.C. Nelson, Selective Laser Sintering: a Definition of the Process and an Empirical Sintering Model, Ph.D. thesis University of Texas at Austin, Austin, TX, 1993.
+
+[2] S.L. Campanelli, G. Casalino, N. Contuzzi, A. Angelastro, A.D. Ludovico, Analysis of the molten/solidified zone in selective laser melted parts, SPIE LASE. 8963 (2014) 896311 .
+
+[3] M.H. Farshidianfar, A. Khajepour, A.P. Gerlich, Effect of real-time cooling rate on microstructure in Laser Additive Manufacturing, J. Mater. Process. Technol. 231 (2016) 468-478.
+
+[4] I. Yadroitsev, I. Yadroitsava, P. Bertrand, I. Smurov, Factor analysis of selective laser melting process parameters and geometrical characteristics of synthesized single tracks, Rapid Prototyping J. 18 (2012) 201-208.
+
+[5] R. Fabbro, Scaling laws for the laser welding process in keyhole mode, J. Mater. Process. Technol. 264 (2019) 346-351.
+
+[6] K.V. Yang, P. Rometsch, T. Jarvis, J. Rao, S. Cao, C. Davies, X. Wu, Porosity formation mechanisms and fatigue response in Al-Si-Mg alloys made by selective laser melting, Mater. Sci. Eng. A. 712 (2018) 166-174.
+
+[7] S. Pal, I. Drstvensek, T. Brajlih, Physical Behaviors of Materials in Selective Laser Melting Process, DAAAM International Scientific Book, DAAAM International, Vienna, Austria, 2018, pp. 239-256.
+
+[8] Y. Liu, J. Zhang, Z. Pang, W. Wu, Investigation into the influence of laser energy input on selective laser melted thin-walled parts by response surface method, Opt. Lasers Eng. 103 (2018) 34-45.
+
+[9] T. Furumoto, K. Egashira, K. Munekage, S. Abe, Experimental investigation of melt pool behaviour during selective laser melting by high speed imaging, CIRP Ann. 67 (2018) 253-256.
+
+[10] C.Y.Y. Choong, G.K.H. Chua, C.H. Wong, Investigation on the integral effects of process parameters on properties of selective laser melted stainless steel parts, Proc. Of the 3rd Intl. Conf. on Progress in Additive Manufacturing (Pro-AM 2018) (2018) 274-279.
+
+[11] Y. Guo, L. Jia, B. Kong, N. Wang, H. Zhang, Single track and single layer formation in selective laser melting of niobium solid solution alloy, Chin. J. Aeronaut. 31 (2017) 860-866.
+
+[12] L.E. Criales, Y.M. Arısoy, B. Lane, S. Moylan, A. Donmez, T. Özel, Laser powder bed fusion of nickel alloy 625: experimental investigations of effects of process parameters on melt pool size and shape with spatter analysis, Int. J. Mach. Tools Manu. 121 (2017) 22-36.
+
+[13] S.M. Yusuf, N. Gao, Influence of energy density on metallurgy and properties in metal additive manufacturing, Mater. Sci. Technol. 33 (2017) 1269-1289.
+
+[14] M. Ni, C. Chen, X. Wang, P. Wang, R. Li, X. Zhang, K. Zhou, Anisotropic tensile behavior of in situ precipitation strengthened Inconel 718 fabricated by additive manufacturing, Mater. Sci. Eng. C 701 (2017) 344-351.
+
+[15] S. Gorsse, C. Hutchinson, M. Gouné, R. Banerjee, Additive manufacturing of metals: a brief review of the characteristic microstructures and properties of steels, Ti-6Al4V and high-entropy alloys, Sci. Technol. Adv. Mater. 18 (2017) 584-610.
+
+[16] U.S. Bertoli, G. Guss, S. Wu, M.J. Matthews, J.M. Schoenung, In-situ characterization of laser-powder interaction and cooling rates through high-speed imaging of powder bed fusion additive manufacturing, Mater. Des. 135 (2017) 385-396.
+
+[17] M. Xia, D. Gu, G. Yu, D. Dai, H. Chen, Q. Shi, Selective laser melting 3D printing of Ni-based superalloy: understanding thermodynamic mechanisms, Sci. Bull. 61 (2016) 1013-1022.
+
+[18] Z. Wang, T.A. Palmer, A.M. Beese, Effect of processing parameters on microstructure and tensile properties of austenitic stainless steel 304L made by directed energy deposition additive manufacturing, Acta Mater. 110 (2016) 226-235.
+
+[19] D. Herzog, V. Seyda, E. Wycisk, C. Emmelmann, Additive manufacturing of metals, Acta Mater. 117 (2016) 371-392.
+
+[20] D.K. Do, P. Li, The effect of laser energy input on the microstructure, physical and mechanical properties of Ti-6Al-4V alloys by selective laser melting, Virtual Phys. Prototyp. 11 (2016) 41-47.
+
+[21] J. Cherry, H. Davies, S. Mehmood, N. Lavery, S. Brown, J. Sienz, Investigation into the effect of process parameters on microstructural and physical properties of 316L stainless steel parts by selective laser melting, Int. J. Adv. Manuf. Technol. 76 (2015) 869-879.
+
+[22] A.S. Wu, D.W. Brown, M. Kumar, G.F. Gallegos, W.E. King, An experimental investigation into additive manufacturing-induced residual stresses in 316L stainless steel, Metall. Mater. Trans. A 45 (2014) 6260-6270.
+
+[23] V. Matilainen, H. Piili, A. Salminen, T. Syvänen, O. Nyrhilä, Characterization of process efficiency improvement in laser additive manufacturing, Phys. Procedia 56 (2014) 317-326.
+
+[24] Q. Jia, D. Gu, Selective laser melting additive manufacturing of Inconel 718 superalloy parts: densification, microstructure and properties, J. Alloys. Compd. 585 (2014) 713-721.
+
+[25] J. Ciurana, L. Hernandez, J. Delgado, Energy density analysis on single tracks formed by selective laser melting with CoCrMo powder material, Int. J. Adv. Manuf. Technol. 68 (2013) 1103-1110.
+
+[26] A. Spierings, G. Levy, K. Wegener, Designing material properties locally with additive manufacturing technology, Int. Solid Freeform Fabr. Symp. (2012) 447-455.
+
+[27] D.D. Gu, W. Meiners, K. Wissenbach, R. Poprawe, Laser additive manufacturing of metallic components: materials, processes and mechanisms, Int. Mater. Rev. 57 (2012) 133-164.
+
+[28] H. Shipley, D. McDonnell, M. Culleton, R. Coull, R. Lupoi, G. O’Donnell, D. Trimble, Optimisation of process parameters to address fundamental challenges during selective laser melting of Ti-6Al-4V: a review, Int. J. Mach. Tools Manuf. 128 (2018) $1-20$.
+
+[29] T.T. Roehling, S.S.Q. Wu, S.A. Khairallah, J.D. Roehling, S.S. Soezeri, M.F. Crumb, M.J. Matthews, Modulating laser intensity profile ellipticity for microstructural control during metal additive manufacturing, Acta Mater. 128 (2017) 197-206.
+
+[30] H. Gu, H. Gong, D. Pal, K. Rafi, T. Starr, B. Stucker, Influences of energy density on porosity and microstructure of selective laser melted 17-4PH stainless steel, Int. Solid Freeform Fabr. Symp. 474 (2013)
+
+[31] L. Hitzler, P. Williams, M. Merkel, W. Hall, A. Öchsner, Correlation between the energy input and the microstructure of additively manufactured cobalt-chromium, Defect Diffus. Forum 379 (2017) 157-165.
+
+[32] S. Cao, Z. Chen, C.V.S. Lim, K. Yang, Q. Jia, T. Jarvis, D. Tomus, X. Wu, Defect, microstructure, and mechanical property of Ti-6Al-4V Alloy fabricated by highpower selective laser melting, JOM 69 (2017) 2684-2692.
+
+[33] Z. Xiang, M. Yin, G. Dong, X. Mei, G. Yin, Modeling of the thermal physical process and study on the reliability of linear energy density for selective laser melting, Results Phys. 9 (2018) 939-946.
+
+[34] U. Scipioni Bertoli, A.J. Wolfer, M.J. Matthews, J.-P.R. Delplanque, J.M. Schoenung, On the limitations of Volumetric Energy Density as a design parameter for Selective Laser Melting, Mater. Des. 113 (2017) 331-340.
+
+[35] W. Ge, S. Han, Y. Fang, J. Cheon, S.J. Na, Mechanism of surface morphology in electron beam melting of Ti6Al4V based on computational flow patterns, Appl. Surf. Sci. 419 (2017) 150-158.
+
+[36] L. Mugwagwa, D. Dimitrov, S. Matope, I. Yadroitsev, Influence of process parameters on residual stress related distortions in selective laser melting, Procedia Manuf. 21 (2018) 92-99.
+
+[37] K.G. Prashanth, S. Scudino, T. Maity, J. Das, J. Eckert, Is the energy density a reliable parameter for materials synthesis by selective laser melting? Mater. Res. Lett. 5 (2017) 1-5.
+
+[38] J. Gockel, J. Fox, J. Beuth, R. Hafley, Integrated melt pool and microstructure control for Ti-6Al-4V thin wall additive manufacturing, Mater. Sci. Technol. 31 (2015) 912-916.
+
+[39] L. Hitzler, M. Merkel, W. Hall, A. Öchsner, A review of metal fabricated with laserand powder-bed based additive manufacturing techniques: process, nomenclature, materials, achievable properties, and its utilization in the medical sector, Adv. Eng. Mater. 20 (2018) 1700658.
+
+[40] A.M. Rubenchik, W.E. King, S.S. Wu, Scaling laws for the additive manufacturing, J. Mater. Process. Technol. 257 (2018) 234-243.
+
+[41] O. Andreau, I. Koutiri, P. Peyre, J.-D. Penot, N. Saintier, E. Pessard, T. De Terris,\\
+C. Dupuy, T. Baudin, Texture control of 316L parts by modulation of the melt pool morphology in selective laser melting, J. Mater. Process. Technol. 264 (2018) $21-31$.
+
+[42] R. Fabbro, Melt pool and keyhole behaviour analysis for deep penetration laser welding, J. Phys. D Appl. Phys. 43 (2010) 445501.
+
+[43] G.G. Gladush, I. Smurov, Physics of Laser Materials Processing: Theory and Experiment, Springer Science \& Business Media, 2011.
+
+[44] J. Ramme, T. Roehling, J. Roehling, J. McKeown, M. Matthews, Laser Intensity Profile Effects on the Solidification Microstructure of Ti-6Al-4V and Ti-5553 (No. LLNL-TR-756734), Lawrence Livermore National Lab. (LLNL), Livermore, CA, 2018.
+
+[45] Y. Kawahito, N. Matsumoto, Y. Abe, S. Katayama, Relationship of laser absorption to keyhole behavior in high power fiber laser welding of stainless steel and aluminum alloy, J. Mater. Process. Technol. 211 (2011) 1563-1568.
+
+[46] R.R. UNOCIC, J.N. DuPONT, Process efficiency measurements in the laser engineered net shaping process, Metall. Mater. Trans. B 35 (2004) 143-152.
+
+[47] C.L.A. Leung, S. Marussi, R.C. Atwood, M. Towrie, P.J. Withers, P.D. Lee, In situ Xray imaging of defect and molten pool dynamics in laser additive manufacturing, Nat. Commun. 9 (2018) 1355.
+
+[48] N.P. Calta, J. Wang, A.M. Kiss, A.A. Martin, P.J. Depond, G.M. Guss, V. Thampy, A.Y. Fong, J.N. Weker, K.H. Stone, C.J. Tassone, M.J. Kramer, M.F. Toney, A. Van Buuren, M.J. Matthews, An instrument for in situ time-resolved X-ray imaging and diffraction of laser powder bed fusion additive manufacturing processes, Rev. Sci. Instrum. 89 (2018) 055101.
+
+[49] C. Zhao, K. Fezzaa, R.W. Cunningham, H. Wen, F. De Carlo, L. Chen, A.D. Rollett, T. Sun, Real-time monitoring of laser powder bed fusion process using high-speed Xray imaging and diffraction, Sci. Rep. 7 (2017) 3602.
+
+[50] N.D. Parab, C. Zhao, R. Cunningham, L.I. Escano, K. Fezzaa, W. Everhart, A.D. Rollett, L. Chen, T. Sun, Ultrafast X-ray imaging of laser-metal additive manufacturing processes, J. Synchrotron Radiat. 25 (2018) 1467-1477.
+
+[51] Q. Guo, C. Zhao, L.I. Escano, Z. Young, L. Xiong, K. Fezzaa, W. Everhart, B. Brown, T. Sun, L. Chen, Transient dynamics of powder spattering in laser powder bed fusion additive manufacturing process revealed by in-situ high-speed high-energy x-ray imaging, Acta Mater. 151 (2018) 169-180.
+
+[52] Y.L. Jae, H.K. Sung, F.F. Dave, D.Y. Choong, Mechanism of keyhole formation and stability in stationary laser welding, J. Phys. D 35 (2002) 1570.
+
+[53] E. Assuncao, S. Williams, D. Yapp, Interaction time and beam diameter effects on the conduction mode limit, Opt. Lasers Eng. 50 (2012) 823-828.
+
+[54] W.E. King, H.D. Barth, V.M. Castillo, G.F. Gallegos, J.W. Gibbs, D.E. Hahn, C. Kamath, A.M. Rubenchik, Observation of keyhole-mode laser melting in laser powder-bed fusion additive manufacturing, J. Mater. Process. Technol. 214 (2014) 2915-2925.
+
+[55] D.B. Hann, J. Iammi, J. Folkes, A simple methodology for predicting laser-weld properties from material and laser parameters, J. Phys. D Appl. Phys. 44 (2011) 445401.
+
+[56] J. Ye, A.M. Rubenchik, M.F. Crumb, G. Guss, M.J. Matthews, Laser absorption and scaling behavior in powder bed fusion additive manufacturing of metals, Conference on Lasers and Electro-Optics, OSA Technical Digest (Online) (Optical Society of America, 2018), (2018) JW2A.
+
+[57] R.M. Hunt, K.J. Kramer, B. El-Dasher, Selective laser sintering of MA956 oxide dispersion strengthened steel, J. Nucl. Mater. 464 (2015) 80-85.
+
+[58] J. Yang, J. Han, H. Yu, J. Yin, M. Gao, Z. Wang, X. Zeng, Role of molten pool mode on formability, microstructure and mechanical properties of selective laser melted Ti-6Al-4V alloy, Mater. Des. 110 (2016) 558-570.
+
+[59] M. Sokolov, A. Salminen, Methods for improving laser beam welding efficiency, Phys. Procedia 56 (2014) 450-457.
+
+[60] Y. Cheng, X. Jin, S. Li, L. Zeng, Fresnel absorption and inverse bremsstrahlung absorption in an actual 3D keyhole during deep penetration CO2 laser welding of aluminum 6016, Opt. Laser Technol. 44 (2012) 1426-1436.
+
+[61] Y. Kawahito, N. Matsumoto, Y. Abe, S. Katayama, Laser absorption characteristics in high-power fibre laser welding of stainless steel, Weld. Int. 27 (2013) 129-135.
+
+[62] T. DebRoy, S.A. David, Physical processes in fusion welding, Rev. Mod. Phys. 67 (1995) 85-112.
+
+[63] A. Kaplan, A model of deep penetration laser welding based on calculation of the keyhole profile, J. Phys. D Appl. Phys. 27 (1994) 1805-1814.
+
+[64] M.J. Matthews, G. Guss, S.A. Khairallah, A.M. Rubenchik, P.J. Depond, W.E. King, Denudation of metal powder layers in laser powder bed fusion processes, Acta Mater. 114 (2016) 33-42.
+
+
+\end{document}

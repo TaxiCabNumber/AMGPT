@@ -1,0 +1,309 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+
+\title{FINDING OPTIMAL PARAMETER RANGES FOR LASER POWDER BED FUSION WITH PREDICTIVE MODELING AT MESOSCALE }
+
+
+\author{*Kintech Lab Ltd, 3rd Khoroshevskaya St. 12, Moscow, 123298, Russia\\
+e-mail: info@kintechlab.com, Web page: http://www.kintechlab.com/\\
+\# Moscow Institute of Physics and Technology, 9 Institutskiy per., Dolgoprudny, Moscow Region,\\
+141701, Russia e-mail: info@mipt.ru - Web page: http://mipt.ru/english\\
+${ }^{\dagger}$ General Electric Global Research Center, 1 Research Circle, Niskayuna, New York 12309, USA\\
+e-mail: meshkov@research.ge.com - Web page: https://www.ge.com/research/}
+\date{}
+
+
+\begin{document}
+\maketitle
+Key words: Additive Manufacturing, Selective Laser Melting, 3D Mesoscale Modelling, Lattice Boltzmann Method, High-performance computing, Process Map
+
+\begin{abstract}
+We present the results of a 3D modeling of the laser powder bed fusion process on the mesoscale level with an advanced multiphysical numerical tool. High-performance simulation allowed to conduct a vast parametric study. Thus, the model has been extensively verified against experimental results in a large parameter range, and, further, it has been used to construct detailed process maps in the range not covered by the available experimental data.\\
+The analysis of the results that were obtained in the model along with the data in the published research allowed to propose the quantitative criteria for determining the behavior of the track formation. The key phenomena that affect this behavior have been studied. We conclude that the productivity limit that arises with the proportional increase in scanning speed and laser beam power is caused by the spatter ejection. The sensitivity analysis shows that the transition to the spattering regime is caused by the overheating of the meltpool surface layer, and, consequently, the development of the surface instability. The instability development is assumed to be due to the fact that the recoil pressure becomes much higher in comparison with the surface tension.
+\end{abstract}
+
+\section*{1 INTRODUCTION}
+Despite the fact that the Additive Manufacturing (AM) with Laser Powder Bed Fusion (LPBF) is a widely spread and well-established practice, its further acceptance is limited by a number of issues, that have to be overcome in the nearest future. First, the speed of manufacturing is currently quite low, and the search for the methods to increase it is a relevant task in contemporary research. This increase leads to an increase in productivity, and, as a\\
+consequence, to the decrease in cost and broadening of the applicability range. Second, manufacturing of parts with high quality, that is, with low porosity, high surface quality, durability, and a desired material structure, is still an issue as well. The quality of the parts manufactured by the LPBF process is determined by many factors, including the scanning strategy, laser beam parameters (power, spot shape, intensity distribution), and powder properties. Many of these parameters may be varied during the manufacturing process to adapt to the change of the melting conditions.
+
+In light of the above, the trial and error approach to the increase of productivity while maintaining high product quality is a complex and costly task. That is why the predictive modelling at the finest possible level can be applied to both help with the experiments and to understand the phenomena that affect the manufacturing process to guide the experts in the design of the AM machines.
+
+\subsection*{1.1 Product quality}
+The LPBF process is complex as it includes many physical phenomena, such as absorption and scattering of the laser beam, heat conduction, phase transitions, material evaporation, the flow of the liquid metal, recoil pressure on the melt pool surface, Marangoni convection, etc. The melt pool which appears as a result of the laser pulse interaction with the powder particles is highly unstable. In the mutual interaction of all these physical processes, some undesirable outcomes are possible, for instance, keyhole formation and balling effect.
+
+As a result, the final part could contain defects. The search for the optimal parameters that grant a high quality of the material should take into account the whole system of the interconnected physical phenomena. At the same time, since the manufactured objects consist of many layers, which, in turn, are a series of tracks, achieving a high quality of one track is the foremost task.
+
+Process maps, that is, 2D graphs which show the quality of the track depending on two control parameters, such as the laser beam power and scanning speed, are widely used to define the optimal parameter range for a given environment and material.
+
+The search for optimal scanning parameters is a popular topic in contemporary research. The methods rely both on experimental data and simulation models. Since the experimental measuring technology is limited, a computer simulation may give more insight into the process of track formation and help to clarify the influence of various aspects.
+
+In [1], the numerical investigation has proven the importance of the recoil pressure under the laser beam and its influence on the keyhole formation. In [2], the 2D numerical model based on the Lattice Boltzmann Method (LBM) is presented. The model helped to investigate the influence of the powder position [3], transition to the balling regime [2]. Further, a 3D model allowed to find optimal parameter region in terms of line energy and scanning speed [4].
+
+The published research contains abundant experimental studies, where the optimal parameters have been found for different materials [5] .
+
+\subsection*{1.2 Productivity increase}
+The productivity of LPBF manufacturing is proportional to the layer thickness (h), scanning speed (V), and hatch spacing (d) [5].
+
+It may be evaluated as
+
+
+\begin{equation*}
+\text { Productivity }=V \times h \times d\left[\mathrm{~mm}^{3} / \mathrm{s}\right] \tag{1}
+\end{equation*}
+
+
+Multiple methods can be applied to improve the productivity. One of them is the increase in the number of lasers in the machine, which leads to a considerable cost escalation. Another method is an increase in the laser spot size. This method has been studied in [5]. However, since optimal scanning speed has decreased with the growth of the track width, the productivity did not increase in the result.
+
+The increase of the powder layer thickness is also treated as one of the ways to a higher productivity. Indeed, the idea has been proven in experiments, where the productivity was reported to increase significantly, when the authors used higher powder layer thickness $[6,7,8$, 9].
+
+However, under these conditions, two major defects may be formed: large lack of fusion regions, and small spherical micropores. The former may be caused by the inadequate track overlap, and the unstable scanning strategies. The scanning strategy should be adapted during the manufacturing process. At the same time, the micropore formation appears to be unavoidable. Furthermore, larger powder layer thickness affects the roughness of the manufactured part surface.
+
+The aim of the current study is to make a contribution to the search of the optimal parameter range for the highest possible productivity. With the use of a rigorous numerical model implemented in a high-performance code, we conduct a large number of experiments, find several thresholds of the track quality transitions, and try to explain them with the theoretical study of several specific cases.
+
+\section*{2 SIMULATION CODE DESCRIPTION}
+\subsection*{2.1 Numerical model}
+The numerical model is based on the extension of the lattice Boltzmann Method and includes phase transitions, thermal conductivity, volume heat generation, liquid dynamics of molten metal, evaporation of metal and recoil pressure, surface tension, Marangoni convection, wettability of a surface with melt, and movement of powder particles under the surface tension and vapor flux forces $[2,10]$. The powder particle finite size is taken into account, and any random distribution in size is possible. The distribution is generated by the YADE software [11] so as to imitate the real powder size distribution and particle placement. The propagation of laser radiation with full ray tracing model includes multiple reflections.
+
+\subsection*{2.2 Implementation}
+The model is implemented in a high-performance code FaSTLaB for General Purpose Graphical Processing Units (GPGPUs). We have developed a novel data structure for storage of the\\
+data and a streaming algorithm that provide highly coalesced memory transactions for the majority of streaming operations. A memory manager has been introduced to store only the fluid data in the device memory. This allows efficient storage of sparse fluid domain on GPU. The 'computational window' approach is developed so that the simulation domain tracks the melt pool region. Outside the computational window the computationally cheap procedure of heat transfer takes place. The resulting program performance rate on a typical run is about $10^{8}$ lattice cell updates per second on a single GPU GTX1080.
+
+\section*{3 PROBLEM STATEMENT}
+\subsection*{3.1 LPBF parameters}
+\subsection*{3.1.1 Material}
+The powder that was used for the numerical simulation consists of spherical particles with the properties of the stainless steel 17-4PH (17-4PH SS). The size distribution covers the sizes from 20 to $100 \mu \mathrm{m}$. 10th, 50th and 90th percentiles of the equivalent diameters are $D_{10}=30.5 \mu \mathrm{m}$, $D_{50}=40.3 \mu \mathrm{m}$, and $D_{90}=64.1 \mu \mathrm{m}$ correspondingly. The substrate material is the same.
+
+The material properties are summarized in Tab. 1
+
+Table 1: Substrate material properties
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Viscosity & $7.3 \cdot 10^{-7} \mathrm{~m}^{2} / \mathrm{s}$ \\
+\hline
+Surface tension coefficient & $1.642 \mathrm{~N} / \mathrm{m}$ \\
+\hline
+Eötvös coefficient & $-2 \cdot 10^{-4} \mathrm{~N} /(\mathrm{m} \cdot \mathrm{K})$ \\
+\hline
+Volume heat capacity of the solid metal & $5.27 \cdot 10^{6} \mathrm{~J} /\left(\mathrm{m}^{3} \cdot \mathrm{K}\right)$ \\
+\hline
+Volume heat capacity of the liquid metal & $5.27 \cdot 10^{6} \mathrm{~J} /\left(\mathrm{m}^{3} \cdot \mathrm{K}\right)$ \\
+\hline
+Solidus temperature $T_{S}$ & $1673 \mathrm{~K}$ \\
+\hline
+Liquidus temperature $T_{l}$ & $1713 \mathrm{~K}$ \\
+\hline
+Temperature-dependent thermal diffusivity $\alpha(T)=\alpha_{S}+\alpha_{T}\left(T-T_{S}\right)$, &  \\
+$\alpha_{s}$ is thermal diffusivity at $T_{s}$ & $7.9 \cdot 10^{-6} \mathrm{~m}^{2} / \mathrm{s}$ \\
+Linear coefficient of the temperature-dependent thermal diffusivity $\alpha_{T}$ & $3 \cdot 10^{-9} \mathrm{~m}^{2} /(\mathrm{s} \cdot \mathrm{K})$ \\
+\hline
+Wetting angle & 10 degrees \\
+\hline
+Absorption coefficient for the solid metal & 0.3 \\
+\hline
+Absorption coefficient for the liquid metal & 0.3 \\
+\hline
+Recoil pressure $p(T)=10^{(A-B / T)}$ & $(A, B)=$ \\
+given by Nesmeyanov model [12] & $(9.6811,20733)$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ed93eb63f9e82096aaebg-05}
+\end{center}
+
+Figure 1: The track width (left) and depth (right) is shown depending on the scanning speed with fixed power $P=200 \mathrm{~W}$ and powder layer thickness of $50 \mu \mathrm{m}$
+
+\subsection*{3.1.2 Simulation scan parameters}
+The laser beam power has been varied in the $25 \div 1000 \mathrm{~W}$ range. The scanning speed has been varied in the $60 \div 20000 \mathrm{~mm} / \mathrm{s}$ range.
+
+\subsection*{3.2 Validation}
+For the model validation the results from the experiments [5] were reproduced in the simulation. The material parameters were chosen based on the survey of the published data (Tab. 1). The laser power in the numerical experiment is $200 \mathrm{~W}$, powder layer thickness is $50 \mu \mathrm{m}$. The results comparison is shown in Fig. 1. A good agreement has been observed. Simulations with several other input parameters have also shown good agreement.
+
+\subsection*{3.3 Classification of the melting regimes}
+There are known quality criteria [13], which may be obtained from a single track:
+
+\begin{itemize}
+  \item The scan track must be continuous.
+  \item The scan track must lightly penetrate the previous layer, to accomplish a good connection of the layers.
+  \item The scan track must be sufficiently high to build up the part.
+\end{itemize}
+
+The loss of continuity of the track is mainly described by the the balling effect. For some conditions, the melt pool gets sufficiently long that it breaks apart into several liquid regions, which gather into drops due to the surface tension. The drops solidify, and thus the track shape is highly irregular.
+
+The proper remelting of the track can be prevented due to the keyholing or lack of fusion effects. If the laser power is too high and the speed is too slow, the keyhole formation is observed. In this regime, the laser intensively melts the material, and the material reaches the temperature
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ed93eb63f9e82096aaebg-06(1)}
+\end{center}
+
+Figure 2: The visualization of the track formation during the simulation. The solid material is shown in blue, where the lighter shade shows higher temperature. The region that has been melted and solidified is shown in green. The shades of red, yellow and white show the temperature of the liquid region (melt pool)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ed93eb63f9e82096aaebg-06}
+\end{center}
+
+Figure 3: The track height, depth and width as extracted from the computation results.
+
+range of rapid evaporation. The recoil pressure forms the depression in the melt pool, leading to multiple reflections of the laser beam and gives rise to a strong instability. This leads to the rapid increase in the melting depth, and the formation of pores is possible.
+
+At some scanning parameters the spattering may be observed. The spatter ejection may lead to the loss of material, resulting in relatively low track height, compared with the one expected from the original powder volume, and the building of the part becomes difficult.
+
+The simulation results include the visualization of the melt pool dynamics in 3D and in several transverse and longitudinal 2D slices (Fig. 2). After post-processing of the simulation results, we can discern such quantifiable characteristics as the height of the track $H$, its width $W$ at the substrate level, and depth $D$ (Fig. 3) at different positions of the track.
+
+We propose to use the track parameters from the simulation to express the criteria of a good track quantitatively, as well as the criteria for balling, keyholing, spattering and lack of fusion.
+
+First of all, for every measured track parameter $X$, we calculate the mean $\bar{X}$ and the deviation\\
+$\sigma_{X}$ as
+
+$$
+\bar{X}=\frac{\sum_{i=1}^{N} X_{i}}{N}, \sigma_{X}=\sqrt{\frac{\sum_{i=1}^{N}\left(X_{i}-\bar{X}\right)}{N-1}} .
+$$
+
+The balling or scan track discontinuity is manifested in the track height $H$ variability along the scanning direction. Numerically it can be formulated by the following expression
+
+
+\begin{equation*}
+\frac{\sigma_{H}}{\bar{H}+\bar{D}}>\mathcal{E}_{B} \tag{2}
+\end{equation*}
+
+
+where $\bar{H}+\bar{D}$ is the average total vertical size of the track, and $\mathcal{E}_{B}$ is the parameter of allowed irregularity.
+
+The keyholing is detected if the melt is excessively deep. We propose the condition:
+
+
+\begin{equation*}
+\frac{\bar{D}}{T \cdot f f}>\mathcal{E}_{K} \tag{3}
+\end{equation*}
+
+
+where $T$ is the powder layer thickness, $f f$ is the powder filling factor (powder tap density) and $T \cdot f f$ is the estimated molten layer thickness that is closely related to the build platform step. $\mathcal{E}_{K}$ is the parameter of allowed melting.
+
+The spattering is characterized by a decreased height of the track with respect to the layer thickness. We suggest to use the measure
+
+
+\begin{equation*}
+\frac{\bar{H}}{T \cdot f f}<\varepsilon_{S} \tag{4}
+\end{equation*}
+
+
+where $\varepsilon_{S}$ is the parameter of minimum track growth ratio.
+
+Lack of fusion indicator uses the same ratio as (3), but is formulated in terms of the minimum track depth required for proper fusion and fully dense part.
+
+
+\begin{equation*}
+\frac{\bar{D}}{T \cdot f f}<\varepsilon_{L} \tag{5}
+\end{equation*}
+
+
+The parameters $\mathcal{E}_{B}, \mathcal{E}_{K}, \varepsilon_{S}, \varepsilon_{L}$ were chosen manually from an initial set of the numerical data. Then, using these values and expressions (2)-(5), we calculate a complete process map that shows how the track quality depends on a range of values of the laser power and the scanning speed.
+
+\section*{4 SIMULATION RESULTS}
+\subsection*{4.1 Process map generation}
+To generate the process map, simulations with the same powder and material properties were performed on a set of experimental parameters covering wide range of laser powers and velocities. The following numerical parameters were used in all simulations: time step 12ns, mesh cell size $2 \mu \mathrm{m}$. The average track length was $\sim 4 \mathrm{~mm}$. The simulation region is a moving
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ed93eb63f9e82096aaebg-08}
+\end{center}
+
+Figure 4: The process map for the 17-4 PH SS material obtained in the computer simulation. The powder layer thickness is 50 $\mathrm{m}$. The shapes of obtained tracks are shown in the inserts, the longitudinal cross-sections were used in the track height and the related balling analysis. The color map show how the considered effects are captured by the numerical criteria (2)-(5) developed in section 3.3
+
+window along the track, so that it covers only the region of currently liquid metal. The total number of cells in the simulation region is greater than 15 million.
+
+We have conducted more than 100 numerical experiments (Fig. 4). One NVidia Tesla K80 GPU was used per simulation. A typical run takes about 1 day. The computations for different parameters were run in parallel on many nodes of the supercomputer at the federal collective usage center Complex for Simulation and Data Processing for Mega-science Facilities at NRC Kurchatov Institute.
+
+The results are divided into series with a constant power to speed ratio $P / V$. The resulting tracks are classified according to the parameters in section 3.3. We can see that the simulation correctly predicts the optimal parameter range, and, moreover, reproduces the regimes that lead to the defect formation. Another series of calculations was carried out for the powder layer thickness of $100 \mu \mathrm{m}$. Comparison of the optimal parameter ranges for the two series (Fig. 5) shows that the process parameters can be selected for the thicker powder layer such that the track quality remains high. This is consistent with the previously reported increase in the productivity
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ed93eb63f9e82096aaebg-09}
+\end{center}
+
+Figure 5: Optimal parameter ranges for good melting regime for two values of the powder layer thickness: $50 \mu \mathrm{m}$ (blue) and $100 \mu \mathrm{m}$ (red)
+
+for thicker layers.
+
+\subsection*{4.2 Analysis of the productivity limit}
+As can be seen from the simulation results, the proportional increase in $\mathrm{P}$ and $\mathrm{V}$ leads to the transition to the spatter ejection regime. Thus, we may conclude that this transition limits the productivity, which makes study of the physical effects that lead to this transition highly relevant.
+
+In the spattering process, the laser melts the material, which, in turn, reaches the temperatures of rapid evaporation and causes the flux of vapor near the surface. When the liquid metal elongates, it thins out and breaks up into small droplets due to surface tension. The pressure of the vapor leads to ejection of these liquid metal droplets [10].
+
+To find the causes of the spatter ejection, the simulation model was modified to investigate the contribution of different phenomena.
+
+For this purpose, we have chosen the calculation with $P=750 \mathrm{~W}, V=6000 \mathrm{~mm} / \mathrm{s}$ (Tab. 2). For the same parameters, we have conducted the computation after switching off the surface tension in the model, and one more simulation with the recoil pressure switched off. The analysis of the results of these numerical experiments allows pinpointing the phenomena with the strongest influence on the transition to the spattering regime. For the chosen parameter set, when the surface tension is turned off, the change in the quality of the track is negligible. When the recoil pressure is turned off in the same situation, the spattering is not observed. The obtained results demonstrate that the recoil pressure reinforces the outward spread of the melt pool and spattering of the liquid metal droplets over the sides of the scan track.
+
+A qualitative analysis of the onset of the spattering phenomenon can be made by introducing the following two time scales $[14,3]$. The characteristic time scale of the laser beam contact with the powder layer is $t_{\text {contact }}=D / V$. The characteristic time of thermal diffusion, i.e., the time required for the heat to diffuse by a distance of a single layer $d=T \cdot f f$ in a material with heat conductivity $k$, may be estimated as $t_{d i f f}=d^{2} / k$. As the scan velocity is increased
+
+Table 2: Calculation with modification of the model. Laser power $P=750 \mathrm{~W}$, scan speed $V=6000 \mathrm{~m} / \mathrm{s}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ed93eb63f9e82096aaebg-10}
+\end{center}
+
+at a fixed $P / V$ value, $t_{\text {contact }}$ becomes less than $t_{\text {diff }}$. In this regime, the heat transfer away from the laser spot is limited by diffusion. Consequently, the surface overheats and a strong evaporation takes place, which, as is shown above, is a necessary prerequisite for the spattering phenomenon.
+
+\section*{5 CONCLUSION}
+In this work, we have used a numerical model to study optimal parameter ranges in the LPBF process. The model has been implemented in high-performance code for General Purpose Graphical Processing Units (GPGPUs) with special attention to minimize the overhead on memory transactions. Owing to the high performance of the code, a large number of code runs is possible to conduct extensive verification tests, study the sensitivity to the model parameters, and, most importantly, cover the large parameter ranges to predict the track quality dependence on the input parameters of the LPBF process.
+
+The current study focused on 17-4PH stainless steel powder fusion.
+
+We have validated the model for several sets of parameters, and the calculation results show adequate correspondence with the experimental results taken from references. A good agreement is demonstrated both for the track parameters (depth and width) and for the transitions between the track formation regimes.
+
+We have proposed the quantitative criteria, which may be extracted by post-processing of a large number of results. With the use of these parameters, several track formation regimes have been classified, such as the optimal regime, keyhole formation, lack of fusion, balling effect, spattering. Quantitative criteria definition allows for the automatic construction of the process maps.
+
+The dependency of the maximal productivity on the powder layer thickness have been stud-\\
+ied. The obtained results suggest that a thicker powder layer can be used to increase the productivity, which agrees with the published research.
+
+The mechanism of the regime transition from optimal range to the spatter ejection, which occurs with a proportional increase in laser power and the scanning speed, has been studied. The sensitivity study leads to a conclusion that the transition is observed due to the overheating of the melt pool surface and the development of the surface instability. The dominance of the recoil pressure effect over the surface tension causes this instability.
+
+The study, described in this paper, proves the advantages of the developed simulation code for the advancement of the AM technology. The model describes the process at the mesoscopic level and captures many relevant physical phenomena. At the same time, it has been implemented for GPU with special considerations for memory and performance efficiency. Thus, multiple simulation runs are possible both on the personal workstation and on many-node supercomputers. In the latter case, the exhaustive parameter study is possible in a reasonable time frame. The details of the equations and implementation methods in the FASTLaB code will be reported elsewhere.
+
+\section*{AKNOWLDGEMENT}
+The computation has been carried out using computing resources of the federal collective usage center Complex for Simulation and Data Processing for Mega-science Facilities at NRC Kurchatov Institute, \href{http://ckp.nrcki.ru/}{http://ckp.nrcki.ru/}.
+
+\section*{References}
+[1] Saad A Khairallah and Andy Anderson. "Mesoscopic simulation model of selective laser melting of stainless steel powder". In: Journal of Materials Processing Technology 214.11 (2014), pp. 2627-2636.
+
+[2] Carolin Körner, Elham Attar, and Peter Heinl. "Mesoscopic simulation of selective beam melting processes”. In: Journal of Materials Processing Technology 211.6 (2011), pp. 978987.
+
+[3] Carolin Körner, Andreas Bauereiß, and Elham Attar. "Fundamental consolidation mechanisms during selective beam melting of powders". In: Modelling and Simulation in Materials Science and Engineering 21.8 (2013), p. 085011.
+
+[4] Matthias Markl et al. "Numerical investigations on hatching process strategies for powderbed-based additive manufacturing using an electron beam". In: The International Journal of Advanced Manufacturing Technology 78.1-4 (2015), pp. 239-247.
+
+[5] Nkutwane Makoana et al. "Characterization of 17-4PH single tracks produced at different parametric conditions towards increased productivity of LPBF systems - the effect of laser power and spot size upscaling”. In: Metals 8.7 (2018), p. 475.
+
+[6] Xuezhi Shi et al. "Performance of high layer thickness in selective laser melting of Ti6Al4V'. In: Materials 9.12 (2016), p. 975.
+
+[7] Shuo Wang et al. "Research on high layer thickness fabricated of $316 \mathrm{~L}$ by selective laser melting”. In: Materials 10.9 (2017), p. 1055.
+
+[8] Mingming Ma et al. "Layer thickness dependence of performance in high-power selective laser melting of 1Cr18Ni9Ti stainless steel”. In: Journal of Materials Processing Technology 215 (2015), pp. 142-150.
+
+[9] Sebastian Bremen, Wilhelm Meiners, and Andrei Diatlov. "Selective laser melting: a manufacturing technology for the future?” In: Laser Technik Journal 9.2 (2012), pp. 3338.
+
+[10] Saad A Khairallah et al. "Laser powder-bed fusion additive manufacturing: Physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones". In: Acta Materialia 108 (2016), pp. 36-45.
+
+[11] V. Šmilauer and B. Chareyre. "DEM formulation". In: Yade Documentation 2nd ed. \href{http://yade-dem.org/doc/}{http://yade-dem.org/doc/}. The Yade Project, 2015. DOI: 10.5281/zenodo. 34044.
+
+[12] A. N. Nesmeyanov. Vapour pressure of the elements. USSR Academy of Sciences, 1963.
+
+[13] K Kempen et al. "Process optimization and microstructural analysis for selective laser melting of AlSi10Mg”. In: Solid Freeform Fabrication Symposium. Vol. 22. 2011, pp. 484495.
+
+[14] Alexander M Rubenchik, Wayne E King, and Sheldon S Wu. "Scaling laws for the additive manufacturing". In: Journal of Materials Processing Technology 257 (2018), pp. 234-243.
+
+
+\end{document}

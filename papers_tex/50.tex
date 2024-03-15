@@ -1,0 +1,427 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Macroscopic simulation and experimental measurement of melt pool characteristics in selective electron beam melting of Ti-6Al-4V }
+
+
+\author{Daniel Riedlbauer ${ }^{1} \cdot$ Thorsten Scharowsky $^{2} \cdot$ Robert F. Singer $^{2} \cdot$ Paul Steinmann $^{1}$.\\
+Carolin Körner ${ }^{2} \cdot$ Julia Mergheim ${ }^{1}$}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Received: 28 August 2015 / Accepted: 22 April 2016 / Published online: 12 May 2016
+
+(C) The Author(s) 2016. This article is published with open access at \href{http://Springerlink.com}{Springerlink.com}
+
+\begin{abstract}
+Selective electron beam melting of Ti-6Al-4V is a promising additive manufacturing process to produce complex parts layer-by-layer additively. The quality and dimensional accuracy of the produced parts depend on various process parameters and their interactions. In the present contribution, the lifetime, width and depth of the pools of molten powder material are analyzed for different beam powers, scan speeds and line energies in experiments and simulations. In the experiments, thin-walled structures are built with an ARCAM AB A2 selective electron beam melting machine and for the simulations a thermal finite element simulation tool is used, which is developed by the authors to simulate the temperature distribution in the selective electron beam melting process. The experimental and numerical results are compared and a good agreement is observed. The lifetime of the melt pool increases linearly with the line energy, whereby the melt pool dimensions show a nonlinear relation with the line energy.
+\end{abstract}
+
+Keywords Additive manufacturing $\cdot$ Selective electron beam melting $\cdot$ Ti-6Al-4V $\cdot$ Heat transfer simulation $\cdot$ Melt pool characteristics
+\footnotetext{$\boxtimes$ Daniel Riedlbauer
+
+\href{mailto:daniel.riedlbauer@ltm.uni-erlangen.de}{daniel.riedlbauer@ltm.uni-erlangen.de}
+
+1 Chair of Applied Mechanics, Friedrich-Alexander-Universität Erlangen-Nürnberg, Egerlandstraße 5, 91058 Erlangen, Germany
+
+2 Chair of Metals Science and Technology, Friedrich-Alexander-Universität Erlangen-Nürnberg, Martensstraße 5, 91058 Erlangen, Germany
+}
+
+\section*{1 Introduction}
+The titanium aluminium vanadium alloy $\mathrm{Ti}-6 \mathrm{Al}-4 \mathrm{~V}$ is a commonly used engineering material in the automotive, aerospace and medical industry [20], well suited for light weight construction due to its low density and good mechanical properties. In the last few years, Ti-6Al-4V also became more important for the additive manufacturing of geometrically complex parts by the selective electron beam melting process (SEBM) [17]. The SEBM process is just one among many additive manufacturing processes [6] and is subject to extensive research to exploit the potentials of the electron beam, such as extremely high scan speeds and the high energy density. Major issues are the power consumption and efficiency of the electron beam [5], the evaporation of alloying elements [19], the choice of suited process parameters [19] and the search for new materials [10, 13-15, 26, 28, 29].
+
+In the SEBM process of metal powders, the size and lifetime of the melt pool have a significant influence on the dimensional accuracy of the produced part [1], especially for thin-walled structures [25]. However, due to the extremely high temperatures of several thousand Kelvin and experimental challenges as X-rays, vacuum and metallization, the measurement of temperatures and melt pool characteristics is very difficult during the SEBM process. Therefore, it is helpful to model and simulate the SEBM process to investigate the evolution of temperatures and the dimensions and lifetime of the melt pool. The insights gained from the simulations can be used to further improve the predictability of the melting process and to optimize the parameters of the SEBM process, e.g. beam power and scan speed.
+
+For the simulation of the SEBM process, various modelling approaches exist. In [2, 23, 24], the Lattice - Boltzman
+
+\begin{itemize}
+  \item Method (LBM) is used to simulate the temperature in a Ti-6Al-4V powder bed on a mesoscopic scale resolving particular powder particles. However, the simulation of single powder particles on small time and length scales is computationally intensive and thus not suited for the simulation of the complete SEBM process. For this purpose, the finite element method (FEM) seems to be more appropriate since it considers the powder material as a continuum. This method is applied in $[11,18,30]$ to simulate the mechanical stresses and warpage of the re-solidified Ti-6Al-4V material in the SEBM process. The simulation of the temperature distribution with FEM in the SEBM process is conducted in [32,33] to analyze the preheating of the metallic powder material and to study the impact of scan speed and beam power on the temperature distribution and the part quality. In [9], the temperature distribution in the SEBM process is simulated with FEM and the influence of different scan strategies on the homogeneity of the temperature distribution is analyzed.
+\end{itemize}
+
+In the present contribution, the temperature distribution in the SEBM of Ti-6Al-4V is simulated with FEM for different scan parameters to investigate the melt pool width, depth and life time. Analogous experiments are performed and the experimental and numerical results are compared.
+
+\section*{2 Experimental setup}
+\subsection*{2.1 Selective electron beam melting process}
+The SEBM process is a powder bed-based additive manufacturing process using an electron beam as heat source for melting metal powders. The process takes place in a vacuum chamber to achieve a high quality electron beam and to guarantee protection of powder material from the atmosphere.
+
+For this contribution, experimental work is done using an ARCAM AB A2 machine, which is schematically shown in Fig. 1. A high speed camera Photron Fastcam SA3 with an Infinity K2 DistaMax Long-Distance Microscope objective and a Cavitar Cavilux HF laser with a wavelength of $810 \mathrm{~nm}$ $\pm 10 \mathrm{~nm}$ for illumination are installed on top of the vacuum chamber for process observation.
+
+The building process starts with preheating the steel start plate to the building temperature of $730^{\circ} \mathrm{C}$. Afterwards, the four steps of the build process are repeated until completion of the parts. The four-process steps are powder application by a rake, preheating of the applied layer, selective melting according to part geometry and lowering of the build table. During the process, a small helium pressure of $2.0 \times 10^{-6}$ bar is maintained in the vacuum chamber to increase the stability of the process. After finalizing the build process, the powder is removed from the parts by shot peening with the same powder which is used for the process. Nearly $100 \%$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_96b190af052f10fc4811g-2}
+\end{center}
+
+Fig. 1 Schematic view of the electron beam melting equipment
+
+of the powder is reused for the next build process [16]. In the present research, an Ti-6Al-4V powder with a composition following DIN 17851 and a mean particle diameter $d_{0,50}$ of $69 \mu \mathrm{m}$ is used. The powder exhibits a particle size distribution between a minimum particle size of $33 \mu \mathrm{m}$ and a maximum size of $118 \mu \mathrm{m}$.
+
+For each layer, the build platform is lowered by the nominal layer thickness $d_{\text {nominal }}$ equal t $50 \mu \mathrm{m}$.
+
+Remark 1 Due to the consolidation of the powder, the effective powder layer thickness $d_{\text {effective }}$ is larger than 50 $\mu m$ and depends on the experimentally determined relative powder density $\rho_{\text {rel }}=58.3 \%$ as
+
+$d_{\text {effective }}=\frac{d_{\text {nominal }}}{\rho_{\text {rel }}}=\frac{50 \mu \mathrm{m}}{0.583}=86 \mu \mathrm{m}$.
+
+Since the consolidation of the powder is not modelled a constant effective powder layer thickness $d_{\text {effective }}$ of $86 \mu m$ is assumed in the simulations.
+
+In the experiments, the electron beam describes a single straight line in each layer resulting in a wall after several layers. Two building processes are performed and for each parameter combination in Table 1 a wall with a height of 3 $\mathrm{mm}$ and thus 60 powder layers is built. A parameter combination is investigated by varying the electron beam power $P_{\mathrm{b}}$, the scan speed $v_{\mathrm{b}}$ and the energy input or line energy $E_{\mathrm{l}}$, which is defined as
+
+$E_{1}:=P_{\mathrm{b}} / v_{\mathrm{b}}$.
+
+The parameter combinations in Table 1 are chosen since the quality of the so produced parts is sufficiently high.
+
+Table 1 Parameter combinations for experiments
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+$P_{\mathrm{b}}[\mathrm{W}]$ & $v_{\mathrm{b}}\left[\frac{\mathrm{m}}{\mathrm{s}}\right]$ & $E_{\mathrm{l}}\left[\frac{\mathrm{J}}{\mathrm{mm}}\right]$ \\
+\hline
+160 & 1.6 & 0.1 \\
+240 & 0.8 & 0.3 \\
+320 & 1.6 & 0.2 \\
+480 & 1.6 & 0.3 \\
+640 & 1.6 & 0.4 \\
+720 & 2.4 & 0.3 \\
+800 & 4.0 & 0.2 \\
+1120 & 5.6 & 0.2 \\
+1600 & 8.0 & 0.2 \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{3 Simulation}
+\subsection*{3.1 Thermal model}
+For the simulation of the dimensions and lifetime of the melt pool, the temperature distribution during the SEBM process for Ti-6Al-4V is required. It is simulated from a macroscopic point of view, i.e. the powder material is not modelled as single particles, but as a continuum with homogenized material properties. The same approach of a continuum body is used for the molten and the re-solidified material. In order to compute the unknown temperature $\vartheta$, the transient heat transfer equation
+
+$\dot{\vartheta} \rho(\vartheta) c(\vartheta)=-\operatorname{div} \boldsymbol{q}+f$
+
+is solved. The quantity $\dot{\vartheta}$ represents the derivative of $\vartheta$ with respect to time $t$. The density $\rho$ and the heat capacity $c$ are functions of the temperature $\vartheta$ and make (3) highly nonlinear. Equation (3) describes how the temperature changes due to heat fluxes $\boldsymbol{q}$ and heat sources $f$ and captures heat transfer by conduction, convection and radiation. In the building chamber in the SEBM process, high vacuum is assumed and therefore heat convection is neglected. The heat flux generated by heat conduction $\boldsymbol{q}_{\mathrm{c}}$ is characterized by Fourier's law
+
+$\boldsymbol{q}_{\mathrm{c}}=-\boldsymbol{K}(\vartheta) \cdot \nabla \vartheta$
+
+Isotropic material behaviour is assumed and the temperature dependent conductivity tensor $\boldsymbol{K}$ is described by
+
+$\boldsymbol{K}(\vartheta)=K(\vartheta) \boldsymbol{I}$.
+
+The heat flux $\boldsymbol{q}_{\mathrm{r}}$ induced by radiation is captured by
+
+$\boldsymbol{q}_{\mathrm{r}}=\epsilon \sigma\left[\vartheta^{4}-\vartheta_{0}{ }^{4}\right] \boldsymbol{n}$.
+
+with the environment temperature $\vartheta_{0}$. The quantity $\sigma$ is the Stefan-Boltzmann constant, $\epsilon$ is the emissivity of the material and $\boldsymbol{n}$ is the normal vector on the surface of the radiating material. The power input of the electron beam is taken into account by the volumetric heat source term $f$ in equation (3). Similar to the electron beam in the real process, the heat source $f$ moves along the surface of the currently processed powder layer to melt the powder material. The distribution of $f$ is modelled by the electron beam model developed in [22]. The basis of the electron beam model is a set of semi-empirical equations and theoretical considerations. Absorption, penetration depth, electron backscattering and transmission are incorporated in the model, which is applied in [22] for Lattice Boltzmann simulations of the temperature distribution in the SEBM process and is validated against experiments in [22]. In order to solve (3), appropriate initial and boundary conditions for the unknown temperature have to be added. The different phases of Ti-6Al-4V in the SEBM process are considered in the thermal model by temperature and phase-dependent material parameters.
+
+\subsection*{3.2 Discretisation and implementation of the thermal model}
+In order to numerically solve the heat transfer (3) for the unknown temperature $\vartheta$, it has to be discretized in time and space. For the discretization, the method of Rothe is adopted and thus (3) is discretized first in time and then in space. The temporal discretization is performed with an implicit Runge-Kutta method [12]. For the spatial discretization of Eq. 3, an adaptive FE method with a very fine FE mesh in the vicinity of the electron beam is used to capture extreme temperature gradients in the vicinity of the electron beam. In contrast, the mesh in the remaining simulation space is as coarse as possible to minimize computing time. The mesh refinement in the beam vicinity is exemplarily shown in Fig. 8. In the simulation, the position of the electron beam is known at any time step and, therefore, the mesh can be refined in these areas without the use of error estimators. The discretized version of Eq. 3 is implemented with the finite element library deal.II [4]. The library is focussed on the efficient numerical solution of partial differential equations with a large number of degrees of freedom.
+
+\subsection*{3.3 Material parameters and setup}
+In agreement with the experiments, Ti-6Al-4V metal powder is used for the simulations. The different phases of Ti-6Al-4V are considered in the thermal model by the phase and temperature dependency of the material parameters. The melting and solidification temperatures $\theta_{\mathrm{m}}$ and $\theta_{\mathrm{s}}$ are 1674 and $1615{ }^{\circ} \mathrm{C}$, respectively [8]. The density $\rho$ is assumed to be different for each material phase, but constant in temperature, compare Table $2[3,27]$.
+
+The heat capacity $c$ is prescribed as a nonlinear function of temperature $\vartheta$ and is shown in Fig. 2, left. Its peak in the region of $\theta_{\mathrm{m}}$ represents the effect of latent heat [7, 21].
+
+Table 2 Density $\rho$ of the different material phases for the simulation of the SEBM process for Ti-6Al-4V
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Material phase & $\rho\left[\mathrm{kg} / \mathrm{m}^{3}\right]$ \\
+\hline
+Powder & 2564 \\
+Melt & 3800 \\
+Solid & 4420 \\
+\hline
+\end{tabular}
+\end{center}
+
+The temperature dependency of the heat conductivity $K$ is illustrated in Fig. 2, right. For all phases, the conductivity $K$ increases linearly in temperature [7].
+
+Similar as in the experiments, the electron beam describes a straight path on top of the current powder layer for different combinations of $P_{\mathrm{b}}$ and $v_{\mathrm{b}}$ (Table 3). In the simulations, more parameter combinations are investigated than in the experiments. The additional combinations are highlighted in gray in Table 3.
+
+The simulation space and the boundary conditions are depicted in Fig. 3.
+
+The dimensions of the cuboidal simulation space are $30 \times 3.6 \times 4 \mathrm{~mm}$ and at the beginning of a simulation the whole space represents powder material. The temperature at all boundaries of the simulation space but the one on top is held constant at $800{ }^{\circ} \mathrm{C}$, which is the value measured in\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_96b190af052f10fc4811g-4(1)}
+
+Fig. 2 Heat capacity and conductivity of the material phases\\
+Table 3 Parameter combinations for simulations
+
+\begin{center}
+\begin{tabular}{ccc}
+\hline
+$P_{\mathrm{b}}[\mathrm{W}]$ & $v_{\mathrm{b}}\left[\frac{\mathrm{m}}{\mathrm{s}}\right]$ & $E_{1}\left[\frac{\mathrm{J}}{\mathrm{mm}}\right]$ \\
+\hline
+160 & 1.6 & 0.1 \\
+240 & 0.8 & 0.3 \\
+240 & 2.4 & 0.1 \\
+320 & 0.8 & 0.4 \\
+320 & 0.2 & 1.6 \\
+4.0 & 0.1 & 400 \\
+480 & 1.6 & 0.3 \\
+640 & 1.6 & 0.4 \\
+720 & 2.4 & 0.3 \\
+800 & 4.0 & 0.2 \\
+960 & 0.4 & 2.4 \\
+1120 & 5.6 & 0.2 \\
+1200 & 4.0 & 0.3 \\
+\hline
+1280 & 0.2 & 6.4 \\
+\hline
+1600 & 8.0 & 0.2 \\
+\hline
+\end{tabular}
+\end{center}
+
+experiments. At the top boundary, heat can be exchanged with the environment by radiation. Assuming that the powder bed is preheated homogeneously, the initial temperature is set to $800{ }^{\circ} \mathrm{C}$ everywhere in the simulation space. The diameter of the beam spot is equal to $400 \mu \mathrm{m}$, similar as in the experiments. The time step sizenteration ranges from 4 to $20 \mu s$ during the scanning process and is adaptively increased up to $50 \mathrm{~ms}$ during the deposition of the next powder layer. In the simulations $25,000-190,000$ trilinear hexahedral finite elements are used for the spatial discretization. As indicated in Fig. 8, the mesh at the current beam position is always very fine to obtain accurate results and further refinement of the finite element mesh did not change the results for the temperature distribution significantly.
+
+The electron beam describes its path on the actual layer of material. Afterwards, the material cools down for $2.5 \mathrm{~s}$, then the next powder layer is deposited by a rake and after a time period of $2.5 \mathrm{~s}$ the beam starts to describe its path on top of the added layer. As depicted in Fig. 4, the deposition
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_96b190af052f10fc4811g-4}
+\end{center}
+
+Fig. 3 Simulation space with boundary conditions and melt pool width $d_{\mathrm{w}}$ and depth $d_{\mathrm{d}}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_96b190af052f10fc4811g-5}
+\end{center}
+
+Fig. 4 Deposition of a new powder layer in the SEBM simulation by adding new finite elements
+
+of the new powder layer is realized by sequentially adding single lines of finite elements on top of the simulation space. The blue finite elements in Fig. 4 represent powder material, and the white elements characterize solidified material in the previous layer.
+
+\section*{4 Determination of melt pool quantities}
+\subsection*{4.1 Lifetime of the melt pool}
+In the experiments, the melt pool lifetime is measured by the evaluation of high speed camera images. Pictures of the melting process are taken with a frame rate of $10,000 \mathrm{fps}$ for a building area of about $0.4 \times 2.8 \mathrm{~mm}$. The state of the material in the region of the beam path is analyzed by observing reflections on the surface of the current powder layer. As illustrated on the left hand side in Fig. 5, moving reflections indicate a liquid state and thus the existence of a molten pool. Solidification is completed if the reflections do not change anymore. The time from the passing of the electron beam until the standstill of the reflections is defined as the life time of the melt pool [31]. On the top in Fig. 5 ,images of the simulation are shown, which correspond to the experimental results at the bottom. The red zone characterizes the melt pool and the finite-element mesh is suppressed in this zone. In the last image, the material is completely solidified.
+
+The melt pool lifetime $t_{1}$ is measured at point $\mathrm{S}$ (Fig. 3) in the center of the straight beam path and it is ensured that $t_{1}$ is computed in a stationary state of the melt pool.
+
+\subsection*{4.2 Width and depth of the melt pool}
+The melt pool width $d_{\mathrm{w}}$ itself can hardly be measured experimentally during the SEBM process. Therefore, it is approximated by the wall thickness of the built part after the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_96b190af052f10fc4811g-5(2)}
+\end{center}
+
+Fig. 5 Measurement and simulation of the lifetime of the melt pool for a melt line with $v_{\mathrm{b}}=5.6 \mathrm{~m} / \mathrm{s}$ and $P_{\mathrm{b}}=1120 \mathrm{~W}$
+
+material is cooled down. A built wall is exemplarily shown in Fig. 6a.
+
+The wall thickness is determined by using a Scanco Medical micro-computed tomograph (X-ray acceleration voltage $80 \mathrm{kV}$; initial current $133 \mu \mathrm{A}$; integration time $300 \mathrm{~ms}$; voxel size $10 \mu \mathrm{m}$ ). The measuring equipment is calibrated using a Ti-6Al-4V sheet with a known thickness of 1.1 $\mathrm{mm}$. The walls are scanned perpendicular to the building direction which is exemplarily shown in Fig. 7a.
+
+The thickness of the wall $d_{\mathrm{w}}$ is measured 50 times for each image and a mean wall thickness $d_{\mathrm{w}, \mathrm{m}}$ is computed for\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_96b190af052f10fc4811g-5(1)}
+
+Fig. 6 Wall (built with $v_{\mathrm{b}}=5.6 \mathrm{~m} / \mathrm{s}$ and $P_{\mathrm{b}}=1120 \mathrm{~W}$ ) (a) optical micrograph, (b) SEM image, (c) micro section\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_96b190af052f10fc4811g-6}
+
+Fig. 7 (a) Measurement of the wall thickness for a built wall in a CT image (b) melt pool width and depth in the simulation
+
+each layer. The mean wall thickness $\bar{d}_{\mathrm{w}, \mathrm{m}}$ is then derived as the arithmetic mean of $d_{\mathrm{w}, \mathrm{m}}$ for 60 layers. The wall thickness is only an approximation for the melt pool width $d_{\mathrm{w}}$ as three uncertainties arise: shrinkage during solidification, thermal contraction during cooling to room temperature and powder particles sticking to the wall due to incomplete melting.
+
+Solidification and cooling from building temperature to room temperature lead to shrinkage. Due to incomplete melting of powder particles, they can stick to the wall on both sides (Fig. 6) and increase the measured wall thickness up to several tens of micrometers. In Fig. 6c, a micro section of a wall is shown and powder particles sticking to the wall can be observed.
+
+Due to phase changes in Ti-6Al-4V during cooling, the melt pool depth cannot be derived from changes in the solidification morphology as in other materials. Therefore, the depth of the melt pool is only computed in the simulations. The simulated width and depth of the melt pool are indicated by $d_{\mathrm{w}}$ and $d_{\mathrm{d}}$ in Fig. 7b, respectively. Both quantities depend on the computed temperature distribution evaluated at the integration points and are not necessarily multiples of the finite element dimensions. Since the melt pool width and depth in a certain point are not constant over time, they are computed at point $\mathrm{S}$ (Fig. 3) for all time steps and only their maximum values are considered.
+
+\section*{5 Results and discussion}
+\subsection*{5.1 Lifetime of the melt pool}
+Experiments and simulations are performed for different combinations of electron beam power $P_{\mathrm{b}}$ and scan speed $v_{\mathrm{b}}$ (Tables 1 and 3). The simulated temperature distribution, which is the basis for computing the melt pool width $d_{\mathrm{w}}$, depth $d_{\mathrm{d}}$ and lifetime $t_{1}$, is shown in Fig. 8 for one parameter combination.
+
+The colors represent the temperature distribution in ${ }^{\circ} \mathrm{C}$. Light blue finite elements characterize powder material and dark red areas molten material. The solidified material of the currently treated layer is represented by the elements in the light red areas along the beam path. Dark blue elements
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_96b190af052f10fc4811g-6(2)}
+\end{center}
+
+Fig. 8 Simulation of the SEBM process and adaptive mesh refinement in the vicinity of the beam for $P_{\mathrm{b}}=800 \mathrm{~W}$ and $v_{\mathrm{b}}=4 \mathrm{~m} / \mathrm{s}$
+
+indicate solidified material of previously processed layers. In the upper image, the very fine finite element mesh in the area of the path is suppressed for reasons of recognizability. In the simulations, the maximum temperature is always located at the current position of the beam. It is about 2370 ${ }^{\circ} \mathrm{C}$ for the first layer and about $2310{ }^{\circ} \mathrm{C}$ for further layers, as heat can spread faster when at least one layer of highlyconductive solidified material is below the currently treated powder layer.
+
+The results for the simulated and experimental lifetimes $t_{1}$ for different line energies $E_{1}$ and a constant scan speed $v_{\mathrm{b}}$ of $1.6 \mathrm{~m} / \mathrm{s}$ are depicted in Fig. 9 .
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_96b190af052f10fc4811g-6(1)}
+\end{center}
+
+Fig. 9 Comparison of the experimental and simulated melt pool lifetime $t_{1}$ for different line energies $E_{1}$ and constant scan speed $v_{\mathrm{b}}$ of 1.6 $\mathrm{m} / \mathrm{s}$. The solid line is a guide for the eye to indicate the linear relation of $t_{1}$ and $E_{1}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_96b190af052f10fc4811g-7(1)}
+\end{center}
+
+Fig. 10 Comparison of the experimental and simulated melt pool lifetime $t_{1}$ for different scan speeds $v_{\mathrm{b}}$
+
+The error bars define the range of the standard deviation of the measured values. A good agreement between the experimental and simulated values for $t_{1}$ is observed.
+
+Figure 9 illustrates that for higher line energies $E_{1}$ the lifetime $t_{1}$ becomes larger, since more energy is induced into the material and mainly conducted into the molten material due to its comparatively high heat conductivity. Hence, a longer time span is required for solidification. The observed relation between the line energy $E_{1}$ and the melt pool lifetime $t_{1}$ is approximately linear in the simulations and experiments.
+
+The effect of the scan speed $v_{\mathrm{b}}$ on the melt pool lifetime $t_{1}$ is shown in Fig. 10.
+
+The life time of the melt pool $t_{1}$ is plotted as a function of the scan speed $v_{\mathrm{b}}$ for different line energies $E_{1}$. The simulated and measured melt pool lifetimes coincide well for the investigated parameter combinations.
+
+When the line energy $E_{1}$ is kept constant and the scan speed $v_{\mathrm{b}}$ is increased, the lifetime of the melt pool remains nearly constant. This tendency is found in the experiments and the simulations.
+
+Due to the good agreement between experiments and simulations the developed simulation tool seems to be able to predict the lifetime of the melt pool in the SEBM process of Ti-6Al-4V properly.
+
+\subsection*{5.2 Width of the melt pool}
+The measured wall thickness $d_{\mathrm{w}, \mathrm{m}}$ is shown in Fig. 11 over the height of the wall for one parameter combination.
+
+The thickness $d_{\mathrm{w}, \mathrm{m}}$ increases only slightly over the wall height. In the simulations, the computed melt pool width $d_{\mathrm{w}}$ also grows only marginally over the wall height. Therefore,
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_96b190af052f10fc4811g-7(2)}
+\end{center}
+
+Fig. 11 Wall thickness over build height in experiments for $P_{\mathrm{b}}=1120$ $\mathrm{W}$ and $v_{\mathrm{b}}=5.6 \mathrm{~m} / \mathrm{s}$
+
+$d_{\mathrm{w}}$ is only calculated (and averaged to $\bar{d}_{\mathrm{w}, \mathrm{m}}$ ) for the second, third and fourth layer to save computing time. The melt pool width of the first layer is not considered, since it is very different from the following layers.
+
+The experimental wall thickness and the simulated melt pool width are investigated for the parameter sets in the Tables 1 and 3, respectively, and the results are illustrated in Fig. 12.
+
+The error bars characterize the range of the standard deviation of the measured wall thicknesses, which is with about $200 \mu \mathrm{m}$ for every parameter combination quite high due to powder particles sticking on both sides of the wall. Due to the same reason the experimental melt pool widths are higher than the simulated ones. Another reason for the deviations might be that the dynamics of the melt pool [31] can
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_96b190af052f10fc4811g-7}
+\end{center}
+
+Fig. 12 Comparison of the experimental and simulated melt pool width for different scan speeds $v_{\mathrm{b}}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_96b190af052f10fc4811g-8}
+\end{center}
+
+Fig. 13 Dependency of the melt pool depth $d_{\mathrm{d}}$ on the scan speed $v_{\mathrm{b}}$ and the line energy $E_{1}$
+
+not be captured by the thermal simulation. Therefore, the flow of the melt, which increases the dimensions of the melt pool, is not considered in the simulation.
+
+The sets with line energy $E_{1}$ of $0.2 \mathrm{~J} / \mathrm{mm}$ show similar melt pool widths for experiments ( 414 to $475 \mu \mathrm{m}$ ) and simulations (344 to $352 \mu \mathrm{m}$ ), respectively. This was expected, since a similar amount of energy is induced into the material due to the same line energy. A similar melt pool width is also observed for the simulations with a line energy of $0.1,0.3$, and $0.4 \mathrm{~J} / \mathrm{mm}$, respectively. The simulations show further that the melt pool width increases nonlinearly with the line energy. The influence of the line energy on the melt pool width decreases for higher line energies.
+
+In summary, the experimental results coincide well with the computed melt pool widths in the simulations.
+
+\subsection*{5.3 Depth of the melt pool}
+The effect of the scan speed on the melt pool depth is simulated and depicted in Fig. 13. The melt pool depth $d_{\mathrm{d}}$ is nearly constant for a constant line energy $E_{1}$.
+
+It increases for higher line energies $E_{1}$ and varies from about $100 \mu \mathrm{m}$ to almost $200 \mu \mathrm{m}$. This is reasonable since the volume of molten material depends on the amount of energy induced into the material. Therefore, not only the melt pool width $d_{\mathrm{w}}$ but also the depth $d_{\mathrm{d}}$ increases for a higher line energy $E_{1}$. In comparison to the melt pool width $d_{\mathrm{w}}$ the depth $d_{\mathrm{d}}$ enlarges more significantly for greater $E_{1}$. This is also reasonable, since the heat conductivity of solid material is much higher than the one of powder and heat is mainly dissipated by the solidified material below the melt pool.
+
+\section*{6 Conclusion}
+In the present contribution, the SEBM process of Ti-6Al-4V was investigated. The lifetime and width of the melt pool in the process were simulated with FEM and compared with experimental measurements.
+
+Experimental and numerical results for the lifetime of the melt pool coincide well for all investigated parameter combinations. The lifetimes increase for higher line energies and stay constant for higher scan speeds when the line energy is kept constant.
+
+The width of the melt pool was approximated by the thickness of the wall built in the SEBM process. The wall thickness and the simulated melt pool width turned out to be nearly constant over the height of the wall and a good agreement between both was observed. The simulations showed that the influence of the line energy on the melt pool width reduces for higher line energies. The melt pool depth was only determined in simulations for various parameter combinations. It is almost constant when the line energy is constant. For higher line energies, the melt pool depth increased.
+
+The developed simulation tool will be used for further investigations of the SEBM process. For instance, the temperature history in the material during the process will be simulated for different scan paths, since it has a major influence on the mechanical properties of the produced part. Furthermore, the spatial homogeneity of the temperature distributions for various scan paths will be compared, as more homogeneous distributions are supposed to lead to less defective parts.
+
+Acknowledgments The authors thank the German Research Foundation (DFG) for funding the Collaborative Research Centre 814, sub-projects $\mathrm{C} 3$ and B2.
+
+Open Access This article is distributed under the terms of the Creative Commons Attribution 4.0 International License (http:// \href{http://creativecommons.org/licenses/by/4.0/}{creativecommons.org/licenses/by/4.0/}), which permits unrestricted use, distribution, and reproduction in any medium, provided you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons license, and indicate if changes were made.
+
+\section*{References}
+\begin{enumerate}
+  \item Aggarangsi P, Beuth JL, Gill DD (2004) Transient changes in melt pool size in laser additive manufacturing processes. In: Solid freeform fabrication proceedings, pp 163-1747
+
+  \item Ammer R, Rüde U, Markl M, Jüchter V, Körner C (2014) Validation experiments for LBM simulations of electron beam melting. Int J Modern Phys C 25(12):1441,009
+
+  \item ASM: Titanium ti-6al-4v (grade 5) annealed (2014). \href{http://asm}{http://asm}. \href{http://matweb.com/search/SpecificMaterial.asp?bassnum=MTP641}{matweb.com/search/SpecificMaterial.asp?bassnum=MTP641}.
+
+\end{enumerate}
+
+Technical datasheet for Ti-6Al-4V from ASM Aerospace Specifications Metals Inc.
+
+\begin{enumerate}
+  \setcounter{enumi}{3}
+  \item Bangerth W, Hartmann R, Kanschat G (2007) deal.II - a generalpurpose object-oriented finite element library. ACM Trans Math Softw (TOMS) 33(4):24
+
+  \item Baumers M, Tuck C, Hague R, Ashcroft I, Wildman R (2010) A comparative study of metallic additive manufacturing power consumption. In: Proceedings of the 2010 solid freeform fabrication symposium
+
+  \item Bikas H, Stavropoulos P, Chryssolouris G (2015) Additive manufacturing methods and modelling approaches: a critical review. Int J Adv Manuf Technol:1-17
+
+  \item Boivineau M, Cagran C, Doytier D, Eyraud V, Nadal MH, Wilthan B, Pottlacher G (2006) Thermophysical properties of solid and liquid Ti-6Al-4V alloy. Int J Thermophys 27(2):507-529
+
+  \item Carpenter: Titanium alloy Ti-6Al-4V (2014). \href{http://cartech.ides}{http://cartech.ides}. com. Technical datasheet for Ti-6Al-4V from Carpenter
+
+  \item Chen YX, Wang XJ, Chen SB (2014) The effect of electron beam energy density on temperature field for electron beam melting. Adv Mater Res 900:631-638
+
+  \item Cormier D, Harrysson O, West H (2004) Characterization of H13 steel produced via electron beam melting. Rapid Prototyp J 10(1):35-41
+
+  \item Denlinger ER, Heigel JC, Michaleris P (2014) Residual stress and distortion modeling of electron beam direct manufacturing Ti-6Al$4 \mathrm{~V}$. In: Proceedings of the institution of mechanical engineers, part b: journal of engineering manufacture p 0954405414539494
+
+  \item Ellsiepen P. (1999) Zeit- und ortsadaptive Verfahren angewandt auf Mehrphasenprobleme poröser Medien. Inst. für Mechanik (Bauwesen), Ph.D. thesis
+
+  \item Frigola P, Harrysson O, Horn T, Ramirez D, Murr L (2014) Fabricating copper components with electron beam melting. Adv Mater Process 172(7):20-24
+
+  \item Gaytan S, Murr L, Martinez E, Martinez J, Machado B, Ramirez D, Medina F, Collins S, Wicker R (2010) Comparison of microstructures and mechanical properties for solid and mesh cobalt-base alloy prototypes fabricated by electron beam melting. Metallurg Mater Trans A 41(12):3216-3227
+
+  \item Harrysson O, Cormier D, Marcellin-Little D, Jajal K (2003) Direct fabrication of metal orthopedic implants using electron beam melting technology. In: Solid freeform fabrication symposium proceedings, pp 439-446
+
+  \item Heinl P, Müller L, Körner C, Singer RF, Müller FA (2008) Cellular Ti-6Al-4V structures with interconnected macro porosity for bone implants fabricated by selective electron beam melting. Acta Biomaterialia 4(5):1536-1544
+
+  \item Heinl P, Rottmair A, Körner C, Singer RF (2007) Cellular titanium by selective electron beam melting. Adv Eng Mater 9(5):360-364
+
+  \item Jamshidinia M, Kong F, Kovacevic R (2013) The coupled CFDFEM model of electron beam melting. ASME District F - Early Career Tech Conf Proc 12:163-171
+
+  \item Juechter V, Scharowsky T, Singer R, Körner C (2014) Processing window and evaporation phenomena for $\mathrm{Ti}-6 \mathrm{Al}-4 \mathrm{~V}$ produced by selective electron beam melting. Acta Materialia 76:252258
+
+  \item Karunakaran K, Bernard A, Suryakumar S, Dembinski L, Taillandier G (2012) Rapid manufacturing of metallic objects. Rapid Prototyp J 18(4):264-280
+
+  \item Kaschnitz E, Reiter P, McClure J (2002) Thermophysical properties of solid and liquid $90 \mathrm{Ti}-6 \mathrm{Al}-4 \mathrm{~V}$ in the temperature range from 1400 to $2300 \mathrm{~K}$ measured by millisecond and microsecond pulse-heating techniques. Int J Thermophys 23(1):267-275
+
+  \item Klassen A, Bauereiß A, Körner C (2014) Modelling of electron beam absorption in complex geometries. J Phys D: Appl Phys 47(6):065,307
+
+  \item Körner C, Attar E, Heinl P (2011) Mesoscopic simulation of selective beam melting processes. J Mater Process Technol 211(6):978987
+
+  \item Markl M, Ammer R, Rüde U, Körner C (2014) Improving hatching strategies for powder bed based additive manufacturing with an electron beam by 3D simulations. CoRR arXiv:1403.3251
+
+  \item Murr L, Gaytan S, Medina F, Martinez E, Martinez J, Hernandez D, Machado B, Ramirez D, Wicker R (2010) Characterization of Ti-6Al-4V open cellular foams fabricated by additive manufacturing using electron beam melting. Mater Sci Eng A 527(7):1861-1868
+
+  \item Murr L, Martinez E, Gaytan S, Ramirez D, Machado B, Shindo P, Martinez J, Medina F, Wooten J, Ciscel D et al (2011) Microstructural architecture, microstructures, and mechanical properties for a nickel-base superalloy fabricated by electron beam melting. Metallurg Mater Trans A 42(11):3491-3508
+
+  \item Rai R, Burgardt P, Milewski J, Lienert T, DebRoy T (2009) Heat transfer and fluid flow during electron beam welding of $21 \mathrm{Cr}-6 \mathrm{Ni}-9 \mathrm{Mn}$ steel and Ti-6Al-4V alloy. J Phys D: Appl Phys 42(2):025,503
+
+  \item Ramirez D, Murr L, Li S, Tian Y, Martinez E, Martinez J, Machado B, Gaytan S, Medina F, Wicker R (2011) Open-cellular copper structures fabricated by additive manufacturing using electron beam melting. Mater Sci Eng A 528(16):5379-5386
+
+  \item Ramirez D, Murr L, Martinez E, Hernandez D, Martinez J, Machado B, Medina F, Frigola P, Wicker R (2011) Novel precipitate-microstructural architecture developed in the fabrication of solid copper components by additive manufacturing using electron beam melting. Acta Mater 59(10):4088-4099
+
+  \item Riedlbauer D, Steinmann P, Mergheim J (2014) Thermomechanical finite element simulations of selective electron beam melting processes: performance considerations. Comput Mech 54(1):109122
+
+  \item Scharowsky T, Osmanlic F, Singer R, Körner C (2014) Melt pool dynamics during selective electron beam melting. Appl Phys A 114(4):1303-1307
+
+  \item Shen N, Chou Y (2012) Numerical thermal analysis in electron beam additive manufacturing with preheating effects. In: Proceedings of the 23rd solid freeform fabrication symposium, pp 774-784
+
+  \item Zäh MF, Lutzmann S (2010) Modelling and simulation of electron beam melting. Product Eng 4(1):15-23
+
+\end{enumerate}
+
+
+\end{document}

@@ -1,0 +1,492 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Melt pool simulation for the evaluation of process parameters in selective laser melting }
+
+
+\author{Thorsten Heeling ${ }^{a, *}$, Michael Cloots ${ }^{b}$, Konrad Wegener ${ }^{a}$\\
+a Institute of Machine Tools and Manufacturing, ETH Zurich, 8092 Zurich, Switzerland\\
+b Irpd AG, 9014 St. Gallen, Switzerland}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+
+
+\section*{A R T I C L E I N F O}
+\section*{Article history:}
+Received 9 November 2016
+
+Received in revised form 7 January 2017
+
+Accepted 8 February 2017
+
+Available online 16 February 2017
+
+\section*{Keywords:}
+Selective laser melting
+
+Simulation
+
+Melt pool dynamics
+
+Additive manufacturing
+
+Powder bed fusion
+
+\begin{abstract}
+A B S T R A C T With increasing industrial interest and significance of the selective laser melting the importance for profound process knowledge increases so that new materials can be qualified faster. Also it is the basis for an educated evaluation of possible process innovations. Therefore a 3D numerical model for the selective laser melting process is presented that allows a detailed look into the process dynamics at comparably low calculation effort. It combines a finite difference method with a combined level set volume of fluid method for the simulation of the process and starts with a homogenized powder bed in its initial configuration. The model uses a comprehensive representation of various physical effects like dynamic laser power absorption, buoyancy effect, Marangoni effect, capillary effect, evaporation, recoil pressure and temperature dependent material properties. It is validated for different process parameters using cubic samples of stainless steel 316L and nickel-based superalloy IN738LC. The results show the significance of evaporation and its related recoil pressure for a feasible prediction of the melt pool dynamics. Furthermore a possible way to reduce the times and costs for material qualification by using the simulation model to predict possible process parameters and therefore to reduce the necessary experimental effort for material qualification to a minimum is shown.
+\end{abstract}
+
+(C) 2017 Elsevier B.V. All rights reserved.
+
+\section*{1. Introduction}
+Additive manufacturing technologies are of increasing importance for many applications due to their freedom of design, possible complexity and their short lead times. The selective laser melting (SLM) process is in particular suited for industrial applications because it features nearly fully dense metal parts with a feature resolution down to about $200 \mu \mathrm{m}$ at almost unlimited complexity. The process is based on a metal powder bed with defined layer thickness of common values of about $20-200 \mu \mathrm{m}$, which is deposited and selectively irradiated in every layer until the final part height is reached. Therefore at the beginning of each layer the build plate is lowered by the layer thickness and the powder reservoir is raised by a certain amount to supply the powder deposition unit with sufficient powder material. After that, the powder deposition unit is moving along over the build plate distributing the powder and pushing the residual powder as well as particles that are too large into the powder overflow. Following that, the new powder layer is selectively irradiated by the laser beam which is deflected and focused prior to entering the process chamber. Due to the irradiation the powder material as well as previous tracks and layers are molten so that a strong bonding between the layers can be achieved leading to a near-fully dense part. Shielding gas is passing through the process chamber to minimize the influence of vaporized metal and spatter on the following tracks and layers. The process is illustrated in Fig. 1.
+
+A wide range of metal alloys like stainless steels [1,2], nickelbased superalloys [3,4], titanium alloys [5,6], aluminum alloys $[7,8]$ as well as cobalt chromium alloys [9] are available and the range is continuously expanding especially for turbine and biomedical related alloys. But the process still lacks productivity, robustness, reproducibility and quality and every new alloy needs a time consuming and costly evaluation of possible process parameter sets for a certain machine configuration. A simulation based approach seems reasonable to reduce the times and costs to predict process parameters and possible optimizations since a strong and detailed understanding of the process dynamics helps to find solutions for the restricting phenomena.
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail address: \href{mailto:heeling@iwf.mavt.ethz.ch}{heeling@iwf.mavt.ethz.ch} (T. Heeling).
+}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_4337cab3afd3e8e599dcg-02(1)}
+\end{center}
+
+Fig. 1. Illustration of the main components necessary for the SLM process.
+
+\subsection*{1.1. Process simulation}
+Several simulation models have already been presented, often trying to use the simulation results for the evaluation of process parameters. Starting with purely thermal approaches, which commonly feature a moving heat source for a rough estimation of the melt pool sizes and thermal histories [10,11], there are those expanding these models by thermo-elasto-plastic modeling to get an idea of the residual stresses and distortion [12-15] and those going more into detail regarding the melt pool dynamics [16-18]. This detailed investigation of the melt pool dynamics and the resulting melt pool dimensions of single or rarely multiple line simulations offer a profound insight into the process dynamics since the SLM process is a stacking of a very high amount of single tracks. These simulations especially show the importance of evaporation and the Marangoni effect on the melt pool dynamics and therefore the achievable melt pool shape and possible indicators for pores and spatter [19]. Some models even take the powder packing into consideration to account for the randomness of the powder bed which influences the melt pool to a certain extent $[18,19]$. But the modeling of every particle leads to very high calculation times due to the necessity of a very fine grid [17]. Due to the high usability of the information taken from one single molten line this approach is presented in this paper in a newly developed simulation tool using a homogenized powder bed in its initial configuration to achieve a balance between computational effort and results' detail. The model is validated over a wider set of parameters for two different alloys, the stainless steel 316L and the nickel-based superalloy IN738LC, investigating the physical effects' influences for different parameter sets. Furthermore the validated model is used to find possible indicators for the evaluation of process parameters as a step to reduce the effort for material qualification.
+
+\section*{2. Model description}
+\subsection*{2.1. Concept}
+The three-dimensional numerical model is divided into a temperature field and a fluid flow part elaborating a weak coupling. While the temperature field is calculated based on a finite difference scheme, the fluid flow calculation utilizes a combined level set volume of fluid (CLSVoF) method and a pressure implicit splitting
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_4337cab3afd3e8e599dcg-02}
+\end{center}
+
+Fig. 2. Cross section of the initial configuration showing powder bed (left), the idealized previous track (right) and idealized previous layers (bottom).
+
+of operators (PISO) solver. The numerical model consists of cubic elements. While the material properties and most state variables like temperature and pressure are fixed to the elements' center points, the melt flow velocities are placed on the elements' faces and are thus evaluated on a staggered grid. Furthermore a homogenized powder bed is elaborated, leading to an initial configuration in which every powder element is just partly but equally filled with material. Since the model is used to be compared to cubic samples, the line to be molten is located next to an already solidified line, leading to the initial configuration shown in Fig. 2. The beam is simulated to be moving along the center line.
+
+The specific properties of non-full elements are weighted with their filling degree $F$.
+
+$\alpha_{F}(T)=F \cdot \alpha(T)+(1-F) \cdot \alpha_{g}$
+
+With $\alpha(T)$ representing any temperature dependent material property and $\alpha_{g}$ the equivalent gas property. Furthermore the thermal conductivity of the powder bed is handled separately, since multiple studies have shown that the thermal conductivity of a powder bed is significantly smaller $[20,21]$.
+
+\subsection*{2.2. Dynamic absorption model}
+The laser power absorption model is implemented following the absorption model proposed by Gusarov et al. [22,23]. In that the following radiation transfer equation is solved for collimated incident laser power normal to a thin powder layer.
+
+$\mu \frac{\partial I(z, \mu)}{\partial z}=\beta \cdot\left(\frac{\omega}{2} \int_{-1}^{1} I\left(z, \mu^{\prime}\right) \cdot P\left(\mu^{\prime}, \mu\right) d \mu^{\prime}-I(z, \mu)\right)$
+
+With $\mu=\cos \theta$ and $\theta$ being the radiation propagation angle, $\beta$ the extinction coefficient, $\omega$ the scattering coefficient, $I(z, \mu)$ the depth resolved intensity and $P\left(\mu^{\prime}, \mu\right)$ the scattering phase function. To solve the radiation transfer equation the depth resolved intensity profile is calculated considering a power density moving deeper into the powder layer $Q_{+}(z)$, a power density $Q_{-}(z)$ leaving the powder layer due to reflection as well as a diffuse part due to (multiple) scattering $S(z, \mu)$ with $\delta$ being the Dirac delta function [23].
+
+$I(z, \mu)=\frac{Q_{+}(z)}{2 \pi} \delta(\mu-1)+\frac{Q_{-}(z)}{2 \pi} \delta(\mu+1)+S(z, \mu)$
+
+Elaborating the boundary conditions at the powder layer surface and substrate as well as assumptions regarding isotropic scattering and the two-flux method within the framework of geometrical optics, which can be found in detail in the publications of Gusarov et al. [22,23], the depth resolved absorbed power can be calculated as follows.
+
+
+\begin{align*}
+& P_{a b s}(\xi)=P_{0} \cdot\left\{\frac{r a}{(4 r-3) D}\left[\left(1-r^{2}\right) e^{-\lambda}\left[(1-r) e^{-2 a \xi}+(1+a) e^{2 a \xi}\right)\right]-\left(3-r e^{-2 \lambda}\right) .\right. \\
+& \left.\left.\left[(1+a+r(1-a)) e^{2 a(\lambda-\xi)}+(1-a-r(1+a)) e^{2 a(\xi-\lambda)}\right]\right]-\frac{3(1-r)\left(e^{-\xi}-r e^{\xi-2 \lambda}\right)}{4 r-3}\right\} \tag{4}
+\end{align*}
+
+
+In which $P_{0}$ is the total input power at the surface, $\xi=\beta \cdot z$ is the dimensionless depth and $a$ and $D$ are values derived from the hemispherical reflectivity $r$ and optical thickness $\lambda=\beta \cdot h_{p l}[23]$.
+
+$a=\sqrt{1-r}$
+
+$\beta=\frac{3}{2} \cdot \frac{\rho_{p l}}{1-\rho_{p l}} \cdot \frac{1}{d_{p p}}$
+
+$D=(1-a)[1-a-r \cdot(1+a)] e^{-2 a \lambda}-(1+a)[1+a-r \cdot(1-a)] e^{2 a \lambda}$
+
+Here $\rho_{p l}$ is the relative powder layer density, $h_{p l}$ the powder layer height and $d_{p p}$ the powder particle diameter. So this modeling equation considers multiple reflection due Eq. (3) and depth resolved power input based on simple powder material data. But it does not handle melt consolidation and evaporation, so that some adjustments are necessary for accuracy improvements. Therefore, the calculation of the relative powder layer density, the powder layer height and the optical thickness for every stack of elements in every time step based on the current configuration is proposed. So the relative powder density is calculated as the mean value of the filling degree of all non-empty and non-full elements per stack from the top to the first completely filled element assuming that the first full element indicates consolidated melt. The powder layer height results as the difference of the uppermost non-empty element and the uppermost completely filled element. Fig. 3 illustrates this approach.
+
+These values are then used to calculate the optical thickness and the extinction coefficient for every element stack. Furthermore the absorbing element length is weighted by the ratio of element filling degree to the stack's relative powder density (average stack filling degree). This is necessary to prevent elements with a filling degree far lower than the average from artificial overheating. Considering these adjustments to the Gusarov absorption model, it is possible to realize a differentiation between powder, consolidating melt as
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_4337cab3afd3e8e599dcg-03}
+\end{center}
+
+Fig. 3. Illustration of the dynamic evaluation of average filling degree and powder layer height for the adjusted absorption model in a longitudinal section. Gray indicates solid/fluid material, white gas/gaseous phase. well as already consolidated melt and solid material on the scale of element resolution.
+
+\subsection*{2.3. Heat flow}
+Additionally to the absorption model, thermal conduction, convection and radiation as well as melting, freezing and evaporation of material and heat exchange due to melt flow are considered to calculate the temperature field. Since the time step size is very small due to the needs of the melt flow simulation an explicit finite difference scheme is used to solve the three-dimensional inhomogeneous heat conduction equation. Therefore, the conductive heat flow in $x$-direction $\dot{Q}_{x, i, j, k}$ is exemplarily discretized as follows [24].
+
+
+\begin{gather*}
+\dot{Q}_{x, i, j, k}=\frac{2}{\Delta x^{2}} \cdot \frac{\lambda_{i, j, k} \cdot \lambda_{i+1, j, k}}{\lambda_{i, j, k}+\lambda_{i+1, j, k}} \cdot\left(T_{i+1, j, k}-T_{i, j, k}\right) \\
++\frac{2}{\Delta x^{2}} \cdot \frac{\lambda_{i, j, k} \cdot \lambda_{i-1, j, k}}{\lambda_{i, j, k}+\lambda_{i-1, j, k}} \cdot\left(T_{i-1, j, k}-T_{i, j, k}\right) \tag{8}
+\end{gather*}
+
+
+In which $\lambda_{i, j, k}$ is the temperature dependent thermal conductivity of element $(i, j, k)$. The boundary conditions are set so that heat is allowed to flow out of the model at the sides and bottom while being insulated to the top. Using this discretization and considering radiation $\dot{Q}_{r a d}$, convection $\dot{Q}_{c o n v}$ and heat flow due to melt flow $\dot{Q}_{\text {flow }}$ an element's temperature of time step $n$ can be predicted as follows
+
+$T_{\text {pred }}^{n}=T^{n-1}+\frac{P_{\text {abs }}+\dot{Q}_{x}+\dot{Q}_{y}+\dot{Q}_{z}+\dot{Q}_{\text {rad }}+\dot{Q}_{\text {conv }}+\dot{Q}_{\text {flow }}}{\rho \cdot c_{p} \cdot V} \cdot \Delta t$.
+
+With $\Delta t$ being the time step size, $\rho$ the material's density and $c_{p}$ the specific heat capacity. The predicted temperature is then used to check for melting, freezing or evaporation of the element and thus possibly corrected afterwards. The latent heat of fusion is considered as an additional heat sink/source between solidus and liquidus temperature while the latent heat of evaporation is considered using the evaporation model which is explained later on.
+
+\subsection*{2.4. Evaporation and recoil pressure}
+Evaporation usually is an important factor within laser based processes because the material is subject to high powers which are induced within a small spot size. Due to the resulting rapid heating to high temperatures molten material soon starts evaporating, inducing a recoil pressure to the melt pool. Different approaches for the modeling of the recoil pressure are known, either more detailed ones which include a modeling of the Knudsen layer [25,26], or experimentally supported ones [19,27]. But all of them lead to quiet similar models based on the Clausius-Clapeyron equation for the calculation of the saturated vapor pressure, which is weighted by a coefficient that accounts for the backward flux of evaporated material [19,26,27].
+
+$p_{\text {rec }}=0.54 \cdot p_{0} \cdot e^{\frac{\text { Levap } \cdot M_{\text {mol }}}{R}} \cdot\left(\frac{1}{T_{0}}-\frac{1}{T}\right)$
+
+In this equation $p_{0}$ and $T_{0}$ are the known pressure and temperature at which evaporation occurs while $p_{\text {rec }}$ is the approximated recoil pressure at another temperature value $T$. $L_{\text {evap }}$ is the heat of evaporation, $M_{m o l}$ the molar mass and $R$ the universal gas constant. To approximate the heat and mass loss of the melt pool due to evaporation as well, a return mapping for temperature and pressure within the Clausius-Clapeyron equation is employed. Starting\\
+with a prediction of the new temperature at the recoil pressure of the previous time step $p_{r e c}^{n-1}$ the recoil pressure of the current time step $p_{\text {rec }}^{n}$ is calculated.
+
+$p_{\text {rec }}^{n}=0.54 \cdot p_{0} \cdot e^{\frac{L_{\text {evap }} \cdot M_{\text {mol }}}{R} \cdot\left(\frac{1}{T_{0}}-\frac{1}{T_{\text {pred }}^{n}}\right)}$
+
+This new recoil pressure is used to map the temperature of the current time step $T^{n}$ back to the saturated vapor pressure curve.
+
+$T^{n}=\left(\frac{1}{T_{0}}-\frac{\ln \left(\frac{p_{\text {rec }}^{n}}{p_{0}}\right) \cdot R}{L_{\text {evap }} \cdot M_{\text {mol }}}\right)^{-1}$
+
+The temperature difference of predicted temperature and actual temperature is then used to calculate the evaporated volume of this time step $\Delta V^{n}$, guaranteeing the conservation of energy within the melt pool.
+
+$\Delta V^{n}=\frac{\left(T^{n}-T_{\text {pred }}^{n}\right) \cdot c_{p} \cdot V}{L_{\text {evap }}}$
+
+The temperature and pressure increase is done incrementally to minimize errors due to the non-linearity of the saturated vapor pressure curve.
+
+\subsection*{2.5. Melt pool dynamics}
+The combined level set volume of fluid (CLSVoF) method is elaborated for the calculation of the melt flow and was widely adopted from the publications of Son et al. [28-30]. It uses the volume of fluids function $F$ (equals the filling degree) as a surface identifier and to calculate the current material configuration based on the surface normals. In its original form any not completely filled element is considered a surface element. But since every powder element is taken as just partly filled in its initial configuration of the proposed approach, the criterion for the surface identification has to be changed for the presented model. So considering any element as a surface element if it has an empty neighboring element, seems to be a more fitting criterion for the presented approach. This coarsens the resolution for the identification of pores within the melt pool but allows the use of this method for the initial configuration of a homogeneous powder bed.
+
+The surface normals are calculated using the level set function $\phi$ which is negative for the gaseous phase, positive for the melt pool and zero on the surface.
+
+$\mathbf{n}=\frac{\nabla \phi}{|\nabla \phi|}$
+
+The equation is discretized using a central differencing scheme. Based on the information gained from the volume of fluid and level set function the advection of material from one element to another can be calculated for a known fluid flow velocity field $\mathbf{u}[28]$.
+
+$\frac{\partial F}{\partial t}+\nabla \cdot \mathbf{u} F=F \nabla \cdot \mathbf{u}$
+
+To reach a higher accuracy the advection is calculated subsequently for $x$-, $y$ - and $z$-direction with reconstruction steps in between while the order in the sequence of directions is changed with every time step. The right side part of the equations is used to guarantee continuity. For a sequence starting with $\mathrm{x}$-direction the advected material can be calculated as follows [29].
+
+$\frac{F^{*}-F^{n-1}}{\partial t}+\frac{\Delta u F^{n-1}}{\partial x}=F^{*} \frac{\partial u}{\partial x}$
+
+$\frac{F^{* *}-F^{*}}{\partial t}+\frac{\Delta v F^{*}}{\partial y}=F^{*} \frac{\partial v}{\partial y}$ $\frac{F^{n}-F^{* *}}{\partial t}+\frac{\Delta w F^{* *}}{\partial z}=F^{*} \frac{\partial w}{\partial z}$
+
+The necessary melt flow field is calculated based on the current material configuration using a pressure implicit splitting of operators (PISO) scheme, as proposed by Issa [31], for solving the continuity and momentum equation (also known as Navier-Stokes equation).
+
+$\nabla \cdot \mathbf{u}=0$
+
+$\rho\left(\frac{\partial \mathbf{u}}{\partial t}+\mathbf{u} \cdot \nabla \mathbf{u}\right)=-\nabla p+\nabla \cdot \eta \nabla \mathbf{u}+\frac{\mathbf{b}}{V}$
+
+Here $\eta$ is the dynamic viscosity, $p$ the pressure and $\mathbf{b}$ the vector of forces. The momentum equation is solved discretizing it as a generalized transport problem and splitting the calculation of the fluid flow and pressure field [32]. In a prediction step the fluid flow velocities (here $x$-direction) are calculated using
+
+$a_{i, j, k}^{u} u_{i, j, k}^{*}=\sum_{n b} a_{n b}^{u} u_{n b}^{*}+\left(p_{i-1, j, k}^{*}-p_{i, j k}^{*}\right) \cdot A_{i, j, k}+b_{i, j, k}$
+
+in which $a_{i, j, k}^{u}$ and $a_{n b}^{u}$ are coefficients to the fluid flow velocities due to the discretization of the momentum equation, $u_{i, j, k}^{*}$ and $u_{n b}^{*}$ the predicted fluid flow velocities at element face $(i, j, k)$ and it's neighboring faces, $p^{*}$ the pressure in a first guess, $A$ the area and $F$ the forces at that face. The predicted velocities are then used to correct the pressure field [32].
+
+$p^{* *}=p^{*}+p^{\prime}$
+
+$a_{i, j, k}^{p} p^{\prime}{ }_{i, j, k}=\sum_{n b} a_{n b}^{p} p^{\prime}{ }_{n b}+c^{\prime}{ }_{i, j, k}$
+
+Here $p^{\prime}$ are the pressure correction values, $p^{* *}$ the corrected pressure value, $a^{p}$ are coefficients to the pressure field due to the discretization of the momentum equation and $c^{\prime}$ is the correction of the error in continuity due to the predicted fluid flow velocities. After correcting the pressure field the velocity field can be corrected as well to reach a smaller error in continuity. In x-direction it can be achieved as follows [32].
+
+$u_{i, j, k}^{* *}=u_{i, j, k}^{*}+\frac{A_{i, j, k}}{a_{i, j, k}^{u *}}\left(p^{\prime}{ }_{i-1, j, k}-p^{\prime}{ }_{i, j, k}\right)$
+
+Within the PISO scheme this correction is repeated once more to reach a higher level of continuity. Therefore while being an implicit method, it usually converges after only one iteration for sufficiently small time steps due to its double correction procedure.
+
+The presented model considers the forces induced by the buoyancy effect $\mathbf{b}_{b o u}$ and the forces due to the capillary effect for minimization of the surface energy $\mathbf{b}_{\text {cap }}$, the Marangoni effect $\mathbf{b}_{\text {mar }}$ and the force due to recoil pressure $\mathbf{b}_{\text {rec }}$ as driving forces. The latter three effects are restricted to surface elements, represented by the $\delta(\Phi)$-function which is zero for all non-surface elements. The forces which are considered in the fluid flow momentum equation are calculated using the following equations.
+
+$\mathbf{b}_{\text {bou }}=\mathbf{g} \cdot \rho \cdot V$
+
+$\mathbf{b}_{\text {cap }}=-\mathbf{n} \cdot \sigma \cdot \kappa \cdot A \cdot \delta(\Phi)$
+
+$\mathbf{b}_{\text {mar }}=[(\mathbf{I}-\mathrm{n} \otimes \mathrm{n}) \cdot \nabla] \cdot \sigma \cdot A \cdot \delta(\Phi)$
+
+$\mathbf{b}_{r e c}=\mathbf{n} \cdot p_{r e c} \cdot A \cdot \delta(\Phi)$
+
+In these $\mathbf{g}$ is the gravitational acceleration, $\sigma$ the surface tension and $\kappa$ the surface curvature.
+
+Table 1
+
+Overview of SS316L material data used in the numerical model [33,34]. Solidus temperature is at $1400^{\circ} \mathrm{C}$, liquidus at $1450^{\circ} \mathrm{C}$ and evaporation temperature at $2800^{\circ} \mathrm{C}$.
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+Parameter & $25^{\circ} \mathrm{C}$ & $1400^{\circ} \mathrm{C}$ & $1450^{\circ} \mathrm{C}$ & $2800^{\circ} \mathrm{C}$ & Constant \\
+\hline
+Specific heat $[\mathrm{J} / \mathrm{kg} \mathrm{K}]$ & 450 & 700 & 707 & 900 &  \\
+Thermal conductivity [W/m K] & 13.3 & 33.8 & 18.1 & 22.2 &  \\
+Surface tension [N/m] &  &  & 1.76 & 0.41 &  \\
+Dynamic viscosity [Pa s] &  &  & 0.0059 & 0.0014 &  \\
+Heat of fusion [J/kg] &  &  &  &  & 270,000 \\
+Heat of evaporation [J/kg] &  &  &  &  & $7,450,000$ \\
+Hemispherical reflectance &  &  &  &  & 0.64 \\
+\end{tabular}
+\end{center}
+
+Table 2
+
+Overview of IN738LC material data used in the numerical model [35-38]. Solidus temperature is at $1250^{\circ} \mathrm{C}$, liquidus at $1350^{\circ} \mathrm{C}$ and evaporation temperature at $2950^{\circ} \mathrm{C}$.
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+Parameter & $25^{\circ} \mathrm{C}$ & $1250{ }^{\circ} \mathrm{C}$ & $1350^{\circ} \mathrm{C}$ & $2950^{\circ} \mathrm{C}$ & constant \\
+\hline
+Specific heat [J/kg K] & 450 & 694 & 700 & 793 &  \\
+Thermal conductivity [W/m K] & 9.8 & 26.5 & 26.95 & 27.0 &  \\
+Surface tension [N/m] &  &  & 1.85 & 0.15 &  \\
+Dynamic viscosity [Pa s] &  &  & 0.0096 & 0.0024 &  \\
+Heat of fusion [J/kg] &  &  &  &  & 256,400 \\
+Heat of evaporation [J/kg] &  &  &  &  & $6,697,000$ \\
+Hemispherical reflectance &  &  &  &  & 0.74 \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{3. Validation}
+\subsection*{3.1. Material properties}
+The material data which is used for the numerical model is listed in Tables 1 and 2. Both show the temperature dependent material data at room, solidus, liquidus and evaporation temperature as well as constant values. Data sets in between are taken from the listed references if available or otherwise are interpolated. Since the stainless steel 316L is already well known for good processing properties and the material data is available over a wide temperature range, the material is used as a baseline for the simulation. The material data of the nickel-based superalloy IN738LC on the other hand is not available in such detail especially within its liquid state. Therefore IN738LC is used as a material to check whether the simulation's results are as well usable to predict possible process parameters for materials with a higher uncertainty of material properties.
+
+\subsection*{3.2. Experimental}
+The numerical model is validated using cubic samples of stainless steel $316 \mathrm{~L}$ as well as nickel-based superalloy IN738LC. The samples' uppermost layer is used to measure width, depth and the cross section area of multiple melt pool cross sections for every parameter set as illustrated in Fig. 4. The depth is taken as the distance from the lowest to the highest point of the melt pool, the half width as the distance from the estimated center line to the outermost melt pool boundary, while the half melt pool cross section area is measured for the half of the melt pool which is not partly covered by the next track. The samples were manufactured on a ConceptLaser M2 utilizing a $200 \mathrm{~W}$ continuous wave laser with a wavelength of $1070 \mathrm{~nm}$ and Gaussian distribution. The samples were built up using layer-wise alternating scanning patterns (so that the hatching is rotated by $90^{\circ}$ after every layer), hatch distance of $90 \mu \mathrm{m}$ and a layer thickness of $30 \mu \mathrm{m}$. For the stainless steel $316 \mathrm{~L}$ scan speeds of $850 \mathrm{~mm} / \mathrm{s}, 1000 \mathrm{~mm} / \mathrm{s}, 1150 \mathrm{~mm} / \mathrm{s}, 1300 \mathrm{~mm} / \mathrm{s}$, $1450 \mathrm{~mm} / \mathrm{s}$ as well as $1600 \mathrm{~mm} / \mathrm{s}$ and for IN738LC scan speeds of $600 \mathrm{~mm} / \mathrm{s}, 750 \mathrm{~mm} / \mathrm{s}, 900 \mathrm{~mm} / \mathrm{s}, 1050 \mathrm{~mm} / \mathrm{s}$ as well as $1200 \mathrm{~mm} / \mathrm{s}$ were used.
+
+A cross section of the elaborated model is shown in Fig. 2, considering the layer thickness increase due to the powder's relative
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_4337cab3afd3e8e599dcg-05(1)}
+\end{center}
+
+Fig. 4. Illustration of the defined depth, width and cross section area measures used for validation.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_4337cab3afd3e8e599dcg-05}
+\end{center}
+
+Fig. 5. Time-resolved evolution of the absorbed laser power calculated using the described absorption model. Plotted ratios are of SS316L on the powder layer side using a scan speed of $1600 \mathrm{~mm} / \mathrm{s}$ and $200 \mathrm{~W}$ laser power. The laser power which irradiates the pre-solidified track of the simulation model is not considered in this plot.
+
+density as well as an already consolidated line. The half width, depth and half cross section area data is extracted from the simulation model just on the side of the already consolidated line and therefore exactly like in the case of the experimental data.
+
+\section*{4. Results and discussion}
+\subsection*{4.1. Absorption characteristics}
+The absorption model takes a crucial role in the numerical model. It directly influences the amount and distribution of the input energy and can thereby influence the melt pool dimensions as well as its dynamics. Therefore the absorption model is checked for reasonable behavior and magnitude of absorptance by monitoring the energy input along the simulated line. The regions of energy input are categorized into the parts of consolidated melt, non-consolidated melt which is defined by a powder like material configuration, the powder itself and the previous layer. Considering these categories, Fig. 5 exemplarily shows a reasonable time evolution of the calculated ratios of absorbed power on the powder layer side for a scan speed of $1600 \mathrm{~mm} / \mathrm{s}$ using the previously described absorption model. The absorbed powers are calculated relative to the input laser power. The different areas in which the power is absorbed are distinguished by temperature and material configuration. Previous layer and powder are defined by a tempera-
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_4337cab3afd3e8e599dcg-06}
+\end{center}
+
+Fig. 6. Overview of simulated average absorbed powers for different scan speeds and alloys.
+
+ture below liquidus temperature. While the previous layer consists of completely filled elements, the powder elements are just partly filled. The melt is defined by a temperature above or equal the liquidus temperature and consolidated melt is indicated by completely filled elements below. Therefore, non-consolidated melt is defined by molten elements with a powder like material configuration in which elements below are just partly filled.
+
+As the figure shows, starting from a powder covered solid material the melt pool evolves step by step. The irradiated area is continuously divided into a consolidated and non-consolidated melt as well as the powder part. In the beginning of this evolution the upper powder particle surfaces are irradiated and molten, keeping a more or less powder like structure and are therefore increasing the part of non-consolidated melt. With increasing time steps the amount of melt increases and consolidates into a melt pool so that the part of non-consolidated melt is restricted to the front of the moving laser spot. During these effects the amount of irradiated powder decreases because it is shrouded by the melt. Therefore the absorption ratios evolve significantly until a quasisteady state of the offset of melt pool front to focal spot center point is reached. These effects are represented in detail by the shown absorption ratio evolution indicating this distinct early stage of melt pool evolution. The total absorptance starts at its maximum because the laser irradiates solely powder which is characterized by its increased absorptance due to multiple reflections into the powder bed. The melting of the particle surfaces is represented by an increase of the non-consolidated melt ratio until it decreases to a steady state when the melt pool is consolidated. The absorption ratio of the consolidated melt is therefore continuously increasing while the total, powder's as well as the previous layer's absorption ratio is decreasing until the steady state is reached.
+
+This distinct evolution of the absorption ratios can be observed for all simulated parameter sets of both alloys. But there are differ- ent magnitudes of absorption ratios as well as total absorptances. Fig. 6 shows these differences between the scan speeds and alloys.
+
+The deviations between behaviors under different scan speeds need a closer look, while the magnitude of the averaged ratios can simply be explained by different values of the hemispherical reflectivity which are used in the absorption model. Both alloys show the same trends for increasing scan speeds. While the absorption ratio of consolidated melt decreases, the total, the powder's as well as the non-consolidated melt absorption ratios increase. Assuming a similar time of irradiation which is needed to melt the powder particles for a defined power input the offset from the front of the consolidated melt pool to the front of the focal spot increases. The higher offset leads to a larger area of irradiated powder and non-consolidated melt. The increase of powder's as well as non-consolidated melt's absorption ratio is higher than the decrease of the one of the consolidated melt because both powder and non-consolidated melt are characterized by a higher absorptance caused by multiple reflection and absorption. Considering these aspects the increase of the total absorptance with increasing scan speeds is reasonable as well. The simulation results of stainless steel 316L furthermore show a distinct drop of the melt pool absorption between scan speeds of $1000 \mathrm{~mm} / \mathrm{s}$ and $1150 \mathrm{~mm} / \mathrm{s}$ which disrupts the continuous increase of total absorption ratio. This drop can be explained by taking a deeper look into the melting behavior. While at $1000 \mathrm{~mm} / \mathrm{s}$ a deep-penetration welding-like mode can be observed, at $1150 \mathrm{~mm} / \mathrm{s}$ the mode changed to a more conduction driven mode, which shows less deep flanks of the recoil pressure driven cavity and therefore less multiple reflections and a lower absorption coefficient.
+
+\subsection*{4.2. Melt pool dynamics}
+While high scan speeds result in flat and lens-like melt pools, lower scan speeds show an increasing tendency towards deeppenetration welding-like characteristics. Fig. 7 illustrates the differences in melt pool evolution as it shows the simulated data of SS316L with scan speeds of $850 \mathrm{~mm} / \mathrm{s}$ and $1600 \mathrm{~mm} / \mathrm{s}$ in comparison.
+
+The low scan speed shows the development of a distinct cavity as the laser focal spot passes by. The evolution of the cavity even starts before the beam's center point reaches the cross section as soon as a small melt pool cross section is established. In the beginning it is supported by the melt consolidation on the powder side because the melt fills the void between the powder particles. The recoil pressure then increases as the surface temperature rises, so that the cavity grows and pushes the melt downwards as well as in radial directions. The maximum extent of the cavity is reached shortly after the beam's center point passed the cross section because the surface is first heated to the pressure dependent evaporation temperature and then the recoil pressure is maintained for a while by the decreasing energy input. The downward convection takes heat from the melt pool surface to the mushy zone at the melt pool bottom and therefore increases the rate of melting. Furthermore the laser energy is absorbed near to the solid material because of the cavity which leaves a small band of melt between the surrounding atmosphere and the solid material. After the laser beam passes, the recoil pressure drops due to the missing heat input and, as a result, the cavity in the cross section closes. So the melt which was pushed in radial directions fills the cavity, mainly driven by surface tension related effects as well as material is pushed backwards from the front of the melt pool. While the upper melt pool regions still melt some of the surrounding solid and powder material due to heat conduction, the lower regions of the melt pool start solidifying. A deeper look into the longitudinal sections of these two scan speeds in Fig. 8 shows that for $850 \mathrm{~mm} / \mathrm{s}$ the front of the melt pool is strongly influenced by the recoil pressure and there-
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_4337cab3afd3e8e599dcg-07(1)}
+\end{center}
+
+Fig. 7. Simulated evolution of melt pool geometry and surface distortion due to recoil pressure for a melt pool with deep-penetration welding tendencies $(850 \mathrm{~mm} / \mathrm{s})$ and a lens-like melt pool $(1600 \mathrm{~mm} / \mathrm{s})$ starting at room temperature. The laser beam is moving from the back towards the reader while $\Delta x$ is the location difference between the laser beam's center point and the shown cross section. $d_{B}$ is equivalent to a $\mathrm{D} 4 \sigma$ beam diameter of $90 \mu \mathrm{m}$.
+
+fore suppressing the effect of the Marangoni convection. Therefore, the deep cavity develops and a small clockwise vortex to the back as well as vortices to the sides of the melt pool are established. Just behind the clockwise vortex another large counter clockwise vortex establishes due to the Marangoni convection leading from the outer regions of the cavity to the melt pool tail. The faster scan speed misses this strong suppression of the Marangoni convection in the melt pool front leading to the velocity configuration shown in Fig. 8 which therefore shows the difference between the welding modes.
+
+Therefore, the melt pool of the high scan speed misses this distinct cavity evolution. Thereby a shallow lens-like melt pool is formed. Naturally the energy input is lower due to the higher scan speed but the melt pool geometry and surface distortion in particular indicate the difference of the welding mode. The melt pool that is formed under high recoil pressures shows steeper flanks and a beginning differentiation of melt pool areas, meaning a deep and steep part in the line's center and a flat conduction driven outer area as it is typical for deep welding [39]. So the reduction of the energy density by $47 \%$ due to the change of scan speeds from $1600 \mathrm{~mm} / \mathrm{s}$ to $850 \mathrm{~mm} / \mathrm{s}$ leads to a decrease of melt pool depth by $58 \%$ and of cross section area by $57 \%$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_4337cab3afd3e8e599dcg-07}
+\end{center}
+
+Fig. 8. Longitudinal sections of the simulated melt pool front and velocity distributions for $(850 \mathrm{~mm} / \mathrm{s})$ and $(1600 \mathrm{~mm} / \mathrm{s})$ for an incident laser beam moving from left to right.
+
+\subsection*{4.3. Melt pool dimensions}
+Evaluating the results concerning the melt pool dimensions shown in Fig. 9, a good accordance of the simulation model to the experimental data can be noticed for the depth and width values over a wide set of scan speeds, while the area data deviates stronger.
+
+In case of the SS316L all but one value of the depth and width data lay in the area of the standard deviation. The relative deviations of the simulation in comparison to the experimental average are all smaller than $20 \%$, in most cases smaller than $10 \%$. The values of the cross section area are deviating increasingly for lower scan speeds of SS316L. This is because of the simulation's starting temperatures which were set to room temperature. Therefore, they differ from the actual boundary conditions in the process. Considering that the energy input increases for lower scan speeds, it is obvious that the residual heat, which is the starting point for every new scanned line and layer, is as well higher for lower scan speeds. Thus it explains the increasing deviation of the cross section area for lower scan speeds.
+
+In case of IN738LC the simulated melt pool depth deviates increasingly from the experimental ones for high scan speeds while the width matches the experimental data well. A mean deviation from the average values of $27.8 \%$ in depth and of $6 \%$ in width can be observed. But considering that the material data has a higher uncertainty due to inter- and extrapolation within its liquid state a still useful similarity to the experimental data with an overall average error in depth, width and area of $19.6 \%$ can be achieved. Concerning the cross section area the same increasing deviation for slower scan speeds can be observed. Although there is a not explainable inverted trend from $750 \mathrm{~mm} / \mathrm{s}$ to $600 \mathrm{~mm} / \mathrm{s}$, it supports the explanation of different starting temperatures.
+
+Therefore, the series of process parameters for SS316L was recalculated with higher starting temperatures. For an illustration of this effect the starting temperatures were assumed as shown in Fig. 10 since the calculation of the remaining track temperature\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_4337cab3afd3e8e599dcg-08(2)}\\
+d)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_4337cab3afd3e8e599dcg-08(3)}
+
+Fig. 9. Summary of the model validation results showing experimental average values and standard deviations in comparison to the simulated values of melt pool depth, width and cross section area of SS316L (a, c and e) and IN738LC (b, d and f).
+
+\begin{center}
+\begin{tabular}{c|cccccc}
+\multicolumn{7}{c}{$\mathrm{SS} 316 \mathrm{~L}$} \\
+$\mathrm{v}[\mathrm{mm} / \mathrm{s}]$ & 850 & 1000 & 1150 & 1300 & 1450 & 1600 \\
+\hline
+$\mathrm{T}_{0}\left[{ }^{\circ} \mathrm{C}\right]$ & 500 & 400 & 300 & 200 & 100 & 25 \\
+\hline
+\end{tabular}
+\end{center}
+
+\includegraphics[max width=\textwidth, center]{2024_03_10_4337cab3afd3e8e599dcg-08}\\
+b)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_4337cab3afd3e8e599dcg-08(1)}
+
+$[\mathrm{mm} / \mathrm{s}]$
+
+experimental
+
+average
+
+standard
+
+deviation
+
+\begin{itemize}
+  \item simulation
+\end{itemize}
+
+Fig. 10. Comparison of simulated and experimental values for the melt pool depth (a), width (b) and cross section area (c) considering the sample temperature as an additional boundary condition for the stainless steel $316 \mathrm{~L}$. is another challenge. As Fig. 10 shows, a far better accordance of the depth and cross section area values is achieved by considering the higher temperatures in the upper layers of the cubic samples. But the width deviations are slightly increased. By considering the higher temperatures as additional boundary conditions the overall mean error of the three considered dimensions for SS316L is reduced from $15.2 \%$ to $12.8 \%$. Since the simulated depth and width data for the elevated temperature series is similar or slightly higher than the experimental data, the difference of the cross section area needs to be explained by the melt pool geometry.
+
+But the well matching values of the melt pool depth for high as well as low energy densities are remarkable, since most current models fail to achieve the experimentally observed depths. This supports the elaborated absorption and evaporation model because of the depths' strong dependence on the welding mode. The deviations in case of melt pool width are assumed to be mainly due to the fact that a dynamic contact angle of the melt to the previous layer is not yet implemented and therefore no typical spherical melt pool establishes which leads to more melting of powder due to heat conduction in the contact with the upper melt pool regions.
+
+\subsection*{4.4. Evaluation of process parameters}
+The key indicator for the evaluation of process parameters of the SLM process is the part density. To simulate the density as itself a high number of multiple track simulations would be necessary. But a rough prediction based on the simulated melt pool dimensions is possible as well. Considering that the porosity within a single melt pool is neglectable as long as no extensive deeppenetration welding occurs, the main reason for porosity in SLM are interlayer defects due to insufficient melting or melt pool overlapping. Therefore the simulated melt pool dimensions are well suited for a first evaluation, since the simulated maximum melt pool depth and width match the experimental results quite well even though a coarse mesh is used. Especially the remelted depth and width might be used for the evaluation. Both cannot be exactly measured from polished cross sections but from the simulation model. A remelted width lower than the hatch distance indicates a high risk for increasing porosity. Even more an overlap of both melt pools is necessary to assure that no powder remains unmolten within the layer. Furthermore experience shows that a remelting of more than 1.5 previous layers increases the chance of dense samples significantly. Elaborating these two criteria of hatch distance and remelted depth, a rough first approximation whether the parameter set leads to a nearly fully dense part or not is possible. Fig. 11 shows the simulated remelted depth and half width comparing them to the hatch distance and layer height and showing the relation to the achieved density of both investigated alloys.
+
+The figure shows that both indicators are quite well suited as a first criterion to evaluate the usability of the process parameters to manufacture nearly fully dense parts since the porosity significantly increases as soon as the predicted values are less than the anticipated values. But in most cases just a residual porosity of $0.5 \%$ is accepted so that both indicators are overrating the usability of the evaluated parameter set. Taking these indicators as a basis, the simulation results offer a chance to set several of the simulated melt pool measures into relation. The ratio of remelted depth to half remelted width shows the most promising correlation to the density. As Fig. 12 shows the porosity significantly increases if the remelted depth to half remelted width ratio drops below 1. Furthermore this value corresponds remarkably well to the usually defined value of $0.5 \%$ residual porosity for the usability of manufactured parts even for IN738LC for which more uncertain material data had to be used.
+
+This ratio as well has a melt pool shape related meaning since it represents the geometry of the shape of the remelted material.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_4337cab3afd3e8e599dcg-09}
+
+Fig. 11. Comparison of simulated remelted depth and width to the indicators of hatch distance and 1.5 times layer height as well as the measured part porosity of SS316L and IN738LC.
+
+While a value smaller than 1 implies that the remelted part takes on a shallow elliptical shape, a value greater than 1 means a deep melt pool with a trend to a keyhole like shape for higher values. Considering the relation of this value to the achieved density it can be shown that the most productive way to form dense parts with a Gaussian beam is right on the edge of heat conduction melting and a starting keyhole supported melting process. For higher scan speeds the density decreases rapidly because of the decrease of remelted width and depth that lead to an increase in interlayer defects due to insufficient melting. Slower scan speeds only offer very low density increases because of a higher rate of remelting and therefore a higher chance to remove defects by following tracks and layers. But by using slower scan speeds the evaporation of material increases significantly. Furthermore the intensity of deep-penetration welding is increased, resulting in a higher possibility for porosity within the melt pool due to the collapse of the keyhole. Considering these effects as well as the common uncertainty of the SLM process it is preferable to stay on the deep-penetration welding-like side rather than right on the edge to conduction welding. So a small drop in heat input due to spatter or evaporated material will not drastically increase the chance for interlayer defects. For a general applicability this indicator first has to be evaluated for more alloys and different machine configurations but it works well for the presented parameters.
+
+\section*{5. Conclusion}
+The SLM process is in need for increases in productivity and part quality. Instead of using extensive designs of experiment to\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_4337cab3afd3e8e599dcg-09(1)}
+
+Fig. 12. Comparison of the ratio of remelted depth to half remelted width to the measured porosity as an indicator of parameter usability.
+
+find parameter sets for dense material, simulation offers a chance to save time and money when changing to a new material or when changing the machine set-up, like to higher laser powers or higher layer thicknesses. This paper shows what is necessary to include in such a simulation model to get a good agreement with experimental data and why. First a detailed energy absorption model is necessary which distinguishes between powder, melt and solid material to get to a reasonable heat input and therefore a reasonable temperature field. The temperature field directly influences the second main aspect which is the representation of melt flow driven by capillary forces, Marangoni convection and the recoil pressure. Especially the recoil pressure is of high importance due to its high influence on the melt pool dynamics. The last not necessary but recommendable aspect is a reliable representation of the powder bed that offers a detailed representation of the consolidation mechanism at low calculation effort. The presented model includes all of these aspects and leads to a good accordance of simulated and experimental data at comparably low calculation effort for a wide range of scan speeds and two different materials. Although the powder bed is homogenized and a quite coarse mesh is used compared to current high fidelity simulations, all significant effects can be observed within the presented simulation results. Furthermore it is shown that the simulated data is well suited to easily evaluate the processing parameters regarding density and productivity based on remelted depth and width and therefore to effectively narrowing down the necessary experimental effort to get to dense and productive processing parameters even when using more uncertain material data.
+
+\section*{6. Outlook}
+Further on, the numerical model will be validated for other processing parameters like higher laser powers and higher layer thicknesses. Furthermore the validated model is used to evaluate new and innovative strategies to influence the melt pool dynamics by tailoring the intensity profiles of one or more beams. Both aspects are already underway and are offering promising results.
+
+\section*{Acknowledgement}
+The authors gratefully acknowledge the financial support of the Bosch Research Foundation.
+
+\section*{References}
+[1] M. Rombouts, J.P. Kruth, L. Froyen, P. Mercelis, Fundamentals of selective laser melting of alloyed steel powders, CIRP Ann. Manuf. Technol. 55 (2006) 187-192, \href{http://dx.doi.org/10.1016/S0007-8506(07)60395-3}{http://dx.doi.org/10.1016/S0007-8506(07)60395-3}.
+
+[2] R. Morgan, C.J. Sutcliffe, W. O’Neill, Density analysis of direct metal laser re-melted 316L stainless steel cubic primitives, J. Mater. Sci. 39 (2004) 1195-1205, \href{http://dx.doi.org/10.1023/B:JMSC.0000013875.62536.fa}{http://dx.doi.org/10.1023/B:JMSC.0000013875.62536.fa}.
+
+[3] L. Rickenbacher, T. Etter, S. Hövel, K. Wegener, High temperature material properties of IN738LC processed by selective laser melting (SLM) technology, Rapid Prototyp. J. 19 (2013) 282-290, \href{http://dx.doi.org/10.1108/}{http://dx.doi.org/10.1108/} 13552541311323281
+
+[4] Z. Wang, K. Guan, M. Gao, X. Li, X. Chen, X. Zeng, The microstructure and mechanical properties of deposited-IN718 by selective laser melting, J. Alloys Compd. 513 (2012) 518-523, \href{http://dx.doi.org/10.1016/j.jallcom.2011.10.107}{http://dx.doi.org/10.1016/j.jallcom.2011.10.107}.
+
+[5] D. Gu, Y.C. Hagedorn, W. Meiners, K. Wissenbach, R. Poprawe, Selective Laser Melting of in-situ TiC/ $\mathrm{Ti}_{5} \mathrm{Si}_{3}$ composites with novel reinforcement architecture and elevated performance, Surf. Coatings Technol. 205 (2011) 3285-3292, \href{http://dx.doi.org/10.1016/j.surfcoat.2010.11.051}{http://dx.doi.org/10.1016/j.surfcoat.2010.11.051}.
+
+[6] P. Edwards, M. Ramulu, Fatigue performance evaluation of selective laser melted Ti-6Al-4V, Mater. Sci. Eng. A 598 (2014) 327-337, \href{http://dx.doi.org/10}{http://dx.doi.org/10}. 1016/j.msea.2014.01.041.
+
+[7] C. Weingarten, D. Buchbinder, N. Pirch, W. Meiners, K. Wissenbach, R. Poprawe, Formation and reduction of hydrogen porosity during selective laser melting of AlSi10Mg, J. Mater. Process. Technol. 221 (2015) 112-120, \href{http://dx.doi.org/10.1016/j.jmatprotec.2015.02.013}{http://dx.doi.org/10.1016/j.jmatprotec.2015.02.013}.
+
+[8] E. Brandl, U. Heckenberger, V. Holzinger, D. Buchbinder, Additive manufactured AlSi10Mg samples using Selective Laser Melting (SLM): microstructure, high cycle fatigue, and fracture behavior, Mater. Des. 34 (2012) 159-169, \href{http://dx.doi.org/10.1016/j.matdes.2011.07.067}{http://dx.doi.org/10.1016/j.matdes.2011.07.067}.
+
+[9] F.S. Schwindling, M. Seubert, S. Rues, U. Koke, M. Schmitter, T. Stober, Two-body wear of $\mathrm{CoCr}$ fabricated by selective laser melting compared with different dental alloys, Tribol. Lett. 60 (2015), \href{http://dx.doi.org/10.1007/}{http://dx.doi.org/10.1007/} s11249-015-0601-7.
+
+[10] S. Bontha, N.W. Klingbeil, P.A. Kobryn, H.L. Fraser, Effects of process variables and size-scale on solidification microstructure in beam-based fabrication of bulky 3D structures, Mater. Sci. Eng. A 513-514 (2009) 311-318, \href{http://dx}{http://dx}. \href{http://doi.org/10.1016/j.msea.2009.02.019}{doi.org/10.1016/j.msea.2009.02.019}.
+
+[11] F. Verhaeghe, T. Craeghs, J. Heulens, L. Pandelaers, A pragmatic model for selective laser melting with evaporation, Acta Mater. 57 (2009) 6006-6012, \href{http://dx.doi.org/10.1016/j.actamat.2009.08.027}{http://dx.doi.org/10.1016/j.actamat.2009.08.027}.
+
+[12] A. Hussein, L. Hao, C. Yan, R. Everson, Finite element simulation of the temperature and stress fields in single layers built without-support in selective laser melting, Mater. Des. 52 (2013) 638-647, \href{http://dx.doi.org/10}{http://dx.doi.org/10}. 1016/j.matdes.2013.05.070
+
+[13] K. Dai, L. Shaw, Distortion minimization of laser-processed components through control of laser scanning patterns, Rapid Prototyp. J. 8 (2002) 270-276, \href{http://dx.doi.org/10.1108/13552540210451732}{http://dx.doi.org/10.1108/13552540210451732}.
+
+[14] L. Papadakis, A. Loizou, J. Risse, S. Bremen, J. Schrage, A computational reduction model for appraising structural effects in selective laser melting manufacturing, Virtual Phys. Prototyp. 9 (2014) 17-25, \href{http://dx.doi.org/10}{http://dx.doi.org/10}. 1080/17452759.2013.868005.
+
+[15] N.E. Hodge, R.M. Ferencz, J.M. Solberg, Implementation of a thermomechanical model for the simulation of selective laser melting, Comput. Mech. 54 (2014) 33-51, \href{http://dx.doi.org/10.1007/s00466-014-1024-2}{http://dx.doi.org/10.1007/s00466-014-1024-2}.
+
+[16] D. Dai, D. Gu, Tailoring surface quality through mass and momentum transfer modeling using a volume of fluid method in selective laser melting of TiC/AlSi10Mg powder, Int. J. Mach. Tools Manuf. 88 (2015) 95-107, \href{http://dx}{http://dx}. \href{http://doi.org/10.1016/j.ijmachtools.2014.09.010}{doi.org/10.1016/j.ijmachtools.2014.09.010}.\\
+[17] S.A. Khairallah, A. Anderson, Mesoscopic simulation model of selective laser melting of stainless steel powder, J. Mater. Process. Technol. 214 (2014) 2627-2636, \href{http://dx.doi.org/10.1016/j.jmatprotec.2014.06.001}{http://dx.doi.org/10.1016/j.jmatprotec.2014.06.001}.
+
+[18] Y. Lee, W. Zhang, Modeling of heat transfer, fluid flow and solidification microstructure of nickel-base superalloy fabricated by laser powder bed fusion, Addit. Manuf. (2016), \href{http://dx.doi.org/10.1016/j.addma.2016.05.003}{http://dx.doi.org/10.1016/j.addma.2016.05.003}.
+
+[19] S.A. Khairallah, A.T. Anderson, A. Rubenchik, W.E. King, Laser powder-bed fusion additive manufacturing: physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones, Acta Mater. 108 (2016) 36-45, \href{http://dx.doi.org/10.1016/j.actamat.2016.02.014}{http://dx.doi.org/10.1016/j.actamat.2016.02.014} arXiv:1011.1669v3.
+
+[20] S. Sumin Sih, J.W. Barlow, The prediction of the emissivity and thermal conductivity of powder beds, Part. Sci. Technol. 22 (2004) 291-304, \href{http://dx}{http://dx}. \href{http://doi.org/10.1080/02726350490501682a}{doi.org/10.1080/02726350490501682a}.
+
+[21] M. Rombouts, L. Froyen, A.V. Gusarov, E.H. Bentefour, C. Glorieux, Photopyroelectric measurement of thermal conductivity of metallic powders, J. Appl. Phys. 97 (2005), \href{http://dx.doi.org/10.1063/1.1832740}{http://dx.doi.org/10.1063/1.1832740}.
+
+[22] A.V. Gusarov, J.P. Kruth, Modelling of radiation transfer in metallic powders at laser treatment, Int. J. Heat Mass Transfer 48 (16) (2005) 3423-3434, http:// \href{http://dx.doi.org/10.1016/j.ijheatmasstransfer.2005.01.044}{dx.doi.org/10.1016/j.ijheatmasstransfer.2005.01.044}.
+
+[23] A.V. Gusarov, I. Yadroitsev, P. Bertrand, I. Smurov, Model of radiation and heat transfer in laser-powder interaction zone at selective laser melting, J. Heat Transfer 131 (2009) 072101, \href{http://dx.doi.org/10.1115/1.3109245}{http://dx.doi.org/10.1115/1.3109245}.
+
+[24] M. Praprotnik, M. Sterk, R. Trobec, Inhomogeneous Heat-Conduction Problems solved by a new explicit finite difference scheme, Int. J. Pure Appl. Math. 13 (2004) 275-291, \href{http://dx.doi.org/10.1017/CB09781107415324.004}{http://dx.doi.org/10.1017/CB09781107415324.004} arXiv:1011.1669v3.
+
+[25] H. Ki, J. Mazumder, P.S. Mohanty, Modeling of laser keyhole welding: Part I. Mathematical modeling, numerical methodology, role of recoil pressure, multiple reflections, and free surface evolution, Metall. Mater. Trans. A 33 (June) (2002) 1817-1830, \href{http://dx.doi.org/10.1007/s11661-002-0190-6}{http://dx.doi.org/10.1007/s11661-002-0190-6}.
+
+[26] A. Klassen, T. Scharowsky, C. Körner, Evaporation model for beam based additive manufacturing using free surface lattice Boltzmann methods, J. Phys. D: Appl. Phys. 47 (2014) 275303, \href{http://dx.doi.org/10.1088/0022-3727/47/27/}{http://dx.doi.org/10.1088/0022-3727/47/27/} 275303.
+
+[27] J.Y. Lee, S.H. Ko, D.F. Farson, C.D. Yoo, Mechanism of keyhole formation and stability in stationary laser welding, J. Phys. D: Appl. Phys. 35 (2002) 1570-1576, \href{http://dx.doi.org/10.1088/0022-3727/35/13/320}{http://dx.doi.org/10.1088/0022-3727/35/13/320}.
+
+[28] G. Son, N. Hur, A coupled level set and volume-of-fluid method for the buoyancy-driven motion of fluid particles, Numer. Heat Transfer Part B: Fundam. 42 (2002) 523-542, \href{http://dx.doi.org/10.1080/10407790260444804}{http://dx.doi.org/10.1080/10407790260444804}.
+
+[29] G. Son, Efficient implementation of a coupled level-set and volume-of-fluid method for three-dimensional incompressible two-phase flows, Numer. Heat Transfer Part B: Fundam. 43 (2003) 549-565, \href{http://dx.doi.org/10.1080/}{http://dx.doi.org/10.1080/} 713836317.
+
+[30] G. Son, A level set method for incompressible two-fluid flows with immersed solid boundaries, Numer. Heat Transfer Part B: Fundam. 47 (2005) 473-489, \href{http://dx.doi.org/10.1080/10407790590919252}{http://dx.doi.org/10.1080/10407790590919252}.
+
+[31] R.I. Issa, Solution of the implicitly discretised fluid flow equations by operator-splitting, J. Comput. Phys. 62 (1986) 40-65, \href{http://dx.doi.org/10}{http://dx.doi.org/10}. 1016/0021-9991(86)90099-9 arXiv:9809069v1.
+
+[32] H. Versteeg, W. Malalasekera, An Introduction to Computational Fluid Dynamics - The Finite Volume Method, Longman Group Limited, 1995.
+
+[33] Iaea, Thermophysical properties of materials for nuclear engineering: a tutorial and collection of data, At. Energy (2008) 200, ISBN:978-92-0-106508-7.
+
+[34] M.A. Ordal, R.J. Bell, J.R.W. Alexander, L.L. Long, M.R. Querry, Optical properties of fourteen metals in the infrared and far infrared: $\mathrm{Al}, \mathrm{Co}, \mathrm{Cu}, \mathrm{Au}$, Fe, Pb, Mo, Ni, Pd, Pt, Ag, Ti, V, and W, Appl. Opt. 24 (1985) 4493-4499, http:// \href{http://dx.doi.org/10.1364/AO.24.004493}{dx.doi.org/10.1364/AO.24.004493}.
+
+[35] R.E. Aune, L. Battezzati, R. Brooks, I. Egry, H.-J. Fecht, J.-P. Garandet, M. Hayashi, K.C. Mills, A. Passerone, P.N. Quested, E. Ricci, F. Schmidt-Hohagen, S. Seetharaman, B. Vinet, R.K. Wunderlich, Thermophysical properties of IN738LC, MM247LC and CMSX-4 in the liquid and high temperature solid phase, Superalloys 718, 625, 706 Deriv. 6 (2005) 467-476.
+
+[36] L.A. Chapman, R. Morrell, P.N. Quested, R.F. Brooks, P. Brown, L.-H. Chen, S. Olive, D. Ford, PAMRIC: Properties of Alloys and Moulds Relevant to Investment Casting, NPL Report MAT 9, 2008, ISSN: 1754-2979.
+
+[37] Y. Danis, E. Lacoste, C. Arvieu, Numerical modeling of inconel 738LC deposition welding: prediction of residual stress induced cracking, J. Mater. Process. Technol. 210 (2010) 2053-2061, \href{http://dx.doi.org/10.1016/j}{http://dx.doi.org/10.1016/j}. jmatprotec.2010.07.027.
+
+[38] M.A. Ordal, R.J. Bell, R.W. Alexander, L.L. Long, M.R. Querry, Optical properties of Au, Ni, and Pb at submillimeter wavelengths, Appl. Opt. 26 (4) (1987) 744-752, \href{http://dx.doi.org/10.1364/AO.26.000744}{http://dx.doi.org/10.1364/AO.26.000744}.
+
+[39] W.E. King, H.D. Barth, V.M. Castillo, G.F. Gallegos, J.W. Gibbs, D.E. Hahn, C. Kamath, A.M. Rubenchik, Observation of keyhole-mode laser melting in laser powder-bed fusion additive manufacturing, J. Mater. Process. Technol. 214 (2014) 2915-2925, \href{http://dx.doi.org/10.1016/j.jmatprotec.2014.06.005}{http://dx.doi.org/10.1016/j.jmatprotec.2014.06.005}.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

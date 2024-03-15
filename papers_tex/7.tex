@@ -1,0 +1,600 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Effects of laser processing parameters on thermal behavior and melting/solidification mechanism during selective laser melting of $\mathrm{TiC} /$ Inconel 718 composites }
+
+
+\author{Qimin Shi ${ }^{\text {a,b }}$, Dongdong Gu ${ }^{\text {a,b,* }}$, Mujian Xia ${ }^{\text {a,b }}$, Sainan Cao ${ }^{\text {a,b }}$, Ting Rong a,b\\
+a College of Materials Science and Technology, Nanjing University of Aeronautics and Astronautics, Yudao Street 29, Nanjing 210016, PR China\\
+b Institute of Additive Manufacturing (3D Printing), Nanjing University of Aeronautics and Astronautics, Yudao Street 29, Nanjing 210016, PR China}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Full length article
+
+
+
+\section*{A R T I C L E I N F O}
+\section*{Article history:}
+Received 18 December 2015
+
+Received in revised form
+
+27 February 2016
+
+Accepted 14 April 2016
+
+Available online 29 April 2016
+
+Keywords:
+
+Additive manufacturing
+
+Selective laser melting (SLM)
+
+Numerical simulation
+
+Melting/solidification mechanism
+
+TiC/Inconel 718
+
+\begin{abstract}
+A B S T R A C T A three-dimensional finite element model is proposed to study the effects of laser power and scan speed on the thermal behavior and melting/solidification mechanism during selective laser melting (SLM) of TiC/Inconel 718 powder system. The cooling time during powder delivery is taken into account to simulate the actual production process well. It shows obviously the existence of heat accumulation effect in SLM process and, the tailored set of cooling time of $10 \mathrm{~ms}$ during powder delivery alleviates that effectively. The maximum temperature gradient in the molten pool slightly increases from $1.30 \times 10^{4}{ }^{\circ} \mathrm{C}$ / $\mathrm{mm}$ to $2.60 \times 10^{4} \mathrm{C} / \mathrm{mm}$ as the laser power is increased from $75 \mathrm{~W}$ to $150 \mathrm{~W}$. However, it is negligibly sensitive to the variation of scan speed. There is a positive corresponding relationship between the maximum rate of temperature change and processing parameters. A low laser power ( $75 \mathrm{~W}$ ) or a high scan speed $(300 \mathrm{~mm} / \mathrm{s})$ is more energy efficient in Z-direction of the molten pool, giving rise to a deepnarrow cross section of the pool. Whereas, a high laser power ( $150 \mathrm{~W}$ ) or a low scan speed ( $50 \mathrm{~mm} / \mathrm{s}$ ) causes a shallow-wide cross section of the molten pool, meaning it is more energy efficient in the Y-direction of the melt. The combination of a laser power of $125 \mathrm{~W}$ and a scan speed of $100 \mathrm{~mm} / \mathrm{s}$ contributes to achieve a sound metallurgical bonding between the neighbor layers and tracks, due to the proper molten pool size (width: $109.3 \mu \mathrm{m}$; length: $120.7 \mu \mathrm{m}$; depth: $67.8 \mu \mathrm{m}$ ). The SLM experiments on $\mathrm{TiC} /$ Inconel 718 powder system are performed to verify the reliability and accuracy of the physical model and, simulation results are proved to be correct.
+\end{abstract}
+
+ⓒ 2016 Elsevier Ltd. All rights reserved.
+
+\section*{1. Introduction}
+Nickel-based superalloys are widely used as high-temperature service parts in industrial and aerospace fields in which perfect combination of elevated temperature workability and mechanical properties are required [1]. Inconel 718, the typical representative of nickel-based superalloys, due to its outstanding oxidation resistance, hot corrosion resistance and fatigue resistance, has been recognized as the most promising candidate for many applications such as turbine wheel blades, rocket motors, nuclear reactors and fossil fuel components at elevated temperature [2]. Furthermore, Inconel 718 based metal matrix composites (MMCs), reinforced with discontinuous TiC reinforcements, show the superiority compared with the pure parts for significantly increased not only of strength and hardness, but also of elasticity modulus and wear
+\footnotetext{\begin{itemize}
+  \item Corresponding author at: College of Materials Science and Technology, Nanjing University of Aeronautics and Astronautics, Yudao Street 29, Nanjing 210016, PR China.
+\end{itemize}
+
+E-mail address: \href{mailto:dongdonggu@nuaa.edu.cn}{dongdonggu@nuaa.edu.cn} (D. Gu).
+}
+
+resistance, amplifying effectively the serviceable range of Inconel 718 [3]. However, the poor wetting ability between the reinforcing particles and the matrix extremely reduces the particle/matrix interfacial bonding due to the formation of microcracks or pores, thus resulting in the premature failure of MMCs during mechanical loading [4]. Considerable research efforts are required to study the liquid wetting effect of powder particles for alleviating the pores and microcracks between the particle/matrix interface and, thus, improving their bonding ability. Meanwhile, the conventional manufacturing processes, such as casting process, easily cause the grain coarsening and shrinkage cavity/porosity and, they are difficult to manufacture Inconel 718 composites with complex geometry [5]. These put forward new requirements on the material forming techniques.
+
+Selective laser melting (SLM), as one of the most important branches of additive manufacturing (AM) techniques, exhibits a great potential for direct fabricating 3D parts with flexibility in materials and shapes [6-9]. During the SLM process, a large amount of powder comes up to the build table and a roller/blade spreads powder at the metal substrate in order to deposit powder
+
+\section*{Nomenclature}
+A Laser energy absorptance of a material
+
+$T \quad$ Temperature of the powder system or melt, ${ }^{\circ} \mathrm{C}$
+
+$T_{\text {amb }} \quad$ Ambient temperature, ${ }^{\circ} \mathrm{C}$
+
+$T_{\mathrm{P}} \quad$ Temperature of powder particles, ${ }^{\circ} \mathrm{C}$
+
+$t \quad$ Interaction time, $s$
+
+$P \quad$ Laser power, $\mathrm{W}$
+
+$k \quad$ Effective conductivity of powder bed, $\mathrm{W} /\left(\mathrm{m}{ }^{\circ} \mathrm{C}\right)$
+
+$k_{\mathrm{f}} \quad$ Thermal conductivity of the fluid, $\mathrm{W} /\left(\mathrm{m}{ }^{\circ} \mathrm{C}\right)$
+
+$k_{\mathrm{s}} \quad$ Thermal conductivity of the powder solid, $\mathrm{W} /\left(\mathrm{m}{ }^{\circ} \mathrm{C}\right)$
+
+$k_{\mathrm{r}} \quad$ Thermal conductivity portion due to the radiation, $\mathrm{W} /$ $\left(\mathrm{m}{ }^{\circ} \mathrm{C}\right)$
+
+$\rho \quad$ Material density, $\mathrm{kg} / \mathrm{m}^{3}$
+
+$\rho_{\mathrm{f}} \quad$ Fluid density, $\mathrm{kg} / \mathrm{m}^{3}$
+
+$\rho_{\mathrm{s}} \quad$ Density of the solid, $\mathrm{kg} / \mathrm{m}^{3}$
+
+$\rho_{\mathrm{p}} \quad$ Density of the powder materials, $\mathrm{kg} / \mathrm{m}^{3}$
+
+$C_{\mathrm{p}} \quad$ Specific heat capacity, $\mathrm{J} /\left(\mathrm{kg}{ }^{\circ} \mathrm{C}\right)$
+
+$x, y, z \quad$ Spatial co-ordinates, $\mathrm{m}$
+
+Q Heat generated per volume, $\mathrm{W} / \mathrm{m}^{3}$
+
+$n \quad$ Normal vector
+
+$q \quad$ Input heat flux, $\mathrm{W} / \mathrm{m}^{2}$
+
+$q_{\text {con }} \quad$ Heat convection, $\mathrm{W} / \mathrm{m}^{2}$
+
+\begin{center}
+\begin{tabular}{ll}
+$q_{\mathrm{rad}}$ & Heat radiation, $\mathrm{W} / \mathrm{m}^{2}$ \\
+$h$ & Coefficient of heat transfer, $\mathrm{W} /\left(\mathrm{m}^{2}{ }^{\circ} \mathrm{C}\right)$ \\
+$\mathrm{Nu}$ & Nusselt number \\
+$\mathrm{Pr}$ & Prandtl numbers \\
+$\mathrm{Gr}$ & Grashof numbers \\
+$g$ & Gravitational acceleration, $\mathrm{m} / \mathrm{s}^{2}$ \\
+$\beta_{\mathrm{f}}$ & Volumetric expansivity, $/{ }^{\circ} \mathrm{C}$ \\
+$\eta_{\mathrm{f}}$ & Fluid viscosity, (Pa s) \\
+$\sigma$ & Stefan-Boltzmann constant, $\mathrm{W} /\left(\mathrm{m}^{2} \mathrm{~K}^{4}\right)$ \\
+$\varepsilon$ & Emissivity \\
+$\varepsilon_{\mathrm{s}}$ & Emissivity of the powder particles \\
+$\varepsilon_{\mathrm{H}}$ & Emissivity of the hole \\
+$A_{\mathrm{H}}$ & Area fraction \\
+$\varphi$ & Porosity of the powder bed \\
+$R$ & Radius of the Gaussian laser beam, $\mathrm{m}$ \\
+$r$ & Radial distance from a point to the center of the laser \\
+ & beam, $\mathrm{m}$ \\
+$H$ & Enthalpy, $\mathrm{J} / \mathrm{m}^{3}$ \\
+$F_{0}$ & View factor \\
+$D_{\mathrm{P}}$ & Average diameter of the powder particles, $\mathrm{m}$ \\
+$M$ & One of the material physical properties \\
+$M_{\mathrm{n}}$ & Physical property of one of the components \\
+$x_{\mathrm{n}}$ & Mass fraction of one of the components \\
+\end{tabular}
+\end{center}
+
+layers with well designed thickness. Fully dense parts are created by a laser beam with a high intensity in a special scanning strategy, local melting and subsequent solidification of the powder bed in successive layers [10]. As the laser beam is scattered through the powder bed, the energy is absorbed by powder particles via both powder-coupling and bulk-coupling mechanisms [11]. The powder system experiences a rapid cooling rate (up to $10^{6-7}{ }^{\circ} \mathrm{C} / \mathrm{s}$ ) during the interaction between the powder particles and the laser beam, which has a substantial effect on the generation of fine and uniform microstructure, as well as resultant mechanical properties of final components $[12,13]$. The materials in SLM process have a tendency to experience a significant non-equilibrium physical and chemical metallurgical process, exhibiting multiple modes of heat, mass and momentum transfer [14]. The typical defects associated with SLM such as "balling effect", residual porosity, stress induced microcracks, warpage induced dimensional accuracy and delamination tend to occur under inappropriate processing parameters (laser power and scan speed) [15,16]. Therefore, to obtain the desired SLM-fabricated parts, the significant research efforts are required to study the relationship between processing parameters and melting/solidification mechanism. However, the experimental measurements of thermal-physical statistics during SLM process are considered to be difficult for it involves the fast moving of laser energy source, the limited liquid lifetime of the molten pool and the extremely high cooling rate of the elevated-temperature melt. Consequently, the numerical simulation approach is typically chosen as an alternative to solve the problems mentioned above.
+
+In fact, some heat conduction three-dimensional models have been established to investigate the thermal behavior and further melting/solidification mechanism during SLM process recently. Gusarov et al. [17] simulated and analyzed the temperature distribution of steel $316 \mathrm{~L}$ powder bed during SLM process. The analysis of the capillary stability of the segmental cylinder applied to the calculated melt pool estimated the stability of the process depending on the scanning velocity, powder layer thickness, and the material optical and thermal properties in the developed model. The results showed that the thermal-physical phenomenon was highly dependent on the processing parameters (laser power, scan speed, thickness of powder layer, properties of materials, etc.). Roberts et al. [18] proposed a three dimensional thermal model for fabrication of TiAl6V4 parts, considering the temperature-dependent thermal-physical properties, which is beneficial to improve the computational accuracy. This model involving multiple layers was equally of great importance because the thermal interactions of successive layers affected the temperature gradients, which governed the heat transfer and thermal stress development mechanisms. The work predicted the transient temperature distribution during the production. It was found that the laser region experienced rapid thermal cycles accompanied with commensurate stress cycles. Ali Foroozmehr et al. [19] conducted the finite element simulation of steel $316 \mathrm{~L}$ SLM process considering optical penetration depth and, each calculating step is divided into some smaller sub-steps where the change in the materials properties from "powder" to "solid" occurred for improving calculation precision. They paid attention to the influences of the different scan speeds on the melt pool depth, width, and length. It suggested that the melt pool size varied from the beginning of a track to its end and from the first track to the next one. The melt pool size, however, reached a stable condition after a few tracks. To date, although there are some numerical simulations have been carried out to investigate the thermal behavior during laser processing of metal powder system, the rare researches focus on the thermal behavior and melting/solidification mechanism during SLM of TiC/Inconel 718 powder system. Meanwhile, the simulation three-dimensional models are needed to be further perfected and optimized for more precise calculation and simulating the actual fabrication process excellently.
+
+In this investigation, a three-dimensional finite element model was established based on the models mentioned above to predict the relationship between melting/solidification mechanism and processing parameters, using ANSYS 13.0 software. Latent heat of phase change, multiple heat transfer mechanisms, temperaturedependent thermal physical properties and cooling time during powder delivery were considered in order to precisely simulate the actual production process, as well as improve the calculation accuracy. Moreover, the movement of Gaussian laser source and the laser energy loading of multi-layer and multi-track were realized using APDL secondary development language. The effects of\\
+laser power and scan speed on the thermal behavior and the forming mechanism of cross-sectional configuration of the molten pool were analyzed. The formation mechanisms of processing defects, such as "balling effect", warpage, pores, microcracks, delamination, etc. were discussed in order to optimize the processing parameters and obtain desired SLM-produced parts. Meanwhile, the corresponding experiments were also implemented to investigate the microstructure of the SLM-produced components with different laser processing conditions for verifying the reliability and accuracy of the model proposed in this paper.
+
+\section*{2. Model descriptions for SLM process}
+\subsection*{2.1. Physical description of SLM}
+Fig. 1 depicts the schematic overview of the interaction zone between laser radiation and powder. As the top surface of the powder bed is irradiated by the incident laser beam, a small fraction of laser energy is dissipated by radiation and convection. The remainder, the vast majority of laser energy, is absorbed by powder particles, leading to the rapid heating and resultant localized melting. After the moving Gaussian laser heat source leaves the melt region, which is called molten pool, rapid consolidation of the melt occurs. Then the metallurgical bonding is formed between the adjacent tracks and the neighbor layers. The heat transfer mechanism of SLM process mainly includes laser radiation to powder bed, heat conduction among metal base plate and powder particles and heat convection between the boundaries of powder layer and chamber atmosphere. These three coupled heat transfer mechanisms make the thermal behavior of SLM process become extremely complex [20].
+
+\subsection*{2.2. Basic setup of the finite element model}
+The numerical simulation is carried out using ANSYS multiphysics finite element package to obtain a thorough understanding of the temperature evolution behavior and resultant phenomenon like temperature gradient, metallurgical defects and deformation during SLM process. The established three-dimensional finite model and laser scan strategy during SLM process are shown in Fig. 2. The dimensions of the computational model of TiC/Inconel 718 powder bed are $1.4 \mathrm{~mm} \times 0.385 \mathrm{~mm} \times 0.1 \mathrm{~mm}$ with two layers. The height of each power layer is $50 \mu \mathrm{m}$ and, the C45 medium carbon steel block with the dimensions of $1.7 \mathrm{~mm} \times 0.7 \mathrm{~mm} \times 0.3 \mathrm{~mm}$ is taken as the metal substrate
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3d8b51f9bfd3b941d680g-03}
+\end{center}
+
+Fig. 1. Schematic overview of the interaction zone between laser radiation and powder bed. beneath the powder layers. The coordinate origin of this physical model lies at the left bottom of the second powder layer as shown in Fig. 2(a) and, its X-axis, Y-axis and Z-axis are located along the laser scan direction, perpendicular to the laser scan direction and from top surface to bottom of the powder layers. Considering the computational precision and simulation efficiency, the ANSYS Solid70 hexahedron element with the fine mesh of $0.0175 \mathrm{~mm} \times 0.0175 \mathrm{~mm} \times 0.025 \mathrm{~mm}$ is utilized in the powder bed, while, a relatively coarse tetrahedron mesh is adopted in the substrate. The three-dimensional simulation model is meshed into 11,745 nodes and 25,532 elements in all. In order to mimic the cooling time involved during the delivery of each powder layer, there is a $10-\mathrm{ms}$ cooling time between the fabrications of neighbor layers. This time is converted by the real time during powder delivery of actual laser processing according to the ratio of the top surface area of the physical model and the area of the real powder delivery during previous experiments. Every calculating step is divided into two smaller sub-steps for improving calculation precision. Each powder layer is processed track by track in a reciprocating raster pattern as shown in Fig. 2(b). Point 1, Point 2 and Point 3 lie at the center of the first scan track, second scan track and fourth scan track, respectively. Path A-B locates on the top surface of the first powder layer along the $\mathrm{Y}$ direction at $\mathrm{X}=0.7 \mathrm{~mm}$ and $\mathrm{Z}=0.05 \mathrm{~mm}$. The applied laser processing parameters are listed in Table 1.
+
+\subsection*{2.3. Governing equations}
+In selective laser melting, the localized heating of the powder bed by the laser beam results in a heat transfer in the material dominated by conductive heat transfer. The spatial and temporal distribution of the temperature field satisfies the heat conduction equation, which can be expressed as [22]:
+
+$\rho C_{\mathrm{p}} \frac{\partial T}{\partial t}=\frac{\partial}{\partial x}\left(k \frac{\partial T}{\partial x}\right)+\frac{\partial}{\partial y}\left(k \frac{\partial T}{\partial y}\right)+\frac{\partial}{\partial z}\left(k \frac{\partial T}{\partial z}\right)+\dot{Q}$
+
+where $T$ is the temperature of the powder system, $t$ is the interaction time between laser beam and powder bed, $(x, y, z)$ are the spatial co-ordinates, $k$ is the effective thermal conductivity of powder bed, $\rho$ is the material density, $C_{\mathrm{p}}$ is the specific heat capacity and, $Q$ is the heat generated per volume within the component.
+
+The initial condition of the temperature distribution in the powder bed and substrate at time $t=0$ is defined as:
+
+$\left.T(x, y, z, t)\right|_{t=0}=T_{\text {amb }} \quad(x, y, z) \in D$
+
+where $T_{\mathrm{amb}}$ is the ambient temperature and is taken as $20^{\circ} \mathrm{C}$.
+
+The thermal boundary conditions for powder, liquid and solid can be expressed by [23]:
+
+$k \frac{\partial T}{\partial n}-q+q_{\mathrm{con}}+q_{\mathrm{rad}}=0 \quad(x, y, z) \in S$
+
+where $S$ represents the surfaces which are attached to imposed heat fluxes, radiation and convection, $n$ is the normal vector of surface $S$, the input heat flux $q$ is presented in the following by Eq. (14). The heat loss $q_{\text {con }}$ due to natural convection of the fluid around the powder bed is described by:
+
+$q_{\mathrm{con}}=h\left(T-T_{\mathrm{amb}}\right)$
+
+where $h$ is the coefficient of heat transfer. $h$ is size- and temperature-dependent and can be expressed as:
+
+$h=\frac{N u k_{\mathrm{f}}}{L}$
+
+where $L$ is the characteristic length of the specimen, $N u$ is the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3d8b51f9bfd3b941d680g-04}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3d8b51f9bfd3b941d680g-04(1)}
+\end{center}
+
+Fig. 2. The established three-dimensional finite element model (a) and laser scan strategy (b) during SLM process (Point 1, Point 2 and Point 3 at the center of the 1 st scan track, 2nd scan track and 4th scan track, respectively).
+
+Table 1
+
+Finite element simulation parameters.
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Parameter & Value \\
+\hline
+Absorptivity, $A$ & $0.72[21]$ \\
+Powder layer thickness, $d$ & $50 \mu \mathrm{m}$ \\
+Laser spot size, $D$ & $70 \mu \mathrm{m}$ \\
+Hatch spacing, $s$ & $50 \mu \mathrm{m}$ \\
+Ambient temperature, $T_{0}$ & $20^{\circ} \mathrm{C}$ \\
+Laser power, $P$ & $75,100,125,150 \mathrm{~W}$ \\
+Scan speed, $v$ & $50,100,200,300 \mathrm{~mm} / \mathrm{s}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Nusselt number and $k_{\mathrm{f}}$ is the thermal conductivity of the fluid in the atmosphere. $\mathrm{Nu}$ is equal to:
+
+$\sqrt{N u}=\sqrt{N u_{0}}+\left[\frac{\operatorname{GrPr} / 300}{\left(1+(0.5 / \operatorname{Pr})^{9 / 16}\right)^{16 / 9}}\right]^{1 / 6}$
+
+where $\mathrm{Pr}$ and $\mathrm{Gr}$ are Prandtl numbers and Grashof numbers, respectively, which can be estimated by:
+
+$G r=g \frac{L^{3} \rho_{\mathrm{f}}^{2} \beta_{\mathrm{f}}\left(T-T_{\mathrm{amb}}\right)}{\eta_{\mathrm{f}}^{2}}$
+
+and
+
+$\operatorname{Pr}=\frac{C_{\mathrm{p}} \eta_{\mathrm{f}}}{k_{\mathrm{f}}}$
+
+where $g$ is the gravitational acceleration, $\rho_{\mathrm{f}}$ is the fluid density, $\beta_{\mathrm{f}}$ is the volumetric expansivity, $\eta_{\mathrm{f}}$ is the fluid viscosity and $C_{\mathrm{p}}$ is the specific heat of the fluid.
+
+The heat loss qrad due to radiation of the powder layer is equal to:
+
+$q_{\mathrm{rad}}=\sigma \varepsilon\left(T^{4}-T_{\mathrm{amb}}^{4}\right)$
+
+where $\sigma$ is the Stefan-Boltzmann constant $\left(5.67 \times 10^{-8} \mathrm{~W} /\left(\mathrm{m}^{2} \mathrm{~K}^{4}\right)\right)$ and $\varepsilon$ is the emissivity of powder bed which can be expressed as:
+
+$\varepsilon=A_{\mathrm{H}} \varepsilon_{\mathrm{H}}+\left(1-A_{\mathrm{H}}\right) \varepsilon_{\mathrm{s}}$
+
+where $\varepsilon_{\mathrm{s}}$ is the emissivity of the powder particles. $A_{\mathrm{H}}$ and $\varepsilon_{\mathrm{H}}$ are the area fraction of the surface that is occupied by the radiationemitting holes and the emissivity of the hole, respectively and
+
+$A_{\mathrm{H}}=\frac{0.908 \varphi^{2}}{1.908 \varphi^{2}-2 \varphi+1}$
+
+and
+
+$\varepsilon_{\mathrm{H}}=\frac{\varepsilon_{S}\left[2+3.082\left(\frac{1-\varphi}{\varphi}\right)^{2}\right]}{\varepsilon_{\mathrm{S}}\left[1+3.082\left(\frac{1-\varphi}{\varphi}\right)^{2}\right]+1}$
+
+where $\varphi$ is the porosity of the powder bed which can be written as\\
+[20]:
+
+$\varphi=\frac{\rho_{\mathrm{s}}-\rho_{\mathrm{p}}}{\rho_{\mathrm{s}}}$
+
+where $\rho_{\mathrm{s}}$ and $\rho_{\mathrm{p}}$ are the density of the solid and powder materials, respectively. The porosity is assumed to vary from $\varphi=0.4$ for powder to $\varphi=0$ for solid and it is taken as 0.4 in this paper.
+
+\subsection*{2.4. Design of moving Gaussian heat source model}
+Powder bed is rapid heated and localized melt by laser heat source and the distribution of the laser beam intensity follows nearly a Gaussian relationship, which was mathematically presented as [24]:
+
+$q=\frac{2 A P}{\pi R^{2}} \exp \left(-\frac{2 r^{2}}{R^{2}}\right)$
+
+where $A$ is the laser energy absorptivity of TiC/Inconel 718 powder system as shown in Table 1, $P$ is the laser power, $R$ represents the radius of the Gaussian laser beam, which denotes the distance from the center of the laser beam to the point at which the energy reduced to its $1 / \mathrm{e}^{2}$ and $r$ is the radial distance from a point on the powder bed surface to the center of the laser beam.
+
+The latent heat occurred in the phase change, such as melting and solidification phenomenon in laser processing, cannot be negligible for the precision of simulation. In that case, the enthalpy is utilized to define the latent heat and expressed as a function of temperature:
+
+$H=\int \rho C_{\mathrm{p}} d T$
+
+where $H$ is the enthalpy, $\rho$ is the material density, $C_{\mathrm{p}}$ is the specific heat capacity and $T$ is the temperature of the melt formed in SLM process.
+
+\subsection*{2.5. Determination of thermal-physical parameters}
+Effective thermal conductivity of the powder layer, $k$, is defined by [25]:
+
+
+\begin{align*}
+\frac{k}{k_{\mathrm{f}}}= & (1-\sqrt{1-\varphi})\left(1+\frac{\varphi k_{\mathrm{r}}}{\mathrm{k}_{\mathrm{f}}}\right) \\
+& +\sqrt{1-\varphi} \times\left\{\frac{2}{1-\frac{k_{\mathrm{f}}}{k_{\mathrm{s}}}}\left[\frac{1}{\left(1-\frac{k_{\mathrm{f}}}{k_{\mathrm{s}}}\right)^{2}}\left(1-\frac{k_{\mathrm{f}}}{k_{\mathrm{s}}}\right) \ln \left(\frac{k_{\mathrm{s}}}{k_{\mathrm{f}}}\right)-1\right]+\frac{k_{\mathrm{r}}}{k_{\mathrm{f}}}\right\} \tag{16}
+\end{align*}
+
+
+where $\varphi$ is the porosity of the powder bed, $k_{\mathrm{f}}$ is the thermal conductivity of the fluid surrounding the powder and substrate, i.e. argon in this case. $k_{\mathrm{s}}$ is the thermal conductivity of the powder solid and $k_{\mathrm{r}}$ is the thermal conductivity portion due to the radiation among powder particles which follows the expression:
+
+$k_{\mathrm{r}}=4 F_{0} \sigma T_{\mathrm{P}}^{3} D_{\mathrm{P}}$
+
+Table 2
+
+Thermal-physical parameters of Inconel 718 [26].
+
+\begin{center}
+\begin{tabular}{lrrrrrrr}
+\hline
+$T\left[{ }^{\circ} \mathrm{C}\right]$ & 20 & 100 & 200 & 400 & 600 & 800 & 1300 \\
+\hline
+$k_{s}\left[\mathrm{~W} /\left(\mathrm{m}{ }^{\circ} \mathrm{C}\right)\right]$ & 10 & 12 & 14 & 17 & 20 & 26 & 31 \\
+$c\left[\mathrm{~J} /\left(\mathrm{kg}^{\circ} \mathrm{C}\right)\right]$ & 362 & 378 & 400 & 412 & 460 & 544 & 583 \\
+\hline
+\end{tabular}
+\end{center}
+
+where $F_{0}$ is a view factor which is approximately taken as $1 / 3, T_{\mathrm{P}}$ is the temperature of powder particles and $D_{\mathrm{P}}$ is the average diameter of the powder particles.
+
+Thermal-physical properties of the mixture like TiC/Inconel 718 in that case can be estimated by:
+
+$M=\sum_{\mathrm{n}} x_{\mathrm{n}} M_{\mathrm{n}}$
+
+where $M$ is one of the material physical properties, $M_{\mathrm{n}}$ and $x_{\mathrm{n}}$ are the physical property of one of the components in the powder and the mass fraction of this component among all the components. The weight ratio of $\mathrm{TiC} /$ Inconel 718 is $0.25: 0.75$ in this paper. The melting point of Inconel 718 is $1300{ }^{\circ} \mathrm{C}$ with the density of $8200 \mathrm{~kg} / \mathrm{m}^{3}$, while reinforcing TiC particle has a relatively high melting point of $3067{ }^{\circ} \mathrm{C}$ and a density of $4910 \mathrm{~kg} / \mathrm{m}^{3}$. Other thermal-physical parameters of solid of Inconel 718 and TiC involved in the numerical calculation are shown in Tables 2 and 3. However, it has to be noted that the properties of the powder and the solid are radically different, especially the thermal conductivities and specific heat capacity. The properties of powder can be defined by:
+
+$M=M_{\mathrm{n}}(1-\varphi)$
+
+where $M$ is one of the material physical properties, $M_{n}$ is the physical property of one of the components in the powder and $\varphi$ is the porosity of the powder bed.
+
+\section*{3. Experiments}
+\subsection*{3.1. Powder materials}
+The powder used in this study as starting materials includes the spherical Inconel 718 powder with a size distribution of 15$45 \mu \mathrm{m}$, which is produced by gas atomization method, the TiC nanopowder with polygonal shape and its size in an average of $50 \mathrm{~nm}$. The chemical compositions of Inconel 718 powder are shown in Table 4. The Inconel 718 and TiC components with a weight ratio of $0.75: 0.25$ are mixed homogeneously in a Fritch Pulverisette 6 planetary ball mill (Fritsch GmbH, Germany) with a rotation speed of the main disc of $200 \mathrm{rpm}$, a ball-to-powder weight ratio of 5:1 and a milling time of $4 \mathrm{~h}$.
+
+\subsection*{3.2. Laser processing}
+The SLM experimental equipment developed by the Fraunhofer ILT is used in the SLM process experiment. The equipment mainly consists of a YLR-200-SM fiber laser with a output power of $\sim 200 \mathrm{~W}$ and a spot diameter of $70 \mu \mathrm{m}$, an automatic system for powder delivery and a computer system for process control. The
+
+Table 3
+
+Thermal-physical parameters of TiC [27].
+
+\begin{center}
+\begin{tabular}{lrrrrrrr}
+\hline
+$T\left[{ }^{\circ} \mathrm{C}\right]$ & 20 & 100 & 200 & 400 & 600 & 800 & 1300 \\
+\hline
+$k_{s}\left[\mathrm{~W} /\left(\mathrm{m}^{\circ} \mathrm{C}\right)\right]$ & 23 & 24 & 25 & 29 & 32 & 34 & 39 \\
+$c\left[\mathrm{~J} /\left(\mathrm{kg}^{\circ} \mathrm{C}\right)\right]$ & 543 & 623 & 683 & 772 & 840 & 870 & 899 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 4
+
+Chemical compositions of Inconel 718 powder (in weight percent, wt\%).
+
+\begin{center}
+\begin{tabular}{llllllll}
+\hline
+$\mathrm{Cr}$ & $\mathrm{Mo}$ & $\mathrm{Al}$ & $\mathrm{Ti}$ & $\mathrm{Fe}$ & $\mathrm{Nb}$ & $\mathrm{C}$ & $\mathrm{Ni}$ \\
+\hline
+18.4 & 4.2 & 0.3 & 0.9 & 17.7 & 5.1 & 0.08 & Balance \\
+\hline
+\end{tabular}
+\end{center}
+
+entire SLM process is conducted in the protection of argon atmosphere. The processing parameters in the experiments are same as those in the simulation listed in the Table 1. The samples for metallographic examinations were cut, ground and polished according to standard procedures strictly. The cross-sectional microstructures of the SLM-produced TiC/Inconel 718 parts were characterized using a PMG3 optical microscopy (Olympus Corporation, Japan). The characteristic surface morphologies of the parts were characterized by scanning electron microscopy (SEM; Hitachi model S-4800, Japan) in secondary electron mode at $10 \mathrm{kV}$.
+
+\section*{4. Results and discussion}
+\subsection*{4.1. Characteristics of temperature distributions in SLM process}
+Fig. 3 shows the transient temperature distribution on the top surface and longitudinal view of the molten pool as laser beam reaches Point 1, Point 2 and Point 3, respectively, with $v$ of $100 \mathrm{~mm} / \mathrm{s}$ and $P$ of $125 \mathrm{~W}$ (Fig. 2(b)). At the center of the first track (Point 1, Fig. 2(b)), the isotherm curves on the top surface of the molten pool are similar to a series of ellipses and, the ellipses of fore part are more intensive than those at the back-end of it. Meantime, it is asymmetry of isotherms along the laser scanning direction. However, this phenomenon is not conspicuous enough as shown in temperature contour pots (Fig. 3). The dashed line circle shown in the temperature contour plots presents the melting temperature of Inconel $718\left(1300^{\circ} \mathrm{C}\right)$. The temperature in this dashed line circle is higher compared with the melting point of Inconel 718, which induces a small molten pool within this region. The predicted operative temperature of the molten pool reduces from $2113{ }^{\circ} \mathrm{C}$ in the center of the melt to $1182^{\circ} \mathrm{C}$ at the edge of the molten pool as the laser beam reaches Point 1. Three dimensions of the molten pool are approximately $95.5 \mu \mathrm{m}$ (width), $106.5 \mu \mathrm{m}$ (length) and $61.3 \mu \mathrm{m}$ (depth), respectively (Fig. 3(a) and (b)). Then the laser spot further moves to the Point 2, the working temperature of the molten pool decreases from $2291{ }^{\circ} \mathrm{C}$ in the center to $1290{ }^{\circ} \mathrm{C}$ at the edge of the molten pool. There, then, is a cooling time of $10-\mathrm{ms}$ after the fabrication of $\mathrm{n}$ layer is completed by scanning track by track and, then, the SLM process of $n+1$ layer continues. The predicted working temperature of the molten pool ranges from $2348{ }^{\circ} \mathrm{C}$ in the center to $1345^{\circ} \mathrm{C}$ at the edge of the pool as the laser beam reaches Point 3. Comparing three dimensions of molten pool in Point 2 with these three figures of the pool in Point 1, the width $(109.3 \mu \mathrm{m})$, length $(120.7 \mu \mathrm{m})$ and depth $(67.8 \mu \mathrm{m})$ of the melt pool at Point 2 increases by $14.5 \%, 13.3 \%$ and 10.6\%, respectively, to these at Point 1 (Fig. 3(c) and (d)). In addition, comparing these three figures of Point 3 with these of Point 1 , the width $(124.1 \mu \mathrm{m})$, length $(132.2 \mu \mathrm{m})$ and depth $(73.1 \mu \mathrm{m})$ of the molten pool at Point 3 are also slightly larger than these at Point 2, increasing by $13.5 \%, 9.5 \%$ and $7.8 \%$, respectively (Fig. 3 (e) and (f)).
+
+The simulation temperature contour plots show that the isotherm ellipses of the fore-part of molten pool (unscanned region) arrange more intensive than these at back-end of the melt (scanned region). This is mainly attributed to the change of thermal conductivities of $\mathrm{TiC}$ /Inconel 718 , which are listed partly in Tables 2 and 3, due to the transition from powder to solid. This kind of transformation from powder to block contributes to the\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_3d8b51f9bfd3b941d680g-06}
+
+(b)
+
+Longitudinal view of Point 1\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_3d8b51f9bfd3b941d680g-06(1)}
+
+Fig. 3. Temperature contour plots during SLM processing ( $v=100 \mathrm{~mm} / \mathrm{s}$ and $P=125 \mathrm{~W}$ ). (a), (c) and (e): top surface of the molten pool of Point 1 , Point 2 and Point 3 , respectively; (b), (d) and (f): longitudinal view of the molten pool of Point 1, Point 2 and Point 3, respectively.
+
+heat transmission in the powder layer. Meantime, there is inconspicuous asymmetry of isotherms along the laser scanning direction since the special thermal-physical properties of materials, especially the thermal conductivities of $\mathrm{TiC} /$ Inconel 718 . The differences between thermal conductivities of high-temperature and low-temperature are small (Tables 2 and 3), leading to the inconspicuous discrepancy of thermal conductive ability on two sides of unprocessed region and processed region along scanning\\
+direction. During SLM process, the fabrication is completed track by track and then layer by layer. The average temperature and molten pool size described in simulation results are increasing gradually. This is mainly due to the fact that the heat stored in previous produced part has a significant influence on the next processing tracks and layers, i.e. heat accumulation effect. Furthermore, the energy losses caused by conduction are higher than the radiation and convection during processing layer by layer, and the development of shaped layers will weaken the ability of heat dissipation by conduction [28]. This phenomenon leads to a higher temperature and a larger molten pool. Fortunately, the existence of cooling time of $10-\mathrm{ms}$ between productions of neighbor layers can relieve heat accumulation to a certain extent, then controlling the molten pool size change in a qualified scope. Excellent dimensional stability of molten pool size guarantees the homogeneity of liquid column size and, resultantly, improving the quality of SLMproduces parts.
+
+\subsection*{4.2. Molten pool dimensions at different SLM processing parameters}
+Fig. 4 depicts the three dimensions of the molten pool under different laser powers and scan speeds during SLM process of TiC/ Inconel 718. It is observed that the length, width and depth of the molten pool are approximately in positive liner relationship with the applied laser power. As the utilized power is increased from $75 \mathrm{~W}$ to $150 \mathrm{~W}$, the pronounced enhancement of three dimensions of the molten pool, i.e. length (from $50.8 \mu \mathrm{m}$ to $217.2 \mu \mathrm{m}$ ), width (from $34.3 \mu \mathrm{m}$ to $211.9 \mu \mathrm{m}$ ) and depth (from $27.3 \mu \mathrm{m}$ to $85.3 \mu \mathrm{m}$ ), respectively, is observed (Fig. 4(a)). However, it can be seen that the three dimensions of the molten pool reduces with the increment of the applied scan speed. On increasing the applied scan speed from $50 \mathrm{~mm} / \mathrm{s}$ to $300 \mathrm{~mm} / \mathrm{s}$, the length of the molten pool decreases evidently from $239.8 \mu \mathrm{m}$ to $91.2 \mu \mathrm{m}$. Meanwhile, the width of the molten pool reduces from $215.2 \mu \mathrm{m}$ to $78.0 \mu \mathrm{m}$ and, the depth of the molten pool decreases from $91.6 \mu \mathrm{m}$ to $49.8 \mu \mathrm{m}$ (Fig. 4(b)). Further, the calculation results manifest that the decreasing tendency becomes less pronounced as the utilized scan speed is increased above $100 \mathrm{~mm} / \mathrm{s}$.
+
+Since SLM is a multi-track and multi-layer additive manufacturing based laser scanning, thus, a successful SLM fabrication should be realized by the well bonding between adjacent scan tracks and neighbor layers through rapid heating, complete melting and subsequent sufficient solidification [29]. The geometric dimension precision and density of the SLM-fabricated parts are pronounced affected by the metallurgical bonding ability between the neighbor layers and adjacent tracks. Furthermore, there is a significant connection between the metallurgical bonding and three-dimension of the molten pool. As the combination of scan speed of $100 \mathrm{~mm} / \mathrm{s}$ and laser power of $75 \mathrm{~W}$ is applied, a narrow melt pool is obtained with its depth of $27.3 \mu \mathrm{m}$ and width of $34.3 \mu \mathrm{m}$, which is obviously less than the powder layer thickness $(50 \mu \mathrm{m})$ and hatch spacing $(50 \mu \mathrm{m})$, respectively, thus, leading to the poor metallurgical bonding between neighbor layers and adjacent tracks since the necessary overlap is not realized. At a relatively higher laser power of $100 \mathrm{~W}$ combined with a constant scan speed of $100 \mathrm{~mm} / \mathrm{s}$, the obtained molten pool depth $(53.6 \mu \mathrm{m})$ approximately equals to the thickness of powder layer, resulting in a relatively weak metallurgical bonding between neighbor layers. Moreover, when a high laser power ( $150 \mathrm{~W})$ with an extremely slow scan speed $(50 \mathrm{~mm} / \mathrm{s})$ is utilized, the three dimensions acquired (length: $239.8 \mu \mathrm{m}$, width: $215.2 \mu \mathrm{m}$ and depth: $91.6 \mu \mathrm{m})$ are obviously larger than results required. Excessive remelting of width and depth arising from large molten pool three dimensions results in the stress accumulation in the remelting region. It is responsible for the attendant microcracks in SLMprocessed parts and distortion of the parts. It thus can be concluded that a SLM-fabricated part with high density and outstanding metallurgical bonding ability cannot be obtained under the above mentioned laser processing conditions.
+
+\subsection*{4.3. Effect of laser processing conditions on thermal behavior}
+Fig. 5 shows the effects of laser processing parameters on the temperature distribution during SLM of TiC/Inconel 718 powder system along the $Y$-direction at $X=0.7 \mathrm{~mm}$ and $Z=0.05 \mathrm{~mm}$ (path A-B), and Z-direction at Point 2 (Fig. 2(b)). The slope of the curves shown in the figures presents the temperature gradient of the powder bed, and a steep slope means a relatively high temperature gradient. When the laser power is increased from $75 \mathrm{~W}$ to $150 \mathrm{~W}$, the maximum temperature gradient along the path A-B pronouncedly increases from $1.30 \times 10^{4}{ }^{\circ} \mathrm{C} / \mathrm{mm}$ to $2.60 \times 10^{4}{ }^{\circ} \mathrm{C}$ / $\mathrm{mm}$ (Fig. 5(a)). The maximum temperature gradient along the Z-direction also significantly increases from $1.36 \times 10^{4}{ }^{\circ} \mathrm{C} / \mathrm{mm}$ to $2.62 \times 10^{4}{ }^{\circ} \mathrm{C} / \mathrm{mm}$. Furthermore, the temperature trend of each curve along Z-direction is obviously divided into four parts. Part (1) and part (2) present the fabricating powder layer. Part (3) and part (4) mean the previous powder layer or metal substrate. The temperature distribution in every powder layer consists of two different segments and the temperature gradient of upper powder layer is higher than that of bottom powder layer. Taking the temperature distribution under processing condition of $P=125 \mathrm{~W}$ and $v=100 \mathrm{~mm} / \mathrm{s}$ as an example, the temperature gradients are $1.68 \times 10^{4}{ }^{\circ} \mathrm{C} / \mathrm{mm}, \quad 7.40 \times 10^{3}{ }^{\circ} \mathrm{C} / \mathrm{mm}, \quad 2.16 \times 10^{4}{ }^{\circ} \mathrm{C} / \mathrm{mm} \quad$ and $1.01 \times 10^{4} \mathrm{C} / \mathrm{mm}$, respectively, from the top surface of building\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_3d8b51f9bfd3b941d680g-07}
+
+Fig. 4. Three dimensions of the molten pool during SLM process of TiC/Inconel 718 powder system with different processing parameters. (a) different laser powers $(v=100 \mathrm{~mm} / \mathrm{s})$; (b) different scan speeds $(P=125 \mathrm{~W})$.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_3d8b51f9bfd3b941d680g-08(1)}\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_3d8b51f9bfd3b941d680g-08}
+
+Fig. 5. Temperature distribution during SLM of TiC/Inconel 718 powder. (a) along the path $A-B$ at $X=0.7 \mathrm{~mm}$ and $Z=0.05 \mathrm{~mm}$ on the top surface of the powder bed for different laser powers $(v=100 \mathrm{~mm} / \mathrm{s})$; (b) along the Z-direction at Point 2 for different laser powers $(v=100 \mathrm{~mm} / \mathrm{s})$; (c) along the path A-B at X=0.7 $\mathrm{mm}$ and $\mathrm{Z}=0.05 \mathrm{~mm}$ on the top surface of the powder bed for different scan speeds $(P=125 \mathrm{~W})$; (d) along the Z-direction at Point 2 for different scan speeds $(P=125 \mathrm{~W})$.
+
+layer to the bottom of previous layer or substrate (Fig. 5(b)). However, the maximum temperature gradient is affected negligibly by the variation of scan speed. When the laser scan speed is increased from $50 \mathrm{~mm} / \mathrm{s}$ to $300 \mathrm{~mm} / \mathrm{s}$, the maximum temperature gradient of different processing conditions fluctuates around $2.18 \times 10^{3}{ }^{\circ} \mathrm{C} / \mathrm{mm}$ along path A-B (Fig. 5(c)). Moreover, the temperature distribution curves of different operative speeds along Z-direction are approximately parallel arranged, where the maximum temperature gradient is about $2.40 \times 10^{3}{ }^{\circ} \mathrm{C} / \mathrm{mm}$. Similarly, the temperature distribution curves along Z-direction of molten pool are divided into four parts under varying scan speeds as same as these under different laser powers (Fig. 5(d)).
+
+The temperature distribution of the powder bed is affected directly by the laser power and, the scan speed indirectly influences temperature contour plots by changing the interaction time between the powder particles and laser beam. Or more precisely, the laser power has a more pronounced influence on the temperature gradient around the molten pool than the scan speed, as depicted by Fig. 5. Moreover, the maximum temperature gradient in Z-direction of the melt pool is relatively larger than that observed in Y-direction of the pool, which attributes to the heat flow direction in the molten pool. During SLM, the majority of laser energy is mainly dissipated through the pre-fabricated layers or metal substrate for the relatively higher thermal conductivity in this region. So the heat flow direction during the SLM process is approximately perpendicular to the surface of pre-processed layers and the temperature gradient in this direction is highest [30]. This high temperature gradient along Z-direction presents that rapid heating and solidification during SLM is an unsteady-state process. The microstructural features, like grain morphology, grain size and its size distribution, in SLM-fabricated parts show some interesting variation along Z-direction correspondingly. Hofmeister et al. [31] noted that the microstructure scale shows more sensitive to variations in Z-direction height than to differences in laser power and traverse velocity. Furthermore, when a relatively high laser power $(150 \mathrm{~W})$ is utilized, the finally solidified parts may suffer from residual stress accumulation due to the large temperature gradient $\left(2.62 \times 10^{4}{ }^{\circ} \mathrm{C} / \mathrm{mm}\right)$ between the hot melt region and the relatively cold substrate. This residual internal stress is responsible for the local inaccuracy, warpage and even delamination $[32,33]$.
+
+Fig. 6 depicts the variation of the maximum rate of temperature change with different processing conditions. It shows that the maximum rate of temperature change including the maximum heating rate and the maximum cooling rate is generally in positive linear relation with the utilized laser power and scan speed. The maximum heating rate is higher slightly than the maximum cooling rate (Figs. 6(a) and (b)). When the laser power is increased from $75 \mathrm{~W}$ to $150 \mathrm{~W}$, the maximum heating rate increases slightly from $2.70 \times 10^{6}{ }^{\circ} \mathrm{C} / \mathrm{s}$ to $5.42 \times 10^{6}{ }^{\circ} \mathrm{C} / \mathrm{s}$. The maximum cooling rate follows the similar variation tendency and it increases from $2.63 \times 10^{6}{ }^{\circ} \mathrm{C} / \mathrm{s}$ to $5.25 \times 10^{6}{ }^{\circ} \mathrm{C} / \mathrm{s}$. On increasing the applied scan speed from $50 \mathrm{~mm} / \mathrm{s}$ to $300 \mathrm{~mm} / \mathrm{s}$, the maximum heating rate increases obviously from $2.30 \times 10^{6}{ }^{\circ} \mathrm{C} / \mathrm{s}$ to $1.30 \times 10^{7}{ }^{\circ} \mathrm{C} / \mathrm{s}$. Meantime, the maximum cooling rate increase from $2.21 \times 10^{6}{ }^{\circ} \mathrm{C} / \mathrm{s}$ to $1.26 \times 10^{7} \mathrm{C} / \mathrm{s}$. Comparing the data from Fig. 6(a) and (b), it reveals that the scan speed has a more significant effect than the laser power on the rate of temperature change. More precisely, the rate of temperature change in the molten pool during SLM is more sensitive to the scan speed than to the laser power.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_3d8b51f9bfd3b941d680g-09(1)}
+
+Fig. 6. The variation of the maximum rate of temperature change with (a) different laser powers $(\nu=100 \mathrm{~mm} / \mathrm{s})$ and (b) different scan speeds ( $P=125 \mathrm{~W})$.
+
+As the track-by-track and layer-by-layer rapid melting and subsequent solidification process continues, the powder bed experiences a complex iteration behavior of heating and cooling, implying the latent heat of phase change and thermal cycles accompanied with stress cycles. On the other hand, the processing conditions play a crucial role in influencing thermal behavior and attendant mechanical properties of as-fabricated parts. When the laser beam scans through the powder bed with a high speed $(300 \mathrm{~mm} / \mathrm{s})$ or a relatively high laser power $(150 \mathrm{~W})$, the particles within the laser radiation region undergo an extremely rapid heating process with the maximum heating rate of $1.30 \times 10^{7} \mathrm{C} / \mathrm{s}$, which potentially results in thermo-capillary instability in the molten pool and droplets splashing from the melt pool. It is responsible for the balling effect on the top surface of every fabricating layer (Fig. 1). Meanwhile, local residual stress accumulation maybe occurs for the enormous cooling rate of $1.26 \times 10^{7}{ }^{\circ} \mathrm{C} / \mathrm{s}$ under scan speed of $300 \mathrm{~mm} / \mathrm{s}$ or laser power of $150 \mathrm{~W}$. It possibly gives rise to the increment of cracking susceptibility, distortion of SLM-processed parts and delamination between neighbor layers. It is worth noting that the combination of the lower heating rate of $4.52 \times 10^{6}{ }^{\circ} \mathrm{C} / \mathrm{s}$ and cooling rate of $4.38 \times 10^{6}{ }^{\circ} \mathrm{C} / \mathrm{s}$ has a tendency to reduce the possibility of these above metallurgical defects under a relatively low scan speed of $100 \mathrm{~mm} / \mathrm{s}$ and a laser power of $125 \mathrm{~W}$. In addition, it is contributory to the refinement of microstructure and, thus resultant synthesized mechanical properties of final components for the rapid melting/rapid solidification mechanism.
+
+The variation of the maximum temperature and the liquid lifetime of molten pool during SLM process with different parameters are shown in Fig. 7. It can be found clearly that the maximum temperature and the liquid lifetime are generally linear to the applied laser power. When the laser power increased from $75 \mathrm{~W}$ to $150 \mathrm{~W}$, the maximum temperature enhances sharply from $1524^{\circ} \mathrm{C}$ to $2690^{\circ} \mathrm{C}$ as a result of the higher laser energy density input. Meanwhile, the liquid lifetime of molten pool increased similarly from $0.51 \mathrm{~ms}$ to $2.15 \mathrm{~ms}$ (Fig. 7(a)). On the other hand, as the utilized scan speed increased from $50 \mathrm{~mm} / \mathrm{s}$ to $300 \mathrm{~mm} / \mathrm{s}$, the maximum temperature undergoes a slight decrement from $2495^{\circ} \mathrm{C}$ to $2080^{\circ} \mathrm{C}$ as an indirect response of the shorter interaction time between powder particles and laser beam. Accordingly, the liquid lifetime also shortens from $5.15 \mathrm{~ms}$ to $0.30 \mathrm{~ms}$. Moreover, it should be noted that the enhancement tendency of maximum temperature and liquid lifetime are alleviated when the scan speed is increased above $100 \mathrm{~mm} / \mathrm{s}$ (Fig. 7(b)). In addition, comparing the data from Fig. 7(a) and (b), it reveals that the laser power has a more pronounced effect than the scan speed on the maximum temperature and, the liquid lifetime of the molten pool during SLM is more sensitive to the scan speed than to the laser power.
+
+The TiC/Inconel 718 powder system is melted by the laser energy, which is directly influenced by the laser power and indirectly affected by the scan speed, to yield a high-temperature molten pool during SLM process. The thermal-physical parameters are changed for the transition of TiC/Inconel 718 form powder to solid, contributing to heat transmission in powder bed and resultant liquid phase with lower viscosity. It is helpful to improve the metal liquid wetting effect around TiC particles and, thus, enhance particle/matrix interfacial bonding ability, so that optimize comprehensive performance of the SLM-fabricated parts. However, An low scan speed $(50 \mathrm{~mm} / \mathrm{s})$ or an intense laser power ( $150 \mathrm{~W}$ ) applied in the SLM process yields an extremely long liquid lifetime\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_3d8b51f9bfd3b941d680g-09}
+
+Fig. 7. The maximum temperature and the liquid lifetime of the molten pool during SLM process using different processing parameters. (a) different laser powers $(v=100 \mathrm{~mm} / \mathrm{s})$; (b) different scan speeds $(P=125 \mathrm{~W}$ ).
+
+( $5.15 \mathrm{~ms})$, maybe, resulting in the formation of gas since the gas atoms release from the lattice in heat affected zone, as proposed by Weingarten [34]. This phenomenon causes the appearance of spherical pores and the attendant high porosity in SLM-produced parts. Moreover, these pores appear generally in the back-end of the molten pool, as revealed by Fig. 1. Meanwhile, when an overwhelmingly high scan speed $(300 \mathrm{~mm} / \mathrm{s})$ or an exceedingly low laser power $(75 \mathrm{~W})$ is used, an extremely short liquid lifetime $(0.30 \mathrm{~ms})$ and low temperature $\left(1524^{\circ} \mathrm{C}\right)$ occur, causing the formation of a small amount of liquid phase with a relatively high viscosity. It is detrimental for the wetting of the liquid phase among the gaps of powders, generating the appearance of irregular pores and the attendant high porosity in SLM-produced parts. In conclusion, an appropriate scan speed $(100 \mathrm{~mm} / \mathrm{s})$ combined with a suitable laser power ( $125 \mathrm{~W}$ ) plays a paramount role in SLM process of TiC/Inconel 718 with an appropriate temperature of $2291{ }^{\circ} \mathrm{C}$ and a proper liquid lifetime of $1.41 \mathrm{~ms}$.
+
+\subsection*{4.4. Effects of different processing parameters on molten pool configuration}
+Fig. 8 shows the melt depth and width divided by the total energy input (i.e. the melt depth per energy, $D_{\text {per }}$; the melt width per energy, $W_{\text {per }}$ ) at different powers and scan speeds. The ratio of the depth per energy/the width per energy (i.e. $R_{\mathrm{D} / \mathrm{W}}$ ) under the same processing parameters is depicted in Fig. 9, as well as the configuration of the molten pool formed under corresponding fabrication conditions in Fig. 10. It can be seen that $D_{\text {per }}$ and $W_{\text {per }}$ both increase as the laser power is increased and, both reduce with the decrease of scan speed. As the laser power is enhanced from $75 \mathrm{~W}$ to $150 \mathrm{~W}$, the $W_{\text {per }}$ increases obviously from $2.61 \mathrm{~mm} / \mathrm{J}$ to $8.07 \mathrm{~mm} / \mathrm{J}$ and, the $D_{\text {per }}$ elevates slightly from $2.08 \mathrm{~mm} / \mathrm{J}$ to $3.25 \mathrm{~mm} / \mathrm{J}$. Whereas the increasing tendency of the $D_{\text {per }}$ is moderate as the applied laser power is increased above $100 \mathrm{~W}$ (Fig. 8 (a)), leading to a decrement of the $R_{\mathrm{D} / \mathrm{W}}$ from 0.80 to 0.40 (Fig. 9 (a)) and a wide-shallow cross section of the molten pool correspondingly (Fig. 10(a)). On increasing the applied scan speed from $50 \mathrm{~mm} / \mathrm{s}$ to $300 \mathrm{~mm} / \mathrm{s}$, the $W_{\text {per }}$ increases extremely from $4.92 \mathrm{~mm} / \mathrm{J}$ to $10.70 \mathrm{~mm} / \mathrm{J}$, the $D_{\text {per }}$ enhances considerately from $2.09 \mathrm{~mm} / \mathrm{J}$ to $6.83 \mathrm{~mm} / \mathrm{J}$ (Fig. 8(a)). As a result, the $R_{\mathrm{D} / \mathrm{w}}$ elevates monotonously from 0.42 to 0.63 (Fig. 9(b)) and, consequently, a relatively deep-narrow configuration of molten pool along the Y-direction is formed as a high scan speed is utilized (Fig. 10(b)).
+
+A superior SLM-fabricated part is bonded by neighbor liquid columns with homogeneous and appropriate radius, thus a further understanding regarding the influential factors of the dimensions and configuration of liquid columns contributes to optimize the processing parameters and improve mechanical properties correspondingly. Fig. 8(a) and (b) reflect the energy efficiency in Z-direction and Y-direction of the molten pool, where the laser beam and powder particles interact between each other, indicating the heat flow direction in the melt. They suggest that low power $(75 \mathrm{~W})$ and high scan speed $(300 \mathrm{~mm} / \mathrm{s})$ are more energy efficient in Z-direction of the molten pool. More precisely, the relatively higher laser energy flows along Z-direction, leading to a higher $R_{\mathrm{D} / \mathrm{W}}(0.80)$ and a resultantly deep-narrow cross sectional view of the molten pool (Fig. 8-10). Whereas a high laser power ( $150 \mathrm{~W}$ ) or a low scan speed $\left(50 \mathrm{~mm} / \mathrm{s}\right.$ ) causes a low $R_{\mathrm{D} / \mathrm{W}}(0.40)$ and a wide-shallow cross section of the molten pool, meaning it is more energy efficient in the Y-direction of the melt (Fig. 8-10). The forming mechanism of the cross-sectional configuration of the molten pool at different processing conditions can be concluded as follows:
+
+(1) The fusion enthalpy of TiC/Inconel 718 powder system is the energy barrier for melting powder particles. The melt generates when accumulated heat reaches the energy barrier.
+
+(2) The laser beam with Gaussian power distribution reveals that the energy intensity of the laser beam periphery is pronounced weaker than that in the center.
+
+(3) The energy $(W=P t)$ accumulated in the periphery region cannot satisfy the fusion enthalpy, i.e. energy barrier, to hinder the generation of the melt under a low laser power or a high scan speed. However, the relatively more powerful laser energy in the center of the beam is absorbed through radiation on the top surface and conduction in the powder bed to melt powder along Z-direction, leading to a deep-narrow cross section of the molten pool. Differently, when a high laser power or a low scan speed is applied, it is easily to melt powder bed in both periphery and center region of the laser beam since enough energy accumulated. That is responsible to generate a wide and relatively shallow configuration of the molten pool.
+
+Consequently, it is beneficial to reduce the hatch spacing when the molten pool configuration is deep and narrow and, improve that when a wide-shallow configuration generates for a comparatively smooth surface and excellent bonding properties.
+
+\subsection*{4.5. Experimental investigation}
+The typical etched cross-sectional metallographic microstructures of shaped samples with varying laser powers are shown in Fig. 11, in order to investigate the layer-by-layer bonding\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_3d8b51f9bfd3b941d680g-10}
+
+Fig. 8. Numerical results of the melt depth/width per energy under (a) varying laser powers $(v=100 \mathrm{~mm} / \mathrm{s})$ and (b) scan speeds $(P=125 \mathrm{~W})$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3d8b51f9bfd3b941d680g-11}
+\end{center}
+
+(a) The ratio of depth per energy/width per energy
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3d8b51f9bfd3b941d680g-11(1)}
+\end{center}
+
+(b)
+
+The ratio of depth per energy/width per energy
+
+Fig. 9. The ratio of the depth per energy/the width per energy with (a) varying laser powers $(\nu=100 \mathrm{~mm} / \mathrm{s})$ and (b) scan speeds $(P=125 \mathrm{~W})$.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_3d8b51f9bfd3b941d680g-11(2)}
+
+Fig. 10. The configuration of the molten pool under (a) different laser powers $(v=100 \mathrm{~mm} / \mathrm{s}$ ) and (b) different scan speeds ( $P=125 \mathrm{~W}$ ).
+
+properties of the final TiC/Inconel 718 samples. Layerwise microstructure features were observed legibly, especially under the condition of laser power of $125 \mathrm{~W}$, as a result of layer-by-layer melting and subsequent solidification of SLM process. At a lower laser power of $75 \mathrm{~W}$, the irregular pores with large size which crossed over several layers, as well as the tiny molten pool width of $35 \mu \mathrm{m}$ and pool depth of $28 \mu \mathrm{m}$ shown using white dot line in the figure, were found (Fig. 11(a)). On enhancing the applied laser power to $100 \mathrm{~W}$, large-sized irregular pores disappeared while small spherical pores occurred, which generally aggregated in the back-end of the molten pool (Figs. 11(b) and 1). Meantime, the width and depth of the molten pool increase to $76 \mu \mathrm{m}$ and $45 \mu \mathrm{m}$, respectively. On further increasing the laser power to $125 \mathrm{~W}$, the dense morphology without any apparent pores, as well as the appropriate width of $95 \mu \mathrm{m}$ and depth of $60 \mu \mathrm{m}$, was formed, indicating a pleasurable bonding between neighbor layers and adjacent tracks (Fig. 11(c)).
+
+During the SLM process, the operative temperature and the amount of liquid phase with its viscosity are closely related with the laser energy. The powerful laser energy gives rise to a large amount of liquid formation with high temperature and low viscosity, which in turn promotes the liquid spreading out to fill the voids among particles and, thus, improve the metallurgical bonding properties between the neighbor layers. In view of the above experimental analyses, as well as the numerical simulation results, it can be found that the metallurgical bonding properties experienced a significant improvement as the laser power is increased from $75 \mathrm{~W}$ to $125 \mathrm{~W}$. At a lower laser power of $75 \mathrm{~W}$, a considerably small amount of liquid phase of TiC/Inconel 718 with higher viscosity is formed due to the lower temperature of $1524^{\circ} \mathrm{C}$, resulting in a shallower penetration of $28 \mu \mathrm{m}$ (Figs. 7 (a) and 11(a)). It is responsible for the appearance of large-sized irregular pores among layers and resultant poor metallurgical bonding behavior between adjacent layers (Fig. 11(a)). On increasing the laser power to $100 \mathrm{~W}$, the volume of liquid phase and penetration increase, resulting from the enhancement of molten pool temperature of $1901^{\circ} \mathrm{C}$ (Figs. 7(a) and 11(b)). The irregular pores with large size are alleviated due to more liquid spreading and filling among particles. Whereas some spherical pores with small size generate in the back-end of the molten pool since the gas atoms release from the lattice in heat affected zone possibly, as demonstrated by Weingarten (Figs. 1 and 11(b)) [34]. On further increasing the applied laser power to $125 \mathrm{~W}$, a sufficient amount liquid phase with lower viscosity, as well as the appropriate width of $95 \mu \mathrm{m}$ and depth of $60 \mu \mathrm{m}$, is formed for a higher temperature of $2291{ }^{\circ} \mathrm{C}$ (Figs. 7(a) and 11(c)). The smoothly spread liquid and the appropriate molten pool dimensions guarantee the sound metallurgical bonding ability between adjacent layers and resultant high density of final SLM-fabricated parts (Fig. 11(c)). The dimensions of the molten pool measured by size calculation in Fig. 11 are in a relatively good agreement with the results predicted by simulation above (Figs. 4 and 11).\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_3d8b51f9bfd3b941d680g-12(1)}
+
+Fig. 11. OM images showing microstructures on cross-sectional view of SLM-processed parts at different laser powers $(v=100 \mathrm{~mm} / \mathrm{s}$ ). (a) $P=75 \mathrm{~W}$; (b) $P=100 \mathrm{~W}$; (c) $P=125 \mathrm{~W}$.
+
+Fig. 12 elucidates the typical surface morphologies of SLMproceed samples using different scan speeds. At a relatively high scan speed of $300 \mathrm{~mm} / \mathrm{s}$, an unfavorable surface quality characterized by large pores and microcracks was obtained on the solidified surface, which severely impeded densification response to a great degree (Fig. 12(a)). As the applied scan speed was
+
+(a)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_3d8b51f9bfd3b941d680g-12}
+
+Fig. 12. SEM images showing microstructures on top surface of SLM-processed parts at different scan speeds $(P=125 \mathrm{~W}$ ). (a) $v=300 \mathrm{~mm} / \mathrm{s}$; (b) $v=200 \mathrm{~mm} / \mathrm{s}$; (c) $v=100 \mathrm{~mm} / \mathrm{s}$.\\
+decreased to $200 \mathrm{~mm} / \mathrm{s}$, the large-sized pores disappeared and a great area of dense surface was obtained, while, balling effect on the top surface occurred (Fig. 12(b)). On further decreasing scan speed to $100 \mathrm{~mm} / \mathrm{s}$, a near-full dense and comparatively smooth surface free of obvious balling was obtained, indicating the formation of continuous and stable tracks and coherent bonding behavior between the adjacent tracks (Fig. 12(c)).
+
+During the track-by-track SLM process, the superior metallurgical bonding performance between the adjacent tracks plays a pronounced role to improve the densification behavior of SLMproduced parts. At a comparatively higher scan speed of $300 \mathrm{~mm} /$ s, a small amount of liquid phase of TiC/Inconel 718 with a relatively high viscosity was yielded, resulting from the lower working temperature of $2080^{\circ} \mathrm{C}$ and extremely short liquid lifetime of $0.30 \mathrm{~ms}$ (Fig. 7(b)). It is unbeneficial for the formed liquid to spread out smoothly for filling the voids among particles, which in turn gives rise to the large-sized pores. Meanwhile, the extremely high cooling rate of $1.26 \times 10^{7}{ }^{\circ} \mathrm{C} / \mathrm{s}$ under high scan speed of $300 \mathrm{~mm} / \mathrm{s}$ results in the local residual stress accumulation and resultant increment of cracking susceptibility (Figs. 6(b) and 12(a)). As the applied scan speed is decreased to $200 \mathrm{~mm} / \mathrm{s}$, the increasing volume of liquid $\mathrm{TiC} /$ Inconel 718 and decreasing of viscosity give rise to the improvement of the inter-track bonding and the density of final SLM-produced parts. Whereas, there is a comparatively higher heating rate of $8.84 \times 10^{6}{ }^{\circ} \mathrm{C} / \mathrm{s}$ at the scan speed of $200 \mathrm{~mm} /$ $\mathrm{s}$, which causes the thermo-capillary instability in the molten pool and droplets to splash from melt pool. It is responsible for the balling effect on the top surface of fabricated layer, as shown by the Figs. 1 and 12(b). On further decreasing the applied scan speed to $100 \mathrm{~mm} / \mathrm{s}$, the higher working temperature of $2291^{\circ} \mathrm{C}$ guarantees the formation of sufficient amount of TiC/Inconel 718 liquid phase with appropriate viscosity (Fig. 7(b)). In addition, the heating rate $\left(4.52 \times 10^{6}{ }^{\circ} \mathrm{C} / \mathrm{s}\right)$ and cooling rate $\left(4.38 \times 10^{6}{ }^{\circ} \mathrm{C} / \mathrm{s}\right)$ of the molten pool alleviate as the scan speed is elevated (Fig. 6(b)). The sound bonding ability between adjacent tracks and fully dense surface are achieved in the SLM-fabricated samples accordingly (Fig. 12(c)).
+
+\section*{5. Conclusions}
+The three-dimensional finite element model, considering the cooling time for powder delivery, temperature-dependent properties, multiple heat transfer mechanisms and latent heat of phase change, was established to mainly focus on the effects of processing conditions on the thermal behavior and further melting/solidification mechanism, as well as forming mechanism of the molten pool configuration, and the following conclusions were drawn.
+
+(1) The maximum temperature, the width, the length, and the depth of the molten pool increases by $8.4 \%, 14.5 \%, 13.3 \%$ and $10.6 \%$, respectively, comparing the Point 2 with Point 1 . While they are $2.5 \%, 13.5 \%, 9.5 \%$ and $7.8 \%$, respectively, comparing the Point 3 with Point 2 . This is mainly due to the heat accumulation effect and the superior ability of conductions in powder bed than convection/radiation. The set of cooling time of 10$\mathrm{ms}$ is obviously beneficial for alleviating the heat accumulation effect and, thus, controlling the liquid column size and resultant quality of final SLM parts.
+
+(2) The maximum temperature gradient in the molten pool slightly increases (from $1.30 \times 10^{4}{ }^{\circ} \mathrm{C} / \mathrm{mm}$ to $2.60 \times 10^{4}{ }^{\circ} \mathrm{C} / \mathrm{mm}$ along the path A-B; from $1.36 \times 10^{4}{ }^{\circ} \mathrm{C} / \mathrm{mm}$ to $2.62 \times 10^{4}{ }^{\circ} \mathrm{C}$ / $\mathrm{mm}$ in Z-direction) as the laser power is increased from $75 \mathrm{~W}$ to $150 \mathrm{~W}$. Whereas, it is affected negligibly by the variation of scan speed.\\
+(3) The maximum rate of temperature change obviously increases (heating: from $2.70 \times 10^{6}{ }^{\circ} \mathrm{C} / \mathrm{s}$ to $5.42 \times 10^{6}{ }^{\circ} \mathrm{C} / \mathrm{s}$; cooling: from $2.63 \times 10^{6}{ }^{\circ} \mathrm{C} / \mathrm{s}$ to $\left.5.25 \times 10^{6}{ }^{\circ} \mathrm{C} / \mathrm{s}\right)$ when the laser power is elevated from $75 \mathrm{~W}$ to $150 \mathrm{~W}$. On increasing the applied scan speed from $50 \mathrm{~mm} / \mathrm{s}$ to $300 \mathrm{~mm} / \mathrm{s}$, the maximum rate of temperature change similarly increases (heating: from $2.30 \times 10^{6}{ }^{\circ} \mathrm{C} / \mathrm{s}$ to $1.30 \times 10^{7}{ }^{\circ} \mathrm{C} / \mathrm{s}$; cooling: from $2.21 \times 10^{6}{ }^{\circ} \mathrm{C} / \mathrm{s}$ to $\left.1.26 \times 10^{7}{ }^{\circ} \mathrm{C} / \mathrm{s}\right)$.
+
+(4) A low power ( $75 \mathrm{~W})$ or a high scan speed $(300 \mathrm{~mm} / \mathrm{s})$ is more energy efficient in Z-direction of the molten pool, leading to a deep-narrow cross sectional view of the pool. Whereas, a high laser power $(150 \mathrm{~W})$ or a low scan speed $(50 \mathrm{~mm} / \mathrm{s})$ causes a low $R_{\mathrm{D} / \mathrm{W}}(0.40)$ and a wide-shallow cross sectional configuration of the molten pool, meaning it is more energy efficient in the Y-direction of the melt.
+
+(5) The microstructures on cross-sectional view and surface morphology of final parts were experimentally acquired, which validated indirectly the results by simulation. These indicated the sound metallurgical bonding between the neighbor layers and adjacent tracks at the optimized combination of $P=125 \mathrm{~W}$ and $v=100 \mathrm{~mm} / \mathrm{s}$, due to the appropriate three dimensions of the molten pool (width: $109.3 \mu \mathrm{m}$; length: $120.7 \mu \mathrm{m}$; depth: $67.8 \mu \mathrm{m}$ ).
+
+(6) The physical phenomena considered in this study are general issues of temperature field simulation and thermal behavior investigation during SLM process. Therefore, the SLM physical model established in this paper is suitable for other material system.
+
+\section*{Acknowledgments}
+The authors gratefully acknowledge the financial support from the National Natural Science Foundation of China (Nos. 51575267 and 51322509), the Top-Notch Young Talents Program of China, the Outstanding Youth Foundation of Jiangsu Province of China (No. BK20130035), the Program for New Century Excellent Talents in University (No. NCET-13-0854), the Science and Technology Support Program (The Industrial Part), Jiangsu Provincial Department of Science and Technology of China (No. BE2014009-2), the 333 Project (No. BRA2015368), the Aeronautical Science Foundation of China (No. 2015ZE52051), the Shanghai Aerospace Science and Technology Innovation Fund (No. SAST2015053), the Fundamental Research Funds for the Central Universities (Nos. NE2013103, NP2015206 and NZ2016108), and the Priority Academic Program Development of Jiangsu Higher Education Institutions.
+
+\section*{References}
+[1] H.N. Moosavy, M.R. Aboutalebi, S.H. Seyedein, M. Goodarzi, M. Khodabakhshi, C. Mapelli, S. Barella, Modern fiber laser beam welding of the newly-designed precipitation-strengthened nickel-base superalloys, Opt. Laser Technol. 57 (2014) 12-20.
+
+[2] B.S. Yilbas, H. Ali, N. Al-Aqeeli, C. Karatas, Laser treatment of Inconel 718 alloy and surface characteristics, Opt. Laser Technol. 78 (2016) 153-158.
+
+[3] K. Venkatesan, R. Ramanujam, P. Kuppan, Parametric modeling and optimization of laser scanning parameters during laser assisted machining of Inconel 718, Opt. Laser Technol. 78 (2016) 10-18.
+
+[4] V. Ocelík, D. Matthews, J.T.M. De Hosson, Sliding wear resistance of metal matrix composite layers prepared by high power laser, Surf. Coat. Technol. 197 (2005) 303-315.
+
+[5] Y. Ma, J.H. Sun, X.H. Xie, Y.H. Hu, J.C. Zhao, P. Yan, An investigation on finegrain formation and structural character in cast IN718 superalloy, J. Mater. Process Technol. 137 (2003) 35-39.
+
+[6] D.D. Gu, Laser Additive Manufacturing of High-performance Materials, Springer,, Berlin, 2015.
+
+[7] N.W. Dai, L.C. Zhang, J.X. Zhang, Q.M. Chen, M.L. Wu, Corrosion behavior of selective laser melted Ti-6Al-4 V alloy in NaCl solution, Corros. Sci. 102 (2016)
+
+484-489.
+
+[8] G. Casalino, S.L. Campanelli, N. Contuzzi, A.D. Ludovico, Experimental investigation and statistical optimisation of the selective laser melting process of a maraging steel, Opt. Laser Technol. 65 (2015) 151-158.
+
+[9] J.F. Sun, Y.Q. Yang, D. Wang, Parametric optimization of selective laser melting for forming Ti6Al4V samples by Taguchi method, Opt. Laser Technol. 49 (2013) $118-124$
+
+[10] Y.J. Liu, X.P. Li, L.C. Zhang, T.B. Sercombe, Processing and properties of topologically optimised biomedical Ti-24Nb-4Zr-8Sn scaffolds manufactured by selective laser melting, Mater. Sci. Eng. A 642 (2015) 268-278.
+
+[11] P. Fischer, V. Romano, H.P. Weber, N.P. Karapatis, E. Boillat, R. Glardon, Sintering of commercially pure titanium powder with a Nd:YAG laser source, Acta Mater. 51 (2003) 1651-1662.
+
+[12] M. Zhong, W. Liu, Laser surface cladding: the state of the art and challenges, IMEPC 224 (2010) 1041-1060.
+
+[13] D.D. Gu, W. Meiners, K. Wissenbach, R. Poprawe, Laser additive manufacturing of metallic components: materials, processes and mechanisms, Int. Mater. Rev. 57 (2012) 133-164.
+
+[14] D.D. Gu, H.Q. Wang, D.H. Dai, P.P. Yuan, W. Meiners, R. Poprawe, Rapid fabrication of Al-based bulk-form nanocomposites with novel reinforcement and enhanced performance by selective laser melting, Scr. Mater. 96 (2015) 25-28.
+
+[15] I. Yadroitsev, A. Gusarov, I. Yadroitsava, I. Smurov, Single track formation in selective laser melting of metal powders, J. Mater. Process Technol. 210 (2010) 1624-1631.
+
+[16] I. Yadroitsev, P. Krakhmalev, I. Yadroitsava, Selective laser melting of Ti6Al4V alloy for biomedical applications: Temperature monitoring and microstructural evolution, J. Alloy. Compd. 583 (2014) 404-409.
+
+[17] A.V. Gusarov, I. Smurov, Modeling the interaction of laser radiation with powder bed at selective laser melting, Phys. Procedia 5 (2010) 381-394.
+
+[18] I.A. Roberts, C.J. Wang, R. Esterlein, M. Stanford, D.J. Mynors, A three-dimensional finite element analysis of the temperature field during laser melting of metal powders in additive layer manufacturing, Int. J. Mach. Tools Manuf. 49 (2009) 916-923.
+
+[19] A. Foroozmehr, M. Badrossamay, F. Foroozmehr, S. Golabi, Finite element si mulation of selective laser melting process considering optical penetration depth of laser in powder bed, Mater. Des. 89 (2016) 255-263.
+
+[20] W.E. King, A.T. Anderson, R.M. Ferencz, N.E. Hodge, C. Kamath, S.A. Khairallah, A.M. Rubenchik, Laser powder bed fusion additive manufacturing of metals; physics, computational, and materials challenges, Appl. Phys. Rev. 2 (2015) 041304.
+
+[21] J.P. Kruth, X. Wang, T. Laoui, L. Froyen, Lasers and materials in selective laser sintering, Assem. Autom. 23 (2003) 357-371.
+
+[22] H.S. Carslaw, J.C. Jaeger, Conduction of Heat in Solids, 2nd ed., Oxford University Press,, Oxford, 1986.
+
+[23] K. Dai, L. Shaw, Finite element analysis of the effect of volume shrinkage during laser densification, Acta Mater. 53 (2005) 4743-4754.
+
+[24] J. Yin, H.H. Zhu, L.D. Ke, W.J. Lei, C. Dai, D.L. Zuo, Simulation of temperature distribution in single metallic powder layer for laser micro-sintering, Comput Mater. Sci. 53 (2012) 333-339,
+
+[25] S.S. Sih, J.W. Barlow, in: Proceedings of the 5th Annual SFF Symposium, The University of Texas, Austin, 1994.
+
+[26] J. Díaz-Álvarez, J.L. Cantero, H. Miguélez, X. Soldani, Numerical analysis of thermomechanical phenomena influencing tool wear in finishing turning of Inconel 718, Int. J. Mech. Sci. 82 (2014) 161-169.
+
+[27] A.V. Nikhil, V.B. Upendra, S.J. Suhas, A finite element model to predict the ablation depth in pulsed laser ablation, Thin Solid Films 519 (2010) 1421-1430.
+
+[28] M. Alimardani, E. Toyserkani, J.P. Huissoon, C.P. Paul, On the delamination and crack formation in a thin wall fabricated using laser solid freeform fabrication process: an experimental-numerical investigation, Opt. Lasers Eng. 47 (2009) 1160-1168.
+
+[29] D.Y. Zhang, W. Niu, X.Y. Cao, Z. Liu, Effect of standard heat treatment on the microstructure and mechanical properties of selective laser melting manufactured Inconel 718 superalloy, Mater. Sci. Eng. A 644 (2015) 32-40.
+
+[30] F.C. Liu, X. Lin, C.P. Huang, M.H. Song, G.L. Yang, J. Chen, W.D. Huang, The effect of laser scanning path on microstructures and mechanical properties of laser solid formed nickel-base superalloy Inconel 718, J. Alloy. Compd. 509 (2011) 4505-4509.
+
+[31] W. Hofmeister, M. Griffith, M. Ensz, J. Smugeresky, Solidification in Direct Metal Deposition by LENS Processing, J. Miner. Met. Mater. Soc. 53 (2001) 30-34.
+
+[32] J.D. Penot, D. Massy, F. Rieutord, F. Mazen, S. Reboh, F. Madeira, L. Capello, D. Landru, O. Kononchuk, Development of microcracks in hydrogen-implanted silicon substrates, J. Appl. Phys. 114 (2013) 123513.
+
+[33] P.Y. Lin, Z.H. Zhang, L.Q. Ren, The mechanical properties and microstructures of AZ91D magnesium alloy processed by selective laser cladding with $\mathrm{Al}$ powder, Opt. Laser Technol. 60 (2014) 61-68.
+
+[34] C. Weingarten, D. Buchbinder, N. Pirch, W. Meiners, K. Wissenbach, R. Poprawe, Formation and reduction of hydrogen porosity during selective laser melting of AlSi10Mg, J. Mater. Process Technol. 221 (2015) 112-120.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3d8b51f9bfd3b941d680g-14(1)}
+\end{center}
+
+\#1 Qimin Shi Nanjing University of Aeronautics and Astronautics, Nanjing, China. Qimin Shi is currently doing his master's degree in College of Materials Science and Technology, Nanjing University of Aeronautics and Astronautics (NUAA), PR China. He received the bachelor degree in Materials Processing Engineering from NUAA in Jun. 2015. His principal research interest is laser additive manufacturing including selective laser melting (SLM), and laser metal deposition (LMD) especially majoring in the experiments and simulation of nickel-based composites processed by SLM.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3d8b51f9bfd3b941d680g-14(3)}
+\end{center}
+
+\#2 Dongong Gu (Corresponding author) Nanjing University of Aeronautics and Astronautics, Nanjing China. Professor Dongdong Gu is currently a Full Professor in College of Materials Science and Technology, Nanjing University of Aeronautics and Astronautics (NUAA), PR China. He received the Ph. D. in Materials Processing Engineering from NUAA in Jun. 2007. From Sep. 2009 to Aug. 2011, he worked in Fraunhofer Institute for Laser Technology ILT as the Alexander von Humboldt Research Fellow. His principal research interest is laser-based additive manufacturing including selective laser melting (SLM), direct metal laser sintering (DMLS), and laser metal deposition (LMD). Prof Gu has authored/co-authored 3 books and more than 100 papers in a number of internationally recognized peer-reviewed journals.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3d8b51f9bfd3b941d680g-14(4)}
+\end{center}
+
+\#3 Mujian Xia Nanjing University of Aeronautics and Astronautics, Nanjing, China. Mujian Xia is currently a $\mathrm{Ph}$. D candidate in College of Materials Science and Technology, Nanjing University of Aeronautics and Astronautics (NUAA), PR China. He received the Master Degree in Materials Processing Engineering from Jiangsu University in Jun. 2012. Starting from Sep. 2015 he studied in College of Materials Science and Technology, NUAA. His principal research interest is laserbased additive manufacturing including selective laser melting (SLM) and direct metal laser sintering (DMLS), especially majoring in the experiments and simulation of nickel-based composite materials by SLM.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3d8b51f9bfd3b941d680g-14}
+\end{center}
+
+\#4 Sainan Cao Nanjing University of Aeronautics and Astronautics, Nanjing, China. Sainan Cao is currently pursuing for a master's degree in College of Materials Science and Technology, Nanjing University of Aeronautics and Astronautics (NUAA), PR China. She received the bachelor degree in Materials Processing Engineering from NUAA in Jun. 2014. Her principal research interest is laser additive manufacturing including selective laser melting (SLM), direct metal laser sintering (DMLS), and laser metal deposition (LMD) She has authored/co-authored 3 papers in internationally recognized peer-reviewed journals including J Laser Appl, Mater Sci Eng A, J Mater Res.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3d8b51f9bfd3b941d680g-14(2)}
+\end{center}
+
+\#5 Ting Rong Nanjing University of Aeronautics and Astronautics, Nanjing, China. Ting Rong is pursuing her master's degree in College of Materials Science and Technology, Nanjing University of Aeronautics and Astronautics (NUAA), PR China. She received the bachelor degree in Materials Processing Engineering from NUAA in Jun.2015. Her principal research interest is laser additive manufacturing including selective laser melting (SLM), and laser melting deposition (LMD), especially majoring in the experiments of nickel-based composites processed by SLM.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

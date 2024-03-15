@@ -1,0 +1,591 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{multirow}
+
+\title{The effects of geometry and laser power on the porosity and melt pool formation in additively manufactured $316 \mathrm{~L}$ stainless steel }
+
+
+\author{Sebastiano Piazza ${ }^{1,2} \cdot$ Brian Merrigan $^{1} \cdot$ Denis P. Dowling $^{1} \cdot$ Mert Celikin $^{1}$ (I)}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Received: 19 June 2020 / Accepted: 28 September 2020 / Published online: 13 October 2020
+
+(C) Springer-Verlag London Ltd., part of Springer Nature 2020
+
+\begin{abstract}
+The present work investigates the effects of geometry and laser power on the porosity and melt pool formation for 316L stainless steel samples fabricated using the laser powder bed fusion (LPBF) technique. Both cylindrical and conical parts with the same heights were processed at a range of laser powers ( $60-70 \mathrm{~W})$. An analytical model was used to select a suitable laser power, based on the established processing parameters, but also to predict the resultant melt pool dimensions. Based on the combination of experimental work and mathematical modelling, a novel geometrical factor is proposed, which was demonstrated to successfully improve the implemented model. A decrease in melt pool depths towards the building direction was determined in all the printed samples; this was however not predicted by the mathematical model. Furthermore, the variation in heat extraction exhibited by the conical and cylindrical parts allows the correlation between the melt pool dimensions and the geometrical factor. Finally, the influence of conical and cylindrical shapes on part hardness with increasing distance from the build plate was demonstrated; based on this comparison, it was determined that the cone geometries exhibit both a higher Vickers hardness and density.
+\end{abstract}
+
+Keywords Additive manufacturing $\cdot 316 \mathrm{~L}$ stainless steel $\cdot$ Laser power $\cdot$ Geometry $\cdot$ Melt pool $\cdot$ Modelling
+
+\section*{1 Introduction}
+Laser powder bed fusion (LPBF) is a promising technology, during which a laser beam selectively melts regions of metallic powder layer-upon-layer [1]. This technique combines the flexibility of ease of part printing while avoiding cost penalties related to both the optimization of product design and manufacturing [2]. LBPF is finding a range of commercial applications, especially in the aerospace and biomedical fields, where complex geometries and relatively low production rates are needed; the most widely used alloys are Ti-6Al-4V and stainless steel [3]. For the widespread use of this processing technology in structural applications, it is clearly important that there is a consistency within the mechanical properties of the parts obtained during replicated part printing operations. However, the effect of porosity level and microstructure on
+\footnotetext{Mert Celikin
+
+\href{mailto:mert.celikin@ucd.ie}{mert.celikin@ucd.ie}
+
+1 School of Mechanical and Materials Engineering, University College Dublin, Belfield, Dublin, Ireland
+
+2 Department of Industrial Engineering, University of Padova, 35131 Padova, Italy
+}
+
+mechanical performance is different for Ti-6Al-4V and 316L stainless steel [4].
+
+For Ti-6Al-4V parts, microstructural tuning through postprocessing such as hot isostatic pressing (HIP) is necessary, if the fabricated part is to achieve the desired mechanical performance. The authors' previous work demonstrated that a variation of not only laser power but also the parts shape influenced the as-built microstructure. Higher laser power not only changed the porosity levels but also led to an increase in $\beta$ grains width and a decrease of $\alpha^{\prime}$ lath thickness, resulting in superior mechanical properties [5]. Indeed, additive manufacturing (AM) processes often lead to metastable microstructures with compositionally different phases which can vary from layer to layer [6]. Furthermore, additional thermal treatments are necessary to transform these metastable structures into equilibrium phases where the kinetics of this transformation is still ambiguous, as it has been highlighted in the authors' most recent work [7].
+
+Compared with Ti-6Al-4V alloy with two-phase microstructure, the porosity tolerance of $316 \mathrm{~L}$ stainless steel is higher and hence post-processing of 3D-printed parts is less critical. With solely austenite phase present in as-built 316L, understanding the porosity formation and microstructure (especially melt pool sizes) is important. Welding studies sheds\\
+light into the melt pool formation in LPBF process as King et al. [8] claim in their paper, nonetheless with different interactions between the energy source and the metal powder. These interactions include radiation absorption of the powder bed influenced by powder scattering that lead to additional absorption; powder melting that occurs rapidly and begins to solidify on cooling after the laser beam passes, while considering melt wetting dynamics due to recoil pressure from metal evaporation. Moreover, spatter ejection is also a melt motion dynamic that needs to be addressed as this can be the cause of process-induced porosity.
+
+Accurate control of the melt pools' length, width, and depth is desirable since it determines the solidification kinetics, and as a result indirectly affects the shape of grains in the deposited layer and phase distribution. Although heat transfer in LPBF can occur through conduction to the substrate and the build plate, as well as via convection to the shield gas, the thermal insulating effect of the metal powder surrounding the part also needs to be considered. The mode of heat transfer has a significant influence on the rate of powder heating/ cooling which in turn will influence the microstructure of the printed alloy. For instance, during printing, the depth of the melt pool results from a dynamic equilibrium between the conduction of heat of the melt pool itself and the material underneath; as the study from King et al. [9] shows, if certain criteria are reached, melt pool shape can undergo significant changes due to occurrence of keyhole-mode laser melting. The melt pool is influenced by many factors such as beam power, speed, and size. As widely reported in the literature however, melt pool geometry as well as thermal environment and history are also influenced to some extent by the part's geometry [10].
+
+Difference in part's dimensions will result in differences in peak temperatures during melting, for a given heat source power and processing speed as highlighted by Sames et al. [11] speed-power relationship. Furthermore, Ilin et al. [12] in their numerical analysis showed that an increase in melt pool dimension, often caused by localized preheating of the part especially between hatches or layers, would lead to poor control of the process. The volumetric energy density $E\left(\mathrm{~J} / \mathrm{mm}^{3}\right)$ is often used to quantify the amount of energy reaching the powder bed linking it to the main process parameters as shown in Eq. (1.1) [13].
+
+$E=\frac{P}{v h t}$
+
+where $P(\mathrm{~W})$ is laser power, scan speed is $v(\mathrm{~mm} / \mathrm{s}), h$ represents the hatch spacing $(\mathrm{mm})$, and the powder layer thickness is $t(\mathrm{~mm})$. Many recent studies investigate the influence of processing parameters such as laser power, on both the printed parts microstructure and mechanical properties. Choo et al. [14] measured an increase in porosity level with decreasing laser power due to a lack of melting giving rise to porosity. Zhang et al. [15] examined the fatigue and fracture behavior of $316 \mathrm{~L}$ stainless steel and reported that fatigue properties are not sensitive to porosity levels, in the energy density processing region between 70 and $130 \mathrm{~J} / \mathrm{mm}^{3}$. An increase in fatigue resistance has been found with higher cooling rates, e.g., lower laser power, since it promoted intergranular fatigue crack initiation and crack branching. Moreover, Kamath et al. [16] looked at how laser power and scan speed affected the density of the printed parts and found that at high laser power, higher density is determined for a wider range of scan speeds compared with that obtained at lower laser powers. Thus, printing with high laser power makes processing parameters more resilient. Kudzal et al. [17] explored the effect of scan pattern on 17-4 SS microstructure and its mechanical performance. Although it was found that the overall void concentration was similar between scans, it differs for different type of voids depending on specific scan strategy employed. However, only a few studies are available investigating the influence of geometry in the process. Wang et al. [18] focused on the microstructure of vertical struts with different diameters. The findings display texture towards the orthogonal direction of the building plate, i.e., building direction, as the part diameter decreased. The amount of metal powder covering the prints played a significant role in the texture transition since it reduced the heat dissipation while the strut diameters decreased.
+
+The objective of this work is to investigate the influence of parts geometry (cylinder and cone) on the microstructural evolution, specifically melt pool size, and hardness of 316L stainless steel using varying laser power $(60-70 \mathrm{~W})$. Simple geometries with the same height were selected, to determine the effect of a decrease in cross-sectional area. The processing parameters were selected using an analytical model and a new geometrical factor is proposed based on the experimental results. The results from this work can provide a basis for future studies to investigate more complex geometries and the overall influence on the LBPF process on 316L stainless steel parts.
+
+\section*{2 Experimental}
+\subsection*{2.1 Experimental setup and material specifications}
+Metallic parts have been produced using LPBF process by Mlab cusing (Concept Laser) Metal 3D-Printer with a
+
+Table 1 Chemical composition of the 316L powder (in wt\%)
+
+\begin{center}
+\begin{tabular}{lllllllll}
+\hline
+$\mathrm{Cr}$ & $\mathrm{Ni}$ & $\mathrm{Mo}$ & $\mathrm{Mn}$ & $\mathrm{Si}$ & $\mathrm{P}$ & $\mathrm{C}$ & $\mathrm{S}$ & $\mathrm{Fe}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+16-18 10-14 $2-2.5 \quad 0-2 \quad 0-1 \quad 0-0.045 \quad 0-0.030 \quad 0-0.030$ Balance
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-03}
+\end{center}
+
+Fig. 1 3D-printed $60 \mathrm{~mm}$ high, cylinder and cone parts (obtained using $65 \mathrm{~W}$ laser power)
+
+reachable maximum laser power of $100 \mathrm{~W}$ and a fixed laser spot diameter of $45 \mu \mathrm{m}$. The feedstock material used in this study was stainless steel $316 \mathrm{~L}$ powder produced via gas atomization technique with a particle size range 10 to $45 \mu \mathrm{m}$. The powder diameter $D_{\mathrm{p}}$, where $p=10 \%, 50 \%$, and $90 \%$, is $D_{10}=$ $18 \mu \mathrm{m} D_{50}=28 \mu \mathrm{m}$, and $D_{90}=40 \mu \mathrm{m}$, respectively. The chemical composition of the metal powder used in this work, according to the manufacturer Legor Group S.p.A, is given in Table 1.
+
+Using two different geometries (cylindrical and conical), 6 prints were produced at 3 different laser powers (Fig. 1). These shapes were selected in order to exhibit a difference in cross-sectional area of the parts at the same heights; thus, the different heat extraction capacity and energy deposition would affect the resultant microstructure enabling the understanding of geometric influence. Sample geometries are designed to have the same base diameter and height: that of 40 and $60 \mathrm{~mm}$, respectively. This would enable univocal correlation to the geometrical variation due to a clear link between the height and the cross sections. Moreover, laser power, as well as scan velocity, presents a strong influence on the melt pool depth. Hence, a constant scan velocity is used $(0.6 \mathrm{~mm} / \mathrm{s})$ to process 3 series of samples for each geometry with distinct laser power [16]. Every part has been built in the same (x, y) position on the build plate and all the processing parameters (layer thickness, hatch spacing, scan velocity) other than laser power were kept constant. An analytical model developed by Rubenchik et al. [19] and based on the Eagar-Tsai thermal model has been implemented to relate the melt pool depth $D_{\mathrm{E}}$ with the main process parameters. The resultant melt pool depths have also been calculated with the approach proposed by Rosenthal (see $D_{\mathrm{R}}$ in Table 2) to further enable the validation of the abovementioned model. Both shares similar assumptions such as temperature independent thermophysical properties and the heat transfer is governed by conduction. These models differ however in the assumption of the heat source: point-source (dimensionless) as in Rosenthal approach or, in the case of Eagar-Tsai model, as a Gaussian shape.
+
+The results of the process parameters investigated (scan velocity, layer thickness, and hatch spacing) with varying laser power are given in Table 2. The energy density levels would guarantee the powder melting mechanism to be controlled by thermal conduction, thus avoiding unstable melting during the process typical of keyhole-mode laser melting [20]. Meanwhile, the appropriate laser powers have been selected to enable the melting of the last printed layer increasing the odds of overall good adhesion between layers in the fabricated parts [11]. Specifically, minimum laser power $(60 \mathrm{~W})$ is chosen to obtain melt pool depth $(28.48 \mu \mathrm{m})$ which is larger than the layer thickness $(25 \mu \mathrm{m}$ ).
+
+The properties of 316L steel reported in Table 3 have been calculated at room temperature ( $298 \mathrm{~K})$ since analysis in which temperature-dependent properties such as density, thermal conductivity, and heat capacity were implemented and exhibited non-significant differences in terms of melt pool geometry as Rubenchik et al. [19] outlined in the corresponding appendix. Furthermore, Tang et al. [21] have determined that room temperature properties well represent the measured melt pool dimensions for LPBF. While, the thermal diffusivity $D$ and melt enthalpy $H_{s}$ have been calculated as Table 3 outline, in which $k$ is the thermal conductivity, $C$ refers to the heat capacity, and $\rho$ to the density.
+
+The melting temperature of stainless steel 316L has been obtained as the average of the liquidus and solidus temperatures as reported by Mills [22], resulting in $T_{\mathrm{m}}=1678 \mathrm{~K}$. The absorptivity (A) is the fraction of the laser power absorbed by the material and it has been assumed a value of 0.3 in accordance with other studies [20, 23]. Although various factors such as processing parameters, melt pool surface roughness, gas composition above the melt pool, and oxide coverage can
+
+Table 2 Summary of the processing parameters, where $D_{\mathrm{E}}$ and $D_{\mathrm{R}}$ are the melt pool depth calculated with the Eagar-Tsai or Rosenthal model respectively, while the energy density is calculated as in Eq. (1.1)
+
+\begin{center}
+\begin{tabular}{lllllll}
+\hline
+Scan velocity $(\mathrm{mm} / \mathrm{s})$ & Layer thickness $(\mu \mathrm{m})$ & Hatch spacing $(\mu \mathrm{m})$ & Laser power $(\mathrm{W})$ & Energy density $\left(\mathrm{J} / \mathrm{mm}^{3}\right)$ & $D_{\mathrm{E}}(\mu \mathrm{m})$ & $D_{\mathrm{R}}(\mu \mathrm{m})$ \\
+\hline
+0.6 & 25 & 100 & 60 & 40 & 28.48 & 34.33 \\
+ &  &  & 65 & 43.33 & 30.09 & 35.73 \\
+ &  & 70 & 46.67 & 31.62 & 37.08 &  \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 3 Thermophysical properties of AISI 316L steel [24]
+
+Density $\left(\mathrm{kg} / \mathrm{m}^{3}\right)$\\
+Thermal conductivity $(\mathrm{W} / \mathrm{m} \mathrm{K})$\\
+Heat capacity $(\mathrm{J} / \mathrm{Kg} \mathrm{K})$\\
+Thermal diffusivity $\left(\mathrm{m}^{2} / \mathrm{s}\right)$\\
+Melt enthalpy $\left(\mathrm{J} / \mathrm{m}^{3}\right)$
+
+$$
+\begin{aligned}
+& \rho=7921-0.614 T_{\mathrm{r}}+0.00002 T_{\mathrm{r}}^{2} \\
+& k=14.307+0.0181 T_{\mathrm{r}}-0.000006 T_{\mathrm{r}}^{2} \\
+& C=444.79+0.5807 T_{\mathrm{r}}-0.001 T_{\mathrm{r}}^{2}+7 \times 10^{-7} T_{\mathrm{r}}^{3} \\
+& D=k / \rho C \\
+& H_{\mathrm{s}}=\rho C\left(T_{\mathrm{m}}-T_{\mathrm{r}}\right)
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+& =7.454 \times 10^{3} \\
+& =2.778 \times 10^{1} \\
+& =1.911 \times 10^{3} \\
+& =1.951 \times 10^{-06} \\
+& =5.963 \times 10^{9}
+\end{aligned}
+$$
+
+affect the absorptivity, in the present work it was assumed constant during the process.
+
+\subsection*{2.2 Microstructural and mechanical characterization}
+The printed part schematics which are illustrated in Fig. 2 provides details on the areas analyzed within the test samples. The horizontal cuts were made at $20 \%, 50 \%$, and $80 \%$ of the print height, to enable hardness testing, while longitudinal sections were examined to measure melt pool depths and their microstructural evolution towards the built direction. The parts were metallographically prepared using standard techniques by grinding using 2500 grit paper, followed by polishing using $1 \mu \mathrm{m}$ diamond paste. Samples were etched using aqua regia, a solution of 3:1 molar ratio of $\mathrm{HCl}: \mathrm{HNO}_{3}$ in methanol as it is a widely known etchant for SS316L also used in several research [25-27]. Images were taken using a Nikon Optiphot Microscope mounted with an HFX Microflex photomicrography system. The melt pool data were measured with the imaging software ImageJ and consisted of 10 measurements per sample where all the cross-sectional images have been taken parallel to the built direction from bottom to top. Vickers hardness tests were performed at 5 different locations per horizontal section, with a Mitutoyo AVK-C2 hardness testing machine with a load of $10 \mathrm{kgf}$.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_b19d26be2529dffb447eg-04}
+
+Fig. 2 Schematic illustration of the areas of the cylinder and cone parts analyzed, the selected regions are represented by the percentage of the total print height from the base
+
+\section*{3 Results and discussion}
+\subsection*{3.1 Microstructural characterization}
+\subsection*{3.1.1 Effect of laser power}
+Optical images of polished cross sections (without etching) are shown in Fig. 3; these demonstrate the porous nature of the printed structures obtained for both the cylindrical and conical shapes. The cylinders exhibit denser zone separated by vertical column of high porosity, mainly caused by the scan pattern alignment during printing. Matthews et al. [28] reported that the combination of scan strategy and hatch spacing strongly affects void formation associated with powder denudation effects. Although this is consistent with the cylindrical geometry, conical samples present a remarkable difference in pore positions which will be discussed later in Section 3.2.2. Overall, parts printed at $65 \mathrm{~W}$ laser power presented the highest density, compared with those obtained at 70 and $60 \mathrm{~W}$ (Fig. 3). The majority of pores present large crevices of asymmetric shapes, indicating the lack of melting during processing at low laser power. The $316 \mathrm{~L}$ steel is also more prone to the formation of this type of defects due to its high thermal conductivity compared with titanium alloys, thus facilitating more rapid cooling of the melt pool. Therefore, stainless steel has higher heat extraction capacity and the resultant melt pool dimensions are smaller, whereas titanium tends to present higher thermal gradient leading to increased melt pool size and sensitivity, as well as to the build-up of internal stresses during printing [25]. Moreover, a lower laser power also decreases the overall absorptivity of the powder since there is less tendency of plasma formation and powder ablation. The former would produce a depression below the laser spot, thus increasing heat absorption due to higher reflections, while the latter would result in lower ray scattering effects ultimately affecting the absorptivity. Therefore, the large voids are formed with many half-melted particles inside with similar features to what Gu et al. [29] have observed in their study.
+
+Figure 4 exhibits variation of porosity levels with laser power, while $65 \mathrm{~W}$ resulted in the highest density. Parts printed at both 65 and $60 \mathrm{~W}$ laser power were found not to exhibit spattered particles, in contrast to parts obtained at 70 W. Furthermore, this phenomenon is more marked at the
+
+Fig. 3 Part 3 cross-sectional views of $70 \mathrm{~W}$ cylinder; $\mathbf{b} 70 \mathrm{~W}$ cone; c $65 \mathrm{~W}$ cylinder; d $65 \mathrm{~W}$ cone; e $60 \mathrm{~W}$ cylinder, f $60 \mathrm{~W}$ cone
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-05(4)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-05}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-05(3)}
+\end{center}
+
+(e)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-05(1)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-05(5)}
+\end{center}
+
+(d)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-05(2)}
+\end{center}
+
+(f) higher heights above the base plate, as can be observed in Fig. 5 , thus implying a lower heat extraction capacity at higher heights caused by an incremental accumulation of heat with part height, as well as the heat conductivity effect of the base plate. The spattered particles are usually an indication of the Marangoni effect, where the incident energy is able to melt the powder surface and heat it above the boiling point, hence, leading to vapor recoil momentum, which could have further driven the melt outward generating small solidified particles along the laser scans [28]. Although the parameters were selected to enable a controlled print, thus thermal conduction mode, it is possible that the $70 \mathrm{~W}$ laser power tapped into the keyhole mode at certain critical points [14]. Indeed, as Thijs et al. [30] mention, at the border of scan area or turning points where laser reverses its direction or when deceleration occurs, excessive heat deposition could be fed into the powder bed.
+
+Figure 6 shows the optical images of etched cross sections of conical parts (at the same height) produced with different laser power. It is determined that melt pool depths increase with increasing laser power for both geometries as seen in Fig. 7. Although this is predicted by both models implemented and also consistent with previous studies mentioned by Rubenchik et al. [19], it is opposed to what Choo et al. [14] reported, in
+
+Fig. 4 Variation in porosity levels (section C) in cylindrical parts produced at a $70 \mathrm{~W} ; \mathbf{b} 65 \mathrm{~W} ; \mathbf{c} 60$ W
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-06(2)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-06}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-06(5)}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-06(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-06(4)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-06(3)}
+\end{center}
+
+(c)
+
+Fig. 6 Optical images of etched cross sections of part 2 (conical part) with varying laser powers: a $70 \mathrm{~W} ; \mathbf{b} 65 \mathrm{~W} ; \mathbf{c} 60 \mathrm{~W}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-07(3)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-07(1)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-07}
+\end{center}
+
+(c)
+
+which increasing laser power caused a decrease in the melt pool depths.
+
+Figure 7 exhibits the variation of the melt pool depths with height and laser power for each sample. As a general trend, an increase in the laser power results in an increase in melt pool depth. This observation is in accordance with the Eagar-Tsai thermal model implemented. Moreover, the graphs exhibit a downward trend: in all samples, the depth values decrease with increasing heights. It is also possible to observe a better correlation between the outcomes of the Rubenchik model and the experimental depth values compared with the Rosenthal solution (see Table 2). In good alignment with the literature, implementing a Gaussian energy distribution around the center of the laser beam gives a more realistic analytical model [31]. Therefore, more focus will be given on the Rubenchik approach that produced minor difference between the experimentally derived melt pool depths and the one predicted by the model. Furthermore, two-way ANOVA statistical analysis has been performed with RStudio software to establish if the mean melt pool depth values of each sample are affected by both factors\\
+Fig. 7 The comparison of measured melt pool depth variation for different laser power (60 to $70 \mathrm{~W}$ ) and geometries (cylindrical and conical)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_b19d26be2529dffb447eg-07(2)}
+
+Table 4 Results of the two-way ANOVA analysis of factors influence on melt pool depth
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+Factor & Df & Sum square & Mean square & $F$ value & $p$ value \\
+\hline
+Laser power & 2 & 587 & 293.49 & 17.205 & $1.07 \mathrm{e}-07$ \\
+Geometry & 1 & 58 & 57.62 & 3.378 & 0.0673 \\
+Laser power:geometry & 2 & 9 & 4.55 & 0.267 & 0.7662 \\
+(Residuals) & 234 & 3992 & 17.06 &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+considered in the present study. Indeed, the summary reported in Table 4 shows a $p$ value below the significance level of 0.05 indicating that different laser power levels are associated with significantly different melt pool depth values, thus, confirming again the predictive mathematical models used and the observations made in the above paragraphs. One-way ANOVA has also been performed to investigate if melt pool depth variations between parts of each sample are statistically significant and its result will be discussed in Section 3.3.1.
+
+\subsection*{3.1.2 Effect of geometry}
+When comparing the porosities obtained between the printed part geometries as demonstrated in Fig. 3, the cone's cross sections showed lower pore density, in contrast to cylinders, and their positions do not align vertically. This is related to the cross-sectional variation with the height causing the laser scan pattern to misalign from previous layer built. Thus, it results in pores not perfectly aligned as they were in the cylindrical geometry. Moreover, the pores are bigger and more frequent; meanwhile, they tend to decrease in size with print height. Although pores with comparable dimensions can still be seen at section $\mathrm{C}$, their presence is occasional. This difference has been observed especially in the conical samples printed with different laser power. The different types of thermal transfer have significant microstructural implications, such as the heat conduction between the melt pool and the bulk material beneath affects the melt pool depth. In fact, King et al. [9] in their work discussed the transition to keyhole-mode melting and its influence on melt pool shape. Therefore, the decrease in melt pool depth with the height shown in Fig. 8 for one of the cylinder parts is related to the accumulation of heat as the process continues; the printed layers are gradually made further away from the print plate which acts as a heatsink.\\
+Fig. 8 Optical images (65 W cylinder) of a part $1 ; \mathbf{b}$ part $2 ; \mathbf{c}$ part 3; d part 4
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-08(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-08}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-08(3)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-08(2)}
+\end{center}
+
+(d)
+
+Fig. 9 The comparison of Vickers Hardness variation for different laser power (60 to $70 \mathrm{~W}$ ) and geometries (cylindrical and conical)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-09(1)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-09}
+\end{center}
+
+By increasing the temperature of each built layer, the thermal gradient between the melt pool and the surrounding is smaller; thus, it should produce larger melt pools due to an increased area of melting. However, this phenomenon also results in an increase in the melt pool temperature creating an outward heat flow from the center to the periphery of the melt pool, due to a negative gradient of surface tension over temperature that contribute to lowering the depth further away from the built plate. As Zacharia et al. [32] discussed in their work on weld pool, development of laser beam welding of SS304 in which a comparison between the experimental depth/width ratio and respective literature values has been done. They concluded a smaller depth/width ratio of the welds is due to the abovementioned phenomena. They also validated their model on fusion zone size and shape, confirmed the influence of surface-active agents such as sulphur on fluid transfer, and showed the importance of considering the dependence of surface tension from temperature. However, the above discussion is in opposition to what Vasinonta et al. reported; they focused on controlling the melt pool size via process maps generated from numerical simulations [33]. In the experimental validation of their model, two different geometries were built: 2-D thin-walled structures and 3 -D bulky parts both having rectangular section. It was stated that shallower melt pools originated from bulky parts due to increased heat extraction compared with thin-walled structures in which less material is able to conduct heat away from the melt pool. Nevertheless, the thermal insulating effect of the metal powder surrounding the part cannot be forgotten, although difficult to take into consideration as discussed by King et al. [9]. Thus, a print that present higher heat deposition levels, such is the case of the cylinders, would consequently accumulate more heat due to the insulating effect of the powder and creating the condition for the outward flow to occur at layers far from the built plate. The two-way ANOVA result (Table 4) presents a $p$ value of 0.0673 , which is slightly above the significance level indicating that geometrical factor does not influence the melt pool depth values in a significant way. However, given its value close to the significance level, it also suggests that a different geometry exhibiting higher crosssectional variation with height could potentially influence the melt pool depth to a lesser extent compared with laser power factor. The analysis excludes a synergic effect between the two factors as the $p$ value largely above the significance threshold.
+
+\subsection*{3.2 Mechanical characterization}
+\subsection*{3.2.1 Effect of laser power}
+The results of the hardness test measurements are given in Fig. 9; conical samples exhibit higher hardness values, especially in higher sections. This is likely to be due to different porosity levels present between the geometries; in fact, the $70 \mathrm{~W}$ cylindrical sample displayed the highest porosity and thus shows the lower hardness. Furthermore, hardness values increase with increasing height and again can be related to the porosity levels exhibited by the prints which tend to decrease towards the top as abovementioned, and also being particularly lower in the $65 \mathrm{~W}$ prints as depicted in Fig. 4. Additionally, in situ oxidation during AM might cause variation in hardness in different layers. For example, Zhong et al. [26] found that\\
+Table 5 Results of the two-way ANOVA analysis of factors' influence on Vickers hardness
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+Factor & Df & Sum square & Mean square & $F$ value & $p$ value \\
+\hline
+Laser power & 2 & 17755 & 8878 & 25.67 & $1.99 \mathrm{e}-09$ \\
+Geometry & 1 & 16374 & 16374 & 47.35 & $9.92 \mathrm{e}-10$ \\
+Laser power:geometry & 2 & 12086 & 6043 & 17.48 & $4.51 \mathrm{e}-07$ \\
+(Residuals) & 84 & 29046 & 346 &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+Fig. 10 The summary of the Vickers hardness tests of $\mathbf{a} 70 \mathrm{~W}$ series; b $65 \mathrm{~W}$ series; c $60 \mathrm{~W}$ series
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-10(2)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-10(1)}
+\end{center}
+
+(b)
+
+60W
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-10}
+\end{center}
+
+(c)
+
+that a difference in laser power highly influences the mean Vickers hardness values. To further study the increasing trend in hardness observed in conical geometry, one-way ANOVA was conducted between hardness measurements of each section of the same printed part. The results showed a statistical equality among hardness measurements where all the values were slightly above 0.05 (value taken as significance level).\\
+Table 6 Results of the one-way ANOVA analysis for each sample
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+Sample & Factor & Sum square & Mean square & $F$ value & $p$ value \\
+\hline
+$70 \mathrm{~W}$ cylinder & Depths & 366 & 121.99 & 4.321 & 0.106 \\
+ & Residuals & 1016 & 28.23 &  &  \\
+\multirow{2}{*}{$70 \mathrm{~W}$ cone} & Depths & 168.3 & 56.09 & 4.45 & 0.00928 \\
+ & Residuals & 453.8 & 12.61 &  &  \\
+ & Depths & 220.1 & 73.36 & 3.556 & 0.0237 \\
+ & Residuals & 742.7 & 20.63 &  & 0.0187 \\
+65 W cone & Depths & 129.6 & 43.21 & 3.779 &  \\
+ & Residuals & 411.7 & 11.44 &  & 0.0426 \\
+ & Depths & 52.18 & 17.394 & 3.012 & 0.0543 \\
+ & Residuals & 207.87 & 5.774 &  &  \\
+ & Depths & 42.06 & 14.019 & 2.791 &  \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 7 Summary of the experimental data curve fit results
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+Laser power $(\mathrm{W})$ & Sample's shape & $\mathrm{p} 1$ & $\mathrm{p} 2(\mu \mathrm{m})$ & SSE & \begin{tabular}{l}
+$R-$ \\
+square \\
+\end{tabular} \\
+\hline
+70 & Cylinder & 0.16160 & 34.13 & 2.265 & 0.9381 \\
+ & Cone & 0.11260 & 31.46 & 0.158 & 0.9928 \\
+65 & Cylinder & 0.12890 & 31.11 & 0.147 & 0.9718 \\
+ & Cone & 0.09370 & 28.75 & 0.1813 & 0.9892 \\
+60 & Cylinder & 0.06212 & 26.94 & 1.428 & 0.8898 \\
+ & Cone & 0.05553 & 26.31 & 0.1546 & 0.9632 \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{3.2.2 Effect of geometry}
+In this section, hardness measurements are compared between parts printed at the same laser power in order to compare the influence of part geometry. Hardness values shares comparable values except for the $70 \mathrm{~W}$ prints, where also the higher difference in porosity has been found. Overall, the cylindrical parts are more susceptible to the process parameters as it can be seen in the higher variation of hardness values (Fig. 9), where the same variation of laser power does not affect the conical geometry to such extent. This result is linked to the heat extraction capacity of the cylinder not being able to dissipate the deposited energy hence accumulating heat that lead to instabilities during printing thus higher porosity and hardness variations.
+
+Furthermore, two-way ANOVA exhibits a statistically significant influence from the geometrical factor indicating that, contrary from depth values, both factors have huge impact on hardness values. In this case, the analysis found a synergic effect between the two factors suggesting that the relationship between hardness values and geometry depends on laser power. While, one-way ANOVA displayed a statistical difference between the geometry at the same laser power level, which was more marked at $70 \mathrm{~W}$ and $60 \mathrm{~W}$ laser power. Figure 10 highlights the better performances of the cones as it presents a higher hardness compared with the cylinders. Therefore, the geometric variations of the cones produced lower porosity during printing that well correlates with both the Vickers hardness measurements and the statistical analysis.
+
+\subsection*{3.3 Proposed model}
+\subsection*{3.3.1 Statistical analysis}
+One-way ANOVA has been performed on the depth measurements to confirm there is a significant difference, between consecutive parts of the same print. Prior to the analysis, the following assumptions were checked: all the data are normally distributed and the variance across groups (i.e., print parts) is homogeneous. Hence, it can be stated that the mean values are a good representation of the data. Table 6 summarizes the\\
+ANOVA analysis done on the data gathered at different heights of each sample. An important note is that the degrees of freedom and their residuals were the same for all the samples: $\mathrm{Df}=3$ and $R=36$, and have been used to calculate the $F$ value and $p$ value. The ANOVA results exhibit a statistical significance where the $p$ values are marked with a star (Table 6), especially in the $70 \mathrm{~W}$ conical sample; hence, there are at least two parts in each sample that differ significantly from each other. The $60 \mathrm{~W}$ cone does not present a $p$ value lower than 0.05 ; however, its value is slightly above the threshold, thus it does not invalidate the overall trend found.
+
+A Tukey's honest significant difference (Tukey HSD) test had been performed on the data assuming a significance level of 0.05 . The multiple pairwise-comparison between the means of groups enable to find where the statistical significance lies. The results exhibited a significant difference between parts 1 and 4 for all the samples; while the $65 \mathrm{~W}$ cone exhibited a significant difference even at lower heights between parts 1 and 3.
+
+From the statistical investigation, the decreasing melt pool depth trend is not limited by the data gathered in this study. Therefore, a factor should be added into the Rubenchik model to describe the trend found.
+
+\subsection*{3.3.2 Factor proposition}
+To further investigate the melt pool depth trend exhibited in Fig. 7 and to find the best mathematical form able to describe it, the melt pool depth curves have been analyzed using the curve fitting tool offered by Matlab software. The best fitting resulted to be linear as represented in Eq. (3.1), where $x$ represents the distance from the building plate (i.e., the height) quantified in millimeters and $f(x)$ is the predicted depth of the melt pool. The coefficients of the polynomial are summarized in the Table 7. Two additional values are displayed to give an indication of the fit quality: the sums of the squares errors (SSE) and the $R$-square.
+
+$f(x)=p 2-p 1 \cdot x$
+
+Fig. 11 Plots of the proposed model and the sample's depths data for a $70 \mathrm{~W}$ series; b $65 \mathrm{~W}$ series; c $60 \mathrm{~W}$ series
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-12(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-12(2)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-12}
+\end{center}
+
+(c)
+
+A good fit was achieved in almost every sample, as indicated both by the SSE values being close to zero and the $R$ squares being near the unity. The slope coefficients tend to decrease with decreasing laser power. This could be explained considering that a lower energy source would result in a more stable printing with lower accumulation of heat inside the print. Furthermore, at constant laser power, the cones exhibit lower slopes compared with the cylinders; however, ANOVA analysis determined a non-significant difference between shapes. Nonetheless, a factor in relation with laser power is proposed to describe the decrease in melt pool depths. The form used to describe the trend is still a polynomial of the first order as in Eq. (3.2) given the good fit already found (see Table 7). While Eq. (3.3) present the linear coefficient $g$ properly defined to take into account the laser power used during the printing, listed as $P, X$ is the height of the envelope and $P_{\max }$ refers to the maximum power reachable by the machine. In this study, $X$ and $P_{\max }$ are $90 \mathrm{~mm}$ and $100 \mathrm{~W}$, respectively.
+
+$f(x)=p 2-g \cdot x$
+
+$g=\frac{p 2}{X} \cdot\left(\frac{P}{P_{\max }}\right)^{3}$\\
+An important note is that instead of the parts division utilized in the previous sections, the melt pool depths of the samples have been assigned to the average cross-sectional position of the selected areas 1 to 4 (Fig. 2) which are 6 $\mathrm{mm}, 21 \mathrm{~mm}, 39 \mathrm{~mm}$, and $54 \mathrm{~mm}$, respectively. This division enables to display both the predicted model curve and the experimental data in the same plot by using the distance from the building plate. The plots representing this new model and the experimental data are listed in Fig. 11 and summarized in Table 8. While a good fit has been obtained for both 70 and
+
+Table 8 Summary of the fit results between the improved model and the experimental data
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+Laser power $(\mathrm{W})$ & \begin{tabular}{l}
+Sample's \\
+shape \\
+\end{tabular} & $g$ & $\mathrm{p} 2(\mu \mathrm{m})$ & $\mathrm{SSE}$ & $R$-square \\
+\hline
+70 & Cylinder & 0.1205 & 31.62 & 3.3234 & 0.7737 \\
+ & Cone &  &  & 0.5371 & 0.9871 \\
+65 & Cylinder & 0.0918 & 30.09 & 1.4158 & 0.9317 \\
+ & Cone &  &  & 3.0415 & 0.4648 \\
+60 & Cylinder & 0.0684 & 28.48 & 2.7452 & -0.0832 \\
+ & Cone &  &  & 3.6254 & -1.3439 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b19d26be2529dffb447eg-13}
+\end{center}
+
+Fig. 12 The comparison between the experimental data and the improved model fit of the $60 \mathrm{~W}$ prints
+
+$65 \mathrm{~W}$ series, the $60 \mathrm{~W}$ series present negative $R$-squared values, indicating that a horizontal curve would interpolate the data better. However, by looking at Fig. 11c, it is clear that the offset is on the melt pool depth prediction that makes the curve starting point at $28.48 \mu \mathrm{m}$, instead of few microns lower.
+
+In fact, the slopes of the curves outlined by the constant $g$ exhibit a good similarity with the values obtained by the curve fitting and reported in Table 7. Thus, the factor proposed describes the descending trend with little mismatch from experimental measurements. This observation is further confirmed when the starting melt pool depth of the $60 \mathrm{~W}$ series is modified to the average of the experimental data, resulting in an adjusted starting value of $\mathrm{p} 2 *=26.63 \mu \mathrm{m}$. In this way, the $R$ squared values for the cylinder and cone are 0.9028 and 0.9524 respectively, as shown in Fig. 12, that indicate a good fit with the experimental data. Therefore, it further validates the definition given to the constant factor $g$.
+
+\section*{4 Conclusions}
+In this work, $316 \mathrm{~L}$ stainless steel samples made with additive manufacturing powder bed fusion technology have been characterized. The influence of geometry and laser power on the microstructure, related to the heat extraction capacity, has been addressed by selecting two simple geometries; a cylinder and a cone. The results are summarized below:
+
+\begin{itemize}
+  \item The correlation between laser power and the melt pool depth was determined and quantified, proving the accuracy of the implemented Rubenchik model. Although at $60 \mathrm{~W}$ laser power an offset of $2 \mu \mathrm{m}$ is present, the rest of the printings exhibit good $R$-square match considering the measurement errors.
+
+  \item A melt pool depth decreased with increasing distance from the build plate was assessed by highlighting the melt pools with proper microstructural characterization and consequent measurement via imaging software. Although the implemented models have not taken it into account, this correlation has been found to be consistent in all the printed samples and further confirmed with inferential statistics.
+
+  \item Constant factor $g$ was proposed and successfully improved the Rubenchik model to describe the decreasing melt pool depth trend and better fit the data.
+
+  \item Comparing the cylindrical and cone geometries, the latter exhibited a higher Vickers hardness and density. The cone part material properties were found to be less influenced by changes in the laser power, in the range studied, compared with those obtained for cylindrical geometries.
+
+\end{itemize}
+
+Given the statistical significance found on the melt pool depth dataset, future work will focus on confirming the results obtained in this study and further validate the improved model proposed.
+
+Author contribution Sebastiano Piazza: investigation, data curation, formal analysis, writing original draft
+
+Brian Merrigan: methodology, investigation
+
+Denis Dowling: supervision, funding acquisition, writing - review and editing
+
+Mert Celikin: conceptualization, methodology, supervision, writingreview and editing
+
+Funding This publication has received partial research support from Science Foundation Ireland (SFI) through the I-Form Manufacturing Research Centre, under Grant Number 16/RC/3872 and is co-funded under the European Regional Development Fund.
+
+\section*{References}
+\begin{enumerate}
+  \item Frazier WE (2014) Metal Additive Manufacturing: A Review. J Mater Eng Perform 23:1917-1928. \href{https://doi.org/10.1007/}{https://doi.org/10.1007/} s11665-014-0958-z
+
+  \item Mueller B (2012) Additive Manufacturing Technologies - Rapid Prototyping to Direct Digital Manufacturing. Assem Autom 32. \href{https://doi.org/10.1108/aa.2012.03332baa}{https://doi.org/10.1108/aa.2012.03332baa}. 010
+
+  \item Harun WSW, Kamariah MSIN, Muhamad N, Ghani SAC, Ahmad F, Mohamed Z (2018) A review of powder additive manufacturing processes for metallic biomaterials. Powder Technol 327:128-151. \href{https://doi.org/10.1016/j.powtec.2017.12.058}{https://doi.org/10.1016/j.powtec.2017.12.058}
+
+  \item Mower TM, Long MJ (2016) Mechanical behavior of additive manufactured, powder-bed laser-fused materials. Mater Sci Eng A 651:198-213. \href{https://doi.org/10.1016/j.msea.2015.10.068}{https://doi.org/10.1016/j.msea.2015.10.068}
+
+  \item Kaschel FR, Celikin M, Dowling DP (2020) Effects of laser power on geometry, microstructure and mechanical properties of printed Ti-6Al-4V parts. J Mater Process Technol 278:116539. \href{https://doi}{https://doi}. org/10.1016/j.jmatprotec.2019.116539
+
+  \item Herzog D, Seyda V, Wycisk E, Emmelmann C (2016) Additive manufacturing of metals. Acta Mater 117:371-392. \href{https://doi}{https://doi}. org/10.1016/j.actamat.2016.07.019
+
+  \item Kaschel FR, Vijayaraghavan RK, Shmeliov A, McCarthy EK, Canavan M, McNally PJ, Dowling DP, Nicolosi V, Celikin M (2020) Mechanism of stress relaxation and phase transformation in additively manufactured Ti-6Al-4V via in situ high temperature XRD and TEM analyses. Acta Mater 188:720-732. \href{https://doi.org/}{https://doi.org/} 10.1016/j.actamat.2020.02.056
+
+  \item King WE, Anderson AT, Ferencz RM, Hodge NE, Kamath C, Khairallah SA, Rubenchik AM (2015) Laser powder bed fusion additive manufacturing of metals physics, computational, and materials challenges. Appl Phys Rev 2:041304. \href{https://doi.org/10}{https://doi.org/10}. 1063/1.4937809
+
+  \item King WE, Barth HD, Castillo VM, Gallegos GF, Gibbs JW, Hahn DE, Kamath C, Rubenchik AM (2014) Observation of keyholemode laser melting in laser powder-bed fusion additive manufacturing. J Mater Process Technol 214:2915-2925. \href{https://doi.org/10}{https://doi.org/10}. 1016/j.jmatprotec.2014.06.005
+
+  \item Palanivel S, Dutt AK, Faierson EJ, Mishra RS (2016) Spatially dependent properties in a laser additive manufactured Ti-6Al-4V component. Mater Sci Eng A 654:39-52. \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. msea.2015.12.021
+
+  \item Sames WJ, List FA, Pannala S, Dehoff RR, Babu SS (2016) The metallurgy and processing science of metal additive manufacturing. Int Mater Rev 61:315-360. \href{https://doi.org/10.1080/09506608}{https://doi.org/10.1080/09506608}. 2015.1116649
+
+  \item Ilin A, Logvinov R, Kulikov A, Prihodovsky A, Xu H, Ploshikhin V, Günther B, Bechmann F (2014) Computer aided optimisation of the thermal management during laser beam melting process. Phys Procedia 56:390-399. \href{https://doi.org/10.1016/j.phpro.2014.08.142}{https://doi.org/10.1016/j.phpro.2014.08.142}
+
+  \item Williams JD, Deckard CR (1998) Advances in modeling the effects of selected parameters on the SLS process. Rapid Prototyp J 4:90100. \href{https://doi.org/10.1108/13552549810210257}{https://doi.org/10.1108/13552549810210257}
+
+  \item Choo H, Sham K-L, Bohling J, Ngo A, Xiao X, Ren Y, Depond PJ, Matthews MJ, Garlea E (2019) Effect of laser power on defect, texture, and microstructure of a laser powder bed fusion processed 316L stainless steel. Mater Des 164:107534. \href{https://doi.org/10}{https://doi.org/10}. 1016/j.matdes.2018.12.006
+
+  \item Zhang M, Sun C-N, Zhang X, Goh PC, Wei J, Hardacre D, Li H (2017) Fatigue and fracture behaviour of laser powder bed fusion stainless steel 316L: Influence of processing parameters. Mater Sci Eng A 703:251-261. \href{https://doi.org/10.1016/j.msea.2017.07.071}{https://doi.org/10.1016/j.msea.2017.07.071}
+
+  \item Kamath C, El-dasher B, Gallegos GF, King WE, Sisto A (2014) Density of additively-manufactured, 316L SS parts using laser powder-bed fusion at powers up to $400 \mathrm{~W}$. Int J Adv Manuf Technol 74:65-78. \href{https://doi.org/10.1007/s00170-014-5954-9}{https://doi.org/10.1007/s00170-014-5954-9}
+
+  \item Kudzal A, McWilliams B, Hofmeister C, Kellogg F, Yu J, TaggartScarff J, Liang J (2017) Effect of scan pattern on the microstructure and mechanical properties of powder bed fusion additive manufactured 17-4 stainless steel. Mater Des 133:205-215. $\mathrm{https://doi.org/10.1016/ \textrm {j } . \text { matdes.2017.07.047 }}$
+
+  \item Wang X, Muñiz-Lerma JA, Sánchez-Mata O, Shandiz MA, Brochu M (2018) Microstructure and mechanical properties of stainless steel $316 \mathrm{~L}$ vertical struts manufactured by laser powder bed fusion process. Mater Sci Eng A 736:27-40. \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. msea.2018.08.069
+
+  \item Rubenchik AM, King WE, Wu SS (2018) Scaling laws for the additive manufacturing. J Mater Process Technol 257:234-243. \href{https://doi.org/10.1016/j.jmatprotec.2018.02.034}{https://doi.org/10.1016/j.jmatprotec.2018.02.034}
+
+  \item Khairallah SA, Anderson A (2014) Mesoscopic simulation model of selective laser melting of stainless steel powder. J Mater Process Technol 214:2627-2636. \href{https://doi.org/10.1016/j.jmatprotec}{https://doi.org/10.1016/j.jmatprotec}. 2014.06.001
+
+  \item Tang M, Pistorius PC, Beuth JL (2017) Prediction of lack-of-fusion porosity for powder bed fusion. Addit Manuf 14:39-48. \href{https://doi}{https://doi}. org/10.1016/j.addma.2016.12.001
+
+  \item Mills KC (2002) Recommended values of thermophysical properties for selected commercial alloys. Woodhead Publishing, Cambridge
+
+  \item Gusarov AV, Smurov I (2010) Modeling the interaction of laser radiation with powder bed at selective laser melting. Phys Procedia 5:381-394. \href{https://doi.org/10.1016/j.phpro.2010.08.065}{https://doi.org/10.1016/j.phpro.2010.08.065}
+
+  \item Umbrello D, M'Saoubi R, Outeiro JC (2007) The influence of Johnson-Cook material constants on finite element simulation of machining of AISI 316L steel. Int J Mach Tools Manuf 47:462470. \href{https://doi.org/10.1016/j.ijmachtools.2006.06.006}{https://doi.org/10.1016/j.ijmachtools.2006.06.006}
+
+  \item Mertens A, Reginster S, Contrepois Q, Dormal T, Lemaire O, Lecomte-Beckers J (2014) Microstructures and mechanical properties of stainless steel AISI 316L processed by selective laser melting. Mater Sci Forum 783-786:898-903. \href{https://doi.org/10.4028/}{https://doi.org/10.4028/} \href{http://www.scientific.net/msf.783-786.898}{www.scientific.net/msf.783-786.898}
+
+  \item Zhong Y, Liu L, Wikman S, Cui D, Shen Z (2016) Intragranular cellular segregation network structure strengthening 316L stainless steel prepared by selective laser melting. J Nucl Mater 470:170178. \href{https://doi.org/10.1016/j.jnucmat.2015.12.034}{https://doi.org/10.1016/j.jnucmat.2015.12.034}
+
+  \item Bartolomeu F, Buciumeanu M, Pinto E, Alves N, Carvalho O, Silva FS, Miranda G (2017) 316L stainless steel mechanical and tribological behavior-A comparison between selective laser melting, hot pressing and conventional casting. Addit Manuf 16:81-89. \href{https://doi.org/10.1016/j.addma.2017.05.007}{https://doi.org/10.1016/j.addma.2017.05.007}
+
+  \item Matthews MJ, Guss G, Khairallah SA, Rubenchik AM, Depond PJ, King WE (2016) Denudation of metal powder layers in laser powder bed fusion processes. Acta Mater 114:33-42. \href{https://doi.org/10}{https://doi.org/10}. 1016/j.actamat.2016.05.017
+
+  \item Gu H, Gong H, Pal D, Rafi K, Starr T, Stucker B (2013) Influences of energy density on porosity and microstructure of selective laser melted 17-4PH stainless steel. Solid Freeform Fabrication Symposium
+
+  \item Thijs L, Verhaeghe F, Craeghs T, Humbeeck JV, Kruth J-P (2010) A study of the microstructural evolution during selective laser melting of Ti-6Al-4V. Acta Mater 58:3303-3312. \href{https://doi.org/10}{https://doi.org/10}. 1016/j.actamat.2010.02.004
+
+  \item Bertoli US, MacDonald BE, Schoenung JM (2019) Stability of cellular microstructure in laser powder bed fusion of 316L stainless steel. Mater Sci Eng A 739:109-117. \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. msea.2018.10.051
+
+  \item Zacharia T, David SA, Vitek JM, Debroy T (1989) Weld pool development during GTA and laser beam welding of type 304 stainless steel Part II. Experimental correlation. Weld J 68:510-519
+
+  \item Vasinonta A, Beuth JL, Griffith M (2006) Process maps for predicting residual stress and melt pool size in the laser-based fabrication of thin-walled structures. J Manuf Sci Eng 129:101-109. \href{https://doi.org/10.1115/1.2335852}{https://doi.org/10.1115/1.2335852}
+
+\end{enumerate}
+
+Publisher's note Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations.
+
+
+\end{document}

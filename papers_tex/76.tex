@@ -1,0 +1,765 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{A three-phase model for simulation of heat transfer and melt pool behaviour in laser powder bed fusion process }
+
+
+\author{E.L. Li, L. Wang, A.B. Yu, Z.Y. Zhou*\\
+ARC Research Hub for Computational Particle Technology, Department of Chemical Engineering, Monash University, Clayton, VIC 3800, Australia}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+
+
+\section*{A R T I C L E I N F O}
+\section*{Article history:}
+Received 22 May 2020
+
+Received in revised form 4 October 2020
+
+Accepted 24 November 2020
+
+Available online 6 December 2020
+
+\section*{Keywords:}
+Laser powder bed fusion
+
+Melt pool
+
+VOF
+
+Porosity
+
+Melting
+
+Solidification
+
+\begin{abstract}
+A B S T R A C T Laser powder bed fusion (LPBF) is one of the most promising additive manufacturing technologies to fabricate high quality metal parts. In this work, a three-phase model based on the volume of fluid (VOF) is employed to investigate the heat transfer and melt pool behaviour in LPBF. Surface tension, Marangoni effect and recoil pressure are implemented in the model, and heat adsorption, reflection and transmission are fully considered. The results show that the melt pool dimension and its shape are controlled by laser power and scanning speed. Metal powders at the bottom layers may be not fully melted, and for larger layer thickness of the powder bed, porosities caused by the trapped gas can form. The gas originated from bulk powders can dissolve, coalesce, and be squeezed in the melt pool. It is demonstrated that the model can capture the main features of powder melting and solidification in LPBF process.
+\end{abstract}
+
+(c) 2020 Elsevier B.V. All rights reserved.
+
+\section*{1. Introduction}
+Additive manufacturing (AM) is an advanced manufacturing technology which fabricates complex components by adding materials layer-upon-layer. Due to its advantages in freeform fabrication [1], AM is heralded as the next industrial revolution [2], and the global AM products and services market grow rapidly. As one of the important AM processes, powder bed fusion (PBF) is considered to be the most practical technique for current metal manufacturing [3]. In particular, laser powder bed fusion (LPBF) has emerged as one of the commercialised technologies for engineering metal fabrication, in which laser beam with high energy density is utilized to melt powders. LPBF can fabricate components with complex geometry nearly without need for further postprocessing and the production can be near full density [4]. Hence it has been increasingly used in aerospace [5] and biomedical sectors [6,7].
+
+Although advantages of LPBF technology have been well recognised, one of the challenges is how to manufacture components to meet the industrial high-quality standards. Defects of the final products such as balling effects, incomplete fusion holes, cracks, porosities, are serious obstacles to the further application of LPBF into the industrial practice $[8,9]$. Generally, during the LPBF process, a melt pool is formed and the fluid dynamics is driven by different forces such as gravity, surface tension, Marangoni force and recoil pressure. Defects formation is closely related to the melt pool dynamics. For example, the molten
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail address: \href{mailto:zongyan.zhou@monash.edu}{zongyan.zhou@monash.edu} (Z.Y. Zhou).
+}
+
+track tends to break into droplets and balling phenomenon is generated to minimize surface energy because of surface tension $[10,11]$. The formation of melt balls can cause high surface roughness and volumetric porosity [12]. Even worse, it might obstruct the process of rolling a new powder layer if the size of the ball is larger enough [11]. Furthermore, recoil pressure can lead to spattering when the temperature of the melt pool exceeds the evaporating point [13], and the spattering can cause voids and rough surface morphology. Advanced measurement techniques have been used to observe the melt pool dynamics. For example, Leung et al. [14] applied synchrotron X-ray imaging to investigate mechanisms of laser-matter interaction and solidification phenomena. It is found that gas pores can nucleate, coalesce and collapse driven by Marangoni convection and a pore bursting mechanism is proposed. Martin et al. [15] investigated the dynamics of pore formation during the laser bed fusion process in situ X-ray imaging, and found that pores are formed due to the collapse of a deep keyhole depression and trapping of inert gas. The experiments provide useful and reliable data for understanding pore formation, but generally conducting experiments to investigate the effect of process parameters on melt pool dynamics and product quality is time-consuming and expensive. It is also difficult to obtain the detailed microscopic information such as velocity and forces which however is crucial for fundamental understanding of the multiple phenomena involved. Mathematical modelling is an alternative method to overcome the difficulty, and it can reveal the process physics and defects formation mechanisms $[16,17]$.
+
+Many efforts have been made in the past years for understanding melt pool dynamics by mathematical modelling. For example, Körner
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-02(1)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-02}
+\end{center}
+
+et al. [18] employed Lattice Boltzmann Method (LBM) to study balling effect, and found that the generated droplets are influenced by the packing arrangement of powders. Gu et al. [19] applied finite volume method (FVM) to examine melt pool behaviour, and found that Marangoni convection has a significant effect on heat transfer and melt pool characteristics. Panwisawas et al. [20] utilized Volume of Fluid (VOF) model to investigate evolution of porosity, and observed that spherical or ellipsoidal pores are formed due to different forces at the metal-gas interface. Gürtler et al. [21] used VOF model to study melting and solidification process, and the obtained porosity is compared with experiments. Khairallahn et al. [22] reported a fine-scale model and demonstrated the melt pool dynamics and formation of pore defects, spatter and denudation zones. It is found out the melt track breaks into three regions and different pore formation mechanisms are observed at different regions. Liu et al. [23] incorporated isoAdvector into the VOF model to capture melting interphase, and made a qualitative comparison with experiments, but the effect of recoil pressure is not considered. Furthermore, due to laser drilling and melt pool dynamics, a depression area which is similar to the keyhole in laser welding is formed and multiple reflections of laser ray occur on cavity surface [24]. The reflected laser energy is deposited on the concave face which can affect melt hydrodynamics. However, in the literature, the laser beam energy is mostly modelled by the heat flux with a geometrical equation or a prescribed absorption profile along the powder bed. In addition, multiple reflection in the depression areas based on discrete distributed powders has not been considered. More detailed analysis of the pore formation during melting and solidification is still required for further understanding of melt pool dynamics.
+
+In this paper, a three-phase model is developed to investigate heat transfer and melt pool behaviour based on discrete distributed powders during LPBF process, in which surface tension, Marangoni effect and recoil pressure are considered. The VOF approach is used to track phase interface between solid metal, molten liquid and gas during melting and solidification process. The Fresnel reflection and adsorption models are implemented to trace the laser ray multiple reflection. The discrete transfer radiation model (DTRM) is applied to describe the adsorption and transmission between laser rays and the multiple phases. Heat loss due to evaporation and mass evaporation are neglected in this model.
+
+\section*{2. Model description}
+VOF, a numerical approach [25] to track the free surface at different phases, is employed in this work. The approach has been presented in some references (for example, [26]), however, the description is not\\
+complete. Here, the involved governing equations and various source terms used in the approach are discussed in detail, aiming to give a comprehensive description of the approach.
+
+\subsection*{2.1. VOF model}
+In VOF, a fraction function is induced to describe the volume fraction of each phase in a grid cell. During the LPBF process, three phases may co-exist in a grid cell, including solid phase (for example, metal powders, solidified metal phase and substrate), molten liquid phase and inert gas phase. Note that phase changes occur in grid cells, for example, solid metal powders are melted to liquid, and then liquid solidifies to metal phase. The volume fractions of the three phases in grid cells are tracked by the VOF method. The governing equation for each phase is given below.
+
+For liquid phase:
+
+$\frac{\partial \alpha_{l}}{\partial t}+\nabla \cdot\left(\alpha_{l} \mathbf{U}\right)+\left\{\nabla \cdot\left(\alpha_{l} \alpha_{s} \mathbf{U}_{l s}\right)+\nabla \cdot\left(\alpha_{l} \alpha_{g} \mathbf{U}_{l g}\right)\right\}=\frac{\dot{m}_{s l}-\dot{m}_{l s}}{\rho_{l}}$
+
+For solid phase:
+
+$\frac{\partial \alpha_{s}}{\partial t}+\nabla \cdot\left(\alpha_{s} \mathbf{U}\right)+\left\{\nabla \cdot\left(\alpha_{s} \alpha_{l} \mathbf{U}_{s l}\right)+\nabla \cdot\left(\alpha_{s} \alpha_{g} \mathbf{U}_{s g}\right)\right\}=\frac{\dot{m}_{l s}-\dot{m}_{s l}}{\rho_{s}}$
+
+For gas phase:
+
+$\frac{\partial \alpha_{g}}{\partial t}+\nabla \cdot\left(\alpha_{g} \mathbf{U}\right)+\left\{\nabla \cdot\left(\alpha_{g} \alpha_{l} \mathbf{U}_{g l}\right)+\nabla \cdot\left(\alpha_{g} \alpha_{s} \mathbf{U}_{g s}\right)\right\}=0$
+
+where $\alpha_{l}, \alpha_{s}$ and $\alpha_{g}$ respectively represent the volume fraction of liquid, solid and gas phases $\left(\alpha_{l}+\alpha_{s}+\alpha_{g}=1\right) ; t$ is the time; $\mathbf{U}$ is the mixture velocity calculated based on volume-averaged value of each phase; $\mathbf{U}_{l s}, \mathbf{U}_{l g}$ and $\mathbf{U}_{s g}$ respectively are the relative velocity between the two phases, and the third term on the left side (in the brackets) is usually referred to the compression term between the two phases; $\dot{m}_{s l}$ and $\dot{m}_{l s}$ respectively represent mass transfer rate from solid to liquid and liquid to solid due to the phase change, and the expression for these two terms will be discussed in Section 2.2; $\rho_{s}$ and $\rho_{l}$ respectively represent the density of solid and liquid. Note that in the VOF method, all the mixture properties in the cell such as the density, dynamic viscosity, specific heat capacity and thermal conductivity are a function of phase volume fraction. For example, the mixture density $\rho=\alpha_{s} \rho_{s}+\alpha_{l} \rho_{l}+\alpha_{g} \rho_{g}$, where $\rho_{g}$ is the gas density.
+
+The algorithm to solve the volume fraction equation is based on the flux-corrected transport (FCT) method [27]. The equations from Eq. (1) to Eq. (3) can be discretised by an explicit scheme as
+
+$\frac{\alpha_{i}^{n+1}-\alpha_{i}^{n}}{\Delta t} \Delta V=F_{U}^{n}+F_{c}^{n}+F_{p c}^{n}$
+
+where $i$ is the phase index; $n$ and $n+1$ respectively are the old and new time step index; $\Delta V$ is the cell volume; $\Delta t$ is the time step; $F_{U}^{n}$ is the flux due to the velocity $\mathbf{U} ; F_{c}^{n}$ is the flux from the compression term; $F_{p c}^{n}$ is the flux for the phase change. To avoid diffusion and eliminate oscillation, the value of total flux is a combination of a first-order scheme and a high-order scheme, and expressed as:
+
+$F^{n}=F^{L, n}+\lambda\left(F^{H, n}-F^{L, n}\right)$
+
+where $F^{L, n}$ is the first-order value; $F^{H, n}$ is the high-order value and $\lambda$ is the weighting factor which is obtained by the Zalesak's multidimensional algorithm [28]. Once the volume fraction equation iteration is completed, the mixture properties are interpolated to solve following momentum equation and energy equation.
+
+\subsection*{2.2. Continuity and momentum governing equations}
+The metal flow in the simulation is assumed to be incompressible and therefore the continuity equation is expressed as
+
+$\nabla \cdot \mathbf{U}=\left(\dot{m}_{s l}-\dot{m}_{l s}\right)\left(\frac{1}{\rho_{l}}-\frac{1}{\rho_{s}}\right)$
+
+Note that the metal mass remains conservative in Eq. (6) during the melting and solidification process, while phase change and mass transfer occur between the solid phase and the liquid phase. Phase change and free surface fluid flow have been well studied by the Lagrangian model where the phase change is assumed to be transformed completely at the melting point [29]. In this work, a continuum phase change model is developed to simulate the melt pool flow during the phase transition with a mass transfer rate. The mass transfer model [30] used between the solid and the liquid is given below.
+
+For melting mass transfer rate (from the solid metal to the molten liquid):
+
+$\dot{m}_{s l}=\beta_{s l} \rho_{s} \alpha_{s} \frac{\left(T-T_{l}\right)}{T_{l}}$ for $T>T_{l}$
+
+For solidification mass transfer rate (from the molten liquid to the solid metal phase):
+
+$\dot{m}_{l s}=\beta_{l s} \rho_{l} \alpha_{l} \frac{\left(T_{s}-T\right)}{T_{s}}$ for $T<T_{s}$
+
+where $\dot{m}_{s l}$ and $\dot{m}_{l s}$ respectively represent mass transfer rate from the solid metal to the molten liquid and the molten liquid to the solid metal phase; $\beta_{s l}$ and $\beta_{l s}$ respectively are the model coefficients which determine the melting and solidification rates and can be interpreted as a relaxation time $\left(\mathrm{s}^{-1}\right) ; \rho_{s}$ and $\rho_{l}$ respectively are the solid and liquid density; $\alpha_{s}$ and $\alpha_{l}$ respectively represent the solid volume fraction and liquid volume fraction in the cell; $T$ is the metal temperature, and $T_{l}$ and $T_{s}$ are respectively the liquidus temperature and solidus temperature. Note that the melting and solidification coefficients of $\beta_{s l}$ and $\beta_{l s}$ vary with powder materials, and there is little information in the literature. Therefore, the values of $\beta_{s l}$ and $\beta_{l s}$ need to be finely tuned to match experimental data. In this work, $\beta_{s l}$ and $\beta_{l s}$ are respectively taken to be $2 \times 10^{3} \mathrm{~s}^{-1}$ and $1 \times 10^{6} \mathrm{~s}^{-1}$ to match well with experiments in melt pool width [31].
+
+Note that in the literature [32,33], immersed boundary method (IBM) is applied to simulate the interaction between the fluid and the solid, but not preferred for the case presented in this work. This is because the solid powder phase in the present work is treated as a continuum fluid and its velocity is forced to zero. The velocity of the solidliquid mixture region (so called mushy zone which is regarded as porous medium) is controlled by the source term for the mushy zone in the momentum governing equation. The melt pool dynamics is driven by different external forces such as gravity, surface tension, Marangoni force and recoil pressure. Hence, the source terms associated with the liquid fraction for mushy zone, surface tension, Marangoni force and recoil pressure must be considered in the momentum conservation equation which is given below:
+
+
+\begin{align*}
+& \frac{\partial(\rho \mathbf{U})}{\partial t}+\nabla \cdot(\rho \mathbf{U U})=-\nabla p+\rho \mathbf{g}+\nabla \cdot\left(\mu\left(\nabla \mathbf{U}+\nabla \mathbf{U}^{T}\right)\right)+C \frac{\left(1-\alpha_{l}\right)^{2}}{\alpha_{l}^{3}+a} \mathbf{U} \\
+& +\sigma \kappa \nabla \alpha+\frac{d \sigma}{d T}(\nabla T-\boldsymbol{n}(\boldsymbol{n} \cdot \nabla T))|\nabla \alpha|+0.54 P_{0} \exp \frac{L_{v} M\left(T-T_{v}\right)}{R T T_{v}} \nabla \alpha \tag{9}
+\end{align*}
+
+
+where $\rho$ is the mixture density, $p$ is the pressure, $\mathbf{g}$ is the gravity acceleration, $\mu$ is the mixture dynamic viscosity. The last four source terms in Eq. (9) are respectively related to mushy zone, surface tension, Marangoni force and recoil pressure, and further explained below.\\
+(i) Mushy zone: Mushy zone refers to the solid-liquid mixture region when phase change happens during the melting and solidification process [34]. The fluid in the solid-liquid mushy zone should be treated properly. A source term based on the Carman-Kozeny equation is added and written as $C \frac{\left(1-\alpha_{l}\right)^{2}}{\alpha_{l}{ }^{3}+a} \mathbf{U}$ in the momentum equation [35]. In the mushy zone, liquid fraction $\alpha_{l}$ varies between 0 and 1 . When the liquid fraction $\alpha_{l}=1$, the source term equals zero and the momentum equation takes the real fluid velocity. This source term increases from zero to a larger value with the liquid fraction $\alpha_{l}$ decreasing from one to zero. When $\alpha_{l}=0$, this source term tends to be infinity which forces the predicted velocity to be zero. Note that $a$ is a small value $\left(10^{-3}\right)$ to avoid the division by zero. $C$ is the mushy zone constant which determines the amplitude of the damping; the higher of the $C$, the quicker the transition of the fluid velocity in the mushy region to zero as the liquid solidifies. Oscillated results may be generated at very large values of $C$, and the commonly used values of $C$ range from $10^{3}$ to $10^{8} \mathrm{~kg} \mathrm{~m}^{-3} \mathrm{~s}^{-1}$ in the literature [36]. In this work, $C$ is set as $10^{8} \mathrm{~kg} \mathrm{~m}^{-3} \mathrm{~s}^{-1}$ to drop the molten metal velocity steeply to zero and obtain steady solutions.
+
+(ii) Surface tension: Surface tension exists between the liquid-gas and liquid-solid interfaces and drives the molten liquid to flow at minimum surface energy. This will lead to balling effect as described by the Plateau-Rayleigh instability [37]. The continuum surface force (CSF) model [38] is applied to calculate the surface tension $\sigma$ $\left(\mathrm{kg} \mathrm{s}^{-2}\right)$ which is related to powder material property. The surface tension term is written as $\sigma \kappa \nabla \alpha$, where $\kappa=-\nabla \cdot \mathbf{n}$ is the curvature at the interface, and $\mathbf{n}=\nabla \alpha /|\nabla \alpha|$ is the interface unit normal vector [38]. The surface tension can adopt smooth superposition of forces for the gas-liquid-solid interface, which is expressed as
+
+$\mathbf{F}_{s t}=\sum_{i, j=1}^{n} \sigma_{i j} \kappa_{i j} \nabla \alpha_{i j}$
+
+where $i, j$ are the phase index, $n$ is the total number of phases interacting with phase $i$, and $\sigma_{i j}, \kappa_{i j}$ and $\nabla \alpha_{i j}$ are the surface tension, curvature and the gradient of volume fraction between phases $i$ and $j$.
+
+(iii) Marangoni force: Marangoni force is generated as a result of surface tension gradient due to the temperature gradient around laser spots [39] in which the change of surface tension with species concentration is neglected. It plays a significant role in heat and mass transfer in melt pool formation. Marangoni force can change the melt pool geometry and produce liquid spattering $[19,22]$. The direction of Marangoni force is tangential to the melt pool surface, and the Marangoni convection can be determined by $\frac{d \sigma}{d T}(\nabla T-\mathbf{n}(\mathbf{n} \cdot \nabla T))|\nabla \alpha|$ [37], where $\frac{d \sigma}{d T}$ and $\nabla T$ represent the change rate of surface tension $\sigma$ with the temperature and temperature gradient, respectively. The value of $\frac{d \sigma}{d T}$ depends on the temperature distribution which determines the liquid circulating direction in the melt pool, and it is taken to be a constant in this work, and set as $-2.6 \times 10^{-4} \mathrm{~kg} \mathrm{~s}^{-2} \mathrm{~K}^{-1}$. For example, the positive value produces inward flow and negative value generates outward flow [40]. The solving algorithm for the Marangoni force term is similar to the surface tension. The Marangoni force is firstly captured as a surface field at the interface, then the surface flux of this force is reconstructed to be a volume field located at the cell centre.
+
+(iv) Recoil pressure: During the powder bed fusion process, the molten metal temperature can easily exceed the boiling point, thus generating a force on the surface of the liquid known as recoil pressure. Molten metal and non-melted powders could be ejected from the melt track as a result of the recoil pressure, causing droplet and powder spattering. The source term for the recoil pressure can be written as $0.54 P_{0} \exp \frac{L_{v} M\left(T-T_{v}\right)}{R T T_{v}} \nabla \alpha[41]$, where $P_{0}, L_{v}, M, T_{v}$ and $R$ are the ambient pressure, latent heat of vaporization, molar mass, boiling temperature of the material and gas constant, respectively. In these parameters, $P_{0}$ normally is set to $10^{5} \mathrm{~Pa}, R$ is $8.314 \mathrm{~J} \mathrm{~K}^{-1} \mathrm{~mol}^{-1}$, and $L_{v}, M, T_{v}$ are dependent on material property.
+
+Note that to take into the account the pressure change caused by the phase change, the following equation is applied in the pressure-velocity coupling iteration:
+
+$\nabla \cdot\left(\frac{1}{\rho} \nabla p\right)=\nabla \cdot \mathbf{U}-\left(\dot{m}_{s l}-\dot{m}_{l s}\right)\left(\frac{1}{\rho_{l}}-\frac{1}{\rho_{s}}\right)$
+
+Following the solved VOF equation which provides the volume fraction and updated mixture properties such as the density and dynamic viscosity, the momentum equation is solved by the pressure-velocity coupling method and the iteration procedure follows: (i) Solve the momentum Eq. (9) to obtain the predicted velocity $\mathbf{U}^{n+1}$; (ii) Solve the pressure Poisson equation to obtain the pressure $p^{n+1}$; (iii) Use the updated pressure $p^{n+1}$ to correct the velocity $\mathbf{U}^{n+1}$; and (iv) Repeat steps ii and iii for several times until it is converged in this current time step.
+
+\subsection*{2.3. Energy governing equations}
+During the LPBF process, the laser beam energy is absorbed at the surface of powders, then the adsorbed energy is further distributed into the powder bed due to thermal conduction. Besides the adsorption of laser beam, some laser rays can be reflected and transmitted. Heat radiation and heat convection also occur to cool down the melting track. The involved heat transfer phenomena is complicated [42], and a schematic is shown in Fig. 1. For the conservation of energy, heat transfer mechanisms including latent heat of fusion, input energy from laser, heat loss including convective and radiative heat transfer should be taken into consideration. The energy governing equation can be written as
+
+$\frac{\partial\left(\rho C_{p} T\right)}{\partial t}+\nabla \cdot\left(\rho C_{p} T \mathbf{U}\right)=\nabla \cdot(k \nabla T)-L_{f}\left(\dot{m}_{s l}-\dot{m}_{l s}\right)$
+
+$+S_{\text {laser }}-h_{c}\left(T-T_{r e f}\right)-\sigma_{s b} \varepsilon_{e}\left(T^{4}-T_{r e f}^{4}\right)$
+
+where $C_{p}$ represents the mixture specific heat capacity. The source terms on the right part of Eq. (12) include thermal conduction (the first
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-04}
+\end{center}
+
+Fig. 1. Schematic of heat transfer modes considered in the energy governing equation. Laser beam supplies the energy which is adsorbed by metal powders to form the melt pool. The adsorbed energy is further distributed into the powder bed due to the thermal conduction. Besides the adsorption of laser beam, some laser rays can be reflected and transmitted. The heat energy for latent of fusion is required to change the solid powder phase to the molten liquid. Heat radiation and heat convection also occur to cool down the melting pool.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-05}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-05(2)}
+\end{center}
+
+(b)
+
+Fig. 2. (a) Computational domain in the simulation including the powder bed and the substrate, (b) enlarged three-dimensional mesh cell represented by the blue lines.
+
+term), latent heat of fusion (the second term), laser energy input (the third term), thermal convection (the fourth term) and thermal radiation (the last term). Each term is further described below:
+
+(i) Terms for thermal conduction, convection and radiation: The induced laser energy is distributed into the powder bed as a result of heat conduction. The conduction term is given by $\nabla \cdot(k \nabla T)$, where $k$ denotes the mixture effective thermal conductivity which determines the intensity of conduction effect. The effective thermal conductivity depends on materials and powder bed structures [43,44]. Heat transfer occurs between the melting track and surrounding atmosphere by convection and radiation. The convective heat transfer term is described as $h_{c}\left(T-T_{r e f}\right)$, where $h_{c}$ is the convective heat transfer coefficient and it affects the convection intensity, $T_{r e f}$ is the reference temperature and is generally set as the ambient temperature at $300 \mathrm{~K}$. Values of $h_{c}$ ranging from 10 $\mathrm{W} \mathrm{m}^{-2} \mathrm{~K}^{-1}$ to $100 \mathrm{~W} \mathrm{~m}^{-2} \mathrm{~K}^{-1}$ have been applied in the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-05(1)}
+\end{center}
+
+Fig. 3. The top figure: 2D slice snapshot of volume fraction of the solid phase after solidification along the laser scanning direction at $440 \mu \mathrm{s}$ under the condition of laser power $200 \mathrm{~W}$, laser spot radius $20 \mu \mathrm{m}$, and laser scanning speed of $2000 \mathrm{~mm} / \mathrm{s}$. The laser is turned off at $40 \mu \mathrm{s}$. The simulation domain is $300 \mu \mathrm{m} \times 140 \mu \mathrm{m} \times 240 \mu \mathrm{m}$ which consists of an $80-\mu \mathrm{m}$ tall substrate, a $20-\mu \mathrm{m}$ tall powder bed with uniform ordered arrangement of particles, and a 140-um tall gas region. The bottom figure: comparison of the gas-solid interface with different mesh sizes in the enlarged region (yellow dotted rectangle).
+
+Table 1
+
+Powder properties and model parameters used in the simulation.
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Parameters & Values \\
+\hline
+Density of solid $\left(\rho_{s}\right)$ & $4420 \mathrm{~kg} \mathrm{~m}^{-3}$ \\
+\hline
+Density of liquid $\left(\rho_{l}\right)$ & $3682 \mathrm{~kg} \mathrm{~m}^{-3}$ \\
+\hline
+Specific heat capacity of solid $\left(C_{p s}\right)$ & $670 \mathrm{~J} \mathrm{~kg}^{-1} \mathrm{~K}^{-1}$ \\
+\hline
+Specific heat capacity of liquid $\left(C_{p l}\right)$ & $831 \mathrm{~J} \mathrm{~kg}^{-1} \mathrm{~K}^{-1}$ \\
+\hline
+Thermal conductivity of solid $\left(k_{s}\right)$ & $10.6 \mathrm{~W} \mathrm{~m}^{-1} \mathrm{~K}^{-1}$ \\
+\hline
+Thermal conductivity of liquid $\left(k_{l}\right)$ & $33.4 \mathrm{~W} \mathrm{~m}^{-1} \mathrm{~K}^{-1}$ \\
+\hline
+Dynamic viscosity of liquid $\left(\mu_{l}\right)$ & $0.002541 \mathrm{~kg} \mathrm{~m}^{-1} \mathrm{~s}^{-1}$ \\
+\hline
+Latent heat of fusion $\left(L_{f}\right)$ & $2.86 \times 10^{5} \mathrm{~J} \mathrm{~kg}^{-1}$ \\
+\hline
+Latent heat of vaporization $\left(L_{v}\right)$ & $9.83 \times 10^{6} \mathrm{~J} \mathrm{~kg}^{-1}$ \\
+\hline
+Reference temperature $\left(T_{r e f}\right)$ & $300 \mathrm{~K}$ \\
+\hline
+Liquidus temperature $\left(T_{l}\right)$ & $1923 \mathrm{~K}$ \\
+\hline
+Solidus temperature $\left(T_{S}\right)$ & $1877 \mathrm{~K}$ \\
+\hline
+Boiling temperature $\left(T_{v}\right)$ & $3533 \mathrm{~K}$ \\
+\hline
+Solidification coefficient $\left(\beta_{l s}\right)$ & $2 \times 10^{3} \mathrm{~s}^{-1}$ \\
+\hline
+Melting coefficient $\left(\beta_{s l}\right)$ & $1 \times 10^{6} \mathrm{~s}^{-1}$ \\
+\hline
+Surface tension $(\sigma)$ & $1.5 \mathrm{~kg} \mathrm{~s}^{-2}$ \\
+\hline
+Change rate of $\sigma$ with the temperature $\left(\frac{d \sigma}{d T}\right)$ & $-2.6 \times 10^{-4} \mathrm{~kg} \mathrm{~s}^{-2} \mathrm{~K}^{-1}$ \\
+\hline
+Mushy zone constant $(C)$ & $10^{8} \mathrm{~kg} \mathrm{~m}^{-3} \mathrm{~s}^{-1}$ \\
+\hline
+Molar mass of the metal $(M)$ & $0.446 \mathrm{~kg} \mathrm{~mol}^{-1}$ \\
+\hline
+Gas constant $(R)$ & $8.314 \mathrm{~J} \mathrm{~K}^{-1} \mathrm{~mol}^{-1}$ \\
+\hline
+Ambient pressure $\left(P_{0}\right)$ & $10^{5} \mathrm{~Pa}$ \\
+\hline
+Stefan-Boltzmann constant $\left(\sigma_{s b}\right)$ & $5.67 \times 10^{-8} \mathrm{~W} \mathrm{~m}^{-2} \mathrm{~K}^{-4}$ \\
+\hline
+Emissivity $\left(\varepsilon_{e}\right)$ & 0.26 \\
+\hline
+Convective heat transfer coefficient $\left(h_{c}\right)$ & $80 \mathrm{~W} \mathrm{~m}^{-2} \mathrm{~K}^{-1}$ \\
+\hline
+Laser power $(P)$ & $100-250 \mathrm{~W}$ \\
+\hline
+Laser beam radius $(r)$ & $20 \mu \mathrm{m}$ \\
+\hline
+Laser scanning speed $(v)$ & $1000-2500 \mathrm{~mm} / \mathrm{s}$ \\
+\hline
+Reflection coefficient $(\varepsilon)$ & 0.2 \\
+\hline
+Permittivity of a vacuum $\left(\varepsilon_{0}\right)$ & $8.854 \times 10^{-12} \mathrm{~F} \mathrm{~m}^{-1}$ \\
+\hline
+Gas density $\left(\rho_{g}\right)$ & $1.784 \mathrm{~kg} \mathrm{~m}^{-3}$ \\
+\hline
+Specific heat capacity of gas $\left(C_{p g}\right)$ & $520.32 \mathrm{~J} \mathrm{~kg}^{-1} \mathrm{~K}^{-1}$ \\
+\hline
+Thermal conductivity of gas $\left(k_{g}\right)$ & $1.772 \times 10^{-2} \mathrm{~W} \mathrm{~m}^{-1} \mathrm{~K}^{-1}$ \\
+\hline
+Dynamic viscosity of liquid $\left(\mu_{g}\right)$ & $2.2 \times 10^{-5} \mathrm{~kg} \mathrm{~m}^{-1} \mathrm{~s}^{-1}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+previous studies [37]. $h_{c}$ varies with operational conditions, and in this work, it is set as $80 \mathrm{~W} \mathrm{~m}^{-2} \mathrm{~K}^{-1}$. Following Stefan-Boltzmann law of radiation, the radiative heat transfer term is expressed as $\sigma_{s b} \varepsilon_{e}\left(T^{4}-T_{r e f}^{4}\right)$, where the StefanBoltzmann constant $\sigma_{s b}=5.67 \times 10^{-8} \mathrm{~W} \mathrm{~m}^{-2} \mathrm{~K}^{-4}, \varepsilon_{e}$ is the emissivity which varies with material types and temperature. An expression of the emissivity of Titanium Alloy as a function of temperature can be found in the literature [45]. A single value of emissivity is taken in this work for simplicity which is an average value of solid and liquid emissivity, and set as 0.26 . Convection and radiation are considered as the boundary conditions on the top surface of the simulation domain. Compared with the laser beam energy, the convective and radiative heat transfer have much less influence on the temperature field.
+
+(ii) Term for heat of fusion: During the melting process, heat energy is required to change the solid powder phase to the molten liquid. In the solidification of the molten liquid to solid metal phase, heat energy is released. In a grid cell, the combined term for the melting and solidification can be expressed as $L_{f}\left(\dot{m}_{s l}-\dot{m}_{l s}\right)$, where $L_{f}$ is the latent heat of fusion, and the term $\dot{m}_{s l}-\dot{m}_{l s}$ is the net transferred mass of the liquid in the grid cell.
+
+(iii) Term for laser beam energy: To be more realistic to represent laser beam energy, the laser ray tracing model [46] is employed in this work. In this model, a set of collimated rays with a Gaussian energy distribution will travel through the multiphase medium. Each laser ray is traced, and the initial position and orientation of the laser rays can be defined. The lase ray is traced until the remaining energy reduces to the pre-defined threshold ( $1 \%$ of the initial value) or is lost through the outlet patches. The total laser beam energy density can be given by
+
+$I_{t}=\frac{P}{\sqrt{2 \pi} \sigma_{d}} e^{-\frac{1}{2}\left(\frac{\left(x-x_{0}\right)^{2}+\left(y-y_{0}\right)^{2}}{\sigma_{d}^{2}}\right)}$
+
+where $\sigma_{d}$ is the laser beam distribution deviation; $P$ is the laser power, $\mathrm{x}$ and $y$ are the coordinates of laser beam and $\left(x-x_{0}\right)^{2}+\left(y-y_{0}\right)^{2}=r^{2}$ where $r$ is the laser beam radius (typically varying from 20 to $200 \mu \mathrm{m}$ ); and $\left(x_{0}, y_{0}\right)$ is the position of the laser beam.
+
+Because of the refection and adsorption, the laser energy density will be attenuated during the laser beams transmitting through the participating media. Note that the energy by the laser ray can be reflected at the surface of the powders and the formed concave surface after melting (Fig. 1). Hence, Fresnel reflection should be taken into account, and the reflectance $R_{r e}[24]$ at the molten material surface is given as follows
+
+$R_{r e}=\frac{1}{2}\left(\frac{1+(1-\varepsilon \cos \theta)^{2}}{1+(1+\varepsilon \cos \theta)^{2}}+\frac{\varepsilon^{2}-2 \varepsilon \cos \theta+2 \cos ^{2} \theta}{\varepsilon^{2}+2 \varepsilon \cos \theta+2 \cos ^{2} \theta}\right)$
+
+where $\varepsilon$ is the reflection coefficient, $\theta$ is the angle between the incident rays and the normal direction of the interface. The value of $\varepsilon$ [47] is related to material properties and laser type, and it can be given by
+
+$\varepsilon^{2}=\frac{2 \varepsilon_{2}}{\varepsilon_{1}+\left[\varepsilon_{1}{ }^{2}+\left(\frac{\sigma}{\omega \varepsilon_{0}}\right)^{2}\right]^{1 / 2}}$
+
+where $\varepsilon_{0}$ represents the permittivity of a vacuum and is set as $8.854 \times 10^{-12} \mathrm{Fm}^{-1}, \varepsilon_{1}$ and $\varepsilon_{2}$ are respectively the dielectric constants of metal and plasma which are typically at $1.0, \sigma_{s t}$ is the electrical conductance per unit depth of metal which is related to material properties, and $\omega$ is the angular frequency which is determined by the laser type. The typical value of $\varepsilon$ is 0.08 for $\mathrm{CO}_{2}$ laser and mild steel while a larger value of 0.2 is set to compensate for approximation made as this gives good results with experiments [47]. $\varepsilon=0.25$ is used for Nd: YAG laser and steel material and the results agree well with experiments [24]. Therefore, the remaining laser energy density considering the multiple reflection can be expressed as:
+
+$I_{r}=I_{t}\left(1-R_{r e}\right)$
+
+In this work, the discrete transfer radiation model (DTRM) is applied to describe the adsorption and transmission between laser beam energy and the multiple phases by the radiative transfer equation [48]. Hence, the change of the laser density along the ray trace omitting the scattering is given below:
+
+$\frac{d I_{r}}{d s}=-\eta I_{r}+\eta \frac{\sigma_{s b} T^{4}}{\pi}$
+
+where $d s$ is the ray travel length; $\eta$ is the adsorption coefficient which can be expressed by the volume-averaged value of each phase and written as $\eta=\alpha_{s} \eta_{s}+\alpha_{l} \eta_{l}+\alpha_{g} \eta_{g}$ where $\eta_{s}, \eta_{l}$, and $\eta_{g}$ are the solid, liquid and gas adsorption coefficient, respectively.
+
+Therefore, a recurrence relation [49] for the laser intensity change in one control volume is expressed as:
+
+$I_{r}^{n+1}=I_{r}^{n} e^{-\eta d s}+\frac{\sigma_{s b} T^{4}}{\pi}\left(1-e^{-\eta d s}\right)$
+
+where $I_{r}^{n}$ is the laser intensity entry to the $n$-th gird, and $I_{r}^{n+1}$ is the laser intensity leaving the $n$-th gird which is also the laser intensity entry to the $(n+1)$-th gird. Thus, the adsorbed laser energy for one laser beam in the control volume can be expressed by\\
+$20 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-07(5)}
+\end{center}
+
+$120 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-07(4)}
+\end{center}
+
+$280 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-07(2)}
+\end{center}
+
+$60 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-07(1)}
+\end{center}
+
+$200 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-07(3)}
+\end{center}
+
+$390 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-07}
+\end{center}
+
+Fig. 4. Snapshots of melting track temperature distribution at different times under the condition of laser power $200 \mathrm{~W}$, laser spot radius $20 \mu \mathrm{m}$, and laser moving to the left with a scanning speed of $2000 \mathrm{~mm} / \mathrm{s}$. The laser is turned off at $120 \mu \mathrm{s}$. The simulation domain is $300 \mu \mathrm{m} \times 140 \mu \mathrm{m} \times 240 \mu \mathrm{m}$ which consists of an $80-\mu \mathrm{m}$ tall substrate, a $20-\mu \mathrm{m}$ tall powder bed with uniform ordered arrangement of particles, and a $140-\mu \mathrm{m}$ tall gas region.
+
+$Q_{i}=\left(I_{r}^{n+1}-I_{r}^{n}\right) d A$
+
+where $i$ is the ray number index; $d A$ is the radiation area. The total source term for adsorbed laser energy for the total number of rays in the control volume is
+
+$S_{\text {laser }}=\frac{\sum_{i=1}^{N} Q_{i}}{\Delta V}$
+
+where $N$ is the total number of rays and $\Delta V$ is the volume of the control cell.
+
+\subsection*{2.4. Simulation conditions}
+The powder bed can be produced by discrete element method (DEM) which gives the detailed information of individual powders such as particle size and positions. CFD model will employ the powder packing information to simulate the melting of individual metal powders. In this work, the powder bed is prepared before the CFD simulation, and particles are kept fixed at their initial positions during the simulation. A uniform and ordered packing of powders with constant diameter of $20 \mu \mathrm{m}$ is used and 107 particles are arranged in each layer. Fig. 2(a) shows the three-dimensional computation domain consisting of the bottom substrate, powder bed and gas region. Fig. 2 (b) shows an example of the mesh used. To test the sensitivity of the mesh size on the results, mesh sizes of $2 \times 2 \times(1.4,1.2,1.0,0.8) \mu \mathrm{m}^{3}$ are used. The simulation domain employed in this grid independence test is described in Fig. 3(a). Fig. 3(b) shows the comparison of the gas-solid interfaces with different mesh sizes. The initial interface between the powder bed and the gas are presented on the left side in Fig. 3(b), and the gas-solid interface after melting and solidification is shown on the right side in Fig. 3(b). Although the red $(1.0 \mu \mathrm{m})$ and black $(0.8 \mu \mathrm{m})$ contours exhibit a slight difference of the gas-solid interface before laser scanning, they coincide along the interface after melting and solidification. This indicates that the larger grid size of $2 \times 2 \times 1 \mu^{3}$ can provide convergent and consistent results as the smaller grid size of $2 \times 2 \times 0.8 \mathrm{~m}^{3}$. Hence, the larger mesh size of $2 \times 2 \times 1 \mu^{3}$ is employed in this work to save computational cost.
+
+In the simulation, the time step is set $10^{-7}$ s initially to satisfy the CFL (Courant Friedrichs Lewy) condition. The convergence criteria for residuals of volume fraction, velocity, pressure and temperature are $10^{-8}$, $10^{-6}, 10^{-9}$ and $10^{-8}$, respectively. Powder material properties of Ti$6 \mathrm{Al}-4 \mathrm{~V}[45,50,51]$ and process parameters used in this work are listed in Table 1. The substrate material property is set the same as the powder bed, and the gas is taken to be Argon. The bottom surface of the substrate is set to a fixed temperature at $300 \mathrm{~K}$ and other faces set as zero gradient for temperature. All faces are set as no-slip boundaries for velocity and zero gradient for pressure. The initial temperature for the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-08(3)}
+\end{center}
+
+$120 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-08(1)}
+\end{center}
+
+$280 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-08(6)}
+\end{center}
+
+$60 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-08}
+\end{center}
+
+$200 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-08(2)}
+\end{center}
+
+$390 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-08(4)}
+\end{center}
+
+Fig. 5. 2D slice snapshots of melting track temperature distribution along the laser scanning direction at different times. The simulation conditions are the same as shown in Fig. 4's caption.
+
+simulated internal flow field is set at $300 \mathrm{~K}$. The laser power, laser spot radius, scanning speed and layer thickness are the key process parameters affecting the fusion process, and their values are given in Table 1. Some combined process parameters such as volume energy density, linear energy density and surface energy density [40] are also used to evaluate the process.
+
+\section*{3. Results and discussions}
+\subsection*{3.1. Melting and solidification of metal powders and model validation}
+Fig. 4 shows the melting track temperature distribution for one layer of powders at different times which presents the melting and solidification process. The laser beam scans from the right to the left and powders are melted when the temperature reaches liquidus point. A continues melting track with melt pool region is formed at $20 \mu$ s. The temperature in the melt pool can be higher than $5000 \mathrm{~K}$ at the location of laser spot from $20 \mu$ s to $120 \mu \mathrm{s}$ shown in Fig. 4. As laser beam moves forwards, the liquid temperature behind the melting pool decreases (at $60 \mu \mathrm{s}$ and $120 \mu \mathrm{s}$ ), and the molten liquid starts to solidify from $120 \mu \mathrm{s}$ to $390 \mu$ s when the temperature drops to the solidus point. Finally, the solidified rough surface is generated. Note that during this process, the edge of melting track, especially in the both ends of molten region (at $60 \mu \mathrm{s}$ and $200 \mu \mathrm{s}$ ), is lack of fusion due to limited laser spot energy. Incomplete melting is also caused by wetting behaviour of molten liquid, which is attributed to the Marangoni force and recoil pressure to drive molten metal flow away from the laser beam spot, thus forming a wider melt pool than laser spot diameter (at $200 \mu \mathrm{s}$ ). The driven molten metal is expected to wet particles located at all sides of melting track as shown in the figure at $390 \mu$ s. Multi-track laser scanning may make the edge of track fully melted.
+
+2D slice snapshots of temperature distribution along the laser scanning direction are presented in Fig. 5 which is a side view of Fig. 4. Powders are melted with the moving laser beam, finally forming a track surface. The melting pool depth can be identified from $20 \mu$ s to $390 \mu$. Due to heat conduction, the laser energy can be distributed to the powder bed, even to the substrate. Besides, deeper penetration of laser beam is allowed because of multiple reflection of laser beam. Hence, most of the powders along the scanning track can be fully melted (at $200 \mu \mathrm{s}$ and $280 \mu \mathrm{s}$ ). The gas initially distributed in the powder bed may dissolve in the melt pool and escape to the top of the melting track. As shown in the figures from $120 \mu$ s to $390 \mu$ s, the powders at both ends of melting track are partial melted because of the limited laser energy and wetting
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-08(5)}
+\end{center}
+
+Fig. 6. The melt pool width varies with scanning speed obtained from the present simulation and experiments by $\mathrm{Wu}$ et al. [31] at laser power $175 \mathrm{~W}$, laser spot radius $35 \mu \mathrm{m}$. The simulation domain is $360 \mu \mathrm{m} \times 220 \mu \mathrm{m} \times 180 \mu \mathrm{m}$ which consists of a 70- $\mu \mathrm{m}$ tall substrate, a $35-\mu \mathrm{m}$ tall powder bed with uniform ordered arrangement of particles, and a $75-\mu \mathrm{m}$ tall gas region.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-09(13)}
+\end{center}
+
+Fig. 7. Surface roughness obtained from the present simulation and experimental data by Wu et al. [31] at laser power $175 \mathrm{~W}$, laser spot radius $35 \mu \mathrm{m}$. The simulation domain is $360 \mu \mathrm{m} \times 220 \mu \mathrm{m} \times 180 \mu \mathrm{m}$ which consists of a $70-\mu \mathrm{m}$ tall substrate, a $35-\mu \mathrm{m}$ tall powder bed with uniform ordered arrangement of particles, and a $75-\mu \mathrm{m}$ tall gas region.
+
+behaviour of melt pool. Gas is preserved in the powder bed and porosity is generated due to the incomplete melting at the start and end regions of the scanning track (at $390 \mu \mathrm{s}$ ).
+
+Clearly, the observation shown in Figs. 4 and 5 is consistent with the general understanding of the melting and solidification process, and those reported in the literature $[20,21]$. To further quantitatively validate the thermophysical model, the calculated melt pool dimensions (such as pool width) and solidified surface roughness for different laser scanning speeds are compared with experimental data [31]. For comparison purpose, a uniform ordered arrangement of powders with
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-09(12)}
+\end{center}
+
+Fig. 9. Effects of the conductance $\varepsilon$ on melt pool dimensions. Laser power $120 \mathrm{~W}$, laser spot radius $20 \mu \mathrm{m}$ and constant scanning speed of $1000 \mathrm{~mm} / \mathrm{s}$. The simulation domain and powder bed structure are the same as Fig. 4.
+
+constant diameter of $35 \mu \mathrm{m}$ is assumed. The simulation domain is of $360 \mu \mathrm{m} \times 220 \mu \mathrm{m} \times 180 \mu \mathrm{m}$ which consists of a $70-\mu \mathrm{m}$ tall substrate, a $35-\mu \mathrm{m}$ tall powder bed, a $75-\mu \mathrm{m}$ tall gas region. The laser power is $175 \mathrm{~W}$, and the laser spot radius is $35 \mu \mathrm{m}$. The laser scanning speed varies from $850 \mathrm{~mm} / \mathrm{s}$ to $1450 \mathrm{~mm} / \mathrm{s}$. The comparison of melt pool width between the simulation and experimental results is presented in Fig. 6. It can be seen that both simulated and measured melt pool width decreases with the increase of scanning speed. The simulated width is a little bit wider than experiment. This is because the simulation domain is much smaller than the realistic built chamber and the heat energy is not easier to diffuse to the neighbouring environment. Overall, the simulated results of melt pool width show good agreement with experimental data.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-09(8)}
+\end{center}
+
+$21 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-09(9)}
+\end{center}
+
+$23 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-09(10)}
+\end{center}
+
+$25 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-09(6)}
+\end{center}
+
+$28 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-09(2)}
+\end{center}
+
+$31 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-09(11)}
+\end{center}
+
+$35 \mu \mathrm{s}$
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-09(5)}
+\end{center}
+
+$21 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-09(7)}
+\end{center}
+
+$23 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-09(4)}
+\end{center}
+
+$25 \mu \mathrm{S}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-09}
+\end{center}
+
+$28 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-09(3)}
+\end{center}
+
+$31 \mu \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-09(1)}
+\end{center}
+
+$35 \mu \mathrm{s}$
+
+(b)
+
+Fig. 8. 2D slice snapshots of temperature distribution with (a) and without multiple reflection (b) by a fixed laser location. Laser power $50 \mathrm{~W}$, laser spot radius $20 \mu \mathrm{m}$. The laser is turned off at $25 \mu \mathrm{s}$. The simulation domain and powder bed structure are the same as Fig. 4.
+
+In addition, surface roughness is also calculated and compared. The surface heights are measured at different locations along the solidified track surface, and the surface roughness $R_{a}$ is calculated by standard deviation which is expressed as
+
+$R_{a}=\sqrt{\frac{\sum_{i=1}^{N}\left(h_{i}-h_{\text {ave }}\right)^{2}}{N}}$
+
+where $h_{i}$ is the surface height at the measured point $i, h_{\text {ave }}$ is the averaged surface height, and $N$ is the total measured points ( $N=15$ in this work). Fig. 7 shows the comparison of surface roughness from the simulation and experiment. It can be seen that an increase of the scanning speed gives a U-shaped curve. With the scanning speed varying from $850 \mathrm{~mm} / \mathrm{s}$ to $1050 \mathrm{~mm} / \mathrm{s}$, the solidified surface becomes smoother. This is probably because the melt pool volume decreases and the stability of the melt pool increases. A relatively smoother surface morphology is obtained at the scanning speed from $1050 \mathrm{~mm} / \mathrm{s}$ to $1250 \mathrm{~mm} / \mathrm{s}$. The surface turns rougher when the speed is over $1250 \mathrm{~mm} / \mathrm{s}$. This is caused
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-10(3)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-10(1)}
+\end{center}
+
+(b)
+
+Fig. 10. Effects of process parameters on temperature distribution along the middle of the melting track (X-axis at $Y=0, Z=80 \mu \mathrm{m}$ ) with a constant laser spot radius of $20 \mu \mathrm{m}$, (a) effects of laser power at a constant scanning speed of $2000 \mathrm{~mm} / \mathrm{s}$, (b) effects of scanning speed at a constant laser power of $200 \mathrm{~W}$. The simulation domain and powder bed structure are the same as Fig. 4. by the short lifetime of the melt pool at a high scanning speed to allow the molten liquid to flow smoothly. It indicates that good surface quality can be achieved at a proper scanning speed. Although some difference of surface roughness is observed between the simulated and experimental data, generally they agree well.
+
+In conclusion, the thermophysical model presented can generate consistent data with experiments in melt pool width and surface roughness at various scanning speeds. Hence, this model can be utilized to simulate the melting and solidification process and generate reliable data for analysis of melt pool formation and its dynamics.
+
+\subsection*{3.2. Effects of multiple reflection}
+In the literature, the effect of energy reflection on the keyhole surface during LPBF process is rarely reported. The reflection can result in an increase of laser beam energy absorption portion and a deeper
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-10(2)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-10}
+\end{center}
+
+(b)
+
+Fig. 11. Effects of process parameters on melt pool dimensions with a constant laser spot radius of $20 \mu \mathrm{m}$, (a) effects of laser power at a constant scanning speed of $2000 \mathrm{~mm} / \mathrm{s}$, (b) effects of scanning speed at a constant laser power of $200 \mathrm{~W}$. The simulation domain and powder bed structure are the same as Fig. 4.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-11}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-11(1)}
+\end{center}
+
+(b)
+
+Fig. 12. Effects of LED on temperature distribution and melt pool dimensions with a constant laser spot radius of $20 \mu \mathrm{m}$, (a) temperature distribution along the middle of the melting track (X-axis at $\mathrm{Y}=0, \mathrm{Z}=80 \mu \mathrm{m}$ ) at different LEDs, (b) melt pool dimensions at different LEDs. The simulation domain and powder bed structure are the same as Fig. 4.
+
+penetration in powder bed. To examine the effects of multiple reflection on the cavity surface during melting and solidification, two simulation cases were carried out: one with multiple reflection and one without multiple reflection. All other simulation conditions maintain the same. The melting results are shown in Fig. 8.
+
+At the beginning of melting process, the area where the temperature is higher than the liquidus point is displayed in red. It can be observed that at $21 \mu$ s and $23 \mu$ s, the temperature distribution and molten track are almost the same for the two cases. Besides, the molten metal is driven out from the melt pool due to the recoil pressure and a concave region is generated which is similar to the welding keyhole. With the laser scanning time increasing, more and more melted parts are pushed out from the melt pool. Comparing the results at $25 \mu \mathrm{s}, 28 \mu \mathrm{s}$ and $31 \mu \mathrm{s}$, more molten metals are melted and squeezed to the powder bed when multiple reflection is applied. This is because of the fact that multiple reflection of laser ray occurs on the cavity surface and the laser beam energy coming from the gas to the solid is reflected back to the gas and transmitted onto the solid when the concave surface is produced.\\
+Consequently, the adsorbed energy portion of laser beam increases due to the multiple reflection on the concave region. In addition, molten metal can transport intensely in the depression area, which indicates that liquid is able to escape from the melt pool due to the recoil pressure. After $25 \mu$ s at which the laser is turned off, the penetration still continues as shown in the figures of $28 \mu \mathrm{s}, 31 \mu \mathrm{s}$ and $35 \mu \mathrm{s}$. This is mainly because of the wetting behaviour of molten metal driven by Marangoni convection and recoil pressure. It can also be observed that the wetting behaviour is much more intensive for the case with multiple reflection, thus forming a deeper depression region at $35 \mu$ s.
+
+In the formula for reflection shown in Eq. (14), the reflectance $R_{r e}$ is closely related to the reflection coefficient $\varepsilon$ which is dependent of material properties and laser type. The effect of the value of $\varepsilon$ on melt pool dimensions is examined and shown in Fig. 9. It can be observed that the melt pool dimensions, including length, width and depth, all increase with the increase of $\varepsilon$. For example, the melt pool length, width and depth increase from $272.0 \mu \mathrm{m}, 70.0 \mu \mathrm{m}$ and $42.0 \mu \mathrm{m}$ to $285.0 \mu \mathrm{m}$, $83.0 \mu \mathrm{m}$ and $45.0 \mu \mathrm{m}$ when $\varepsilon$ varies from 0 to 0.2 , respectively. The increased percentages are $4.8 \%, 18.6 \%$ and $6.7 \%$, respectively.
+
+\subsection*{3.3. Effects of laser power and scanning speed}
+Laser power and scanning speed are two significant process parameters in LPBF which determine the energy source input to the system. The effects of laser power and scanning speed on thermal behaviour and melt pool dimensions are investigated here. The laser scanning direction in the simulation is along the X-axis from the positive to the negative direction (Fig. 2). Fig. 10 shows the temperature distribution along the middle of the melting track at different laser powers. It can be seen the temperature increases with the increase of laser power due to more energy input and adsorption in the powder bed (Fig. 10(a)). The peak temperature has a growth from $1593 \mathrm{~K}$ to $2561 \mathrm{~K}$ when laser power rises from $100 \mathrm{~W}$ to $250 \mathrm{~W}$. As the laser moves forwards, the temperature decreases behind the melt pool and solidifies when temperature falls to solidus point. Furthermore, higher laser powers have steeper curves both in the front and rear part of the melt pool, which means the temperature gradient grows with the increase of laser power along the melting track. In addition, the temperature gradient at the back of melting track is smaller than that at the front region. The influence of scanning speeds on the temperature along the melting track is shown in Fig. 10(b). Note that higher scanning speed provides less time for laser-powders interaction and relative lower energy absorption by the power bed. Hence, the temperature along the melting track decreases with the increase of scanning speeds. For example, the maximum temperature drops from $7663 \mathrm{~K}$ to $1881 \mathrm{~K}$ as the scanning speed increase from $1000 \mathrm{~mm} / \mathrm{s}$ to $2500 \mathrm{~mm} / \mathrm{s}$. In addition, the effect of scanning speeds on temperature gradients is not obvious as laser powers. The temperature gradient in the front of melting track is slightly higher than that in the rear side.
+
+Fig. 11(a) shows the melt pool dimensions at different laser powers. Clearly, an increase of the laser power enlarges the melt pool size due to the enhanced energy input to the system, and more powders are melted. When the laser power varies from $100 \mathrm{~W}$ to $250 \mathrm{~W}$, the melt pool's length, width and depth range from $69.5 \mu \mathrm{m}, 23.3 \mu \mathrm{m}$ and $10.9 \mu \mathrm{m}$ to $278.8 \mu \mathrm{m}, 94.7 \mu \mathrm{m}$ and $52.4 \mu \mathrm{m}$, respectively. Effect of the laser scanning speed on the melt pool size is illustrated in Fig. 11(b). As described above, with the increase of scanning speed, less energy is absorbed by powders due to the shorter interaction time between laser spot and powder bed, which leads to the decrease of melt pool width and depth. For example, the pool's width and depth fall from $74.0 \mu \mathrm{m}$ and $62.9 \mu \mathrm{m}$ to $56.2 \mu \mathrm{m}$ and $44.7 \mu \mathrm{m}$ when the laser scanning speed increases from $1000 \mathrm{~mm} / \mathrm{s}$ to $2500 \mathrm{~mm} / \mathrm{s}$. The increase of the scanning speed gives rise to melt pool length varying from $128.0 \mu \mathrm{m}$ to $256.8 \mu \mathrm{m}$. This is because laser moves a longer track at the higher speed and more metal powders are melted in the scanning direction.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_e9cbc9a135113044b5a1g-12(3)}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-12}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-12(2)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e9cbc9a135113044b5a1g-12(1)}
+\end{center}
+
+(c)
+
+Fig. 13. Effects of layer thickness on 2D slice temperature distribution along the middle melting track at different times: (a) $20 \mu \mathrm{m}$, (b) $40 \mu \mathrm{m}$ and (c) $60 \mu \mathrm{m}$. The laser spot radius is $20 \mu \mathrm{m}$, and laser power is $200 \mathrm{~W}$, and scanning speed is $1000 \mathrm{~mm} / \mathrm{s}$. The laser is turned off at $240 \mu$.
+
+In addition, the effects of linear energy density (LED, defined as $P / v, \mathrm{~J}$ $\mathrm{mm}^{-1}$ ) which combines both laser power $(\mathrm{P})$ and scanning speed $(v)$ on the melt track temperature distribution and melt pool dimension are also investigated. The higher value of the LED, the higher intensity of laser energy is induced to the powder bed. Fig. 12(a) shows the temperature distribution along the middle of the melting track at different LEDs. With the increase of the LED, the temperature profile along the melt track moves upwards. The maximum temperature increases significantly from $1593 \mathrm{~K}$ to $7663 \mathrm{~K}$ when the LED increases from $0.05 \mathrm{~J} \mathrm{~mm}^{-1}$ to $0.2 \mathrm{~J} \mathrm{~mm}^{-1}$ because of the enhanced energy intensity input. The melt pool dimensions at different LEDs are shown in Fig. 12(b). An increase of the LED enlarges the melt pool size. The melt pool's length, width and depth range from $69.5 \mu \mathrm{m}, 23.3 \mu \mathrm{m}$ and $10.9 \mu \mathrm{m}$ to $296.1 \mu \mathrm{m}$, $109.3 \mu \mathrm{m}$ and $64.6 \mu \mathrm{m}$, respectively as the LED increases from $0.05 \mathrm{~J} \mathrm{~mm}^{-1}$ to $0.2 \mathrm{~J} \mathrm{~mm}^{-1}$. This is because relative higher energy is absorbed by the powders at a higher LED value, thus converting more solid to molten liquid.
+
+Porosity or relative density of the final manufactured product is related to the LED [40]. The process window of the LED for Ti6AI4V is between $0.125 \mathrm{~J} \mathrm{~mm}^{-1}$ and $0.167 \mathrm{~J} \mathrm{~mm}^{-1}$, which can produce fully dense part [52]. At the same level of the LED, the combination of higher laser power and higher scanning speed presents smaller porosity, and unmelted powders are entrapped in the porosity produced at the combination of lower laser power and lower scanning speed [40].
+
+\subsection*{3.4. Effects of layer thickness}
+In LPBF process, the layer thickness is one of important operation parameters, and varies from $20 \mu \mathrm{m}$ to $100 \mu \mathrm{m}$. In this section, the effect of the layer thicknesses on the thermal behaviour and gas pores evolution is examined. The layer thicknesses considered are $20 \mu \mathrm{m}\left(1 d_{p}\right), 40 \mu \mathrm{m}$ $\left(2 d_{p}\right)$ and $60 \mu \mathrm{m}\left(3 d_{p}\right)$ where $d_{p}$ is the diameter of powders.\\
+Fig. 13 shows the temperature distribution along the middle melting track during the melting and solidification process at different layer thicknesses. With the increase of layer thickness, much more laser energy is absorbed by the powders, thus reducing the temperature of substrate for the period of $100 \mu \mathrm{s}$ to $400 \mu \mathrm{s}$. For the case of $60 \mu \mathrm{m}$ (Fig. 13(c)), the laser energy is mostly distributed on the powder bed due to the heat conduction between particles. In Fig. 13(a), the input heat source is large enough to fully melt the $20 \mu \mathrm{m}$ layer-thickness powder bed; for $40 \mu \mathrm{m}$ powder bed, the bottom metal powders are not fully melted. Porosities are formed at the end of the track shown in Fig. 13 (b) at $400 \mu$ s because of insufficient laser energy. In Fig. 13 (c), due to limited energy source, incomplete melting is serious which can be seen at $100 \mu$ s and $180 \mu$ s at the bottom part of the powder bed. The gas presented among the powder particles can dissolve in the melt pool (see Fig. 13 (c) at $100 \mu$ s, $180 \mu$ s and $240 \mu$ s), and small gas pores can coalesce into larger piece as demonstrated in Fig. 13 (c) at $100 \mu \mathrm{s}$. Most dissolved gas may escape from the molten metal and is released to the inert atmosphere as shown in Fig. 13 (c) from $100 \mu$ s to $400 \mu$ s. However, due to the rapid solidification rate and limited laser energy, some gas at the bottom of the powder bed is trapped (Fig. 13 (c) at $400 \mu \mathrm{s}$ ), hence leading to porosity defects.
+
+In order to trace more details about the porosity generation at the layer thickness of $60 \mu \mathrm{m}$, the evolution of the gas pores in some enlarged region from $110 \mu$ s to $170 \mu$ s illustrated in Fig. 14. It can be observed from the middle region of powder bed that as the laser moves forwards, gas pores originated from the powder bed can dissolve in the melt pool (Fig. 14 (a) and Fig. 14 (b) at $110 \mu$ s). The dissolved gas has the tendency to coalesce as shown in Fig. 14 (b) at $120 \mu$ s. Hence, small gas pores coalesce into to a lager one at $130 \mu$ s. Comparing the gas behaviour at $130 \mu \mathrm{s}$ and $140 \mu \mathrm{s}$, it can be seen the merged gas pores could be squeezed into smaller one by the dynamic molten metal, thus reducing the volume of gas pores as shown at $160 \mu$ s. In addition, the gas pores\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_e9cbc9a135113044b5a1g-13}
+
+Fig. 14. Gas pores evolution (left figures) at the layer thickness of $60 \mu \mathrm{m}$, and gas velocity vectors of enlarged region (right figures). The process parameters are the same as Fig. 13.
+
+are carried forwards along the melt track by the molten metal. The gas pores can also rise to the melt pool surface and escape into the chamber atmosphere as shown at $170 \mu$ s. For the bottom gas in the powder bed, it can also coalesce to larger one shown from $140 \mu$ s to $160 \mu$ s. Due to limited laser energy, these parts could not dissolve completely and escape from the melt pool at the beginning of the scan track, thus forming porosities shown at $180 \mu$ s in Fig. 13(c).
+
+\section*{4. Conclusions}
+In this work, a three-phase model is developed to investigate heat transfer and melt pool behaviour in the LPBF process. The models used including VOF, mass, momentum and energy governing equations are described in detail, and validated by literature experimental data. The effects of the key variables including laser power, scan speed and powder\\
+layer thickness on melt pool dynamics are examined and analysed. The conclusions drawn from the present work are given below.
+
+(1) The three-phase model proposed can capture the thermal behaviour during the melting and solidification process, and the simulated results agree well with experiments data in melt pool width and surface roughness at different scanning speeds. The edge of the melting track is lack of fusion due to the thin layer thickness (e.g. at $20 \mu \mathrm{m}$ ). Incomplete melting is also caused by wetting behaviour of molten metal, which is attributed to the effect of the Marangoni force and recoil pressure. Powders at the beginning and the end of melting track are partially melted and the porosity is generated correspondingly.
+
+(2) The effect of heat multiple reflection is considered in the model, and the results show that more metal powders are melted and driven from the concave region by multiple reflections compared with the case without reflections. A deeper depression region is produced in the case with multiple reflection. The melt pool dimensions increase with the increase of the reflection coefficient.
+
+(3) The temperature along the melting track increases with the increase of laser power, and decreases with the increase of scanning speed. The increase of the laser power enlarges the dimensions of melt pool, including length, width and depth. With the increase of scanning speeds, the melt pool width and depth decrease while the melt pool length increases.
+
+(4) For the powder bed with larger layer thickness (e.g., $40 \mu \mathrm{m}$ and $60 \mu \mathrm{m}$ ), bottom metal powders are not fully melted because of insufficient laser energy. Porosities formed by the trapped gas is obvious for thick powder beds due to rapid cooling rate and limited laser energy. The gas originated from the bulk powders can dissolve, coalesce, and be squeezed in the melt pool, and most of gas can escape from the molten metal.
+
+The simulation results have demonstrated that the three-phase model proposed can capture the key flow and heat transfer characteristics in melting and solidification process in LPBF. However, there are still some limitations of the model which needs further improvement. For example, the phenomena related to the liquid metal evaporation and the interaction between laser ray and vapor are not implemented in the model. The studies regarding the effects of model parameters related to powder physical and thermal properties and the effects of Marangoni convection or recoil pressure are still lacking. These limitations will be further addressed in our future work.
+
+\section*{Declaration of Competing Interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Acknowledgements}
+The authors are grateful for the financial support from Australian Research Council Industrial Transformation Research Hubs Scheme (Project Number IH140100035). This research was undertaken with the assistance of resources from the National Computational Infrastructure (NCI), which is supported by the Australian Government.
+
+\section*{Credit author statement}
+Erlei Li: Software, Data curation, Investigation, Writing original draft, Revision of draft.
+
+Zongyan Zhou: Supervision, Investigation, Conceptualization, Methodology, Writing- Reviewing and Editing.
+
+Lin Wang: Software, Investigation.
+
+Aibing Yu: Supervision, Investigation, Editing.
+
+\section*{References}
+[1] K.V. Wong, A. Hernandez, A review of additive manufacturing, ISRN Mech. Eng. 2012 (2012) 208760 .
+
+[2] B. Berman, 3-D printing: the new industrial revolution, Business Horizons 55 (2012) 155-162.
+
+[3] W.E. Frazier, Metal additive manufacturing: a review, J. Mater. Eng. Perform. 23 (2014) 1917-1928.
+
+[4] W.E. King, A.T. Anderson, R. Ferencz, N. Hodge, C. Kamath, S.A. Khairallah, A.M. Rubenchik, Laser powder bed fusion additive manufacturing of metals; physics, computational, and materials challenges, Appl. Phys. Rev. 2 (4) (2015), 041304, .
+
+[5] Z. Lu, J. Cao, H. Jing, T. Liu, F. Lu, D. Wang, D. Li, Review of main manufacturing processes of complex hollow turbine blades, Virtual and Physical Prototyping 8 (2013) $87-95$.
+
+[6] J. Biemond, G. Hannink, N. Verdonschot, P. Buma, Bone ingrowth potential of electron beam and selective laser melting produced trabecular-like implant surfaces with and without a biomimetic coating, J. Mater. Sci. Mater. Med. 24 (2013) 745-753.
+
+[7] A.L. Jardini, M.A. Larosa, C.A. de Carvalho Zavaglia, L.F. Bernardes, C.S. Lambert, P. Kharmandayan, D. Calderoni, R. Maciel Filho, Customised titanium implant fabricated in additive manufacturing for craniomaxillofacial surgery, Virtual Physical Prototyping 9 (2014) 115-125.
+
+[8] B. Zhang, Y. Li, Q. Bai, Defect formation mechanisms in selective laser melting: a review, Chin. J. Mech. Eng. 30 (2017) 515-527.
+
+[9] I.V. Zhirnov, P.A. Podrabinnik, M. Tokbergenov, A.A. Okunkova, I.Y. Smurov, Optical monitoring and diagnostics of SLM processing for single track formation from CoCr alloy, Materials Science Forum, Trans Tech Publ 834 (2015) 51-60.
+
+[10] J.P. Kruth, L. Froyen, J. Van Vaerenbergh, P. Mercelis, M. Rombouts, B. Lauwers, Selective laser melting of iron-based powder, J. Mater. Process. Technol. 149 (2004) 616-622.
+
+[11] R. Li, J. Liu, Y. Shi, L. Wang, W. Jiang, Balling behavior of stainless steel and nickel powder during selective laser melting process, Int. J. Adv. Manuf. Technol. 59 (2012) 1025-1035.
+
+[12] I. Yadroitsev, P. Bertrand, I. Smurov, Parametric analysis of the selective laser melting process, Appl. Surf. Sci. 253 (2007) 8064-8069.
+
+[13] M. Simonelli, C. Tuck, N.T. Aboulkhair, I. Maskery, I. Ashcroft, R.D. Wildman, R. Hague, A study on the laser spatter and the oxidation reactions during selective laser melting of 316L stainless steel, Al-Si10-mg, and Ti-6Al-4V, Metall. Mater. Trans. A 46 (2015) 3842-3851.
+
+[14] C.L.A. Leung, S. Marussi, R.C. Atwood, M. Towrie, P.J. Withers, P.D. Lee, In situ X-ray imaging of defect and molten pool dynamics in laser additive manufacturing, Nat. Commun. 9 (2018) 1-9.
+
+[15] A.A. Martin, N.P. Calta, S.A. Khairallah, J. Wang, P.J. Depond, A.Y. Fong, V. Thampy, G.M. Guss, A.M. Kiss, K.H. Stone, Dynamics of pore formation during laser powder bed fusion additive manufacturing, Nat. Commun. 10 (2019) 1-10.
+
+[16] L. Wang, E.L. Li, H. Shen, R.P. Zou, A.B. Yu, Z.Y. Zhou, Adhesion effects on spreading of metal powders in selective laser melting, Powder Technol. 363 (2020) 602-610.
+
+[17] E.L. Li, R.P. Zou, A.B. Yu, Z.Y. Zhou, Particle scale numerical Modelling of heat transfer and melt Pool dynamics in selective laser melting, the II international conference on simulation for additive manufacturing (SIM-AM 2019), Pavia 11-13 (September 2019) 309-315.
+
+[18] C. Körner, E. Attar, P. Heinl, Mesoscopic simulation of selective beam melting processes, J. Mater. Process. Technol. 211 (2011) 978-987.
+
+[19] P. Yuan, D. Gu, Molten pool behaviour and its physical mechanism during selective laser melting of TiC/AlSi10Mg nanocomposites: simulation and experiments, J. Phys. D. Appl. Phys. 48 (2015), 035303, .
+
+[20] C. Panwisawas, C. Qiu, Y. Sovani, J. Brooks, M. Attallah, H. Basoalto, On the role of thermal fluid dynamics into the evolution of porosity during selective laser melting, Scr. Mater. 105 (2015) 14-17.
+
+[21] F.J. Gürtler, M. Karg, K.H. Leitz, M. Schmidt, Simulation of laser beam melting of steel powders using the three-dimensional volume of fluid method, Phys. Procedia 41 (2013) 881-886.
+
+[22] S.A. Khairallah, A.T. Anderson, A. Rubenchik, W.E. King, Laser powder-bed fusion additive manufacturing: physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones, Acta Mater. 108 (2016) 36-45.
+
+[23] Z. Wang, W. Yan, W.K. Liu, M. Liu, Powder-scale multi-physics modeling of multilayer multi-track selective laser melting with sharp interface capturing method, Comput. Mech. 63 (2019) 649-661.
+
+[24] J.H. Cho, S.J. Na, Implementation of real-time multiple reflection and Fresnel absorption of laser beam in keyhole, J. Phys. D. Appl. Phys. 39 (2006) 5372.
+
+[25] C.W. Hirt, B.D. Nichols, Volume of fluid (VOF) method for the dynamics of free boundaries, J. Comput. Phys. 39 (1981) 201-225.
+
+[26] K. Amato, S. Gaytan, L. Murr, E. Martinez, P. Shindo, J. Hernandez, S. Collins, F. Medina, Microstructures and mechanical behavior of Inconel 718 fabricated by selective laser melting, Acta Mater. 60 (2012) 2229-2239.
+
+[27] J.P. Boris, D.L. Book, Flux-corrected transport. I. SHASTA, a fluid transport algorithm that works, J. Comput. Phys. 11 (1973) 38-69.
+
+[28] S.T. Zalesak, Fully multidimensional flux-corrected transport algorithms for fluids, J. Comput. Phys. 31 (1979) 335-362.
+
+[29] K. Takabatake, X. Sun, M. Sakai, D. Pavlidis, J. Xiang, C.C. Pain, Numerical study on a heat transfer model in a Lagrangian fluid dynamics simulation, Int. J. Heat Mass Transf. 103 (2016) 635-645.
+
+[30] W.H. Lee, A pressure iteration scheme for two-phase modeling, Los Alamos scientific laboratory, Los Alamos, New Mexico, report no, LA-UR (1979) 79-975.
+
+[31] Y.C. Wu, W.S. Hwang, C.H. San, C.H. Chang, H.J. Lin, Parametric study of surface morphology for selective laser melting on Ti6Al4V powder bed with numerical and experimental methods, Int. J. Mater. Form. 11 (2018) 807-813.
+
+[32] X. Sun, M. Sakai, Numerical simulation of two-phase flows in complex geometries by using the volume-of-fluid/immersed-boundary method, Chem. Eng. Sci. 139 (2016) 221-240.
+
+[33] X. Sun, M. Sakai, Direct numerical simulation of gas-solid-liquid flows with capillary effects: an application to liquid bridge forces between spherical particles, Phys. Rev. E 94 (2016), 063301,
+
+[34] C. Swaminathan, V.R. Voller, A general enthalpy method for modeling solidification processes, Metall. Trans. B 23 (1992) 651-664.
+
+[35] V.R. Voller, C. Prakash, A fixed grid numerical modelling methodology for convection-diffusion mushy region phase-change problems, Int. J. Heat Mass Transf. 30 (1987) 1709-1719.
+
+[36] M. Fadl, P.C. Eames, Numerical investigation of the influence of mushy zone parameter Amush on heat transfer characteristics in vertically and horizontally oriented thermal energy storage systems, Appl. Therm. Eng. 151 (2019) 90-99.
+
+[37] P.S. Cook, A.B. Murphy, Simulation of melt pool behaviour during additive manufacturing: underlying physics and progress, Additive Manufacturing 31 (2020) 100909.
+
+[38] J.U. Brackbill, D.B. Kothe, C. Zemach, A continuum method for modeling surface tension, J. Comput. Phys. 100 (1992) 335-354.
+
+[39] T. DebRoy, S. David, Physical processes in fusion welding, Rev. Mod. Phys. 67 (1995) 85
+
+[40] S. Sun, M. Brandt, M. Easton, Powder bed fusion processes: An overview, in: M. Brandt (Ed.), Laser Additive Manufacturing: Materials, Design, Technologies, and Applications, Woodhead Publishing, Duxford 2016, pp. 55-77.
+
+[41] V.P. Carey, Liquid Vapor Phase Change Phenomena: An Introduction to the Thermophysics of Vaporization and Condensation Processes in Heat Transfer Equipment, second ed. CRC Press, New York, 2008.\\
+[42] M. Markl, C. Körner, Multiscale modeling of powder bed-based additive manufacturing, Annu. Rev. Mater. Res. 46 (2016) 93-123.
+
+[43] Z. Zhou, A. Yu, P. Zulli, A new computational method for studying heat transfer in fluid bed reactors, Powder Technol. 197 (2010) 102-110.
+
+[44] J. Gan, Z. Zhou, A. Yu, Effect of particle shape and size on effective thermal conductivity of packed beds, Powder Technol. 311 (2017) 157-166.
+
+[45] Z. Fan, F. Liou, Numerical modeling of the additive manufacturing (AM) processes of titanium alloy, Titanium alloys-towards achieving enhanced properties for diversified applications, in: A.K.M. Nural Amin (Ed.), Titanium Alloys-Towards Achieving Enhanced Properties for Diversified Applications, InTech, Croatia 2012, pp. 3-28.
+
+[46] C. Meier, R.W. Penny, Y. Zou, J.S. Gibbs, A.J. Hart, Thermophysical phenomena in metal additive manufacturing by selective laser melting: fundamentals, modeling, simulation and experimentation, Annu. Rev. Heat Transf. 20 (2018) 241-316.
+
+[47] R. Ducharme, K. Williams, P. Kapadia, J. Dowden, B. Steen, M. Glowacki, The laser welding of thin metal sheets: an integrated keyhole and weld pool model with supporting experiments, J. Phys. D. Appl. Phys. 27 (1994) 1619.
+
+[48] M.F. Modest, Radiative Heat Transfer, third ed. Academic press, New York, 2013.
+
+[49] K.A. Jensen, J.-F. Ripoll, A.A. Wray, D. Joseph, M. El Hafi, On various modeling approaches to radiative heat transfer in pool fires, Combustion and Flame 148 (2007) 263-279.
+
+[50] R.I. Guthrie, T. Iida, The Physical Properties of Liquid Metals, Clarendon press, Oxford, 1988.
+
+[51] K.C. Mills, Recommended Values of Thermophysical Properties for Selected Commercial Alloys, Woodhead Publishing, Abingdon, 2002.
+
+[52] H. Gong, K. Rafi, H. Gu, T. Starr, B. Stucker, Analysis of defect generation in Ti-6Al-4V parts made using powder bed fusion additive manufacturing processes, Additive Manufacturing 1 (2014) 87-98.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

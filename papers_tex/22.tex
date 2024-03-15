@@ -1,0 +1,247 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{multirow}
+
+\title{Correlation of meltpool characteristics and residual stresses at high laser intensity for metal lpbf process }
+
+
+\author{Alexandre Staub ${ }^{a *}$, Adriaan B. Spierings ${ }^{a}$, Konrad Wegener ${ }^{b}$\\
+${ }^{a}$ Inspire, Innovation Center for Additive Manufacturing Switzerland (icams), St. Gallen,\\
+Switzerland, ${ }^{b}$ ETH Zurich, Institute of Machine Tools and Manufacturing, Zurich,\\
+Switzerland}
+\date{}
+
+
+\begin{document}
+\maketitle
+See discussions, stats, and author profiles for this publication at: \href{https://www.researchgate.net/publication/328411432}{https://www.researchgate.net/publication/328411432}
+
+Article in Advances in Materials and Processing Technologies $\cdot$ October 2018 Dol: 10.1080/23740688.2018.1535643
+
+CITATIONS
+
+7
+
+3 authors:
+
+Alexandre Staub
+
+inspire AG
+
+5 PUBLICATIONS 8 CITATIONS
+
+SEE PROFILE
+
+Konrad Wegener
+
+ETH Zurich
+
+485 PUBLICATIONS 5,645 CITATIONS
+
+SEE PROFILE
+
+Some of the authors of this publication are also working on these related projects:
+
+GPU-Enhanced Metal Cutting Simulation Using Advanced Meshfree Methods View project
+
+DLPCC Direct Laser Processing of Ceramic Composite View project\\
+Adriaan B. Spierings
+
+inspire $A G$
+
+52 PUBLICATIONS 1,952 CITATIONS
+
+SEE PROFILE
+
+\section*{Correlation of Meltpool Characteristics and Residual Stresses at High Laser Intensity for Metal LPBF Process }
+*Corresponding author: \href{mailto:staub@inspire.ethz.ch}{staub@inspire.ethz.ch}
+
+\section*{Correlation of Meltpool and Residual Stresses at High Laser Intensity for Metal LPBF Process}
+Selective Laser Melting (SLM) commonly referred as Metal Laser Powder Bed Fusion (LPBF) processes, proved in the last decade to be suitable for the manufacturing of complex metallic components. In order to fulfil industrial needs from various industries (e.g. aerospace, tooling, energy production, medical), Machine manufacturers have increased the productivity of the LPBF-process mainly by increasing the number and maximum power of lasers. However, this strategy also affects the magnitude of residual stresses generated in the consolidated material. This study analyses the residual stresses in SS316L components by XRD measurement, where a correlation to the meltpool dimensions could be found and verified for different laser power and scan speeds. The results provide fundamentals to assess the gain in productivity, and to establish generic guidelines for the optimization of residual stresses at high laser power.
+
+Keywords: additive manufacturing, laser powder bed fusion, residual stresses, XRD, meltpool, SS316L
+
+\section*{Introduction}
+Selective Laser Melting (SLM) (PBF-LB/M according to ISO/ASTM DIS 52900:2018), commonly Laser Powder Bed Fusion (LPBF) is one of the most promising Additive Manufacturing (AM) technologies for the manufacturing of metallic three-dimensional structures having typical sizes from tenths of millimetres to tenths of centimetres [1]. Bourell et al. [2] presented a review of the different AM-processes and highlighted the remaining bottlenecks. Schmidt et al. [3] also discussed the opportunities and limitations of the LPBF process. Notably the residual stresses remaining in the parts are identified by Patterson et al. [4] as a bottleneck for further technology development. Indeed, the high stress levels in the parts can lead to build job interruption in case of in-process deformation, or to critical part distortions once they are removed from the build plate. In fact, no prediction of the final part accuracy is possible without the knowledge of the residual stress state, which is greatly influenced by the part geometry and the build-up strategy. In addition, the residual stresses limit their industrial performance during use.
+
+Independently from the manufacturing technique, all metallic materials are subject to residual stresses either coming from mechanical or thermal solicitation during\\
+the manufacturing process. Complex residual stress states in LPBF originate from the high temperature gradient induced by the high intensity laser process, and according to Kruth et al. [5] strongly depends on the Marangoni convection. Indeed, the extremely fast temperature change in the process is leading to two phenomena. Both the temperature gradient mechanism (TGM) during the heating phase and a thermal shrinkage of the solidified melt-pool during the cooling phase yield to the formation of high residual stresses as a result of surrounding solid material constraining the solidification of the molten material [6].
+
+A lot of research has been performed to characterise residual stresses induced by the LPBF process. The different mechanisms of residual stresses formation are having different scales, and are classified in three types as proposed by Withers et al. [7], being the atomic level (type III), the grain level (type II) and the macroscopic level (type I). For each stress type specific tools and methods for quantification are used, which do not permit the quantification of the other types. The residual stresses studied in most of the literature about the LPBF process are from type I, being macro-scale stresses, as these stresses are the most relevant in terms of part deformation. Measurement methods such as geometrical deformation permit a qualitative assessment of the residual stresses magnitude using a beam curvature after removal of the support structure binding to the build plate, as used by Safronov et al. [8], while Ghasri-Khouzani et al. [9] used the overall deformation of disk artefacts for the same purpose. However, the use of neutron diffraction $[9,10]$ or the hole drilling method [11] permit a better understanding of the residual stress profiles over the depth of a sample. Casavola et al. [11] identified that due to the partial re-melting of the layers through the build, residual stresses would be reduced in the depth of the sample. Bartlett et al. [12] proposed a new methodology to in-situ monitor residual stresses during the LPBF-process, by using digital image correlation. These results permit to establish stress maps for simple geometries. The authors also highlighted the high dependencies of the stress state on the geometry of the sample. X Ray Diffraction (XRD) measurements have been performed to assess the stress state in a surface near region, hence within the last top-layer of the sample. Vrancken et al. [13] used XRD to identify that the main stress direction is in the scan direction, while Mercelis et al. [6] applied chemical etching to assess the stress state of layers beneath the top layer, giving information about the stress profile. Numerous analytical studies [14-16] analysed the effects of different scanning strategies on residual stress reduction, concluding that\\
+the reduction of the scanning vector length and the application of a chessboard island scan strategy are beneficial for stress reduction.
+
+However, so far not sufficient work has been put into the characterisation of the residual stresses for higher laser intensities, and the dependency of residual stresses from the properties of the melt-pool created by the laser beam. Hence, this paper intends to advance the state of the art in the comprehension of these phenomena. By the characterisation of the residual stresses and the correlation with the meltpool dimensions, this paper aims at providing a comparison basis for the understanding of the residual stresses in LPBF at various laser powers using a constant methodology.
+
+\section*{Materials and Methods}
+\section*{Sample definition and LPBF parameters}
+10x10x10mm $\mathrm{mm}^{3}$ cube samples were produced in SS316L, as a widely adopted material in metal additive manufacturing. A ConceptLaser M2 machine, equipped with a SPI 400W Nd-YAG laser source operated in continuous wave mode, was used. The laser spot diameter in the processing plane was $116 \mu \mathrm{m}$. The slicing thickness $(L)$ and hatching distance ( $h$ ) were respectively of $40 \mu \mathrm{m}$ and $90 \mu \mathrm{m}$. The classic meander scanning strategy with a $90^{\circ}$ rotation applied between each layer was chosen as it has been shown to be the most promising strategy for high laser intensities [17].
+
+Prior to the analysis of meltpool characteristics and residual stress state, a process window for a material density of $\rho \geq 99.5 \%$ was developed for each laser power level $(P)$. By the variation of the scanning speed $(v)$ samples were produced and measured for $\mathrm{P}=$ $100 \mathrm{~W}, 150 \mathrm{~W}, 200 \mathrm{~W}, 250 \mathrm{~W}, 300 \mathrm{~W}$, and $350 \mathrm{~W}$. The common characteristics to all process windows is that they use the same volumetric energy density range, $e_{d}$, as defined in Equation (1).
+
+
+\begin{equation*}
+e_{d}=\frac{P}{L * h * v}\left(\mathrm{~J} \cdot \mathrm{mm}^{-3}\right) \tag{1}
+\end{equation*}
+
+
+\section*{Analysis}
+The material density analysis was performed with a non-destructive density measurement methodology using Archimedes' principle applied in acetone. As pointed out by
+
+Spierings et al. [18] this analysis is easy and yields to quick and reliable results in comparison to other analysis methods, e.g. X-ray neutron imaging, or optical micrograph analysis.
+
+The meltpool characteristics were analysed by a cutting, embedding, polishing and etching procedure in the transversal plane. After ODS (oxide dispersion solution) polishing down to $\mathrm{Ra}=50 \mathrm{~nm}$ the samples were etched for $30 \mathrm{~s}$ using V2A etchant (Schmitz-Metallographie, Germany). The analysis was performed using an optical light microscope Leica DM6 at various magnifications.
+
+Three different samples per laser power level were selected for the residual stress state quantification. For comparison purposes, the three samples will each have respectively the same energy density for each laser power. The samples are produced using energy densities, $e_{d}$, of 43,62 and $79 \mathrm{~J} / \mathrm{mm}^{3}$, and having all a material density $\rho \geq$ 99\% (see arrows on Figure 1).
+
+The residual stresses were measured using an X Ray Diffractometer Stresstech Xstress 3000 G3 using Mn radiation at wavelength of $0.2103 \mathrm{~nm}$, equipped with a $1 \mathrm{~mm}$ diameter collimator. The measurements of the samples are obtained for a $2 \theta$ value of $152.3^{\circ}$, at nine different tilt angles being: $0^{\circ}, \pm 18,3^{\circ}, \pm 26,4^{\circ}, \pm 33,0^{\circ}, \pm 39,0^{\circ}$. The total exposure time is $65 \mathrm{~s}$. The two principal in-plane directions $\sigma_{11}$ and $\sigma_{22}$ are computed and the resulting stress is deduced.
+
+Stress relieve operations were realised at a temperature of $800^{\circ} \mathrm{C}$ followed by a natural furnace cooling [19].
+
+\section*{Results and Discussion}
+\section*{Process window development}
+In order to keep comparable results, the energy density range to establish the processing windows is kept the same for all laser powers. Consequently, and knowing the fixed parameter presented above, it is impossible to establish a suitable processing window for a laser power of $100 \mathrm{~W}$, as shown on Figure 1. This is due to the meltpool size being not large enough to correctly connect to the neighbouring scan tracks, resulting in connection defects and correspondingly a high material porosity. Indeed, it has been shown in previous studies that such energy density range could easily process SS316L, but only\\
+with other process parameters, notably a smaller hatch distance and layer thickness.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c897e4a312c10ccc8db6g-07}
+\end{center}
+
+Figure 1. Relative Material density-gain curve along the energy density for several laser powers.
+
+All the other five processing windows developed for $\mathrm{P}=150 \mathrm{~W}$ to $350 \mathrm{~W}$ successfully reached the expected material density level and the above-described samples were used for residual stresses measurement.
+
+\section*{Meltpool Characteristics}
+The meltpool dimensions were measured in the cross section of the samples, averaged and represented using elliptical shapes, representing all typical meltpool geometries, as in the present data set there were no "bell shaped" meltpool observed due to the selected manufacturing parameters. The aspect ratio $(A R)$, being the ratio between the width and the depth of the sample, was calculated to highlight the meltpool shape. An $A R>1$ represents shallow and flat meltpools, while $A R<1$ represents deep and thin meltpools. The characteristics of the meltpools are summarized in Table 1.
+
+\begin{center}
+\begin{tabular}{cccc}
+\hline
+$P[W]$ & $E d\left[\mathrm{~J} / \mathrm{mm}^{3}\right]$ & $A R$ & Area $[\mu \mathrm{m} 2]$ \\
+\hline
+\multirow{3}{*}{150} & 43 & 1.53 & 10033 \\
+ & 62 & 1.51 & 19554 \\
+ & 79 & 1.64 & 22616 \\
+\hline
+\multirow{3}{*}{200} & 43 & 1.15 & 13344 \\
+ & 62 & 1.13 & 24951 \\
+ & 79 & 1.30 & 24362 \\
+\hline
+\multirow{3}{*}{250} & 43 & 1.28 & 16496 \\
+ & 62 & 0.95 & 22425 \\
+ & 79 & 1.19 & 46863 \\
+\hline
+ & 43 & 1.28 & 23164 \\
+ & 62 & 0.81 & 20793 \\
+ & 79 & 0.71 & 29863 \\
+\hline
+ & 43 & 1.10 & 24075 \\
+350 & 62 & 0.67 & 28612 \\
+ & 79 & 0.64 & 34508 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 1. Meltpools characteristics in the different processing conditions
+
+As shown in Figure 2, meltpool shapes tend to elongate in depth with increasing laser power assuming a constant energy density. Typical $A R$ values are between 1.51 to 0.67 for an energy density, $e_{d}$, of $62 \mathrm{~J} / \mathrm{mm}^{3}$. For each laser power $P$ in the power range [150 W; $250 \mathrm{~W}$ ], the $A R$ tends to increase with the corresponding energy density increase, in the domain where the consolidated material is considered dense ( $\rho \geq 99 \%)$. While for higher laser power $\mathrm{P}>250 \mathrm{~W}$ the contrary effect is observed. Therefore, the assumption can be made that this change in the meltpool shape is linked to a change in the dynamic behaviour of the meltpool during the liquid phase and its energy dissipation to the surrounding material, thus influencing the residual stress state. Once a threshold of $\mathrm{P}=$ $250 \mathrm{~W}$ is exceeded, and for energy densities permitting to produce dense material, the welding mode switches from convection to keyhole welding, as discussed by King et al. [20] and Staub et al.[17], resulting in more elongated and deeper meltpool shapes.
+
+The increase in the energy brought to the powder layer, considering a constant laser power, will also increase the area of the meltpool cross-section as shown in Table 1. Indeed, the time given to the growth of the meltpool per unit of length is longer for a higher energy density due to the slower scanning speed. This volume increase goes along with a change in the aspect ratio $A R$, showing the tendency of the meltpool not to increase its width proportionally to the depth. This anisotropic growth of the meltpool size is related to the given laser spot diameter that is comparable or slightly smaller than the\\
+meltpool width, thus explaining the tendency of the meltpool to switch to the keyhole mode.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c897e4a312c10ccc8db6g-09}
+\end{center}
+
+Figure 2. Meltpool characteristics at different laser powers and energy densities.
+
+\section*{Residual stresses}
+Figure 3 shows the residual stresses in dependence of the aspect ratio. A steady increase of the residual stress state can be observed for increasing $A R$. A flatter meltpool induces higher residual stresses on the surface due to its larger width in comparison to a deeper and thinner meltpool. This leads to the conclusion that deeper meltpools are beneficial for lower in-plane residual stresses. However, this measurement does not give any insights on the residual stresses in the build direction, which might be increased by the meltpool elongation.
+
+At a laser power of $\mathrm{P}=250 \mathrm{~W}$ the residual stresses are stable through the increase of the energy input and in the magnitude of the yield stress of the bulk material. This behaviour has also to be correlated with the meltpool characteristics, which show relatively large but stable meltpools for this parameter set.
+
+For the other laser powers, except for $\mathrm{P}=350 \mathrm{~W}$ were the stresses increase with the energy input, $e_{d}$, the residual stress state shows the same behaviour. The samples having a lower material density result in lower residual stresses, due to a different mechanical behaviour arising from the higher pore concentration. The residual stresses increase for samples having a relative material density $\rho \geq 99.5 \%$ and decrease again for even higher energy inputs. This effect arise from the increase of the sample temperature\\
+at higher energy density, thus increasing the ductility of the material and lowering the resulting residual stresses.
+
+Removing approximately $-150 \mu \mathrm{m}$ by etching the sample produced using $250 \mathrm{~W}$ with an energy density $62 \mathrm{~J} / \mathrm{mm}^{3}$, hence removing the last molten layer leaves a zone that was not remolten by the last scan tracks. This allows the measurement of residual stresses within the material, yielding to a resulting stress of $593 \mathrm{MPa}$ at a depth of the meltpool bottom. This drastic increase of the stresses compared to measurements done at a surfacenear region highlights the complexity of the stress distribution in LPBF-produced samples. The highest temperature of the meltpool is found at its bottom according to Zhang et al. [21]. The even steeper temperature gradient in the neighbourhood of the meltpool bottom explains this drastic increase in residual stresses.
+
+The stress-relived samples, produced at $300 \mathrm{~W}$, showed small residual stresses in the magnitude of $50 \mathrm{MPa}$, proving the reliability of the measurement for this study.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c897e4a312c10ccc8db6g-10}
+\end{center}
+
+Figure 3. Residual stresses measured at different laser powers in dependence of the meltpool aspect ratio.
+
+\section*{Conclusion}
+This study investigates the meltpool size and shape in dependence of the laser power at comparable processing conditions (i.e. constant scanning strategies and energy input range) and correlates them with the meltpool shape and area. Several effects are identified:
+
+(1) The shape and area, of the meltpool correlate with the residual stresses on the top layer of the sample. Thereby, larger and flatter meltpools induce higher in-plane stresses in both directions.
+
+(2) The higher laser intensities influence single-track residual stresses. Nevertheless, the overall increase of the temperature of the sample appears to be beneficial for the relief of stresses. For this reason, for a proper comparison of stress measurement data, the temperature of the samples needs to be considered, which is highly dependent of the volume, geometry and orientation of the part.
+
+(3) The complexity of the residual stresses also needs to be investigated in the build direction in order to draw optimisation guidelines for the LPBF process.
+
+The results of this study tend to favour the keyhole melting mode as beneficial for lower residual stresses. In addition, detrimental effects of the keyhole welding mode, such as e.g. the formation of keyhole porosity, and typical complex features on real AM-parts, e.g. fine lattice structures, and the quality of overhanging surfaces, which are more complex to manufacture at high laser intensities should be considered.
+
+This study serves as a basis for further development of simulation models taking into account the meltpool characteristics. The results are also a contribution to the general optimisation of the LPBF process. Nevertheless, a visual inspection permits to realise that the residual stress state needs to be compared to other dimensions in order to optimise the process. Residual stress reduction cannot be the only goal to improve the LPBF process. Further work to correlate different physical dimension such as residual stresses in build direction, surface quality of overhanging surface, mechanical behaviour are necessary to lead the optimisation of the process.
+
+\section*{Acknowledgments}
+The authors would like to kindly acknowledge the company Stresstech GmbH for leading fast and effective XRD measurements of the samples.
+
+\section*{References}
+[1] D. Herzog, V. Seyda, E. Wycisk, and C. Emmelmann, "Additive manufacturing of metals," Acta Materialia, Article vol. 117, pp. 371-392, 2016.
+
+[2] D. Bourell et al., "Materials for additive manufacturing," CIRP Annals Manufacturing Technology, Article vol. 66, no. 2, pp. 659-681, 2017.
+
+[3] M. Schmidt et al., "Laser based additive manufacturing in industry and academia," CIRP Annals, Article vol. 66, no. 2, pp. 561-583, 2017.
+
+[4] A. E. Patterson, S. L. Messimer, and P. A. Farrington, "Overhanging Features and the SLM/DMLS Residual Stresses Problem: Review and Future Research Need," Technologies, vol. 5, no. 2, 2017.
+
+[5] J. P. Kruth, L. Froyen, J. Van Vaerenbergh, P. Mercelis, M. Rombouts, and B. Lauwers, "Selective laser melting of iron-based powder," Journal Of Materials Processing Technology, vol. 149, no. 1-3, pp. 616-622, Jun 102004.
+
+[6] P. Mercelis and J. P. Kruth, "Residual stresses in selective laser sintering and selective laser melting," Rapid Prototyping Journal, Article vol. 12, no. 5, pp. 254-265, 2006.
+
+[7] P. J. Withers and H. K. D. H. Bhadeshia, "Residual stress part 2 - Nature and origins," Materials Science and Technology, Review vol. 17, no. 4, pp. 366-375, 2001 .
+
+[8] V. A. Safronov, R. S. Khmyrov, D. V. Kotoban, and A. V. Gusarov, "Distortions and residual stresses at layer-by-layer additive manufacturing by fusion," Journal of Manufacturing Science and Engineering, Transactions of the ASME, Article vol. 139, no. 3, 2017, Art. no. 031017.
+
+[9] M. Ghasri-Khouzani et al., "Experimental measurement of residual stress and distortion in additively manufactured stainless steel components with various dimensions," Materials Science and Engineering A, Article vol. 707, pp. 689-700, 2017.
+
+[10] D. W. Brown, J. D. Bernardin, J. S. Carpenter, B. Clausen, D. Spernjak, and J. M. Thompson, "Neutron diffraction measurements of residual stress in additively manufactured stainless steel," Materials Science and Engineering A, Article vol. 678, pp. 291-298, 2016.
+
+[11] C. Casavola, S. L. Campanelli, and C. Pappalettere, "Preliminary investigation on distribution of residual stress generated by the selective laser melting process," Journal of Strain Analysis for Engineering Design, Article vol. 44, no. 1, pp. 93104, 2009.
+
+[12] J. L. Bartlett, B. P. Croom, J. Burdick, D. Henkel, and X. Li, "Revealing mechanisms of residual stress development in additive manufacturing via digital image correlation," Additive Manufacturing, Article vol. 22, pp. 1-12, 2018.
+
+[13] B. Vrancken, R. Wauthle, J. P. Kruth, and J. Van Humbeeck, "Study of the influence of material properties on residual stress in selective laser melting," in 24th International SFF Symposium - An Additive Manufacturing Conference, SFF 2013, 2013, pp. 393-407.
+
+[14] K. Dai and L. Shaw, "Distortion minimization of laser-processed components through control of laser scanning patterns," Rapid Prototyping Journal, Article vol. 8, no. 5, pp. 270-276, 2002.
+
+[15] B. Cheng, S. Shrestha, and K. Chou, "Stress and deformation evaluations of scanning strategy effect in selective laser melting," Additive Manufacturing, Article vol. 12, pp. 240-251, 2016.
+
+[16] Y. Liu, Y. Yang, and D. Wang, "A study on the residual stress during selective laser melting (SLM) of metallic powder," International Journal of Advanced Manufacturing Technology, Article in Press pp. 1-10, 2016.
+
+[17] A. Staub, A. B. Spierings, and K. Wegener, "Selective Laser Melting at High Laser Intensity: Overhang Surface Characterization and Optimization " in Direct Digital Manufacturing Conference, Berlin, 2018, vol. ISBN 978-3-8396-1320-7.
+
+[18] A. B. Spierings, M. Schneider, and R. Eggenberger, "Comparison of density measurement techniques for additive manufactured metallic parts," Rapid Prototyping Journal, Article vol. 17, no. 5, pp. 380-386, 2011.
+
+[19] T. Kurzynowski, K. Gruber, W. Stopyra, B. Kuźnicka, and E. Chlebus, "Correlation between process parameters, microstructure and properties of $316 \mathrm{~L}$ stainless steel processed by selective laser melting," Materials Science and Engineering A, Article vol. 718, pp. 64-73, 2018.
+
+[20] W. E. King et al., "Observation of keyhole-mode laser melting in laser powderbed fusion additive manufacturing," Journal of Materials Processing Technology, Article vol. 214, no. 12, pp. 2915-2925, 2014.
+
+[21] D. Zhang, P. Zhang, Z. Liu, Z. Feng, C. Wang, and Y. Guo, "Thermofluid field of molten pool and its effects during selective laser melting (SLM) of Inconel 718 alloy," Additive Manufacturing, Article vol. 21, pp. 567-578, 2018.
+
+
+\end{document}

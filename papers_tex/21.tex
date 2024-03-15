@@ -1,0 +1,464 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Transient Laser Energy Absorption, Co-axial Melt Pool Monitoring, and Relationship to Melt Pool Morphology }
+
+
+\author{Brandon Lane ${ }^{a}, *$, Ivan Zhirnov ${ }^{b}$, Sergey Mekhontsev ${ }^{b}$, Steven Grantham ${ }^{b}$, Richard Ricker ${ }^{c}$,\\
+Santosh Rauniyar ${ }^{\mathrm{d}}$, Kevin Chou ${ }^{\mathrm{d}}$\\
+a Engineering Laboratory, National Institute of Standards and Technology, Gaithersburg, MD, United States\\
+${ }^{\mathrm{b}}$ Physical Measurement Laboratory, National Institute of Standards and Technology, Gaithersburg, MD, United States\\
+${ }^{\mathrm{c}}$ Materials Measurement Laboratory, National Institute of Standards and Technology, Gaithersburg, MD, United States\\
+${ }^{\mathrm{d}}$ Department of Industrial Engineering, University of Louisville, Louisville, KY, United States}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+Absorption
+
+Laser powder bed fusion
+
+Selective laser melting
+
+Process monitoring
+
+\begin{abstract}
+A B S T R A C T Melt pool monitoring (MPM) is a technique used in laser powder bed fusion (LPBF) to extract features from insitu sensor signals that correlate to defect formation or general part fabrication quality. Various melt pool phenomena have been shown to relate to measured transient absorption of the laser energy, which in turn, can be relatable to the melt pool emission measured in MPM systems. This paper describes use of a reflectometerbased instrument to measure the dynamic laser energy absorption during single-line laser scans. Scans are conducted on bare metal and single powder layer of nickel alloy 625 (IN625) at a range of laser powers. In addition, a photodetector aligned co-axially with the laser, often found in commercial LPBF monitoring systems, synchronously measured of the incandescent emission from the melt pool with the dynamic laser absorption. Relationships between the dynamic laser absorption, co-axial MPM, and surface features on the tracks are observed, providing illustration of the melt pool dynamics that formed these features. Time-integrated measurements of laser absorption are shown to correlate well with MPM signal, as well as indicate the transition between conduction and keyhole mode. This transition is corroborated by metallographic cross-section measurement, as well as topographic measurements of the solidified tracks. Ultimately, this paper exemplifies the utility of dynamic laser absorption measurements to inform both the physical nature of the melt pool dynamics, as well as interpretation of process monitoring signals.
+\end{abstract}
+
+\section*{1. Introduction}
+The metal additive manufacturing (AM) process is experiencing growing adoption in the manufacturing sector. There is also a widespread, parallel research and development (R\&D) effort to better understand the physics of various AM processes with hopes to improve throughput, cost, and quality of AM parts. Laser powder bed fusion (LPBF) is one such process receiving much R\&D attention, with much focus on the laser-induced melt pool physics and energy transport mechanisms [1-4]. Better physical understanding of these mechanisms can inform and advance multiphysics simulations, process parameter selection, new alloy development, or in-situ process monitoring, all of which aim to reduce economic barriers to more widespread adoption of LPBF in manufacturing environments. This paper aims to demonstrate how measurement of the LPBF laser power absorption can be correlated to LPBF process monitoring instrument signals, and as a result, elucidate the physical sources of those signals. In turn, this can lead to improved signal or data processing and interpretation.
+
+\subsection*{1.1. Reflected and Absorbed Laser Power}
+Considering a control volume that encompasses the entirety of the liquid melt pool and heat affected zone, the total input laser energy, $P_{i n}$, can be assumed to be either absorbed into the control volume, or reflected off the surface $\left(P_{r e f}\right)$ as light energy at the laser wavelength:
+
+$P_{i n}=P_{a b s}+P_{r e f}$
+
+Here, $P_{a b s}$ includes all forms of energy conversion from the laser energy source that is not reflected, and can be further divided in to various other factors including: thermal conduction into the substrate, absorption of laser energy via the plume, latent heats of fusion or vaporization, mass loss and transfer through vaporization or particle
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail address: \href{mailto:brandon.lane@nist.gov}{brandon.lane@nist.gov} (B. Lane).
+}
+ejecta, radiative or convective heat loss, or heat transport within the melt pool through fluid convection. Simonds et al. reviewed in detail the many possible modes of energy transport in stationary keyhole welding [5]. For a particular material and scanned laser conditions occurring in LPBF, the relative proportion or influence of these factors will vary [6,7], and physically manifest into variations of melt pool geometry, morphology, and flow behavior, in addition phenomena external to the melt pool such as plume dynamics, particle ejecta or powder denudation $[8,9]$. Foremost, this melt pool behavior varies with the basic scan parameters, namely the laser power, scan speed, and laser spot size. Beyond the relative variation of subcomponents of $P_{a b s}$ (which are not investigated in this paper, but are highlighted in similar work $[10,11]$ ) the total value $P_{a b s}$ will also depend on these basic parameters and be indicative of the melt pool formation and morphology. Therefore, for a known $P_{i n}$, and measured $P_{r e f}$, the total $P_{a b s}$ can also be known, and both $P_{r e f}$ and $P_{a b s}$ can provide information on the melt pool dynamics.
+
+\subsection*{1.2. Melt Pool Morphology}
+The shape of the melt pool relates to thermal gradients and cooling rates at the solidification boundary, which influence size and shape of grains that grow epitaxially and parallel to the temperature gradient $[12,13]$. Apart from relating to the thermal gradients and cooling rates that drive solidification microstructure evolution, the melt pool shape and morphology can also distinguish the 'quality' of individual or adjacent scan tracks, which manifest into physical defects or pores within a 3D build. These effects may include balling or humping phenomena caused by Rayleigh-plateau instability in the liquid melt pool [14], which may incur localized lack-of-fusion defects caused by insufficient re-melting of adjacent or sub surface scan tracks [15]. Keyholing phenomena is another thoroughly studied and known contributor to porosity [13,16,17]. Keyholing occurs due to rapid vaporization of the liquid metal, which incurs a recoil pressure and associated depression in the liquid surface. At times, this vapor depression can collapse, causing pore entrapment. Further details and review on keyhole phenomena are provided in Section 1.5.
+
+\subsection*{1.3. Melt Pool Radiant Emission Monitoring in LPBF}
+Although Rayleigh-plateau instability or formation of a keyhole are not deterministic predictors of defect formation, the reviewed research has shown strong physical relationships, and therefor likely correlation. For this reason, there is extensive ongoing research into process monitoring, and in particular, melt pool monitoring (MPM), which aims to employ in-situ sensors to the AM process to predict and identify potential melt pool instabilities and resulting defects. Co-axial MPM is now broadly applied in commercial LPBF systems [18-20], and incorporate various combinations of radiometric detectors or cameras that are optically aligned with the processing laser to continually capture the radiant emission from the high-temperature, incandescing melt pool within the sensor field of view. Co-axial MPM can be incorporated into a variety of process monitoring or control modalities [21].
+
+Photodetectors are low cost, have high temporal bandwidth ( $>100 \mathrm{kHz}$ ), and enable relatively simple implementation. High speed cameras, on the other hand, are more expensive, typically lower bandwidth $(<20 \mathrm{kHz}$ ), more difficult to implement, but offer much richer information through both temporal and spatial data. However, despite incorporation in commercial systems and broad research activities, design of these systems vary (camera field of view, spatial resolution, wavelength, frame rates or sampling rates, exposure or integration time, etc.) [22], as well as the image or signal processing algorithms. For example, Craeghs et al. [23] and more recent associated work by Kolb et al [24,25], utilized camera parameters causing a saturated melt pool image in which size parameters (length, width, area) are extracted as image features. Others choose to not saturate the camera, which essentially measures the hottest portion of the melt pool including the vapor depression, as opposed to the melt pool solidification boundaries [26].
+
+Due to the relatively small size of the LPBF melt pool top surface (on the order of a square $\mathrm{mm}$ or less for single tracks [27]) the total hemispherical emissive power governed by the Stefan-Boltzmann law, results in only a few watts of emitted power. This is even a perfect emitter $(\varepsilon=1)$, and includes emission at all wavelengths in all directions. The emissive power that co-axial MPM instruments observe is far less than the total amount emitted by the melt pool. This is primarily due to 1) the finite solid angular subtense (or entendue) defined by the numerical aperture or f-number and 2) typically limited spectral bandwidth defined by the spectral sensitivity of the detector and any added spectral filters. However, the laser energy impingent on the melt pool is on the order of hundreds of watts, and it may be expected that the reflected laser energy would be on the same order, assuming the liquid metal melt pool surface is relatively reflective.
+
+Measurement of laser absorption has been used to study laser processing, and can generally be divided into calorimetric methods or optical methods [3]. Calorimetric methods yield a singular (non-dynamic) energy value at a specified laser processing condition (beam shape, laser power, scan speed, etc.). Optical methods provide timeresolved measure of the reflected laser light via photodetector through an integrating sphere, which removes directional dependence of the reflection. Simonds et al. and Deisenroth et al. provided both calorimetric and optical methods, which enabled direct comparison of the dynamic and calorimetric laser absorption [5,10]. Allen et al. provided a direct observation of the relationship between laser absorption and keyhole depression depth [11]. Absorption was measured with laser reflectometer described in [5], and similar to that discussed in this paper and in [10]. Keyhole depth was measured using an inline coherent imaging system.
+
+\subsection*{1.4. Relationship between Absorbed Laser Power and Melt Pool Emission}
+Measurement of the dynamic absorption (or reflection) of the laser energy can provide great insight into the transient melt pool physics. Accurate, and absolute measurements of energy balance can provide relational measurements to support development of multiphysics simulations. Also, they may elucidate the physical relationship between more common co-axial MPM methods measuring melt pool radiant emission, and the physical melt pool phenomena that generate them to improve design of the instrumentation or signal processing methods.
+
+Kirchoff's law of thermal radiation states that the emittance $(\varepsilon)$ and absorptivity $(\alpha)$ of an opaque surface at a given wavelength and temperature are equal. Additionally, the emittance is relatable to the reflectance $(\rho)$ :
+
+$\varepsilon=\alpha=1-\rho$
+
+In reality, these parameters depend on surface temperature, surface roughness, wavelength, incident angle, and polarization of the light (i.e. Fresnel equations) [28]. However, this equation is provided for the theoretical applications in this paper.
+
+A photodetector or camera pixel in a co-axial MPM system can be considered a radiometer. A simplified model for radiometer signal $S_{\text {rad }}$, for a linear sensor, is that it is proportional to the surface emittance $\varepsilon$, the area of the emitting surface $A$, and the temperature dependent spectral radiance ( $L_{\lambda}(T)$, e.g., Planck's law) integrated over the spectral bandpass of the system. Depending on the temperature range and spectral bandpass, this can be approximated as a power law function of temperature to some $n$th power, where $n$ may range from 4 to 10 or higher for visible or near-infrared wavelengths and high temperatures [29].
+
+$S_{r a d} \propto \varepsilon \mathrm{A} \int L_{\lambda}(T) \mathrm{d} \lambda \approx \varepsilon A T^{n}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_09f598492ffb2d619324g-03}
+\end{center}
+
+Fig. 1. Schematic of the relative effects of melt pool vapor depression morphology on the laser reflectance and monitored optical emission from the melt pool.
+
+A laser reflectometer, based on integrating sphere design, can also be described by a simplified model, where signal $S_{r e f}$ is proportional to the surface reflectance $\rho$ times the input laser power $P_{i n}$. Incorporating Equation (1), this may also be written in terms of surface emittance, $\varepsilon$ :
+
+$S_{\text {ref }} \propto \rho P_{\text {in }}=(1-\varepsilon) P_{\text {in }}$
+
+Assuming $S_{r e f}$ is measured over a narrow waveband around the laser wavelength, this signal is largely unaffected by the comparatively low radiant thermal emission, as discussed in Section 1.3. Note that in Equation (4), there is no term related to the size or area of the melt pool, nor temperature of the melt pool. Although there is an emittance term, the normal spectral emittance of liquid metals are known to be relatively insensitive to temperature [30], therefore the reflectometer signal in Eq. (4) may be considered relatively insensitive to melt pool surface temperature as well. In contrast, the radiometer signal in (3) may be considered highly sensitive to temperature and melt pool area.
+
+The highest temperatures of a melt pool surface occur in and around the laser interaction, which also coincides within the vapor depression or keyhole, though not necessarily co-aligned [31,32]. The peak surface temperature is ultimately limited by evaporative heat loss and convective heat removal in the molten pool [6,33], however it is speculated that superheating may occur with liquid metal surface temperature exceeding the boiling temperature [33,34].
+
+\subsection*{1.5. Melt Pool Morphology and Keyhole Phenomenon}
+The vapor depression increases in depth with increasing laser energy density primarily due to vaporization and recoil pressure [35,36]. This increasing depth is assisted by increased Marongoni convection within the molten pool [37]. As the depression deepens, it may form a 'keyhole cavity'. Other thermocapillary forces within the liquid melt counteract the effect of recoil pressure on forming the vapor depression, such that under certain conditions, these combating effects can cause periodic oscillations in the cavity [5].
+
+Different definitions exist for threshold when the depression becomes a 'keyhole', such as when the melt pool peak temperature reaches boiling [16], when the keyhole depth $(L)$ to width $(\phi)$ ratio ( $R=L / \phi)$ becomes greater than or equal to one [38], when the depression shape causes multiple internal reflections of the laser [11], or when the transverse cross-sectional dimensions of the solidified melt pool width $(w)$ and depth (d) result in a ratio $2 d / w>1$, becoming elongated instead of semi-circular [39]. Fabbro et al. demonstrated a laser welding keyhole model for an assumed cylindrical keyhole shape with ratio that is solely based on processing conditions (power, speed, and spot size) and material properties [38]. Their model assumes keyhole width is approximately equal to the laser spot D $4 \sigma$ diameter $d$, which is demonstrated as a realistic assumption based on LPBF in-situ observations using high speed X-ray imaging [40-42]. As mentioned, the integrated emittance at the opening of a cylindrical cavity increases and approaches unity as the depth/width ratio increases. Saunders\\
+provided a model for integrated emittance at the opening of a cylindrical cavity, $\varepsilon_{0}$, which is re-written in terms of the depth to diameter ratio $R$, and $\varepsilon_{s}$ is the emittance of the internal cavity surfaces [43]:
+
+$\varepsilon_{0}=1-\left(1-\varepsilon_{s}\right)(2 R)^{-2}$
+
+When written in terms of $R=L / \phi$, this equation shows that the effective cavity emittance approaches unity as the depth-squared $\left(L^{2}\right)$ increases and diameter-squared $\left(\phi^{2}\right)$ decreases. Note that the analytical formulation of Equation (5) depends on an assumed high $\varepsilon_{s}$ and $R$ values, which for a melt pool will occur as the keyhole depression becomes relatively deep. However, this model is presented to give the reader an idea of the potential functional relationship between cavity depth ratio, and effective emittance at the cavity opening. Similarly, Allen et al. demonstrated the functional relationship between keyhole cavity shape and laser absorption using a ray tracing model and two simplified keyhole cavity models [11]. The absorption model and measurement results from Allen et al. showed a very similar functional form to Equation (5), but in terms of absorption rather than emittance. However, this supports the hypothesized absorption/emittance equivalence presented in Equation (2).
+
+\subsection*{1.6. Summary and Goals of Investigation}
+With this theoretical work in keyhole shape evolution and related emittance of cavities, the following theory is developed relating laser power reflection and absorption, monitored melt pool emission, and melt pool vapor depression morphology. As shown in Fig. 1, for a melt pool exhibiting conduction mode and a shallow depression, the reflected laser energy will be relatively high, absorbed laser energy low, and the surface emittance low due to Eq. (1). This is considering that spectral emittance at the radiometer wavelength ( $520 \mathrm{~nm}$ in this paper) and laser wavelength $(1070 \mathrm{~nm})$ are similar or vary proportionally with changes in the melt pool depression shape. A co-axial MPM radiometer or camera will measure a relatively low signal due to the low emittance of the liquid melt pool surface when in conduction mode.
+
+When in keyhole mode, the melt pool morphology will exhibit a deeper depression or cavity. This results in a higher effective emittance, lower reflectance, and assuming the surface temperature of the melt pool in the keyhole is similar to that in conduction mode (e.g., at or slightly above the boiling/ vaporization temperature), the co-axial MPM radiometer will observe a brighter spot or higher signal.
+
+By simultaneously measuring the reflected laser energy and the emitted energy, we may be able to distinguish the relative effect of melt pool surface morphology on the co-axial MPM system. Note again that in Equations (3) and (4) that the co-axial MPM photodetector or camera is likely much more sensitive to surface temperature changes than the reflectometer. In other words, the dynamic laser reflection is relatively independent of surface temperature, whereas the co-axial MPM camera or photodetector is dependent.
+
+One caveat to this analysis is if there are potentially secondary phenomena related to the metal vapor plume. The hot, incandescing plume may affect the co-axial MPM signal described in Equation (3) by emitting light in addition to that from the melt pool surface, thereby adding additional measured signal [44]. It may affect the laser reflectometer signal described in Equation (4) by absorbing or scattering the laser light, thereby reducing the measured signal [45], and equating to a higher measured $P_{a b s}$. This scattering or absorption is most attributable to the condensation of vaporized metal into small particles on the order of tens of nanometers in size [45-47].
+
+If the plume scatters but does not absorb the laser light this will change the laser power distribution and energy density, making a cooler melt pool. Based on Fig. 1, this will decrease $P_{\text {abs }}$ (assuming the laser total laser energy still reaches the surface), and decrease photodetector signal (e.g., the dynamic laser absorption and melt pool emission will be coupled). If the plume absorbs but does not scatter, this will increase measured $P_{a b s}$ via the reflectometer, but decrease the dynamic melt pool emission due to lowered laser energy density reaching the melt pool (e.g., the dynamic laser absorption and melt pool emission will be decoupled).
+
+Based on these reviewed phenomena, observations can be made using synchronous laser absorption and melt pool emission. The following objectives are thus laid out in this paper:
+
+\begin{enumerate}
+  \item Measure dynamic laser reflectance and absorption and compare to transient variation of surface structure along the scan tracks.
+
+  \item Compare and identify the relationship between dynamic laser absorption and coaxial MPM signals, and use this to infer the physical melt pool phenomena that most relate to MPM signal.
+
+  \item Compare observations of time-integrated laser absorption measured here to observations made via calorimetric methods reviewed in literature.
+
+  \item Compare observations of dynamic laser absorption, melt pool crosssection shape, and end-of-track surface profiles in relation to transition from conduction to keyhole mode.
+
+\end{enumerate}
+
+\section*{2. Methods}
+\subsection*{2.1. Laser Reflectometer Design and Calibration}
+Reflected laser power was measured using a hemispherical reflectometer, shown in Fig. 2. The reflectometer consists of an aluminum hemispherical shell with inside coated with PTFE powder, and floor made of polished aluminum. Slots are made for laser to pass through the shell and laser window and access the sample. The reflectometer is mounted on the recoating platform of the NIST Additive Manufacturing Metrology Testbed (AMMT) such that it can be moved and aligned [48]. Two silicon-based photodetectors (labeled Y + and Y-) are mounted at the approximate equator of the dome to limit reflection of the laser light directly into detectors. These photodetectors had $(1070 \pm 5) \mathrm{nm}$ spectral bandpass filters to match the AMMT's Yb:fiber laser wavelength, in addition to neutral density filters with total optical density (OD) of 2. The photodetectors are connected to two low-noise current preamplifiers connected to a data acquisition system sampling at $100 \mathrm{kHz}$. More detailed description and images of the reflectometer design can be found in [10].
+
+Several trials were first attempted to set the proper optical density (OD) of the neutral density (ND) filters and preamplifier gain settings such that a readable signal could be achieved. The reflected laser power was calibrated by scanning a defocused spot on a commercially made, silver reflective mirror $\left(\rho_{A g}=0.98307\right.$ at $\left.1070 \mathrm{~nm}\right)$ at low power levels of $50 \mathrm{~W}$ and $65 \mathrm{~W}$ so as not to damage the mirror. Since the mirror reflectance is known, the measured reflected laser power is $\rho_{A g} \cdot P_{i n}$. The time-averaged photodetector signal in [V] from the $\mathrm{Y}+$ and $\mathrm{Y}$ - channels were measured, with detector noise of $\approx 0.5 \%$ and drift $1 \%$. Linear calibration functions relating reflected laser power to photodetector signals (Equation (4)) were determined for each channel. Subsequent measurements utilize the average of the two photodetector channels. After calibration, the reflected power measured by the $\mathrm{Y}+$ and $\mathrm{Y}$ - channels differed $<1 \%$ during the duration of a scan track, indicating uniform reflectivity of the sphere internal surface, at least in the vicinity of the reflected laser, and good optical integration.
+
+\subsection*{2.2. Laser Reflectance-based Parameter Calculations}
+Simonds et al. calculated several parameters based on their integrating sphere measurements, which are repeated here in Equations (6a-c) [5]. Here, $P_{i n}, P_{r e f}(t)$, and $P_{a b s}(t)$, are the input laser power, the measured reflected laser power, and the calculated absorbed laser energy as described in Equation (1), all in units [W]. As mentioned in the introduction, $P_{a b s}$ does not imply all laser energy absorbed into the melt pool and substrate, but all laser power that has not been reflected and measured by the hemispherical reflectometer.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_09f598492ffb2d619324g-05}
+\end{center}
+
+Fig. 2. Left: Computer model of the hemispherical reflectometer mounted to the recoater arm on the AMMT. Right: Cutaway images in the transverse and longitudinal direction showing location of photodetectors and laser beam path.
+
+Absorbed Laser Power: $P_{a b s}(t)=P_{\text {in }}-P_{\text {ref }}(t)$
+
+Dynamic Absorptance: $\eta(t)=P_{a b s}(t) / P_{i n}(t)$
+
+Average Coupling Efficiency: $\eta=\int \eta(t) d t$
+
+Note that the dynamic absorptance $\eta(t)$, and its time-integrated counterpart the average coupling efficiency $\eta$, are non-dimensional parameters analogous to the absorptivity of the melt pool utilizing calorimetric methods, although secondary phenomena such as absorption or scattering by the plume or energy loss through mass evaporation would yield discrepancies in the two methods.
+
+\subsection*{2.3. Laser Source and Melt Pool Monitoring System Design}
+Fig. 3 shows a schematic of the laser path, reflectometer, and one of the melt pool monitoring optical paths (labelled MPM path) on the AMMT. The AMMT uses a variable focus lens (located in the processing laser path) to achieve a planar focus scan field and limit chromatic aberrations that occur with f-theta lenses. The radiant melt pool emission is measured with a MPM photodetector with $(520 \pm 20) \mathrm{nm}$ spectral bandpass filter and sampled at $100 \mathrm{kHz}$. This path also includes a high-speed MPM camera, though results from the camera will be described in future publications.
+
+The laser power, dynamic focusing lens, and galvo-scanner mirrors are controlled via a FPGA-based DIO controller that ensures synchronous control of all systems [48]. Data acquisition of the melt-pool monitoring photodetector, reflectometer photodetectors, as well as galvo-scanner position encoders and laser power monitoring are synchronized to the same clock.
+
+\subsection*{2.4. Experiment Design and Process Parameters}
+The laser spot size was $62 \mu \mathrm{m}$ (D4 6 diameter) at the substrate surface. The beam waist, equating to a $41 \mu \mathrm{m}$ D $4 \sigma$ minimum spot size, was set below the build plane, which has been shown to cause a deeper melt pool than if the waist is positioned above the surface [49]. An inert Ar gas flow passed into the reflectometer at approximately $251 / \mathrm{min}$. Nine laser power levels were tested at one scan speed, with each power level repeated for three tracks on a nickel alloy 625 (IN625) substrate. Tracks were scanned in sets of three, each in the same direction, with laser power turned on or off when at a constant scan velocity. The laser switching rise time ( $5 \%$ to $95 \%$ power) and fall time was previously measured to be $57 \mu \mathrm{s}$ and $56 \mu \mathrm{s}$ ( $\pm 5 \mu \mathrm{s}$ ), respectively [50]. Each set of tracks was repeated at another location with $(60 \pm 10) \mu \mathrm{m}$ layer of powder spread using the stainless steel recoater mechanism, and height checked using a laser profilometer affixed to the recoater (instrument accuracy $\approx \pm 0.5 \mu \mathrm{m}$ ). Scan tracks were $12 \mathrm{~mm}$ long to ensure steady state is reached [51], and spaced $500 \mu \mathrm{m}$ to ensure limited effect of powder denudation or reheating of adjacent tracks [8]. Table 1 provides pertinent material and process parameters.
+
+\subsection*{2.5. Ex-situ Track Characterization}
+High resolution optical micrographs as well as scanning laser confocal measurements of the track topography were taken of each track after fabrication. Methods and equipment used largely mirror that described in Ricker et al. [52]. The tracks were characterized with a Zeiss LSM 800 confocal scanning laser microscope (CLSM). This instrument was used for wide-field, white light, and scanning laser ( $405 \mathrm{~nm}$ ) illumination of a surface, and the compiling of stitched, and high depth of field images, from tiled (field of view incrementally stepped in the $x$ or $y$ directions), and stacked (fixed field of view incrementally stepped in the $z$ direction) images. Using widefield illumination, bright field images of the entire length of all the tracks were compiled from tiles taken with a 5x apochromatic objective with numerical apertures (NA) of 0.13 . Additional bright field images were acquired of select tracks, and areas, using a 20x/0.22 NA apochromatic objective. The topography of the entire length of select tracks was measured using the scanning laser topographic analysis mode of this instrument, and a 20x/ 0.70 NA apochromat lens optimized for use with $405 \mathrm{~nm}$ laser
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_09f598492ffb2d619324g-06}
+\end{center}
+
+Fig. 3. Computer model of the heating laser path (from right), the reflectometer (bottom), and the co-axial melt pool monitoring (MPM) path.
+
+illumination. The resulting image stacks of reflected laser intensity data were converted into surface position data and analyzed using the image acquisition, analysis, and surface metrology software designed for use with this instrument (Zeiss ZEN 2.3 and Zeiss ConfoMaps ST 7.4, the Zeiss integrated version of Digital Surf's MountainsMap software).
+
+After top surface microscopy and topography, the single-track parts were sectioned (perpendicular to the track scanning direction, about $2.5 \mathrm{~mm}$ away from the end of each track) using a precision sectioning saw with a diamond wafering blade of $0.4 \mathrm{~mm}$ thickness to prepare metallographic samples. The sectioned samples were then cold mounted in epoxy and, once hardened, the metallographic samples were polished using a common manual polishing machine with 240 , $320,600,800$, and 1200 grit papers in that sequence. Afterwards, the samples were further fine-polished with $9 \mu \mathrm{m}$ and then $3 \mu \mathrm{m}$ diamond paste to achieve scratch-free surface for etching. Then, electro-etching was carried out to the samples in a solution consisting of $170 \mathrm{~mL}$ of $\mathrm{H}_{3} \mathrm{PO}_{4}, 10 \mathrm{~mL} \mathrm{H}_{2} \mathrm{SO}_{4}$ and $15 \mathrm{~g} \mathrm{CrO}_{3}$ at $5 \mathrm{~V}$ for $5 \mathrm{~s}$ to $7 \mathrm{~s}$, enough to reveal the melt pool boundary when observed by optical microscopy. The melt pool depth and width of each single-track case were measured using an optical microscope with a calibration slide.
+
+\section*{3. Results}
+\subsection*{3.1. Dynamic Measurements}
+\subsection*{3.1.1. Dynamic Reflected Laser Power}
+Fig. 4 plots the dynamic reflected laser energy for each scan track for both bare plate and single-layer powder samples. Overall, the reflected laser power on the powder substrate was lower, had greater temporal variation, and mean values at each input laser power setting generally varied less compared to the solid substrate. Reflected laser power measured on the solid substrate ranged from $\approx 15 \mathrm{~W}$ to $60 \mathrm{~W}$, whereas that measured on the single layer powder surface ranged from $\approx 5 \mathrm{~W}$ to $50 \mathrm{~W}$.
+
+Some input laser power settings exhibited highly unstable reflected laser power signals, with distinct peaks and apparently aperiodic behavior (Fourier analysis was performed with no significant spectral peaks). These fluctuations largely occurred in the input laser power range of $80 \mathrm{~W}$ to $120 \mathrm{~W}$ and were much more prominent in the bare surface measurements.
+
+\subsection*{3.1.2. Dynamic Absorptance $\eta(t)$ and Comparison to Melt Pool Monitoring}
+Using Equation (6a), the dynamic absorbed laser power is calculated and demonstrated in Fig. 5. It is observed that while the reflected laser power is relatively consistent in Fig. 4, the absorbed laser power in Fig. 5 increases with the applied laser power and the transient features are inversed. The dynamic absorptance is then calculated using Equation (6b). Features in the dynamic absorptance are similar but inverse to those made for the dynamic reflected laser power in Fig. 4. That is, the powder generally exhibited higher absorption than the bare plate, the powder exhibited greater temporal variation, and tracks on the bare metal surface between $80 \mathrm{~W}$ and $120 \mathrm{~W}$ showed aperiodic and distinct fluctuations. These $80 \mathrm{~W}$ to $120 \mathrm{~W}$ tracks occur at the keyhole transition region, whereas the $50 \mathrm{~W}$ and $65 \mathrm{~W}$ exhibited conduction mode, and power levels of $150 \mathrm{~W}$ and above exhibited keyhole mode, which will be shown in section 3.2. However, these fluctuations demonstrate that transition between modes may occur in an unstable manner during track formation.
+
+Comparing the co-axial MPM photodetector vs. the dynamic absorptance results in an interesting relationship, particularly for tracks
+
+Table 1
+
+Materials and process parameters used in laser absorption measurements
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{2}{|l|}{Material} & \multicolumn{2}{|l|}{Process Parameters} \\
+\hline
+Substrate prep & Ground, 600 grit sand & Laser Power & $50,65,80,100,120,150,200$, and $300 \mathrm{~W}$ \\
+\hline
+Powder Material & In625, Ar atomized & Spot Size (D4б) & $62 \mu \mathrm{m}$ \\
+\hline
+ &  & Powder Layer Thickness & $60 \mu \mathrm{m}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_09f598492ffb2d619324g-07}
+\end{center}
+
+Fig. 4. Dynamic reflected laser power vs. applied laser power and vs. time for a bare IN625 substrate and single layer of IN625 powder. The three distinct signal regions in the time axis come from the three scan tracks repeated at each laser power setting.
+
+made on the bare metal surface between $65 \mathrm{~W}$ and $150 \mathrm{~W}$ that exhibited aperiodic, nonstationary fluctuations, as highlighted in Fig. 6. At different periods, it appears the dynamic absorptance and signal measured by the co-axial photodetector appear highly coupled. These periods are manually highlighted in yellow in Fig. 6, and time periods of zero laser power between tracks removed. This coupling is particularly strong for the $80 \mathrm{~W}$ power level, where signals are highly coupled for the entire duration of each of the three tracks. For the single powder layer, these correlations in temporal domain were not evident. Computation of the cross-correlation in the time domain of the normalized photodetector signal and dynamic absorptance for the powder layer sample did not yield a strong correlation.
+
+From the $80 \mathrm{~W}$ bare plate example, as well as others indicating the aperiodic fluctuations, it is shown that under certain conditions, the dynamics of the melt pool emissions monitored by the coaxial photodetector are highly correlated to the absorbed laser energy from the vicinity of the melt pool.\\
+It appears the fluctuations are due to instability in the melt pool surface morphology. When compared side-to-side, and scaled vs. time using the scan speed of $500 \mathrm{~mm} / \mathrm{s}$, Fig. 7 shows that when the melt pool is absorbing more laser energy and more brightly radiating visible light, the tracks are wider, and the vapor depression likely deeper. When the melt pool is more reflecting and dimmer, the track is narrower, and the vapor depression likely shallower. Similar observations were made on the other tracks exhibiting aperiodic instabilities, but not for powder surface.
+
+These observations indicate that these fluctuations are likely stemming from instability in the melt pool vapor depression at the onset of keyholing. Note that although these fluctuations were evident in the bare plate tracks, they were not as readily evident in the powder surface, as other fluid effects in the melt pool such as particle wetting or entrapment would further disturb the track formation. Simonds et al. observed similar fluctuations in the static laser coupling tests, which exhibited very periodic behavior attributed to the battling forces of\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_09f598492ffb2d619324g-07(1)}
+
+Fig. 5. Dynamic absorbed laser power for bare plate (top) and single layer of powder (bottom). Sections of time between scan tracks are removed.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_09f598492ffb2d619324g-08}
+
+Fig. 6. Dynamic absorptance $(\eta(t))$ vs. photodetector (PD) signal measured on the bare plate substrates (no powder). Sections of time between scan tracks are removed. Portions of each plot are highlighted in yellow to show sections of time where the dynamic absorptance and photodetector signal appear to be strongly coupled. Tracks on bare metal at laser power at and above $200 \mathrm{~W}$ showed no such relationship, nor did any measurements on the single-layer powder surfaces.
+
+recoil pressure opening the vapor cavity, and surface tension closing it [5]. Laser light scattering within the plume could also be the cause of this instability, which may effectively cause varying laser energy distribution on the melt pool surface [46,47]. Whether this phenomenon is attributable to melt pool fluid dynamics or laser-plume interaction cannot be proven here. However, based on the discussion in Section 0, this indicates that melt pool radiant emission monitoring via photodetector is more related to the melt pool surface morphology as opposed to temperature fluctuations, under these processing conditions. The reflectometer-based measurements are independent of temperature, but the MPM photodetector signal is highly correlated. This is further verified in the time-integrated laser absorption and MPM photodetector measurements, which average out the temporal fluctuations, but show broader trends commensurate with the melt pool shape and depth.
+
+\subsection*{3.2. Time-Integrated Measurements}
+\subsection*{3.2.1. Average Coupling Efficiency and Photodetector Signal}
+Average coupling efficiency is calculated from the laser reflectometer signals using Equation (6c) and shown in Fig. 8. Additionally, the MPM photodetector signal is integrated vs. time and divided by the total time period ignoring periods when the laser is off, yielding the average signal.
+
+Despite the surface instabilities on the bare surface substrate that elicited corresponding fluctuations in the laser reflectometer and MPM photodetector signal, the time-integrated measurements of laser coupling yielded similar results to those observed by other researchers using calorimetric methods under LPBF conditions, summarized in the following:
+
+\begin{enumerate}
+  \item For the bare plate scans, there is a slight short drop in coupling at\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_09f598492ffb2d619324g-09(1)}
+\end{enumerate}
+
+Fig. 7. Example from the first track of the $80 \mathrm{~W}$, bare plate scan showing track surface features correlated to the aperiodic fluctuations observed in the dynamic laser absorptance $\eta(\mathrm{t})$ and radiant energy measured by the MPM photodetector (PD Signal). Absorptance and photodetector temporal data is converted to spatial using the constant scan speed of $500 \mathrm{~mm} / \mathrm{s}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_09f598492ffb2d619324g-09}
+\end{center}
+
+Fig. 8. Average laser coupling efficiency, $\eta$, compared the average MPM photodetector signal $S_{r a d}$ on bare plate and single layer powder surfaces. Error bars represent $+/$ - one standard deviation of the temporal variation of the signal.
+
+low laser power, followed by a transition region of increasing absorption, and finally a stabilization in the keyholing regime [2].
+
+\begin{enumerate}
+  \setcounter{enumi}{1}
+  \item At low power, the absorption on powder surface is about twice higher than on the bare metal surface (observed on $316 \mathrm{~L}$ steel by [1]). Above some power threshold, the powder and bare-plate absorption approaches the same values.
+
+  \item For bare plate scans on IN625, at $500 \mathrm{~mm} / \mathrm{s}$ scan speed and laser spot size of $57 \mu \mathrm{m}$ (slightly smaller than $65 \mu \mathrm{m}$ used in this paper), calorimetric methods showed transition to keyhole mode at around $90 \mathrm{~W}[2]$.
+
+\end{enumerate}
+
+In their calorimetric approach, Ye et al. showed that IN625 (and other metals) reached a peak absorptivity of 0.7 [2], whereas Fig. 9 shows a peak value of average coupling efficiency (an analogous measure) of 0.9 , at very similar laser scan conditions. Multiple factors may contribute to these different values, both phenomenology or stemming from differences in experiment conditions. For example, if laser energy is absorbed or scattered by the plume and not transmitted to the workpiece, it would yield a lower absorptivity measured via calorimeter, but a higher coupling efficiency measured via laser reflectometer. However, this affect cannot be concluded here without simultaneous measurement and comparison of both methods, such as in\\
+[5], who applied a correction factor attributed to energy transfer due to mass loss.
+
+The time-integrated MPM photodetector signal, also shown in Fig. 8, demonstrates markedly similar trends to the average coupling efficiency. This shows that although there were periods of track instability on the bare surface as demonstrated in Section 3.1.2, these did not have a great effect on the overall, time-integrated nature of the laser coupling as a function of laser power. Fig. 9 shows the relationship between coupling efficiency and the time-integrated MPM photodetector signal for both bare surface and single-layer powder.
+
+The dynamic absorption and MPM measurements in Section 3.1 showed that specific instances of melt pool instability may be observed on a bare plate, but not on powder surfaces, thereby not yielding realistic localized or point-defect monitoring. However, Fig. 9 indicates that time-averaging or lowpass filtering of dynamic laser coupling or MPM may be a good indicator of melt pool conditions. Kawahito et al. demonstrated a linear relationship between keyhole depth measured via X-ray imaging and laser absorption measured via calorimetry in laser welding [31]. Given the high linear correlation in Fig. 9, it goes to reason that the MPM photodetector signal is primarily affected by the melt pool surface morphology, and less so to the temperature. As described in Section 0, the absorption (and emittance) are primarily\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_09f598492ffb2d619324g-10}
+
+Fig. 9. Correlation between average photodetector signal and average coupling efficiency for bare plate tracks (left image) and single layer of powder (right image).
+
+related to vapor depression or keyhole. Conversely, the photodetector signal is highly nonlinearly related to the surface temperature, according to Equation (2). Ex-situ measurements also indicate that average MPM photodetector signal is related to vapor depression depth.
+
+\subsection*{3.3. Ex-Situ Measurements}
+Although the transition from conduction mode to keyhole mode may be observed from the trends in laser coupling efficiency measured in Fig. 8, other definitions of the conduction-to-keyhole transition are based shape measurements of the melt pool transverse cross-sections. The melt pool depth is a strong indicator of keyhole-mode transition, although it is the formation of a deep vapor-depression in the melt pool which truly indicates keyholing. At the end of a track when the laser turns off, this depression may solidify before the melt pool liquid surface fully fills the vapor depression, sometimes entrapping pores [35], and usually forming a depression in the solidified surface [52]. This section compares the melt pool transverse cross-sections and end-oftrack depression topography to 1) compare cross-section based definition of keyhole mode transition to laser absorption and 2) test if end-oftrack depression measurements may provide a corollary indicator of keyhole mode transition.
+
+Fig. 10 demonstrates the measured transverse cross-sections of each track formed on the single-layer of powder. Cross-section shapes for the bare metal surface were very similar, but with lower top surface bead heights. Fig. 11 gives the measured track widths, depths, and shape ratio $2 d / w$, where indication of keyhole mode is sometimes defined as when $2 d / w>1$ [39].
+
+Cross-sections verified that transition to keyhole likely occurred around $100 \mathrm{~W}$ assuming a threshold at $2 d / w>1$. More precisely, this occurred at approximately $97 \mathrm{~W}$ for bare plate and $106 \mathrm{~W}$ for powder, using linear interpolation between measurement points.
+
+Track surface confocal microscopy results show frozen melt pool depth vs. laser power at end of track for bare plate scans, and relate to track depth observed in previous section. A subset of measurements of end-of-track frozen depressions on the bare plate scans are shown as pseudo-color 3D height maps in Fig. 12.
+
+Fig. 13 shows the measured end-of-track frozen depression profiles as well as measured width and depth geometry. Frozen depression depth was measured via transverse and longitudinal directions. For laser power below $120 \mathrm{~W}$, the transverse and longitudinal depth values agreed. Above $120 \mathrm{~W}$, the frozen depression reaches a maximum. Some of the frozen melt pool depth measurements were different in the transverse vs. longitudinal direction. The longitudinal profile lines were made at the approximate centerline of the track, which may not intersect the minimum point determined in the transverse cross-sections.
+
+Also to note, the frozen melt pool depth measurements tended to stabilize above approximately $100 \mathrm{~W}$ to $120 \mathrm{~W}$, similar to the point where conduction to keyhole mode melting was observed via laser absorption and melt pool emission measurements in Section 3.2.1. However, it is more likely this is a coincidence than evidence of conduction to keyhole mode transition. It was mentioned in the introduction that high speed X-ray imaging methods have demonstrated that the keyhole depression depth follows near the bottom of the liquid melt pool depth [40-42]. Fig. 10 and Fig. 11 showed that the solidified melt pool depth increased monotonically with laser power. At a certain threshold depth of the keyhole cavity, the surface tension forces in the liquid melt pool are strong enough to effectively cause the keyhole cavity to collapse before rapid solidification, thereby causing a 'maximum' depth of the frozen end-of-track depression. A similar phenomena was observed by Simonds et al., where the keyhole depression would collapse then reopen in a very periodic manner due to the stationary laser position in their laser absorption tests [5].
+
+\section*{4. Discussion}
+Measurement of reflected laser energy is demonstrated as valuable tool for investigating the melt pool energy transport mechanisms. However, this measurement alone cannot distinguish other thermal energy absorbed by the substrate, latent heat during metal evaporation, or thermal losses through mass transfer due to spatter.
+
+Process parameters used in this paper, especially the scan speed of $500 \mathrm{~mm} / \mathrm{s}$, were selected to be a direct comparison to Ye et al. [2]. However, for IN625, nominal scan speeds used on a commercial machine are on the order $1000 \mathrm{~mm} / \mathrm{s}$, which Ye et al. did demonstrate has an effect of reducing the absorbed laser energy (measured via calorimetry). The similarities between the reviewed calorimetric methods and the time-integrated laser reflection measurements made here indicate similar trends would would be expected. However, this will be confirmed in future studies.
+
+In the introduction, we discussed how melt pool radiant emission measurement via camera or photodetector is linearly related to source (melt pool) area, and logarithmically sensitive to temperature in Equation (3). In contrast, the reflected laser energy measurement in Equation (4) is insensitive to source area or temperature. However, both measures are sensitive to the relative emittance of the source, which we propose is related to the melt pool's surface morphology defined by the laser-induced vapor depression (see cavity emittance model in Equation (5)). The transient and time-integrated correlations between reflected laser energy, MPM photodetector signal, melt pool cross-section shape, and frozen end-of-track shape support this hypothesis. Additionally, this supports the hypothesis that co-axial MPM via photodetector is more sensitive to melt pool surface morphology than temperature. However, the potential for plume interaction and scattering of laser light is not accounted for in this study and may have affected the transient correlation. This effect will be studied in future experiments.
+
+While the transient photodetector signal, laser absorption, and
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_09f598492ffb2d619324g-11(1)}
+\end{center}
+
+Fig. 10. Melt pool cross-sections for each track scanned on single-layer of powder. Tracks on bare plate showed very similar size and shape, with less pronounced 'bump' above the substrate surface.
+
+surface features appeared to correlate in time for certain scan tracks and laser power, this was not always the case, and certainly not observable in the single-layer powder tests. However, time-integrated measure of laser absorption and photodetector signal did show good correlation. This indicates that these transient measurements may not be adequate for point-defect detection (or finding defects at specific point in time or space), but averaged or filtered signal metrics and a statistically based definition of build quality may be more appropriate.
+
+\section*{5. Conclusions}
+A hemispherical reflectometer was used on a laser powder bed fusion (LPBF) testbed which used filtered photodetectors calibrated to measure the time-resolved reflected laser energy from the melt pool.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_09f598492ffb2d619324g-11}
+\end{center}
+
+Fig. 11. Melt pool cross-section measurement results for single-layer powder (left) and bare plate (right) showed similar values. For both cases, cross-section shape ratio $2 \mathrm{w} / \mathrm{d}>1$ (one definition of transition to keyhole mode) occurred at approximately $100 \mathrm{~W}$ laser power.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_09f598492ffb2d619324g-12(1)}
+
+Fig. 12. Example of select melt pool end-of-track frozen depression from the bare plate scans measured using laser confocal microscope. Note that the top row and bottom row have different length and colorbar scales.
+
+This was synchronized to a melt pool monitoring (MPM) photodetector optically aligned with the laser. Single track tests were conducted on IN625 bare surface and single layer of powder.
+
+Features were observed where dynamic laser absorption appeared highly coupled to the MPM photodetector signal when scanning on bare metal surface. These fluctuations were spatially correspondent to fluctuations observed on the solidified scan track. Similar fluctuations were not observed in the sensor signals nor surface morphology for the tracks made on single powder layer.
+
+For both bare metal and single-layer powder tests, the time-integrated average laser coupling efficiency was linearly correlated to the time-integrated signal from the MPM photodetector, indicating a strong physical relationship between the absorbed laser energy and the radiant emission from the melt pool. The transition from conduction mode to keyhole mode was marked by an increase in average coupling at a range of laser power levels, which was further exemplified via melt pool cross-section shape analysis, as well as topography of the end-of-track solidified depression depth.
+
+Based on these observations, we conclude that a MPM photodetector signal is more related to surface morphology or keyhole depression formation than temperature or size of the melt pool. This stems from the discussed relationships between absorption, emittance, and keyhole depth, and that laser absorption or coupling is insensitive to both melt pool temperature and surface area. However, it was observed that MPM photodetector signal was highly correlated to the average coupling efficiency, which in turn, was observed to be correlated to the melt pool morphology.
+
+\section*{CRediT authorship contribution statement}
+Brandon Lane: Conceptualization, Investigation, Methodology, Formal analysis, Writing - original draft, Writing - review \& editing. Ivan Zhirnov: Investigation, Methodology. Sergey Mekhontsev: Conceptualization, Investigation, Methodology. Steven Grantham: Investigation, Methodology. Richard Ricker: Investigation, Visualization, Writing - original draft. Santosh Rauniyar: Investigation, Visualization. Kevin Chou: Investigation, Visualization, Writing - original draft.
+
+\section*{Declaration of Competing Interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Acknowledgements}
+The authors greatly acknowledge Brian Simonds of the NIST Physical Measurement Laboratory in Boulder, CO provided much helpful discussion and interpretation of results based on his prior work in laser coupling measurement. Ho Yeung of NIST Engineering Lab in Gaithersburg, MD provided additional experiment results on plume measurements that assisted in interpretation of results in this paper [45]. David Deisenroth of NIST Physical Measurement Laboratory in Gaithersburg, MD provided valuable background review of laser absorption and laser welding literature.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_09f598492ffb2d619324g-12}
+
+Fig. 13. Left: Surface profilometry measurements of transverse end-of-track frozen melt pool depression depth. Right: Measured melt pool end-of-track frozen depression geometries.
+
+\section*{References}
+[1] J. Trapp, A.M. Rubenchik, G. Guss, M.J. Matthews, In situ absorptivity measurements of metallic powders during laser powder-bed fusion additive manufacturing, Appl. Mater. Today. 9 (2017) 341-349, \href{https://doi.org/10.1016/j.apmt.2017.08}{https://doi.org/10.1016/j.apmt.2017.08}. 006.
+
+[2] J. Ye, S.A. Khairallah, A.M. Rubenchik, M.F. Crumb, G. Guss, J. Belak, M.J. Matthews, Energy coupling mechanisms and scaling behavior associated with laser powder bed fusion additive manufacturing, Adv. Eng. Mater. 21 (2019) 1900185, , \href{https://doi.org/10.1002/adem.201900185}{https://doi.org/10.1002/adem.201900185}.
+
+[3] R. Indhu, V. Vivek, L. Sarathkumar, A. Bharatish, S. Soundarapandian, Overview of Laser Absorptivity Measurement Techniques for Material Processing, Lasers Manuf. Mater. Process. 5 (2018) 458-481, \href{https://doi.org/10.1007/s40516-018-0075-1}{https://doi.org/10.1007/s40516-018-0075-1}.
+
+[4] B.J. Simonds, E.J. Garboczi, T.A. Palmer, P.A. Williams, Dynamic Laser Absorptance Measured in a Geometrically Characterized Stainless-Steel Powder Layer, Phys. Rev. Appl. 13 (2020) 024057, , \href{https://doi.org/10.1103/}{https://doi.org/10.1103/} PhysRevApplied.13.024057.
+
+[5] B.J. Simonds, J. Sowards, J. Hadler, E. Pfeif, B. Wilthan, J. Tanner, C. Harris, P. Williams, J. Lehman, Time-Resolved Absorptance and Melt Pool Dynamics during Intense Laser Irradiation of a Metal, Phys. Rev. Appl. 10 (2018) 044061, \href{https://doi.org/10.1103/PhysRevApplied.10.044061}{https://doi.org/10.1103/PhysRevApplied.10.044061}.
+
+[6] V. Semak, A. Matsunawa, The role of recoil pressure in energy balance during laser materials processing, J. Phys. Appl. Phys. 30 (1997) 2541, , \href{https://doi.org/10}{https://doi.org/10} 1088/0022-3727/30/18/008.
+
+[7] S.A. Khairallah, A.T. Anderson, A. Rubenchik, W.E. King, Laser powder-bed fusion additive manufacturing: Physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones, Acta Mater. 108 (2016) 36-45, \href{https://doi}{https://doi}. org/10.1016/j.actamat.2016.02.014.
+
+[8] M.J. Matthews, G. Guss, S.A. Khairallah, A.M. Rubenchik, P.J. Depond, W.E. King, Denudation of metal powder layers in laser powder bed fusion processes, Acta Mater. 114 (2016) 33-42, \href{https://doi.org/10.1016/j.actamat.2016.05.017}{https://doi.org/10.1016/j.actamat.2016.05.017}.
+
+[9] P. Bidare, I. Bitharas, R.M. Ward, M.M. Attallah, A.J. Moore, Fluid and particle dynamics in laser powder bed fusion, Acta Mater. 142 (2018) 107-120, \href{https://doi}{https://doi}. org/10.1016/j.actamat.2017.09.051.
+
+[10] D.C. Deisenroth, S. Mekhontsev, B. Lane, Measurement of mass loss, absorbed en ergy, and time-resolved reflected power for laser powder bed fusion, Proc. SPIE, International Society for Optics and Photonics, (2020), \href{https://doi.org/10.1117/}{https://doi.org/10.1117/} 12.2547491 .
+
+[11] T.R. Allen, W. Huang, J.R. Tanner, W. Tan, J.M. Fraser, B.J. Simonds, EnergyCoupling Mechanisms Revealed through Simultaneous Keyhole Depth and Absorptance Measurements during Laser-Metal Processing, Phys. Rev. Appl. 13 (2020) 064070, , \href{https://doi.org/10.1103/PhysRevApplied.13.064070}{https://doi.org/10.1103/PhysRevApplied.13.064070}.
+
+[12] S.A. David, J.M. Vitek, Correlation between solidification parameters and weld microstructures, Int. Mater. Rev. 34 (1989) 213-245, \href{https://doi.org/10.1179/imr}{https://doi.org/10.1179/imr}. 1989.34.1.213.
+
+[13] Y. Wang, L. Xing, K. Li, C. Yu, J. Ma, W. Liu, Z. Shen, Band-Like Distribution of Grains in Selective Laser Melting Track Under Keyhole Mode, Metall. Mater. Trans. B. (2019), \href{https://doi.org/10.1007/s11663-018-1483-5}{https://doi.org/10.1007/s11663-018-1483-5}.
+
+[14] I. Yadroitsev, I. Smurov, Selective laser melting technology: From the single laser melted track stability to 3D parts of complex shape, Phys. Procedia (2010) 551-560, \href{https://doi.org/10.1016/j.phpro.2010.08.083}{https://doi.org/10.1016/j.phpro.2010.08.083}.
+
+[15] M. Tang, P.C. Pistorius, J.L. Beuth, Prediction of lack-of-fusion porosity for powder bed fusion, Addit. Manuf. 14 (2017) 39-48, \href{https://doi.org/10.1016/j.addma}{https://doi.org/10.1016/j.addma}. 2016.12.001.
+
+[16] W.E. King, H.D. Barth, V.M. Castillo, G.F. Gallegos, J.W. Gibbs, D.E. Hahn, C. Kamath, A.M. Rubenchik, Observation of keyhole-mode laser melting in laser powder-bed fusion additive manufacturing, J. Mater. Process. Technol. 214 (2014) 2915-2925, \href{https://doi.org/10.1016/j.jmatprotec.2014.06.005}{https://doi.org/10.1016/j.jmatprotec.2014.06.005}.
+
+[17] S. Shrestha, T. Starr, K. Chou, A Study of Keyhole Porosity in Selective Laser Melting: Single-Track Scanning With Micro-CT Analysis, J. Manuf. Sci. Eng. 141 (2019), \href{https://doi.org/10.1115/1.4043622}{https://doi.org/10.1115/1.4043622} 071004-071004-11.
+
+[18] M. Grasso, B.M. Colosimo, Process defects and in situ monitoring methods in metal powder bed fusion: a review, Meas. Sci. Technol. 28 (2017) 044005, , \href{https://doi}{https://doi}. org/10.1088/1361-6501/aa5c4f.
+
+[19] M. Mani, B. Lane, M.A. Donmez, S. Feng, S. Moylan, R. Fesperman, Measurement science needs for real-time control of additive manufacturing powder bed fusion processes, National Institute of Standards and Technology, Gaithersburg, MD, 2015http://nvlpubs.nist.gov/nistpubs/ir/2015/NIST.IR.8036.pdf.
+
+[20] T.G. Spears, S.A. Gold, In-process sensing in selective laser melting (SLM) additive manufacturing, Integrating Mater. Manuf. Innov. 5 (2016) 16-40, \href{https://doi.org/}{https://doi.org/} 10.1186/s40192-016-0045-4.
+
+[21] C. Reiff, F. Wulle, O. Riedel, S. Epple, V. Onuseit, On inline process control for selective laser sintering, Proc. MCP-CE 2018, Novi Sad, Serbia, 2018, p. 11.
+
+[22] L. Mazzoleni, A.G. Demir, L. Caprio, M. Pacher, B. Previtali, Real-Time Observation of Melt Pool in Selective Laser Melting: Spatial, Temporal and Wavelength Resolution Criteria, IEEE Trans. Instrum. Meas. (2019).
+
+[23] T. Craeghs, S. Clijsters, E. Yasa, F. Bechmann, S. Berumen, J.-P. Kruth, Determination of geometrical factors in Layerwise Laser Melting using optical process monitoring, Opt. Lasers Eng. 49 (2011) 1440-1446.
+
+[24] T. Kolb, P. Gebhardt, O. Schmidt, J. Tremel, M. Schmidt, Melt pool monitoring for laser beam melting of metals: assistance for material qualification for the stainless steel 1.4057, Procedia CIRP. 74 (2018) 116-121, \href{https://doi.org/10.1016/j.procir}{https://doi.org/10.1016/j.procir}. 2018.08.058.
+
+[25] T. Kolb, L. Müller, J. Tremel, M. Schmidt, Melt pool monitoring for laser beam melting of metals: inline-evaluation and remelting of surfaces, Procedia CIRP. 74 (2018) 111-115, \href{https://doi.org/10.1016/j.procir.2018.08.052}{https://doi.org/10.1016/j.procir.2018.08.052}.
+
+[26] B.A. Fisher, B. Lane, H. Yeung, J. Beuth, Toward determining melt pool quality metrics via coaxial monitoring in laser powder bed fusion, Manuf. Lett. 15 (2018)\\
+119-121, \href{https://doi.org/10.1016/j.mfglet.2018.02.009}{https://doi.org/10.1016/j.mfglet.2018.02.009}.
+
+[27] J.C. Heigel, B.M. Lane, Measurement of the Melt Pool Length During Single Scan Tracks in a Commercial Laser Powder Bed Fusion Process, J. Manuf. Sci. Eng. 140 (2018), \href{https://doi.org/10.1115/1.4037571}{https://doi.org/10.1115/1.4037571} 051012-051012-7.
+
+[28] D.P. DeWitt, G.D. Nutter, Theory and practice of radiation thermometry, Wiley Online Library, 1988.
+
+[29] D.P. DeWitt, J.C. Richmond, Applications of Radiation Thermometry: A Symposium, ASTM International, Philadelphia, PA, 1985.
+
+[30] M. Susa, R.K. Endo, Emissivities of High Temperature Metallic Melts, in: H. Fukuyama, Y. Waseda (Eds.), High-Temp. Meas. Mater. Springer, Berlin Heidelberg, 2009, pp. 111-129 (Accessed December 13, 2013), \href{http://link}{http://link}. \href{http://springer.com/chapter/10.1007/978-3-540-85918-5}{springer.com/chapter/10.1007/978-3-540-85918-5} 6
+
+[31] Y. Kawahito, N. Matsumoto, Y. Abe, S. Katayama, Relationship of laser absorption to keyhole behavior in high power fiber laser welding of stainless steel and aluminum alloy, J. Mater. Process. Technol. 211 (2011) 1563-1568, \href{https://doi.org/}{https://doi.org/} 10.1016/j.jmatprotec.2011.04.002.
+
+[32] I. Zhirnov, S. Mekhontsev, B. Lane, S. Grantham, N. Bura, Accurate determination of laser spot position during laser powder bed fusion process thermography, Manuf. Lett. 23 (2020) 49-52, \href{https://doi.org/10.1016/j.mfglet.2019.12.002}{https://doi.org/10.1016/j.mfglet.2019.12.002}.
+
+[33] C.L. Chan, J. Mazumder, One-dimensional steady-state model for damage by vaporization and liquid expulsion due to laser-material interaction, J. Appl. Phys. 62 (1987) 4579-4586, \href{https://doi.org/10.1063/1.339053}{https://doi.org/10.1063/1.339053}.
+
+[34] D. Dai, D. Gu, Effect of metal vaporization behavior on keyhole-mode surface morphology of selective laser melted composites using different protective atmo spheres, Appl. Surf. Sci. 355 (2015) 310-319, \href{https://doi.org/10.1016/j.apsusc}{https://doi.org/10.1016/j.apsusc}. 2015.07.044
+
+[35] S.A. Khairallah, A.T. Anderson, A. Rubenchik, W.E. King, Laser powder-bed fusion additive manufacturing: Physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones, Acta Mater. 108 (2016) 36-45, \href{https://doi}{https://doi}. org/10.1016/j.actamat.2016.02.014.
+
+[36] A. Klassen, T. Scharowsky, C. Körner, Evaporation model for beam based additive manufacturing using free surface lattice Boltzmann methods, J. Phys. Appl. Phys. 47 (2014) 275303, , \href{https://doi.org/10.1088/0022-3727/47/27/275303}{https://doi.org/10.1088/0022-3727/47/27/275303}.
+
+[37] C. Limmaneevichitr, S. Kou, Visualization of Marangoni convection in simulated weld pools, Weld. J.-N. Y.-. 79 (2000) 126-s.
+
+[38] R. Fabbro, M. Dal, P. Peyre, F. Coste, M. Schneider, V. Gunenthiram, Analysis and possible estimation of keyhole depths evolution, using laser operating parameters and material properties, J. Laser Appl. 30 (2018) 032410, , \href{https://doi.org/10}{https://doi.org/10}. 2351/1.5040624.
+
+[39] T. Eagar, N. Tsai, Temperature fields produced by traveling distributed heat sources, Weld. J. 62 (1983) 346-355
+
+[40] Q. Guo, C. Zhao, L.I. Escano, Z. Young, L. Xiong, K. Fezzaa, W. Everhart, B. Brown, T. Sun, L. Chen, Transient dynamics of powder spattering in laser powder bed fusion additive manufacturing process revealed by in-situ high-speed high-energy x-ray imaging, Acta Mater. 151 (2018) 169-180, \href{https://doi.org/10.1016/j.actamat}{https://doi.org/10.1016/j.actamat}. 2018.03.036.
+
+[41] N.D. Parab, C. Zhao, R. Cunningham, L.I. Escano, K. Fezzaa, W. Everhart, A.D. Rollett, L. Chen, T. Sun, Ultrafast X-ray imaging of laser-metal additive manufacturing processes, J. Synchrotron Radiat. 25 (2018) 1467-1477, \href{https://doi}{https://doi}. org/10.1107/S1600577518009554.
+
+[42] C. Zhao, K. Fezzaa, R.W. Cunningham, H. Wen, F.D. Carlo, L. Chen, A.D. Rollett, T. Sun, Real-time monitoring of laser powder bed fusion process using high-speed Xray imaging and diffraction, Sci. Rep. 7 (2017) 3602, , \href{https://doi.org/10.1038/}{https://doi.org/10.1038/} s41598-017-03761-2.
+
+[43] P. Saunders, Radiation thermometry: fundamentals and applications in the petrochemical industry, SPIE press, 2007.
+
+[44] D. Ye, J.Y. Hsi Fuh, Y. Zhang, G.S. Hong, K. Zhu, In situ monitoring of selective laser melting using plume and spatter signatures by deep belief networks, ISA Trans. (2018), \href{https://doi.org/10.1016/j.isatra.2018.07.021}{https://doi.org/10.1016/j.isatra.2018.07.021}.
+
+[45] David C. Deisenroth, J. Neira, J. Weaver, H. Yeung, Effects of shield gas flow on meltpool variability and signature in scanned laser melting, Proc. ASME 2020 15th Int. Manuf. Sci. Eng. Conf. Cincinnati, OH, USA, 2020, p. 11.
+
+[46] A. Ladewig, G. Schlick, M. Fisser, V. Schulze, U. Glatzel, Influence of the shielding gas flow on the removal of process by-products in the selective laser melting process, Addit. Manuf. 10 (2016) 1-9, \href{https://doi.org/10.1016/j.addma.2016.01.004}{https://doi.org/10.1016/j.addma.2016.01.004}.
+
+[47] P. Shcheglov, Study of Vapour-plasma plume during high power fiber laser beam influence on metals, Candidate of Science, Bundesanstalt für Materialforschung und -prüfung (BAM), (2012) (Accessed January 2, 2020), \href{https://opus4.kobv.de/opus4bam/files/70/diss88_vt.pdf}{https://opus4.kobv.de/opus4bam/files/70/diss88\_vt.pdf}.
+
+[48] B. Lane, S. Mekhontsev, S. Grantham, M. Vlasea, J. Whiting, H. Yeung, J. Fox, C. Zarobila, J. Neira, M. McGlauflin, L. Hanssen, S. Moylan, M.A. Donmez, J. Rice, Design, Developments, and Results from the Nist Additive Manufacturing Metrology Testbed (ammt), Proc. 26th Annu. Int. Solid Free. Fabr. Symp. Austin, TX, 2016, pp. $1145-1160$.
+
+[49] J. Metelkova, Y. Kinds, K. Kempen, C. de Formanoir, A. Witvrouw, B. Van Hooreweder, On the influence of laser defocusing in Selective Laser Melting of 316L, Addit. Manuf. 23 (2018) 161-169, \href{https://doi.org/10.1016/j.addma}{https://doi.org/10.1016/j.addma}. 2018. 08.006 .
+
+[50] S. Grantham, B. Lane, J. Neira, S. Mekhontsev, M. Vlasea, L. Hanssen, Optical design and initial results from NIST's AMMT/TEMPS facility, Proc. SPIE, San Francisco, CA, 2016, p. 97380S, , \href{https://doi.org/10.1117/12.2214246}{https://doi.org/10.1117/12.2214246}.
+
+[51] J.C. Heigel, B.M. Lane, The effect of powder on cooling rate and melt pool length measurements using in situ thermographic techniques, Proc. Solid Free. Fabr. Symp. Austin, TX, 2017, pp. 1340-1348.
+
+[52] R.E. Ricker, J.C. Heigel, B.M. Lane, I. Zhirnov, L.E. Levine, Topographic measurement of individual laser tracks in alloy 625 bare plates, Integrating Mater. Manuf. Innov. (2019), \href{https://doi.org/10.1007/s40192-019-00157-0}{https://doi.org/10.1007/s40192-019-00157-0}.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

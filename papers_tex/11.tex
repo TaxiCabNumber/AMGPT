@@ -1,0 +1,438 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Influence of laser processing parameters on porosity in Inconel 718 during additive manufacturing }
+
+
+\author{Pankaj Kumar ${ }^{1} \cdot$ Jano Farah $^{2} \cdot$ Javed Akram ${ }^{3} \cdot$ Chong Teng $^{3} \cdot$ Jon Ginn $^{3} \cdot$ Mano Misra $^{1}$}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\DeclareUnicodeCharacter{0131}{$\imath$}
+
+\begin{document}
+\maketitle
+Received: 15 January 2019 / Accepted: 27 March 2019 /Published online: 6 April 2019
+
+(C) Springer-Verlag London Ltd., part of Springer Nature 2019
+
+\begin{abstract}
+The melt pool characteristics in terms of size and shape and the porosity development in laser powder bed fusion-processed Inconel 718 were investigated to determine how laser power and scan speed influence the porosity in the microstructure. The melt pool characteristics developed with both single-track and multilayer bulk laser deposition were evaluated. It was found that the melt pool characteristic is critical for the porosity development. It is shown that the porosity fraction and pore shape change depending on the melt pool size and shape. This result is explained based on the local energy density of a laser during the process. High-density (>99\%) Inconel 718 samples were achieved over a wide range of laser energy densities $\left(\mathrm{J} / \mathrm{mm}^{2}\right)$. A careful assessment shows that the laser power and scan speed affect differently in developing the pores in the samples. The porosity decreased rapidly with the increase in laser power while it varied linearly with the scan speed. A proper combination, however, led to fully dense samples. The study reveals an optimum condition in terms of laser power and scan speed that can be adopted to fabricate high-density Inconel 718 parts using laser powder bed fusion-based additive manufacturing process.
+\end{abstract}
+
+Keywords Additive manufacturing $\cdot$ Selective laser melting $\cdot$ Inconel $718 \cdot$ Porosity $\cdot$ Melt pool characteristics $\cdot$ Laser powder bed fusion
+
+\section*{1 Introduction}
+Additive manufacturing (AM) of superalloys, such as Inconel 718 (IN 718), by laser powder bed fusion (L-PBF) for aerospace applications, creates a larger range of design possibilities for more efficient and powerful engines. With the ability to build layer by layer, complex structures that would be difficult or otherwise impossible with standard subtractive manufacturing are possible with additive manufacturing. However, critical parts produced using AM must be carefully
+\footnotetext{$\boxtimes$ Pankaj Kumar
+
+\href{mailto:pkumar@unr.edu}{pkumar@unr.edu}
+
+$\boxtimes$ Javed Akram
+
+\href{mailto:javed.akram@ansys.com}{javed.akram@ansys.com}
+
+1 Chemical and Materials Engineering, University of Nevada, Reno, NV 89557, USA
+
+2 Metallurgical Engineering, University of Utah, Salt Lake City, UT 84112, USA
+
+3 Ansys, 1794 Olympic Parkway, Site\#110, Park City, UT 84098, USA
+}
+
+evaluated to ensure the optimum structural property requirements are met. L-PBF based on selective laser sintering (SLS) is one of the few industrially attractive AM techniques that can produce fully dense nickel-based alloys [1-3]. This technique utilizes a localized and focused laser beam to melt the alloy particles and subsequently solidify the melted metal pool layer by layer in an optimized pattern to achieve a high-density 3D structure. Essentially, the 3D components produced by L-PBF result from the creation of micron-sized melt pools due to high energy-localized laser irradiation and rapid solidification of these melt pools. The effect of melt pool characteristics on the build quality of various materials has been widely studied and reported in the literature [4-10]. Small melt pool size (and depth) tends to reduce the processing efficiency by increasing the processing time. In contrast, a large melt pool can increase the processing efficiency but may vaporize the substrate/ powder leading to the formation of pores and increase the overall porosity in the materials $[5,9]$. Therefore, the quality of the build, including final density and the surface roughness, is primarily dependent on the melt pool characteristics (shape and size) which are largely controlled by the energy density of the laser beam. The similar dependency of melt pool characteristic on the energy density is also shown in selective\\
+electron beam melting (SEBM) based AM [11]. It has been well established that the characteristic of the melt pool is related to the laser energy density which is essentially a measure of energy input applied during the processing of the materials [12]. Therefore, a controlled and optimized energy density of the L-PBF system for a given material can be achieved by controlling the predefined controllable parameters. The laser power $(P)$, scan speed $(v)$, hatch distance (melt pool overlaps, $d)$, and the layer thickness $(t)$ are the most important parameters and related to the laser energy density as $[9,13]$ :
+
+$E=\frac{P}{v \times d \times t}$
+
+In general, the laser beam diameter is fixed with uniform energy distribution while the parameters associated with the laser as mentioned above can be altered simultaneously/ individually to achieve the desired energy density. The resultant energy density affects favorably the melt pool characteristic and powder fusion quality for optimum density and microstructure of the build.
+
+Several studies of various materials including metal matrix composite have been pursued to understand the influence of processing parameters on the build quality, with the aim of developing the predictive model/strategy to manufacture defect-free components repeatedly by L-PBF [7, 9, 14-22]. An early study by Gu et al. [13] on stainless steel demonstrated that parameters such as laser power and scan speed affect differently on the porosity and microstructure evolution in LPBF processing. Yang et al. [23] experimentally showed that build quality is primarily controlled by the scan speed followed by the laser power and layer thickness. In a statistical study, the relative importance of each contributing process parameter was studied, demonstrating that the scan speed is the most influential parameter [24]. A low scan speed ensures the melting of particles and a dense structure; however, the processing efficiency is greatly reduced. At very slow scan speeds, melt pool instability causes irregular melting along each track leading to high surface roughness, distortion, and high volumetric porosity due to balling effects $[4,5]$. At high scan speeds, the short-time interaction between the materials and the laser beam causes narrow melt pools, which lead to increased surface roughness [5]. Additionally, very high scan speeds can contribute to increased porosity as well as thermally induced cracking as a consequence of extremely high cooling rates [14]. Thus, finding an optimum scan rate is a trade-off between build efficiency and build quality. The decrease in the mechanical properties of the materials in the presence of defects due to the processing is well reported in a recent study [25].
+
+Considerable research has focused on the L-PBF of nickelbased alloys for melt pool and microstructure characterization in order to achieve the optimized conditions to manufacture high-density components [26-30]. Criales et al. [2] have shown that the L-PBF process parameters and scan strategy significantly affect the porosity in Inconel 625. In their elaborate experimental investigation, they established that porosity of the build is directly linked to the melt pool characteristics which are controlled by the process parameters. In recent studies $[9,13,31,32]$, single-track melt pool experiments have been developed to understand the effect of process parameters on porosity and microstructure evolution. Inconel 718 alloy is an age-hardened version of Inconel 625 with excellent strength (twice the strength of Inconel 625) [33, 34]. Exceptionally high tensile strength, fracture toughness, and wear resistance at relatively high temperature make this alloy an attractive material for application in high heat, wear, and corrosive environments such as turbine, nuclear reactors, jet engines, and combustion chambers. At the same time, these properties make it extremely difficult to machine [35-37]. Therefore, L-PBF is an attractive method to manufacture high-density Inconel 718 components. Extensive investigations have been carried out regarding the laser-based processing of Inconel 718 [6, 38-41], reporting the microstructure evolution and related mechanical properties. However, the effect of varying laser processing parameters on the porosity and the microstructure in Inconel 718 is rare [15]. In a limited study, the effect of laser energy density was investigated by processing Inconel 718 artifacts with different scan rates and laser power combinations [6, 42]. According to the study, the densification of the alloy is related to the laser energy density, and the highest possible density is achieved with an optimized laser energy density. However, the main effects of process parameters such as laser power, scan speed, and scan strategy on the porosity and microstructure in this alloy are not well understood. The densification of any materials is critically linked with the melt pool characteristics, and affected by the contributing parameters of the energy density [43-47]. Additional studies are required to understand fully the processing variability in terms of melt pool characteristics to achieve the desired porosity and microstructure. Investigation of single-track deposits using various process parameters will provide a basic understanding of the effect on melt pool characteristics. This will help to identify and establish the optimized processing conditions for 3D components of Inconel 718.
+
+In this investigation, the effect of L-PBF processing parameters, i.e., laser power and scan speed on the melt pool characteristics of Inconel 718, was studied. The melt pool geometry of L-PBF-processed single-track and bulk components under various processing conditions were evaluated with an aim to understand the effect of processing parameters on the density/porosity of the processed samples. The present study contributes to a gap of systematic research on the effect of machine/material processing parameters on the porosity evolution in Inconel
+
+\begin{enumerate}
+  \setcounter{enumi}{717}
+  \item In addition, this research provides an optimized processing window for Inconel 718 that can be adopted at an industrial level.
+\end{enumerate}
+
+\section*{2 Experimental procedure}
+\subsection*{2.1 L-PBF processing}
+A selective laser melting, $\mathrm{SLM}^{\mathrm{R}}$ 500, machine with a maximum power of $400 \mathrm{~W}$ was used to fabricate single tracks (beads) and porosity cubes. Different sets of process parameters were used to examine the melt pool characteristics and porosity of the cubes.
+
+Single-track laser deposition Single tracks with powder were deposited over a pad. The pads were fabricated using default settings of the machine. The dimension of pads is as follows: $45 \mathrm{~mm}$ in width (perpendicular to scan direction) and $19 \mathrm{~mm}$ in the scan direction of single tracks. Figure 1a illustrates the schematic of single tracks over pad. The purpose of putting single tracks over pads rather than wrought material was to capture the real heating phenomena occurring during the printing. The scanning direction of the single tracks was kept transverse to the scanning direction of the pad to provide maximum contrast upon analysis. Twelve (12) single tracks were deposited on a pad with different laser powers and scan speeds. A layer thickness of $40 \mu \mathrm{m}$ was maintained for single-track deposits with powder. The process parameter set for the singletrack experiment is listed in Table 1. To capture the statistical variation, three identical pads with the same process parameters (12 single beads on each pad) were produced.
+
+Multilayer-deposited cube samples To examine the porosity at different combinations of power and laser speed, simple cubes were printed using a bidirectional scan pattern with a $90^{\circ}$ rotation at each layer as shown in Fig. 1b. Default support structure was built at the bottom of each cube for easy removal from base plate. The cubes were $10 \times 10 \times$ $5 \mathrm{~mm}$ in dimension. Table 2 lists the set of process parameters used to fabricate the porosity cubes. Two replicates were produced for each process parameter set to capture the statistical variance.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5feb4058e560929d98a4g-03(1)}
+\end{center}
+
+Fig. 1 Schematic of single-track laser deposition (a) and multilayerdeposited porosity cubes (b) with a scan strategy for analyzing melt
+
+\subsection*{2.2 Characterization}
+The melt pool dimensions and micrographs were examined using an optical microscope. The samples were cut cross-sectionally. The cut samples were mounted and polished following a standard metallurgical polishing method. The polished samples were etched lightly with Keller's reagent to reveal the melt pool in the microstructure. The porosity and microstructure of the cube samples were determined on the vertical plane of each cube. The porosity fraction, shape, and melt pool dimensions were determined with the aid of imageJ image analysis software.
+
+\section*{3 Results and discussion}
+\subsection*{3.1 Melt pool characteristics}
+Melt pool characteristics (source of the build quality) were studied by varying processing parameters. Melt pools obtained by the single-track laser deposition performed on the additively manufactured IN718 base pad were examined under an optical microscope. A characteristic melt pool which can easily be distinguished by the visible interface is shown in Fig. 2. The geometrical morphology and dimension of the melt pool in terms of width and depth can easily be identified. A symmetric melt pool was observed in all operating conditions while the width and depth of the melt pools changed with changes in laser power and scan speed. Figure 3 depicts the change in the shape of the melt pool when the energy density increases from 2.5 to $5 \mathrm{~J} / \mathrm{mm}^{2}$. It can be seen that the depth to width ratio increased with the energy level. The melt pool width is a critical parameter to consider in order to optimize the hatch distance. The hatch distance is important as it dictates the re-melting and solidification of previously solidified melt pool track during the subsequent laser passes. The process may lead to void formation, increase in surface roughness, and the complicated evolution of microstructure. Similar to width, the depth of melt pool influences the re-melting and solidification of already solidified layers in subsequent laser processing, which significantly impact the build quality. Therefore, it is essential to identify a range of optimized laser settings to achieve optimum melt pool geometry. In one study,
+
+(b)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_5feb4058e560929d98a4g-03}
+
+pool characteristics and porosity. A scan strategy of $0-90$ is followed to fabricate the cube samples
+
+Table 1 Single-track laser deposition parameters
+
+\begin{center}
+\begin{tabular}{llll}
+\hline
+Power $(\mathrm{W})$ & \begin{tabular}{l}
+Speed \\
+$(\mathrm{mm} / \mathrm{s})$ \\
+\end{tabular} & \begin{tabular}{l}
+Layer thickness \\
+$(\mathrm{mm})$ \\
+\end{tabular} & \begin{tabular}{l}
+Energy density \\
+$\left(\mathrm{J} / \mathrm{mm}^{2}\right)$ \\
+\end{tabular} \\
+\hline
+75 & 800 & 0.04 & 2.3 \\
+75 & 1500 & 0.04 & 1.2 \\
+75 & 2200 & 0.04 & 0.8 \\
+150 & 800 & 0.04 & 4.6 \\
+150 & 1500 & 0.04 & 2.5 \\
+150 & 2200 & 0.04 & 1.7 \\
+225 & 800 & 0.04 & 7.0 \\
+225 & 1500 & 0.04 & 3.7 \\
+225 & 2200 & 0.04 & 2.5 \\
+300 & 800 & 0.04 & 9.3 \\
+300 & 1500 & 0.04 & 5.0 \\
+300 & 2200 & 0.04 & 3.4 \\
+\hline
+\end{tabular}
+\end{center}
+
+it was demonstrated that melt pool geometry can change the melting characteristic from conduction to keyhole mode which eventually affects the build quality [23]. The melt pool width and depth obtained as a function of laser energy density by varying the scan rate and laser power are presented in Fig. 4. The melt pool width increases linearly with the increase in laser energy density $\left(\mathrm{J} / \mathrm{mm}^{2}\right)$ in the range of 2 to $10 \mathrm{~J} / \mathrm{mm}^{2}$. Similarly, the melt pool depth increases linearly with the energy density in the same energy density range (Fig. 4 inset). This indicates that the melt pool dimensions are directly related to the laser operating parameters. It is interesting to note that as the energy density increases, the scatter in the width and depth dimension of melt pool is also increased. A similar trend of increasing scattering in melt pool dimensions associated with increasing energy density can be observed in a recent study [48]. This demonstrates that at higher energy intensity levels, controlling the melt pool dimensions can be problematic. Large scattering in melt pool width and depth can cause uneven melting of the powder. For example, for a fixed laser beam diameter and hatch distance, some particles partially melt in the region where the hatch distance is larger than the melt pool dimension. In a region where the hatch distance\\
+Table 2 Cube deposition parameters
+
+\begin{center}
+\begin{tabular}{llll}
+\hline
+Power $(\mathrm{W})$ & \begin{tabular}{l}
+Speed \\
+$(\mathrm{mm} / \mathrm{s})$ \\
+\end{tabular} & \begin{tabular}{l}
+Layer thickness \\
+$(\mathrm{mm})$ \\
+\end{tabular} & \begin{tabular}{l}
+Energy density \\
+$\left(\mathrm{J} / \mathrm{mm}^{2}\right)$ \\
+\end{tabular} \\
+\hline
+75 & 800 & 0.04 & 2.3 \\
+75 & 1200 & 0.04 & 1.5 \\
+75 & 1600 & 0.04 & 1.1 \\
+75 & 2000 & 0.04 & 0.9 \\
+120 & 800 & 0.04 & 3.7 \\
+120 & 1200 & 0.04 & 2.5 \\
+120 & 1600 & 0.04 & 1.8 \\
+120 & 2000 & 0.04 & 1.5 \\
+165 & 800 & 0.04 & 5.1 \\
+165 & 1200 & 0.04 & 3.4 \\
+165 & 1600 & 0.04 & 2.5 \\
+165 & 2000 & 0.04 & 2.0 \\
+225 & 800 & 0.04 & 7.0 \\
+225 & 2000 & 0.04 & 2.8 \\
+285 & 800 & 0.04 & 8.9 \\
+285 & 2000 & 0.04 & 3.5 \\
+330 & 800 & 0.04 & 10.3 \\
+330 & 2000 & 0.04 & 4.1 \\
+375 & 800 & 0.04 & 11.7 \\
+375 & 2000 & 0.04 & 4.6 \\
+\hline
+ &  &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5feb4058e560929d98a4g-05}
+\end{center}
+
+Fig. 2 Melt pool geometry obtained by a single-track L-PBF deposition with a laser power of $300 \mathrm{~W}$ at the scan speed of $1500 \mathrm{~mm} / \mathrm{s}$, equivalent of $\sim 5 \mathrm{~J} / \mathrm{mm}^{2}$. The width and depth of the melt pool at this operating condition are $\sim 142 \mu \mathrm{m}$ and $\sim 115 \mu \mathrm{m}$ respectively
+
+is shorter than the melt pool dimension, the excessive energy may vaporize the particles. Both cases will result in the formation of voids which significantly impact the build quality. Based on this, it can be argued that the build quality can be compromised at higher energy densities $\left(>10 \mathrm{~J} / \mathrm{mm}^{2}\right.$ ) due to large scatter in melt pool dimension.
+
+The representative microstructure development in a melt pool as a result of solidification can be seen in Fig. 2. The columnar grain formation is prevalent in the microstructure. The columnar grain developed along the building direction. Along with the course columnar grain parallel to the build height, the irregular columnar grain also developed. Typically, this microstructure developed when there is a large thermal gradient available. This characteristic microstructure developed in L-PBF process can be corroborated with the earlier study [15]. The columnar grain extends to the previous layer with a size approaching double the size of the melt pool height. This clearly indicates that during the laser scanning, the previous layer re-melted and solidified to form the columnar grain. Therefore, the thermal conditions in this approach encourage the formation of large elongated columnar grains that can extend to multiple layers.
+
+The evaluation of melt pool characteristic in a single layer is extended to melt pools in multilayer cube sample. An optical image of the developed microstructure of the vertical section of the L-PBF-processed IN 718 cubes (scanned using 0-90 pattern and a laser energy density of $5.15 \mathrm{~J} / \mathrm{mm}^{2}$ [power $165 \mathrm{~W}$, scan rate $800 \mathrm{~mm} / \mathrm{s}$, and layer thickness $0.04 \mathrm{~mm}]$ ) is shown in Fig. 5. The melt pools as a result of multilayer laser scanning to fabricate a $1-\mathrm{cm}$ cube can be clearly observed. Overlapped melt pools can be seen in the microstructure. This observation confirms that the excessive local energy can re-melt the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5feb4058e560929d98a4g-05(1)}
+\end{center}
+
+Fig. 3 Representative melt pool geometries with change in energy density. Melt pool shape changes from short pyriform to long pyriform with increase in the energy density
+
+previously solidified melt pool. The average width and the depth of the observed melt pool are $\sim 112 \pm 9 \mu \mathrm{m}$ and $\sim$ $73 \pm 10 \mu \mathrm{m}$, respectively. When compared, the melt pool dimensions are smaller than those obtained with singlelayer deposition with a similar energy density $\left(5 \mathrm{~J} / \mathrm{mm}^{2}\right)$. This difference in dimension can be attributed to error in measurement due to melt pool overlapping, assuming that the similar energy density has yielded a similar melt pool
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5feb4058e560929d98a4g-06}
+\end{center}
+
+Fig. 4 Melt pool width obtained by a single-track L-PBF deposition as a function of laser energy density. Inset diagram shows the melt pool depth obtained in the same experiments as a function of energy density. The laser energy density is varied by varying the laser power (75 to $300 \mathrm{~W}$ ) and scan rate ( 800 to $2200 \mathrm{~mm} / \mathrm{s}$ )
+
+volume. Also, a small fraction of randomly distributed fine porosity can also be observed.
+
+The microstructure of an as-fabricated cube sample consists of large and interconnected directional columnar grains with random columnar grains. This suggests that the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5feb4058e560929d98a4g-06(1)}
+\end{center}
+
+Fig. 5 Microstructure of the vertical section of the L-PBF fabricated with energy density $5.15 \mathrm{~J} / \mathrm{mm}^{2}$ (laser power $165 \mathrm{~W}$, laser scan speed $800 \mathrm{~mm} /$ $\mathrm{s}$, and layer thickness $0.04 \mathrm{~mm}$ ) cube. Melt pools and layer development in the sample can be clearly observed. The columnar grains stretch to the multilayer characteristic microstructure of the melt pool in single-layer $\mathrm{L}-\mathrm{PBF}$ is preserved in the multilayer deposition process. The excess energy re-melts the already solidified layer and subsequently develops a large interconnected columnar grain in the direction of laser scanning.
+
+\subsection*{3.2 Effect of laser processing parameters on the densification}
+The first criteria to define a good quality build are directly related to the porosity present in the as-fabricated samples. A good build quality should be fully dense with no porosity present in the microstructure. Therefore, the L-PBF processing parameters should be first optimized to achieve fully dense samples. High density represents a lower fraction of porosity and vice versa. In order to achieve an optimized processing window for fully dense manufacturing of the IN 718 components, it is essential to understand the effect of individual laser processing parameters. The representative micrographs of the IN 718 as obtained from varying laser power and scan speed are shown in Fig. 6. The observed micrographs suggest that the density of a sample increases with the increase in laser power for a given scan speed. For example, the fraction of pores observed at $75 \mathrm{~W}$ is significantly reduced when the laser power is increased to $285 \mathrm{~W}$ at a scan speed of $800 \mathrm{~mm} / \mathrm{s}$. This observation is consistent with all the scan speeds considered in this study. Intuitively, it can be said that higher laser power provides sufficient energy to melt the particles resulting in larger melt pool volume. The sufficient melt pool volume ensures less porosity in the microstructure by interlayer bonding. The sample fabricated using the parameters $165 \mathrm{~W}$ of laser power, $800 \mathrm{~mm} / \mathrm{s}$ of laser scan speed, and $0.04 \mathrm{~mm}$ of layer thickness (energy density $5.15 \mathrm{~J} / \mathrm{mm}^{2}$ ) yielded a very low fraction of porosity in the microstructure. Increasing the energy density further to $\sim 9 \mathrm{~J} / \mathrm{mm}^{2}$ ( $285 \mathrm{~W}, 800 \mathrm{~mm} / \mathrm{s}$, and $0.04 \mathrm{~mm}$ layer thickness) by increasing the laser power to $285 \mathrm{~W}$ does not necessarily reduce the porosity fraction.
+
+Increasing the scan rate, however, can significantly reduce the density of the L-PBF-processed IN 718 samples (Fig. 6). For instance, at the fixed laser power of $120 \mathrm{~W}$, the pore fraction was significantly enhanced when the laser scan speed was increased from 800 to 2000 mm/s as shown in Fig. 6. It can be argued that at the higher scan speed, partial melting of powder occurs due to insufficient time available. The partial melting at high scan speeds causes the formation of voids, hence the poor density of samples $[49,50]$.
+
+The laser scan speed can be increased to enhance the processing efficiency; however, increase in the scan speed is limited by the void formation at a given laser power. On the other hand, low scan speed can reduce the void formation but required a longer time to process the sample. Although a good build quality can be achieved with low scan speed at a given laser power, the processing efficiency reduces significantly.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5feb4058e560929d98a4g-07}
+\end{center}
+
+Fig. 6 Optical micrographs of the vertical section of L-PBF-fabricated cubes as a function of laser power and the laser scanning speed. The black regions in the micrographs represent the pores in the microstructure
+
+Therefore, these parameters are chosen in a way to yield the optimum build quality and fabrication efficiency. This can be achieved by simultaneously increasing or reducing the parameters as indicated in Fig. 6.
+
+A close inspection of the micrographs shown in Fig. 6 suggests that two different types of pores, irregular and round pores, are developed depending on the process conditions. The irregular pores are prevalent when laser energy input is low (low laser power (<120 W) and high scan speed (>1200 mm/s )). One plausible reason is that, in this condition, the melt pool dimensions (width and depth) are small and not sufficient to melt the particle in a volume enough to make strong bonding between the layers resulting in the formation of irregular pores (voids) $[45,51,52]$. The local melting occurs through localized conduction and convection process [9,23]. Due to a small melt pool and insufficient energy available during the process, the complete melting process does not occur leaving behind the partially melted IN 718 .
+
+The small round pores are observed at high energy density, i.e., high laser power and low scan speed. In the present study, this is observed in the sample fabricated at a laser power above $165 \mathrm{~W}$ and a scan speed of $800 \mathrm{~mm} / \mathrm{s}$ (Fig. 6). These pores are essentially formed due to characteristic heating and cooling cycles by the specific melt pool geometry. The large pyriform shape of melt pools from these operating conditions is observed (Fig. 3). In this case, due to large melt pool depth, the heat transfer and melting process occur in multi-layer deposits. Studies indicate that interlayer melting results in the small round pore formation $[53,54]$. The pore formation mechanism has been associated with the following: (i) shielding gas entrapment $[55,56]$ and (ii) local melting, vaporization, and entrapment during the laser processing, known as keyhole formation $[13,32,42,45]$. However, pore formation due to shielding gas entrapment phenomena is yet to be experimentally established. Nevertheless, it is well known that the interlayer melting results in the formation of fine round pores. Since the L-PBF process is dynamic in nature, the involved gases, such as vaporized melt and shielding gases, may entrap in the solidified melt pool resulting in the formation of the pores.
+
+The effect of laser input power on the porosity can be analyzed by plotting the porosity obtained as a function of laser power as shown in Fig. 7. As evident from the figure, the porosity was reduced with the increase in the input laser
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5feb4058e560929d98a4g-08}
+\end{center}
+
+Fig. 7 Porosity obtained as a function of laser power at various laser scan speeds. Inset shows the porosity variation in the high-density samples
+
+power at all scanning speeds. A non-linear behavior of reducing porosity with the increase in laser power is observed. Near fully dense samples are observed for the sample processed at laser power above $165 \mathrm{~W}$ at a scan speed of $800 \mathrm{~mm} / \mathrm{s}$. Increased scan speed from 800 to $2000 \mathrm{~mm} / \mathrm{s}$ can introduce porosity up to $40 \%$ in the microstructure obtained with the laser power of $165 \mathrm{~W}$. The increased laser power allows the use of a high scan speed. For instance, at high scan speeds ( $\sim 2000 \mathrm{~mm} / \mathrm{s}$ scan speed), the porosity reduced to $<10 \%$ from $\sim 40 \%$ when the laser power increased from 165 to $265 \mathrm{~W}$, and nearly $100 \%$ density is observed when the laser input power is increased to above $330 \mathrm{~W}$. The magnified view of the porosity variation in high density sample is shown as the inset figure. The inset figure clearly shows that the porosity level as low as $<1 \%$ can be achieved with choosing an appropriate laser power for a given scan speed. This demonstrates that a fully dense sample can be achieved if the laser power is optimized.
+
+The effect of laser scanning on the porosity variation can be analyzed using Fig. 8. As can be seen from Fig. 8, the porosity in the samples varies linearly with the scan speed. This
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5feb4058e560929d98a4g-08(2)}
+\end{center}
+
+Fig. 8 Variation in porosity as a function of scan speed at various laser power settings. Inset shows the porosity variation in the high-density samples observation is more evident when the laser input power is below $165 \mathrm{~W}$. Also, it is observed that at $75 \mathrm{~W}$ of laser power, the fully dense sample cannot be achieved with any scan speed considered in this study. However, from Fig. 8, it can be extrapolated to predict the required scan speed to achieve the high-density samples with a laser power of $75 \mathrm{~W}$. For example, a scan speed of $<500 \mathrm{~mm} / \mathrm{s}$ is needed to achieve the highdensity IN 718 sample when processing with a laser power of $75 \mathrm{~W}$. Thus, this figure can be used as a tool to predict the optimum scan speed required to achieve the highest possible density at a given laser power. The high-density samples plotted on Fig. 8 are magnified and shown in inset figure. A porosity fraction $<1 \%$ is achieved at both low $(800 \mathrm{~mm} / \mathrm{s})$ and high scanning speeds $(2000 \mathrm{~mm} / \mathrm{s})$ with $>165 \mathrm{~W}$ and $>$ $330 \mathrm{~W}$ laser input power respectively. These indicate that both the laser power and speed are required to be chosen appropriately for desired porosity levels.
+
+Alternatively, the porosity variation due to laser power and scan speed can be analyzed by considering the laser energy density. The variation in porosity as a function of energy density is plotted in Fig. 9. It is clearly evident that the porosity level reduces abruptly with the increase in the laser energy density. The porosity reduced to $<1 \%$ from $\sim 100 \%$ when the energy density increases from $\sim 2.5$ to $4 \mathrm{~J} / \mathrm{mm}^{2}$. A nonlinear behavior of reducing porosity with energy density is evident from the present study. Furthermore, there is no observable change when the energy density increased above $4 \mathrm{~J} /$ $\mathrm{mm}^{2}$ as shown in the inset figure. All the samples processed in the range of 4 to $10 \mathrm{~J} / \mathrm{mm}^{2}$ show the porosity level $<1 \%$. Dilip et al. [9] experimentally demonstrated the porosity pore formation by the keyhole mechanism at higher energy density. The authors established that the porosity level reduced to a minimum and increased significantly with a further increase in energy density. This is the characteristic behavior when the porosity is formed by keyhole mechanism [51, 57]. At higher energy density, excessive vaporization can result in higher
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5feb4058e560929d98a4g-08(1)}
+\end{center}
+
+Fig. 9 Porosity observed as a function of laser energy density. Inset shows the porosity variation in the high-density samples\\
+porosity. In the present study, it is confirmed that density does not change with the increase in the laser energy density in the range of 4 to $10 \mathrm{~J} / \mathrm{mm}^{2}$. This behavior reveals that the round pore might not be formed by the keyhole mechanism. While the pore formation mechanism is not clear, it is reasonable to assume that the pores are likely to form due to inert shielding gas entrapment during the L-PBF processing in the present study.
+
+\subsection*{3.3 Analyzing L-PBF processing parameters}
+It is demonstrated that a high-density IN 718 sample with porosity below $1 \%$ can be achieved by utilizing a laser energy density above $\sim 4 \mathrm{~J} / \mathrm{mm}^{2}$. There is no appreciable change in porosity observed when the energy density increased up to $\sim 10 \mathrm{~J} / \mathrm{mm}^{2}$. To understand the L-PBF processing parameter effects in order to achieve high-density sample ( $<1 \%$ porosity), the laser power and scan speed are reproduced from the energy densities in the range of $\sim 4$ to $10 \mathrm{~J} / \mathrm{mm}^{2}$ as given in Table 3. It can be noted that a porosity level of less than $1 \%$ can be achieved with energy densities ranging from 4.7 to 10 . $3 \mathrm{~J} / \mathrm{mm}^{2}$. Therefore, it is vital to compare these energy densities in terms of scan speed and power input in order to optimize the processing conditions. Increasing scanning speed directs to the high fabrication efficiency while high laser power increases the cost of fabrication. The high scan speed is, therefore, a natural selection for fabrication. When compared, the laser processing condition of $800 \mathrm{~mm} / \mathrm{s}$ scan speed and $330 \mathrm{~W}$ laser power produces a similar dense sample as the laser condition of $2000 \mathrm{~mm} / \mathrm{s}$ speed with $375 \mathrm{~W}$. Although, the high-speed condition uses slightly more power, the parts can be fabricated about 2.5 times faster than the $800 \mathrm{~mm} / \mathrm{s}$ condition. This suggests that the fabrication efficiency is comparatively much higher which could eventually reduce the overall manufacturing cost. Even reducing the laser power to $225 \mathrm{~W}$ with the scan speed of $800 \mathrm{~mm} / \mathrm{s}$, the comparative benefit is not significant. Similarly, for the samples with
+
+Table 3 Laser density, scan speed, and power to achieve the porosity level $<1 \%$ and $<2 \%$
+
+\begin{center}
+\begin{tabular}{llll}
+\hline
+\begin{tabular}{l}
+Porosity \\
+$(\%)$ \\
+\end{tabular} & \begin{tabular}{l}
+Energy \\
+$\left(\mathrm{J} / \mathrm{mm}^{2}\right)$ \\
+\end{tabular} & \begin{tabular}{l}
+Scan \\
+speed \\
+$(\mathrm{mm} / \mathrm{s})$ \\
+\end{tabular} & \begin{tabular}{l}
+Power \\
+$(\mathrm{W})$ \\
+\end{tabular} \\
+\hline
+$<1$ & 10.3 & 800 & 330 \\
+ & 7.03 & 800 & 225 \\
+ & 8.9 & 800 & 285 \\
+$<2$ & 4.7 & 2000 & 375 \\
+ & 4.1 & 2000 & 330 \\
+ & 5.1 & 800 & 165 \\
+ & 11.7 & 800 & 375 \\
+\hline
+\end{tabular}
+\end{center}
+
+Italicized data indicated the optimum laser power and speed to fabricate IN 718 parts using the L-PBF porosity $<2 \%$, the comparative evaluation suggests that the optimum condition to fabricate parts is to use a high laser speed. Based on these arguments, the optimum operating window to fabricate IN 718 is identified (italicized data in Table 3). In addition, it is shown that the energy density is not the true parameter to optimize for fabricating AM parts. However, it can guide the amount of energy spent on fabrication. Depending on the energy spent locally, the microstructure of the build can significantly change [58]. Nevertheless, a comprehensive study of the microstructure evolution due to varying laser power and scanning speed is the scope of a future study.
+
+\section*{4 Conclusion}
+The effect of laser power and scan speed on melt pool dimensions and the porosity in the microstructure were systematically studied. The key contribution of this study is the demonstration that high-density IN 718 parts can be fabricated with laser powder bed fusion (L-PBF) by choosing the appropriate laser power and the scan speed. It is demonstrated that melt pool shape and dimension are the deciding factors for the porosity level and pore shapes in the final components. A linear correlation of melt pool dimension with the energy is observed in the range of 2 to $10 \mathrm{~J} / \mathrm{mm}^{2}$. The trend of melt pool characteristics as observed in the single-track deposition is preserved in the multilayer deposition. This information can be used to predict the multilayer build quality in laser-based AM processes by analyzing the melt pool characteristics in a single-layer deposition. A linear increase in porosity fraction was observed with the increase in laser scan speed. Surprisingly, a rapid reduction in the porosity fraction was seen with the increase in laser power. Based on this information, assessing energy density $\left(\mathrm{J} / \mathrm{mm}^{2}\right)$, a single parameter that includes variables such as laser scan speed and laser power, for the build quality is not practical. The same build quality can be achieved with a wide range of laser energy densities. Optimizing the processing condition based on the energy density is, therefore, not feasible. An optimized processing window is required to be established in terms of laser power and the scan speed. This approach should be helpful to develop the operating condition criteria to achieve high-density ( $>99 \%$ ) components. Based on the rigorous operating parameter analysis, an optimum laser power and scan speed window to fabricate IN 718 efficiently at low cost is devised in the present study.
+
+Funding information The authors PK, JF, and MM duly acknowledge the partial financial support from the Roger and Dawn Center for Renewable Energy Center at the University of Utah.
+
+\section*{References}
+\begin{enumerate}
+  \item Arısoy YM, Criales LE, Özel T et al (2017) Influence of scan strategy and process parameters on microstructure and its optimization in additively manufactured nickel alloy 625 via laser powder bed fusion. Int J Adv Manuf Technol 90:1393-1417. \href{https://doi}{https://doi}. org/10.1007/s00170-016-9429-z
+
+  \item Criales LE, Arisoy YM, Lane B et al (2017) Laser powder bed fusion of nickel alloy 625: experimental investigations of effects of process parameters on melt pool size and shape with spatter analysis. Int J Mach Tools Manuf 121:22-36. \href{https://doi.org/10}{https://doi.org/10}. 1016/j.ijmachtools.2017.03.004
+
+  \item Wang X, Gong X, Chou K (2017) Review on powder-bed laser additive manufacturing of Inconel 718 parts. Proc Inst Mech Eng B J Eng Manuf 231:1890-1903. \href{https://doi.org/10.1177/}{https://doi.org/10.1177/} 0954405415619883
+
+  \item Kempen K, Thijs L, Yasa E, et al (2011) Process optimization and microstructural analysis for selective laser melting of AlSi10Mg. pp $484-495$
+
+  \item Kamath C, El-dasher B, Gallegos GF et al (2014) Density of additively-manufactured, 316L SS parts using laser powder-bed fusion at powers up to $400 \mathrm{~W}$. Int J Adv Manuf Technol 74:65-78
+
+  \item Jia Q, Gu D (2014) Selective laser melting additive manufacturing of Inconel 718 superalloy parts: densification, microstructure and properties. J Alloys Compd 585:713-721. \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. jallcom.2013.09.171
+
+  \item Song B, Dong S, Liao H, Coddet C (2012) Process parameter selection for selective laser melting of Ti6A14V based on temperature distribution simulation and experimental sintering. Int J Adv Manuf Technol 61:967-974
+
+  \item Sun J, Yang Y, Wang D (2013) Parametric optimization of selective laser melting for forming Ti6Al4V samples by Taguchi method. Opt Laser Technol 49:118-124
+
+  \item Dilip JJS, Zhang S, Teng C et al (2017) Influence of processing parameters on the evolution of melt pool, porosity, and microstructures in Ti-6Al-4V alloy parts fabricated by selective laser melting. Progress in Additive Manufacturing 2:157-167. \href{https://doi.org/10}{https://doi.org/10}. 1007/s40964-017-0030-2
+
+  \item Maamoun AH, Xue YF, Elbestawi MA, Veldhuis SC (2018) Effect of SLM process parameters on the quality of $\mathrm{Al}$ alloy parts; part II: microstructure and mechanical properties. \href{https://doi.org/10.20944/}{https://doi.org/10.20944/} preprints201811.0026.v1
+
+  \item Riedlbauer D, Scharowsky T, Singer RF et al (2017) Macroscopic simulation and experimental measurement of melt pool characteristics in selective electron beam melting of Ti-6Al-4V. Int J Adv Manuf Technol 88:1309-1317. \href{https://doi.org/10.1007/s00170016-8819-6}{https://doi.org/10.1007/s00170016-8819-6}
+
+  \item Fotovvati B, Wayne SF, Lewis G, Asadi E (2018) A review on meltpool characteristics in laser welding of metals. Adv Mater Sci Eng 2018:1-18. \href{https://doi.org/10.1155/2018/4920718}{https://doi.org/10.1155/2018/4920718}
+
+  \item Gu H, Gong H, Pal D, et al (2013) Influences of energy density on porosity and microstructure of selective laser melted $17-4 \mathrm{PH}$ stainless steel
+
+  \item Sames WJ, List F, Pannala S et al (2016) The metallurgy and processing science of metal additive manufacturing. Int Mater Rev 61: 315-360
+
+  \item Choi J-P, Shin G-H, Yang S et al (2017) Densification and microstructural investigation of Inconel 718 parts fabricated by selective laser melting. Powder Technol 310:60-66. \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} j.powtec.2017.01.030
+
+  \item Paria Karimi Neghlani (2016) SLM additive manufacturing of alloy 718 effect of process parameters on microstructure and properties. $\mathrm{PhD}$ thesis, University West
+
+  \item Mertens R, Clijsters S, Kempen K, Kruth J-P (2014) Optimization of scan strategies in selective laser melting of aluminum parts with downfacing areas. J Manuf Sci Eng 136:061012
+
+  \item Teng C, Ashby K, Phan N et al (2016) The effects of material property assumptions on predicted meltpool shape for laser powder bed fusion based additive manufacturing. Meas Sci Technol 27: 085602. \href{https://doi.org/10.1088/0957-0233/27/8/085602}{https://doi.org/10.1088/0957-0233/27/8/085602}
+
+  \item Kasperovich G, Hausmann J (2015) Improvement of fatigue resistance and ductility of TiA16V4 processed by selective laser melting. J Mater Process Technol 220:202-214. \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. jmatprotec.2015.01.025
+
+  \item AlMangour B, Grzesiak D, Borkar T, Yang J-M (2018) Densification behavior, microstructural evolution, and mechanical properties of $\mathrm{TiC} / 316 \mathrm{~L}$ stainless steel nanocomposites fabricated by selective laser melting. Mater Des 138:119-128. \href{https://doi.org/}{https://doi.org/} 10.1016/j.matdes.2017.10.039
+
+  \item Jia Q, Gu D (2014) Selective laser melting additive manufacturing of Inconel 718 superalloy parts: high-temperature oxidation property and its mechanisms. Opt Laser Technol 62:161-171. https:// \href{http://doi.org/10.1016/j.optlastec.2014.03.008}{doi.org/10.1016/j.optlastec.2014.03.008}
+
+  \item Cherry JA, Davies HM, Mehmood S et al (2015) Investigation into the effect of process parameters on microstructural and physical properties of $316 \mathrm{~L}$ stainless steel parts by selective laser melting. Int J Adv Manuf Technol 76:869-879. \href{https://doi.org/10.1007/}{https://doi.org/10.1007/} s00170-014-6297-2
+
+  \item Yang J, Han J, Yu H et al (2016) Role of molten pool mode on formability, microstructure and mechanical properties of selective laser melted Ti-6Al-4V alloy. Mater Des 110:558-570. \href{https://doi}{https://doi}. org/10.1016/j.matdes.2016.08.036
+
+  \item Kamath C (2016) Data mining and statistical inference in selective laser melting. Int J Adv Manuf Technol 86:1659-1677
+
+  \item Fotovvati B, Namdari N, Dehghanghadikolaei A (2018) Fatigue performance of selective laser melted Ti6Al4V components: state of the art. Materials Research Express 6:012002. \href{https://doi.org/10}{https://doi.org/10}. 1088/2053-1591/aae10e
+
+  \item Hack H, Link R, Knudsen E et al (2017) Mechanical properties of additive manufactured nickel alloy 625. Additive Manufacturing 14:105-115
+
+  \item Zadi-Maad A, Basuki A (2018) The development of additive manufacturing technique for nickel-base alloys: a review. AIP Publishing, New York, p 020064
+
+  \item DebRoy T, Wei HL, Zuback JS et al (2018) Additive manufacturing of metallic components - process, structure and properties. Prog Mater Sci 92:112-224. \href{https://doi.org/10.1016/j.pmatsci.2017.10}{https://doi.org/10.1016/j.pmatsci.2017.10}. 001
+
+  \item Criales LE, Arisoy YM, Lane B et al (2017) Predictive modeling and optimization of multi-track processing for laser powder bed fusion of nickel alloy 625. Addit. Manuf 13:14-36
+
+  \item Manfredi D, Calignano F (2017) Laser powder bed fusion of aluminum, titanium and nickel based alloys: materials and design investigations. IEEE:1423-1425
+
+  \item Gong H, Teng C, Zeng K, et al (2016) Single track of selective laser melting Ti-6Al-4V powder on support structure
+
+  \item Dilip J, Anam MA, Pal D, Stucker B (2016) A short study on the fabrication of single track deposits in SLM and characterization
+
+  \item Brooks J, Bridges P (1988) Metallurgical stability of Inconel alloy 718. Superalloys 88:33-42
+
+  \item Eiselstein H, Tillack D (1991) The invention and definition of alloy 625. Superalloys 718:1-14
+
+  \item Sharman ARC, Amarasinghe A, Ridgway K (2008) Tool life and surface integrity aspects when drilling and hole making in Inconel 718. J Mater Process Technol 200:424-432. \href{https://doi.org/10}{https://doi.org/10}. 1016/j.jmatprotec.2007.08.080
+
+  \item Parida AK, Maity K (2018) Comparison the machinability of Inconel 718, Inconel 625 and Monel 400 in hot turning operation. Engineering Science and Technology, an International Journal 21: 364-370. \href{https://doi.org/10.1016/j.jestch.2018.03.018}{https://doi.org/10.1016/j.jestch.2018.03.018}
+
+  \item Narutaki N, Yamane Y, Hayashi K et al (1993) High-speed machining of Inconel 718 with ceramic tools. CIRP Ann 42:103-106. \href{https://doi.org/10.1016/S0007-8506(07)62402-0}{https://doi.org/10.1016/S0007-8506(07)62402-0}
+
+  \item Blackwell PL (2005) The mechanical and microstructural characteristics of laser-deposited IN718. J Mater Process Technol 170: 240-246. \href{https://doi.org/10.1016/j.jmatprotec.2005.05.005}{https://doi.org/10.1016/j.jmatprotec.2005.05.005}
+
+  \item Amato KN, Gaytan SM, Murr LE et al (2012) Microstructures and mechanical behavior of Inconel 718 fabricated by selective laser melting. Acta Mater 60:2229-2239. \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. actamat.2011.12.032
+
+  \item Pröbstle M, Neumeier S, Hopfenmüller J et al (2016) Superior creep strength of a nickel-based superalloy produced by selective laser melting. Mater Sci Eng A 674:299-307. \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. msea.2016.07.061
+
+  \item Bean GE, Witkin DB, McLouth TD, Zaldivar RJ (2018) The effect of laser focus and process parameters on microstructure and mechanical properties of SLM Inconel 718. International Society for Optics and Photonics, p 105230Y
+
+  \item Moussaoui K, Rubio W, Mousseigne M et al (2018) Effects of selective laser melting additive manufacturing parameters of Inconel 718 on porosity, microstructure and mechanical properties. Mater Sci Eng A 735:182-190. \href{https://doi.org/10.1016/j.msea}{https://doi.org/10.1016/j.msea}. 2018.08.037
+
+  \item Khairallah SA, Anderson AT, Rubenchik A, King WE (2016) Laser powder-bed fusion additive manufacturing: physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones. Acta Mater 108:36-45
+
+  \item Seifi M, Salem A, Beuth J et al (2016) Overview of materials qualification needs for metal additive manufacturing. Jom 68: 747-764
+
+  \item Gong H, Rafi K, Gu H et al (2014) Analysis of defect generation in Ti-6Al-4V parts made using powder bed fusion additive manufacturing processes. Addit. Manuf 1:87-98
+
+  \item Gorsse S, Hutchinson C, Gouné M, Banerjee R (2017) Additive manufacturing of metals: a brief review of the characteristic microstructures and properties of steels, Ti-6Al-4V and high-entropy alloys. Sci Technol Adv Mater 18:584-610. \href{https://doi.org/10.1080/}{https://doi.org/10.1080/} 14686996.2017.1361305
+
+  \item Xia M, Gu D, Yu G et al (2017) Porosity evolution and its thermodynamic mechanism of randomly packed powder-bed during selective laser melting of Inconel 718 alloy. Int J Mach Tools Manuf 116: 96-106. \href{https://doi.org/10.1016/j.ijmachtools.2017.01.005}{https://doi.org/10.1016/j.ijmachtools.2017.01.005}
+
+  \item Sadowski M, Ladani L, Brindley W, Romano J (2016) Optimizing quality of additively manufactured Inconel 718 using powder bed laser melting process. Addit. Manuf 11:60-70. \href{https://doi.org/10}{https://doi.org/10}. 1016/j.addma.2016.03.006
+
+  \item Laoui T, Froyen L, Yadroitsev IA et al (2004) Balling processes during selective laser treatment of powders. Rapid Prototyp J 10: 78-87. \href{https://doi.org/10.1108/13552540410526953}{https://doi.org/10.1108/13552540410526953}
+
+  \item Mumtaz KA, Hopkinson N (2010) Selective laser melting of thin wall parts using pulse shaping. J Mater Process Technol 210:279287. \href{https://doi.org/10.1016/j.jmatprotec.2009.09.011}{https://doi.org/10.1016/j.jmatprotec.2009.09.011}
+
+  \item Kasperovich G, Haubrich J, Gussone J, Requena G (2016) Correlation between porosity and processing parameters in TiA16V4 produced by selective laser melting. Mater Des 105: 160-170. \href{https://doi.org/10.1016/j.matdes.2016.05.070}{https://doi.org/10.1016/j.matdes.2016.05.070}
+
+  \item Gong H, Rafi K, Karthik NV, et al (2013) The effects of processing parameters on defect regularity in Ti-6Al-4V parts fabricated by selective laser melting and electron beam melting. pp 440-453
+
+  \item Thijs L, Verhaeghe F, Craeghs T et al (2010) A study of the microstructural evolution during selective laser melting of Ti-6Al-4V. Acta Mater 58:3303-3312. \href{https://doi.org/10.1016/j.actamat.2010}{https://doi.org/10.1016/j.actamat.2010}. 02.004
+
+  \item Dai D, Gu D (2014) Thermal behavior and densification mechanism during selective laser melting of copper matrix composites: simulation and experiments. Mater Des 55:482-491. \href{https://doi}{https://doi}. org/10.1016/j.matdes.2013.10.006
+
+  \item Pang S, Chen W, Wang W (2014) A quantitative model of keyhole instability induced porosity in laser welding of titanium alloy. Metall Mater Trans A 45:2808-2818
+
+  \item Vilaro T, Colin C, Bartout JD (2011) As-fabricated and heat-treated microstructures of the Ti-6Al-4V alloy processed by selective laser melting. Metall Mater Trans A 42:3190-3199. \href{https://doi.org/10}{https://doi.org/10}. 1007/s11661-011-0731-y
+
+  \item Tan JL, Tang C, Wong CH (2018) A computational study on porosity evolution in parts produced by selective laser melting. Metall and Mat Trans A 49:3663-3673 \href{https://doi.org/10.1007/s11661018-4697-%D1%85}{https://doi.org/10.1007/s11661018-4697-х}
+
+  \item Akram J, Chalavadi P, Pal D, Stucker B (2018) Understanding grain evolution in additive manufacturing through modeling. Addit. Manuf 21:255-268. \href{https://doi.org/10.1016/j.addma.2018.03.021}{https://doi.org/10.1016/j.addma.2018.03.021}
+
+\end{enumerate}
+
+Publisher's note Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations.
+
+
+\end{document}

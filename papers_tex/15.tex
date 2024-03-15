@@ -1,0 +1,1302 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{multirow}
+
+\title{Determination of melt pool dimensions using DOE-FEM and RSM with process window during SLM of Ti6Al4V powder }
+
+\author{}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Full length article
+
+\textbackslash author\{\\
+Jyun-Rong Zhuang a, Yee-Ting Lee ${ }^{b}$, Wen-Hsin Hsieh ${ }^{c}$, An-Shik Yang b,*
+
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-01} \\
+ ${ }^{\mathrm{b}}$ Department of Energy and Refrigerating Air-Conditioning Engineering, National Taipei University of Technology, Taipei 106, Taiwan, ROC \\
+ 'Department of Mechanical Engineering, National Chung-Cheng University, Chiayi 621, Taiwan, ROC\\
+\}
+
+\section*{A R T I C L E I N F O}
+\section*{Article history:}
+Received 1 May 2017
+
+Received in revised form 21 November 2017 Accepted 5 January 2018
+
+Available online 12 January 2018
+
+\section*{Keywords:}
+Selective laser melting (SLM)
+
+Design of experiment (DOE)
+
+Response Surface Method (RSM)
+
+Melt pool dimensions
+
+Process window
+
+Titanium alloy
+
+\begin{abstract}
+A B S T R A C $T$ Selective laser melting (SLM) shows a positive prospect as an additive manufacturing (AM) technique for fabrication of 3D parts with complicated structures. A transient thermal model was developed by the finite element method (FEM) to simulate the thermal behavior for predicting the time evolution of temperature field and melt pool dimensions of Ti6Al4V powder during SLM. The FEM predictions were then compared with published experimental measurements and calculation results for model validation. This study applied the design of experiment (DOE) scheme together with the response surface method (RSM) to conduct the regression analysis based on four processing parameters (exactly, the laser power, scanning speed, preheating temperature and hatch space) for predicting the dimensions of the melt pool in SLM. The preliminary RSM results were used to quantify the effects of those parameters on the melt pool size. The process window was further implemented via two criteria of the width and depth of the molten pool to screen impractical conditions of four parameters for including the practical ranges of processing parameters. The FEM simulations confirmed the good accuracy of the critical RSM models in the predictions of melt pool dimensions for three typical SLM working scenarios.
+\end{abstract}
+
+๑C 2018 Elsevier Ltd. All rights reserved.
+
+\section*{1. Introduction}
+Titanium alloys have very high tensile strength, light weight, good biocompatibility and superior corrosion resistance at even extreme temperatures $[1,2]$. For applications, titanium alloys have been broadly used in various fields such as aerospace, biomedical and automotive industries in recent years. However, titanium alloys are difficult-to-machine materials due to their high strength, low thermal conductivity and high chemical reactivity. Additionally, the slow solidification rates would produce the coarsened microstructures and the large degrees of segregation during the conventional casting processes [3]. As a result, further processing technologies are needed to maintain titanium components with great performance.
+
+Additive manufacturing (AM), also known as three-dimensional (3D) printing, is the process of direct fabrication for 3D objects in a layer-by-layer fashion. Selective laser melting (SLM) demonstrates a promising potential as a lately developed AM technique for fab-
+\footnotetext{\begin{itemize}
+  \item Corresponding author at: Department of Energy and Refrigerating Air-Conditioning Engineering, National Taipei University of Technology, 1, Sec. 3, ChungHsiao E. Rd., Taipei 106, Taiwan, ROC.
+\end{itemize}
+
+E-mail address: \href{mailto:asyang@ntut.edu.tw}{asyang@ntut.edu.tw} (A.-S. Yang).
+}
+
+rication of 3D parts with complex structures [4-7]. The SLM process can be also applied to precision part manufacturing $[3,8]$. In practice, SLM technology applied a high energy laser beam to selectively scan thin loose powder layers to generate melting and consolidation from a CAD model within milliseconds. As a result, the powders can be melted with higher-density parts formed by SLM, and thereby shape a final model with high mechanical properties [9]. SLM is usually performed in a neutral gas, nitrogen or argon gas, to protect the molten pool from oxidation. Considering as the concerned issues involving the operations of SLM, relocating a high energy density of laser beam on a powder bed can produce elevated thermal gradients, which may result in the undesired shrinkage variations, non-homogeneous thermal cracks and residual stresses distributed within consolidated layers [10].
+
+The laser based SLM technique involves a complex process of heat and mass transfer including conduction, convection and radiation. Significant efforts were made to explore the thermal behavior and laser melting operational characteristics in the SLM process. Hussein et al. [11] and Craeghs et al. [12] analyzed the process parameters such as the laser power, scan velocity, preheating temperature and layer thickness affecting the formation of melt pool size as well as the dimension accuracy control and final features of SLM parts. The former found an increase in the
+
+\section*{Nomenclature}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+$A$ & laser energy absorptance of a material & $R a_{L}$ & Rayleigh number \\
+\hline
+c & specific heat, J/kg K & $R$ & radius of the Gaussian heat source \\
+\hline
+$D_{P}$ & average diameter of the powder particles, $m$ &  & beam, $\mathrm{m}$ \\
+\hline
+$F_{0}$ & view factor & $T_{m}$ & melting temperature, $\mathrm{K}$ \\
+\hline
+$G_{r}$ & Grashof numbers & $T_{o}$ & preheating temperature, $\mathrm{K}$ \\
+\hline
+$H$ & enthalpy, $\mathrm{J} / \mathrm{m}^{3}$ & $T_{P}$ & temperature of powder particles, $\mathrm{K}$ \\
+\hline
+$h$ & convective heat transfer coefficient, $\mathrm{W} / \mathrm{m}^{2} \mathrm{~K}$ & $T_{\infty}$ & ambient temperature, $/{ }^{\circ} \mathrm{C}$ \\
+\hline
+$k_{f}$ & thermal conductivity of atmosphere, $\mathrm{W} / \mathrm{m} \mathrm{K}$ & $x, y, z$ & Coordinates \\
+\hline
+$k_{r}$ & thermal conductivity due to radiation, $\mathrm{W} / \mathrm{m} \mathrm{K}$ & $\beta_{f}$ & volumetric expansivity, $/{ }^{\circ} \mathrm{C}$ \\
+\hline
+$k_{s}$ & thermal conductivity of solid, $\mathrm{W} / \mathrm{m} \mathrm{K}$ & $\rho$ & material density, $\mathrm{kg} / \mathrm{m}^{3}$ \\
+\hline
+$l$ & length of scanning track, $m$ & $\rho_{f}$ & fluid density, $\mathrm{kg} / \mathrm{m}^{3}$ \\
+\hline
+$L$ & moving distance, $\mathrm{m}$ & $\rho_{s}$ & solid density, $\mathrm{kg} / \mathrm{m}^{3}$ \\
+\hline
+$N_{t}$ & number of track & $\rho_{p}$ & powder density \\
+\hline
+$q$ & input heat flux, $\mathrm{W} / \mathrm{m}^{2}$ &  & $\left.\mathrm{~m}^{2} \mathrm{~K}^{4}\right)$ \\
+\hline
+$q_{c o n}$ & convection heat flux, $\mathrm{W} / \mathrm{m}^{2}$ &  &  \\
+\hline
+$q_{\text {rad }}$ & heat radiation heat flux, $\mathrm{W} / \mathrm{m}^{2}$ &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+predicted length of the melt pool at higher scan speed with both width and depth of the melt pool decreased. High VonMises stresses were also noted in the consolidated layers due to the cyclic melting and cooling rates in the scanned tracks. With the use of static processing parameters at downfacing planes, the latter observed bad surface quality at these planes on account of the outsized melt pool. Childs et al. [13] investigated the relationship of the processing parameters with molten mass for a $\mathrm{CO}_{2}$ laser beam focused to $0.55 \mathrm{~mm}$ and $1.1 \mathrm{~mm}$ diameters, scanning over those beds made from M2 and $\mathrm{H} 13$ tool steel and 314S-HC stainless steel powders in the SLM development. It was noted that the structure of the powder bed and size of particles could affect penetration of radiation into the bed and the consequent densification in the partial melting regime. Zaeh and Branner [14] described that those SLM parts (using tool steel 1.2709, X3NiCoMoTi18-9-5 alloy) with a thinner layer thickness were susceptible to deformation because of elevated temperature variations. The initial platform temperature was identified to be the major influence on the occurring deformations of the shaped cantilever. The scanning strategy and the layer size were indicated as a minor impact with larger layer sizes of $70 \mu \mathrm{m}$ produced additionally reduced deformations. The layer-based detail model was found to be an essential requirement for determining the deformations and residual stresses with an augmented precision. Mumtaz and Hopkinson [15] experimentally examined the selective laser melting of Inconel 625 by an Nd:YAG pulsed laser to produce thin wall parts with minimum top surface and side surface roughness. Higher peak powers tended to reduce both top surface roughness and side roughness as recoil pressures flatten out the melt pool and ease balling formation by increasing wettability of the melt. Nevertheless, higher repetition rate and lower scan speed reduced top surface roughness but increased side roughness. Using a two-dimensional (2D) formulation, Ilin et al. [16] adopted the Goldak's heat source model to predict the melt pool size and the temperature distribution of the 316L-steel bulk and powder materials. The increasing width of the melt pool near the border was perceived by the local increasing of the powder amount in the vicinity of the fusing zone. The further numerical analysis also showed the attainment of decreasing the melt pool width via increasing the scanning speed for stabilizing the laser beam melting process and enhancing the accuracy of the sample dimensions. From the predictions of unsteady temperature field for TiAl6V4 powder layers during the additive layer manufacturing (ALM) process, Roberts et al. [17] indicated rapid thermal cycles with commensurate thermal stress cycles occurred at laser heated regions.
+
+In fact, the experimental measurements of SLM practice are considered to be difficult since it involves many details of localized laser heating, superfast melting and solidification. Numerical simulation has become a powerful tool to comprehend the underlying mechanisms behind the phenomena of SLM. The finite element method is the widely used computational method for predicting temperature and stress fields in the SLM procedure. Using a 3D finite element model to resolve the temperature field, Dai and Shaw [18] investigated the effect of the volume shrinkage due to transformation from a powder compact to dense liquid on the temperature field, size and shape of laser-densified dental porcelain bodies. Different criteria were proposed to judge the state of element by considering the possible occurrence of volume shrinkage associated with the powder conversion process during laser densification. Germain et al. [19] carried out the finite element method (FEM)-based thermal numerical simulations by Abaqus/Standard ${ }^{\circledR}$ to resolve the shape and size of heat affected zone (HAZ) in two metals (100Cr6/AISI52100 and Ti6Al4V) all over moving laser irradiation. It was observed that the surface roughness was not affected by the laser power. Yang et al. [20] presented a 3D FEM model to predict the HAZ in the Ti6Al4V plate work piece by a moving Gaussian laser beam. The size of the HAZ was found to be closely related to the laser power, speed, and spot size. Foroozmehr et al. [21] conducted the FEM computations to simulate laser melting of a single layer of stainless steel 316L on a thick powder bed at scan speeds of 80,100 , and $150 \mathrm{~mm} / \mathrm{s}$. The results showed that the melt pool dimensions reached a steady condition after\\
+the third track. The melt pool depth of each track also stayed nearly constant after around $2 \mathrm{~mm}$ from the beginning of the track. Though past studies indicated that the processing characteristics including the design and operational variables can substantially affect the structure of melt pool change, the study of employing the design of experiment (DOE) scheme along with the response surface method (RSM) for modeling of the process parameters in SLM machining applications has not been done before. In this research, a computational DOE-FEM approach based on a timedependent analysis was developed to characterize the thermal behavior of TiAl6V4 powder bed over the laser melting course, which is validated by the preceding computational and experimental results. The purpose of this study is to explore the effects of important processing parameters consisting of the laser power, scanning speed, preheating temperature and hatch space between two neighboring tracks on the predicted time sequences of temperature distribution and melt pool dimensions of Ti6Al4V powder during SLM. RSM was then used to quantify the relationship between the input processing parameters (including the laser power, scanning speed, preheating temperature and hatch space) and the response factors (i.e., the length, width and depth of melt pool) with the preliminary RSM correlations produced by the multiple regression method. The analysis of variance (ANOVA) was also employed to explore the significance of the developed regression model and each processing parameter in SLM. We further proposed the process window procedures to verify the ranges of the input processing parameters with the quality criteria, and thus preclude the improper setting of parameters for achieving practical combinations. In the end, we incorporated the justified processing parameters from the process window into the critical RSM responses to realize the accurate predictions of the melt pool extent of Ti6Al4V powder during SLM.
+
+\section*{2. Theoretical formulation}
+\subsection*{2.1. Physical description of SLM}
+Fig. 1 shows a schematic of the thermal behavior between laser radiation and powder bed disposed on the dense substrate during
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-03(1)}
+\end{center}
+
+Fig. 1. Schematic of the thermal behavior between laser radiation and powder bed during SLM process.\\
+SLM process. The environment is full of inert gas (i.e. Argon (Ar) in this case) to evade corrosion. When the laser beam irradiates the surface of a powder bed, a small fraction of the laser energy can be reflected and dissipated by radiation and convection. The remainder of laser energy is absorbed by the powder layers and thereby results in rapid heating and localized melting with the formation of a molten pool. After the moving laser heat source leaves with swift consolidation occurred, the metallurgical bonding is developed between the neighboring tracks and the lower layers. Furthermore, the inherent complexities of thermal transport within the powder beds, the thermal heat losses caused by convection and radiation within the heat transfer mechanism of SLM process should also be considered for properly characterizing the thermal behavior.
+
+\subsection*{2.2. Finite element analysis}
+This research used the FEM software package ANSYS ${ }^{\circledR}$ (Workbench v16.0) to conduct the thermo-mechanical coupling analysis for exploring the thermal essentials of laser melting development. A 3D FEM model, including all detailed structure parts, was constructed using ANSYS ${ }^{\circledR}$ for the predictions of the time-varying temperature field and associated phenomena such as deformation, temperature gradients and metallurgical defects during the SLM process. Fig. 2 illustrates the schematics depicting (a) the established 3D FEM model and (b) the laser scan strategy during SLM
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-03(2)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-03}
+\end{center}
+
+(b)
+
+Fig. 2. Schematic depicting (a) established 3D FEM model and (b) laser scan strategy during SLM process.\\
+process. A TiAl6V4 powder layer with the dimensions of $3 \mathrm{~mm} \times 3$ $\mathrm{mm} \times 0.03 \mathrm{~mm}$ were placed on a dense substrate with the size of $3 \mathrm{~mm} \times 3 \mathrm{~mm} \times 1 \mathrm{~mm}$ depicted in Fig. 2(a). In practice, the layer was processed progressively in the pattern of five scanning tracks as depicted in Fig. 2(b). The heat flux from a mobile laser beam with the Gaussian distribution was applied on the top surface of powder layer, moving along the axial axis with a constant velocity. The laser beam travels one element once with the duration time at a spot defined by the element size and scanning speed for the simulations of the scenarios for continual movement of a heat source [19]. During simulations, the materials of elements can be assessed by monitoring the temperature field. The laser processing parameters in the SLM process are listed in Table 1.
+
+\subsection*{2.3. Governing equations}
+A thermal-structure model built in the ANSYS ${ }^{\circledR}$ software was developed to effectively simulate the thermal behavior for predicting the transient temperature field associated with SLM progression. In practice, the laser beam produces the localized heating of the powder bed, causing the transfer of heat energy to the material governed by conductive heat transfer. The transient 3D heat conduction equation in the domain $D$ can be expressed as below [22].
+
+$\rho c \frac{\partial T}{\partial t}=\frac{\partial}{\partial x}\left(k \frac{\partial T}{\partial x}\right)+\frac{\partial}{\partial y}\left(k \frac{\partial T}{\partial y}\right)+\frac{\partial}{\partial z}\left(k \frac{\partial T}{\partial z}\right)+\dot{Q}$,
+
+where $(x, y, z)$ are the spatial coordinates. The symbols $\rho, c, T, t, k$ and $Q$ denote the material density, specific heat capacity, temperature of the powder system, interaction time between the laser beam and powder bed, thermal conductivity and heat generated per volume within the component, respectively. The initial temperature distribution in the powder beds at $t=0$ can be defined as follows.
+
+$\left.T(x, y, z, t)\right|_{t=0}=T_{o}, \quad(x, y, z) \in D$,
+
+where $T_{o}$ is the preheating temperature ( $T_{\text {preheating }}$ ) or the ambient temperature $\left(T_{\infty}\right)$ of $20^{\circ} \mathrm{C}$ in agreement with the test conditions.
+
+The following expression is employed to specify the thermal boundary conditions for powder, liquid and solid [19].
+
+$k \frac{\partial T}{\partial n}-q+q_{c}+q_{r}=0, \quad(x, y, z) \in S$,
+
+where $S$ represents the surfaces attached to imposed heat fluxes (convection and radiation), $n$ is the normal vector of $S, q$ is the input heat flux from the laser energy source with a full description of $q$ given later and $q_{c}$ is the heat loss because of natural convection of the fluid around the powder bed, as defined below.
+
+$q_{c}=h\left(T-T_{\infty}\right)$,
+
+where $h$ is the convective heat transfer coefficient, and can be expressed as:
+
+Table 1
+
+Laser processing parameters of SLM process.
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Parameter & Value \\
+\hline
+Laser power, $P$ & $120 \mathrm{~W}$ \\
+Scan speed, $V$ & $220 \mathrm{~mm} / \mathrm{s}$ \\
+Laser spot radius, $\omega$ & $0.05 \mathrm{~mm}$ \\
+Track length, $l$ & $0.85 \mathrm{~mm}$ \\
+Track number, $N t$ & 5 \\
+Hatch spacing, $d$ & $0.05 \mathrm{~mm}$ \\
+Laser absorptivity of powder, $A$ & 0.3 \\
+Powder layer thickness, $\delta$ & $30 \mu \mathrm{m}$ \\
+Initial porosity of powder, $\varphi_{0}$ & 0.646 \\
+Density of dense material, $\rho_{\text {dense }}$ & $4420 \mathrm{~kg} / \mathrm{m}^{3}$ \\
+Total heat transfer coefficient, $h$ & $80 \mathrm{~W} / \mathrm{m}^{2} \mathrm{~K}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+$h=\frac{N u k_{f}}{L}$
+
+where $L$ is the characteristic length of the specimen, $N u$ is the Nusselt number and $k_{f}$ is the thermal conductivity of the fluid in the atmosphere (for example, $\mathrm{Ar}$ is used as the protective atmosphere of SLM process: $k_{f}=0.016 \mathrm{~W} / \mathrm{m} /{ }^{\circ} \mathrm{C}$ ). Considering the molten pool, formed during laser scanning, as a hot horizontal plate [23], $\mathrm{Nu}$ can be then calculated as:
+
+$\overline{N u_{L}}=0.54 R a_{L}^{1 / 4}, \quad\left(10^{4} \leqslant R a_{L} \leqslant 10^{7}\right)$
+
+where $R a_{L}$ is the Rayleigh number, which is the product of the Prandtl (Pr) and Grashof ( $G r$ ) numbers (i.e., $R a_{L}=G r P r$ ), as revealed below.
+
+$G r=\frac{g \rho_{f}^{2} \beta_{f}\left(T_{s}-T_{\infty}\right) L^{3}}{\mu_{f}^{2}}$,
+
+$\operatorname{Pr}=\frac{c_{f} \mu_{f}}{k_{f}}$,
+
+where $g$ is the acceleration of gravity. The signs $\rho_{f}, \beta_{f}, \mu_{f}$ and $c_{f}$ correspond to the density, volumetric expansivity, viscosity and specific heat of the fluid, respectively. Besides, the heat loss $q_{r}$ owing to radiation of the powder bed is expressed as below.
+
+$q_{r}=\sigma \varepsilon\left(T^{4}-T_{\infty}^{4}\right)$,
+
+where $\sigma$ is the Stefan-Boltzmann constant $\left(5.67 \times 10^{-8} \mathrm{~W} / \mathrm{m}^{2} \mathrm{~K}^{4}\right)$, and $\varepsilon$ is the emissivity of Ti6Al4V powder, taken as 0.7 from Ref. $[25]$.
+
+\subsection*{2.4. Moving Gaussian heat source model}
+The thermal energy from the laser beam was treated as a moving Gaussian distributed source term to yield the localized heating of the powder bed during SLM. The distribution of the laser beam intensity follows nearly a Gaussian relationship, as mathematically presented in the following [25].
+
+$q=\frac{2 A P}{\pi R^{2}} \exp \left(-\frac{2 r^{2}}{R^{2}}\right)$,
+
+where $A$ is the laser energy absorptivity of Ti6Al4V powder as listed in Table 1, $P$ is the laser power, $R$ designates the radius of the Gaussian heat source, indicating the distance from the center of laser beam to the point at which the energy reduced to its $1 / e^{2}$, and $r$ is the radial distance from a point on the powder beds surface to the center of the laser spot. In this study, the latent heat for phase change cannot be neglected owing to the occurrence of the melting phenomena occurred during SLM. The relationship between enthalpy and specific heat was expressed as a function of temperature according to
+
+$H=\int \rho c d T$
+
+where $H$ is the enthalpy, $\rho$ is the material density, $c$ is the specific heat capacity and $T$ is the temperature of the molten pool formed in the powder bed. As the temperature of the material exceeded the melting point, the latent heat of fusion should be considered. In this model, the enthalpy change caused by specific heat increase is utilized to calculate the latent heat of fusion at the melting point as below [26].
+
+$\Delta H=\rho T_{m}(\Delta c)$,
+
+where $\Delta H$ is the enthalpy change, $\Delta c$ is the specific heat capacity change and $T_{m}$ is the melting point.
+
+\subsection*{2.5. Thermal-physical properties}
+The effective thermal conductivity of loose metallic powders is dominated by gas in the pores determining the accuracy of SLM simulation results. Rombouts et al. [27] found that the effective thermal conductivity of a powder bed is essentially independent of material but depends on the size and morphology of particles, void fraction, and thermal conductivity of the gas. The effective thermal conductivity of the powder bed, $k_{\text {eff, }}$, is determined as follows [28].
+
+
+\begin{align*}
+\frac{k_{e f f}}{k_{f}}= & (1-\sqrt{1-\phi})\left(1+\frac{\phi k_{r}}{k_{f}}\right) \\
+& +\sqrt{1-\phi}\left[\frac{2}{1-\frac{k_{f}}{k_{s}}}\left(\frac{1}{1-\frac{k_{f}}{k_{s}}} \ln \left(\frac{k_{s}}{k_{f}}\right)-1\right)+\frac{k_{r}}{k_{f}}\right] \tag{13}
+\end{align*}
+
+
+where $\phi$ is the porosity of the powder bed which can be written as
+
+$\phi=\frac{\rho_{s}-\rho_{p}}{\rho_{s}}$,
+
+where the signs $\rho_{s}$ and $\rho_{p}$ are the density of the dense solid and powder materials, respectively. The symbols $k_{f}, k_{s}$ and $k_{r}$ correspond to the thermal conductivity of the fluid (i.e. argon in this case) enfolding the powder and substrate, thermal conductivity of the dense solid and thermal conductivity portion resulting from the radiation among powder particles, as shown below.
+
+$k_{r}=4 F_{0} \sigma T_{p}^{3} D_{p}$,
+
+where $F_{0}$ is a view factor estimated as $1 / 3, T_{P}$ is the temperature of powder particles and $D_{P}$ is the average diameter of the powder particles. The thermal physical properties of TiAl6V4 are illustrated in Table 2 [29,30], where the sudden changes of thermal physical properties can be clearly observed due to the transition from $\alpha$ phase to $\beta$ phase at $950{ }^{\circ} \mathrm{C}$ and the melting point of $1660{ }^{\circ} \mathrm{C}$ (1933 K).
+
+Table 2
+
+Variation of thermo-physical properties for TiAl6V4 with temperature $[29,30]$.
+
+\begin{center}
+\begin{tabular}{llll}
+\hline
+Temp. $\left[{ }^{\circ} \mathrm{C}\right]$ & Density $\left[\mathrm{kg} / \mathrm{m}^{3}\right]$ & Specific heat $[\mathrm{J} / \mathrm{kg} \mathrm{K}]$ & \begin{tabular}{l}
+Thermal \\
+conductivity $[\mathrm{W} / \mathrm{m} \mathrm{K}]$ \\
+\end{tabular} \\
+\hline
+25 & 4420 & 546 & 7 \\
+100 & 4406 & 562 & 7.45 \\
+200 & 4395 & 584 & 8.75 \\
+300 & 4381 & 606 & 10.15 \\
+400 & 4366 & 629 & 11.35 \\
+500 & 4350 & 651 & 12.6 \\
+600 & 4336 & 673 & 14.2 \\
+700 & 4324 & 694 & 15.5 \\
+800 & 4309 & 714 & 17.8 \\
+900 & 4294 & 734 & 20.2 \\
+994 & 4282 & 753 & 22.7 \\
+996 & 4282 & 693 & 19.3 \\
+1100 & 4267 & 660 & 21 \\
+1200 & 4252 & 678 & 22.9 \\
+1300 & 4240 & 696 & 23.7 \\
+1400 & 4225 & 714 & 24.6 \\
+1500 & 4205 & 732 & 25.8 \\
+1600 & 4198 & 750 & 27 \\
+1649 & 4189 & 759 & 28.4 \\
+1651 & 3920 & 1007 & 83.5 \\
+1700 & 3886 & 831 & 83.5 \\
+1800 & 3818 & 831 & 83.5 \\
+1900 & 3750 & 831 & 83.5 \\
+\hline
+ &  &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{3. Computational analysis}
+\subsection*{3.1. Design of experiment}
+Design of experiments (DOE) is a tool to study the individual effects and interactions of a group of factors on a complex system. In the simulation-based DOE, planned changes of each input variable require a new run of finite element calculations to investigate the thermal effects of the input variables on the thermal responses during SLM. In this paper, simulations of achieving accurate predictions of melt pool size in laser melting of Ti6Al4V powder layer were carried out by the deterministic method in DOE. The information from the FEM results could be fitted as response surfaces to develop three explicit approximation functions of all selected input variables. The customized design points were adopted in accordance with the common operating conditions of SLM. The DOEFEM results were thus used to analyze and determine the most suitable correlations between the factors and the length, width and depth of molten pool as well as to estimate the relative importance of each specific factor on three dimensions of melt pool for identifying the most influential variables. The ranges in terms of the lower/upper bounds and initial setting were prescribed to perform the analysis for choosing the significant factors. Referring to the earlier results of laser assisted machining of Ti6Al4V alloy $[24,26]$, the input variables corresponding to those processing parameters consist of the laser power $(P)$, scanning speed $(V)$, preheating temperature $(T)$ and hatch spacing $(H)$ between two neighboring tracks, whereas the response variables were the dimensions (i.e. the length, width and depth) of melt pool. Table 3 illustrates the ranges for those input variables and their levels. The output data of response parameters were three dimensions of melt pool during SLM. To conduct the DOE-FEM simulations, we utilized a four-factor and a seven-level central composite design to achieve the high-quality of the fitted second-order polynomial model equation for attaining 49 design points (involving 1 center point, 16 axial points and 32 factorial points) at a reasonable computational cost.
+
+\subsection*{3.2. Screening of input variables}
+The central composite design (CCD) can be the most broadly used experimental design uniting one center point, the points along the axis of the input variables and the points settled by a fractional factorial design to develop the design space of three dimensions of melt pool over the powder layer. Fundamentally, the CCD scheme locates the sampling points such that the space of random input variables is investigated in the most efficient way, increasing the accuracy of the response surfaces derived from the calculated results of sampling points. This study performed the simulations using ANSYS ${ }^{\circledR}$ with the CCD scheme to generate the results, which were further processed by a response surface methodology with MATLAB ${ }^{\circledR}$ software to develop 3D response surface plots for screening of input variables. The coefficient of determination $R^{2}$ (defined as $1-S S_{\text {residual }} / S S_{\text {total }}$ with $S S_{\text {residual }}$ and $S S_{\text {total }}$ corresponding to the residual sum of squares and the total sum of squares) and adjusted $R^{2}$ values can statistically judge the quality of the fitted second-order polynomial model equation, and thus generate the 3D surface plots to resolve the relationship between the responses and visualize the interactions between the variables used in the study $[31,32]$.
+
+\subsection*{3.3. Evaluation procedure and analysis of data}
+The FEM simulated results were fitted to a quadratic polynomial model with regression coefficients acquired. The generalized
+
+Table 3
+
+Ranges of input variables and their levels.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+\multirow[t]{2}{*}{Input Variables} & \multicolumn{7}{|c|}{Factors Level} \\
+\hline
+ & -1 & -0.5 & -0.25 & 0 & 0.25 & 0.5 & 1 \\
+\hline
+Power (w) & 40 & 67.5 & 81.25 & 95 & 108.75 & 122.5 & 150 \\
+\hline
+Scan speed $(\mathrm{mm} / \mathrm{s})$ & 20 & 115 & 162.5 & 210 & 257.5 & 305 & 400 \\
+\hline
+Preheat temp. $\left({ }^{\circ} \mathrm{C}\right)$ & 20 & 65 & 87.5 & 110 & 132.5 & 155 & 200 \\
+\hline
+Hatch space $(\mathrm{mm})$ & 0.05 & 0.0625 & 0.06875 & 0.075 & 0.08125 & 0.0875 & 0.1 \\
+\hline
+\end{tabular}
+\end{center}
+
+second-order polynomial model used in the response surface analysis was as below:
+
+$Y=\beta_{0}+\sum_{i=1}^{k} \beta_{i} X_{i}+\sum_{i=1}^{k} \beta_{i i} X_{i}^{2}+\sum \sum_{i<j=1}^{k} \beta_{i j} X_{i} X_{j}$.
+
+Here $Y$ indicates the response function, whereas $X_{i}$ and $X_{j}$ represent the independent variables. The signs $\beta_{0}, \beta_{i}, \beta_{i i}$ and $\beta_{i j}$ are the regression coefficients for intercept, linear, quadratic and interaction terms, respectively. The response surfaces and contour plots were generated using MATLAB ${ }^{\circledR}$ software while retaining a variable constant in the fitted second-order polynomial equation. Hence, the relationship between the response and experimental levels of each factor can be visualized with the response surfaces deduced. Fig. 3 illustrates the flowchart of the evaluation procedure. The first step is to define the desirable input parameters (with the ranges) and response factors. In this study, we intend to evaluate the influences of process parameters on the performance of final parts. Hence, a performance evaluation criterion is selected to quantify the response results. In practice, DOE coupled with the response surface analysis is more advantageous than the traditional single parameter variation study due to time efficiency and cost saving. This type of DOE was to recognize the groups of input variables and discriminate those most significant factors for each response variable during the process. The second-order CCD is one of the most popular and useful DOE method among the categories of RSM. This study set up the ranges for all selected input variables and produced the test matrix for DOE in conjunction with CCD. FEM calculations were then performed according to the design matrix generated by DOE and CCD to obtain the preliminary responses with ANOVA conducted for statistically analyzing the results. After that, the quality of fit was checked using the adjusted coefficient ( $\operatorname{Adj} \mathrm{R}^{2}$ ) and $\mathrm{p}$ value. In general, the value of $R^{2}$ spans from 0 to 1 with a $R^{2}$ value closer to 1 showing a higher quality of the response model. Then the factor with the $\mathrm{p}$ value less than 0.01 was considered having significant effect on the response. If the quality of fit is unsatisfactory, the design matrix will be reconstructed by adding more design points. The development of strict quality criteria is necessitated to ensure successful operations in SLM. Therefore, the process window was implemented as a filter to remove the ineffectual and impractical conditions of input variables, and then apply the narrower ranges of the processing parameters to establish the critical RSM models with ANOVA made for accurately determining three dimensions of melt pool. The comparison of the critical RSM predictions of three dimensions of melt pool with the FEM simulated results was completed to validate the critical regression models.
+
+\section*{4. Results and discussion}
+The transient thermal analysis was conducted to solve the time sequences of temperature distribution during SLM. Fig. 4(a) presents the numerical grids for reproducing the laser heating of a powder bed in SLM simulations. The mesh setup consisted of two sections: the powder layer and dense substrate. Essentially, finer grids have been arranged in the areas near the scanning region of powder layer to describe the prompt variations of temperature field. In view of the numerical accuracy and computation efficiency, an ANSYS ${ }^{\circledR}$ Solid 70 hexahedral element was used in the powder bed while tetrahedral elements were utilized in the substrate. Hence, the 3D FEM model was meshed into 51,996 elements (with the nodes of 61,600 ) for the powder layer and 24,532 elements (with the nodes of 35,475) for the substrate layer, respectively. The grid-independence inspection was conducted on the total grids of $37,750,76,528$ and 142,819 points at the laser power of $120 \mathrm{~W}$ and scanning speed of $220 \mathrm{~mm} / \mathrm{s}$ with a time step of $2 \times 10^{-5} \mathrm{~s}$ in the laser melting of Ti6Al4V powder layers. Fig. 4(b) illustrates the predicted length, width and depth of the melt pool at the end of the fifth track for different grids. The differences of the predictions of length, width and depth of the melt pool between the grids of 37,750 and 142,819 were $6.5 \%, 8.2 \%$ and $6.2 \%$. Alternatively, for the meshes of 76,528 and 142,819 grids, the discrepancies of calculated length, width and depth of melt pool were substantially reduced to $1.1 \%, 1.7 \%$ and $1.9 \%$, respectively. Furthermore, the time step-independence of the solutions was checked using three different time steps of $4 \times 10^{-6} \mathrm{~s}, 2 \times 10^{-5} \mathrm{~s}$ and $10^{-4} \mathrm{~s}$. Two groups of time steps, specifically $4 \times 10^{-6} \mathrm{~s}$ and $10^{-4}$ $\mathrm{s}$ as well as $4 \times 10^{-6} \mathrm{~s}$ and $2 \times 10^{-5} \mathrm{~s}$, in simulations indicated $4.3 \%, 4.6 \%$ and $5.4 \%$ together with $1.4 \%, 2.2 \%$ and $2.6 \%$, respectively, for the variations of predicted length, width and depth of the melt pool. Since more computational resources are needed in response to an increase in total grids or decrease of time step, the FEM computations of time-dependent temperature distributions at different grids and time steps indicated satisfactory grid and time step independence for the following simulations attained by a mesh setup of 76,528 grids with a time step of $2 \times 10^{-5} \mathrm{~s}$. It usually required around $65 \mathrm{~min}$ of central processing unit (CPU) time on an Intel ${ }^{\circledR}$ Xeon $^{\circledR}$ E5-2670v3-2.3 GHz $\times 2$ (192 GB RAM) high-performance workstation to achieve a solution for one single simulation.
+
+\subsection*{4.1. Measurement validation}
+Two simulation cases were conducted to validate the computational model by comparing the calculated results with the experimental results [33] and the predictions [26,34], respectively. The details of test conditions for those two cases are given in Tables 4 and 5. Fischer et al. [31] scanned the pure titanium powder layer with a Nd:YAG laser beam and observed the peak skin temperature in the sintering process by a Raytheon infrared camera. Kolossov et al. [32] conducted the 3D FEM analysis to characterize the temperature changes during the selective sintering process. Fig. 5 illustrates a comparison of (a) the calculated surface temperature contours after $0.75 \mathrm{~s}$ with (b) the visualized infrared image [31] and (c) the predictions [26] during SLM. The calculated peak surface temperature of $2650 \mathrm{~K}$ agreed reasonably well with the thermal image in Fig. 5(b) representing elevated temperatures of $2678 \pm 200 \mathrm{~K}$, (Region a with a red color in Ref. [34]) over the powder bed because of the direct laser exposure. Considering the melting temperature of $1933 \mathrm{~K}$ for Ti6Al4V, the simulated melt pool dimensions of $209.68 \mu \mathrm{m}$ long, $156.67 \mu \mathrm{m}$ wide and $63.6 \mu \mathrm{m}$ deep were in good agreement with the predictions of $219.6 \mu \mathrm{m} \times 162.5$ $\mu \mathrm{m} \times 67.8 \mu \mathrm{m}$ in Ref. [34]. Fig. 6 shows a comparison of (a) the calculated temperature distribution in the $x$-axis at $y=2.5 \mathrm{~mm}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-07}
+\end{center}
+
+Fig. 3. Flowchart of the evaluation procedure.
+
+and $z=2.0 \mathrm{~mm}$ with (b) the measured temperature profile and the predictions [34]. The computed temperature profile along the axial direction reached its highest temperature of $2537.1 \mathrm{~K}$ at around $x=1.8 \mathrm{~mm}$ on the top surface, and matched well with the measured data and predicted results. In general, the validation shows that the present FEM model is accurate enough to predict the transient temperature distribution and melt pool dimensions during SLM process.
+
+\subsection*{4.2. Thermal characteristics during SLM}
+Fig. 7 shows the time sequences of predicted temperature contours on the top surface of 3D melt pool at various locations including the start of the first track (Point 1), the center of the third track (Point 2) and the end of the fifth track (Point 3) for the laser power of $120 \mathrm{~W}$ and scanning speed of $220 \mathrm{~mm} / \mathrm{s}$ during SLM of TiAl6V4 powder: (a) top view and (b) side view. The dotted line on the charts denoted the isotherm curve of melting temperature of Ti6Al4V (i.e. $1933 \mathrm{~K}$ ) on the top surface. Accordingly, the region within this specific contour line was in a liquid state due to its temperature above the melting point, and thereby formed a melt pool characterized by a series of ellipses. Asymmetry of temperature contours was noted along the laser scanning direction. The combined effects of higher thermal conductivity of the scanned part and the thermal accumulation resulted in more intensive isothermal contours of front ellipses as compared to those at the back side. As the laser spot located at the start of the first track (Point 1, Fig. 7(a)), the predicted maximum temperature of the powder layer was $4650.3 \mathrm{~K}$ due to low conductivity of material in the region under laser irradiation, exceeding the Ti6Al4V melting point of $1933 \mathrm{~K}$ and boiling point of $3808 \mathrm{~K}$ to cause the occurrence of localized melting and even potential vaporization of powder. However, it was found that the extent of the vaporization region was approximately $32.3 \mu \mathrm{m} \times 29.2 \mu \mathrm{m} \times 1.1 \mu \mathrm{m}$ with the laser exposure time duration less than $13.6 \mathrm{~ms}$. Consequently, the effect of material loss may be reasonably ignored in the analysis on account of a truly small evaporated zone in size over a very short time period. In the meantime, this peak temperature notably dropped with increasing move distance of laser spot because of the heat conduction into the dense substrate layer with a high conductivity. The melt pool size was around $109.85 \mu \mathrm{m}$ long, $105.15 \mu \mathrm{m}$ wide and $13.13 \mu \mathrm{m}$ deep, respectively. When the laser beam
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-08}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-08(2)}
+\end{center}
+
+(b)
+
+Fig. 4. (a) Numerical grids for reproducing laser heating of a powder bed in SLM simulations; (b) predicted length, width and depth of melt pool at the end of the fifth track for different grids.
+
+Table 4
+
+Experimental details of Fischer et al. [33].
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Parameter & Value \\
+\hline
+Laser power & $3 \mathrm{~W}$ \\
+Laser beam radius & $0.05 \mathrm{~mm}$ \\
+Scanning speed & $1 \mathrm{~mm} / \mathrm{s}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 5
+
+Simulation details of Kolossov et al. [34].
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Parameter & Value \\
+\hline
+Laser power & $2 \mathrm{~W}$ \\
+Laser beam radius & $0.025 \mathrm{~mm}$ \\
+Scanning speed & $1 \mathrm{~mm} / \mathrm{s}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+reached the center of the third scan track (point 2, Fig. 7(b)), the center temperature of the melt pool decreased from $4650.3 \mathrm{~K}$ to 2662.3 K. In addition, the melt pool dimensions of $196.4 \mu \mathrm{m} \times$ $156.48 \mu \mathrm{m} \times 61.9 \mu \mathrm{m}$ increased significantly as compared to the pool formed at the start point of first track. When the laser spot further moved to the end of the fifth track (Point 3, Fig. 7(c)), the temperature contours were visualized to be more intense at the front side than those at the back side of the ellipses with an increase in the maximum temperature of the powder bed to 2673.2 K. The melt pool dimensions of $209.68 \mu \mathrm{m} \times 156.67 \mu \mathrm{m}$ $\times 63.6 \mu \mathrm{m}$ were relatively larger than those cases at Point 1 and
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-08(4)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-08(3)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-08(1)}
+\end{center}
+
+(c)
+
+Fig. 5. Comparison of (a) calculated surface temperature contours after $0.75 \mathrm{~s}$ with (b) Visualized infrared images [33] and (c) predictions [26] during SLM.
+
+Point 2. The reason was that heat produced in the past track had an influence on the temperature field of the next track, resulting in a heat accumulation outcome during SLM. Thus, the combined results of greater heat accumulation and a longer interaction time
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-09(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-09}
+\end{center}
+
+(b)
+
+Fig. 6. Comparison of (a) calculated temperature distribution along the $x$ direction at $y=2.5 \mathrm{~mm}$ and $z=2.0 \mathrm{~mm}$ with (b) measured temperature profile and the predictions [34] during SLM.
+
+of the laser beam with the powder bed produced a higher temperature for the last track.
+
+Fig. 8 exhibits the time evolution of top surface temperature of the powder bed at the center of the third track (point 2) for the laser power of $120 \mathrm{~W}$ and scan speed of $220 \mathrm{~mm} / \mathrm{s}$. In essence, the temperature profile showed five large fluctuations. From the simulated results, each peak indicated the arrival of the laser beam at the center of each scan track with the greatest temperature of $2664 \mathrm{~K}$ observed at the third peak $(t=9.6 \mathrm{~ms})$. For the first three waves, the corresponding peak temperatures gradually increased and this was because each subsequent scanning could affect and reheat the previous track for the laser spot approaching the monitoring point. The cyclic melting/heating processes continued in all five tracks over the surface of a deposited powder layer. Besides, a remelting phenomenon occurred along the prior scan track, leading to the development of excessive molten metal with a significant heat accumulation effect. When the laser beam passed over the center of the third track and arrived at the end of the last track $(t=19.2 \mathrm{~ms})$, the peak temperatures tended to lessen with the last peak temperature of $1934.8 \mathrm{~K}$ at the monitoring point slightly over the melting point of TiAl6V4. However, the high temperature gradients around the molten pool can result in substantial solidification rates and melt unstably. Therefore, the residual stress could generate deformation or crack in laser-processed components, and in turn reduced the bonding ability between the adjacent layers and decreased the final densification of SLM parts [5].\\
+Fig. 9 shows the predicted interfacial temperature profiles between the powder bed and substrate layer at the center of the first scanning track for the laser powers of $40 \mathrm{~W}, 67.5 \mathrm{~W}, 120 \mathrm{~W}$ and $150 \mathrm{~W}$ with the fixed scanning speeds of (a) $80 \mathrm{~mm} / \mathrm{s}$ and (b) $305 \mathrm{~mm} / \mathrm{s}$. The temperatures were monitored during the travel of laser beam along the first pathway. The simulations clearly indicated apparent temperature waves at the monitoring point. During laser heating, the temperature profiles for various laser powers nearly attained their highest temperatures concurrently at a relatively low scanning speed of $80 \mathrm{~mm} / \mathrm{s}$. The monitoring temperatures escalated from the preheating temperature of $383 \mathrm{~K}$ to those peak temperatures as a result of the heat accumulation effect. For a relatively low power of $40 \mathrm{~W}$, the maximum operating temperature was just $1647 \mathrm{~K}$ at $t=5.5 \mathrm{~ms}$, causing the melting failure of TiAl6V4 powder because of an inadequate energy supplied by the laser beam. As the laser power was increased to $150 \mathrm{~W}$, the maximum interfacial temperature noticeably escalated up to $2360 \mathrm{~K}$, which exceeded the melting point of $1933 \mathrm{~K}$. Accordingly, the melting phenomenon occurred to form a relatively larger high-temperature molten pool as a result of the sufficient energy penetration of the laser beam into the titanium alloy powder. The associated melting times required for heat penetration through the powder layer were 3.2, 2.7 and $2.3 \mathrm{~ms}$ for the laser powers of $67.5,120$ and $150 \mathrm{~W}$, respectively, suggesting that a stronger laser power can shorten the penetration time for laser heating to the interface of powder depth. In addition, an augmented laser power led to a higher melting temperature thanks to a greater laser energy input, and thereby produced a resultant bigger and deeper molten pool with a longer liquid lifetime. On the other hand, when the applied scanning speed increased to $305 \mathrm{~mm} / \mathrm{s}$, the time periods for lower laser powers to achieve their peak temperatures were delayed, revealing more time through the laser penetration depth to the substrate. A relatively less irradiation time influenced a reduction in the amount of energy transfer to the powder layer during laser heating, resulting in the difficulties of melting TiAl6V4 powder along the scanning track and ensuring reliable bonds of neighboring tracks for the conditions of 40 and $67.5 \mathrm{~W}$. However, those increased laser powers of 120 and $150 \mathrm{~W}$ could melt the powder layer as a result of much shorter melting times (i.e. 0.44 and $0.43 \mathrm{~ms}$ ) as compared to the total scanning time of $2.8 \mathrm{~ms}$.
+
+\subsection*{4.3. Development of preliminary RSM}
+Fig. 10 illustrates the predictions of length, width and depth of the melt pool during SLM of TiAl6V4 powder with different processing parameters: (a) laser power of $40-150 \mathrm{~W}(v=210 \mathrm{~mm} / \mathrm{s}$, $T=110{ }^{\circ} \mathrm{C}$ and $H=0.075 \mathrm{~mm}$.); (b) scanning speed of $20-400$ $\mathrm{mm} / \mathrm{s}\left(P=95 \mathrm{~W}, T=110^{\circ} \mathrm{C}\right.$ and $H=0.075 \mathrm{~mm}$.); (c) preheating temperature of $20-200{ }^{\circ} \mathrm{C}(P=95 \mathrm{~W}, v=210 \mathrm{~mm} / \mathrm{s}$ and $H=0.075$ $\mathrm{mm}$.$) and (d) hatch space 0.05-0.075 \mathrm{~mm}(P=95 \mathrm{~W}, v=210 \mathrm{~mm} /$ $\mathrm{s}$ and $T=110^{\circ} \mathrm{C}$.) Essentially, the length, width and depth of the melt pool was found to increase with the laser power on the powder layer due to more energy transferred into the heat affected zone. The applied power elevated from 40 to $150 \mathrm{~W}$ at a scanning speed of $220 \mathrm{~mm} / \mathrm{s}$ led to significant enlargement on the melt pool size. It was observed that the associated dimensions of length, width and depth increased from $101.2 \mu \mathrm{m} \times 81.7 \mu \mathrm{m} \times 21.8 \mu \mathrm{m}$ to $245.5 \mu \mathrm{m} \times 187.7 \mu \mathrm{m} \times 84 \mu \mathrm{m}$ in Fig. 10(a). Since the amount of liquid formation of melt pool mainly depends on the operating temperature of the SLM process, increasing laser power can produce a high temperature rise of the powder layer, and in turn expand the melt pool extent. In contrast, the simulated results in Fig. 10(b) evidently indicated the decline of three dimensions of the melt pool with the increment of the applied scan speeds. When the scanning speed was increased from 20 to $400 \mathrm{~mm} / \mathrm{s}$ at a fixed
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-10}
+\end{center}
+
+Track 1\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_28c7c9a63c5801f46eefg-10(1)}
+
+Scan direction\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_28c7c9a63c5801f46eefg-10(2)}
+
+$4650.3 K$
+
+4175.1
+
+3699.8
+
+3224.6
+
+2749.4
+
+2274.1
+
+1798.9
+
+1323.6
+
+848.39
+
+373.15
+
+$2662.3 K$
+
+2408
+
+2153.6
+
+1899.3
+
+1644.9
+
+1390.6
+
+1136.2
+
+881.85
+
+627.5
+
+373.15
+
+$2673.2 K$
+
+2417.7
+
+2162.1
+
+1906.5
+
+1651
+
+1395.4
+
+1139.8
+
+884.28
+
+628.72
+
+373.15
+
+(a)
+
+(b)
+
+Fig. 7. Time sequences of predicted temperature contours on the top surface of 3D melt pool at various locations including the start of the first track (Point 1 ), the center of the third track (Point 2) and the end of the fifth track (Point 3) for laser power of $120 \mathrm{~W}$ and scanning speed of $220 \mathrm{~mm} / \mathrm{s}$ during SLM of TiAl6V4 powder: (a) top view and (b) side view.
+
+laser power of $95 \mathrm{~W}$, the length of the melt pool decreased from 220.6 to $158 \mu \mathrm{m}$. In addition, the associated width /depth reduced from $187.7 / 92.2 \mu \mathrm{m}$ to $106.1 / 37.4 \mu \mathrm{m}$, respectively. Under higher scan speed conditions ( $20-400 \mathrm{~mm} / \mathrm{s}$ ), there was no sufficient time for the event of melting process to produce a long thin melt pool over the track, causing a substantial splash of melted materials with the region still remained in a state of non-melted powder. The computed results in Fig. 10(c) and (d) indicated insignificant variations of three dimensions of the melt pool over the ranges of preheating temperature of $20-400^{\circ} \mathrm{C}$ and hatching space of
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-11}
+\end{center}
+
+Fig. 8. Time evolution of the top surface temperature of powder bed at the center of the third track (point 2) for the laser power of $120 \mathrm{~W}$ and scan speed of $220 \mathrm{~mm} / \mathrm{s}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-11(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-11(2)}
+\end{center}
+
+(b)
+
+Fig. 9. Predicted interfacial temperature profiles between powder bed and substrate layer at the center of the first scanning track for the laser powers of 40 $\mathrm{W}, 67.5 \mathrm{~W}, 120 \mathrm{~W}$ and $150 \mathrm{~W}$ with the fixed scan speeds of (a) $80 \mathrm{~mm} / \mathrm{s}$ and (b) 305 $\mathrm{mm} / \mathrm{s}$.
+
+$0.075-0.1 \mathrm{~mm}$. Nevertheless, the preheating temperature can be closely related to the densification of SLM-processed parts, which affect the dimensional accuracy of finished products [35]. Besides, due to the overlapping between ensuing tracks depending on the hatching space distance, some sections were exposed to multiple scans and melted repetitively to firmly bond adjacent tracks for forming a dense layer. Hence, it can be useful to produce a uniform distribution of energy for attaining a fully melting condition with a short hatching space. In general, the laser power and scanning speed were identified as the most important laser processing parameters influencing the melt pool size.
+
+In this study, the boundary conditions affecting three dimensions of the melt pool were examined to accurately predict the melt pool extent. Table 6 illustrates the test matrix for DOE with 49 simulation runs completed and results obtained, corresponding to the combined effect of those 4 input variables in their specific ranges. These results were then analyzed using MATLAB ${ }^{\circledR}$ software to obtain the second order regression model. The preliminary RSM models are expressed by Eqs. (17)-(19)
+
+
+\begin{align*}
+\text { Length }= & 9.2+1.663 P-0.2175 V+0.165 T+1300 H \\
+& -0.000683 P \times P+0.000364 V \times V-0.000509 T \\
+& \times T-8265 H \times H-0.000875 P \times V+0.000128 P \\
+& \times T+0.26 P \times H+0.000263 V \times T-0.365 V \times H \\
+& -0.93 T \times H \tag{17}
+\end{align*}
+
+
+
+\begin{align*}
+\text { Width }= & 53.9+1.628 P-0.2509 V+0.028 T-41 H \\
+& -0.001947 P * P+0.000396 V * V+0.000121 T \\
+& * T+214 H * H-0.001298 P * V+0.000320 P * T \\
+& -0.56 P * H+0.000071 V * T+0.552 V * H \\
+& -0.89 T * H \tag{18}
+\end{align*}
+
+
+
+\begin{align*}
+\text { Depth }=3.5 & +0.863 P-0.0969 V-0.014 T-148 H \\
+& +0.000348 P * P+0.000354 V * V+0.000080 T * T \\
+& +1106 H * H-0.001455 P * V+0.000297 P * T \\
+& -0.05 P * H-0.000032 V * T-0.119 V * H+0.02 T * H \tag{19}
+\end{align*}
+
+
+The P-values were used as a tool to indicate the interactions between those variables for investigating the significance of each coefficient. In fact, the corresponding coefficients with smaller $\mathrm{P}$ values were more significant than those with relatively larger $P$ values. Table 7 exhibits the ANOVA test results for preliminary quadratic regression models of three dimensions of melt pool at the end of the fifth track, revealing the significance at a level of $1 \%(P<0.01)$ for three preliminary quadric regression models. Table 8 illustrates the summary of preliminary quadric regression coefficients. For the regression correlations of length/width/depth of the melt pool, the determination coefficients $\left(R^{2}=98.91 \% /\right.$ 98.77\%/96.94\%) and the adjusted determination coefficients (Adj. $\mathrm{R}^{2}=98.47 \% / 98.27 \% / 95.68 \%$ ) confirmed that the models were highly significant. The models were found to be sufficient for accurate forecasts of three dimensions of melt pool within the ranges of input variables. In this study, the linear coefficients $(P, V)$ were most significant terms in preliminary model at greater than the $95 \%$ confidence level, whereas other coefficients were not significant. The laser power and scanning speed were designated as the primary effects since those have a vital influence on the melt pool dimensions. Then the equations were completed to determine 3D response surfaces for predicting the relationships between the independent variables (laser power and scan speed) and the dependent variables (the length, width and depth of melt pool), while the other two variables were held constant at their respective center values of the testing ranges $\left(T=110{ }^{\circ} \mathrm{C}\right.$ and $H=0.075$ $\mathrm{mm}$ ), as depicted in Fig. 11.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-12(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-12(2)}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-12}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-12(3)}
+\end{center}
+
+(d)
+
+Fig. 10. Predictions of length, width and depth of the melt pool during SLM of TiAl6V4 powder with different processing parameters: (a) laser power of $40-150 \mathrm{~W}$ ( $v=210$ $\mathrm{mm} / \mathrm{s}, T=110^{\circ} \mathrm{C}$ and $H=0.075 \mathrm{~mm}$.); (b) scanning speed of $20-400 \mathrm{~mm} / \mathrm{s}\left(P=95 \mathrm{~W}, T=110^{\circ} \mathrm{C}\right.$ and $H=0.075 \mathrm{~mm}$.); (c) preheating temperature of $20-200{ }^{\circ} \mathrm{C}(P=95 \mathrm{~W}, v=$ $210 \mathrm{~mm} / \mathrm{s}$ and $H=0.075 \mathrm{~mm}$.) and (d) hatch space $0.05-0.075 \mathrm{~mm}\left(P=95 \mathrm{~W}, v=210 \mathrm{~mm} / \mathrm{s}\right.$ and $T=110^{\circ} \mathrm{C}$. ) Hold values of $P=95 \mathrm{~W}, v=210 \mathrm{~mm} / \mathrm{s}, T=110{ }^{\circ} \mathrm{C}$ and $H=0.075$ $\mathrm{mm}$.
+
+Table 6
+
+Test matrix for DOE with 49 simulation runs completed and results obtained.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+No. & $\mathrm{X} 1$, power $(\mathrm{W})$ & X2, scan speed $(\mathrm{mm} / \mathrm{s})$ & $\mathrm{X} 3$, preheat temp. $\left({ }^{\circ} \mathrm{C}\right)$ & X4, hatch space $(\mathrm{mm})$ & Length (mm) & Width (mm) & Depth (mm) \\
+\hline
+1 & 0 & 0 & 0 & 0 & 0.169 & 0.137 & 0.053 \\
+\hline
+2 & -1 & 0 & 0 & 0 & 0.101 & 0.082 & 0.022 \\
+\hline
+3 & -0.5 & 0 & 0 & 0 & 0.133 & 0.105 & 0.033 \\
+\hline
+4 & 1 & 0 & 0 & 0 & 0.246 & 0.181 & 0.084 \\
+\hline
+5 & 0.5 & 0 & 0 & 0 & 0.211 & 0.159 & 0.066 \\
+\hline
+6 & 0 & -1 & 0 & 0 & 0.221 & 0.188 & 0.092 \\
+\hline
+7 & 0 & -0.5 & 0 & 0 & 0.184 & 0.149 & 0.062 \\
+\hline
+8 & 0 & 1 & 0 & 0 & 0.158 & 0.116 & 0.037 \\
+\hline
+9 & 0 & 0.5 & 0 & 0 & 0.161 & 0.126 & 0.041 \\
+\hline
+10 & 0 & 0 & -1 & 0 & 0.169 & 0.135 & 0.049 \\
+\hline
+11 & 0 & 0 & -0.5 & 0 & 0.169 & 0.137 & 0.051 \\
+\hline
+12 & 0 & 0 & 1 & 0 & 0.174 & 0.140 & 0.055 \\
+\hline
+13 & 0 & 0 & 0.5 & 0 & 0.172 & 0.138 & 0.053 \\
+\hline
+14 & 0 & 0 & 0 & -1 & 0.170 & 0.140 & 0.052 \\
+\hline
+15 & 0 & 0 & 0 & -0.5 & 0.170 & 0.134 & 0.052 \\
+\hline
+16 & 0 & 0 & 0 & 1 & 0.171 & 0.135 & 0.052 \\
+\hline
+17 & 0 & 0 & 0 & 0.5 & 0.170 & 0.134 & 0.052 \\
+\hline
+18 & -0.5 & -0.5 & -0.5 & -0.5 & 0.143 & 0.116 & 0.037 \\
+\hline
+19 & -0.25 & -0.25 & -0.25 & -0.25 & 0.162 & 0.129 & 0.042 \\
+\hline
+20 & 0.5 & -0.5 & -0.5 & -0.5 & 0.228 & 0.184 & 0.081 \\
+\hline
+21 & 0.25 & -0.25 & -0.25 & -0.25 & 0.194 & 0.153 & 0.064 \\
+\hline
+22 & -0.5 & 0.5 & -0.5 & -0.5 & 0.122 & 0.096 & 0.030 \\
+\hline
+23 & -0.25 & 0.25 & -0.25 & -0.25 & 0.146 & 0.116 & 0.037 \\
+\hline
+24 & 0.5 & 0.5 & -0.5 & -0.5 & 0.190 & 0.142 & 0.058 \\
+\hline
+25 & 0.25 & 0.25 & -0.25 & -0.25 & 0.189 & 0.139 & 0.057 \\
+\hline
+26 & -0.5 & -0.5 & 0.5 & -0.5 & 0.146 & 0.122 & 0.039 \\
+\hline
+27 & -0.25 & -0.25 & 0.25 & -0.25 & 0.165 & 0.130 & 0.043 \\
+\hline
+28 & 0.5 & -0.5 & 0.5 & -0.5 & 0.228 & 0.184 & 0.084 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 6 (continued)
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+No. & $\mathrm{X} 1$, power $(\mathrm{W})$ & $\mathrm{X} 2$, scan speed $(\mathrm{mm} / \mathrm{s})$ & $\mathrm{X} 3$, preheat temp. $\left({ }^{\circ} \mathrm{C}\right)$ & X4, hatch space (mm) & Length (mm) & Width (mm) & Depth (mm) \\
+\hline
+29 & 0.25 & -0.25 & 0.25 & -0.25 & 0.212 & 0.158 & 0.064 \\
+\hline
+30 & -0.5 & 0.5 & 0.5 & -0.5 & 0.128 & 0.097 & 0.031 \\
+\hline
+31 & -0.25 & 0.25 & 0.25 & -0.25 & 0.152 & 0.118 & 0.038 \\
+\hline
+32 & 0.5 & 0.5 & 0.5 & -0.5 & 0.202 & 0.151 & 0.061 \\
+\hline
+33 & 0.25 & 0.25 & 0.25 & -0.25 & 0.186 & 0.142 & 0.058 \\
+\hline
+34 & -0.5 & -0.5 & -0.5 & 0.5 & 0.142 & 0.117 & 0.037 \\
+\hline
+35 & -0.25 & -0.25 & -0.25 & 0.25 & 0.161 & 0.132 & 0.042 \\
+\hline
+36 & 0.5 & -0.5 & -0.5 & 0.5 & 0.224 & 0.180 & 0.081 \\
+\hline
+37 & 0.25 & -0.25 & -0.25 & 0.25 & 0.196 & 0.153 & 0.063 \\
+\hline
+38 & -0.5 & 0.5 & -0.5 & 0.5 & 0.118 & 0.097 & 0.029 \\
+\hline
+39 & -0.25 & 0.25 & -0.25 & 0.25 & 0.141 & 0.112 & 0.036 \\
+\hline
+40 & 0.5 & 0.5 & -0.5 & 0.5 & 0.190 & 0.146 & 0.058 \\
+\hline
+41 & 0.25 & 0.25 & -0.25 & 0.25 & 0.186 & 0.140 & 0.056 \\
+\hline
+42 & -0.5 & -0.5 & 0.5 & 0.5 & 0.144 & 0.119 & 0.039 \\
+\hline
+43 & -0.25 & -0.25 & 0.25 & 0.25 & 0.164 & 0.130 & 0.043 \\
+\hline
+44 & 0.5 & -0.5 & 0.5 & 0.5 & 0.226 & 0.182 & 0.085 \\
+\hline
+45 & 0.25 & -0.25 & 0.25 & 0.25 & 0.196 & 0.156 & 0.064 \\
+\hline
+46 & -0.5 & 0.5 & 0.5 & 0.5 & 0.122 & 0.098 & 0.031 \\
+\hline
+47 & -0.25 & 0.25 & 0.25 & 0.25 & 0.149 & 0.119 & 0.037 \\
+\hline
+48 & 0.5 & 0.5 & 0.5 & 0.5 & 0.196 & 0.149 & 0.060 \\
+\hline
+49 & 0.25 & 0.25 & 0.25 & 0.25 & 0.188 & 0.141 & 0.057 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 7
+
+ANOVA test results for preliminary quadric regression model three dimensions of melt pool at the end of the fifth track.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+Source & DF &  &  & Adj SS &  &  & Adj MS &  &  & F-Value &  &  & P-Value \\
+\hline
+\multicolumn{14}{|c|}{(a) ANOVA for the length of melt pool} \\
+\hline
+Model & 14 &  &  & 50016.3 &  &  & 3572.6 &  &  & 221.25 &  &  & .000 \\
+\hline
+Linear & 4 &  &  & 49433.1 &  &  & 12358.3 &  &  & 765.36 &  &  & .000 \\
+\hline
+Square & 4 &  &  & 468 &  &  & 117 &  &  & 7.25 &  &  & .000 \\
+\hline
+2-Way Interaction & 6 &  &  & 118.5 &  &  & 19.8 &  &  & 1.22 &  &  & .319 \\
+\hline
+Error & 34 &  &  & 549 &  &  & 16.1 &  &  &  &  &  &  \\
+\hline
+Total & 48 &  &  & 50565.3 &  &  &  &  &  &  &  &  &  \\
+\hline
+\multicolumn{14}{|c|}{(b) ANOVA for the width of melt pool} \\
+\hline
+Model & 14 & 29306.8 &  &  & 2093.3 &  &  & 195.72 &  &  & .000 &  &  \\
+\hline
+Linear & 4 & 28596.9 &  &  & 7149.2 &  &  & 668.44 &  &  & .000 &  &  \\
+\hline
+Square & 4 & 502.2 &  &  & 125.5 &  &  & 11.74 &  &  & .000 &  &  \\
+\hline
+2-Way Interaction & 6 & 211.6 &  &  & 35.3 &  &  & 3.3 &  &  & .011 &  &  \\
+\hline
+Error & 34 & 363.6 &  &  & 10.7 &  &  &  &  &  &  &  &  \\
+\hline
+Total & 48 & 29670.5 &  &  &  &  &  &  &  &  &  &  &  \\
+\hline
+\multicolumn{14}{|c|}{(c) ANOVA for the depth of melt pool} \\
+\hline
+Model & 14 &  & 12908.3 &  &  & 922.02 &  &  & 76.98 &  &  & .000 &  \\
+\hline
+Linear & 4 &  & 12330.3 &  &  & 3082.56 &  &  & 257.35 &  &  & .000 &  \\
+\hline
+Square & 4 &  & 332.3 &  &  & 83.07 &  &  & 6.94 &  &  & .000 &  \\
+\hline
+2-Way Interaction & 6 &  & 248.3 &  &  & 41.38 &  &  & 3.45 &  &  & .009 &  \\
+\hline
+Error & 34 &  & 407.3 &  &  & 11.98 &  &  &  &  &  &  &  \\
+\hline
+Total & 48 &  & 13315.6 &  &  &  &  &  &  &  &  &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{4.4. Process window}
+The process window of SLM technical is specified by the laser power and scan speed. To enable the detailed observations of the better heat affected zone and surface smoothness under SLM procedures, it is thus necessary to develop strict quality criteria. The laser power and scan speed were constrained by two criteria of the width and depth of the molten pool. For the cases with the melt pool width less than the hatch space, the TiAl6V4 powder bed cannot be completely melted with residue left, leading to the failure of SLM operation. Alternatively, as the melt pool width is two times greater than the hatch space, the over-concentrated laser energy tends to produce excessive re-melting and overheating between or even beyond the neighboring tracks with the occurrence of splashes and balling for causing the poor surface quality. Another criterion is that the depth of molten pool must be exceeding the single layer thickness of TiAl6V4 powder to ensure the direct bonding formation of powder layer with the dense substrate.\\
+From the aforementioned criteria, the process window can effectively realize practical combinations for the predictions of the molten pool size during SLM, as illustrated in Fig. 12.
+
+\subsection*{4.5. Development and validation of critical RSM with FEM predictions}
+As indicated above, the process window can be used as a filter to remove the ineffectual and impractical conditions of input variables, and then apply the screened combinations (i.e. narrower ranges of those processing parameters) to fit a full quadratic regression model with regression coefficients obtained for accurately determining three dimensions of melt pool. As described in Table 9, the critical regression models indicated the corresponding adjusted determination coefficients (Adj. $\mathrm{R}^{2}$ ) were 97.89\%/98.03\%/97.57\%, indicating that only less than $2.11 \% / 1.97 \% / 2.43 \%$ of the total variations were not explained by the models. Besides, the significance of each coefficient was determined using P-value. It could be seen that two independent variables $(P, V)$ and two quadratic
+
+Table 8
+
+Summary of preliminary quadric regression coefficients:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\begin{tabular}{l}
+Model summary \\
+Term \\
+\end{tabular} & \begin{tabular}{l}
+Rsqr \\
+$98.91 \%$ \\
+Coef \\
+\end{tabular} & \begin{tabular}{l}
+Adj Rsqr \\
+$98.47 \%$ \\
+SE Coef \\
+\end{tabular} & \begin{tabular}{l}
+Standard Error of Estimate \\
+4.0183 \\
+T-Value \\
+\end{tabular} & P-Value \\
+\hline
+\multicolumn{5}{|c|}{(a) Regression coefficients for the length of melt pool} \\
+\hline
+Constant & 9.2 & 41.4 & 0.22 & .825 \\
+\hline
+P & 1.663 & 0.302 & 5.51 & .000 \\
+\hline
+V & -0.2175 & 0.0826 & -2.63 & .013 \\
+\hline
+$\mathrm{T}$ & 0.165 & 0.176 & 0.94 & .354 \\
+\hline
+$\mathrm{H}$ & 1300 & 775 & 1.68 & .103 \\
+\hline
+P*P & -0.0007 & 0.0009 & -0.73 & .469 \\
+\hline
+$\mathrm{V} * \mathrm{~V}$ & 0.0004 & 0.0001 & 4.65 & .000 \\
+\hline
+$\mathrm{T}^{*} \mathrm{~T}$ & -0.0005 & 0.0003 & -1.46 & .153 \\
+\hline
+$\mathrm{H}^{*} \mathrm{H}$ & -8265 & 4515 & -1.83 & .076 \\
+\hline
+$\mathrm{P}^{*} \mathrm{~V}$ & -0.0009 & 0.0004 & -2.34 & .025 \\
+\hline
+$\mathrm{P}^{*} \mathrm{~T}$ & 0.0001 & 0.0008 & 0.16 & .872 \\
+\hline
+$\mathrm{P}^{*} \mathrm{H}$ & 0.26 & 2.84 & 0.09 & .926 \\
+\hline
+$\mathrm{V} * \mathrm{~T}$ & 0.0003 & 0.0002 & 1.15 & .257 \\
+\hline
+V* $\mathrm{H}$ & -0.365 & 0.821 & -0.45 & .659 \\
+\hline
+$\mathrm{T}^{*} \mathrm{H}$ & -0.93 & 1.73 & -0.53 & .596 \\
+\hline
+\multirow[t]{2}{*}{Model Summary} & Rsqr & Adj Rsqr & Standard Error of Estimate &  \\
+\hline
+ & $98.77 \%$ & $98.27 \%$ & 3.27038 &  \\
+\hline
+Term & Coef & SE Coef & T-Value & P-Value \\
+\hline
+\multicolumn{5}{|c|}{(b) Regression coefficients for the width of melt pool} \\
+\hline
+Constant & 53.9 & 33.7 & 1.6 & .119 \\
+\hline
+$\mathrm{P}$ & 1.628 & 0.245 & 6.63 & .000 \\
+\hline
+V & -0.2509 & 0.0672 & -3.73 & .001 \\
+\hline
+$\mathrm{T}$ & 0.028 & 0.143 & 0.2 & .845 \\
+\hline
+$\mathrm{H}$ & -41 & 631 & -0.07 & .948 \\
+\hline
+$\mathrm{P} * \mathrm{P}$ & -0.00195 & 0.000759 & -2.56 & .015 \\
+\hline
+$\mathrm{V} * \mathrm{~V}$ & 0.000396 & 0.000064 & 6.22 & .000 \\
+\hline
+$\mathrm{T}^{*} \mathrm{~T}$ & 0.000121 & 0.000284 & 0.43 & .672 \\
+\hline
+$\mathrm{H}^{*} \mathrm{H}$ & 214 & 3675 & 0.06 & .954 \\
+\hline
+$\mathrm{P}^{*} \mathrm{~V}$ & -0.0013 & 0.000304 & -4.27 & .000 \\
+\hline
+$\mathrm{P}^{*} \mathrm{~T}$ & 0.00032 & 0.000641 & 0.5 & 0.621 \\
+\hline
+$\mathrm{P}^{*} \mathrm{H}$ & -0.56 & 2.31 & -0.24 & .809 \\
+\hline
+$\mathrm{V} * \mathrm{~T}$ & 0.000071 & 0.000186 & 0.38 & .706 \\
+\hline
+$\mathrm{V}^{*} \mathrm{H}$ & 0.552 & 0.668 & 0.83 & .415 \\
+\hline
+$\mathrm{T}^{*} \mathrm{H}$ & -0.89 & 1.41 & -0.63 & .533 \\
+\hline
+\multirow[t]{2}{*}{Model Summary} & Rsqr & Adj Rsqr & Standard Error of Estimate &  \\
+\hline
+ & $96.94 \%$ & $95.68 \%$ & 3.4609 &  \\
+\hline
+Term & Coef & SE Coef & T-Value & P-Value \\
+\hline
+\multicolumn{5}{|c|}{(c) Regression coefficients for the depth of melt pool} \\
+\hline
+Constant & 3.5 & 35.6 & 0.1 & .923 \\
+\hline
+$\mathrm{P}$ & 0.863 & 0.26 & 3.32 & .002 \\
+\hline
+V & -0.0969 & 0.0711 & -1.36 & .182 \\
+\hline
+$\mathrm{T}$ & -0.014 & 0.151 & -0.09 & .926 \\
+\hline
+$\mathrm{H}$ & -148 & 668 & -0.22 & .826 \\
+\hline
+$\mathrm{P}^{*} \mathrm{P}$ & 0.000348 & 0.000803 & 0.43 & .668 \\
+\hline
+$\mathrm{V} * \mathrm{~V}$ & 0.000354 & 0.000067 & 5.26 & .000 \\
+\hline
+$\mathrm{T}^{*} \mathrm{~T}$ & 0.00008 & 0.0003 & 0.27 & .792 \\
+\hline
+$\mathrm{H}^{*} \mathrm{H}$ & 1106 & 3889 & 0.28 & .778 \\
+\hline
+$\mathrm{P}^{*} \mathrm{~V}$ & -0.00146 & 0.000321 & -4.53 & .000 \\
+\hline
+$\mathrm{P}^{*} \mathrm{~T}$ & 0.000297 & 0.000678 & 0.44 & .664 \\
+\hline
+$\mathrm{P}^{*} \mathrm{H}$ & -0.05 & 2.44 & -0.02 & .985 \\
+\hline
+$\mathrm{V}^{*} \mathrm{~T}$ & $-3.2 \mathrm{E}-05$ & 0.000196 & -0.16 & .87 \\
+\hline
+$\mathrm{V}^{*} \mathrm{H}$ & -0.119 & 0.707 & -0.17 & .867 \\
+\hline
+$\mathrm{T}^{*} \mathrm{H}$ & 0.02 & 1.49 & 0.02 & .988 \\
+\hline
+\end{tabular}
+\end{center}
+
+terms $\left(P^{2}\right.$ and $\left.V^{2}\right)$ were the most significant terms of three dimensions of melt pool in terms of the overall results. The critical regression models were obtained by the coefficients, as shown below.
+
+
+\begin{align*}
+\text { Length }= & -9.9+2.855 P-0.323 V+0.159 T+605 H \\
+& -0.01066 P * P+0.000104 V * V-0.000392 T * T \\
+& -6744 H * H+0.00164 P * V-0.00348 P * T  \tag{20}\\
+& +6.49 P * H+0.001118 V * T-1.48 V * H+0.79 T * H
+\end{align*}
+
+
+Width $=13.1+2.792 P-0.348 V+0.114 T-256 H$
+
+$$
+\begin{aligned}
+& -0.01011 P * P+0.00007 V * V+0.000179 T * T \\
+& +960 H * H+0.000858 P * V-0.00172 P * T \\
+& +0.31 P * H+0.000529 V * T+0.780 V * H \\
+& -0.92 T * H
+\end{aligned}
+$$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-15(3)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-15(1)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-15}
+\end{center}
+
+(c)
+
+Fig. 11. Preliminary response surfaces of (a) length, (b) width and (c) depth of molten pool.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-15(2)}
+\end{center}
+
+Fig. 12. Process window for SLM of Ti6Al4V powder at $T=110^{\circ} \mathrm{C}$ and $H=0.075 \mathrm{~mm}$ for improper (red cross points) and appropriate (blue circle points) settings of laser power and scan speed. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)
+
+
+\begin{align*}
+\text { Depth }= & -14.5+0.715 P+0.0610 V+0.0094 T-85 H \\
+& +0.00363 P * P+0.000185 V * V+0.000146 T * T \\
+& +1967 H * H-0.002587 P * V+0.000507 P * T \\
+& -1.51 P * H-0.000003 V * T-0.021 V * H-0.78 T * H \tag{21}
+\end{align*}
+
+
+Therefore, the critical response surfaces were developed by the regression models, as depicted in Fig. 13. The verification of the validity of critical response surfaces was conducted via comparing the predictions by the critical regression models with the FEM simulated results. Table 10 shows the ANOVA test results for critical quadratic regression models of three dimensions of melt pool at the end of the fifth track. The significance was specified at a level of $1 \%(P<0.01)$. The smaller was the value of $P$, the more significant was the corresponding coefficient. Moreover, the analysis of variance (ANOVA) in Table 10 revealed that the linear and square models of three critical regression models significantly affected the melt pool size with the resultant regression correlations being significant at greater than the $99.9 \%$ confidence level. The comparison in Table 11 indicated that the greatest differences of three dimensions of melt pool between the critical RSM predictions and the FEM simulated results were $3.6 \%, 2.2 \%$ and $2.0 \%$, respectively, for three typical working scenarios of SLM. The predicted three dimensions of melt pool by the critical RSM models agreed well with the FEM simulations, suggesting accurate prediction capabilities of the critical regression models.
+
+\section*{5. Conclusions}
+A dynamic DOE-FEM analysis was formulated to simulate the thermal characteristics of TiAl6V4 powder for accurately resolving the time progression of temperature distribution and melt pool extent during SLM. The predictions of the length, width and depth of melt pool were in good agreement with previous computational results and experimental measurements in the literature. We then implemented the RSM technique to characterize the relationship of the input processing parameters of the laser power, scanning speed, preheating temperature and hatch space with the response factors of the length, width and depth of the melt pool for establishing the regression correlations in SLM. The preliminary RSM results indicated that the length, width and depth of the melt pool
+
+Table 9
+
+Summary of critical quadric regression coefficients:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\begin{tabular}{l}
+Model Summary \\
+Term \\
+\end{tabular} & \begin{tabular}{l}
+Rsqr \\
+$98.79 \%$ \\
+Coef \\
+\end{tabular} & \begin{tabular}{l}
+Adj Rsqr \\
+$97.89 \%$ \\
+SE Coef \\
+\end{tabular} & \begin{tabular}{l}
+Standard Error of Estimate \\
+2.8163 \\
+T-Value \\
+\end{tabular} & P-Value \\
+\hline
+\multicolumn{5}{|c|}{(a) Regression coefficients for the length of melt pool} \\
+\hline
+Constant & -9.9 & 38.8 & -0.26 & .801 \\
+\hline
+P & 2.855 & 0.64 & 4.46 & .000 \\
+\hline
+V & -0.323 & 0.15 & -2.16 & .044 \\
+\hline
+$\mathrm{T}$ & 0.159 & 0.169 & 0.94 & .358 \\
+\hline
+$\mathrm{H}$ & 605 & 661 & 0.92 & .371 \\
+\hline
+P*P & -0.01066 & 0.00371 & -2.87 & .01 \\
+\hline
+$\mathrm{V} * \mathrm{~V}$ & 0.000104 & 0.000114 & 0.91 & .374 \\
+\hline
+$\mathrm{T}^{*} \mathrm{~T}$ & -0.00039 & 0.000271 & -1.45 & .165 \\
+\hline
+$\mathrm{H}^{*} \mathrm{H}$ & -6744 & 3515 & -1.92 & .07 \\
+\hline
+$\mathrm{P}^{*} \mathrm{~V}$ & 0.00164 & 0.00122 & 1.34 & .196 \\
+\hline
+$\mathrm{P}^{*} \mathrm{~T}$ & -0.00348 & 0.00179 & -1.94 & .067 \\
+\hline
+$\mathrm{P}^{*} \mathrm{H}$ & 6.49 & 3.96 & 1.64 & .118 \\
+\hline
+$\mathrm{V}^{*} \mathrm{~T}$ & 0.001118 & 0.000502 & 2.23 & .038 \\
+\hline
+V* $\mathrm{H}$ & -1.48 & 1 & -1.48 & .156 \\
+\hline
+$\mathrm{T}^{*} \mathrm{H}$ & 0.79 & 1.93 & 0.41 & .686 \\
+\hline
+\multirow[t]{2}{*}{Model Summary} & Rsqr & Adj Rsqr & Standard Error of Estimate &  \\
+\hline
+ & $98.87 \%$ & $98.03 \%$ & 3.27038 &  \\
+\hline
+Term & Coef & SE Coef & T-Value & P-Value \\
+\hline
+\multicolumn{5}{|c|}{(b) Regression coefficients for the width of melt pool} \\
+\hline
+Constant & 13.1 & 26.6 & 0.49 & .628 \\
+\hline
+$\mathrm{P}$ & 2.792 & 0.439 & 6.35 & .000 \\
+\hline
+V & -0.348 & 0.103 & -3.39 & .003 \\
+\hline
+$\mathrm{T}$ & 0.114 & 0.116 & 0.99 & .337 \\
+\hline
+$\mathrm{H}$ & -256 & 453 & -0.56 & .579 \\
+\hline
+$\mathrm{P} * \mathrm{P}$ & -0.01011 & 0.00255 & -3.97 & .001 \\
+\hline
+$\mathrm{V} * \mathrm{~V}$ & 0.00007 & 0.000078 & 0.89 & .383 \\
+\hline
+$\mathrm{T}^{*} \mathrm{~T}$ & 0.000179 & 0.000186 & 0.96 & .349 \\
+\hline
+$\mathrm{H}^{*} \mathrm{H}$ & 960 & 2412 & 0.4 & .695 \\
+\hline
+$\mathrm{P}^{*} \mathrm{~V}$ & 0.000858 & 0.000839 & 1.02 & .319 \\
+\hline
+$\mathrm{P}^{*} \mathrm{~T}$ & -0.00172 & 0.00123 & -1.4 & .178 \\
+\hline
+$\mathrm{P}^{*} \mathrm{H}$ & 0.31 & 2.72 & 0.11 & .911 \\
+\hline
+$\mathrm{V} * \mathrm{~T}$ & 0.000529 & 0.000345 & 1.53 & .141 \\
+\hline
+$\mathrm{V}^{*} \mathrm{H}$ & 0.78 & 0.688 & 1.13 & .271 \\
+\hline
+$\mathrm{T}^{*} \mathrm{H}$ & -0.92 & 1.33 & -0.7 & .495 \\
+\hline
+\multirow[t]{2}{*}{Model Summary} & Rsqr & Adj Rsqr & Standard Error of Estimate &  \\
+\hline
+ & $98.60 \%$ & $97.57 \%$ & 1.4851 &  \\
+\hline
+Term & Coef & SE Coef & T-Value & P-Value \\
+\hline
+\multicolumn{5}{|c|}{(c) Regression coefficients for the depth of melt pool} \\
+\hline
+Constant & -14.5 & 20.5 & -0.71 & .486 \\
+\hline
+$\mathrm{P}$ & 0.715 & 0.337 & 2.12 & .048 \\
+\hline
+V & 0.061 & 0.0789 & 0.77 & .449 \\
+\hline
+$\mathrm{T}$ & 0.0094 & 0.0889 & 0.11 & .917 \\
+\hline
+$\mathrm{H}$ & -85 & 348 & -0.24 & .81 \\
+\hline
+$\mathrm{P}^{*} \mathrm{P}$ & 0.00363 & 0.00195 & 1.86 & .078 \\
+\hline
+$\mathrm{V} * \mathrm{~V}$ & 0.000185 & 0.00006 & 3.08 & .006 \\
+\hline
+$\mathrm{T}^{*} \mathrm{~T}$ & 0.000146 & 0.000143 & 1.02 & .319 \\
+\hline
+$\mathrm{H}^{*} \mathrm{H}$ & 1967 & 1851 & 1.06 & .301 \\
+\hline
+$\mathrm{P}^{*} \mathrm{~V}$ & -0.00259 & 0.000644 & -4.02 & 0.001 \\
+\hline
+$\mathrm{P}^{*} \mathrm{~T}$ & 0.000507 & 0.000945 & 0.54 & 0.598 \\
+\hline
+$\mathrm{P}^{*} \mathrm{H}$ & -1.51 & 2.09 & -0.72 & 0.478 \\
+\hline
+$\mathrm{V}^{*} \mathrm{~T}$ & $-3 E-06$ & 0.000265 & -0.01 & 0.992 \\
+\hline
+$\mathrm{V}^{*} \mathrm{H}$ & -0.021 & 0.528 & -0.04 & 0.969 \\
+\hline
+$\mathrm{T}^{*} \mathrm{H}$ & -0.78 & 1.02 & -0.77 & 0.453 \\
+\hline
+\end{tabular}
+\end{center}
+
+were found to increase with the laser power on the powder layer, whereas escalating scan speeds led to the reduction of three dimensions of the melt pool. Furthermore, the preheating temperature and hatching space were insignificant to the melt pool extent. The adjusted determination coefficients (Adj. $R^{2}$ ) for the regression correlations of length/width/depth of melt pool were $98.47 \% / 98.27 \% / 95.68 \%$, respectively. To screen out ineffectual and impractical conditions, the process window was applied using the quality criteria to realize critical response surfaces for enveloping the practical ranges of processing parameters. For the critical RSM results, the adjusted determination coefficients (Adj. $\mathrm{R}^{2}$ ) were improved to $97.89 \% / 98.03 \% / 97.57 \%$ for the regression correlations of length/ width/depth of melt pool. In view of three typical SLM working scenarios, the comparison indicated that the greatest differences of the critical RSM predictions with FEM simulations were $3.6 \%, 2.2 \%$ and $2.0 \%$ for three dimensions of the melt pool. Accurate predictions of the melt pool dimensions can be helpful to smooth the homogeneity of liquid zone size during SLM, and thereby improve the quality of produced parts. Based on the screened results, the ranges of laser power and scanning speed were modified to $67.5-122.5 \mathrm{~W}$ and $115-400 \mathrm{~mm} / \mathrm{s}$, which can effectively realize practical combinations to predict the melt pool dimensions
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-17}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-17(1)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_28c7c9a63c5801f46eefg-17(2)}
+\end{center}
+
+(c)
+
+Fig. 13. Critical response surfaces of (a) length, (b) width and (c) depth of molten pool.
+
+Table 10
+
+ANOVA test results for critical quadric regression model three dimensions of melt pool at the end of the fifth track:
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+Source & DF & Adj SS & Adj MS & F-Value & P-Value \\
+\hline
+(a) ANOVA for the length of melt pool &  &  &  &  &  \\
+Model & 14 & 12231.6 & 873.68 & 110.6 & .000 \\
+Linear & 4 & 8712 & 2178.01 & 275.71 & .000 \\
+Square & 4 & 152.7 & 38.17 & 4.83 & .007 \\
+2-Way Interaction & 6 & 67.2 & 11.2 & 1.42 & .259 \\
+Error & 19 & 150.1 & 7.9 &  &  \\
+Total & 33 & 12381.6 &  &  &  \\
+(b) ANOVA for the width of melt pool &  &  &  &  &  \\
+Model & 14 & 6174.56 & 441.04 & 118.57 & .000 \\
+Linear & 4 & 3926.85 & 981.71 & 263.93 & .000 \\
+Square & 4 & 93.94 & 23.49 & 6.31 & .002 \\
+2-Way Interaction & 6 & 20.21 & 3.37 & 0.91 & .512 \\
+Error & 19 & 70.67 & 3.72 &  &  \\
+Total & 33 & 6245.23 &  &  &  \\
+(c) ANOVA for the depth of melt pool &  &  &  &  &  \\
+Model & 14 & 2939.59 & 209.97 & 95.79 & .000 \\
+Linear & 4 & 2158.46 & 539.62 & 246.19 & .000 \\
+Square & 4 & 22.95 & 5.74 & 2.62 & .068 \\
+2-Way Interaction & 6 & 80.66 & 13.44 & 6.13 & .001 \\
+Error & 19 & 41.65 & 2.19 &  &  \\
+Total & 33 & 2981.23 &  &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+without necessitating the changes of SLM machine or the design of manufactured parts. It is thus suggested that the RSM technique in conjunction with the process window to filter those unsuitable processing parameters can be a more effective way to achieve a good accuracy of the predictions for melt pool dimensions during SLM. The evaluation procedure established in this investigation can be also suitable for other additive manufacturing techniques.\\
+Table 11
+
+Comparison of predictions from the critical RSM with simulated results.
+
+\begin{center}
+\begin{tabular}{lccl}
+\hline
+\begin{tabular}{l}
+Melt pool \\
+dimensions \\
+\end{tabular} & \begin{tabular}{l}
+Simulated results \\
+$(\mathrm{mm})$ \\
+\end{tabular} & \begin{tabular}{l}
+Predicted model \\
+$(\mathrm{mm})$ \\
+\end{tabular} & \begin{tabular}{l}
+Discrepancy \\
+$(\%)$ \\
+\end{tabular} \\
+\hline
+$P=70 \mathrm{w}, V=270 \mathrm{~mm} / \mathrm{s}, T=110^{\circ} \mathrm{C}$ and $H=0.075 \mathrm{~mm}$ &  &  &  \\
+\begin{tabular}{l}
+Length \\
+\end{tabular} & 128.57 & 126.3 &  \\
+Width & 100.12 & 99.57 & 1.29 \\
+Depth & 32.38 & 30.92 & 1.09 \\
+$P=80 \mathrm{w}, V=200 \mathrm{~mm} / \mathrm{s}, T=110^{\circ} \mathrm{C}$ and $H=0.075 \mathrm{~mm}$ & 3.58 &  &  \\
+Length & 155.26 & 153.49 &  \\
+Width & 121.02 & 122.06 & 0.77 \\
+Depth & 39.6 & 40.22 & 0.46 \\
+$P=90 \mathrm{w}, V=350 \mathrm{~mm} / \mathrm{s}, T=110^{\circ} \mathrm{C}$ and $H=0.075 \mathrm{~mm}$ & 2.18 &  &  \\
+Length & 156.25 & 152.31 &  \\
+Width & 115.36 & 115.51 & 0.43 \\
+Depth & 37.26 & 36.99 & 0.34 \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{Acknowledgment}
+This paper represents part of the results obtained under the support of the Ministry of Science and Technology, Taiwan, ROC (Contract No. MOST105-2218-E-194-004; 105-2622- E-194-004CC2).
+
+\section*{References}
+[1] D.K. Pattanayak, A. Fukuda, T. Matsushita, M. Takemoto, S. Fujibayashi, K. Sasaki, N. Nishida, T. Nakamura, T. Kokubo, Bioactive Ti metal analogous to human cancellous bone: fabrication by selective laser melting and chemical treatments, Acta Biomater. 7 (2011) 1398-1406.
+
+[2] B.S. Yilbas, H. Ali, N. Al-Aqeeli, C. Karatas, Laser treatment of Inconel 718 alloy and surface characteristics, Opt. Laser Technol. 78 (2016) 153-158.
+
+[3] H.N. Moosavy, M.R. Aboutalebi, S.H. Seyedein, M. Goodarzi, M. Khodabakhshi, C. Mapelli, S. Barella, Modern fiber laser beam welding of the newly-designed\\
+precipitation-strengthened nickel-base superalloys, Opt. Laser Technol. 57 (2014) 12-20.
+
+[4] J.P. Kruth, G. Levy, F. Klocke, T.H.C. Child, Consolidation phenomena in laser and powder-bed based layered manufacturing, CIRP Ann-Manuf Technol. 56 (2007) 730-759.
+
+[5] D.D. Gu, W. Meiners, K. Wissenbach, R. Poprawe, Laser additive manufacturing of metallic components: materials, processes and mechanisms, Int Mater Rev. 57 (2012) 133-164.
+
+[6] J.F. Sun, Y.Q. Yang, D. Wang, Parametric optimization of selective laser melting for forming Ti6Al4V samples by Taguchi method Opt, Laser Technol. 49 (2013) 118-124.
+
+[7] B.C. Zhang, L. Dembinski, C. Coddet, The study of the laser parameters and environment variables effect on mechanical properties of high compact parts elaborated by selective laser melting 316L powder, Mater Sci Eng, A. 584 (2013) 21-31.
+
+[8] I. Yadroitsev, I. Yadroitsava, P. Bertrand, I. Smurov, Factor analysis of selective laser melting process parameters and geometrical characteristics of synthesized single tracks, Rapid Prototyp. J. 18 (2012) 201-208.
+
+[9] D. Dai, D.D. Gu, Thermal behavior and densification mechanism during selective laser melting of copper matrix composites: simulation and experiments, Mater. Des. 55 (2014) 482-491.
+
+[10] K. Zeng, D. Pal, B. Stucker, A review of thermal analysis methods in laser sintering and selective laser melting, SFF Simposium. (2012) 796-814.
+
+[11] A. Hussein, L. Hao, C. Yan, R. Everson, Finite element simulation of the temperature and stress fields in single layers built without-support in selective laser melting, Mater. Des. 52 (2013) 638-647.
+
+[12] T. Craeghs, F. Bechmann, S. Berumen, J.P. Kruth, Feedback control of layerwise laser melting using optical sensors, Phys. Procedia. 5 (2010) 505-514.
+
+[13] T. Childs, C. Hauser, M. Badrossamay, Selective laser sintering (melting) of stainless and tool steel powders: experiments and modelling, Proc Inst Mech Eng, Part B: J Eng Manuf. 219 (4) (2005) 339-357.
+
+[14] M. Zaeh, G. Branner, Investigations on residual stresses and deformations in selective laser melting, Prod Eng. 4 (1) (2010) 35-45.
+
+[15] K. Mumtaz, N. Hopkinson, Top surface and side roughness of Inconel 625 parts processed using selective laser melting, Rapid Prototyp. J. 15 (2009) 96-103.
+
+[16] A. Ilin, R. Logvinov, A. Kulikov, A. Prihodovsky, H. Xu, V. Ploshikhin, Benjamin Güntherc, Florian Bechmannc, Computer aided optimisation of the thermal management during laser beam melting process, Phys. Procedia. 56 (2014) 390-399.
+
+[17] I.A. Roberts, C.J. Wang, R. Esterlein, M. Stanford, D.J. Mynors, A threedimensional finite element analysis of the temperature field during laser melting of metal powders in additive layer manufacturing, Int J Mach Tools Manuf. 49 (2009) 916-923.
+
+[18] K. Dai, L. Shaw, Finite element analysis of the effect of volume shrinkage during laser densification, Acta Mater. 53 (2005) 4743-4754.
+
+[19] G. Germain, F. Morel, J.L. Lebrun, A. Morel, Machinability and surface integrity for a bearing steel and a titanium alloy in laser assisted machining, Laser Eng. 17 (2007) 329-344.\\
+[20] N. Yang, S.J. Sun, M. Brandt, Numerical and experimental investigation of the heat-affected zone in a laser-assisted machining of Ti-6Al-4V alloy process, Mater. Sci. Forum. 618 (619) (2009) 143-146.
+
+[21] A. Foroozmehr, M. Badrossamay, F. Foroozmehr, S. Golabi, Finite element simulation of selective laser melting process considering optical penetration depth of laser in powder bed, Mater. Des. 89 (2016) 255-263.
+
+[22] H.S. Carslaw, J.C. Jaeger, Conduction of Heat in Solids, Second Edition., Oxford University Press, Oxford, 1986.
+
+[23] T. Polivnikova, R. Glardon, E. Boillat, Study and Modelling of the Melt Pool Dynamics during Selective Laser Sintering and Melting, Thèse EPFL. no 6826 (2015) 77-80.
+
+[24] J. Yang, S. Sun, M. Brandt, W. Yan, Experimental Investigation and 3D Finite Element Prediction of the Heat Affected Zone During Laser Assisted Machining of Ti-6Al-4V Alloy, J. Mater. Process. Technol. 210 (15) (2010) 2215-2222.
+
+[25] J. Yin, H.H. Zhu, L.D. Ke, W.J. Lei, C. Dai, D.L. Zuo, Simulation of temperature distribution in single metallic powder layer for laser micro-sintering, Comput. Mater. Sci. 53 (2012) 333-339.
+
+[26] Y. Huang, L.J. Yang, X.Z. Du, Y.P. Yang, Finite element analysis of thermal behavior of metal powder during selective laser melting, Int. J. Therm. Sci. 104 (2016) 146-157.
+
+[27] M. Rombouts, L. Froyen, A.V. Gusarov, E.H. Bentefour, C. Glorieux, Light extinction in metallic powder beds: correlation with powder structure, J Appl. Phys. 98 (2005).
+
+[28] S.S. Sih, J.W. Barlow, The prediction of the emissivity and thermal conductivity of powder beds, Part. sci. technol. 22 (2004) 427-440.
+
+[29] V. Fallah, M. Alimardani, S. Corbin, A. Khajepour, Temporal development of melt-pool morphology and clad geometry in laser powder deposition, Comput. Mater. Sci. 50 (2011) 2124-2134.
+
+[30] K.C. Mills, Recommended Values of Thermophysical Properties for Selected Commercial, Woodhead Publishing (2002)
+
+[31] J.L. Devore, Probability and Statistics for Engineering and the Sciences, 8th Edition., Cengage Learning, Boston, MA, 2011.
+
+[32] B. Davoodi, B. Eskandari, Tool wear mechanisms and multi-response optimization of tool life and volume of material removed in turning of $\mathrm{N}$ 155 iron-nickel-base superalloy using RSM, Measurement. 68 (2015) 286 294.
+
+[33] P. Fischer, M. Locher, V. Romano, H.P. Weber, S. Kolossov, R. Glardon, Temperature measurements during selective laser sintering of titanium powder, Int. J. Mach. Tools Manuf. 44 (2004) 1293-1296.
+
+[34] S. Kolossov, E. Boillat, R. Glardon, P. Fischer, M. Locher, 3D FE simulation for temperature evolution in the selective laser sintering process, Int. J. Mach. Tools Manuf. 44 (2004) 117-123.
+
+[35] W.E. King, A.T. Anderson, R.M. Ferencz, N.E. Hodge, C. Kamath, S.A. Khairallah, A.M. Rubenchik, Laser powder bed fusion additive manufacturing of metals; physics, computational, and materials challenges, Appl. Phys. Rev. 2 (2015) 041304 .
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

@@ -1,0 +1,739 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{A novel heat source model for analysis of melt Pool evolution in selective laser melting process }
+
+
+\author{Kang-Hyun. Lee ${ }^{\mathrm{a}}$, Gun Jin Yun ${ }^{\mathrm{b}, \mathrm{a}, *}$\\
+a Department of Mechanical \& Aerospace Engineering, Seoul National University, Gwanak-gu Gwanak-ro 1, Seoul, 08826, Republic of Korea\\
+${ }^{\mathrm{b}}$ Institute of Advanced Aerospace Technology, Seoul National University, Gwanak-gu Gwanak-ro 1, Seoul, 08826, Republic of Korea}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+Selective laser melting
+
+Melt pool
+
+Finite element analysis
+
+Additive manufacturing
+
+Melting mode
+
+\begin{abstract}
+A B S T R A C T In this paper, a novel hybrid heat source model is developed considering the different absorption mechanisms for porous and dense state materials, and an effective absorptivity is adapted to the proposed model to analyze the melting mode transition. The proposed model can predict the melt pool characteristics including the melt pool dimensions and the melting modes in the selective laser melting (SLM) process. The problem is formulated using the heat transfer equation considering the phase transition and the degree of consolidation based on the phasefield approach. The single-track scans of $316 \mathrm{~L}$ stainless steel for both the non-powder case and the powder case are simulated to validate the model and the obtained results are in good agreement with the experimentally measured melt pool dimensions (mean error within 6\%). Furthermore, the melting modes (conduction and keyhole) can be distinguished based on the predicted melt pool morphology and the degree of vaporization with the proposed model, which provides insight to define the optimized process boundary. It is also found that the keyhole mode melting is more sensitive to the change of the process parameter than the conduction mode melting.
+\end{abstract}
+
+\section*{1. Introduction}
+Additive manufacturing (AM) technologies have been rapidly developed in the last few years as they enable the fabrication of complexshaped functional parts for various applications [1-4]. Among the proposed AM technologies, SLM is one of the powder bed-based AM processes that uses a high energy laser beam and metallic powder to build a part in a layer by layer fashion. During the SLM process, a thin layer of powder material is deposited with predefined thickness and a laser beam selectively melts the loose powder on the solid substrate. The consolidation and densification then take place after the full melting of the powder, which leads to high-density parts compared to other AM technologies such as selective laser sintering (SLS) [5,6]. The high material utilization and the flexibility of materials being processed also make the SLM process take a special position within the various AM processes [7-9].
+
+However, SLM printed parts suffer from various manufacturing defects including porosity, residual stress, and part distortion as the process involves the consolidation of powder material with rapid cooling [10-13]. The generated melt pool with a high-temperature gradient due to the concentrated heat flux is also crucial for defect formation, part quality, and microstructure evolution in the SLM process [14-17]. The process optimization for managing the foregoing defects requires investigation of various process parameters including laser power, scanning velocity, and layer thickness. Gong et al. [18] investigated the porosity distribution of SLM and electron beam melting (EBM) printed parts using the Archimedes method. The authors then introduced a process window with classifications considering the effect of process parameters on the degree of melting and heating. Dilip et al. [19] proposed an experimental study about melt pool evolutions and morphologies from single-track deposits. They concluded that the optimal setting of laser power and scanning speed leads to a well-defined bowl-shaped melt pool. Kasperovich et al. [20] presented an optimization strategy for porosity reduction in SLM printed specimens based on a correlation study between the process parameters and the void fraction. They also discussed the different formation mechanisms for the keyhole pores and the lack-of-fusion pores caused by excessive or insufficient energy density, respectively.
+
+For saving a considerable amount of cost and time to optimize the process window with try-and-error experiments, numerical methods have been widely developed and used in recent years. The majority of previous literature shows that the phase transition and consolidation during the SLM process are crucial components for computing the temperature distribution during the process [21-24]. The released or
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail address: \href{mailto:gunjin.yun@snu.ac.kr}{gunjin.yun@snu.ac.kr} (G.J. Yun).
+}
+absorbed latent heat of fusion and vaporization significantly affect the temperature field and enthalpy changes at each material point. The variation of the thermophysical material properties due to the change of material state with extreme temperature fluctuation also makes the problem highly non-linear [25,26].
+
+In recent years, high-fidelity numerical simulations based on computational fluid dynamics (CFD) have been utilized to study the physical phenomena in the SLM process. Khairallah et al. [27] proposed a numerical model which included a Marangoni effect with the recoil pressure. The authors emphasized the effect of the dynamical melt flow with the defect formation mechanisms and investigated the evolution of the melt pool in detail. Wu et al. [28] developed a simulation framework employing the volume of fluid (VOF) method [29] and studied the effect of material evaporation on the melt pool profile. Their study showed that the melt pool was in the keyhole mode melting as evaporation occurred with the narrow and deep melt penetration. Bayat et al. [30] also proposed a mesoscale model to investigate the formation of lack-of-fusion pores during the multi-track and multi-layer laser melting process. However, these methods often demand high computational resources which are not feasible for obtaining multiple analysis results with several sets of process parameters. For example, a threedimensional powder-scale multi-physics model using the finite volume method (FVM) took 140 hours for only $4 \mathrm{~ms}$ simulations of the selective melting process with an Intel Core i7-2600 CPU [31]. Furthermore, if the laser spot size and the penetration depth get bigger, larger geometry needs to be modeled which significantly increases the total computation time.
+
+Alternatively, there have been some effective models of SLM process developed to provide reliable analysis results with reasonable computation cost considering typical physical phenomena in the process such as volume shrinkage, material evaporation, and thermocapillary convection (or Marangoni convection) using numerical techniques. Li et al. [32] developed a sequentially coupled thermo-mechanical analysis framework for the SLM process considering volume shrinkage of the powder layer and vaporization. The framework is then used to predict the temperature field, melt pool shape, and residual stress distribution in the multiple layers. Loh et al. [33] proposed an effective model of the SLM process to investigate the temperature history as well as the melt pool dimensions considering the shrinkage and material removal. Ladani et al. [34] applied the effective liquid conductivity in the SLM process simulation to obtain more realistic melt pool dimensions and temperature profiles considering the Marangoni effect. Zhang et al. [35] proposed a three-dimensional numerical model of laser powder-bed fusion (LPBF) process with the anisotropically enhanced thermal conductivity to effectively incorporate the fluid dynamics including the mass convection. They also showed that the melt pool simulation without enhanced conductivity and varied absorptivity significantly underestimates the depth of the melt pool.
+
+For the continuum-based simulation of the SLM process, proper models for effective material properties are required to improve the accuracy of analysis results. For example, the thermal properties including the conductivity and the specific heat capacity of the powder material can be approximated by the volume averaging method with the phase functions [22,36]. However, the properties related to the laser irradiation such as the absorptivity and the extinction coefficient are more dependent on the powder packing geometry, the surface morphology, and the flat-surface absorptivity. Boley et al. [37] used the powder-scale simulation with different powder packing geometries and the direct calorimetric measurement to determine the absorptivity values of several metals in the powder state. They also found out that the effective absorptivity of the powder material is highly dependent on the flat-surface absorptivity. Moser et al. [38] investigated the geometrical effects including the powder particle size distribution on the laser absorptivity and the laser extinction using the particle model with the raytracing algorithm. The authors also derived the correlation equations of effective absorptivity and extinction coefficient of powder material based on the numerical model with the non-dimensional radius of particle with uncertainty estimates. Trapp et al. [39] also found out that the keyhole formation due to the high laser energy can enhance the light absorption with multiple light scattering. Their results show that the effective absorptivity of bulk solid $316 \mathrm{~L}$ stainless steel increases from 0.3 and saturates at 0.78 where the depth of the melt pool reaches $300 \mu \mathrm{m}$.
+
+The previous works for effective modeling of SLM focused on the reflection of typical mechanisms in the SLM process including the phase transition, the volume shrinkage, and the material removal. Various numerical techniques such as element deactivation and the effective material properties have been used to enhance the simulation accuracy. However, simulation without considering the important phenomena such as variation of the material interface and different light absorption mechanisms for powder and dense solid material can lead to unrealistic results even though the target output such as the melt pool dimension gets closer to the experimental results. Furthermore, there has been no previous study proposed with an effective model of the SLM process considering the transition of melting mode in the simulation. In this study, an effective model of the SLM process with a novel hybrid heat source model considering the different laser absorption mechanisms for powder and dense solid material is proposed. The proposed model combines both of the volumetric and the surface heat source models considering the different optical thicknesses for the powder state and the dense state material. An effective algorithm to track the interface where the laser interacts with the material is proposed based on the states of material points in clustered element columns. Furthermore, the melt pool depth-dependent absorptivity is applied to analyze the keyhole mode melting. To the best knowledge of the authors, there has been no attempt to consider the varying effective absorptivity with the melt pool geometry in the thermal analysis of the SLM process. For validation of the model, the predicted melt pool depth and width are compared to the experimental results for both the case with the powder layer and the case without the powder layer. The simulations with a range of process parameters that involve the conduction mode and the keyhole mode melting are conducted and the results are discussed for evaluation of the process. For the implementation of the proposed model in numerical analysis, the commercial FEA software ABAQUS is used with multiple user-subroutines. The detailed processes of modeling and implementation are also provided in this research.
+
+\section*{2. Modeling approach}
+The schematic diagram of the SLM process and its numerical model in the Cartesian coordinate system $(x, y, z)$ is as shown in Fig. 1. In the SLM process, a laser beam scans the predefined scanning track on the powder bed with the layer thickness $d_{p}$. The material is then melted forming a thin molten track, which is called the melt pool in general. For high density and good bonding of the track to the substrate, the generated melt pool should completely wet the substrate before solidification [40,41]. Thus, the dimensions and shape of the melt pool are important characteristics to control the quality of the process.
+
+To track the temperature evolution and the melt pool formation in the SLM process, a thermal problem can be constructed considering the important mechanisms in the process. The laser beam can be modeled as moving heat flux in the numerical model with the given initial state of the material. Furthermore, the thermal behavior of material must be modeled properly considering the intense fluctuation of temperature including the variation of material state to obtain a reliable solution. This section introduces the proposed numerical modeling methods and the required backgrounds to build an effective analysis model of the SLM process.
+
+\subsection*{2.1. Energy balance equation}
+In this research, the thermodynamically-consistent phase field
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-03}
+\end{center}
+
+Fig. 1. Schematic diagram of the SLM process with a cross-section view of temperature distribution (gray color denotes $\boldsymbol{T}>\boldsymbol{T}_{\boldsymbol{m}}$ ).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-03(1)}
+\end{center}
+
+Fig. 2. Temperature dependent volumetric heat capacity and conductivity of dense state $316 \mathrm{~L}$ stainless steel used in the proposed model.
+
+approach is adapted to deal with the problems of phase transition and the degree of consolidation [22,42]. Also, the latent heat of vaporization is added to the governing equation with the corresponding interpolation function of the state variable. The governing equation used for the analysis is as follows
+
+$\frac{d H}{d t}=\nabla \cdot \boldsymbol{q}(\boldsymbol{r}, t)+Q(x, y, z, t)$, in $\Omega$
+
+$\boldsymbol{q}=-k \nabla T$
+
+where $H$ is the enthalpy, $\mathbf{q}$ is the heat flux vector, $Q$ is the heat source term, $T$ is the temperature, and the $t$ denotes the time. The enthalpy is expressed in terms of the temperature and the state variables as follows
+
+$H=C_{s}(\psi) T+p\left(\phi_{m}\right)\left\{L_{m}+\left[C_{l}-C_{s}(\psi)\right]\left(T-T_{m}\right)\right\}+L_{v} p\left(\phi_{v}\right)$
+
+$p(\phi)=\phi^{3}\left(10-15 \phi+6 \phi^{2}\right)$
+
+where $C_{s}$ and $C_{l}$ are the volumetric heat capacity in a solid-state and liquid state, $L_{m}$ and $L_{v}$ are the latent heat of melting and vaporization, $T_{m}$ is the melting temperature which is the average value of the liquidus temperature $T_{l}$ and the solidus temperature $T_{s}$. The function $p(\phi)$ is the interpolation function of phase parameter $\phi$ which satisfies the local minima condition of free energy density for each material state [42]. The phase parameters $\phi_{m}$ and $\phi_{v}$ are defined as follows
+
+$\phi_{m}=\frac{1}{2}\left\{\tan \left[\frac{A\left(T-T_{m}\right)}{T_{l}-T_{s}}\right]+1\right\}, \phi_{v}=\frac{1}{2}\left\{\tan \left[\frac{A\left(T-T_{v}\right)}{T_{v p}-T_{v l}}\right]+1\right\}$
+
+where $\mathrm{A}$ is the parameter for smooth phase transition which is set to 5.0 in this study, $T_{v p}$ is the vaporized temperature, $T_{v l}$ is the temperature at the start of vaporization, and $T_{v}$ is the average vaporization temperature. The thermal properties including conductivity and heat capacity are determined by the consolidation parameter $\psi$, which holds the maximum value of $\phi_{m}$ to characterize thermal history at each material point defined as follows [22]
+
+$\psi(\boldsymbol{r}, t)=\max \left[\phi\left(\boldsymbol{r}, t^{\prime}\right), \psi(\boldsymbol{r}, t)\right], 0 \leq t^{\prime} \leq t$
+
+$\varepsilon=\varepsilon_{0}(1-\psi)$
+
+$C_{S}(\psi)=(1-\varepsilon) C_{d}$
+
+$k(\psi)=(1-\psi) k_{p}+\psi k_{d}$
+
+where $\varepsilon$ is the porosity, $\varepsilon_{0}$ is the initial porosity of the powder bed, $C_{d}$ is the volumetric heat capacity of the dense material, $k_{p}$ is the thermal conductivity of the powder material which is set to $0.3 \mathrm{~W} / \mathrm{mK}$ considering the powder particle size $(10-50 \mu \mathrm{m})$ and the gas in the pores [36] near melting point, and $k_{d}$ is the thermal conductivity of the dense material. It is worth noting that the thermal conductivity of gas actually increases with temperature increment [43]. The constant conductivity of $0.3 \mathrm{~W} / \mathrm{mK}$ is chosen because the value is still much lower than that of the thermal conductivity of the dense solid. We consider $316 \mathrm{~L}$ stainless steel with the temperature dependent material properties in dense states as shown in Fig. 2. The material properties over the melting temperature are estimated as constant values $\left(C_{l}=5.95 \times 10^{6} \mathrm{~J} / \mathrm{m}^{3}, k_{d}=32 \mathrm{~W} / \mathrm{mK}\right)$ [36,44]. The other thermophysical properties of $316 \mathrm{~L}$ stainless steel used in this study are as shown in Table 1 and the variation of enthalpy for different initial states is as shown in Fig. 3.
+
+During the SLM process, the melt pool convection due to the thermocapillary force and the buoyancy effect can influence the heat transfer. According to Ladani et al. [34], the buoyancy effect can be neglected due to the small Bond (Bo) number of materials including $316 \mathrm{~L}$ stainless steel, Ti6Al4V, and In718 which are commonly used materials in SLM process. On the other hand, the anisotropically or isotropically enhanced thermal heat conductivity has been widely used to consider the thermocapillary effect in the thermal FEA for improved accuracy $[35,45-50]$. The use of enhanced conductivity also requires a careful calibration process between the independent and the dependent variables with a proper shape of function. The anisotropically enhanced thermal conductivities in $x, y$, and $z$ directions can be expressed as follows
+
+Table 1
+
+Properties of 316 L stainless steel [36,52-54].
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Descriptions & Values \\
+\hline
+Solidus temperature $[\mathrm{K}]$ & 1680 \\
+Liquidus temperature $[\mathrm{K}]$ & 1720 \\
+Latent heat of fusion/melting $\left[\mathrm{kJ} / \mathrm{m}^{3}\right]$ & $L_{m}=2.18 \times 10^{6}$ \\
+Liquidus temperature $[\mathrm{K}]$ & 3030 \\
+(Liquid $\rightarrow$ vapor) & 3070 \\
+Vaporized temperature $[\mathrm{K}]$ & $L_{v}=44.7 \times 10^{6}$ \\
+Latent heat of vaporization $\left[\mathrm{kJ} / \mathrm{m}^{3}\right]$ &  \\
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-04}
+\end{center}
+
+Fig. 3. Variation of enthalpy versus temperature with different initial states of materials.
+
+$\boldsymbol{q}=-\left[\begin{array}{ccc}k_{x} & 0 & 0 \\ 0 & k_{y} & 0 \\ 0 & 0 & k_{z}\end{array}\right] \nabla T$
+
+$k_{x}=\lambda_{x} k, k_{y}=\lambda_{y} k, k_{z}=\lambda_{z} k$
+
+where $\lambda_{x}, \lambda_{y}$ and $\lambda_{z}$ are the anisotropically enhanced factors of thermal conductivity, which are usually set to 1 when $T<T_{m}$, and set to 2-30 when $T \geq T_{m}[34,35,49]$. The enhanced factors are determined based on trial and error comparing the predicted values with the experimental results. The enhanced factor also can be applied as a function rather than a constant. Zhang et al. [35] used a linear approximation of anisotropic enhanced conductivity $\lambda_{z}$ based on the fact that the experimentally measured melt pool depth is proportional to $P / \sqrt{v}$ where the laser power $P$ is the laser power, and $v$ is the scanning velocity. However, the high fixed enhanced conductivity for the entire time of the analysis with given process parameters $(P$ and $v)$ can attenuate the concentrated heat flux and the high temperature gradient at the beginning of the laser interaction. Thus, based on the fact that the enhanced factor $\lambda_{z}$ directly affects the predicted melt pool depth, a linear approximation is used in this study as follows
+
+$\lambda_{z}=p_{1} \cdot d_{m}+p_{2}$
+
+where $d_{m}$ is the varying melt pool depth during the process, $p_{1}$ and $p_{2}$ are the empirically determined fitting parameters. On the other hand, the constant enhanced factors $\lambda_{x}$ and $\lambda_{y}$ are used for simplification considering their smaller values compared to $\lambda_{z}$ when deep melt penetration is formed. In this study, the enhanced factors $\lambda_{x}, \lambda_{y}$ and $p_{2}$, which is the initial value of $\lambda_{z}$, are assumed as the constant value of 2.5 [51].
+
+Although enhanced thermal conductivity in previous studies has been treated as a useful tool to predict the melt pool geometry, the overestimated conductivity to obtain the deep melt pool depth can lead to an excessively large heat flux which is unrealistic. Moreover, the high thermal conductivity can lead to suppression of material vaporization which is the dominant physical phenomenon in the keyhole mode. Thus, the enhanced thermal conductivity must be used carefully considering the mechanism of deep laser penetration and the material vaporization to get realistic results. To deal with this problem, an effective model incorporating the material removal, the powder volume shrinkage, and the newly proposed hybrid heat source model with effective absorptivity is proposed in this study.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-04(1)}
+\end{center}
+
+Fig. 4. Volume shrinkage due to the initial porosity of powder layer and material removal due to evaporation.
+
+\subsection*{2.2. Powder volume shrinkage and material removal}
+During the melting process of SLM, a certain amount of volume shrinks due to the void fraction of the powder layer. The location of the surface then gets lower after the void is filled by the molten material. This volume shrinkage affects the morphology of the generated melt pool because it affects the heat conduction in the surrounding powder layer. Furthermore, the applied heat flux for each material point changes due to the variation of the distance from the center of the laser beam. The proportion of volume shrinkage of the powder layer is generally equivalent to the initial porosity of powder [33]. In this study, the initial porosity of the powder $\varnothing$ is estimated as 0.4 [24,55]. To consider the volume shrinkage in the simulation, a simplified method is used in this study which is deactivating the shrunk element. After the powder layer is molten ( $T>T_{m}$ ), the shrunk volume (shown in Fig. 4) is treated as an empty space with zero conductivity in the simulation. In addition, the empty space can be simulated by element removal function provided by ABAQUS/Standard [56] ramping down the heat fluxes to zero during the removal step. In this way, the removed elements with zero heat flux can be reactivated with the defined initial state in the following analysis step with newly deposited powder material for simulation of multi-layer deposition.
+
+As the material vaporization is considered in the governing Eq. (3), the vaporization can be detected when the temperature exceeds the vaporized temperature. Then, the vaporized volume is treated as the same as the shrunk volume to consider material removal. A problem that arises with this method is the deep penetration depth caused by high laser energy density cannot be detected well due to the removed material and the fixed height of the center of the numerical heat flux. To overcome this matter, a model of heat flux with a moving interface is proposed in this study and the detailed explanation is in Section 3.2.
+
+\section*{3. Hybrid heat source model for the SLM process}
+\subsection*{3.1. Surface and volumetric heat source models}
+In the SLM process, the interaction between the laser and the material works very differently depending on the material state. For a dense state of the material, the optical penetration depth is known to be very small which is of the order of tens of nanometers [57,58]. This means most of the laser energy acts on the surface and cannot penetrates deep into the material. In this case, the surface heat source model with Gaussian distribution is usually adopted as follows [24,59]\\
+$Q_{s}(x, y, t)=\alpha I_{0} \exp \left(-2 \frac{\left.\left(x-x_{c}\right)^{2}+\left(y-y_{c}\right)^{2}\right)}{r^{2}}\right)$
+
+$I_{0}=\frac{2 P}{\left(\pi r^{2}\right)}$
+
+where $\alpha$ is the optical absorptivity, $I_{0}$ is the maximum beam intensity, and $r$ is the effective radius of the beam where $I=I_{0} e^{-2}, x_{c}$ and $y_{c}$ are the positions of the beam center in $x$ and $y$ directions.
+
+On the other hand, the laser irradiation onto the porous powder layer involves multiple reflections with deep penetration due to the pores between the powder particles. In this case, the volumetric heat sources are often used to consider the distributed heat flux in threedimensional space. The volumetric heat source model considering the progressive attenuation of laser beam intensity is as follows [60]
+
+$Q_{v}(x, y, z, t)=\alpha \beta I_{0} \exp \left[-2 \frac{\left.\left(x-x_{c}\right)^{2}+\left(y-y_{c}\right)^{2}\right)}{r^{2}}-\beta\left(z_{c}-z\right)\right]$
+
+where $\beta$ is the optical extinction coefficient and $z_{c}$ is the position of the beam center in $z$ direction. To determine the effective absorptivity and the extinction coefficient of the powder layer, Moser et al. [38] derived following correlation equations based on the simulation results from the particle-scale models with the ray-tracing algorithm
+
+$\alpha_{e f f}=0.053+1.37 \alpha_{s}-1.04 \alpha_{s}^{2}+0.399 \alpha_{s}^{3}$
+
+$\beta R=0.325+1.03 \alpha-1.22 \alpha^{2}+0.587 \alpha^{3}$
+
+where $\alpha_{e f f}$ is the effective optical absorptivity of the powder material, $\alpha_{s}$ is the optical absorptivity ranges from 0.1 to 0.9 of the bulk solid metal, and $R$ is the average radius of the powder particles. Using the Eq.s (13) - (17), the different heat flux equations for dense state material and porous material can be calculated with the readily available material properties and given process parameters.
+
+\subsection*{3.2. Combination of two heat source models with interface tracking}
+To apply different heat source models to a certain material point considering the material state, we propose a novel hybrid heat source model with both of the surface and the volumetric heat flux Eq.s (13) and (15). The schematic diagram of the proposed model is as shown in Fig. 5. At the beginning of the process, the material on the solid substrate is a porous state $(\psi=0)$ for the entire powder layer and the laser can penetrate through the pores. Thus, the volumetric heat flux is applied in this case with the determined effective optical absorptivity and the extinction coefficient of the powder material. When sufficient energy is applied to the powder material by the moving heat flux, the material turns into a liquid state and becomes a solid-state after cooling. The liquid state and bulk solid-state are both treated as a dense state $(\psi=1)$. In this case, the laser cannot penetrate deep into the material and most of the laser energy is applied on the material surface.
+
+However, applying different heat flux with the captured interfaces where the laser and the material interact is very complicated in the SLM process due to the powder volume shrinkage and the material vaporization. Also, the laser interaction mechanism in the SLM process shows that the material state of the upper material affects the applied heat flux to the material below. Thus, an effective method to capture the interface based on the generated space during the simulation (Section 2.2) is proposed in this study. First, the whole finite elements are classified into numbers of columns in $z$ direction as shown in Fig. 6a. The elements in each column share the material state information and the number of empty elements $\left(N_{0}\right)$ is computed at every time increment. Also, the number of shrunk elements, molten elements, and vaporized elements can be computed for each element column in the same way.
+
+The proposed hybrid heat source model is applied to the following algorithm. First, if there is powder material in a column, then the applied heat flux model for all the elements in the column is the volumetric heat source with progressive attenuation (15). After a certain time is passed and if all of the powder material is melted in the element column, the surface heat source model is applied to the captured interface as shown in Fig. 6b. The interface can be lower as more material is vaporized with intense heating. The governing equation to apply the surface heat flux with a varying interface is as follows
+
+$\frac{d H}{d t}=\nabla \cdot \boldsymbol{q}(\boldsymbol{r}, t)+2\left[Q_{s}(x, y, t)-h\left(T-T_{\infty}\right)-\sigma \zeta\left(T^{4}-T_{\infty}^{4}\right)\right]|\nabla \varphi|$
+
+where $h$ is the convection coefficient, $\sigma$ is the Stephan-Boltzmann constant, $\zeta$ is the emissivity, $T_{\infty}$ is the ambient temperature, $\varphi$ is the value of the material fraction $(\varphi=1$ when the material is present (porous or dense) and $\varphi=0$ for empty space) and $|\nabla \varphi|$ is the interface delta function. Using this method, the heat flux model and the boundary conditions can be adaptively applied to the elements in each column considering the variation of the material state.
+
+In addition, the denudation of metallic powder due to the vaporization during the SLM process has been reported in the previous studies [61,62]. It is worth noting that the denudation effect affects the formation of the consolidated track since the interface where the laser strikes varies due to the removed powder particles. In particular, Mattews et al. [61] studied the degree of denudation (dimensions of the denudated zone) as a function of laser parameters and gas pressure. If\\
+Gaussian distributed heat flux $Q_{v}$ (volumetric)\\
+Gaussian distributed heat flux $Q_{v}+Q_{s}(\mathrm{~W} /$ interface delta function $)$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_bd6e034633d8b3d1d1d5g-05}
+
+Fig. 5. The schematic diagram of the hybrid heat source model of the SLM process.\\
+a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-06}
+\end{center}
+
+b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-06(2)}
+\end{center}
+
+Fig. 6. a) Management of empty space in each column of elements, b) material states dependent laser penetration in the melt pool.
+
+the approximate denudated volume is known, the corresponding volume can be converted to empty space just before the laser interacts or from the beginning of the analysis considering the small effect (low conductivity) of the powder material to incorporates the denudation effect. This effect is not considered in this study since the degree of the denudation is not known but consideration of this effect is suggested for future work.
+
+\subsection*{3.3. Effective absorptivity with deep melt penetration}
+In particular, the multiple reflections on keyhole walls can lead to a significant increase in energy absorption in the real SLM process [63]. Trapp et al. [39] found out that the effective optical absorptivity of material increases as the keyhole traps the light with the surface depression of the melt pool. They also measured the variation of the effective laser absorptivity of bulk solid 316 L stainless steel with the variation of the melt pool dimensions and the laser power. The graph in Fig. 7 and Fig. 8 show that as the melt pool depth increases, which means more possibility of keyhole mode, the effective absorptivity of dense state $316 \mathrm{~L}$ stainless steel increases from 0.3 and saturates at 0.78 . To consider this phenomenon in the simulation, we applied the melt pool depth-dependent optical absorptivity of the dense state material with the surface heat flux model after the full melting of the powder material. We assumed the effective absorptivity for dense state material
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-06(1)}
+\end{center}
+
+Fig. 7. Effective absorptivity for dense state $316 \mathrm{~L}$ stainless steel versus melt pool depth [39] with the fitted curve.\\
+Effective absorptivity for dense state material $\left(\alpha_{d}\right)$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-06(3)}
+\end{center}
+
+Melt pool depth (d)
+
+Fig. 8. Melt pool depth-dependent effective absorptivity of dense state material.
+
+follows the experimental result proposed by Trapp et al. [39]. The data is then fitted to be applied in the numerical analysis for convenience as follows
+
+\[
+\left\{\begin{array}{c}
+\alpha_{d}=0.3(d<50)  \tag{19}\\
+\alpha_{d}=c_{1} d^{3}+c_{2} d^{2}+c_{3} d+c_{4}(50 \leq d \leq 300) \\
+\alpha_{d}=0.78(300<d)
+\end{array}\right.
+\]
+
+where $\quad c_{1}=1.037 \times 10^{-7}, c_{2}=-6.916 \times 10^{-5}, c_{3}=0.01485 \quad$ and $c_{4}=-0.3133$. Although the data was obtained after the end of the process measuring the melt penetration $d$, we used the melt pool depthdependent absorptivity assuming $d=d_{m}$. The varying melt pool depth $d_{m}$ can be computed using the material states in $z$ direction at every time increment as explained in Section 3.2.
+
+The measured effective absorptivity is affected by various physical phenomena including the surface depression due to the recoil pressure and the multiple laser scatterings. Even though the complex fluid dynamics and the light scattering are not directly modeled, we assumed that the varying effective absorptivity can enhance the accuracy of the melt pool simulation with the proposed effective model. Moreover, the value may need to be calibrated for improved accuracy of the model likes some other effective properties. It is also worth noting that further
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-07}
+\end{center}
+
+Fig. 9. Schematic of simulation domain with boundary conditions.
+
+calibration will be required according to the type of materials used and the processing conditions. In this study, however, the fitted curve from the experimental results is applied directly to the model to analyze its effect on the results. The development of proper calibration methods and the study of underlying physics will be addressed in future works.
+
+\section*{4. Numerical implementation with FEA}
+To build the proposed effective model of the SLM process, the builtin heat transfer analysis step in commercial FEA tool ABAQUS/ Standard is used to calculate the transient temperature field. The important physical phenomena of the SLM process explained in the previous sections are effectively modeled using multiple user subroutines called for different purposes [56]. The mesh design and the boundary conditions of the half-symmetric model with respect to $x-z$ plane is shown in Fig. 9. The flowchart for the implementation of the effective model in ABAQUS is as shown in Fig. 10. As defined in Section 3.2, the elements must be classified into several columns to define the heat flux with the varying interface. To sort the elements according to its position, the information of the element and the node in the ABAQUS input
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-07(1)}
+\end{center}
+
+Fig. 10. Flowchart of the proposed effective model of SLM process in ABAQUS with multiple user subroutines. file is first pre-processed by a custom MATLAB script to assign a column number to each element. Thereafter, the assigned column number is imported into ABAQUS using a UEXTERNALDB subroutine which is called at the beginning of the analysis. Moreover, the initial state of each material point needs to be varied according to the determined layer thickness. Therefore, the initial values of material state variables for each material point are defined according to their positions using an SDVINI subroutine. After the initial conditions are defined, the problem is solved based on the governing equation with the defined material behavior and the boundary conditions. To define the thermal material behavior considering the consolidation and the phase transitions (1)(3), a UMATHT subroutine is developed to update the enthalpy of each material point and the heat flux vector according to the governing equation and the material properties. Therefore, the material state can be defined by the state variables in eq. (5) and (6) with the corresponding temperature history. The variation of the enthalpy and the heat flux are also computed analytically with the temperature increment for convergence in the implicit method. Furthermore, a USDFLD subroutine is developed to manage the material states and transfer them to a DFLUX subroutine, which is used to define the non-uniform distributed heat flux with thermal boundary conditions. For convenience, the material state is defined by one discrete numeric value with the following four conditions: -1 for powder state, 0 for dense solid-state, 1 for the liquid state, and 2 for the empty state. It is worth noting that the amount of applied heat flux is not only dependent on the state of the material point itself but also dependent on the states of the materials in the build direction. Therefore, the common block provided in FORTRAN is used to access and share important information such as the material states of the other material points through multiple user subroutines. The obtained material states of the whole elements are used to define the interface where the laser interacts at every time increment using UEXTERNALDB. The interface and the melt pool depth $d_{m}$ are computed explicitly with a reasonably small maximum time increment of $10^{-6} \mathrm{~s}$ because both of them are determined based on the states of the whole elements in the analysis domain. Based on the computed interface, the hybrid heat source model with both of the surface heat flux (13) and the volumetric heat flux (15) can be adaptively applied to the material point using the DFLUX subroutine.
+
+\section*{5. Results and discussion}
+\subsection*{5.1. Single-track laser scan without powder bed}
+A single-track laser scan without powder material is simulated first to validate the proposed effective model using the experimentally measured melt pool dimensions with different melting modes [39]. In the simulation, a $316 \mathrm{~L}$ stainless steel without powder layer is subjected to a single laser scan where the spot dimeter is $60 \mu m$. The process parameters used are as shown in Table 2. The laser power is varied widely from $32 \mathrm{~W}$ to $223 \mathrm{~W}$ with the constant scanning velocity of $500 \mathrm{~mm} / \mathrm{s}$ to analyze the melting mode transition. It is worth noting that only the surface heat flux is used in this case because there is no porous material in the analysis domain as explained in Section 3.2. After several trial-and-error attempts and the comparison with the experimental results, the value of $p_{1}$ in (12) is determined as 0.1757 for improved prediction of the melt pool depth. This value is also adopted for the case with a powder bed in section 5.2 since the melt penetration
+
+Table 2
+
+Process parameters for the non-powder material case.
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Descriptions & Values \\
+\hline
+Laser power $[\mathrm{W}]$ & $P=32,48,65,83,99,117,134,178,223$ \\
+Laser scanning speed $[\mathrm{mm} / \mathrm{s}]$ & $v_{x}=500$ \\
+Laser spot diameter $[\mu \mathrm{m}]$ & $D=60$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-08(1)}
+\end{center}
+
+Fig. 11. Predicted melt pool dimensions and the experimental results for single-track scan without powder material.
+
+is measured from the level of the solid substrate surface.
+
+The predicted melt pool dimensions using the proposed model and the experimental results are shown in Fig. 11. The result shows that both the melt pool width and depth increase as more laser power is applied. The predicted results are also in good agreement with the experimental results. The varying melt pool width and depth about $20 \mu \mathrm{m}$ to $270 \mu \mathrm{m}$ are predicted and the proposed model has the mean errors for both the depth and the width within 6\% as seen in Table 3. In particular, the predicted melt pool width shows larger error than the predicted melt pool depth because the calibrated linear approximation is used for the enhanced factor $\lambda_{z}$ whereas the constant value is used for the enhanced factor $\lambda_{y}$ which is related to the melt pool width for simplification of the calibration process. The errors may also occur due to the measuring error and potential differences between the applied thermo-physical properties and the real material properties.
+
+To facilitate the understanding of the process parameters and their effects, the ratio between the volume of vaporized material and the volume of molten material $\eta$ is computed to evaluate the degree of the intense heating. Although the high laser power contributes to the deep melt penetration (which is preferred for stronger bonding between the molten track and the substrate in the SLM process) and wider melt width (which is preferred for minimizing the production time), the more energy can be wasted through the vaporization of the material. The increasing $\eta$ shows that this waste gets more severe as more energy is applied. Thus, $\eta$ should be minimized while the minimum melt pool size is ensured for enough bonding between the material and the substrate from the energy efficiency point of view. The result also shows that the vaporization does not occur for the laser power of $32 \mathrm{~W}, 48 \mathrm{~W}$, and $65 \mathrm{~W}(\eta=0)$. For these laser powers, the rate of change of the melt pool depth with the varying laser power is relatively small compared to the higher laser powers as shown in Fig. 12. The graphs from both the experimental results and the simulation show that the rate of change is below 0.5 before the vaporization occurs, and increases sharply up to 2.44 and holds the value above 1.0 after the vaporization occurs. This shows that when the applied energy is not sufficient to cause the vaporization of the material, the size of the melt pool does not fluctuate a lot according to the change of the process parameter. It can be also said that if a desired melt pool size can be achieved in the range of
+
+Table 3
+
+Comparison of simulation results with experimental results.
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+\begin{tabular}{l}
+Min error \\
+(width) [\%] \\
+\end{tabular} & \begin{tabular}{l}
+Max error \\
+(width) [\%] \\
+\end{tabular} & \begin{tabular}{l}
+Mean error \\
+(width) [\%] \\
+\end{tabular} & \begin{tabular}{l}
+Min error \\
+(depth) [\%] \\
+\end{tabular} & \begin{tabular}{l}
+Max error \\
+(depth) [\%] \\
+\end{tabular} & \begin{tabular}{l}
+Mean error \\
+(depth) [\%] \\
+\end{tabular} \\
+\hline
+0.116 & 9.67 & 5.65 & 0.114 & 8.0 & 2.64 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-08}
+\end{center}
+
+Fig. 12. Rate of change of the melt pool depth according to the laser power.
+
+parameters with lower energy density, the process can be optimized with the stable formation of the melt pool.
+
+In the laser process of alloy, the transition between the different modes of melting due to the material vaporization involves complex physical phenomena including the surface depression induced by the recoil pressure and the multiple laser scatterings. When the laser energy exceeds a certain boundary to cause the vaporization of the material, the melt pool shape is observed to have a keyhole shape with deep melt penetration rather than a bowl shape [19]. The two distinct melting modes in laser welding have been observed in previous studies and literature [64,65]. This remarkable change of the melt pool shape from the conduction mode melting to the keyhole mode melting can be explained by the different energy absorption mechanisms. Compared to the conduction mode melting, keyhole mode melting is always associated with the vaporization of the alloy [66]. As the surface is depressed with the material vaporization, there is more chance of the light to be trapped which leads to enhanced energy absorption. The increased absorbed energy then leads to more intense vaporization and deeper laser penetration forming a keyhole-shaped melt pool. In this study, this absorption mechanism is considered using the effective absorptivity which is dependent on the melt pool depth (Section 3.3).
+
+Fig. 13 illustrates the melt pool cross-section images using optical microscopy. As shown in Fig. 14, the different modes of melting can be distinguished by the predicted morphology of the melt pool (gray
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-09(2)}
+\end{center}
+
+Fig. 13. Melt pool cross-section images with varied laser power from reference [39] used under CC BY 4.0 license.
+
+denotes the empty space, red denotes the molten region, and blue denotes the dense solid). When the laser energy is not very high (Fig. 14a and b), the melt pool width is 2-3 times as large as the melt pool depth. The material vaporization also does not occur in this case which can be classified as the conduction mode melting. If the laser power increases and the material vaporization takes place (Fig. $14 \mathrm{c}$ and d), the melt pool depth rapidly increases with the high energy absorption. Then, a keyhole-shaped melt pool geometry is predicted and the process can be classified as the keyhole mode melting.
+
+\subsection*{5.2. Single-track laser scan with powder bed}
+A simulation for a single-track laser scan with the powder material is conducted for melt pool analysis of the SLM process. For the validation of the proposed model, the analysis results are compared with the experimental results in the previous study [67] with the two distinct melting modes. In the simulation, a $316 \mathrm{~L}$ stainless steel with the powder layer thickness of $75 \mu \mathrm{m}$ is subjected to a single path laser scan where the spot diameter is $55 \mu \mathrm{m}$. The two cases of the conduction mode melting with the laser power of $100 \mathrm{~W}$ and the keyhole mode melting with the laser power of $200 \mathrm{~W}$ are simulated with the scanning velocity of $300 \mathrm{~mm} / \mathrm{s}$.
+
+To validate the performance of the proposed model, the analysis results with the conventional heat source models which are the Gaussian surface heat flux model (2-dimensional) [24,68] and the Goldak's semi-ellipsoid model (three-dimensional) [69,70] are obtained for comparative purpose. Then, the analysis results obtained by the proposed hybrid heat source model (Section 3) are discussed with the different characteristics of the melting modes. The analysis results are shown in Table 4 and Table 5 with the corresponding relative errors. The proposed interface tracking method (Section 3.2) is used for all of the analysis cases to consider the empty space caused by the volume shrinkage and the material vaporization.
+
+\subsection*{5.2.1. Simulation with conventional heat source models}
+For the case of the conduction mode melting $(P=100 W)$, the Gaussian surface heat flux model is used as a comparison target considering the shallow melt depth compared to the keyhole mode melting. Fig. 15a shows the predicted melt pool morphology using the Gaussian surface heating model. Due to the concentrated heat flux to the material interface from the beginning of the laser interaction, the vaporization can readily occur within the laser spot size. Furthermore, the low conductivity of the powder material intensifies the local temperature increases. As a result, the vaporization occurs in both the material in the powder layer and the material in the solid substrate. This shows that the surface heat flux model overestimates the material vaporization. As seen in Table 4, $\eta$ is 0.531 with the surface heat flux model which means the volume of the vaporized material is extremely large. It can be said that the result is very unrealistic because the melting mode is conduction in this case.
+
+For the case of the keyhole mode melting $(P=200 W)$, the Goldak's semi-ellipsoid model is used for comparison considering the deep laser
+
+\section*{- - - : Experimental melt pool boundary}
+\includegraphics[max width=\textwidth, center]{2024_03_10_bd6e034633d8b3d1d1d5g-09(1)}\\
+a) $32 \mathrm{~W}$
+
+\includegraphics[max width=\textwidth, center]{2024_03_10_bd6e034633d8b3d1d1d5g-09}\\
+b) $65 \mathrm{~W}$\\
+Keyhole mode melting
+
+\includegraphics[max width=\textwidth, center]{2024_03_10_bd6e034633d8b3d1d1d5g-09(3)}\\
+c) $83 \mathrm{~W}$\\
+d) $223 \mathrm{~W}$
+
+Fig. 14. Predicted melt pool morphology in the $\boldsymbol{y}-\boldsymbol{z}$ cross section for single-track scan without powder material a) $\boldsymbol{P}=32 \mathrm{~W}, \mathrm{~b}) \boldsymbol{P}=65 \mathrm{~W}$, c) $\boldsymbol{P}=83 \mathrm{~W}$, d) $\boldsymbol{P}=223 \mathrm{~W}$.
+
+Table 4
+
+Comparison of simulation results with experimental results (conduction mode).
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+Simulation method & Width $[\mu m]$ (error \%) & depth $[\mu m]$ (error \%) & $\eta$ & Experimental width $[\mu m]$ & Experimental depth $[\mu m]$ \\
+\hline
+Surface heat source & $80.1(22.23)$ & $84.9(63.27)$ & 0.531 & $103 \pm 24$ & 52 \\
+\hline
+Hybrid heat source w/ enhanced $k$ & $101.1(1.84)$ & $51.3(1.35)$ & 0.0 &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 5
+
+Comparison of simulation results with experimental results (keyhole mode).
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+Simulation method & Width $[\mu m]$ (error \%) & depth $[\mu m]$ (error \%) & $\eta$ & Experimental width $[\mu m]$ & Experimental depth $[\mu m]$ \\
+\hline
+Volumetric heat source & $134.8(3.69)$ & $260.8(1.95)$ & 0.0 & $130 \pm 10$ & 266 \\
+\hline
+Hybrid heat source w/ enhanced $k$ & $135.1(3.92)$ & $263.9(0.79)$ & 0.122 &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+penetration depth. The model can be expressed as follows
+
+$Q(x, y, z, t)=\frac{2 \alpha P}{\bar{a} \bar{b} \bar{c} \pi \sqrt{\pi}} \exp \left[-\left(\frac{\left(x+v_{x} t\right)^{2}}{\bar{a}^{2}}+\frac{(y)^{2}}{\bar{b}^{2}}+\frac{(z)^{2}}{\bar{c}^{2}}\right)\right]$
+
+where $\bar{a}, \bar{b}$, and $\bar{c}$ are the dimensions of the ellipsoid determined by the beam radius $R$, the laser penetration depth $\delta$, and eccentricity $e$ as follows.
+
+$\bar{a}=e R, \bar{b}=R / e, \bar{c}=\delta$
+
+Three-dimensional heat source models are useful to predict the deep melt pool with the calibrated heat source geometry based on the
+
+a) Surface heat source w/o enhanced $k$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-10(3)}
+\end{center}
+
+C) Volumetric heat source w/o enhanced $k$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-10(2)}
+\end{center}
+
+measured melt pool dimensions [35,71]. In this study, half of the measured melt pool width $(=65 \mu \mathrm{m})$ is used for the beam radius and the measured melt pool depth $(=266 \mu \mathrm{m})$ is used for the laser penetration depth. Fig. 15c shows the predicted melt pool morphology using Goldak's model. As seen in Table 5, the errors between the simulation and the experiment are within $4 \%$ for both the width and the depth in this case. This shows that a three-dimensional heat source model can predict the melt pool dimensions with high accuracy if a calibration process is performed in advance. However, the result shows that vaporization does not occur $(\eta=0)$ even though the keyhole mode melting is observed in the experiment [67]. The reason can be ascribed
+
+\section*{b) Hybrid heat source w/ enhanced $k$}
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-10(1)}
+\end{center}
+
+d) Hybrid heat source w/ enhanced $k$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-10}
+\end{center}
+
+Fig. 15. Predicted melt pool morphology I. conduction mode melting $(\boldsymbol{P}=100 \mathbf{W})$ : a) surface heat source without enhanced $\boldsymbol{k}$, b) hybrid heat source with enhanced $\boldsymbol{k}$ II. keyhole mode melting $(\boldsymbol{P}=200 \mathbf{W})$ c) volumetric heat source, d) hybrid heat source with enhanced. $\boldsymbol{k}$\\
+a) Conduction mode $(P=100 \mathrm{~W})$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-11}
+\end{center}
+
+b) Keyhole mode $(P=200 \mathrm{~W})$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-11(1)}
+\end{center}
+
+Fig. 16. Top views of the melt pool evolution at the level of the solid substrate surface with the proposed hybrid heat source models a) conduction mode melting $(\boldsymbol{P}=100 \mathbf{W})$, b) keyhole mode melting $(\boldsymbol{P}=200 \mathbf{W})$. The dotted-line circles are the projection of the laser beam.
+
+to the fact that the widely distributed energy in the three-dimensional space attenuates the concentrated energy input as well as the temperature gradient. Thus, the transition between the melting modes cannot be detected in this case.
+
+\subsection*{5.2.2. Simulation with a hybrid heat source model}
+The same processes in the previous section are simulated using the proposed hybrid heat source model. As seen in Table 4 and Table 5, the errors between the simulation results based on the proposed model and the experimental results are within $4 \%$ for both the conduction mode melting and the keyhole mode melting. The melting mode also can be distinguished by the predicted melt pool morphology and the degree of vaporization as seen in Fig. 15b and d. For the conduction mode melting $(P=100 \mathrm{~W})$, the molten region in the solid substrate is predicted to have a bowl shape without material vaporization $(\eta=0.0)$. On the other hand, the predicted molten region in the solid substrate is a keyhole shape with material vaporization $(\eta=0.122)$ for the keyhole mode melting $(P=200 W)$. The top views of the predicted melt pool morphology are also depicted in Fig. 16 a) and b) which show that a wider and longer melt pool is formed in keyhole mode melting.
+
+In order to further investigate the effect of process parameters on melt pool evolution, different scanning velocities are applied in the simulation with the laser powers of $200 \mathrm{~W}$ and $300 \mathrm{~W}$ as shown in Fig. 17. The predicted melt pool dimensions and $\eta$ are as shown in Table 6. It is shown that as the velocity is decreased, a deeper and wider melt pool is generated with an increased degree of vaporization. In particular, the mean error of the predicted melt pool width is $4.43 \%$, and the mean error of the predicted melt pool depth is $1.92 \%$ compared to the experimental results. Furthermore, the discrimination of melting modes from the literature [67] correlates with the value of $\eta$ with the
+
+proposed model (zero or non-zero). In other words, the keyhole mode melting is successfully captured along with the material vaporization. It is noteworthy that this result can serve as a useful guideline for defining the process boundary with the formation of a stable melt pool. Overall, the analysis results show that the proposed model can predict the morphology of the melt pool in the SLM process considering the different characteristics of the melting modes.
+
+To verify the obtained results by the proposed model in detail, the values of the applied heat flux to the material points are visualized as shown in Fig. 18. The center of the laser beam is moving from left to right and the volume shrinkage occurs due to the melting of the porous material as shown in Fig. 18a. It is also can be noticed that the heat flux is concentrated on the upper surface where the volume is shrunk while the more widely distributed heat flux is applied where the porous layer is still present. The graph in Fig. 18b shows the change of the applied heat flux according to the time at two different positions. It is worth noting that the applied heat flux at P1 is always higher than P2 because it is closer to the center of the laser beam in the $z$ direction. The graph shows that until $1.64 \times 10^{-3} \mathrm{~s}$, the heat flux is applied to both of P1 and P2 with the small difference between their values. This means the volumetric heat source is applied in this period due to the presence of the powder material. The curves in this period have several discontinuities due to the variation of the material interface with volume shrinkage while maintaining the increasing trend. Then, the applied heat flux for P1 increases sharply at a certain time and the applied heat flux for P2 changes to zero due to the transition from the volumetric heat flux to the surface heat flux. Also, the graph shows that the maximum heat flux (which means the center of the laser beam is closest to the point) occurs after this transition happens. This contributes to more realistic analysis results for the following reasons. First, the high temperature gradient due to the low conductivity of the powder can be avoided at the beginning of the laser interaction. When the volumetric heat source based on the laser absorption and extinction through the powder particles (15) is applied, the heat flux is distributed in three-dimensional space and it mitigates the concentrated heat flux. Thus, the powder material can turn into the dense state more evenly within the laser spot. Then, the surface heat flux takes place after the powder material is fully molten. Although the concentrated heat flux is applied at this time, the vaporization is suppressed because the laser energy is not very high in conduction mode melting and the conductivity of the dense state material is significantly higher than that of the powder.
+
+Besides, the applied heat flux can increase significantly due to the variation of the effective absorptivity $\alpha_{d}$ which is dependent on the melt pool depth $d_{m}$. Fig. 19 shows the maximum applied heat flux in an element column during the laser scan process with keyhole mode melting. As shown in the graph in Fig. 19b, the maximum applied heat flux increases up to $11.67 \times 10^{6} \mathrm{~W} / \mathrm{mm}^{3}$ which is more than twice as large as the peak value $\left(=4.69 \mathrm{~W} / \mathrm{mm}^{3}\right)$ in the conduction mode melting in Fig. 18b. As already explained in the Section 3.3, it is worth noting that the increase of effective absorptivity is caused by a combination of multiple physical phenomena. Such complex mechanisms and physics need to be studied for a better understanding of the melt pool dynamics. In this study, however, the complex mechanisms are condensed into the effective absorptivity with the proposed model of the SLM process. This simplification may cause error between the simulation and the experiment thus, the underlying physics should be studied in more detail in the future. Meanwhile, the analysis results showed that the proposed model can predict the melt pool dimensions with reasonable errors and the variation of the melt pool morphology in different melting modes. Therefore, it can be said that the model has a certain practical guidance role for parameter selection.
+
+\section*{6. Conclusion}
+In this paper, an effective model of the SLM process is developed with a novel hybrid heat source model to predict and analyze the melt
+
+$$
+P=100 \mathrm{~W}, v=150 \mathrm{~mm} / \mathrm{s}
+$$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-12(4)}
+\end{center}
+
+$$
+P=100 \mathrm{~W}, v=200 \mathrm{~mm} / \mathrm{s}
+$$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-12(2)}
+\end{center}
+
+$$
+P=200 \mathrm{~W}, v=400 \mathrm{~mm} / \mathrm{s}
+$$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-12}
+\end{center}
+
+$$
+P=200 \mathrm{~W}, v=600 \mathrm{~mm} / \mathrm{s}
+$$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-12(3)}
+\end{center}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Process parameters: $P[\mathrm{~W}], v[\mathrm{~mm} / \mathrm{s}]$ & Width $[\mu m]$ (error \%) & depth $[\mu m]$ (error \%) & $\eta$ & Experimental width $[\mu m]$ & Experimental depth $[\mu m]$ & Melting mode \\
+\hline
+100,150 & $132.1(8.26)$ & $155.2(3.47)$ & 0.077 & $144 \pm 13$ & 150 & keyhole \\
+\hline
+100,200 & $117.6(0.51)$ & $121.9(3.25)$ & 0.037 & $117 \pm 7$ & 126 & keyhole \\
+\hline
+100,300 & 101.1(1.84) & $51.3(1.35)$ & 0 & $103 \pm 24$ & 52 & conduction \\
+\hline
+200,300 & $135.1(3.92)$ & $263.9(0.79)$ & 0.122 & $130 \pm 10$ & 266 & keyhole \\
+\hline
+200,400 & $132.3(5.84)$ & $162.8(2.39)$ & 0.091 & $125 \pm 16$ & 159 & keyhole \\
+\hline
+200,600 & $120.0(6.19)$ & $69.8(0.29)$ & 0 & $113 \pm 19$ & 70 & conduction \\
+\hline
+\end{tabular}
+\end{center}
+
+Fig. 17. Predicted melt pool morphology with various laser powers and scanning velocities.
+
+Table 6
+
+Melt pool analysis results with various laser powers and velocities compared to the experimental results [67].\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_bd6e034633d8b3d1d1d5g-12(1)}
+
+Fig. 18. Time versus applied heat flux amount at different positions for conduction mode melting.
+
+pool characteristics. The proposed model considers the important mechanisms in the SLM process including the volume shrinkage, the material vaporization, and the variation of effective absorptivity due to the transition of the melting modes. The thermal behavior of the material with the phase transition and the consolidation is also considered in the energy balance equation using the phase-field approach. The main conclusions that can be drawn from the study are summarized as follows:
+
+1 An FEA has been performed with ABAQUS for a single-track scan of\\
+a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-13(1)}
+\end{center}
+
+b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_bd6e034633d8b3d1d1d5g-13}
+\end{center}
+
+Fig. 19. a) A column of an element in the analysis domain, b) time versus maximum applied heat flux in an element column for keyhole mode melting.
+
+the SLM process. The multiple user-subroutines have been developed to account for the important mechanisms in the SLM process and the hybrid heat source model is applied treating the analysis domain as a cluster of element columns.
+
+2 The analysis results show that the model achieved good agreement (mean error within 6\% for both the case without powder and the case with powder) when compared to the experimentally measured melt pool dimensions. The predicted melting modes based on the melt pool morphologies are also in good agreement with the experimental results.
+
+3 The different characteristics of the two melting modes (conduction and keyhole) are discussed in the process optimization point of view with the degree of intense heating. It is concluded that the keyhole mode melting is not preferred in terms of energy efficiency and is more sensitive to the change of the laser power.
+
+4 The performance of the proposed hybrid heat source model is also compared with the conventional heat source models. The result shows that the combination of the volumetric and the surface heat fluxes contributes to more realistic results considering the different absorption mechanisms of the porous and dense materials.
+
+In the future, more sets of process parameters and various metal alloys should be considered to further validate the performance of the proposed model. The more detailed study about the degree of intense heating and the transition between the melting modes is also required with reliable experimental measurements. Moreover, the effects of the other process parameters including the laser spot size, layer thickness, and the hatch-distance in the multiple-track cases would be investigated. Then, the proposed model would be used as a tool to derive the simulation-based process window with the predicted melt pool characteristics.
+
+\section*{CRediT authorship contribution statement}
+Kang-Hyun. Lee: Conceptualization, Data curation, Formal analysis, Investigation, Methodology, Software, Validation, Visualization, Writing - original draft. Gun Jin Yun: Funding acquisition, Investigation, Project administration, Resources, Supervision, Writing review \& editing.
+
+\section*{Declaration of Competing Interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Acknowledgment}
+This work was supported by the Korea Evaluation Institute of Industrial Technology (KEIT) grant funded by the Korea government\\
+(MOTIE) (No.20004662, Industrial Technology Innovation Program) and Institute of Engineering Research at Seoul National University. The authors are grateful for their supports.
+
+\section*{References}
+[1] D. Gu, Laser Additive Manufacturing of High-performance Materials, Springer, 2015.
+
+[2] I. Chang, Y. Zhao, Advances in Powder Metallurgy: Properties, Processing and Applications, Elsevier, 2013.
+
+[3] M. Wong, S. Tsopanos, C.J. Sutcliffe, I. Owen, Selective laser melting of heat transfer devices, Rapid Prototyp. J. 13 (5) (2007) 291-297.
+
+[4] P. Rochus, J.-Y. Plesseria, M. Van Elsen, J.-P. Kruth, R. Carrus, T. Dormal, New applications of rapid prototyping and rapid manufacturing (RP/RM) technologies for space instrumentation, Acta Astronaut. 61 (1-6) (2007) 352-359.
+
+[5] R. Li, Y. Shi, Z. Wang, L. Wang, J. Liu, W. Jiang, Densification behavior of gas and water atomized 316L stainless steel powder during selective laser melting, Appl. Surf. Sci. 256 (13) (2010) 4350-4356.
+
+[6] J.-P. Kruth, L. Froyen, J. Van Vaerenbergh, P. Mercelis, M. Rombouts, B. Lauwers, Selective laser melting of iron-based powder, J. Mater. Process. Technol. 149 (1-3) (2004) 616-622.
+
+[7] C.Y. Yap, C.K. Chua, Z.L. Dong, Z.H. Liu, D.Q. Zhang, L.E. Loh, S.L. Sing, Review of selective laser melting: materials and applications, Appl. Phys. Rev. 2 (4) (2015) 041101.
+
+[8] D. Gu, Y.-C. Hagedorn, W. Meiners, K. Wissenbach, R. Poprawe, Selective laser melting of in-situ TiC/Ti5Si3 composites with novel reinforcement architecture and elevated performance, Surf. Coat. Technol. 205 (10) (2011) 3285-3292.
+
+[9] F.S. Schwindling, M. Seubert, S. Rues, U. Koke, M. Schmitter, T. Stober, Two-body wear of cocr fabricated by selective laser melting compared with different dental alloys, Tribol. Lett. 60 (2) (2015) 25.
+
+[10] E.O. Olakanmi, R. Cochrane, K. Dalgarno, A review on selective laser sintering/ melting (SLS/SLM) of aluminium alloy powders: processing, microstructure, and properties, Prog. Mater. Sci. 74 (2015) 401-477.
+
+[11] J. Li, L. Li, F. Stott, Thermal stresses and their implication on cracking during laser melting of ceramic materials, Acta Mater. 52 (14) (2004) 4385-4398.
+
+[12] P. Mercelis, J.-P. Kruth, Residual stresses in selective laser sintering and selective laser melting, Rapid Prototyp. J. 12 (5) (2006) 254-265.
+
+[13] H. Gu, H. Gong, D. Pal, K. Rafi, T. Starr, B. Stucker, Influences of energy density on porosity and microstructure of selective laser melted 17-4PH stainless steel, 2013 SOlid Freeform Fabrication Symposium (2013).
+
+[14] H. Gong, K. Rafi, H. Gu, T. Starr, B. Stucker, Analysis of defect generation in Ti-6Al-4V parts made using powder bed fusion additive manufacturing processes, Addit. Manuf. 1 (2014) 87-98.
+
+[15] E. Malekipour, H. El-Mounayri, Defects, Process Parameters and Signatures for Online Monitoring and Control in Powder-Based Additive Manufacturing, Mechanics of Additive and Advanced Manufacturing Vol. 9 Springer, 2018, pp. 83-90.
+
+[16] H. Gong, H. Gu, K. Zeng, J. Dilip, D. Pal, B. Stucker, D. Christiansen, J. Beuth, J.J. Lewandowski, Melt pool characterization for selective laser melting of Ti-6Al4V pre-alloyed powder, Solid Freeform Fabrication Symposium (2014) 256-267.
+
+[17] Y. He, C. Montgomery, J. Beuth, B. Webler, Melt pool geometry and microstructure of Ti6Al4V with B additions processed by selective laser melting additive manufacturing, Mater. Des. 183 (2019) 108126.
+
+[18] H. Gong, K. Rafi, T. Starr, B. Stucker, The effects of processing parameters on defect regularity in Ti-6Al-4V parts fabricated by selective laser melting and electron beam melting, 24th Annual International Solid Freeform Fabrication Symposium-An Additive Manufacturing Conference, Austin, TX, 2013, pp. 12-14.
+
+[19] J. Dilip, S. Zhang, C. Teng, K. Zeng, C. Robinson, D. Pal, B. Stucker, Influence of processing parameters on the evolution of melt pool, porosity, and microstructures in Ti-6Al-4V alloy parts fabricated by selective laser melting, Prog. Addit. Manuf. 2 (3) (2017) 157-167.
+
+[20] G. Kasperovich, J. Haubrich, J. Gussone, G. Requena, Correlation between porosity and processing parameters in TiAl6V4 produced by selective laser melting, Mater. Des. 105 (2016) 160-170.
+
+[21] F. Verhaeghe, T. Craeghs, J. Heulens, L. Pandelaers, A pragmatic model for selective laser melting with evaporation, Acta Mater. 57 (20) (2009) 6006-6012.
+
+[22] S. Roy, M. Juha, M.S. Shephard, A.M. Maniatty, Heat transfer model and finite element formulation for simulation of selective laser melting, Comput. Mech. 62 (3) (2018) 273-284.
+
+[23] G. Vastola, G. Zhang, Q. Pei, Y.-W. Zhang, Controlling of residual stress in additive manufacturing of Ti6Al4V by finite element modeling, Addit. Manuf. 12 (2016) 231-239.
+
+[24] A. Hussein, L. Hao, C. Yan, R. Everson, Finite element simulation of the temperature and stress fields in single layers built without-support in selective laser melting, Mater. Des. 52 (1980-2015) (2013) 638-647.
+
+[25] P. Tan, F. Shen, B. Li, K. Zhou, A thermo-metallurgical-mechanical model for selective laser melting of Ti6Al4V, Mater. Des. 168 (2019) 107642
+
+[26] L. Parry, I. Ashcroft, R.D. Wildman, Understanding the effect of laser scan strategy on residual stress in selective laser melting through thermo-mechanical simulation, Addit. Manuf. 12 (2016) 1-15.
+
+[27] S.A. Khairallah, A.T. Anderson, A. Rubenchik, W.E. King, Laser powder-bed fusion additive manufacturing: physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones, Acta Mater. 108 (2016) 36-45.
+
+[28] Y.-C. Wu, C.-H. San, C.-H. Chang, H.-J. Lin, R. Marwan, S. Baba, W.-S. Hwang, Numerical modeling of melt-pool behavior in selective laser melting with random powder distribution and experimental validation, J. Mater. Process. Technol. 254 (2018) 72-78.
+
+[29] C.W. Hirt, B.D. Nichols, Volume of fluid (VOF) method for the dynamics of free boundaries, J. Comput. Phys. 39 (1) (1981) 201-225.
+
+[30] M. Bayat, S. Mohanty, J.H. Hattel, Multiphysics modelling of lack-of-fusion voids formation and evolution in IN718 made by multi-track/multi-layer L-PBF, Int. J. Heat Mass Transf. 139 (2019) 95-114.
+
+[31] W. Yan, W. Ge, Y. Qian, S. Lin, B. Zhou, W.K. Liu, F. Lin, G.J. Wagner, Multi-physics modeling of single/multiple-track defect mechanisms in electron beam selective melting, Acta Mater. 134 (2017) 324-333.
+
+[32] Y. Li, K. Zhou, P. Tan, S.B. Tor, C.K. Chua, K.F. Leong, Modeling temperature and residual stress fields in selective laser melting, Int. J. Mech. Sci. 136 (2018) 24-35.
+
+[33] L.-E. Loh, C.-K. Chua, W.-Y. Yeong, J. Song, M. Mapar, S.-L. Sing, Z.-H. Liu, D.Q. Zhang, Numerical investigation and an effective modelling on the Selective Laser Melting (SLM) process with aluminium alloy 6061, Int. J. Heat Mass Transf. 80 (2015) 288-300.
+
+[34] L. Ladani, J. Romano, W. Brindley, S. Burlatsky, Effective liquid conductivity for improved simulation of thermal transport in laser beam melting powder bed technology, Addit. Manuf. 14 (2017) 13-23.
+
+[35] Z. Zhang, Y. Huang, A.R. Kasinathan, S.I. Shahabad, U. Ali, Y. Mahmoodkhani, E. Toyserkani, 3-Dimensional heat transfer modeling for laser powder-bed fusion additive manufacturing with volumetric heat sources based on varied thermal conductivity and absorptivity, Opt. Laser Technol. 109 (2019) 297-312.
+
+[36] A. Gusarov, I. Yadroitsev, P. Bertrand, I. Smurov, Model of radiation and heat transfer in laser-powder interaction zone at selective laser melting, J. Heat Transfer 131 (7) (2009) 072101.
+
+[37] C. Boley, S. Mitchell, A. Rubenchik, S. Wu, Metal powder absorptivity: modeling and experiment, Appl. Opt. 55 (23) (2016) 6496-6500.
+
+[38] D. Moser, S. Pannala, J. Murthy, Computation of effective radiative properties of powders for selective laser sintering simulations, JOM 67 (5) (2015) 1194-1202.
+
+[39] J. Trapp, A.M. Rubenchik, G. Guss, M.J. Matthews, In situ absorptivity measurements of metallic powders during laser powder-bed fusion additive manufacturing, Appl. Mater. Today 9 (2017) 341-349.
+
+[40] I. Yadroitsev, A. Gusarov, I. Yadroitsava, I. Smurov, Single track formation in selective laser melting of metal powders, J. Mater. Process. Technol. 210 (12) (2010) 1624-1631.
+
+[41] X. Zhou, X. Liu, D. Zhang, Z. Shen, W. Liu, Balling phenomena in selective laser melted tungsten, J. Mater. Process. Technol. 222 (2015) 33-42.
+
+[42] S.-L. Wang, R. Sekerka, A. Wheeler, B. Murray, S. Coriell, R. Braun, G. McFadden, Thermodynamically-consistent phase-field models for solidification, Physica D 69 (1-2) (1993) 189-200.
+
+[43] D. Moser, S. Pannala, J. Murthy, Computation of effective thermal conductivity of powders for selective laser sintering simulations, J. Heat Transfer 138 (8) (2016).
+
+[44] J.J. Valencia, P.N. Quested, Thermophysical Properties, (2013).
+
+[45] L. Wang, J. Jue, M. Xia, L. Guo, B. Yan, D. Gu, Effect of the Thermodynamic behavior of selective laser melting on the formation of in situ oxide dispersionstrengthened aluminum-based composites, Metals 6 (11) (2016) 286.
+
+[46] C. Körner, A. Bauereiß, E. Attar, Fundamental consolidation mechanisms during selective beam melting of powders, Model. Simul. Mat. Sci. Eng. 21 (8) (2013) 085011.
+
+[47] S. Liu, H. Zhu, G. Peng, J. Yin, X. Zeng, Microstructure prediction of selective laser melting AlSi10Mg using finite element analysis, Mater. Des. 142 (2018) 319-328.
+
+[48] H. Ali, H. Ghadbeigi, K. Mumtaz, Residual stress development in selective lasermelted Ti6Al4V: a parametric thermal modelling approach, Int. J. Adv. Manuf. Technol. 97 (5-8) (2018) 2621-2633.
+
+[49] A. Kamara, W. Wang, S. Marimuthu, L. Li, Modelling of the melt pool geometry in the laser deposition of nickel alloys using the anisotropic enhanced thermal conductivity approach, Proceedings of the Institution of Mechanical Engineers, Part B: J. Eng. Manuf. 225 (1) (2011) 87-99.
+
+[50] Y. Lee, M.M. Kirka, R.B. Dinwiddie, N. Raghavan, J. Turner, R.R. Dehoff, S.S. Babu, Role of scan strategies on thermal gradient and solidification rate in electron beam powder bed fusion, Addit. Manuf. 22 (2018) 516-527.
+
+[51] C. Lampa, A.F. Kaplan, J. Powell, C. Magnusson, An analytical thermodynamic model of laser welding, J. Phys. D Appl. Phys. 30 (9) (1997) 1293.
+
+[52] J.R. Davis, Stainless Steels, ASM international, 1994.
+
+[53] V. Bobkov, L. Fokin, E. Petrov, V. Popov, V. Rumiantsev, A. Savvatimsky, Thermophysical Properties of Materials for Nuclear Engineering: a Tutorial and Collection of Data, IAEA, Vienna, 2008.
+
+[54] M.A. Ordal, R.J. Bell, R.W. Alexander, L.L. Long, M.R. Querry, Optical properties of fourteen metals in the infrared and far infrared: $\mathrm{Al}, \mathrm{co}, \mathrm{cu}, \mathrm{au}, \mathrm{fe}, \mathrm{pb}, \mathrm{mo}, \mathrm{ni}, \mathrm{pd}, \mathrm{pt}$, ag, ti, v, and w, Appl. Opt. 24 (24) (1985) 4493-4499.
+
+[55] Y. Li, K. Zhou, S.B. Tor, C.K. Chua, K.F. Leong, Heat transfer and phase transition in the selective laser melting process, Int. J. Heat Mass Transf. 108 (2017) 2408-2416.
+
+[56] V. Abaqus, 6.14 documentation, Dassault Systemes Simulia Corporation 651 (2014) 6.2.
+
+[57] C. Van Gestel, Study of Physical Phenomena of Selective Laser Melting Towards Increased Productivity, EPFL, 2015.
+
+[58] S. Kolossov, E. Boillat, R. Glardon, P. Fischer, M. Locher, 3D FE simulation for temperature evolution in the selective laser sintering process, Int. J. Mach. Tools Manuf. 44 (2-3) (2004) 117-123.
+
+[59] J.C. Nelson, S. Xue, J.W. Barlow, J.J. Beaman, H.L. Marcus, D.L. Bourell, Model of the selective laser sintering of bisphenol-A polycarbonate, Ind. Eng. Chem. Res. 32 (10) (1993) 2305-2317
+
+[60] D. Moser, M. Cullinan, J. Murthy, Multi-scale computational modeling of residual stress in selective laser melting with uncertainty quantification, Addit. Manuf. 29 (2019) 100770.
+
+[61] M.J. Matthews, G. Guss, S.A. Khairallah, A.M. Rubenchik, P.J. Depond, W.E. King, Denudation of metal powder layers in laser powder bed fusion processes, Acta Mater. 114 (2016) 33-42.
+
+[62] P. Bidare, I. Bitharas, R. Ward, M. Attallah, A.J. Moore, Fluid and particle dynamics in laser powder bed fusion, Acta Mater. 142 (2018) 107-120.
+
+[63] P. Solana, G. Negro, A study of the effect of multiple reflections on the shape of the keyhole in the laser processing of materials, J. Phys. D Appl. Phys. 30 (23) (1997) 3216 .
+
+[64] R. Fabbro, K. Chouf, Keyhole modeling during laser welding, J. Appl. Phys. 87 (9) (2000) 4075-4083.
+
+[65] V. Semak, A. Matsunawa, The role of recoil pressure in energy balance during laser materials processing, J. Phys. D Appl. Phys. 30 (18) (1997) 2541.
+
+[66] J. Yang, J. Han, H. Yu, J. Yin, M. Gao, Z. Wang, X. Zeng, Role of molten pool mode on formability, microstructure and mechanical properties of selective laser melted Ti-6Al-4V alloy, Mater. Des. 110 (2016) 558-570.
+
+[67] U.S. Bertoli, A.J. Wolfer, M.J. Matthews, J.-P.R. Delplanque, J.M. Schoenung, On the limitations of volumetric energy density as a design parameter for selective laser melting, Mater. Des. 113 (2017) 331-340.
+
+[68] I.A. Roberts, C. Wang, R. Esterlein, M. Stanford, D. Mynors, A three-dimensional finite element analysis of the temperature field during laser melting of metal powders in additive layer manufacturing, Int. J. Mach. Tools Manuf. 49 (12-13) (2009) 916-923.
+
+[69] J. Goldak, A. Chakravarti, M. Bibby, A new finite element model for welding heat sources, Metall. Trans. B 15 (2) (1984) 299-305.
+
+[70] Q. Zhang, J. Xie, Z. Gao, T. London, D. Griffiths, V. Oancea, A metallurgical phase transformation framework applied to SLM additive manufacturing processes, Mater. Des. 166 (2019) 107618.
+
+[71] C. Bruna-Rosso, A.G. Demir, B. Previtali, Selective laser melting finite element modeling: validation with high-speed imaging and lack of fusion defects prediction, Mater. Des. 156 (2018) 143-153.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

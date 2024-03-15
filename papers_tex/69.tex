@@ -1,0 +1,389 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Modulating laser intensity profile ellipticity for microstructural control during metal additive manufacturing }
+
+
+\author{Tien T. Roehling a, b, *, Sheldon S.Q. Wu ${ }^{c}$, Saad A. Khairallah ${ }^{\text {d }}$, John D. Roehling ${ }^{\text {b, }}$,\\
+S. Stefan Soezeri ${ }^{a}$, Michael F. Crumb ${ }^{c}$, Manyalibo J. Matthews ${ }^{\text {b, }}$.\\
+a Department of Mechanical Engineering, University of the Pacific, Stockton, CA, USA\\
+${ }^{\mathrm{b}}$ Materials Science Division, Lawrence Livermore National Laboratory, Livermore, CA, USA\\
+${ }^{\text {c }}$ National Ignition Facility, Lawrence Livermore National Laboratory, Livermore, CA, USA\\
+${ }^{\mathrm{d}}$ Weapons and Complex Integration, Lawrence Livermore National Laboratory, Livermore, CA, USA}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Full length article
+
+
+
+\section*{A R T I C L E I N F O}
+\section*{Article history:}
+Received 16 December 2016
+
+Accepted 7 February 2017
+
+Available online 12 February 2017
+
+\section*{Keywords:}
+Additive manufacturing
+
+Laser powder-bed fusion
+
+Microstructure control
+
+Laser modulation
+
+Beam shaping
+
+\begin{abstract}
+A B S T R A C $T$ Additively manufactured (AM) metals are often highly textured, containing large columnar grains that initiate epitaxially under steep temperature gradients and rapid solidification conditions. These unique microstructures partially account for the massive property disparity existing between AM and conventionally processed alloys. Although equiaxed grains are desirable for isotropic mechanical behavior, the columnar-to-equiaxed transition remains difficult to predict for conventional solidification processes, and much more so for AM. In this study, the effects of laser intensity profile ellipticity on melt track macrostructures and microstructures were studied in 316L stainless steel. Experimental results were supported by temperature gradients and melt velocities simulated using the ALE3D multi-physics code. As a general trend, columnar grains preferentially formed with increasing laser power and scan speed for all beam profiles. However, when conduction mode laser heating occurs, scan parameters that result in coarse columnar microstructures using Gaussian profiles produce equiaxed or mixed equiaxed-columnar microstructures using elliptical profiles. By modulating spatial laser intensity profiles on the fly, sitespecific microstructures and properties can be directly engineered into additively manufactured parts. (C) 2017 Acta Materialia Inc. Published by Elsevier Ltd. This is an open access article under the CC BY-NCND license (\href{http://creativecommons.org/licenses/by-nc-nd/4.0/}{http://creativecommons.org/licenses/by-nc-nd/4.0/}).
+\end{abstract}
+
+\section*{1. Introduction}
+Research in additive manufacturing (AM) has gained tremendous momentum over the past decade due to the prospect of directly building complex three-dimensional parts from computeraided design (CAD) files. During laser powder-bed fusion (LPBF), processing parameters such as laser power, scan speed, scan pattern, and hatch spacing have typically been optimized to improve geometrical accuracy and reduce defect concentrations. In taking this macroscopic approach, however, the microstructureproperty relationships underlying the performance disparities between conventionally machined and AM parts are often overlooked.
+
+The ultimate goal of a priori parameter selection for tailored microstructures is in sight, with recent efforts made in e-beam and
+\footnotetext{\begin{itemize}
+  \item Corresponding author. Department of Mechanical Engineering, University of the Pacific, Stockton, CA, USA.
+\end{itemize}
+
+E-mail address: \href{mailto:roehling2@1lnl.gov}{roehling2@1lnl.gov} (T.T. Roehling).
+}
+
+laser additive manufacturing [1-6]. Site-specific microstructural control has numerous practical applications, such as in improving the fatigue life of a part by imposing deliberate textures at surfaces or stress-concentrating features, or in manufacturing components with functionally graded mechanical properties. In 2014, Körner et al. investigated the effect of varying "cross snake" scan patterns every ten versus every single layer in Inconel tensile samples [1]. The authors found that columnar grains are formed when solidification occurs primarily in the building direction, while equiaxed grains are formed when the solidification direction varies frequently. In 2015, Dehoff et al. demonstrated localized microstructural control by developing highly misoriented equiaxed grains surrounded by columnar grains in an Inconel 718 block [2]. The researchers rapidly switched between point and line heat sources to manipulate local thermal gradients and solid/liquid (s/l) interface velocities. Some microstructural control has also been demonstrated in laser additive manufacturing by varying laser power up to $1000 \mathrm{~W}$ [3], using multiple laser sources [4], and varying scan strategies $[5,6]$.
+
+In this work, beam ellipticity is pursued as a potential means for microstructural control during laser additive manufacturing. Commercial LPBF systems typically use circular Gaussian intensity profiles, although they may not be ideal for optimizing process control. During a build, beam ellipticity can be modulated on the fly by diverting the laser into a beam shaping optical element (e.g., an anamorphic prism pair). Since local temperature gradients are affected, it may be possible to engineer equiaxed or columnar grains at specified locations by modulating beam shape in situ. Elliptical beams have been explored for laser annealing semiconductors $[7,8]$, but knowledge of their effects on metal solidification remains relatively limited, particularly with respect to metal AM. The present study explores the microstructures produced by circular and elliptical laser intensity profiles in 316L stainless steel single-tracks. Macroscopic features, such as track continuity, roughness, and melt depth are measured and discussed.
+
+Since LPBF is a far-from-equilibrium processing technique, the classic temperature gradient $(G)$ versus solidification rate $(R)$ analysis may not fully capture the complexities of solidification in the aggressively dynamic melt. The Arbitrary Lagrangian-Eulerian 3D (ALE3D) massively-parallel multi-physics code was used to simulate the temperature gradients and melt flow velocities induced by the beam profiles used in this study. The model takes into account Marangoni convection, the recoil pressure, evaporative and radiative cooling. It has been used recently to successfully described several deleterious LPBF phenomena, including spatter, denudation, melt instability, and three mechanisms of pore formation [9-11].
+
+The objective of this investigation is to determine the microstructures produced by circular and elliptical laser intensity profiles at different beam sizes, laser powers, and scan speeds. The purpose is to judge if changes in beam ellipticity could provide a route for site-specific microstructural control during laser additive manufacturing. ALE3D simulations support analyses of the experimental results.
+
+\section*{2. Experimental}
+\subsection*{2.1. Laser powder-bed fusion experiments}
+Single-track laser melting experiments were completed using 316L stainless steel powder (Concept Laser) on 316L stainless steel substrates (McMaster-Carr). Prior to use, the $\sim 27-\mu \mathrm{m}$ powders were vacuum dried at $623 \mathrm{~K}$ and stored in a desiccator thereafter. The surfaces of the $3.175-\mathrm{mm}(1 / 8-$ in) thick substrates were bead blasted. A $50-\mu \mathrm{m}$ thick powder layer was manually spread onto each substrate using a glass microscope slide prior to single powder layer melting.
+
+In the LPBF testbed, the output of a $600 \mathrm{~W}$ fiber laser (JK600 FL, JK Lasers) was first collimated using a $50 \mathrm{~mm}$ FL lens and then directed through an anamorphic prism pair (Thor Labs) to adjust beam ellipticity. The modified beam was then directed through a $2-$ $5 \mathrm{x}$ reducer (Thor Labs) which controls the beam size to a galvanometer scanner (Nutfield Technologies), and through the high purity fused silica window of a $15 \times 15 \times 15 \mathrm{~cm}^{3}$ vacuum chamber. For each experiment, the chamber was evacuated using a turbomolecular pump and back-filled with argon. During laser melting, the Ar pressure was maintained at 750 Torr.
+
+The circular and elliptical beam profiles were studied at three sizes, each (Fig. 1, Table 1). The nominal $1 / e^{2}$ diameters of the circular beams were $w_{b}=100,175,250 \mu \mathrm{m}$. These sizes will hereon be referred to as $\mathrm{S}$ (small), $\mathrm{M}$ (medium), and $\mathrm{L}$ (large), respectively. The major and minor axes of the elliptical beams were calculated from $S, M$, and $L$ to deliver equivalent peak irradiances (based on average geometric beam diameters) at an aspect ratio of $\sim 3.7: 1$. Size $S$ was limited by the smallest minor axis achievable using the current setup. The elliptical beams were scanned with the major axes parallel ("longitudinal", LE) and perpendicular ("transverse", TE) to the scan direction, and compared to circular (C) beam scans. The intensity profiles are named by geometry and size (e.g., LE-M refers to a longitudinal elliptical beam of Size M)
+
+Experimental parameters were selected based on Kamath et al. [12] and King et al. [13]. An energy density $(Q)$ equation common in laser welding was adapted to scale laser power $(P)$, scan speed $(v)$, powder layer thickness $(t=50 \mu \mathrm{m})$, and beam size $\left(w_{b}\right)$ :
+
+$Q=\frac{P}{v t w_{b}}$
+
+The energy density ranged from 80 to $260 \mathrm{~J} / \mathrm{mm}^{3}$ at $60 \mathrm{~J} / \mathrm{mm}^{3}$ intervals. Since nominal laser power was varied from 50 to $550 \mathrm{~W}$ at $100-W$ intervals, scan speed $(15-1375 \mathrm{~mm} / \mathrm{s})$ was calculated based on $Q, P, t$, and $w_{b}$. Overall, 216 combinations of beam shape, beam size, power, and scan speed were studied.
+
+\subsection*{2.2. Characterization}
+Wide-field height maps of the single-tracks were generated by laser confocal microscopy (Keyence) to assess macroscopic morphological features. Height and line roughness were measured along the centerline of the middle $\sim 0.8 \mathrm{~cm}$ of each $1.0-\mathrm{cm}$ long track. Track continuity was categorized according to Childs et al. [14], with example tracks shown in the Supporting Information (Table S1).
+
+After sectioning, the samples were mounted, ground using 120-1200 grit metallographic silicon carbide paper, and then polished with $1-\mu \mathrm{m}$ polycrystalline diamond suspension. At this point, the samples were checked by optical microscopy for pores and voids. Immediately before etching, the samples were polished with $0.05 \mu \mathrm{m}$ aluminum oxide. The samples were swabbed with a modified Carpenter's reagent, which contained an additional $5 \mathrm{~mL}$ of $\mathrm{HNO}_{3}$ for each $100 \mathrm{~mL}$ of stock solution, for less than $1 \mathrm{~min}$. The\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c67706ca9b766b63e498g-02}
+
+Fig. 1. Numerical fits of measured spatial intensity profiles for the (a) circular Gaussian and (b) elliptical beam shapes at Size L.
+
+Table 1
+
+Size of circular and elliptical beam shapes, including geometric average size for elliptical beams.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Size & Circula $(\mu \mathrm{m})$ & Elliptical $(\mu \mathrm{m})$ & Elliptical average $(\mu \mathrm{m})$ \\
+\hline
+$S$ & 98 & $52 \times 201$ & 102 \\
+\hline
+M & 187 & $95 \times 351$ & 183 \\
+\hline
+$\mathrm{L}$ & 248 & $125 \times 457$ & 239 \\
+\hline
+\end{tabular}
+\end{center}
+
+Carpenter's stock solution contained $8.5 \mathrm{~g} \mathrm{FeCl}_{3}, 2.4 \mathrm{~g} \mathrm{CuCl}_{2}, 122 \mathrm{~mL}$ $\mathrm{HCl}, 6 \mathrm{~mL} \mathrm{HNO}_{3}$, and $122 \mathrm{~mL} \mathrm{CH}_{3} \mathrm{CH}_{2} \mathrm{OH}$.
+
+The transverse and longitudinal track cross-sections were examined by scanning electron microscopy (TESCAN VEGA3 SEM) at $15-30 \mathrm{kV}$ using a backscattered electron detector. Specifically, we used SEM to characterize the degree of surface wetting (contact angle, $\theta$ ) and the depth $(d)$ to width $(w)$ ratio of the melt beads (Fig. 2). Equiaxed and columnar microstructures were characterized in the root of the melt zone, since the region represented by the melt bead would be re-melted and re-solidified with the addition of subsequent layers during an actual LPBF process. Partial re-melting is necessary during LPBF to reach full densities [15,16].
+
+\subsection*{2.3. Simulations}
+Details of the ALE3D code and the 316L material properties used in the simulations are published elsewhere [9,17]. Briefly, the simulation used the actual particle size distribution, and random particle packing ( $40 \%$ density) was modeled using the ALE3D utility code, ParticlePack [18]. A laser ray tracing algorithm was used to simulate laser interaction with the powder bed. The threedimensional model was addressed using a hybrid finite element and finite volume formulation on an unstructured grid. Simulations were run using each beam shape at Size $S$ for $P=550 \mathrm{~W}$. To conserve computational time, the scan velocity was set at $1800 \mathrm{~mm} / \mathrm{s}$, resulting in an energy density of $61 \mathrm{~J} / \mathrm{mm}^{3}$. This energy density is slightly lower than the minimum value used in the experiments $\left(80 \mathrm{~J} / \mathrm{mm}^{3}\right)$.
+
+\section*{3. Results}
+\subsection*{3.1. Macrostructure}
+The morphological characteristics of the melt tracks (i.e., track continuity, bead height, substrate penetration depth, contact angle, and centerline roughness) were mapped on plots of energy density vs. laser power for the different laser intensity profiles, and are presented in the Supporting Information (Figs. S1-S5). Height maps of selected tracks demonstrating trends in intensity profile and beam size are presented in Fig. 3.
+
+The least suitable conditions for LPBF are discussed first in order to limit the practical process window. Circular intensity profiles at the largest beam size ( $\mathrm{C}-\mathrm{L}$ ) resulted in bead heights up to 4.8 times the powder layer thickness $(t, 50 \mu \mathrm{m})$ with high surface roughness $\left(R_{a}=49.2 \pm 16.7 \mu \mathrm{m}\right)$. At $80-140 \mathrm{~J} / \mathrm{mm}^{3}$, the melt tracks adhered to the substrate only by a narrow neck (Fig. 4a, profile Type 1), or by wetting the surface and forming a semicircular melt bead cross-section (profile Type 2). On average, relatively high contact angles $\left(92.4 \pm 30.5^{\circ}\right)$ were formed, indicating poor substrate wetting. The C-L profile only produced discontinuous tracks (Fig. 3, Fig. S1).
+
+Using the smallest beam size, the longitudinal and transverse elliptical beams produced single tracks with undesirable topographies. Track heights were $2.8 t$ for LE-S and $3.3 t$ for TE-S, with comparable centerline surface roughnesses of $50.3 \pm 15.4 \mu \mathrm{m}$ and $51.6 \pm 13.4 \mu \mathrm{m}$, respectively. In addition to significant balling, at $50-150 \mathrm{~W}$ and $80-260 \mathrm{~J} / \mathrm{mm}^{3}$, the tracks demonstrated poor surface adhesion. At 350-550 W, however, keyhole-mode laser heating can be observed as evidenced by a deep "margarita glass"-shaped melt pool and $d / w>0.8$ (Fig. 4, profile Type 5). Since conduction-mode laser heating was only observed using a few $Q$ and $P$ combinations, the stark transition from poor adhesion (i.e., profile Types $0-2$ ) to keyhole formation (i.e., profile Type 5) with increasing power makes the LE-S and TE-S profiles unamenable to processing optimization in a manufacturing environment.
+
+In contrast, the smallest circular intensity profiles (C-S) generally produced melt tracks appropriate for full builds as judged by track continuity and roughness (Figs. S1-S5). The C-S profile most resembles those used in commercial LPBF systems, and produced melt beads of moderate height (2.1t). Centerline surface roughness was generally low $\left(R_{a}=20.1 \pm 7.5 \mu \mathrm{m}\right)$, and continuous tracks could be produced at $P=150-550 \mathrm{~W}$ and $Q \geq 140 \mathrm{~J} / \mathrm{mm}^{3}$. Contact angles between the bead and substrate were moderate $\left(86.2 \pm 21.5^{\circ}\right)$. Evidence of a transition to keyhole-mode laser heating can be observed circa $350-550 \mathrm{~W}$ and $80-260 \mathrm{~J} / \mathrm{mm}^{3}$ (Fig. 4a). The depths
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c67706ca9b766b63e498g-03}
+\end{center}
+
+Fig. 2. Typical transverse melt track cross-section dimensions labeled. Here, $\mathrm{h}=$ bead height, $\mathrm{d}=$ substrate penetration depth, $\mathrm{w}=$ maximum width of track root, $\theta=$ contact angle.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c67706ca9b766b63e498g-04(1)}
+\end{center}
+
+Fig. 3. Height maps of single melt tracks produced at $P=250 \mathrm{~W}$ and $Q=260 \mathrm{~J} / \mathrm{mm}^{3}$. Continuous tracks were formed using the C-S, C-M, LE-M, LE-L, TE-M, and TE-L profiles. A discontinuous, irregularly broken track was formed using the C-L profile. Discontinuous, balled tracks were formed using the LE-S and TE-S profiles. Each segment shown is $0.4-\mathrm{cm}$ long, sampled from the middle of the $1.0-\mathrm{cm}$ melt track.
+
+of the melt pools increased with increasing $Q$ and $P$ up to $278 \mu \mathrm{m}(d /$ $w=1.9)$ for $P=550 \mathrm{~W}$ and $Q=260 \mathrm{~J} / \mathrm{mm}^{3}$.
+
+Continuous tracks with low roughness were also formed by the LE and TE profiles at Size M and L. These profiles produced bead heights closest to the powder layer thickness (i.e., 1.1-1.6t, Fig. S2) with low surface roughness $\left(R_{a}<20 \mu \mathrm{m}\right)$ in most cases (Fig. S5). At $P \geq 150 \mathrm{~W}$, continuous or nearly continuous tracks formed at all power densities with few exceptions (Fig. S1). The melt penetrated the substrate by approximately $1 t$ at $150-550 \mathrm{~W}$, demonstrating conduction-mode laser heating as evidenced by a bowl-shaped melt pool and $d / w<0.8$ (i.e., profile Type 3 in Fig. $4 \mathrm{a}$ ). The TE-M and TE-L profiles produced flatter bead profiles than the LE-M and LE-L profiles, as shown by lower contact angles (Fig. S4).
+
+\subsection*{3.2. Microstructure}
+The microstructure was examined at two different scales: (1) at the grain morphology level, and (2) at the solidification substructure level, which is also referred to as the solidification pattern. The grain morphology can vary from equiaxed to columnar, while the solidification substructure can vary from planar to cellular to dendritic. While columnar grains are elongated and often nucleate epitaxially at the fusion boundary, equiaxed grains can develop anywhere in the melt.
+
+Distinguishing between cells and dendrites can be challenging in single melt tracks. Solidification cells grow antiparallel to the direction of heat extraction in a melt, while dendrites grow in the\\
+Circular
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c67706ca9b766b63e498g-04}
+\end{center}
+
+Longitudinal Elliptical\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c67706ca9b766b63e498g-04(2)}
+
+Transverse Elliptical\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c67706ca9b766b63e498g-04(3)}
+
+Fig. 4. Processing maps of energy density $\left(\mathrm{J} / \mathrm{mm}^{3}\right.$ ) versus laser power (W) for the circular (left), longitudinal elliptical (middle), and transverse elliptical (right) laser intensity profiles. (a) Melt zone profile type is shown (top row) with a schematic legend. The melt zone profile types were designated as follows: $0=$ no deposition; $1=$ low substrate wetting with necking between a nearly-spherical melt bead and the substrate; $2=$ good substrate wetting by a semicircular melt bead with no substrate penetration $(d / w \approx 0) ; 3=$ shallow substrate penetration $(0<d / w \leq 0.5)$ with conduction-mode laser melting; $4=$ intermediate substrate penetration $(0.5<d / w \leq 0.8) ; 5=$ deep substrate penetration $(0.8<d / w)$ with keyhole-mode laser melting. (b) Solidification microstructure is shown (bottom row) with a schematic legend, where color level $0=$ no fusion, $1=$ equiaxed, $2=$ mixed equiaxedcolumnar, and 3 = columnar.\\
+preferred crystallographic direction closest to antiparallel to the direction of heat extraction [19]. This is to say that cells grow normal to the $s / 1$ interface, but with increasing growth rates $(R)$, crystallography effects can cause growth to adopt a favorable crystallographic direction. In the absence of secondary dendrite arms, cells and dendrites can be nearly indistinguishable, as was the case in most track cross-sections. Longitudinal sections (Fig. 5a) were necessary to uncover the tell-tale curvature of cellular grains [19-21], as cells have been observed to grow away from the fusion boundary and curve in the direction of laser scanning towards the surface of melt tracks [22]. Considering the high laser scan rates, the strong orientation preference of the large columnar grains indicate dendritic solidification. The equiaxed grains could be either cellular or dendritic. Note that homogeneously or stochastically nucleated equiaxed grains (i.e., those nucleated by random atomic fluctuations) are typically dendritic, not cellular [23].
+
+Scanning electron microscopy of etched cross-sections revealed that, regardless of the beam shape used, all tracks possess a very narrow region of planar growth at the fusion boundary (Fig. 5b). This region was typically less than $1.5-\mu \mathrm{m}$ thick, and quickly transitioned to cellular or dendritic growth towards the center of the melt pool. Since cellular and dendritic grains typically make up
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c67706ca9b766b63e498g-05}
+\end{center}
+
+Fig. 5. (a) Longitudinal cross-section of a melt track, where the laser scanning direction is right to left. Columnar dendritic and equiaxed grains are observable. This track was formed using a LE-L beam at $P=550 \mathrm{~W}$ and $Q=140 \mathrm{~J} / \mathrm{mm}^{3}$. (b) Transverse crosssection of a melt track showing a transition from planar, to cellular, to mixed cellular and dendritic growth, where the laser scanning direction is out of the plane of the image. Microsegregation-related pitting corrosion is seen most clearly near the fusion boundary, where $\mathrm{R}$ is lowest. This track was formed using a TE-L beam at $\mathrm{P}=350 \mathrm{~W}$ and $Q=260 \mathrm{~J} / \mathrm{mm}^{3}$. nearly the entire bulk of LPBF alloys, the discussion will not dwell on the planar regions. Adjacent to the planar growth region, solutepoor cell/dendrite cores etched deeply, indicating pitting corrosion (Fig. 5b). These pits were not present prior to etching.
+
+A solidification map of laser power $v s$. energy density for each laser intensity profile and size is shown in Fig. 4b. The tracks represented by off-white data markers ( color level $=0$ ) were absent at the cross-section due to lack of fusion or sampling at a balling trough, and will not be discussed here. Generally, regardless of beam ellipticity or size, equiaxed solidification was favored at lower laser powers, particularly when substrate penetration by the melt was absent or poor. With increasing power and scan speed, the concentration of columnar grains increases (Fig. 6). Tracks demonstrating keyhole-mode laser heating (i.e., profile Type 5, Fig. 4a) consist entirely of columnar grains.
+
+Most interestingly, the parameter space over which equiaxed or mixed equiaxed-columnar microstructures are produced is much larger for the elliptical beam profiles than for the circular beam profiles, with the TE profile being most encouraging for equiaxed solidification (Fig. 4b). For example, at $350 \mathrm{~W}$ and $\mathrm{Q}=80-260 \mathrm{~J} /$ $\mathrm{mm}^{3}$, the C-M profile will only result in columnar solidification (Fig. 7). However, without changing laser power, scan speed, or beam size, a greater area fraction of equiaxed grains can be achieved for LE profiles at $Q=260 \mathrm{~J} / \mathrm{mm}^{3}$ and TE profiles at $\mathrm{Q}=200-260 \mathrm{~J} / \mathrm{mm}^{3}$. The tendency for elliptical profiles to increase the area fraction of equiaxed grains is generally observed at $d /$ $w \approx 0.2-0.5$, when conduction-mode laser heating of the substrate occurs. These results confirm that site-specific microstructural control is achievable by varying beam ellipticity.
+
+\section*{4. Simulations}
+Beam shape effects on track macro- and microstructures were further investigated by modeling laser-material interactions using the ALE3D code (Movies 1-3). During the track melting simulations, the role of surface tension and vapor recoil on track topography can be observed (Figs. 8 and 9). In order to reduce surface energy, capillary forces pull liquid metal towards the center of the melt track, smoothing the track surface and wetting the substrate [17]. However, surface tension effects can also cause PlateauRaleigh instability and track discontinuity. Using Fig. 8, the lateral temperature gradient can be judged by using the distance between the red and gray isothermal contours, where the red contour is approximately the melting temperature of 316L steel ( $1700 \mathrm{~K}$ ) and gray is $500 \mathrm{~K}$. For each beam intensity profile, a slight denudation zone (or bare zone) exists between the melt track and the surrounding heat-affected particles (Fig. 8). The physics of the more dominant contributions to denudation is discussed in detail for Gaussian beams elsewhere [11].
+
+Supplementary video related to this article can be found at \href{http://dx.doi.org/10.1016/j.actamat.2017.02.025}{http://dx.doi.org/10.1016/j.actamat.2017.02.025}.
+
+Since the simulations were performed for a short distance $(0.050 \mathrm{~cm})$, undulations in the melt track surfaces cannot easily be tied to track discontinuities, which occur over similar or longer length scales (trough to trough) for the C-S, LE-S, and TE-S profiles at $P=550 \mathrm{~W}$ and $Q=80 \mathrm{~J} / \mathrm{mm}^{3}$ (Fig. S6). Nevertheless, melt velocity vectors are shown on longitudinal cross-sectional views in Fig. 9. The shape of each topological depression mirrored the beam shape used. At $z=0 \mathrm{~cm}$, considering the distance between the front of the topological depression and the $1700 \mathrm{~K}$ (red) isothermal contour in the tail region, the temperature gradient is steepest in the scanning direction using the TES profile $\left(68 \times 10^{3} \mathrm{~K} / \mathrm{cm}\right)$, followed by the $\mathrm{C}-\mathrm{S}\left(50 \times 10^{3} \mathrm{~K} / \mathrm{cm}\right)$ and LE-S $\left(47 \times 10^{3} \mathrm{~K} / \mathrm{cm}\right)$ profiles. This is related to the intensity distributions produced by the different beam profiles: the\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c67706ca9b766b63e498g-06(1)}
+
+Fig. 6. Cross-sections of melt track roots produced using the C-M profile at constant energy density $\left(260 \mathrm{~J} / \mathrm{mm}^{3}\right.$ ) and varying power: (a) $P=50 \mathrm{~W}$, (b) $P=250 \mathrm{~W}$, and (c) $P=550 \mathrm{~W}$. The percent area occupied by equiaxed grains (as opposed to columnar grains) increases with increasing laser power and scan speed.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c67706ca9b766b63e498g-06(2)}
+
+Fig. 7. Cross-sections of melt track roots produced at constant beam size, power, and energy density (Size M, $350 \mathrm{~W}$, and $260 \mathrm{~J} / \mathrm{mm}^{3}$ ) as beam shape is varied. The percent area occupied by equiaxed grains (as opposed to columnar grains) is $2 \%$ (a, C-M), $28 \%$ (b, LE-M), and $77 \%$ (c, TE-M). The substrate penetration depths were $71.9,73.3$, and $78.0 \mu \mathrm{m}$ for the C-M, LE-M, and TE-M profiles, respectively.
+
+centerline of tracks melted by the LE-S profile experience heating longer than those melted by the TE-S profile.
+
+The maximum melt flow velocity was lower in magnitude using the $C$-S profile $\left(1.1 \times 10^{-3} \mathrm{~cm} / \mathrm{s}\right)$ than using the TE-S $\left(1.3 \times 10^{-3} \mathrm{~cm} / \mathrm{s}\right)$ and LE-S $\left(2.2 \times 10^{-3} \mathrm{~cm} / \mathrm{s}\right)$ profiles. Examining the topological depression caused by vapor recoil, the TE-S profile produced backward melt flow at the greatest velocity, with horizontal flow from the bottom of the topological depression and upward melt flow near the surface of the tailing wall of the depression. The LE-S profile produced backward melt flow at a lower velocity, although the flow was directed downward in the depression. Near the surface of the tailing wall of the depression, melt flow was in the forward direction, creating a breaking wave that resulted in a trail of trapped pores. (The existence of these pores could not be confirmed in the closest experiment (LE-S, $P=550 \mathrm{~W}, Q=80 \mathrm{~J} / \mathrm{mm}^{3}$ ) since the discontinuous track separated from the substrate during sectioning.) The C-S profile produced the lowest velocity backward melt flow, which was met by\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c67706ca9b766b63e498g-06}
+
+Fig. 8. Top-down view of melt-track formation by the (a) C-S, (b) LE-S, and (c) TE-S profiles, where laser scanning occurs in the positive x-direction. The pseudo-colors correspond to temperature linearly, where red is $3200 \mathrm{~K}$ and blue is room temperature. The isothermal contours were assigned as follows: gray $=500 \mathrm{~K}$, red $=1700 \mathrm{~K}$, fuchsia $=2500 \mathrm{~K}$, black $=3500 \mathrm{~K}$. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c67706ca9b766b63e498g-07}
+
+Fig. 9. Longitudinal cross-sectional view of melt-track formation by the (a) C-S, (b) LE-S, and (c) TE-S profiles, where laser scanning occurs in the positive $x$-direction. The pseudocolor range corresponds to temperature linearly, where red is $3200 \mathrm{~K}$ and blue is room temperature $(298 \mathrm{~K})$. Isothermal contours are shown, where gray $=500 \mathrm{~K}$, red $=1700 \mathrm{~K}$, magenta $=2500 \mathrm{~K}$, and black $=3500 \mathrm{~K}$. The sizes of the velocity vectors scale with magnitude. For subfigure b, trapped pores in the melt track are shown in white. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)
+
+forward and upward melt flow in the transition region. For all three beam shapes, in addition to backward melt flow in the tail region, some degree of melt mixing was observed in the transition region. The contribution of the melt vortex to cooling the molten metal has been reported [10].
+
+The ALE3D simulations also model spatter, and a more in-depth study of spatter patterns can be found elsewhere [24]. Although spatter occurred for each intensity profile studied, the extent and nature of spatter was very different (Movies 1-3). For the LE-S profiles, relatively small spatter droplets ejected laterally and backward from the topological depression. For the TE-S profile, spatter can be described by the so-called "snow plow" effect, wherein liquid metal builds up ahead of the laser spot, eventually causing the forward ejection of a very large spatter droplet [24]. The C-S profile demonstrated spatter intermediate to that observed for the LE-S and TE-S profiles. In the experiments, very few spatter particles were observed for the tracks that most closely resembled the conditions simulated (Fig. S6).
+
+\section*{5. Discussion}
+\subsection*{5.1. Macrostructure}
+The traditional approach to AM parameter selection places heavy emphasis on defect mitigation. To reduce lack-of-fusion defects, smooth, continuous tracks with bead heights close to the powder layer thickness are highly desirable. Tall melt beads can impede uniform powder spreading, while undulations in the build surface from balling or discontinuous tracks can be amplified in subsequent layers. In both cases, the likelihood of void formation is very high. The depth of melt penetration into the substrate also needs optimization. While poor surface adhesion can result in flat defects that act as crack nucleation sites, deep substrate penetration can be accompanied by keyhole voids [13].
+
+The results show that circular and elliptical beam intensity profiles perform best at different sizes. Of the profiles sizes, laser powers, and scan rates studied, the C-L, LE-S, and TE-S profiles\\
+produced melt tracks that were undesirable in terms of bead height ( $>3 t$ ), roughness $\left(R_{a}>40 \mu \mathrm{m}\right)$, and continuity (Fig. 3). Previous computational work has related track discontinuity to the PlateauRaleigh instability and showed that track stability increases with increasing laser power and spot size, which increase track width [17]. For the LE and TE profiles, track continuity increased with increasing spot size (Fig. 3) as roughness decreased (Fig. S4). However, an opposite trend was observed for the circular profile, which yielded high roughness, high bead heights, and low substrate penetration depths using C-L. The C-L profile delivers the same power as the C-S profile, but distributed over a larger area. The higher roughness produced by $\mathrm{C}-\mathrm{L}$ could be related to a decrease in surface flow driven by the Marangoni effect. For a specific subset of beam intensity profiles (i.e., the C-S, C-M, LE-M, LE-L, TE-M, and TE-L profiles), the tracks became more continuous and less rough with increasing power (Figs. S1 and S5) as described by earlier simulations [17].
+
+Although some evidence of keyhole-mode laser heating can be observed for the LE-S and TE-S profiles at high power (Fig. 4b), keyhole-mode melting occurred over the widest parameter space for the C-S profile ( $P=250-550 \mathrm{~W}, Q=140-260 \mathrm{~J} / \mathrm{mm}^{3}$ ) which, without performing metallographic cross-sections, produced tracks that met macroscopic expectations. In conventional laser welding, keyhole-mode laser heating is generally described in terms of power or energy densities. SEM of track cross-sections showed that the laser-heating mode is also a function of laser intensity profile (i.e., ellipticity). For example, at $350 \mathrm{~W}$ and $260 \mathrm{~J} /$ $\mathrm{mm}^{3}$, the $\mathrm{C}-\mathrm{S}$ profile produced a melt track that demonstrates keyhole-mode laser heating, while the LE-S and TE-S profiles did not (Fig. 4a, Fig. S7).
+
+This investigation was initially motivated by the possibility of producing favorable track morphologies in designated locations by varying laser beam ellipticity. For example, at Size M, bead height, track continuity, and substrate wetting are improved using elliptical intensity profiles compared to circular ones. However, this trend is not observed at all beam sizes. The extreme case occurs at Size S, for which the circular profile far out-performs the LE-S and TE-S profiles. At Size L, the LE-L and TE-L profiles dramatically improve track macrostructure; but, the C-L profile would be inappropriate for most AM applications since it results in discontinuous, balled tracks in the first place. However, instead of being used for adding material, elliptical beams could be used to reprocess regions deposited by circular profiles to reduce surface roughness.
+
+\subsection*{5.2. Microstructure}
+The current understanding of how temperature gradients (G) and solidification rates $(\mathrm{R})$ affect solidification microstructures and patterns is heavily based on conventional metastable and rapid solidification studies [19]. Measuring G and R during LPBF remains experimentally challenging due to the localized nature of melting and the extreme rate of solidification. Myriad numerical efforts have been dedicated to modeling the microstructures formed under certain $G$ and $R$, but most efforts are not yet fully predictive [25-34]. Real-time observations of laser-melted alloy solidification have been made using several techniques [35,36], but simple binary systems are generally used as case studies. Popular AM candidates, however, are multicomponent, polymorphic, and/or multiphase (e.g., stainless steels, Inconels, Ti-6Al-4V, AlSi10 Mg, etc.). To shed light on the mechanisms that give rise to the unique microstructures of LPBF materials, ALE3D simulations of temperature gradients and flow patterns provide useful information. For example, the velocity vectors modeled demonstrate the dynamic nature of LPBF, and the inapplicability of solidification analyses developed for casting.\\
+During solidification, the propagation rate of the $s / 1$ interface $(R)$ scales with laser scan speed $(v)$ according to:
+
+$R=v \cos \alpha$
+
+where $\alpha$ is the angle between the laser scanning direction and the solidification direction. Since solidification occurs normal to the fusion boundary, $\mathrm{R}$ is zero at the fusion boundary and maximum along the track centerline [20]. The presence of a narrow planar growth regime at the fusion boundary supports this analysis, since planar growth is favored at very high G/R. As G/R decreases and the degree of constitutional undercooling increases, perturbations in the planar $s / 1$ interface develop and grow as cells or dendrites, rejecting solute atoms into the surrounding liquid phase by microsegregation. After complete solidification, soluteaccommodating dislocation walls can be found in the interdendritic/intercellular regions [37]. In this study, pitting corrosion occurred preferentially in cell/dendrite cores during etching, most aggressively near the fusion boundary (Fig. 5b). This has previously been ascribed to Mo and $\mathrm{Cr}$ microsegregation [38-41], the degree of which increases with decreasing R [42]. It can be inferred that solidification proceeds relatively slowly for some distance (up to $\sim 40 \mu \mathrm{m}$, in Fig. 5b) past the instability of planar growth. Slowly solidifying directional grains are terminated (or "pinched-off") in the melt zone by more rapidly propagating, advantageously oriented grains in the vicinity. In a full LPBF part build, these favorably oriented grains can propagate through multiple additive layers, producing a problematically coarse microstructure.
+
+Because of their origins in discrete perturbations, cells and dendrites are also associated with low-angle boundaries and small intragranular misorientations. Several studies have been dedicated to understanding how and to what extent these solidification defects affect the mechanical properties of AM materials [37,43]. From a practical standpoint, it should be considered that the features of cells and dendrites are greatly diminished by post-process annealing [44] while grain boundaries continue to persist and evolve, playing a larger role in boundary strengthening and texture effects. A close examination of LPBF grain morphologies is therefore warranted.
+
+A majority of the columnar grains observed were resolutely dendritic. The primary dendrites seen in the columnar grains impinged upon one another prior to the formation of secondary dendrite arms in all cases, indicating rapid solidification, close dendrite spacing, and interdendritic solute trapping. Furthermore, columnar dendritic solidification was observed at high powers and scan speeds for all of the intensity profiles studied (Figs. 4b and 6). This was expected since columnar dendritic solidification occurs at low G/R [45] and R scales with scan speed. However, keeping scan speed constant, mixed equiaxed-columnar microstructures could be produced using elliptical profiles at moderate powers (250-350 W), but not using circular profiles, highlighting the need for important physical considerations (e.g., temperature gradient and melt dynamics) as they relate to beam shape.
+
+For each of the beam intensity profiles studied, columnar dendritic grains were exclusively observed for tracks with $d / w>0.5$. With increasing power, scan speed, and substrate penetration, columnar dendritic solidification becomes more prominent for several possible reasons (Fig. 6). Since $Q$ is held constant, $v$ and $\mathrm{R}$ increase with $P$, such that $\mathrm{G} / \mathrm{R}$ decreases. Also, as the contact area between the melt and the high-thermal conductivity substrate increases, the melt cooling rate increases. While the latter observation seems to indicate that microstructures can be tailored by way of cooling rate control, this approach ignores solute interactions, undercooling effects, and transformation enthalpies. Purely thermal models have failed to predict the columnar-to-\\
+equiaxed transition even for conventional processes, while phasefield models are making progress at AM-relevant solidification rates by using more complete thermodynamic and kinetic approaches [46-49].
+
+A novel and significant finding was that, even when substrate penetration depths are comparable and all other processing parameters are equal (i.e., $P, v, Q w_{b}, t$ ), varying the beam intensity profile alters the ratio of equiaxed to columnar grains (Fig. 7). Due to the presence of very high temperature gradients, the homogeneous nucleation of equiaxed grains is not expected [23]. However, equiaxed solidification can be achieved by non-stochastic or athermal nucleation mechanisms under the influence of melt mixing. By accounting for Marangoni convection and recoil pressure effects, the simulations show the presence of a melt vortex following the topological depression of a melt track, wherein hot molten metal is stirred from the depression towards the much cooler transition region at high velocity. Notably, higher melt flow velocities were found using the LE and TE intensity profiles than the C profiles (Fig. 9). The high-velocity flow can cause dendrite tip fragmentation and redistribution, allowing the solid fragments to act as intrinsic nucleation sites for equiaxed grains ahead of the growth front in the melt zone [50,51]. (Note that dendrite fragmentation is not caused by pure mechanical deformation [52], but by constitutional remelting at dendrite roots. The remelting can be caused by locally high interdendritic solute contents [53-55] or by elastic energy changes that cause a shift in the thermodynamic equilibrium at the $s / 1$ interface [56].) The possibility of dendrite fragmentation for equiaxed grain nucleation is supported by the experimental results, which show that the LE and TE profiles each produce equiaxed microstructures over a larger parameter space than the $C$ profiles (Figs. $4 \mathrm{~b}$ and 7). This type of spurious nucleation is undesirable during single crystal repair by epitaxial laser metal forming [57,58], but is highly desirable in the additive manufacturing of alloys with isotropic properties. Though less likely than dendrite fragmentation, the athermal nucleation of equiaxed grains could occur if near-critical embryos are suddenly undercooled by being quickly stirred into cooler molten metal [45]. The temperature decrease reduces the requisite critical nucleus size to activate stable and continuous growth. While the exact underlying mechanisms of equiaxed solidification are not confirmed, this study demonstrates the efficacy of laser intensity spatial profile modulation for site-specific microstructural control.
+
+In laser powder-bed fusion, the ability to tailor microstructures in specific locations gives rise to major implications. Beyond HallPetch strengthening, equiaxed grains can be used to limit hot cracking in susceptible materials, to introduce a more treacherous path for intergranular crack propagation, or to improve fatigue life near surfaces and stress-concentrating geometric features. Large columnar grains can improve creep resistance or result in strong textures and anisotropic properties for specific applications. With the advent of microstructural control, LPBF is transformed from a convenient net-shape manufacturing tool to a powerful processing technique for the production of designer materials with enhanced properties and performance.
+
+\section*{6. Conclusions}
+The effects of circular, longitudinal elliptical, and transverse elliptical laser intensity profiles on single-track macrostructures and microstructures were investigated. At Size S (the $100 \mu \mathrm{m}-$ equivalent beam size), the circular profile produced smooth, continuous tracks, while the elliptical profiles both resulted in rough, discontinuous tracks with poor substrate wetting at the energy densities and laser powers studied. Keyhole-mode laser heating was only observed at Size S, and most prominently using the circular beam profile. Moreover, the laser heating mode was determined by beam shape as well as laser power and energy density. At Size M and L (the 175 and $250 \mu$ m-equivalent beam sizes), track continuity, smoothness, and substrate adhesion are improved with the use of elliptical intensity profiles while melt bead heights are reduced.
+
+More importantly, beam ellipticity demonstrated a strong effect on solidification microstructure. The elliptical intensity profiles produced equiaxed or mixed equiaxed-columnar grains over a much larger parameter space than the circular profiles when conduction-mode laser heating occurred. This indicates that at moderate powers ( $150-450 \mathrm{~W}$ ), grain morphology can be tailored by varying beam intensity spatial profile while maintaining constant laser power and scan speed. With the ability to control microstructures locally and on the fly, site-specific properties can be directly engineered into additively manufactured parts.
+
+\section*{Acknowledgements}
+This work was performed under the auspices of the U.S. Department of Energy by Lawrence Livermore National Laboratory under Contract DE-AC52-07NA27344, supported by the Office of Laboratory Directed Research and Development (LDRD), tracking numbers 15-ERD-037 and LDRD 15-ERD-006. TTR was supported in part by the U.S. Department of Energy, Office of Science, Office of Workforce Development for Teachers and Scientists (WDTS) under the Visiting Faculty Program (VFP). The authors acknowledge useful discussions with Joseph T. McKeown and Wayne E. King. The LLNL document review and release number is LLNL-JRNL-713205.
+
+\section*{Appendix A. Supplementary data}
+Supplementary data related to this article can be found at http:// \href{http://dx.doi.org/10.1016/j.actamat.2017.02.025}{dx.doi.org/10.1016/j.actamat.2017.02.025}.
+
+\section*{References}
+[1] C. Körner, H. Helmer, A. Bauereiß, R.F. Singer, Tailoring the grain structure of IN718 during selective electron beam melting, MATEC Web Conf. 14 (2014) 8001, \href{http://dx.doi.org/10.1051/matecconf/20141408001}{http://dx.doi.org/10.1051/matecconf/20141408001}.
+
+[2] R.R. Dehoff, M.M. Kirka, W.J. Sames, H. Bilheux, A.S. Tremsin, L.E. Lowe, S.S. Babu, Site specific control of crystallographic grain orientation through electron beam additive manufacturing, Mater. Sci. Technol.. 31 (n.d.) 931-938.
+
+[3] T. Niendorf, S. Leuders, A. Riemer, H.A. Richard, T. Tröster, D. Schwarze, Highly anisotropic steel processed by selective laser melting, Metall. Mater. Trans. B 44 (2013) 794-796, \href{http://dx.doi.org/10.1007/s11663-013-9875-z}{http://dx.doi.org/10.1007/s11663-013-9875-z}.
+
+[4] T. Niendorf, S. Leuders, A. Riemer, F. Brenne, T. Tröster, H.A. Richard, D. Schwarze, Functionally graded alloys obtained by additive manufacturing, Adv. Eng. Mater. 16 (2014) 857-861, \href{http://dx.doi.org/10.1002/}{http://dx.doi.org/10.1002/} adem. 201300579.
+
+[5] L. Thijs, K. Kempen, J.-P. Kruth, J. Van Humbeeck, Fine-structured aluminium products with controllable texture by selective laser melting of pre-alloyed AlSi10Mg powder, Acta Mater. 61 (2013) 1809-1819, \href{http://dx.doi.org/}{http://dx.doi.org/} 10.1016/j.actamat.2012.11.052.
+
+[6] L. Thijs, M.L. Montero Sistiaga, R. Wauthle, Q. Xie, J.-P. Kruth, J. Van Humbeeck, Strong morphological and crystallographic texture and resulting yield strength anisotropy in selective laser melted tantalum, Acta Mater. 61 (2013) 4657-4668, \href{http://dx.doi.org/10.1016/j.actamat.2013.04.036}{http://dx.doi.org/10.1016/j.actamat.2013.04.036}.
+
+[7] Y.I. Nissim, A. Lietoila, R.B. Gold, J.F. Gibbons, Temperature distributions produced in semiconductors by a scanning elliptical or circular $\mathrm{cW}$ laser beam, J. Appl. Phys. 51 (1980) 274-279, \href{http://dx.doi.org/10.1063/1.327420}{http://dx.doi.org/10.1063/1.327420}.
+
+[8] M. Yamada, K. Nambu, K. Yamamoto, Nonlinear calculation of a temperature profile produced in a two-layer structure by a scanning $\mathrm{cw}$ elliptical laser or electron beam, J. Appl. Phys. 57 (1985) 965-967, \href{http://dx.doi.org/10.1063/}{http://dx.doi.org/10.1063/} 1.334698 .
+
+[9] S.A. Khairallah, A. Anderson, A.M. Rubenchik, J. Florando, S. Wu, H. Lowdermilk, Simulation of the main physical processes in remote laser penetration with large laser spot size, AIP Adv. 5 (2015) 47120, http:// \href{http://dx.doi.org/10.1063/1.4918284}{dx.doi.org/10.1063/1.4918284}.
+
+[10] S.A. Khairallah, A.T. Anderson, A. Rubenchik, W.E. King, Laser powder-bed fusion additive manufacturing: physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones, Acta Mater. 108 (2016) 36-45, \href{http://dx.doi.org/10.1016/j.actamat.2016.02.014}{http://dx.doi.org/10.1016/j.actamat.2016.02.014}.
+
+[11] M.J. Matthews, G. Guss, S.A. Khairallah, A.M. Rubenchik, P.J. Depond, W.E. King, Denudation of metal powder layers in laser powder bed fusion processes, Acta Mater. 114 (2016) 33-42, \href{http://dx.doi.org/10.1016/}{http://dx.doi.org/10.1016/} j.actamat.2016.05.017
+
+[12] C. Kamath, B. El-dasher, G.F. Gallegos, W.E. King, A. Sisto, Density of additively-manufactured, 316L SS parts using laser powder-bed fusion at powers up to $400 \mathrm{~W}$, Int. J. Adv. Manuf. Technol. 74 (2014) 65-78, http:// \href{http://dx.doi.org/10.1007/s00170-014-5954-9}{dx.doi.org/10.1007/s00170-014-5954-9}.
+
+[13] W.E. King, H.D. Barth, V.M. Castillo, G.F. Gallegos, J.W. Gibbs, D.E. Hahn, C. Kamath, A.M. Rubenchik, Observation of keyhole-mode laser melting in laser powder-bed fusion additive manufacturing, J. Mater. Process. Technol. 214 (2014) 2915-2925, \href{http://dx.doi.org/10.1016/j.jmatprotec.2014.06.005}{http://dx.doi.org/10.1016/j.jmatprotec.2014.06.005}.
+
+[14] T.H.C. Childs, C. Hauser, M. Badrossamay, Mapping and modelling single scan track formation in direct metal selective laser melting, CIRP Ann. Manuf. Technol. 53 (2004) 191-194, \href{http://dx.doi.org/10.1016/S0007-8506(07)}{http://dx.doi.org/10.1016/S0007-8506(07)} 60676-3.
+
+[15] S. Das, Physical aspects of process control in selective laser sintering of metals, Adv. Eng. Mater. 5 (2003) 701-711, \href{http://dx.doi.org/10.1002/}{http://dx.doi.org/10.1002/} adem. 200310099.
+
+[16] X. Zhou, K. Li, D. Zhang, X. Liu, J. Ma, W. Liu, Z. Shen, Textures formed in a CoCrMo alloy by selective laser melting, J. Alloys Compd. 631 (2015) 153-164, \href{http://dx.doi.org/10.1016/j.jallcom.2015.01.096}{http://dx.doi.org/10.1016/j.jallcom.2015.01.096}.
+
+[17] S.A. Khairallah, A. Anderson, Mesoscopic simulation model of selective laser melting of stainless steel powder, J. Mater. Process. Technol. 214 (2014) 2627-2636, \href{http://dx.doi.org/10.1016/j.jmatprotec.2014.06.001}{http://dx.doi.org/10.1016/j.jmatprotec.2014.06.001}.
+
+[18] G. Friedman, ParticlePack Users' Manual, Lawrence Livermore Natl. Lab., 2011. LLNL-SM-458031.
+
+[19] W. Kurz, D.J. Fisher, Fundamentals of Solidification, fourth ed., CRC Press, 1998.
+
+[20] M. Rappaz, S.A. David, J.M. Vitek, L.A. Boatner, Development of microstructures in $\mathrm{Fe}-15 \mathrm{Ni}-15 \mathrm{Cr}$ single crystal electron beam welds, Metall. Trans. A. 20 (n.d.) 1125-1138. \href{http://dx.doi.org/10.1007/BF02650147}{http://dx.doi.org/10.1007/BF02650147}.
+
+[21] W.J. Boettinger, D. Shechtman, R.J. Schaefer, F.S. Biancaniello, The Effect of Rapid Solidification Velocity on the Microstructure of Ag-Cu Alloys, Metall Trans. A. 15 (n.d.) 55-66. \href{http://dx.doi.org/10.1007/BF02644387}{http://dx.doi.org/10.1007/BF02644387}.
+
+[22] J.D. Roehling, A. Perron, J.-L. Fattebert, G.M. Guss, P.E.A. Turchi, M.J. Matthews, J.T. McKeown, Rapid Solidification of Metal Alloys in the TEM, 2016.
+
+[23] W. Kurz, C. Bezençon, M. Gäumann, Columnar to equiaxed transition in solidification processing, Sci. Technol. Adv. Mater. 2 (2001) 185-191, http:// \href{http://dx.doi.org/10.1016/S1468-6996(01)00047-X}{dx.doi.org/10.1016/S1468-6996(01)00047-X}.
+
+[24] S. Ly, A. Rubenchik, G. Guss, S. Khairallah, S. Wu, M. Matthews, Probing melt pool dynamics and particle ejection using high speed optical diagnostics, in: Conf. Lasers Electro-opt. 2016 Pap. AW4J2, Optical Society of America, 2016, \href{http://dx.doi.org/10.1364/CLEO_AT.2016.AW4J.2}{http://dx.doi.org/10.1364/CLEO\_AT.2016.AW4J.2}. AW4J.2.
+
+[25] W. Kurz, D.J. Fisher, Dendrite growth in eutectic alloys: the coupled zone, Int. Met. Rev. 24 (1979) 177-204, \href{http://dx.doi.org/10.1179/imtr.1979.24.1.177}{http://dx.doi.org/10.1179/imtr.1979.24.1.177}.
+
+[26] W. Kurz, D.J. Fisher, Dendrite growth at the limit of stability: tip radius and spacing, Acta Metall. 29 (1981) 11-20, \href{http://dx.doi.org/10.1016/00016160(81)90082-1}{http://dx.doi.org/10.1016/00016160(81)90082-1}.
+
+[27] W. Kurz, B. Giovanola, R. Trivedi, Theory of microstructural development during rapid solidification, Acta Metall. 34 (1986) 823-830, \href{http://dx.doi.org/}{http://dx.doi.org/} 10.1016/0001-6160(86)90056-8.
+
+[28] R. Trivedi, P. Magnin, W. Kurz, Theory of eutectic growth under rapid solidification conditions, Acta Metall. 35 (1987) 971-980, \href{http://dx.doi.org/}{http://dx.doi.org/} 10.1016/0001-6160(87)90176-3.
+
+[29] A.F.A. Hoadley, M. Rappaz, M. Zimmermann, Heat-flow simulation of laser remelting with experimenting validation, Metall. Trans. B 22 (1991) 101-109, \href{http://dx.doi.org/10.1007/BF02672531}{http://dx.doi.org/10.1007/BF02672531}.
+
+[30] M. Carrard, M. Gremaud, M. Zimmermann, W. Kurz, About the banded structure in rapidly solidified dendritic and eutectic alloys, Acta Metall. Mater. 40 (1992) 983-996, \href{http://dx.doi.org/10.1016/0956-7151(92)90076-Q}{http://dx.doi.org/10.1016/0956-7151(92)90076-Q}.
+
+[31] M. Pierantoni, M. Gremaud, P. Magnin, D. Stoll, W. Kurz, The coupled zone of rapidly solidified Al-Si alloys in laser treatment, Acta Metall. Mater. 40 (1992) 1637-1644, \href{http://dx.doi.org/10.1016/0956-7151(92)90106-O}{http://dx.doi.org/10.1016/0956-7151(92)90106-O}.
+
+[32] M. Gremaud, D.R. Allen, M. Rappaz, J.H. Perepezko, The development of nucleation controlled microstructures during laser treatment of AlSi alloys, Acta Mater. 44 (1996) 2669-2681, \href{http://dx.doi.org/10.1016/1359-6454(95)}{http://dx.doi.org/10.1016/1359-6454(95)} 00393-2.
+
+[33] A. Badillo, C. Beckermann, Phase-field simulation of the columnar-toequiaxed transition in alloy solidification, Acta Mater. 54 (2006) 2015-2026, \href{http://dx.doi.org/10.1016/j.actamat.2005.12.025}{http://dx.doi.org/10.1016/j.actamat.2005.12.025}.
+
+[34] M. Asta, C. Beckermann, A. Karma, W. Kurz, R. Napolitano, M. Plapp, G. Purdy M. Rappaz, R. Trivedi, Solidification microstructures and solid-state parallels: recent developments, future directions, Acta Mater. 57 (2009) 941-971, \href{http://dx.doi.org/10.1016/j.actamat.2008.10.020}{http://dx.doi.org/10.1016/j.actamat.2008.10.020}.
+
+[35] J.T. McKeown, A.K. Kulovits, C. Liu, K. Zweiacker, B.W. Reed, T. LaGrange, J.M.K. Wiezorek, G.H. Campbell, In situ transmission electron microscopy of crystal growth-mode transitions during rapid solidification of a hypoeutectic $\mathrm{Al}-\mathrm{Cu}$ alloy, Acta Mater. 65 (2014) 56-68, \href{http://dx.doi.org/10.1016}{http://dx.doi.org/10.1016} j.actamat.2013.11.046.
+
+[36] A.J. Clarke, D. Tourret, S.D. Imhoff, P.J. Gibbs, K. Fezzaa, J.C. Cooley, W.-K. Lee, A. Deriy, B.M. Patterson, P.A. Papin, K.D. Clarke, R.D. Field, J.L. Smith, X-ray imaging and controlled solidification of $\mathrm{Al}-\mathrm{Cu}$ alloys toward microstructures by design, Adv. Eng. Mater. 17 (2015) 454-459, \href{http://dx.doi.org/10.1002/}{http://dx.doi.org/10.1002/} adem. 201400469
+
+[37] K. Saeidi, X. Gao, Y. Zhong, Z.J. Shen, Hardened austenite steel with columnar sub-grain structure formed by laser melting, Mater. Sci. Eng. A 625 (2015) 221-229, \href{http://dx.doi.org/10.1016/j.msea.2014.12.018}{http://dx.doi.org/10.1016/j.msea.2014.12.018}.
+
+[38] M. Qian, J.N. DuPont, Microsegregation-related pitting corrosion characteristics of AL-6XN superaustenitic stainless steel laser welds, Corros. Sci. 52 (2010) 3548-3553, \href{http://dx.doi.org/10.1016/j.corsci.2010.07.007}{http://dx.doi.org/10.1016/j.corsci.2010.07.007}.
+
+[39] V.M. Salinas-Bravo, R.C. Newman, An alternative method to determine critical pitting temperature of stainless steels in ferric chloride solution, Corros. Sci. 36 (1994) 67-77, \href{http://dx.doi.org/10.1016/0010-938X(94)90109-0}{http://dx.doi.org/10.1016/0010-938X(94)90109-0}.
+
+[40] D.J. Lee, K.H. Jung, J.H. Sung, Y.H. Kim, K.H. Lee, J.U. Park, Y.T. Shin, H.W. Lee, Pitting corrosion behavior on crack property in AISI 304L weld metals with varying $\mathrm{Cr} / \mathrm{Ni}$ equivalent ratio, Mater. Des. 30 (2009) 3269-3273, http:// \href{http://dx.doi.org/10.1016/j.matdes.2009.01.023}{dx.doi.org/10.1016/j.matdes.2009.01.023}.
+
+[41] K. Saeidi, L. Kvetková, F. Lofaj, Z. Shen, Austenitic stainless steel strengthened by the in situ formation of oxide nanoinclusions, RSC Adv. 5 (2015) 20747-20750, \href{http://dx.doi.org/10.1039/C4RA16721J}{http://dx.doi.org/10.1039/C4RA16721J}.
+
+[42] Y. Zhang, J. Li, Characterization of the microstructure evolution and microsegregation in a Ni-based superalloy under super-high thermal gradient directional solidification, Mater. Trans. 53 (2012) 1910-1914.
+
+[43] Y.M. Wang, Z. Zheng, T.G.G. Voisin, J.T. McKeown, Y. Zhang, J. Li, Z. Li, J. Ye, P. Agee, T.T. Roehling, C. Kamath, W.E. King, A.V. Hamza, T. Zhu, Defect- and Heterogeneity-controlled Strength and Deformation Mechanisms in Additively Manufactured Steels, 2016. Submitt. Publ.
+
+[44] R. Casati, J.N. Lemke, A. Tuissi, M. Vedani, Aging behaviour and mechanical performance of 18-Ni 300 steel processed by selective laser melting, Metals 6 (2016) 218, \href{http://dx.doi.org/10.3390/met6090218}{http://dx.doi.org/10.3390/met6090218}.
+
+[45] M.E. Glicksman, Principles of Solidification, Springer, New York, New York, NY, 2011 (Accessed 19 September 2016), \href{http://link.springer.com/10.1007}{http://link.springer.com/10.1007} 978-1-4419-7344-3.
+
+[46] J.D. Hunt, Steady state columnar and equiaxed growth of dendrites and eutectic, Mater. Sci. Eng. 65 (1984) 75-83, \href{http://dx.doi.org/10.1016/00255416(84)90201-5}{http://dx.doi.org/10.1016/00255416(84)90201-5}.
+
+[47] S.C. Flood, J.D. Hunt, Columnar and equiaxed growth, J. Cryst. Growth 82 (1987) 543-551, \href{http://dx.doi.org/10.1016/0022-0248(87)90346-0}{http://dx.doi.org/10.1016/0022-0248(87)90346-0}.
+
+[48] M. Gäumann, R. Trivedi, W. Kurz, Nucleation ahead of the advancing interface in directional solidification, Mater. Sci. Eng. A 226 (1997) 763-769, http:/ \href{http://dx.doi.org/10.1016/S0921-5093(97)80081-0}{dx.doi.org/10.1016/S0921-5093(97)80081-0}.
+
+[49] H.B. Dong, P.D. Lee, Simulation of the columnar-to-equiaxed transition in directionally solidified Al-Cu alloys, Acta Mater. 53 (2005) 659-668, http:// \href{http://dx.doi.org/10.1016/j.actamat.2004.10.019}{dx.doi.org/10.1016/j.actamat.2004.10.019}.
+
+[50] K.-O. Yu, Modeling for Casting and Solidification Processing, CRC Press, 2001
+
+[51] K. Kelton, A.L. Greer, Nucleation in Condensed Matter: Applications in Materials and Biology, Elsevier, 2010
+
+[52] J. Pilling, A. Hellawell, Mechanical deformation of dendrites by fluid flow Metall. Mater. Trans. A 27 (1996) 229-232, \href{http://dx.doi.org/10.1007/}{http://dx.doi.org/10.1007/} BF02647763.
+
+[53] A. Hellawell, S. Liu, S.Z. Lu, Dendrite fragmentation and the effects of fluid flow in castings, JOM 49 (1997) 18-20, \href{http://dx.doi.org/10.1007/BF02914650}{http://dx.doi.org/10.1007/BF02914650}.
+
+[54] T. Campanella, C. Charbon, M. Rappaz, Grain refinement induced by electromagnetic stirring: a dendrite fragmentation criterion, Metall. Mater. Trans. A 35 (2004) 3201-3210, \href{http://dx.doi.org/10.1007/s11661-004-0064-1}{http://dx.doi.org/10.1007/s11661-004-0064-1}.
+
+[55] D. Ruvalcaba, R.H. Mathiesen, D.G. Eskin, L. Arnberg, L. Katgerman, In situ observations of dendritic fragmentation due to local solute-enrichment during directional solidification of an aluminum alloy, Acta Mater. 55 (2007) 4287-4292, \href{http://dx.doi.org/10.1016/j.actamat.2007.03.030}{http://dx.doi.org/10.1016/j.actamat.2007.03.030}.
+
+[56] S. Ananiev, P. Nikrityuk, K. Eckert, Dendrite fragmentation by catastrophic elastic remelting, Acta Mater. 57 (2009) 657-665, \href{http://dx.doi.org/10.1016/}{http://dx.doi.org/10.1016/} j.actamat.2008.10.004.
+
+[57] J.-M. Drezet, S. Mokadem, Marangoni convection and fragmentation in laser treatment, Mater. Sci. Forum 508 (2006) 257-262.
+
+[58] M. Gäumann, C. Bezençon, P. Canalis, W. Kurz, Single-crystal laser deposition of superalloys: processing-microstructure maps, Acta Mater. 49 (2001) 1051-1062, \href{http://dx.doi.org/10.1016/S1359-6454(00)00367-0}{http://dx.doi.org/10.1016/S1359-6454(00)00367-0}.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

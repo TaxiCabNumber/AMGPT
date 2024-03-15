@@ -1,0 +1,389 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+
+\title{Texture control of 316L parts by modulation of the melt pool morphology in selective laser melting }
+
+\author{}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+\textbackslash author\{\\
+Olivier Andreau ${ }^{a, b, *}$, Imade Koutiri ${ }^{b}$, Patrice Peyre ${ }^{b}$, Jean-Daniel Penot ${ }^{a}$, Nicolas Saintier ${ }^{c}$, \\
+ Etienne Pessard ${ }^{\mathrm{d}}$, Thibaut De Terris ${ }^{\mathrm{b}}$, Corinne Dupuy ${ }^{\mathrm{b}}$, Thierry Baudin ${ }^{\mathrm{e}}$ \\
+ ${ }^{\text {a }}$ CEA Saclay DIGITEO Labs, Bât. 565, 91191 Gif-Sur-Yvette Cedex, France \\
+ ${ }^{\mathrm{b}}$ Arts et Métiers ParisTech, CER Paris - Laboratoire PIMM - UMR 8006 CNRS - ENSAM - CNAM, 151 Bd de l'hôpital, 75013 Paris, France
+
+\includegraphics[max width=\textwidth]{2024_03_10_0e8b6c26c1eb60cec4e4g-01} \\
+ d Arts et Métiers ParisTech, CER Angers - Laboratoire LAMPA - 2 Bd du Ronceray, 49035 Angers Cedex 1, France \\
+ e ICMMO, SP2M, Univ. Paris-Sud, Universite Paris-Saclay, UMR CNRS 8182, 91405 Orsay Cedex, France\\
+\}
+
+\section*{A R T I C L E I N F O}
+Associate Editor: Gary J. Cheng
+
+Keywords:
+
+Selective laser melting
+
+Laser deposition
+
+Austenitic stainless steel
+
+Crystallographic texture
+
+Solidification microstructures
+
+\begin{abstract}
+A B S T R A C T In this study, 316L parts were fabricated with the selective laser melting additive layer manufacturing process using unidirectional laser scan to control their texture. The melt pool shape, microstructure and texture of three different cubic samples were analyzed and quantified using optical microscopy and electron back-scattered diffraction. The samples scanned along the shielding gas flow direction were shown to exhibit shallow conduction melt pools together with a strong $\{110\}<001>$ Goss texture along the laser scanning direction. The sample prepared with a laser scan perpendicular to the gas flow direction had deeper melt pools, with a weaker $\{110\}<001>$ Goss texture in addition to $a<100>$ fiber texture parallel to the scanning direction. Correlations were proposed between the melt-pool geometry and overlap and the resulting texture. The decrease of the melt pool depth was assumed to be linked to local attenuation of the laser beam effective power density transmitted to the powder bed.
+\end{abstract}
+
+\section*{1. Introduction}
+Additive manufacturing (AM) is opening up new horizons for producing novel complex shapes, such as lattice or topologically optimized parts to save weight and gain more efficiency. The (ISO/ASTM 5290015,2015 ) norm describes this process as adding matter through a pattern generated from a virtual 3D file, known as STL file, instead of subtracting material from a bulk part with traditional machining. Powder bed fusion (PBF) processes are AM techniques where powder layers are successively stacked and melted on top of each other with an energetic beam (electrons, laser). Among PBF processes, Selective Laser Melting (SLM) is the most common PBF process and has been developing for the last two decades, since the pioneering work achieved by Meiners et al. (1999). Using this new process, functional and lightweight parts are now fabricated to be integrated and used in various fields. Singh and Ramakrishna (2017) referenced multiple applications of metallic additive manufacturing for biomedical implants. Brandt et al.(2013) studied the manufacturability of a high-value aerospace bracket using SLM. They found that the manufactured part met the necessary mechanical requirements in AMS standards.\\
+316L austenitic stainless steel is used many industrial sectors, ranging from jewelry to welding. It is widely recognized for its biocompatibility, its excellent corrosion resistance because of its low carbon content that reduce the sensitization effect, and its high chromium content that protects it from oxidation even at high temperatures, due to the formation of a stable $\mathrm{Cr}_{2} \mathrm{O}_{3}$ passive layer. Its low cost, availability and biocompatibility makes it a good candidate with additive manufacturing for fabricating orthopedic implants or prostheses, as summarized in Sing et al. (2016) study.
+
+$316 \mathrm{~L}$ is mentioned in a wide range of studies in additive manufacturing. Kamath et al.(2014) have shown that very low porosity rates of less than $1 \%$ can be achieved in SLM with layers of 20-100 $\mu \mathrm{m}$. In a different way, Fatemi et al. (2017) have shown using Direct Laser Metal Sintering that $90 \%$ dense parts could be manufactured with high thicknesses using a minimal power input of $60 \mathrm{~W}$. 316L can also be coupled with another material, as shown by (Liu et al., 2014) were bimaterials parts of 316L and C18400 copper alloy were manufactured and showed good bonding at the interface. High tensile properties of 316L manufactured by SLM, superior to wrought and cast 316L steel properties were measured by Andreau et al. (2017), that Röttger et al.
+\footnotetext{\begin{itemize}
+  \item Corresponding author at: Arts et Métiers ParisTech, CER Paris - Laboratoire PIMM - UMR 8006 CNRS - ENSAM - CNAM, 151 Bd de l'hôpital, 75013 Paris, France. E-mail address: \href{mailto:andreau.olivier@gmail.com}{andreau.olivier@gmail.com} (O. Andreau).
+\end{itemize}
+}
+
+(2016) attributed to the fine cellular or cellular-dendritic microstructure generated by the fast heating and cooling solidification process. This microstructure has been observed in recent work by Wan et al. (2017) for Inconel 718 SLM samples. Similar types of microstructure have previously been observed in various rapid solidification processes. Kim and Cantor (1990) observed cellular solidification in melt spinning, and Majumdar et al. (2005) found that the morphology of the microstructure obtained in 316L in laser cladding varied from cellular-dendritic to cellular with increasing laser power.
+
+Despite generally superior mechanical monotonous performances, an important microstructure and mechanical anisotropy in SLM 316L, depending mainly on the sample orientation, laser scanning strategies, and main parameters (power, speed, hatch spacing) has been noticed by many authors. Casati et al (2016) and Deev et al. (2016) both observed superior mechanical performance for horizontally built specimens. Suryawanshi et al. (2017) observed that single melt scanning strategies offered better tensile properties than chess scanning strategies, despite a higher porosity. Several authors observed a strong solidification texture in several face-centered cubic (FCC) materials processed by SLM. Thijs et al. (2013) observed a $<001>$ fiber texture in AlSi10Mg along the laser scanning direction, which was described further by Liu and To (2017) with a semi-empirical model. Nadammal et al. (2017) identified a strong $\{110\}<001>$ Goss texture in Inconel 718. Sun et al. (2018) observed that the scanning strategy could deeply impact the resulting texture orientation in a Ni-25\%Mo alloy. In a similar way, Wan et al. (2018) observed an increase in Inconel 718 texture by varying the laser scanning strategy, going from bimodal with a unidirectional scanning to strong cube with bidirectional scanning. Li et al. (2017) fabricated a weak textured Hexagonal Close Packed (HCP) titanium part with a high power and a high scanning speed, which resulted in isotropic properties in compression. Additionally, Niendorf et al. (2013) elaborated 316L parts using a high energy laser with a very strong $\{001\}<100>$ cube texture. Finally, Prashanth et al. (2014) have shown that the texture and microstructure can be controlled either by changing the angle between the sample and the substrate plate, or with a post fabrication isothermal annealing. Prashanth et al. (2017) showed in their recent work that additional in-situ parameters, such as the addition of a contour, a base plate heating, combined with a specific hatch style can help fabricating anisotropic parts. In consequence, the combination of in-situ and ex-situ fabrication parameters can help to control the texture and the microstructure of a SLM part. Campbell (2015) explains in his work that controlling the texture of a material, and especially selecting specific crystallographic orientations, is very attractive for manufacturing single crystal parts, such as turbine blades for jet engines. Indeed, Versnyder and Shank (1970) showed that the absence of grain boundaries enhances the resistance to creep, especially at high temperatures. To the contrary, manufacturing textureless polycrystalline parts with isotropic microstructure may be of interest to maximize their yield strength and easily predict their behavior.
+
+The aim of the present work is to describe and explain further the morphological and crystallographic texture of a FCC stainless steel part fabricated using selective laser melting, and show how some secondary parameters (scanning direction versus cross flow direction) can still affect the morphological and crystallographic texture of a material. The micrographs and melt pool measurements given in this paper will be linked to the laser scanning direction versus the protection gas and to the power input for a similar energy density. It will be observed that the competition between global thermal gradients and local melt pool shape that control the microstructure selection can still affect strongly the texture of a material. Additionally, the detrimental effect of the gas shielding versus the laser scanning direction in SLM on the melt pool shape uniformity and thus on the resulting texture will be discussed.\\
+Table 1
+
+Chemical composition of the 316L steel powder.
+
+\begin{center}
+\begin{tabular}{lllllllllll}
+\hline
+Element & $\mathrm{Fe}$ & $\mathrm{C}$ & $\mathrm{Si}$ & $\mathrm{Mn}$ & $\mathrm{P}$ & $\mathrm{S}$ & $\mathrm{Cr}$ & $\mathrm{Ni}$ & $\mathrm{Mo}$ & $\mathrm{N}$ \\
+\hline
+$\mathrm{wt} \%$ & Bal. & 0.01 & 0.65 & 1.19 & 0.023 & 0.005 & 17.17 & 10.99 & 2.47 & 0.1 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0e8b6c26c1eb60cec4e4g-02}
+\end{center}
+
+Fig. 1. Powder diameter distribution histogram (gray) and cumulative diameter distribution curve (red). (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article).
+
+\section*{2. Experimental setups}
+\subsection*{2.1. Materials and sample fabrication method}
+Three samples have been manufactured simultaneously using a SLM HL 125 machine. The material used for the study is 316L stainless steel powder, with composition and particle distribution shown respectively in Table 1 and Fig. 1. The $\mathrm{D}_{10}, \mathrm{D}_{50}, \mathrm{D}_{90}$ of the powder are respectively 23, 37 and $60 \mu \mathrm{m}$. A SEM analysis did not reveal entrapped gas within powder grains, as mounted and polished powder did not show any hollow grains, and the same manufacturing powder batch was used for all the samples. The geometry of the samples is a $10 * 10 * 10 \mathrm{~mm}$ cube shown Fig. 2.
+
+The only varying parameters used for the sample fabrication are summarized in Table 2. All other parameters were kept constant. Power and speed were chosen so that the ratio power/speed remains constant, in order to theoretically keep the same Volumetric Energy Density (VED), which is ratio of the laser power divided by the scanning speed times the laser spot area, as described by Gunenthiram et al (2018). Such an analytical formulation was used instead of other ones (using for instance powder bed layer or hatch distance as influent parameters) for the following reasons: (1) recent work by Fabbro et al. (2018) have shown a linear dependence between fusion depth and such a VED formulation, (2) our experimental results on 316L exhibit a clear dependence between porosity rate (densification level) and such a VED, (3) it provides a physically realistic formulation of laser absorption which occurs mainly at the surface of the melt-pool and is not affected by powder thickness. As indicated by Scipioni Bertoli et al. (2017), the use of VED as a mean for combining the power, speed and beam diameter process parameters in a single energy input is mostly efficient at low energy inputs, typically below $100 \mathrm{~J} / \mathrm{mm}^{3}$. The layer thickness was $30 \mu \mathrm{m}$, the building platform was heated at $80^{\circ} \mathrm{C}$, the hatch (distance between two laser tracks) was $140 \mu \mathrm{m}$, the fiber laser beam diameter (Ø99\%) was $70 \mu \mathrm{m}$ with a gaussian profile, and the time between two successive layers was $50 \mathrm{~s}$. The shielding gas was ALPHAGAZ ${ }^{\mathrm{TM}}$ argon ( $>99.999 \%$ purity), the pressure inside the chamber was $1 \mathrm{~atm}+12 \mathrm{mbar}$, and the gas flow was set at approximately $5 \mathrm{~m} / \mathrm{s}$. The
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0e8b6c26c1eb60cec4e4g-03}
+\end{center}
+
+Fig. 2. Laser scanning fabrication parameters of a) sample A and b) sample B. Dash-point lines outline the observation planes for the TD-BD samples.
+
+Table 2
+
+Main building parameters.
+
+\begin{center}
+\begin{tabular}{llll}
+\hline
+ & A & B & C \\
+\hline
+Power (W) & 175 & 175 & 400 \\
+Speed (mm/s) & 500 & 500 & 1100 \\
+\begin{tabular}{l}
+Angle between the laser scanning direction and gas shielding \\
+$\quad$ direction ( $\left.{ }^{\circ}\right)$ \\
+\end{tabular} & 0 & 90 & 0 \\
+\begin{tabular}{l}
+Volumetric Energy Density (VED, J. $\mathrm{mm}^{-3}$ ) \\
+\end{tabular} & 91 & 91 & 94 \\
+\hline
+\end{tabular}
+\end{center}
+
+scanning strategy was bi-directional with a meander strategy, so that the laser went back and forth along the whole sample with no stop or overlap. Additionally, the samples were prepared close to each other on the building plate, and placed at 10 to $13 \mathrm{~cm}$ from the gas outlet, but were not aligned horizontally nor vertically, so that the construction of one sample would have a minimal impact in terms of spatter or recoating on the others. The building plate was machined in polycrystalline 316L stainless steel.
+
+The building direction (BD), scanning direction (SD) and tangential direction (TD), shielding gas direction during fabrication along the $\mathrm{X}$ axis, and the laser scan strategy are shown Fig. 2 for sample A and B. For each sample, the laser scanning directions were kept identical from the first to the last layer.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_0e8b6c26c1eb60cec4e4g-03(1)}
+
+Fig. 3. Melt pools on the TD-BD plane at the top of (a) Sample A, (b) Sample B, (c) Sample C. Some of the top melt pools are outlined in white for each sample (d) Cellular structure observed in sample A.\\
+post-processing were achieved using respectively NORDIF, OIM DC (Data collection) and TSL OIM Analysis v7 softwares.
+
+After EBSD, the samples were etched using Carpenter's reagent for less than $1 \mathrm{~min}$. They were observed on a Zeiss Imager M2m optical microscope and the images were acquired on a 5 Megapixels Zeiss Icc5 camera at magnification 100 and 500.
+
+\section*{3. Results}
+\subsection*{3.1. Melt pool shapes and dimensions}
+The melt pool shape for samples A, B and C are displayed Fig. 3a)-c). For more clarity, the contour of some melt pools is outlined Fig. 3 for each sample. The melt pool dimensions have been measured according to the drawing Fig. 3b). Since an overlap hides the left side of every melt pool, the width was estimated by taking into account the local curvature of each melt pool to recreate its whole contour. It is to note that despite the highly regular laser scans, the melt pool shape and alignment vary from one track to another. The cellular structure typical of the SLM melt pools is visible Fig. 3d) and corresponds to the observations of the literature for SLM samples.
+
+Strong epitaxy is evidenced by the grains that grew in multiple melt pools, especially for sample B. Fig. 3b) shows columnar grains at the center of the melt pools, shared for over 10 layers. The average melt pool dimensions measurements are reported on Fig. 4, with the error bars corresponding to the standard deviation estimated on a minimum of 10 measurements. Since the slight misalignment of the melt pools borders did not exceed more than $5^{\circ}$ with the tangential direction, it was not taken into account in the width measurements. The height of the melt pool was measured at mid-width. The high deviation for the depth of sample B melt pools is due to the important variability in melt pool shape. As it can be seen Fig. 3, the sample B has melt pools with various shapes with an average width/height ratio close to 1 , and even sometimes superior, indicating a conduction to keyhole transition welding mode, widely described in the work of Fabbro (2008) for laser welding, or in the more recent work of King et al. (2014) for powder additive manufacturing. The two other samples exhibit flatter melt pools corresponding to a conduction mode. The keyhole mode is linked to the vaporization of the metal by the laser, which applies a recoil pressure at the bottom the melt pool. It results in a melt pool front with a lower inclination with the laser, favoring the laser absorptivity and thus increasing the depth of the melted material. The typical nail-head keyhole shape is clearly evidenced in Fig. 3b) for sample B. The asymmetry of the melt pools is linked to the powder or metallic interfaces present during each track solidification: the left side of the melt pools face a $30 \mu \mathrm{m}$-high powder layer, while the right is in contact with solidified metal from the previous track. Rombouts (2006) showed that solid metal has a thermal conductivity around 100 times higher than loose powder, hence leading to asymmetrical isotherms distribution in the melt pool on the TD-BD plane.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0e8b6c26c1eb60cec4e4g-04}
+\end{center}
+
+Fig. 4. Melt pool dimensions for the three samples.\\
+The same width of $169 \mu \mathrm{m}$ was measured for samples A and B with similar error bars, but the sample B shows deeper melt pools with a larger error bar due to the high variability in depth from track to track, as illustrated Fig. 3b). It appears that scanning along the protection gas flow direction decreases the melt pool depth. The sample C, processed at a higher power with a higher speed, has $245 \mu \mathrm{m}$ wide melt pools, with a depth similar to sample B tracks at $113 \pm 22 \mu \mathrm{m}$ and melt pools with a shape similar to sample A indicating a conduction mode.
+
+Sample B has an average height/length aspect ratio of 0.7 while A and $C$ have the same ratio of 0.45 . By considering the $140 \mu \mathrm{m}$ hatch distance, sample A and B melting pools have a $17 \%$ overlap and sample $\mathrm{C}$ has a $43 \%$ overlap in width. However, despite the difference in melt pool dimensions and shape, no significant differences in porosity ( $<0.1 \%$ on all samples) were observed after porosity evaluation using image processing, indicating little or no involvement of the spatter redeposition between the samples or deleterious effects from the powder batch.
+
+\subsection*{3.2. EBSD grain characterization}
+EBSD scans were carried out on samples A, B and C on their TD-BD planes. By convention, all the Inverse Pole Figures (IPF) and Pole Figures (PF) are plotted with the $<\mathrm{uvw}>$ directions parallel to the BD.
+
+The IPF map of the top of sample B is displayed Fig. 5a), along with an optical micrograph taken in the same area. The black lines represent the grain boundaries $\left(>15^{\circ}\right)$ and the red line the sub-grains boundaries $\left(2-15^{\circ}\right)$. A strong intragranular misorientation is visible in the grains through the continuous color gradients of each grain. Moussa et al. (2017) attributed it to the presence of geometrically necessary dislocations that induce a local lattice rotation. Those dislocations can originate from the rapid solidification occurring in SLM.
+
+A strong epitaxy is observed with columnar grains in red $(<001>/ / \mathrm{BD})$ and green $(<011>/ / \mathrm{BD})$ crossing most of the layers. However, contrary to previous study made by Nadammal et al. (2017), those red $<001>$ columnar grains are not localized at overlapping melt pools, but at the center of vertically aligned melt pools. The same observation had already been made by Thijs et al.(2013). What appears to be the melt pool shape between two red columnar grains is in fact the zone where the melt pools are overlapping. The spacing between those red columnar grains is thus equal to the hatch spacing in the laser parameters.
+
+For a more quantitative analysis of the microstructure, two $1.4 \mathrm{~mm} * 1.4 \mathrm{~mm}$ areas have been acquired with a $1.5 \mu \mathrm{m}$ step size in the upper part of each sample in the TD-BD plane. Three $1.4 * 1.4 \mathrm{~mm}$ IPFs of samples $\mathrm{A}$ to $\mathrm{C}$ are displayed Fig. 6. No difference in microstructure or texture was noticed along the whole $10 \mathrm{~mm}$ width of the samples in the TD-BD plane. Additionally, a confirmation sample identical to sample A but placed $10 \mathrm{~cm}$ farther from the gas outlet on the building plate during fabrication showed a similar texture and microstructure. A quantitative analysis of the orientation proportion of the grains in the IPFs was performed using OIM Analysis and is shown Table 3. The sample B shows more $<001>(/ / \mathrm{BD})$ columnar grains than the two other samples, along with a less pronounced trend with the $<011>$ (// BD) for the grains. Samples A and C both show very large $<011$ $>$ grains that occupy more than 40 consecutive layers, while sample $\mathrm{B}$ has randomly oriented grains disrupting the green columnar grains. As a result, its average grain size weighted by area Fig. 6d) appears twice smaller compared to the other two samples.
+
+Fig. 7 represents three IPF maps of the sample B taken on the three planes defined by TD-BD (left of the cube), SD-BD (right of the cube), and SD-TD (top of the cube). The SD-TD map shows small red $<001$ $>$ grains, with large green $<011>$ grains interrupted by thin grains with various orientation all aligned in the TD. Those same red grains were previously observed on the TD-BD plane where they are columnar. The melt pool shape and trajectory are displayed Fig. 7b)-d) for the three observations planes. The shape of the melt pool for the SD-TD and\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_0e8b6c26c1eb60cec4e4g-05}
+
+Fig. 5. a) EBSD scan of sample B in the TD-BD plane with $<\mathrm{uvw}>$ directions plotted // BD, (b) Metallography observation in the same area.
+
+SD-BD planes was deduced from the measurable melt pool dimensions and the angle made by the solidification chevrons observable on the SDTD plane before polishing, as observed by Zhou et al. (2015) at the top of a CoCrMo cube fabricated using SLM. The red grains are not observed on the SD-BD plane IPF shown in the cube because the observed area corresponds to an overlapping zone between two melt pools, where the $<001>$ grains are present in fewer quantities.
+
+The global microstructure distribution relative to the teardrop melt pool dimensions in Fig. 7c) is similar to what Kou (2002) described for laser welding. It corresponds to a very high speed welding with elongated melt pool with grains growing almost perpendicular to the welding direction, with the presence of equiaxial grains at the pool tail.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_0e8b6c26c1eb60cec4e4g-05(1)}
+
+Fig. 6. IPF maps in the TD-BD plane with grain boundaries (black $>15^{\circ}$ ) and sub-grains boundaries (red, 2 to $15^{\circ}$ ) of samples a) A, b) B, c) C. d) Average grain diameter estimated for each sample on a $4 \mathrm{~mm}^{2}$ area on the TD-BD plane. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article).
+
+Table 3
+
+$<100>$ and $<110>$ grain orientation proportions parallel to the BD in the IPFs.
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Sample & $<100>/ / \mathrm{BD}$ & $<110>/ / \mathrm{BD}$ \\
+\hline
+A & $2 \%$ & $65 \%$ \\
+B & $11 \%$ & $40 \%$ \\
+C & $2 \%$ & $85 \%$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Those equiaxial grains could correspond to the high power and speed used in SLM and correspond to the morphology of the welds described by Arata et al.(1974) for several aluminum alloys. However, as the welds in SLM are superimposed on top of each other along the BD, they create elongated grains with epitaxy, oriented along the main fabrication direction.
+
+\subsection*{3.3. Texture characterization}
+The texture of sample A has been characterized at several building heights. Fig. 8 shows the $\{001\}$ pole figures with texture sharpness increasing with the building height. In the first layers (upper zone in Fig. 8), the grains are very small and of all orientations. A transition zone shows the start of the epitaxy with grains growing over several layers. In the next layers, a preferred direction $(<011>$ green grains // BD) develops. Finally, close to the top of the sample, a $\{110\}<001>$ Goss texture can be identified in the TD-SD plane.
+
+In the areas with a strong Goss texture Fig. 8, a chevron-like pattern is observed in the zones where melt pools are overlapping (Fig. 9). The EBSD data were rotated around $10^{\circ}$ along TD and plotted with the $<$ uvw $>$ directions //SD to have a better color contrast. The chevrons are asymmetrical as seen in Fig. 9c): the most elongated part corresponds to the newest track and the least elongated part to the former one. This difference in length corresponds to the $\sim 30 \mu \mathrm{m}$ overlap of melt pools in samples A and B.
+
+The texture observed for samples B and C near the top is similar to the Goss texture observed for sample A. Fig. 10 shows the $\{001\}$ PF of the three samples, calculated over a total of $4 \mathrm{~mm}^{2}$ for each sample, with more than $10^{6}$ indexation points. All three samples show a similar Goss texture, but with differences in contour plot intensity and shape. The strongest texture is observed for sample C, followed by A and\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_0e8b6c26c1eb60cec4e4g-06}
+
+Fig. 7. a) 3D visualization of the microstructure in sample B: $1,4^{*} 1,4^{*} 1,4 \mathrm{~mm}^{3}$ cube. Schematic visualizations of the melt pools based on the average measures in sample B superimposed on IPFs on the b) TD-BD plane c) SD-TD plane d) SD-BD plane.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0e8b6c26c1eb60cec4e4g-07(1)}
+\end{center}
+
+Fig. 8. a) IPF maps of sample A at the bottom and top of the samples, b) $\{001\}$ Pole figures corresponding to the zones indicated by the solid brackets.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_0e8b6c26c1eb60cec4e4g-07}
+
+Fig. 9. Chevron pattern illustrated for a) Sample A, b) close-up of the dashed zone in A, c) Melt pool overlap zone in B with measurement annotations.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0e8b6c26c1eb60cec4e4g-07(2)}
+\end{center}
+
+Fig. 10. $\{001\}$ pole figures of samples a) A, b) B, c) C described in the TD-SD plane.
+
+finally B, with maxima at intensities of respectively 10.4, 6.3 and 6 . The Goss texture is characterized by FCC crystals aligned along the scanning direction, while they are inclined by $45^{\circ}$ from the $\mathrm{BD}$ and the TD. This particular texture has also been reported as rotated Cube by Nadammal et al. (2017), when plotting the pole figures centered on the SD. For sample B, the presence of the numerous $<001>$ red columnar grains, indicates the presence of a secondary weak $\{100\}<001>$ Cube texture. In addition to the mostly randomly oriented grains in the TD-BD plane, it leaves a line along the TD axis, and indicates a partial $<100$ $>$ fibre.
+
+\section*{4. Discussion}
+\subsection*{4.1. Melt pool shape}
+Anwar and Pham (2017) described the deleterious consequences of scanning in the same direction as the shielding gas flow. They collected less spattered powder for manufactured at low shielding gas flow, likely
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_0e8b6c26c1eb60cec4e4g-08}
+\end{center}
+
+Fig. 11. a) Sample A melt pools, b) Sample C melt pools, c) Sample B melt pool,s d) Epitaxial growth in the melt pool overlap indicated for sample A, e) Epitaxial growth at the center of the melt pools and at the melt pool overlap indicated for sample B $\left(T_{i}=\right.$ local thermal gradient for bead $i, C_{i}=$ Cell growth direction for bead i).
+
+indicating an interaction between the laser and those particles and resulting in lower mechanical performances due to incomplete melting. In the same manner, Scholz et al. (2015) observed that the laser power can be locally attenuated by the metal vapor plume. This vapor plume can interact in two ways with the laser beam: directly and indirectly. First, the hot and dense vapor column can act as a thermal lens and modify the caustic of the laser, thus affecting the beam diameter. Additionally, nanoparticles are generated by the vapor plume condensation and can have a size of a few tens of nanometers, as measured by Scholz et al. (2014). Park and Na (2010) describe such small particles eligible to interact with the laser beam via the Rayleigh scattering and absorption effects. Finally, powder particles, in the range of the size distribution given by Fig. 1, coming directly from the powder bed, are entrained upwards by the vapor plume. This effect is known as powder denudation and is in good part at the origin of the spatter formation described by Gunenthiram et al. (2018) and Matthews et al. (2016). However, this last phenomenon produces discrete particles, with trajectories at a high inclination with the laser beam, so it is not believed to have a continuous and measurable interaction with the laser.
+
+Sample A and B melting pools have identical widths but A melt pools are around $40 \mu \mathrm{m}$ shallower than B melt pools. It is likely that a flow of nanoparticles from the vapor plume, or micro particles from the powder bed lifted upwards by the vapor plume, are entrained from right to left on the $\mathrm{X}$ axis by the shielding gas, corresponding to the $\mathrm{SD}$ for horizontally scanned samples. As a result, the laser is partially absorbed by those particles when scanning along the $\mathrm{X}$ axis. Since the laser spot diameter remained the same between sample A and B, the irradiated area on the surface is similar, leading to a similar width of melt pool induced by a conduction mode. However, the absorption of a fraction of the laser power for sample A could have led to a reduced heating of the melt pool, and a decrease of Marangoni induced flow. On the contrary, a higher power is supposed to have irradiated the surface of sample B and induced more intense flow and deeper melt pools. This should have come from the generation of a near keyhole welding mode, as evidenced Fig. 3b) and d).
+
+Last, sample $\mathrm{C}$ was manufactured using a more than twice higher power and scanning speed, generating bigger melt pools. Those melt pools kept the same ratio height/length than sample A but were approximately $40 \%$ larger and deeper. According to the similar VED between the two samples, a change of this magnitude would not be expected. However, the VED formula does not take into account nonlinear effects such as the interaction between the laser and the vapor plume. It is likely that the vapor plume for sample $\mathrm{C}$ had a different angle and velocity, thus acting as a different thermal lens or showing different Rayleigh scattering and absorption effects. Additionally, as stated by Scipioni Bertoli et al. (2017) the VED does not take into account all the complex physics that shape the melt pool, such as Marangoni flow, hydrodynamic instabilities or recoil pressure.
+
+\subsection*{4.2. Texture}
+It is known from the solidification theory that the primary growth direction of the FCC crystals is $<001>$. It is linked to the anisotropy of the FCC crystals, with the presence of dense and less dense crystallographic planes. The axis involving the least atoms $(<001>)$ are the fastest to grow during solidification, while the densest directions are the slowest. Additionally, for a single track, the best growing orientation for dendrites or cells in the TD-BD plane is perpendicular to the solid-liquid interface in every point, as predicted by the theory. This has been observed already for TD-BD observations for steel alloys with LMD tracks by Ocelík et al. (2010) or SLM tracks by Yadroitsev et al. (2013), where all the grains grew perpendicularly to the melt pool border and point towards the center of the melt pool. However, this observation is accurate for single tracks only, and is clearly different from the results\\
+shown previously on the IPF maps and PF of this study. Indeed, a strong texture has been observed, showing a preferred FCC orientation at $45^{\circ}$ from the $\mathrm{BD}$ and the $\mathrm{TD}$ and aligned $\left(0^{\circ}\right)$ along the SD.
+
+The alignment of the $<001>$ direction along the SD can be explained by the thermal gradient induced along SD during a scan. That gradient follows exactly the laser trajectory as described by Zhou et al. (2015), resulting in a $<001>$ crystallographic growth in the same direction, in agreement with solidification theory for FCC materials. The $180^{\circ}$ rotation of the SD at every new track does not impact the crystal growth. Indeed, because of the cubic arrangement, multiple rotations of $90^{\circ}$ will result in the same crystallographic orientation. A $180^{\circ}$ rotation around $\mathrm{BD}$ of the thermal gradient will thus not change the crystal orientation, even if the nucleation starts in the direction opposite to the laser trajectory of the previous track.
+
+In order to describe the microstructure selection that occur during the solidification process on the TD-BD plane, we have reported on Fig. 11 the melt pools of samples A to C, based on the average measurements from Fig. 4. A particular interest was given in Fig. 11c) to explain how the epitaxy has affected the crystal orientation at the melt pool overlap whereas Fig. 11e) shows the epitaxial growth of the $<$ $001>$ red grains at the bottom of the melt pools as observed for sample B. The scan order considered in the figure is from right to left, and the building direction is from bottom to top, according to the samples processing parameters. Consequently (Fig. 11c), the fusion bead chronology is A/B/C/D/E/F.
+
+Point $\alpha$ (Fig. c): As track $A$ is considered as the first track of the part, the germination is perpendicular to the isotherms: the dendritic cell growth direction $C_{a}$ follows the thermal gradient $T_{a}$ at the interface between the liquid and solid: $\mathrm{C}_{\mathrm{a}} / / \mathrm{T}_{\mathrm{a}}$. After $\mathrm{B}$ is scanned and partially remelts $A$, the thermal gradient $T_{b}$ should impose the solidification of the cells. However, in order to minimize the nucleation energy of the new cells, an epitaxial growth can occur on the grains already present. Since the thermal gradient still forces the global cell growth direction, the epitaxial growth direction $\mathrm{C}_{\mathrm{b}}$ cannot have a large angular distance from $T_{b}$. The direction $C_{b}$ considering epitaxy can thus only be perpendicular to $\mathrm{C}_{\mathrm{a}}$, near the direction $\mathrm{T}_{\mathrm{b}}$. Locally, the epitaxy occurs on the small second arms of the cellular dendritic structure in the melt pool A. Since the system is FCC, there appears to be no change in crystal orientation since $C_{a}$ and $C_{b}$ are perpendicular. This phenomenon of epitaxial growth on the secondary arms has already been described Dinda et al. (2012) for cladding.
+
+Point $\alpha$ to $\beta$ in melt pool B: The distance is less than $25 \mu \mathrm{m}$ for sample A. The dendritic cell growth with a given orientation is not restricted to point $\alpha$. It occurs first at the bottom of a melt pool, and progressively continues upwards, starting from the edges. The solidification direction thus follows the same cell direction $\mathrm{C}_{\mathrm{b}}$, since the angular difference with the local thermal gradients remains small. It is important to note that if the layer thickness was higher, the local thermal gradient variation between $\alpha$ and $\beta$ and its direction could overcome the epitaxial growth by necessitating a lower nucleation energy for a heterogeneous germination.
+
+Point $\beta$ : After bead $C$ is scanned, by considering an epitaxial growth, the cell growth direction $\mathrm{C}_{\mathrm{c}}$ can either follow the primary arms of the dendritic cells that grew along $\mathrm{C}_{\mathrm{a}}$, or the direction $\mathrm{C}_{\mathrm{b}}$. Since the thermal gradient of bead $B$ at point $\beta \mathrm{T}_{\mathrm{c} \beta}$ restricts having a too large angular deviation for the growth, it occurs along the direction $C_{a}$ and not $C_{b}$. This direction is also favored because of the presence of the secondary arms of the cells that grew along $\mathrm{C}_{\mathrm{b}}$. A slight deviation from the direction $C_{a}$ could be caused by the gradient $T_{c \beta}$ pulling the growth direction upwards. At every layer and every new track, the competition between heterogeneous nucleation (following the thermal gradient) and the epitaxial growth (controlled by the crystals already present) could explain the chevron-pattern observed in Fig. 9. As the angular deviation is small (a few degrees), it remains in the same grain. The asymmetry of the chevron pattern evidenced in Fig. 9 comes from the position of the point $\beta$, which is not centered between the melt pools. A growth of two cells at respectively $+45^{\circ}$ (left) and $-45^{\circ}$ (right) from BD until they reach the middle of the melt pools would result in a longer cell length on the left. This asymmetry is illustrated in Fig. 11e).
+
+Point $\beta$ to $\gamma$ in melt pool C: Same reasoning as in point $\alpha$ to $\beta$. Also, the presence of the dendritic cells with a secondary arm direction very close to $\mathrm{C}_{\mathrm{c}}$ assists the germination.
+
+Point $\gamma$ : After the track $\mathrm{D}$ is scanned, the dendritic cells can grow epitaxially on the primary arms of the dendritic cells of the track B. They could also be slightly deviated upwards with an epitaxial growth occurring on the secondary arms of the dendritic cells of the track C.
+
+In every subsequent layer, the dendritic cells nucleating epitaxially are the fastest to grow, and eliminate the other orientations gradually, because they need less nucleation energy. Epitaxy occurs both on the previous track of the layer, and on the tracks of the previous layers. Once most of the random orientations are eliminated, the most stable configuration leading to a stationary regime occurs when all the dendritic cells grow with their primary arms oriented with an angle of $45^{\circ}$ versus the building direction, as illustrated for point $\delta$ in Fig. 11c). This indeed corresponds to a state where the angular deviation between the growth direction and the local thermal gradient direction is minimal in all the tracks.
+
+The columnar $<001>$ grains mostly observed for sample B Fig. 7 are illustrated Fig. 11e). In the first layers, they result from a heterogeneous germination due to the vertical thermal gradient at the bottom of the melt pool. Since at each layer, the melt pools are piled on top of each other, their lowest points are aligned vertically. As a consequence, in every new track, both the thermal gradient and the epitaxy on the $<001>$ grains of the track beneath facilitate the nucleation of a new $<001>$ grain. Additionally, the angular difference between the local thermal gradient and the $<011>$ dendritic cell direction is too different for the epitaxy to lead to $a<011>$ grain growth at the bottom of the melt pools. Finally, the depth and steepness of the melt pools in sample B induces high thermal gradients flowing radially, leading to grains competing to grow oriented in almost all the directions in the TD-BD plane. In addition to the $<001>$ grains, they form the $<001>$ fibre observed Fig. 10b).
+
+$<001>$ columnar grains are also present the sample A, but in lower proportions. The shallower melt pools have lower thermal gradients, leaving more opportunity for the epitaxial growth to occur. In the sample $\mathrm{C}$, the high melt pool overlap combined with the shallow melt pools is at the origin of the very strong texture observed and the absence of $\{100\}<001>$ texture.
+
+The predominance of epitaxy leading to a strong texture explained in Fig. 11 was simplified for obvious reasons. In reality, the selection of a preferential grain orientation does not occur in three but in hundreds of layers, and is impacted by a multitude of external factors. Indeed, the chevron pattern can be observed all along the samples height, and is the proof of frequent growth direction conflicts.
+
+Scanning against or along the direction of the shielding gas flow is usually avoided in common industrial parametrizations to prevent undesired effects, such as pronounced variations in melt pool shape or dimensions. The industrial solution is usually to introduce a large forbidden angular window for the laser scanning directions in hatching mode, often coupled with a forced scanning order starting the first track at the farthest point from the shielding gas outlet and ending at the closest point. This scanning order aims at preventing spatters from contaminating the powder bed. However, limiting the laser scanning directions increases the texture, as it has been observed in this study or by Thijs et al. (2013). The part orientation on the building plate has to be thoroughly chosen in order to have the texture oriented according to the mechanical needs. The fabrication of fully untextured parts with regular melt pools and low porosity in selective laser melting remains a challenging objective. It requires either post processing, such as heat treatments, or improvements of the shielding gas flow to prevent the vapor plume from interacting with the laser.
+
+\section*{5. Conclusion}
+The analysis of melt pool shapes, along with microstructural and crystallographic texture characterizations of 316L austenitic steel samples fabricated by Selective Laser Melting were carried out. A specific focus was put on the influence of the scanning direction versus shielding gas flow on resulting morphological and crystallographic microstructures. It was found that:
+
+\begin{enumerate}
+  \item Melt pool shape and dimensions were strongly affected by the scanning direction versus the gas flow. For identical parameters, scanning along the gas flow direction was shown to reduce the melt pool depth by $33 \%$, without affecting the melt pool width. This depth reduction was attributed to interactions between the laser and the vapor plume that reduce the laser power irradiating the surface
+
+  \item The grains observed in the samples were highly columnar, aligned along the building direction. They crossed several tens of layers, indicating a strong epitaxy occurring during the fabrication. Since the grain orientation does not follow its texture according to usual solidification theory, a distinction between crystallographic and morphological texture was proposed.
+
+  \item High color gradients were observed in the grains, indicating a high intergranular misorientation. In the overlapping zones between the melt pools, this contrast took the shape of crystallographic chevronpatterns. One can interpret this contrast as a continuous competition between epitaxial growth and heterogeneous nucleation with the thermal gradients, leading to small and periodical angular shifts of the crystallographic lattice of a grain, indicating the presence of dislocations.
+
+  \item A Goss texture develops at the first layers of the sample and throughout all the fabrication. Selective crystallographic selection occurs with epitaxy and thermal gradients: the FCC crystals oriented along the scanning direction and at $45^{\circ}$ from the building direction are the more likely to grow with the melt pool overlap during fabrication.
+
+\end{enumerate}
+
+In summary, because of the strong presence of epitaxy and high cooling rates in selective laser melting, the texture and grain dimensions are affected by numerous factors influencing the melt pool shape, dimensions, and thus the overlapping. Scanning in the same direction as the gas flow affects the melt pool depth because of an undesired interaction of the laser with the vapor plume. A better control of the vapor plume by the shielding gas flow would ensure a more precise and homogeneous tailoring of the texture in selective laser melting.
+
+\section*{Acknowledgements}
+This work was financially supported by the CEA Digiteo and the PIMM laboratory in France.
+
+\section*{References}
+Andreau, O., Peyre, P., Penot, J.D., Koutiri, I., Dupuy, C., Pessard, E., Saintier, N., 2017. Deterministic defect generation in selective laser melting : parametric optimization and control. Lasers Manuf. - WLT eV. pp. 1-11.
+
+Anwar, A.Bin, Pham, Q.C., 2017. Selective laser melting of AlSi10Mg: effects of scan direction, part placement and inert gas flow velocity on tensile strength. J. Mater. Process. Technol. 240, 388-396. \href{https://doi.org/10.1016/j.jmatprotec.2016.10.015}{https://doi.org/10.1016/j.jmatprotec.2016.10.015}. Arata, Y., Matsuda, F., Matsui, A., 1974. Effect of welding condition on solidification structure in weld metal of aluminum alloy sheets. Trans. J. Weld. Res. Inst. 3, 89-97.
+
+Brandt, M., Sun, S.J., Leary, M., Feih, S., Elambasseril, J., Liu, Q.C., 2013. High-value SLM aerospace components: from design to manufacture. Adv. Mater. Res. 633, 135-147. \href{https://doi.org/10.4028/www.scientific.net/AMR.633.135}{https://doi.org/10.4028/www.scientific.net/AMR.633.135}.
+
+Campbell, J., 2015. Controlled solidification techniques. Complet. Cast. Handb. 883-891. \href{https://doi.org/10.1016/B978-0-444-63509-9.00017-0}{https://doi.org/10.1016/B978-0-444-63509-9.00017-0}.
+
+Casati, R., Lemke, J., Vedani, M., 2016. Microstructure and fracture behavior of 316L austenitic stainless steel produced by selective laser melting. J. Mater. Sci. Technol. 32, 738-744. \href{https://doi.org/10.1016/j.jmst.2016.06.016}{https://doi.org/10.1016/j.jmst.2016.06.016}.
+
+Deev, A.A., Kuznetcov, P.A., Petrov, S.N., 2016. Anisotropy of mechanical properties and its correlation with the structure of the stainless steel 316L produced by the SLM method. Phys. Procedia 83, 789-796. \href{https://doi.org/10.1016/j.phpro.2016.08.081}{https://doi.org/10.1016/j.phpro.2016.08.081}.
+
+Dinda, G.P., Dasgupta, A.K., Mazumder, J., 2012. Texture control during laser deposition of nickel-based superalloy. Scr. Mater. 67, 503-506. \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. scriptamat.2012.06.014.
+
+Fabbro, R., 2008. Dynamic approach of the keyhole and melt pool behavior for deep penetration Nd-Yag laser welding. AIP Conf. Proc. 1047, 18-24. \href{https://doi.org/10}{https://doi.org/10}. 1063/1.2999933.
+
+Fabbro, R., Dal, M., Peyre, P., Coste, F., Schneider, M., Gunenthiram, V., Fabbro, R., Dal, M., Peyre, P., Coste, F., Schneider, M., Gunenthiram, V., 2018. Parameters and material properties. Analysis and Possible Estimation of Keyhole Depths Evolution, Using Laser Operating Parameters and Material Properties. \href{https://doi.org/10.2351/}{https://doi.org/10.2351/} 1.5040624. 32410 .
+
+Fatemi, S.A., Ashany, J.Z., Aghchai, A.J., Abolghasemi, A., 2017. Experimental investigation of process parameters on layer thickness and density in direct metal laser sintering : a response surface methodology approach. Virtual Phys. Prototyp. 0, 1-8. \href{https://doi.org/10.1080/17452759.2017.1293274}{https://doi.org/10.1080/17452759.2017.1293274}.
+
+Gunenthiram, V., Peyre, P., Schneider, M., Dal, M., Coste, F., Koutiri, I., Fabbro, R., 2018. Experimental analysis of spatter generation and melt-pool behavior during the powder bed laser beam melting process. J. Mater. Process. Technol. 251, 376-386. \href{https://doi.org/10.1016/j.jmatprotec.2017.08.012}{https://doi.org/10.1016/j.jmatprotec.2017.08.012}.
+
+ISO/ASTM 52900-15, 2015. Standard Terminology for Additive Manufacturing - General Principles - Terminology. \href{https://doi.org/10.1520/ISOASTM52900-15}{https://doi.org/10.1520/ISOASTM52900-15}.
+
+Kamath, C., El-Dasher, B., Gallegos, G.F., King, W.E., Sisto, A., 2014. Density of additively-manufactured, 316L SS parts using laser powder-bed fusion at powers up to 400 W. Int. J. Adv. Manuf. Technol. 74, 65-78. \href{https://doi.org/10.1007/s00170014-5954-9}{https://doi.org/10.1007/s00170014-5954-9}.
+
+Kim, W.T., Cantor, B., 1990. The variation of grain size with cooling rate during melt spinning. Scr. Metall. Mater. 24, 633-637. \href{https://doi.org/10.1016/0956-716X(90)}{https://doi.org/10.1016/0956-716X(90)} 90214-2.
+
+King, W.E., Barth, H.D., Castillo, V.M., Gallegos, G.F., Gibbs, J.W., Hahn, D.E., Kamath, C., Rubenchik, A.M., 2014. Observation of keyhole-mode laser melting in laser powder-bed fusion additive manufacturing. J. Mater. Process. Technol. 214, 2915-2925. \href{https://doi.org/10.1016/j.jmatprotec.2014.06.005}{https://doi.org/10.1016/j.jmatprotec.2014.06.005}.
+
+Kou, S., 2002. Welding Metallurgy. Wiley-Interscience, Hoboken, N.J. \href{https://doi.org/10}{https://doi.org/10}, 1002/0471434027.
+
+Li, X.P., Humbeeck, J.Van, Kruth, J.P., 2017. Selective laser melting of weak-textured commercially pure titanium with high strength and ductility: a study from laser power perspective. Mater. Des. 116, 352-358. \href{https://doi.org/10.1016/j.matdes}{https://doi.org/10.1016/j.matdes}. 2016.12.019.
+
+Liu, J., To, A.C., 2017. Quantitative texture prediction of epitaxial columnar grains in additive manufacturing using selective laser melting. Addit. Manuf. 16, 58-64. \href{https://doi.org/10.1016/j.addma.2017.05.005}{https://doi.org/10.1016/j.addma.2017.05.005}.
+
+Liu, Z.H., Zhang, D.Q., Sing, S.L., Chua, C.K., Loh, L.E., 2014. Interfacial characterization of SLM parts in multi-material processing : metallurgical diffusion between 316L stainless steel and C18400 copper alloy. Mater. Charact. 94, 116-125. \href{https://doi}{https://doi} org/10.1016/j.matchar.2014.05.001.
+
+Majumdar, J.D., Pinkerton, A., Liu, Z., Manna, I., Li, L., 2005. Microstructure characterisation and process optimization of laser assisted rapid fabrication of 316L stainless steel. Appl. Surf. Sci. 247, 320-327. \href{https://doi.org/10.1016/j.apsusc.2005}{https://doi.org/10.1016/j.apsusc.2005}. 01.039 .
+
+Matthews, M.J., Guss, G., Khairallah, S.A., Rubenchik, A.M., Depond, P.J., King, W.E., 2016. Denudation of metal powder layers in laser powder bed fusion processes. Acta Mater. 114, 33-42. \href{https://doi.org/10.1016/j.actamat.2016.05.017}{https://doi.org/10.1016/j.actamat.2016.05.017}.
+
+Meiners, W., Over, C., Wissenbach, K., Poprawe, R., 1999. Direct Generation of metal parts and tools by Selective Laser Powder Remelting (SLPR). Proc. Solid Free. Fabr. Symp. 655-661.
+
+Moussa, C., Bernacki, M., Besnard, R., Bozzolo, N., 2017. Statistical analysis of dislocations and dislocation boundaries from EBSD data. Ultramicroscopy 179, 63-72. \href{https://doi.org/10.1016/j.ultramic.2017.04.005}{https://doi.org/10.1016/j.ultramic.2017.04.005}.
+
+Nadammal, N., Cabeza, S., Mishurova, T., Thiede, T., Kromm, A., Seyfert, C., Farahbod, L., Haberland, C., Schneider, J.A., Portella, P.D., Bruno, G., 2017. Effect of hatch length on the development of microstructure, texture and residual stresses in selective laser melted superalloy Inconel 718. Mater. Des. 134, 139-150. \href{https://doi.org/}{https://doi.org/} 10.1016/j.matdes.2017.08.049.
+
+Niendorf, T., Leuders, S., Riemer, A., Richard, H.A., Tröster, T., Schwarze, D., 2013. Highly anisotropic steel processed by selective laser melting. Metall. Mater. Trans. B Process Metall. Mater. Process. Sci. 44, 794-796. \href{https://doi.org/10.1007/s11663013-9875-z}{https://doi.org/10.1007/s11663013-9875-z}.
+
+Ocelík, V., Furár, I., De Hosson, J.T.M., 2010. Microstructure and properties of laser clad coatings studied by orientation imaging microscopy. Acta Mater. 58, 6763-6772. \href{https://doi.org/10.1016/j.actamat.2010.09.002}{https://doi.org/10.1016/j.actamat.2010.09.002}.
+
+Park, K.W., Na, S.J., 2010. Theoretical investigations on multiple-reflection and Rayleigh absorption-emission-scattering effects in laser drilling. Appl. Surf. Sci. 256, 2392-2399. \href{https://doi.org/10.1016/j.apsusc.2009.10.073}{https://doi.org/10.1016/j.apsusc.2009.10.073}.
+
+Prashanth, K.G., Scudino, S., Klauss, H.J., Surreddi, K.B., Löber, L., Wang, Z., Chaubey, A.K., Kühn, U., Eckert, J., 2014. Microstructure and mechanical properties of Al 12Si produced by selective laser melting : effect of heat treatment. Mater. Sci. Eng. A 590, 153-160. \href{https://doi.org/10.1016/j.msea.2013.10.023}{https://doi.org/10.1016/j.msea.2013.10.023}.
+
+Prashanth, K.G., Scudino, S., Eckert, J., 2017. Acta Materialia De fi ning the tensile properties of Al-12Si parts produced by selective laser melting. Acta Mater. 126, 25-35. \href{https://doi.org/10.1016/j.actamat.2016.12.044}{https://doi.org/10.1016/j.actamat.2016.12.044}.
+
+Rombouts, M., 2006. Selective Laser sintering/melting of Iron-based Powders. KU Leuven.
+
+Röttger, A., Geenen, K., Windmann, M., Binner, F., Theisen, W., 2016. Comparison of microstructure and mechanical properties of $316 \mathrm{~L}$ austenitic steel processed by selective laser melting with hot-isostatic pressed and cast material. Mater. Sci. Eng. A
+
+678, 365-376. \href{https://doi.org/10.1016/j.msea.2016.10.012}{https://doi.org/10.1016/j.msea.2016.10.012}.
+
+Scholz, T., Dickmann, K., Ostendorf, A., 2014. Dynamical behavior of laser-induced na noparticles during remote processing. SPIE Photon. West 2014-LASE Lasers Sources 8963https://doi.org/10.1117/12.2035197. 896303.
+
+Scholz, T., Dickmann, K., Ostendorf, A., Uphoff, H., Michalewicz, M., 2015. Effect of process parameters on the formation of laser-induced nanoparticles during material processing with continuous solid-state lasers. J. Laser Appl. 27, 32001. \href{https://doi}{https://doi}. org/10.2351/1.4916081.
+
+Scipioni Bertoli, U., Wolfer, A.J., Matthews, M.J., Delplanque, J.P.R., Schoenung, J.M., 2017. On the limitations of Volumetric Energy Density as a design parameter for Selective Laser Melting. Mater. Des. 113, 331-340. \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. matdes.2016.10.037.
+
+Sing, S.L., An, J., Yeong, W.Y., Wiria, F.E., 2016. Laser and electron-beam powder-bed additive manufacturing of metallic implants : a review on processes. Mater. Des 34 (3), 369-385. \href{https://doi.org/10.1002/jor}{https://doi.org/10.1002/jor}. 23075.
+
+Singh, S., Ramakrishna, S., 2017. Biomedical applications of additive manufacturing: present and future. Curr. Opin. Biomed. Eng. 2, 105-115. \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. cobme.2017.05.006.
+
+Sun, S.H., Hagihara, K., Nakano, T., 2018. Effect of scanning strategy on texture formation in Ni-25 at.\%Mo alloys fabricated by selective laser melting. Mater. Des. 140, 307-316. \href{https://doi.org/10.1016/j.matdes.2017.11.060}{https://doi.org/10.1016/j.matdes.2017.11.060}.\\
+Suryawanshi, J., Prashanth, K.G., Ramamurty, U., 2017. Mechanical behavior of selective laser melted 316L stainless steel. Mater. Sci. Eng. A 696, 113-121. \href{https://doi.org/}{https://doi.org/} 10.1016/j.msea.2017.04.058.
+
+Thijs, L., Kempen, K., Kruth, J.P., Van Humbeeck, J., 2013. Fine-structured aluminium products with controllable texture by selective laser melting of pre-alloyed AlSi10Mg powder. Acta Mater. 61, 1809-1819. \href{https://doi.org/10.1016/j.actamat.2012.11}{https://doi.org/10.1016/j.actamat.2012.11}. 052 .
+
+Versnyder, F.I., Shank, M.E., 1970. The development of columnar grain and single crystal high temperature materials through directional solidification. Mater. Sci. Eng. 6, 213-247. \href{https://doi.org/10.1016/0025-5416(70)90050-9}{https://doi.org/10.1016/0025-5416(70)90050-9}.
+
+Wan, H.Y., Zhou, Z.J., Li, C.P., Chen, G.F., Zhang, G.P., 2017. Effect of scanning strategy on grain structure and crystallographictexture of Inconel 718 processed by selective laser melting. J. Mater. Sci. Technol. 34, 1799-1804. \href{https://doi.org/10.1016/j.jmst}{https://doi.org/10.1016/j.jmst}. 2018.02.002.
+
+Yadroitsev, I., Krakhmalev, P., Yadroitsava, I., Johansson, S., Smurov, I., 2013. Energy input effect on morphology and microstructure of selective laser melting single track from metallic powder. J. Mater. Process. Technol. 213, 606-613. \href{https://doi.org/10}{https://doi.org/10}, 1016/j.jmatprotec.2012.11.014.
+
+Zhou, X., Li, K., Zhang, D., Liu, X., Ma, J., Liu, W., Shen, Z., 2015. Textures formed in a CoCrMo alloy by selective laser melting. J. Alloys Compd. 631, 153-164. \href{https://doi}{https://doi}. org/10.1016/j.jallcom.2015.01.096.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

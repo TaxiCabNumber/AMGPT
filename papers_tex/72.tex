@@ -1,0 +1,1172 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{multirow}
+
+\title{Additive Manufacturing of Copper-based Alloy by Laser Powder Bed Fusion }
+
+
+\author{Powder Characterization}
+\date{}
+
+
+\DeclareUnicodeCharacter{00D7}{$\times$}
+
+\begin{document}
+\maketitle
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-01}
+\end{center}
+
+Binghao Lu
+
+University of Central Florida
+
+Part of the Metallurgy Commons
+
+Find similar works at: \href{https://stars.library.ucf.edu/etd2020}{https://stars.library.ucf.edu/etd2020}
+
+University of Central Florida Libraries \href{http://library.ucf.edu}{http://library.ucf.edu}
+
+This Masters Thesis (Open Access) is brought to you for free and open access by STARS. It has been accepted for inclusion in Electronic Theses and Dissertations, 2020- by an authorized administrator of STARS. For more information, please contact \href{mailto:STARS@ucf.edu}{STARS@ucf.edu}.
+
+\section*{STARS Citation}
+Lu, Binghao, "Additive Manufacturing of Copper-based Alloy by Laser Powder Bed Fusion" (2020). Electronic Theses and Dissertations, 2020-. 94.
+
+\href{https://stars.library.ucf.edu/etd2020/94}{https://stars.library.ucf.edu/etd2020/94}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-01(1)}
+\end{center}
+
+\section*{ADDITIVE MANUFACTURING OF COPPER-BASED ALLOY BY LASER POWDER BED FUSION }
+by
+
+\section*{BINGHAO LU}
+B.S. Harbin Institute of Technology 2016
+
+2020
+
+(C) 2020 Binghao Lu
+
+\begin{abstract}
+Copper $(\mathrm{Cu})$ and $\mathrm{Cu}$-alloy are good candidates for the engineered components that require good thermal and electrical conductivity. Since industry often needs sophisticated components that cannot be made easily by traditional methods, such as casting, forging and machining, research for additive manufacturing of copper-based alloy is on demand. Therefore, this thesis focuses on the optimization of laser powder bed fusion (LPBF) of Cu-10 wt.\% Sn alloy and pure Cu based on their characteristics such as relative density/porosity, surface roughness, phase constitutes, melt pool dimension, and dendrite arm spacings dimension, determined by optical microscopy, X-ray diffraction and Scanning electron microscope. LPBF, also known as selective laser melting, was carried out for the Cu-10Sn alloy with varying parameters of laser power from $200 \mathrm{~W}$ to $350 \mathrm{~W}$, laser scan speed from $100 \mathrm{~mm} / \mathrm{s}$ to $1000 \mathrm{~mm} / \mathrm{s}$, hatch spacing from $0.06 \mathrm{~mm}$ to $0.21 \mathrm{~mm}$, and slice thickness of $0.03 \mathrm{~mm}$. Relative density of $98 \%$ to $100 \%$ by Archimedes Principle and nearly $100 \%$ by image analysis were obtained for a large range of parameters for Cu10Sn samples, which shows a very good printability of Cu10Sn over a large window of processing parameter. $\alpha$-FCC Cu, $\delta$ - $\mathrm{Cu}_{41} \mathrm{Sn}_{11}$ eutectoid phase and $\alpha$-FCC Cu phase were observed on the printed Cu10Sn samples. Flaws related to keyhole was observed according to the energy input estimated by energy density of LPBF. Melt pool of all samples were measured, and its dimension had a linear relationship with the energy density. LPBF of pure Cu was also explored with varying parameters of laser power from $200 \mathrm{~W}$ to $350 \mathrm{~W}$, laser scan speed from $50 \mathrm{~mm} / \mathrm{s}$ to $800 \mathrm{~mm} / \mathrm{s}$, with a constant slice thickness of $0.03 \mathrm{~mm}$. Relative density of the LPBF pure $\mathrm{Cu}$ varied from $80 \%$ to $88 \%$, and the flaws were mostly non-spherical, suggesting the lack of fusion to fully melt the Cu powder.
+\end{abstract}
+
+\section*{ACKNOWLEDGMENTS}
+I want to thank Lord for his effort to bring faith to human being, it is because of the faith that I can endure the hard time of life and keep positive mind site. I want to thank my academic advisor Dr. Yongho Sohn for his help and supervision, and the research opportunity he brought me. I also want to thank every students and co-workers in research laboratory for their training and help throughout my research, especially Dr. Zhou for his constant advice on my research and spending time on my thesis and presentation modification, in addition to my parents and friends for their love and support.
+
+\section*{TABLE OF CONTENTS}
+LIST OF FIGURES ..... vii\\
+LIST OF TABLES ..... $x$\\
+CHAPTER ONE: INTRODUCTION ..... 1\\
+CHAPTER TWO: LITERATURE REVIEW ..... 3\\
+Additive Manufacturing ..... 3\\
+Laser Source Melting ..... 4\\
+Electron Beam Melting ..... 4\\
+Comparison of SLM and EBM. ..... 5\\
+Copper-based Alloy ..... 7\\
+CuSn (bronze) ..... 7\\
+Pure $\mathrm{Cu}$.... ..... 8\\
+Additive Manufacturing of Cu-Sn Alloys ..... 10\\
+Cu10Sn Additive Manufacturing ..... 10\\
+Cu15Sn Additive Manufacturing ..... 11\\
+Cu4Sn Additive Manufacturing ..... 11\\
+Additive Manufacturing of Pure $\mathrm{Cu}$ ..... 12\\
+Challenges Associated with Pure $\mathrm{Cu}$ ..... 12\\
+Previous Pure Cu Additive Manufacturing Research ..... 12\\
+CHAPTER THREE: EXPERIMENTAL DETAILS ..... 15\\
+Powder Characterization ..... 15\\
+Laser Powder Bed Fusion ..... 15\\
+Sample Preparation and Characterization ..... 17\\
+CHAPTER FOUR: FINDINGS ..... 20\\
+Powder Characterization ..... 20\\
+Laser Power Bed Fusion ..... 25\\
+Sample Characterization ..... 27\\
+Relative Density by Archimedes Principle on Cu10Sn and pure copper LPBF parts ..... 27\\
+Cross-sectional Analysis for Porosity and Surface Roughness on Cu10Sn Samples ..... 29\\
+Cross-sectional Analysis for Porosity on Pure Cu Samples ..... 38\\
+Melt Pool Measurement on LPBF Cu10Sn Samples ..... 39\\
+XRD Analysis on Cu10Sn LPBF Parts and Powder ..... 40\\
+SEM on LPBF Cu10Sn Part and Dendrite Measurement ..... 40\\
+Demonstrative Cu10Sn Component Manufactured by LPBF. ..... 42\\
+CHAPTER FOUR: CONCLUSION ..... 44\\
+LIST OF REFERENCES ..... 45
+
+\section*{LIST OF FIGURES}
+Figure 1 Metal additive manufacturing process...................................................................... 3
+
+Figure 2 Cu-Sn phase diagram [18] .......................................................................................... 7
+
+Figure 3 SEM micrographs for the Cu-10Sn fabricated by (a-c) SLM and (d) casting showing the ( $\alpha+\delta$ )-eutectoid (bright phase) and $\alpha$-dendrites (dark phase). [26] ...................................... 10
+
+Figure 4 Room-temperature stress-strain curves under tensile loading for the cast and SLM Cu-
+
+10Sn bronze and (inset) Cu-10Sn bronze propeller fabricated by SLM. [26] ............................ 11
+
+Figure 5 Micrographs of copper specimens polished cross-sections: a) specimen N1 horizontal cross-section; b) specimen N1 vertical cross-section; c) specimen N3 horizontal cross-section; d) specimen N3 vertical cross-section [29]................................................................................. 13
+
+Figure 6 Relative density of SLM-built cubes of pure Cu [30] ................................................ 14
+
+Figure 7 Schematic diagram of the Cu10Sn sample cutting and characterization cross-section.. 18
+
+Figure 8 Schematic diagram of the pure Cu sample cutting and characterization cross-section.. 18
+
+Figure 9 An example of melt pool measurement from an etched cross-sectional sample............ 19
+
+Figure 10 XRD pattern of Cu10Sn powders............................................................................. 20
+
+Figure 11 XRD pattern of pure Cu powders ............................................................................ 21
+
+Figure 12 Cu10Sn powder size distribution by laser diffraction particle size analyzer .............. 22
+
+Figure 13 Pure copper powder size distribution by laser diffraction particle size analyzer ......... 22
+
+Figure 14 Cross-sectional optical microscopy confirms spherical morphology of Cu10Sn
+
+powders (a) 150× magnification, (b) 300× magnification........................................................ 23
+
+Figure 15 Cross-sectional optical microscopy confirms spherical morphology of pure copper powders (a) 150× magnification, (b) 300× magnification....................................................... 23
+
+Figure 16 SEM micrographs of Cu10Sn powders at different magnifications and EDS pattern of the Cu10Sn powders 24
+
+Figure 17 SEM micrograph of pure copper powders at different magnifications and EDS pattern of the pure copper powder 25
+
+Figure 18 LPBF builds of Cu10Sn cylinder samples with different parameters ......................... 26
+
+Figure 19 LPBF build of pure copper samples with different parameters.................................. 27
+
+Figure 20 Relative density of Cu10Sn samples measured by Archimedes Principle, (a) as a function of laser scan speed, (b) as a function of energy density, (c) as a function of hatch spacing ........................................................................................................................................... 28
+
+Figure 2116 Relative density of pure copper samples with different laser power and laser scan speed measured by Archimedes Principle 29
+
+Figure 22 Optical micrographs from Cu10Sn samples produced with 350W laser power .......... 30
+
+Figure 23 Optical micrographs from Cu10Sn samples produced with 300W laser power .......... 30
+
+Figure 24 Optical micrographs from Cu10Sn samples produced with 250W laser power .......... 31
+
+Figure 25 Optical micrographs from Cu10Sn samples produced with 200W laser power .......... 31
+
+Figure 26 Relative density determined from samples produced with 350W laser power ............ 32
+
+Figure 27 Relative density determined from samples produced with 300W laser power ............ 32
+
+Figure 28 Relative density determined from samples produced with 250W laser power ............ 33
+
+Figure 29 Relative density determined from samples produced with 200W laser power ............ 33
+
+Figure 30 Surface roughness observed from the cross-section optical micrographs for samples produced with 350W laser power ............................................................................................... 34
+
+Figure 31 Surface roughness observed from the cross-section optical micrographs for samples produced with 300W laser power . 34
+
+Figure 32 Surface roughness observed from the cross-section optical micrographs for samples produced with 250W laser power 35
+
+Figure 33 Surface roughness observed from the cross-section optical micrographs for samples produced with 200W laser power . 35
+
+Figure 34 Quantification of surface roughness method............................................................ 36
+
+Figure 35 Surface roughness determined from samples produced with 350W laser power......... 36
+
+Figure 36 Surface roughness determined from samples produced with 300W laser power......... 37
+
+Figure 37 Surface roughness determined from samples produced with 250W laser power........ 37
+
+Figure 38 Surface roughness determined from samples produced with 200W laser power......... 38
+
+Figure 39 Optical micrograph from LPBF pure Cu................................................................. 38
+
+Figure 40 Cu10Sn melt pool depth and width with laser parameter......................................... 39
+
+Figure 41 Cu-10Sn melt pool depth and width with energy density ......................................... 39
+
+Figure 42 XRD of printed Cu10Sn part with SLM parameter and Cu10Sn Powder................... 40
+
+Figure 43 Secondary and backscatter electron micrographs of etched Cu10-Sn sample made with recommended parameters (350w, 750mm/s, 0.12mm)............................................................. 41
+
+Figure 44 Primary dendrite arm spacing.................................................................................. 42
+
+Figure 45 Demonstrative Component Manufactured by LPBF of Cu10Sn10 (Power=350W, Scan
+
+Speed $=750 \mathrm{~mm} / \mathrm{s}$, Hatch Space=0.12mm) Double Layered Pipe ( $\sim 5 \mathrm{~cm}$ in Diameter)with Internal
+
+Cooling Channels and Grit-blasted Surface Finish................................................................... 43
+
+\section*{LIST OF TABLES}
+Table 1 Processing parameters examined during LPBF optimization study for Cu10Sn............ 16
+
+Table 2 Processing parameters examined during LPBF optimization study for pure copper ...... 17
+
+\section*{CHAPTER ONE: INTRODUCTION}
+Copper-based alloys have many desirable properties that suits a wide range of applications because of high electrical conductivity, high thermal conductivity, good strength, excellent ductility and good corrosion resistance. Pure copper, of course has one of the best electrical and thermal conductivities among all metals, and over half of the copper produced is used for electrical applications. Copper can also be easily alloyed with a wide range of elements, and produce many commercially important alloys such as brass (copper-zinc alloy), bronze ( coppertin alloy), gunmetal (copper-tin, zinc, lead alloy), copper-nickel alloy, nickel silver alloy (copper-nickel-zinc), and Beryllium-copper. [1] Bronze is an alloy of copper and tin with high ductility and low friction coefficient. Bronze has been used in architecture for design and structural purpose, in bearing, and for musical instruments, electrical contacts, coins and ship propellers. [2] Today, copper and copper-based alloy play an important role in the development of new technology, renewable energy, architecture, information and communication technology, health and sanitation. Copper production is a very important part of our economy.
+
+Additive manufacturing (AM) is a technological process of making physical objects from 3D computer files. The manufacturing of the parts is built typically by a layer by layer strategy, and is commonly called 3D printing in a consumer-friendly way. [3] Benefits of metal additive manufacturing includes: parts can be produced directly from a 3D computer file which reduces production time; eliminate tooling and other production support process; environmental-friendly since metal powders can be re-used; reduced cost for product design; and offer an efficient way to produce sophisticated parts. [4]
+
+Therefore, this thesis focuses on the additive manufacturing (AM) of Cu10Sn and pure Cu by laser powder bed fusion (LPBF) technology. Both Cu10Sn and pure Cu samples were produced by varying the important parameters of LPBF, namely laser power, laser scan speed, hatch spacing and slice thickness. Relative density and microstructure of Cu10Sn and pure Cu samples were examined to optimize the parameters of LPBF, and to help understand the mechanism of LPBF process.
+
+\section*{CHAPTER TWO: LITERATURE REVIEW }
+Additive manufacturing (AM), which is also called 3D printing, is a process of building threedimensional object from a computer-designed model, and the objects are usually built layer by layer [3]. AM is different from other conventional subtractive processes, like casting or forging, where material is required to be machines to manufacture component with desired geometry. AM can provide sophisticated components with less energy and time than the traditional manufacturing methods. It is currently employed to process plastics, metals and alloys, ceramics, composites and biological materials. [5]
+
+For AM of metals and alloys, raw material can have the form of powder or wire, which are melted and/or sintered by an energy source. Metal AM are usually classified into two groups: Powder Bed Fusion (PBF) and Directed Energy Deposition (DED). These are further classified based on their energy source: laser and electron beam. The additive manufacturing process was illustrated in Figure 1.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-14}
+\end{center}
+
+Figure 1 Metal additive manufacturing process
+
+\section*{Laser Source Melting}
+In PBF technology, certain regions of the powder bed are selectively fused by the thermal energy. [3] Typical representatives are selective laser sintering/melting (SLS/SLM), Direct Metal Laser Sintering (DMLS) and electron beam melting (EBM). SLS is the process to use laser power to selectively coalesce powders by a layer by layer strategy to form the final 3D part. SLM is a more advanced technology than SLS, which can fully melt the powder by the laser. Most of the laser power for these technologies range from $200 \mathrm{~W}$ to $1000 \mathrm{~W}$. Inert atmosphere is provided within the chamber: typically, nitrogen for non-reactive material and argon for reactive material. The main parameters for these processes are laser power, scan speed, layer thickness, hatch spacing. [6] Powder layer thickness usually varies from $20 \mu \mathrm{m}$ to $100 \mu \mathrm{m}$ based on the material. A wide range of metallic material can be printed densely with these processes, for example titanium alloys, Inconel alloys, cobalt alloys, aluminum alloys and ferrous alloys. The laser based PBF has a relatively slow building speed of $5-20 \mathrm{~cm}^{3}$ and build size limitation is usually $250 \times 250 \times 325 \mathrm{~cm}^{3}$, which limits the PBF to the field of printing small parts and increases its costs. So recently the research has focusing on increasing the build speed and size to make mass printing available.
+
+\section*{Electron Beam Melting}
+Electron beam melting (EBM) is another kind of PBF technique that uses electron beam as a source to melt the powder bed. EBM is similar to SLM, and the only difference is EBM uses electron beam instead of laser to fuse powders. [7] The electron beam is emitted by a high temperature tungsten filament, and focused and controlled by electro-magnetic fields. The electron beam is focused by focus coil to the desired diameter down to $0.1 \mathrm{~mm}$ and is moved by\\
+deflection coil to certain positions of the powder bed. [8] [9] After the high-speed electron beam bombards the powder bed, the kinetic energy of the electron transforms to thermal energy and melt the metal powder bed. [10] Each powder layer experiences two stages during EBM: preheating and melting. During the preheating stage, the high current and speed electron beam scans the powder bed multiple times to make sure the powders achieve the preheating temperature, which is usually $0.4-0.6 \mathrm{~T}_{\mathrm{m}}$. During the melting stage, low current and speed electron beam melts the metal powders. [11] After scanning the first layer, the stage will move down and pave another layer of powder and repeat the same procedure as the first layer. During the melting process, a small amount of inert gas helium is added to the chamber to avoid the powder being charged. It also has a system to allow the beam to be divided into multiple beam to control the powder to be heated, sintered or melted. [12] Important parameters for EBM process are: electron beam power, current, diameter of the focus, preheating temperature, and layer thickness. The typical layer thickness for EBM ranges between 50 and 200 pm. [8] EBM can work for many metallic alloys, such as titanium, cobalt chrome, titanium aluminide, Inconel, stainless steels, tool steels, copper, aluminum alloys, beryllium, etc.
+
+\section*{Comparison of SLM and EBM}
+Due to the high energy density and high scan speed, EBM often has a higher building rate than SLM, but it has inferior dimension accuracy and surface quality. [12] In both SLM and EBM, residual stress within the component is created because of the high heating and cooling rate. The preheating reduces the residual stresses on the powder layer, which can eliminate the residual stress and post-build heat-treatment process. Preheating can also make the powders agglomerate together, which serves as the support structure for some overhanging area. Therefore, the support structure in EBM only needs to conduct the heat not for support function. This can reduce the\\
+support structure required for printing and increase the ability to print sophisticated parts. During LPBF, preheating of the powder bed can be done by the platform heating.
+
+The EBM needs a high vacuum to operate because of electron beam use. [13] Vacuum environment can eliminate thermal convection, thermal gradient and the oxidation of the alloy parts. [12] However, metals and alloys that evaporate easily cannot be used in EBM. In contrast, SLM uses Argon as protective gas for reactive metal to prevent oxidation and contamination, and Nitrogen for non-reactive material. [14] Even though EBM has many advantages, it is still not as popular as SLM, because of its high cost, lack of accuracy and limited build volume that requires vacuum.
+
+AM technologies of metals and alloys started to get attention in the fields of aerospace, marine, oil and gas, automobile, because of their unique advantages. The first advantage is its high material utilization ratio, the traditional subtractive manufacturing methods such as forging or machining has a very low material utilization. The ratio is usually 1:20 or 1:10 for some aerospace parts. The additive in contrast has a very high material utilization ratio, which can nearly reach 1:1. [15] [16] Second, through finite element analysis, it can be used for structure optimization to reduce the material weight.
+
+Traditional manufacturing method usually finishes an engineered component in several steps including rolling, machining, wielding. However, AM technologies can make the final component within only one step. AM can also finish the component without any resembling components. AM has the advantages of less time, material consumption, better mechanical properties, and less manufacturing procedures. [17]
+
+\section*{Copper-based Alloy}
+\section*{CuSn (bronze)}
+Bronze is a Cu-based alloy with an alloying addition of 12 to $12.5 \mathrm{wt} . \%$ Sn, the addition of alloying addition often provides enhanced properties, such as higher stiffness, ductility, and machinability. The Cu-Sn phase diagram is shown in Figure 2.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-18}
+\end{center}
+
+Figure 2 Cu-Sn phase diagram [18]
+
+The bronze is first widely used as a hard metal in Bronze Age. The Bronze Age dates to the 4mid millennium BC in India and Western Eurasia, 2 millennium BC in Ancient China, and other places. There are many kinds of bronze alloys, but the most common one is with $88 \mathrm{wt} \% \mathrm{Cu}$ and 12 wt.\% Sn. [19] Bronze is usually non-magnetic, but the addition of iron or nickel can make it magnetic.
+
+Alpha Bronze consists of alpha solid solution of tin in face-centered cubic copper. The alpha bonze with 4-5 wt.\% Sn is used to manufacture springs, blades, turbines and coins. During Bronze Age, there were two kinds of bronze used: classical bronze has a Sn concentration about 10 wt.\% and it was commonly used for casting; while mild bronze has a Sn content about 6 wt.\% and it was used from an ingot to be hammered to sheets.
+
+Bronze is a very ductile metal (i.e., more ductile than cast iron), and only oxides superficially and passivates. However, if the copper chlorides are formed, the corrosion will then destroy the whole sample. [20] Bronze usually has a relatively low melting point than cast iron or steel. The density of bronze is usually 10\% lower than steel. Bronze has a higher electrical and heat conductivity than steel, but the cost of bronze is usually higher than ferrous alloys, although lower than nickel-alloys.
+
+\section*{Pure Cu}
+Copper has a symbol of $\mathrm{Cu}$ with the atomic number of 29 and has a good thermal and electrical conductivity with soft and ductile property. It has a pinkish and orange color in its original form. It can be used as a heat or thermal conductor, build material or the base for different copper alloys.
+
+Copper is in the 11 group of the element periodic table, it has one s-orbital electron on top of the filled d-orbital electron shell, which give its high ductility, thermal and electrical\\
+conductivity. The filled d-shell contributes little to the interatomic bond, which is dominated by the s-electron. Unlike other metallic element with an incomplete d-shell, copper with only selection contributing to the metallic bond lacks the property of covalent bonds and is therefore considered fragile. This is the reason why single crystal copper has a high ductility and low hardness. [21] On the macroscopic scale, the introduction of the defects, such as grain boundary, will hinder the motion of dislocation and increase the hardness of the material.
+
+This partially explains the reason why copper has a high electrical conductivity (59.6×106 S/m), which is the second highest among all pure metal, second to pure silver. [22] This is because the obstruction of the electron flow primarily comes from the thermal vibration of the electrons, which are very low in soft material. [21] The maximum current density allowed in the copper cross-section in an open air is $3.1 \times 106 \mathrm{~A} / \mathrm{m}^{2}$, and above which the copper is going to heat up extensively. [23] Copper is one of the few metals that has an orange-like appearance instead of gray or silver, [24] and it will have a reddish tarnish on the surface after exposure to the air. The reason for this characteristic is because of the energy difference between the filled 3d electron orbital and the half-filled 4s orbital. Galvanic corrosion will happen if the copper is in contact with other elements. [25]
+
+Copper doesn't react with water, but it does react with oxygen at atmospheric environment to form a thin layer of brown-black corrosion, unlike the corrosion in iron, this kind of thin layer protects the inner part and prevents it from further corrosion.
+
+\section*{Additive Manufacturing of Cu-Sn Alloys}
+\section*{Cu10Sn Additive Manufacturing}
+Using LPBF with laser power of $271 \mathrm{~W}$, laser scan speed of $210 \mathrm{~mm} / \mathrm{s}$, powder layer thickness of $90 \mu \mathrm{m}$, hatch spacing of $90 \mu \mathrm{m}, \mathrm{S}$. Scudino, et al. [26] could print $99.7 \%$ relative density parts.
+
+Similar to as-cast Cu10Sn alloy, SLM Cu10Sn sample had microstructure consisting of $\alpha-\mathrm{Cu}$ (FCC) and the eutectoid $(\alpha+\delta)$ as shown in Figure 3. However, due to the high cooling rate during the SLM process, the microstructure in general was finer than the cast, which contributed to the better mechanical property in SLM samples. The yield strength (YS), ultimate tensile strength (UTS) and elongation reported were, respectively, $120 \mathrm{MPa}, 180 \mathrm{MPa}, 7 \%$ for cast sample and 220MPa, 420MPa, 17\% for SLM samples as shown in Figure 4.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_46ea9d70c5fdc95ea927g-21}
+
+Figure 3 SEM micrographs for the Cu-10Sn fabricated by (a-c) SLM and (d) casting showing the $(\alpha+\delta)$-eutectoid (bright phase) and $\alpha$-dendrites (dark phase). [26]
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-22}
+\end{center}
+
+Figure 4 Room-temperature stress-strain curves under tensile loading for the cast and SLM Cu10Sn bronze and (inset) Cu-10Sn bronze propeller fabricated by SLM. [26]
+
+\section*{Cu15Sn Additive Manufacturing}
+Z Mao, et al. [27] were able to print Cu15Sn bronze with 99.6\% relative density by LPBF with laser power of $187 \mathrm{~W}, 185 \mathrm{~mm} / \mathrm{s}$ scan speed and $0.17 \mathrm{~mm}$ hatch spacing. During the LPBF process, the rapid cooling produced refined cellular and dendrite structures, which significantly improved the mechanical properties of the printed parts with the UTS of 661MPa and YS of 436MPa, both of which are significantly higher than the traditionally manufactured alloy with similar composition. The annealing process significantly improved the elongation to $20 \%$ although it reduced the UTS to 545MPa - still higher than traditionally manufactured alloy with similar composition.
+
+\section*{Cu4Sn Additive Manufacturing}
+Relative density of 93.68\% was obtained by using LPBF with parameters of laser power 195W, scan speed $50 \mathrm{~mm} / \mathrm{s}$ and hatch spacing of $0.06 \mathrm{~mm}$ by Z Mao, et al. [28].
+
+\section*{Additive Manufacturing of Pure $\mathrm{Cu}$}
+\section*{Challenges Associated with Pure Cu}
+Due to the high thermal conductivity of pure $\mathrm{Cu}$, the melting area experience extremely high thermal gradient and rapid cooling, both of which will induce cracking, curling or delamination. In addition, due to the high laser reflection of the pure $\mathrm{Cu}$, energy absorption by the $\mathrm{Cu}$ powder bed can be too low for efficient melting. The reflected laser can also cause damage to the additive manufacturing instrument.
+
+\section*{Previous Pure Cu Additive Manufacturing Research}
+By using LPBF, Lykov et al. [29] successfully printed pure Cu cubes with the relative density of 88\% using the parameter set consisting of laser power $200 \mathrm{~W}$, scan speed $100 \mathrm{~mm} / \mathrm{s}$, layer
+
+thickness of $0.05 \mathrm{~mm}$, hatch spacing of $0.12 \mathrm{~mm}$. The cross-section of the highest density(N1) and lowest density(N3) are shown in Figure 5.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-24}
+\end{center}
+
+Figure 5 Micrographs of copper specimens polished cross-sections: a) specimen N1 horizontal cross-section; b) specimen N1 vertical cross-section; c) specimen N3 horizontal cross-section; $d$ ) specimen N3 vertical cross-section [29]
+
+Ikeshoji et al. [30] managed to print pure Cu samples by different hatch spacing range from
+
+$0.025 \mathrm{~mm}$ to $0.12 \mathrm{~mm}$ with $800 \mathrm{~W}$ laser power, scan speed of $300 \mathrm{~mm} / \mathrm{s}$ and powder thickness of 0.05mm by LPBF. The maximum relative density of $96.6 \%$ was obtained by the hatch spacing of 0.1 mm. The chart of relative density with hatch spacing was shown in Figure 6.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-25}
+\end{center}
+
+Figure 6 Relative density of SLM-built cubes of pure Cu [30]
+
+Colopi et al. printed pure Cu by LPBF by using the laser power, ranging from 200W to 1000W, laser scan speed, ranging from $1000 \mathrm{~mm} / \mathrm{s}$ to $4000 \mathrm{~mm} / \mathrm{s}$, layer thickness of $0.05 \mathrm{~mm}, 0.1 \mathrm{~mm}$. The highest relative density of $97 \%$ was reported with the use of laser power at 600W. [31]
+
+\section*{CHAPTER THREE: EXPERIMENTAL DETAILS}
+\section*{Powder Characterization}
+Powder characterization was conducted for the gas atomized Cu10Sn powders supplied by the SLM Solutions (Germany) and pure Cu powder supplied by Sandvik (Germany). Powder characterization in this research included: X-ray diffraction (XRD) to identify the phase constituents of the powders; laser diffraction particle size analyzer to determine particle size measurement; optical microscopy to examine the cross-sectional characteristics; scanning electron microscopy to observe the microstructure, and X-ray energy dispersive spectroscopy (XEDS) to determine the elemental composition of the powders.
+
+XRD was conducted for the Cu10Sn and copper powders by using PANalytical Empyrean $^{\mathrm{TM}}$ diffractometer with $\mathrm{Cu}$ target $\mathrm{K} \alpha$ radiation with the operating parameters of $40 \mathrm{~mA}$ and $45 \mathrm{kV}$ to identify the phases. The particle sizes of the powders were measured using the laser diffraction particle size analyzer (Beckman Coulter LSTM 13 320). Powder morphology was then examined by using a field-emission scanning electron microscope (FE-SEM, Zeiss Ultra55). Cross-sections of the powders were prepared metallographically by polishing down to $0.04 \mu \mathrm{m}$ using colloidal silica to examine the microstructure by optical microscopy and FE-SEM. Composition of the Cu10Sn and $\mathrm{Cu}$ powders were measured by XEDS equipped on FE-SEM.
+
+\section*{Laser Powder Bed Fusion}
+SLM® 125HL (SLM Solutions, Germany), a laser powder bed fusion instrument with the maximum power $400 \mathrm{~W}$ was used to produce samples made up of Cu10Sn alloy and pure copper. 40 cylinder samples of the Cu10Sn and 17 cubic samples of pure $\mathrm{Cu}$ were produced. Even\\
+though there are many manufacturing parameters, four of them are critical in influencing the printing outcome: they are laser power, laser scan speed, hatch spacing, layer thickness. SLM Solutions recommended parameter for Cu10Sn is $350 \mathrm{~W}$ laser power, $750 \mathrm{~mm} / \mathrm{s}$ laser scan speed, $30 \mu \mathrm{m}$ layer thickness, $120 \mu \mathrm{m}$ hatch spacing. There is no recommended parameter for pure copper powder since it is considered not printable.
+
+The three main LPBF parameters varied in this parametric study of Cu10Sn were laser power, laser scan speed, and hatch spacing. Slice thickness was held constant at $0.03 \mathrm{~mm}$. Four laser power values (200W, 250W, 300W and 350W) and laser scan speed range from 100mm/s to $1000 \mathrm{~mm} / \mathrm{s}$ were examined in the Cu10Sn investigation. Hatch spacing range from $60 \mu \mathrm{m}$ to $210 \mu \mathrm{m}$ were examined while laser power, scan speed and layer thickness were held constant at $350 \mathrm{~W}, 750 \mathrm{~mm} / \mathrm{s}$, and $0.03 \mathrm{~mm}$, respectively. These parameters are listed in Table 1.
+
+Table 1 Processing parameters examined during LPBF optimization study for Cu10Sn
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Power $(\mathrm{W})$ & Scan speed $(\mathrm{mm} / \mathrm{s})$ & Hatch spacing $(\mathrm{mm})$ & Layer thickness (mm) \\
+\hline
+350 & \begin{tabular}{c}
+$300,400,500,600,700,750$, \\
+$800,900,1000$ \\
+\end{tabular} & 0.12 &  \\
+\cline { 1 - 3 }
+350 & 750 & \begin{tabular}{c}
+$0.06,0.09,0.12,0.15$, \\
+$0.18,0.21$ \\
+\end{tabular} &  \\
+\cline { 1 - 3 }
+300 & \begin{tabular}{c}
+$200,300,400,500,600,700$, \\
+$750,800,900$ \\
+\end{tabular} & 0.12 & \multirow{2}{*}{0.03} \\
+\cline { 1 - 3 }
+250 & \begin{tabular}{c}
+$100,200,300,400,500,600$, \\
+$700,750,800$ \\
+\end{tabular} & 0.12 &  \\
+\cline { 1 - 3 }
+200 & \begin{tabular}{c}
+$100,200,300,400,500,600$, \\
+700,750 \\
+\end{tabular} & 0.12 &  \\
+\hline
+\end{tabular}
+\end{center}
+
+Only the laser power and laser scan speed were varied to conduct to examine the feasibility of LPBF for pure Cu: laser power varied at 200W, 300W and 350W, laser scan speed varied from $50 \mathrm{~mm} / \mathrm{s}$ to $800 \mathrm{~mm} / \mathrm{s}$, while the layer thickness was $0.03 \mathrm{~mm}$ and hatch spacing was $0.12 \mathrm{~mm}$. These parameters are listed in Table 2.
+
+Table 2 Processing parameters examined during LPBF optimization study for pure copper
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Power (W) & Scan speed $(\mathrm{mm} / \mathrm{s})$ & Hatch spacing $(\mathrm{mm})$ & Layer thickness (mm) \\
+\hline
+350 & \begin{tabular}{c}
+$50,100,150,200,300,500$, \\
+700,800 \\
+\end{tabular} & \multirow{2}{*}{0.12} &  \\
+\hline
+300 & $50,100,150,200,300,500$ &  &  \\
+\hline
+200 & $50,100,200$ &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{Sample Preparation and Characterization}
+The printed Cu10Sn and pure Cu samples were sectioned from the build plate and support structure was removed from the bottom surface of the samples by polishing. The determination of the relative density was based on the Archimedes method. The absolute density of Cu10Sn was chosen as $8.85 \mathrm{~g} / \mathrm{mm}^{3}$, while the absolute density value for pure $\mathrm{Cu}$ was chosen as 8.96 $\mathrm{g} / \mathrm{cm}^{3}$. The formula to calculate relative density is:
+
+
+\begin{equation*}
+\text { Relative Density }=\frac{\rho_{1} \times w_{1}}{\rho_{2} \times w_{2}} \tag{1}
+\end{equation*}
+
+
+where $\rho_{1}$ is water density, $\rho_{2}$ is theoretical density of the alloy, $\mathrm{w}_{1}$ is the measured dry weight of the sample, $\mathrm{w}_{2}$ is the measured water-immersed weight of the sample. Measurement was done 3 times for each sample to determine the average and uncertainty.
+
+The cylinder Cu10Sn samples and cubic pure Cu samples were then sectioned to prepare the XY and XZ cross-sections. As presented Figure 7, the Cu10Sn samples were first sectioned along the XZ cross-section to get the entire cross-section along the build direction (Z), then one of the half sample was sectioned along the XY cross-section. The cubic pure copper samples were sectioned in the same way as the cylinder as illustrated in Figure 8. The full XZ crosssection and half XY cross-section of Cu10Sn and pure Cu samples were mounted with epoxy resin for metallographic preparation.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-29(1)}
+\end{center}
+
+Figure 7 Schematic diagram of the Cu10Sn sample cutting and characterization cross-section
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-29}
+\end{center}
+
+Figure 8 Schematic diagram of the pure Cu sample cutting and characterization cross-section The mounted Cu10Sn samples were first ground and polished by the MetPrep $3^{\mathrm{TM}}$ grinding and polishing machines made by Allied Electronics \& Automation company. First the samples were ground by the SiC grinding pad with the lubricant of water, gradually from coarse pad to fine pad, i.e., 240, 400, 600, 800, 1200 grits. Then, the polishing was carried out using the $1 \mu \mathrm{m}$ diamond pad with the lubricant of mineral oil. VibroMet ${ }^{\mathrm{TM}} 2$ Vibratory Polisher (Buehler
+
+Company) was used for final polishing: the amplitude was set at $10 \%$ for 45 minutes using the polishing fluids of colloidal silica and distilled water. The polishing procedure for pure $\mathrm{Cu}$ samples was the same as Cu10Sn.
+
+The metallographically polished Cu10Sn and pure Cu samples were examined by optical microscopy on both XZ and XY cross-sections. The amount of flaws due to insufficient or excessive melting was quantified on both the XZ and XY cross-sections of the samples by ImageJ software. The polished Cu10Sn surfaces were then etched with a solution of distilled water, ammonium hydroxide and 3\%-hydrogen peroxide mixed by volumetric ratio of 5:5:1. Etching was carried out for less than a second. [32] From the etched Cu10Sn cross-sections, the melt pool dimension from each sample was quantified from the top layer of the sample by optical microscope, as illustrated in Figure 8. XRD was first carried out to determine the phase constituents in the Cu10Sn sample manufactured with SLM recommended parameter from both XZ and XY cross-section. FE-SEM was carried out to examine the detailed microstructure of MPBF Cu10Sn samples.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-30}
+\end{center}
+
+Figure 9 An example of melt pool measurement from an etched cross-sectional sample.
+
+\section*{CHAPTER FOUR: FINDINGS }
+XRD patterns from the Cu10Sn and pure Cu powders are shown in Figures 10 and 11, respectively. There are two phases ( $\left.\alpha=\mathrm{FCC} \mathrm{Cu}, \delta=\mathrm{Cu}_{41} \mathrm{Sn}_{11}\right)$ in the Cu10Sn powders and the main phase is $\alpha=$ FCC Cu. Only one phase, $\alpha=$ FCC Cu, was detected from pure Cu powder as presented in Figure 11.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-31}
+\end{center}
+
+Figure 10 XRD pattern of Cu10Sn powders
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-32}
+\end{center}
+
+Figure 11 XRD pattern of pure Cu powders
+
+Figures 12 and 13 presents particle size distribution of Cu10Sn and pure Cu powders determined by laser diffraction particle size analyzer. The average particle size of the Cu10Sn powder was $40.4 \mu \mathrm{m}$ and the D10, D50, D90 values were $20.6 \mu \mathrm{m}, 40.4 \mu \mathrm{m}$ and $60.5 \mu \mathrm{m}$, as reported in Figure 11. The average particle size of the pure Cu powders was $42.65 \mu \mathrm{m}$, and the D10, D50, D90 values were $33.05 \mu \mathrm{m}, 42.28 \mu \mathrm{m}$ and $52.82 \mu \mathrm{m}$, respectively, as reported in Figure 13.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-33(1)}
+\end{center}
+
+Figure 12 Cu10Sn powder size distribution by laser diffraction particle size analyzer
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-33}
+\end{center}
+
+Figure 13 Pure copper powder size distribution by laser diffraction particle size analyzer
+
+The optical micrographs presented in Figures 14 and 15 demonstrates, in general,
+
+spherical shape of the Cu10Sn and pure Cu powders with very few irregularities.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_46ea9d70c5fdc95ea927g-34(1)}
+
+Figure 14 Cross-sectional optical microscopy confirms spherical morphology of Cu10Sn powders (a) 150x magnification, (b) 300x magnification\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_46ea9d70c5fdc95ea927g-34}
+
+Figure 15 Cross-sectional optical microscopy confirms spherical morphology of pure copper powders (a) 150x magnification, (b) 300x magnification
+
+Secondary electron micrographs in Figures 16 and 17 presents the surface morphology of the Cu10Sn powder and pure copper powder, respectively. They are mostly spherical with smooth surface. Randomly, 10 powders were selected determined the chemical composition by XEDS. XEDS spectrum from Cu10Sn powder and pure copper powder are also presented in Figures 16 and 17, respectively. Chemical composition of the Cu10Sn powder was 89 wt.\% Cu\\
+and 11 wt.\% of Sn, which is very close to the nominal composition of the Cu10Sn powder.
+
+Chemical composition of the pure copper powder was nearly $100 \%$ copper.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_46ea9d70c5fdc95ea927g-35}
+
+Figure 16 SEM micrographs of Cu10Sn powders at different magnifications and EDS pattern of the Cu10Sn powders\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_46ea9d70c5fdc95ea927g-36}
+
+Figure 17 SEM micrograph of pure copper powders at different magnifications and EDS pattern of the pure copper powder
+
+\section*{Laser Power Bed Fusion}
+40 cylindrical samples of Cu10Sn and 17 cubic samples of pure copper were made by LPBF as presented in Figure 18 and 19, respectively. Some of the Cu10Sn samples had extraneous materials attached to the cylindrical geometry, this only occurred for samples printed with very low scan speed $(100 \mathrm{~mm} / \mathrm{s}$ or $200 \mathrm{~mm} / \mathrm{s})$ when the high energy density "sintered" powders adjacent to the laser scan. Pure copper cubes printed well with good surface finish as demonstrated by the sample identification number clearly exhibited on top surface as seen in Figure 19.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-37}
+\end{center}
+
+Figure 18 LPBF builds of Cu10Sn cylinder samples with different parameters
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-38}
+\end{center}
+
+Figure 19 LPBF build of pure copper samples with different parameters
+
+\section*{Sample Characterization}
+Relative Density by Archimedes Principle on Cu10Sn and pure copper LPBF parts
+
+The measured relative density of the Cu10Sn samples is present Figure 20. The relative density increased with an increase in laser scan speed in general. The relationship between energy\\
+density and relative density is revealed in Figure 20, as the energy density increased, the relative density decreased. The energy density is defined as:
+
+
+\begin{equation*}
+E=\frac{P}{v \times h \times t} \tag{2}
+\end{equation*}
+
+
+where $\mathrm{P}$ is the laser power $(\mathrm{W}), \mathrm{v}$ is the laser scan speed $(\mathrm{mm} / \mathrm{s}), \mathrm{h}$ is the hatch spacing $(\mathrm{mm}), \mathrm{t}$ is the layer thickness (mm). [33] Energy density is a very simple factor that normalizes all four critical parameters. Finally, the relative density increased with an increase in hatch spacing.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_46ea9d70c5fdc95ea927g-39}
+
+Figure 20 Relative density of Cu10Sn samples measured by Archimedes Principle, (a) as a function of laser scan speed, (b) as a function of energy density, (c) as a function of hatch spacing
+
+Relative density of pure copper sample was measured as shown in Figure 21. Highest relative density observed was $88 \%$. The relative density was higher when $350 \mathrm{~W}$ power was employed in general. The relatively low value of relative density observed suggested that the overall energy input and/or energy absorption is insufficient to fully melt the pure copper powders.
+
+\section*{Relative Density with Laser Parameter}
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-40}
+\end{center}
+
+Figure 2116 Relative density of pure copper samples with different laser power and laser scan speed measured by Archimedes Principle
+
+Cross-sectional Analysis for Porosity and Surface Roughness on Cu10Sn Samples
+
+Optical micrographs from the XZ and XY cross-sectional Cu10Sn samples are presented in Figures 22 through 25 . They were mostly dense, but with some pores with relatively circular shape. This demonstrates that the energy input was enough to fully melt the Cu10Sn powders and the reason for these circular pores is the gas entrapment. [34]\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_46ea9d70c5fdc95ea927g-41(20)}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41(9)}
+\end{center}
+
+Cu-10Sn $350 \mathrm{~W} 800 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41(2)}
+\end{center}
+
+Cu-10Sn $350 \mathrm{~W} 800 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41(19)}
+\end{center}
+
+Cu-10Sn $350 \mathrm{~W} 900 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41(17)}
+\end{center}
+
+Cu-10Sn 350W 900mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41(1)}
+\end{center}
+
+Cu-10Sn $350 \mathrm{~W} 600 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41(10)}
+\end{center}
+
+Cu-10Sn 350W $1000 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41(12)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41(6)}
+\end{center}
+
+Cu-10Sn 350W $700 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41}
+\end{center}
+
+Cu-10Sn 350W 700mm/s
+
+Figure 22 Optical micrographs from Cu10Sn samples produced with 350W laser power
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41(18)}
+\end{center}
+
+Cu-10Sn 300W $700 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41(16)}
+\end{center}
+
+Cu-10Sn 300W 700mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41(4)}
+\end{center}
+
+Cu-10Sn 300W $750 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41(3)}
+\end{center}
+
+Cu-10Sn 300W $750 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41(7)}
+\end{center}
+
+Cu-10Sn 300W $800 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41(13)}
+\end{center}
+
+Cu-10Sn $300 \mathrm{~W} 400 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41(11)}
+\end{center}
+
+Cu-10Sn 300W $800 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41(15)}
+\end{center}
+
+Cu-10Sn 300W $900 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41(8)}
+\end{center}
+
+Cu-10Sn 300W $900 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41(5)}
+\end{center}
+
+Cu-10Sn 300W $600 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-41(14)}
+\end{center}
+
+Cu-10Sn 300W 600mm/s
+
+Figure 23 Optical micrographs from Cu10Sn samples produced with 300W laser power\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_46ea9d70c5fdc95ea927g-42(21)}
+
+Cu-10Sn 250W 600mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(4)}
+\end{center}
+
+Cu-10Sn $250 \mathrm{~W} 200 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(20)}
+\end{center}
+
+Cu-10Sn 250W $700 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(7)}
+\end{center}
+
+Cu-10Sn 250W 200mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42}
+\end{center}
+
+Cu-10Sn 250W $700 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(1)}
+\end{center}
+
+Cu-10Sn 250W 300mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(11)}
+\end{center}
+
+Cu-10Sn 250 W $750 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(3)}
+\end{center}
+
+Cu-10Sn $250 \mathrm{~W} 300 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(14)}
+\end{center}
+
+Cu-10Sn 250 W $750 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(9)}
+\end{center}
+
+Cu-10Sn 250W $400 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(5)}
+\end{center}
+
+Cu-10Sn 250W $800 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(24)}
+\end{center}
+
+Cu-10Sn 250W 400mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(23)}
+\end{center}
+
+Cu-10Sn 250W $800 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(2)}
+\end{center}
+
+Cu-10Sn $250 \mathrm{~W} 500 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(17)}
+\end{center}
+
+Cu-10Sn 250W 500mm/s
+
+Figure 24 Optical micrographs from Cu10Sn samples produced with 250W laser power
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(18)}
+\end{center}
+
+Cu-10Sn 200W 600mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(19)}
+\end{center}
+
+Cu-10Sn 200W 600mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(12)}
+\end{center}
+
+Cu-10Sn 200W 700mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(16)}
+\end{center}
+
+Cu-10Sn 200W 700mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(6)}
+\end{center}
+
+Cu-10Sn 200W $300 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(22)}
+\end{center}
+
+Cu-10Sn 200W $750 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(10)}
+\end{center}
+
+Cu-10Sn 200W $750 \mathrm{~mm} / \mathrm{s}$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_46ea9d70c5fdc95ea927g-42(15)}
+
+Cu-10Sn 200W 500mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(13)}
+\end{center}
+
+Cu-10Sn 200W 400mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-42(8)}
+\end{center}
+
+Cu-10Sn 200W 500mm/s
+
+Figure 25 Optical micrographs from Cu10Sn samples produced with 200W laser power
+
+From these micrographs, the amount of flaws was determined for each sample from 5 of the XZ cross-section optical micrographs with ImageJ software. Results were plotted as relative\\
+density (1 - flaw fraction) in Figures 26 through 29. The variation in density as a function of scan speed did not agree between the two methods employed, Archimedes method and image analysis. Samples with nearly $100 \%$ density was documented via optical micrographs and image analysis at any laser power demonstrated that the range of laser power examined in this study was sufficient to melt the Cu10Sn powders, at selected scan speeds. In particular at 350W Cu10Sn alloy appeared fully dense using the scan speed of $750 \mathrm{~mm} / \mathrm{s}$, which is the SLM recommended parameters.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-43}
+\end{center}
+
+Figure 26 Relative density determined from samples produced with 350W laser power
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-43(1)}
+\end{center}
+
+Figure 27 Relative density determined from samples produced with 300W laser power
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-44}
+\end{center}
+
+Figure 28 Relative density determined from samples produced with $250 \mathrm{~W}$ laser power
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-44(1)}
+\end{center}
+
+Figure 29 Relative density determined from samples produced with 200W laser power
+
+In order to clarify the inconsistency in density measurement presented in Figures 26 through 29, surface roughness of the samples were quantified, because, as shown in Figure 18, there were powder coalescence in some samples which may significantly change the surface roughness that can interfere with Archimedes method. Figures 29 through 32 presents typical surface roughness observed in LPBF Cu10Sn samples. The RMS value of the surface roughness\\
+was then determined for each sample as shown in Figure 33. First vertical lines (white lines in Figure 33) with equal distance was drawn on the optical micrograph, then the length of each line was measured to calculate the root-mean-square. Variation in RMS surface roughness is presented for each sample as a function of scan speed in Figures 34 through 37, and the roughness clearly decreased with an increase in scan speed. This trend observed in Figures 34 through 37 is exactly opposite of trend observed for density measured by Archimedes method presented in Figures 25 and 28. Therefore for the Cu10Sn samples, the surface roughness interfered with the measurement of relative density by Archimedes method, i.e., trapped water bubble. The relative density measured by image analysis appears to be more correct in characterizing the Cu10Sn samples produced by LPBF.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_46ea9d70c5fdc95ea927g-45(7)}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-45(9)}
+\end{center}
+
+Cu-10Sn $350 \mathrm{~W} 800 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-45(5)}
+\end{center}
+
+Cu-10Sn 350W $900 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-45(8)}
+\end{center}
+
+Cu-10Sn 350 W $1000 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-45(2)}
+\end{center}
+
+Cu-10Sn 350W $700 \mathrm{~mm} / \mathrm{s}$
+
+Figure 30 Surface roughness observed from the cross-section optical micrographs for samples produced with 350W laser power
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-45(3)}
+\end{center}
+
+Cu-10Sn 300W $200 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-45(10)}
+\end{center}
+
+Cu-10Sn 300W $700 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-45(1)}
+\end{center}
+
+Cu-10Sn 300W $300 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-45}
+\end{center}
+
+Cu-10Sn 300W $750 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-45(12)}
+\end{center}
+
+Cu-10Sn 300W $400 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-45(6)}
+\end{center}
+
+Cu-10Sn 300W $800 \mathrm{~mm} / \mathrm{s}$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_46ea9d70c5fdc95ea927g-45(11)}
+
+Cu-10Sn 300W 900mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-45(4)}
+\end{center}
+
+Cu-10Sn 300W $600 \mathrm{~mm} / \mathrm{s}$
+
+Figure 31 Surface roughness observed from the cross-section optical micrographs for samples produced with 300W laser power
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-46(8)}
+\end{center}
+
+Cu-10Sn 250W $100 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-46(9)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-46(4)}
+\end{center}
+
+Cu-10Sn 250W 600mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-46(1)}
+\end{center}
+
+Cu-10Sn 250W $200 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-46(14)}
+\end{center}
+
+Cu-10Sn 250W 700mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-46(11)}
+\end{center}
+
+Cu-10Sn $250 \mathrm{~W} 300 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-46(15)}
+\end{center}
+
+Cu-10Sn 250W $750 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-46(6)}
+\end{center}
+
+Cu-10Sn 250W 400mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-46(10)}
+\end{center}
+
+Cu-10Sn 250W 800mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-46(3)}
+\end{center}
+
+Cu-10Sn $250 \mathrm{~W} 500 \mathrm{~mm} / \mathrm{s}$
+
+Figure 32 Surface roughness observed from the cross-section optical micrographs for samples produced with 250W laser power
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-46(12)}
+\end{center}
+
+Cu-10Sn 200W 100mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-46(13)}
+\end{center}
+
+Cu-10Sn 200W 600mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-46(16)}
+\end{center}
+
+Cu-10Sn 200W 200mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-46}
+\end{center}
+
+Cu-10Sn 200W 700mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-46(5)}
+\end{center}
+
+Cu-10Sn 200W $300 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-46(2)}
+\end{center}
+
+Cu-10Sn 200W $750 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-46(7)}
+\end{center}
+
+Cu-10Sn 200W 400mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-46(17)}
+\end{center}
+
+Cu-10Sn 200W 500mm/s
+
+Figure 33 Surface roughness observed from the cross-section optical micrographs for samples produced with 200W laser power
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-47(1)}
+\end{center}
+
+Figure 34 Quantification of surface roughness method
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-47}
+\end{center}
+
+Figure 35 Surface roughness determined from samples produced with 350W laser power
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-48}
+\end{center}
+
+Figure 36 Surface roughness determined from samples produced with 300W laser power
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-48(1)}
+\end{center}
+
+Figure 37 Surface roughness determined from samples produced with $250 \mathrm{~W}$ laser power
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-49}
+\end{center}
+
+Figure 38 Surface roughness determined from samples produced with 200W laser power Cross-sectional Analysis for Porosity on Pure Cu Samples
+
+Representative optical micrograph from the LPBF pure $\mathrm{Cu}$ is presented in Figure 39, and they show large irregular pores because the laser energy was insufficient to fully melt the pure $\mathrm{Cu}$ powder. [34]
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-49(1)}
+\end{center}
+
+$300 \mathrm{~W} 300 \mathrm{~mm} / \mathrm{s} \mathrm{XZ}$ cross-section
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-49(2)}
+\end{center}
+
+$300 \mathrm{~W} 300 \mathrm{~mm} / \mathrm{s}$ XY cross-section
+
+Figure 39 Optical micrograph from LPBF pure Cu
+
+\section*{Melt Pool Measurement on LPBF Cu10Sn Samples}
+The top layer of the melt pool has the actual width and depth of laser melted volume that solidified at the end of the sample production. Width and depth were measured by ImageJ software. As presented in Figure 40, melt pool depth and width decrease with an increase in laser scan speed, which corresponds well to the increase in both depth and width with an increase in energy density as shown in Figure 41. This can be directly related to deeper laser penetration.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_46ea9d70c5fdc95ea927g-50}
+
+Figure 40 Cu10Sn melt pool depth and width with laser parameter
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-50(1)}
+\end{center}
+
+Figure 41 Cu-10Sn melt pool depth and width with energy density
+
+XRD patterns from the XZ and XY cross-sections of LPBF Cu10Sn samples are presented in Figure 42. For comparison, XRD pattern from the starting Cu10Sn powders is also included. They have similar patterns and have the same phases consisting of $\alpha-\mathrm{FCC} \mathrm{Cu}$ and $\delta-\mathrm{Cu}_{41} \mathrm{Sn}_{11}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-51}
+\end{center}
+
+Figure 42 XRD of printed Cu10Sn part with SLM parameter and Cu10Sn Powder
+
+SEM on LPBF Cu10Sn Part and Dendrite Measurement
+
+Secondary and backscatter electron micrographs shown in Figure 43 consisted of dark matrix, $\alpha$ $\mathrm{Cu}$ (FCC) and light inter-dendritic phase of mixture $\delta-\mathrm{Cu}_{41} \mathrm{Sn}_{11}$ and $\alpha-\mathrm{Cu}$ (FCC). Dendrite structure can be clearly observed Figure 43, and so the primary dendrite arm spacing (PDAS) was measured as schematically illustrated in Figure 44. The PDAS is expressed by:
+
+
+\begin{equation*}
+P D A S=\frac{L}{n-1} \tag{3}
+\end{equation*}
+
+
+where $\mathrm{L}$ is the total spacing from the first to the last arm, $\mathrm{n}$ is the number of existing dendrite arms in this area. PDAS determined for Cu10Sn sample shown in Figure 44 is $615.9 \pm 97 \mathrm{~nm}$. This value is extremely small for $\mathrm{Cu}-10 \mathrm{Sn}$ and demonstrates rapid cooling rate associated with LPBF and would be responsible for enhanced mechanical properties, i.e., tensile strength, yield strength and elongation.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_46ea9d70c5fdc95ea927g-52}
+
+Figure 43 Secondary and backscatter electron micrographs of etched Cu10-Sn sample made with recommended parameters $(350 \mathrm{w}, 750 \mathrm{~mm} / \mathrm{s}, 0.12 \mathrm{~mm}$ )
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_46ea9d70c5fdc95ea927g-53}
+\end{center}
+
+Figure 44 Primary dendrite arm spacing
+
+Demonstrative Cu10Sn Component Manufactured by LPBF
+
+In order to demonstrate the printability of the Cu10Sn powders by LPBF, a pipe-like component with complex internal features was manufactured following the recommended parameters: laser power of $350 \mathrm{~W}$, laser scan speed of $750 \mathrm{~mm} / \mathrm{s}$, hatch spacing of $120 \mu \mathrm{m}$, and layer thickness of $30 \mu \mathrm{m}$. This component had an outside diameter of $5 \mathrm{~cm}$ with the inner features having minimal thickness of $0.8 \mathrm{~mm}$ and is shown in Figure 45.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_46ea9d70c5fdc95ea927g-54}
+
+Figure 45 Demonstrative Component Manufactured by LPBF of Cu10Sn10 (Power=350W, Scan Speed $=750 \mathrm{~mm} / \mathrm{s}$, Hatch Space=0.12 $\mathrm{mm}$ ) Double Layered Pipe ( $\sim 5 \mathrm{~cm}$ in Diameter)with Internal Cooling Channels and Grit-blasted Surface Finish
+
+\section*{CHAPTER FOUR: CONCLUSION}
+Laser powder bed fusion parametric study has been conducted using powders of Cu10Sn and pure $\mathrm{Cu}$. The Cu10Sn samples were in general very dense with relative density around $98 \%$ to $100 \%$ by Archimedes Principle and nearly $100 \%$ by image analysis when manufactured with the energy density range between 74 to $140 \mathrm{~J} / \mathrm{mm}^{3}$. This is indicative of a very good printability over a large window of processing. Phase constituents of the LPBF Cu10Sn were $\alpha-\mathrm{Cu}$ (FCC) phase and $\alpha$-Cu (FCC), $\delta$-Cu ${ }_{41} \mathrm{Sn}_{11}$ eutectoid phase. Laser powder bed fusion of pure $\mathrm{Cu}$ with the maximum laser power of $350 \mathrm{~W}$ was conducted, and the maximum relative density of pure $\mathrm{Cu}$ accomplished was $88 \%$ using the parameter set of laser power of $350 \mathrm{~W}$, laser scan speed of $200 \mathrm{~mm} / \mathrm{s}$, powder layer thickness of $0.03 \mathrm{~mm}$, hatch spacing of $0.12 \mathrm{~mm}$. Large irregular pores were observed in cross-sections due to the lack of fusion.
+
+\section*{LIST OF REFERENCES}
+[1] "Copper Alliance," \href{https://copperalliance.org.uk/about-copper/copper-alloys/}{https://copperalliance.org.uk/about-copper/copper-alloys/}.
+
+[2] "Composition and Properties of Bronze," Bronze Metal Facts.
+
+[3] "Standard Terminology for Additive Manufacturing Technologies".
+
+[4] S. Lasers, \href{https://www.spilasers.com/whitepapers/metal-additive-manufacturing/}{https://www.spilasers.com/whitepapers/metal-additive-manufacturing/}.
+
+[5] T. W. T. Caffrey, "Additive manufacturing state of the industry," Wohlers Report, 2015.
+
+[6] G. N. L. K. W. Adriaan B. Spierings, "Designing Material Properties Locally with Additive Manufacturing technology SLM," in Solid Freeform Fabrication Symposium, Austin, TX, USA, 2012.
+
+[7] F. V. F. V. Benjamin Vayre, "Metallic additive manufacturing: State-of-the-art review and prospects, Grenoble," Cambridge University Press, vol. 13, no. 2, pp. 89-96, 2012.
+
+[8] T. A. ,. K. C. Xibing Gong, "Review on Powder-Based Electron Beam Additive Manufacturing Technology," in ASME/ISCIE 2012 International Symposium on Flexible Automation, St. Louis, Missouri, USA, June 18-20, 2012.
+
+[9] J. HIEMENZ, "EBM Offers a New Alternative for Producing Titanium Parts and Prototypes," in Rapid Prototyping/Manufacturing, 2006.
+
+[10] T. E. S. Z. F. J. K. S. A. P. F. L. Jianzhong Ruan, "A Review of Layer Based Manufacturing Processes for Metals," in Solid Freeform Fabrication Symposium, December 2005.
+
+[11] E. M. K. A. S. M. G. J. H. D. A. R. P. W. S. F. M. R. B. W. Lawrence E. Murr, "Fabrication of Metal and Alloy Components by Additive Manufacturing: Examples of 3D Materials Science," Journal of Materials Research and Technology, vol. 1, no. 1, pp. 42-54, April-June 2012.
+
+[12] F. V. F. V. B Vayre, "Identification on Some Design Key Parameters for Additive Manufacturing: Application on Electron Beam Melting," Procedia CIRP, vol. 7, pp. 264-269, 2013.
+
+[13] K. M. L. G. G. A. C. R. K. T. O. Mari Koike, "Evaluation of titanium alloy fabricated using electron beam melting system for dental applications," Journal of Materials Processing Technology, vol. 211, no. 8, pp. 1400-1408, August 2011.
+
+[14] S. B. U. A. S. S. P. E. P. F. J. E. L. Loeber, "Comparison of selective laser and electron beam melted titanium aluminides," in Solid Freeform Fabrication Symposium, June 2011.
+
+[15] G. E. C. C. O. G. AVIATION, "An Overview of Ni Base Additive Fabrication Technologies for Aerospace Applications (Preprint)," Mar 2011.
+
+[16] P. D. O. L. A. H. P. Timothy J. Horn, "Overview of Current Additive Manufacturing Technologies and Selected Applications," Science Progress, vol. 95, no. 3, pp. 255282, September 1, 2012.
+
+[17] E. D. J. V. M. S. J. Geraedts, "Three Views On Additive Manufacturing: Business, Research, And Education," in Proceedings of TMCE, 2012.
+
+[18] K. A. H. W. S. Max Hansen, "Constitution of Binary Alloys," Journal of The Electrochemical Society, vol. 105, 1958.
+
+[19] B. Knapp, Copper, Silver and Gold, Australia: Reed Library, 1996.
+
+[20] "Bronze Disease, Archaeologies of the Greek Past," the original, 26 February 2015.
+
+[21] G. L. Trigg and E. H. Immergut, "Encyclopedia of Applied Physics, Encyclopedia of Applied Physics Volume 4," VCH Publishers, 1992, p. 267-272.
+
+[22] C. Hammond, The Elements, in Handbook of Chemistry and Physics (81st ed.), CRC press, 2004.
+
+[23] "Resistance Welding Manufacturing Alliance," in Resistance Welding Manual (4th ed.), 2003, p. 18-12.
+
+[24] W. Chambers and R. Chambers, Chambers's Information for the People (5th ed.), 1884.
+
+[25] Galvanic Corrosion, Corrosion Doctors, Retrieved 29 April 2011.
+
+[26] C. U. K. G. P. H. A. N. E. V. U. J. E. Sergio Scudino, "Additive manufacturing of Cu-10Sn bronze," Materials Letters, vol. 156, pp. 202-204, 1 October 2015.
+
+[27] D. Z. Z. J. J. G. F. P. Z. Zhongfa Mao, "Processing optimisation, mechanical properties and microstructural evolution during selective laser melting of Cu-15Sn high-tin bronze," Materials Science and Engineering: A, vol. 721, pp. 125-134, 4 April 2018.
+
+[28] D. Z. Z. P. W. K. Z. Zhongfa Mao, "Manufacturing Feasibility and Forming Properties of Cu4Sn in Selective Laser Melting," Materials, 2017.
+
+[29] E. V. S. A. M. A. P. A. Lykov, "Selective Laser Melting of Copper," Materials Science Forum, vol. 843, pp. 284-288, 2016.
+
+[30] K. N. M. Y. K. I. H. K. Toshi-Taka Ikeshoji, "Selective Laser Melting of Pure Copper," JOM, vol. 70, p. pages396-400, 2018.
+
+[31] L. C. A. G. D. B. P. Marzia Colopi, "Selective laser melting of pure Cu with a $1 \mathrm{~kW}$ single mode fiber laser," Procedia CIRP, vol. 74, pp. 59-63, 2018.
+
+[32] P. Technologies, "\href{https://www.metallographic.com/MetallographicEtchants/Metallography-Copper-alloy-etchants.htm}{https://www.metallographic.com/MetallographicEtchants/Metallography-Copper-alloy-etchants.htm}".
+
+[33] V. F. C. T. Thijs Lore, V. H. Jan and J.-P. Kruth, "A study of the microstructural evolution during selective laser melting of Ti-6AI-4V," Acta Materialia, vol. 58, no. 9, pp. 3303-3312, May 2020.
+
+[34] Y. L. Q. B. Bi Zhang, "Defect Formation Mechanisms in Selective Laser Melting: A Review," Chinese Journal of Mechanical Engineering , vol. 30, p. 515-527, 21 April 2017.
+
+[35] M. ALIAKBARI, "Additive Manufacturing: State-of-the-Art, Capabilities, and Sample Applications with Cost Analysis," 2012.
+
+
+\end{document}

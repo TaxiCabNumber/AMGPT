@@ -1,0 +1,13 @@
+prefix=/Users/achuthchandrasekhar/Desktop/C_SEM2/RESEARCH/AMGPT/RAG_KRISHNAIK/LLAMA_INDEX/venv
+exec_prefix=/Users/achuthchandrasekhar/Desktop/C_SEM2/RESEARCH/AMGPT/RAG_KRISHNAIK/LLAMA_INDEX/venv
+libdir=/Users/achuthchandrasekhar/Desktop/C_SEM2/RESEARCH/AMGPT/RAG_KRISHNAIK/LLAMA_INDEX/venv/lib
+sharedlibdir=/Users/achuthchandrasekhar/Desktop/C_SEM2/RESEARCH/AMGPT/RAG_KRISHNAIK/LLAMA_INDEX/venv/lib
+includedir=/Users/achuthchandrasekhar/Desktop/C_SEM2/RESEARCH/AMGPT/RAG_KRISHNAIK/LLAMA_INDEX/venv/include
+
+Name: zlib
+Description: zlib compression library
+Version: 1.2.13
+
+Requires:
+Libs: -L${libdir} -L${sharedlibdir} -lz
+Cflags: -I${includedir}

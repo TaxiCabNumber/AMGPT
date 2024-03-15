@@ -1,0 +1,368 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Determining processing behaviour of pure $\mathrm{Cu}$ in laser powder bed fusion using direct micro-calorimetry }
+
+
+\author{Leonidas Gargalis ${ }^{\mathrm{a}, *}$, Jianchao $\mathrm{Ye}^{\mathrm{c}}$, Maria Strantza ${ }^{\mathrm{c}}$, Alexander Rubenchik ${ }^{\mathrm{c}}$,\\
+James W. Murray ${ }^{b}$, Adam T. Clare ${ }^{b}$, Ian A. Ashcroft ${ }^{a}$, Richard Hague ${ }^{a}$, Manyalibo J. Matthews ${ }^{c}$\\
+${ }^{\text {a }}$ Centre for Additive Manufacturing (CfAM), Faculty of Engineering, University of Nottingham, Nottingham, NG8 1BB, UK\\
+${ }^{\mathrm{b}}$ Advanced Manufacturing, Faculty of Engineering, University of Nottingham, NG7 2RD, UK\\
+${ }^{\mathrm{c}}$ Lawrence Livermore National Laboratory (LLNL), 7000 East Avenue, Livermore, CA94550, USA}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+
+
+\section*{A R T C L E I N F O}
+Associate Editor: R Mishra
+
+\section*{Keywords:}
+Absorptivity
+
+Direct micro-calorimetry
+
+Copper
+
+Laser powder bed fusion
+
+Additive manufacturing
+
+Infrared laser diode
+
+\begin{abstract}
+A B S T R A C T Copper is challenging to process by laser powder bed fusion (LPBF) given its high reflectivity at common infrared laser diode wavelengths and high thermal conductivity. Successful deposition of copper in a predictable and repeatable fashion relies on understanding the development of the keyhole melting regime, as well as heating, melting, boiling and vapour formation behaviour when interacting with a laser beam within an LPBF environment. In this study, in situ optical absorptivity measurements are used to clarify the complex physics of the laser material interaction. Absorptivity of laser energy is measured using direct micro-calorimetry and compared to melt pool depth in correlation to processing parameters. The measured absorptivity for a $100 \mu \mathrm{m}$ layer thickness of powder was found to be approximately four times higher than that of the bare polished discs. It was also shown that high laser power above $500 \mathrm{~W}$ and scan speed up to $150 \mathrm{~mm} / \mathrm{s}$ are appropriate for effective melting of the powder layer, with these parameters overcoming the threshold required to achieve keyhole melting. This is explained by multiple reflections withing the powder particles and the lower thermal conductivity of packed powder in comparison to bare discs. Melt pool formation was found to be highly unstable and an explosive behavior was observed when in the keyhole regime, caused by high fluctuations in absorptivity values. This work demonstrates calorimetry can be used to monitor melting behaviour in a real-time fashion during processing for this challenging to proces material, thereby avoiding unnecessary parametric optimisation. In addition, the parametric window for optimum processing revealed here can inform future work.
+\end{abstract}
+
+\section*{1. Introduction}
+Copper and copper alloys are extensively used as functional materials in electronic devices and heat exchangers owing to their excellent electrical and thermal properties (Davis, 2001). The increasing demand for functional circuits, electronics, heat sinks and high-performance devices with superior electrical and thermal properties has led to recent advances in the manufacture of copper and copper alloy parts via AM processes. Laser Powder Bed Fusion (LPBF) for pure copper was studied by Ikeshoji et al. (2017) who used a thermoviewer to compare melt pool dimensions with estimated values. Direct Metal Laser Sintering (DMLS) of copper on ferrous and non-ferrous substrates was investigated by Pogson et al. (2003) and Electron Beam Melting (EBM) was used by Frigola et al. (2014) to produce fully dense copper components with complex geometries. However, as pointed out in the review of\\
+Auwal et al. (2018) on laser beam welding of copper alloys, some critical challenges remain for the manufacture of high-density copper parts via LPBF. These include excessive oxidation and the requirement for high power lasers that are not of standard wavelengths, due to high thermal losses. Moreover, low laser radiation absorption and the formation of an unstable melt pool with standard IR lasers hinder the stability and quality of the process as shown by Hess et al. (2011). Owing to its high thermal conductivity, copper facilitates rapid heat transport away from the melt pool resulting in partial melting and poor interlayer adhesion. Samples produced with conventional LPBF machines (200-400 W laser power) typically feature a low average density, depending on the laser system source. Lykov et al. (2016) used a $200 \mathrm{~W} \mathrm{CO}_{2}$ laser to process copper resulting in a density of $88 \%$ whereas (Silbernagel et al. 2019) used a $200 \mathrm{~W}$, Yb-fiber laser and produced samples with a density between $83-88 \%$. This poor densification is related to the low absorption
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail address: \href{mailto:leonidas.gargalis@nottingham.ac.uk}{leonidas.gargalis@nottingham.ac.uk} (L. Gargalis).
+}
+of infrared radiation during LPBF of copper due to the wavelength dependency of the absorption coefficient (McVey et al., 2007). In the work of (Colopi et al., 2018) copper was processed with a $1 \mathrm{~kW}$ single mode fiber laser in order to produce high density parts ( $>97 \%$ ). Kaiser et al. (2018) used a $1 \mathrm{~kW} 515 \mathrm{~nm}$ (green) continuous wave laser to weld copper joints and presented the benefits in terms of melt pool stability and weld quality. However, as shown by Jadhav et al. (2019a), overcoming this issue by simply increasing the laser power to $1 \mathrm{~kW}$ and above is not normally an option, given the lack of access to commercial systems at such high-power levels, as well as the vulnerability of the optics (i.e. mirrors) to high powered lasers.
+
+Solid copper has very low absorptivity at the infrared wavelengths $(\sim 1070 \mathrm{~nm})$ commonly used in LPBF, absorbing only up to $5 \%$ of the incoming thermal energy when in flat solid form and up to $15 \%$ of the laser energy when in powder form as shown by Wang et al. (2000). This is to be compared with $\sim 30$ and $\sim 60 \%$ absorptivity values for common structural alloys in flat solid or powder form respectively as shown by Ye et al. (2019). An increase in absorptivity for copper can be achieved with shorter laser wavelengths, due to an increase in intraband electronic transitions. Liebl et al. (2014) showed that when the laser wavelength is reduced (typically using blue/green lasers), copper absorptivity increases significantly; at wavelengths below $532 \mathrm{~nm}$ (green spectrum) it can reach maximum values close to $40 \%$ as presented by Engler et al. (2011). Engler compared experimentally green and IR laser radiation in continuous laser welding of copper.
+
+In the work of Rubenchik et al. (2015) the authors calculated, using ray-trace modelling and simulations, the absorption of laser light by metal powders and investigated the dependence of absorption on powder content and beam size. It was found that the absorption is significantly increased relative to its flat-surface value by multiple scattering (reflections of the IR laser beam between powder particles) and this effect is especially important for highly reflective materials such as copper. That means that the absorption value is strongly affected by the size distribution of the powder spheres and their geometrical arrangement. For a laser wavelength of $1070 \mathrm{~nm}$, incident angle of $0^{\circ}$ and a flat clean surface the absorptivity of copper is $\mathrm{A}=0.028$ whereas for powder layers, the absorptivity value is increased to $\mathrm{A} \approx 0.12-0.17$.
+
+Boley et al. (2017) demonstrated that absorptivity of metallic powders is dependent on numerous parameters, including powder layer thickness, particle size and distribution and powder surface morphology; Tolochko et al. (2000) showed that absorptivity is also affected by the temperature of the substrate and by laser scanning parameters such as laser power. Measuring absorptivity in LPBF is complex because the material undergoes continuous dynamic surface morphology fluctuations. In addition, several physical effects take place during laser-matter interaction, for example, multiple light reflections, energy loss by material euation and ablation, absorption and refraction of light by the vapour jet formed as shown in the experimental work by Ly et al. (2017). At high laser energy densities, when the vapour recoil pressure is sufficient to form a deep depression in the melt pool (i.e., the keyhole welding regime), light interacts with the keyhole walls at steep angles and with the ejected vapours. A fraction of the net absorbed energy is lost via evaporative cooling and part of the laser light is directly absorbed in the vapour plume. On the other hand, multiple reflections in the melt pool vapour depression under keyhole conditions causes a net $2-3 \times$ increase in absorbed energy making the process more efficient and potentially more stable.
+
+There is therefore a need to measure the effective absorptivity of pure copper under conditions similar to the LPBF process, focusing only on the energy absorbed by the substrate. An experimental method to directly measure the absorptivity using a micro-calorimetry setup was developed, validated and used previously by Trapp et al. (2017). Trapp, measured the absorptivity of various materials and concluded that absorptivity values can vary greatly and differ from estimated values found in the literature. However, the results were in good agreement with a finite element simulation for LPBF which involved laser beam interaction with the melt pool through ray tracing analysis developed by Matthews et al. (2019). A similar setup, designed to minimise thermal losses and equipped with an IR pyrometer was shown recently in the work of Clare et al. (2020), where carbon nanotubes were used to modify the chemistry of aluminium and enhance its absorptivity.
+
+The role of powder chemistry on absorption in terms of oxygen content (thin oxide layer formed onto the powder particles) is significant. As shown in Jadhav et al. (2019b) the oxides can greatly increase absorption. The authors intentionally modified the surface of copper powder by heat treatment to form a surface oxide layer (105 nm) featuring a mixture of $\mathrm{Cu} 2 \mathrm{O}$ and $\mathrm{CuO}$. The optical absorption was improved from $32 \%$ to $58 \%$ for a $1080 \mathrm{~nm}$ fiber laser wavelength. Coating the copper powder particle surface with metallic or oxide coatings, which are less reflective than copper, can significantly improve the copper laser beam absorptivity. However, oxides can precipitate in copper reducing its thermal and electrical conductivity, leading to oxide inclusions and poor weld quality.
+
+In this work, a systematic study is performed in which the fundamental melting and conduction/keyhole behaviour of copper powder on a copper substrate system, are assessed. This is achieved through analysis of the absorptivity of the laser during processing, as well as an investigation of the key process parameters of scan speed and laser power. The cross-sectional features of the single tracks are analysed to understand the processing behaviour in the context of the conduction and keyhole melting regimes. High frame-rate video recording and optical metallography are used to support the identification of conduction and keyhole welding regimes and offer new insights into the energy coupling of copper as a function of laser parameters. Such a fundamental study has not yet been performed on copper, a key material for thermal and electrical applications.
+
+\section*{2. Material and methods}
+\subsection*{2.1. Materials}
+High chemically pure copper powder $(\mathrm{HCP} \mathrm{Cu})$ feedstock was used in this study, made by nitrogen gas atomisation, with a purity of 99.9 w.t. $\%$, and an apparent density of $4.80 \mathrm{~g} / \mathrm{cm}^{3}$ (ISO3923/1) (ECKA Granules GmbH Germany). A Hitachi High-Technologies Corp. (Japan) TM3030 scanning electron microscope (SEM) at $15 \mathrm{kV}$ was used for surface and cross-sectional analysis. Energy dispersive X-ray (EDX) spectroscopy at the same voltage was used for elemental composition analysis. The powder contained traces of phosphorus ( $<0.05$ w.t. \%) and oxygen ( $<$ 0.04 w.t. \%). Powder particle morphology and size distributions are critical factors in developing LPBF process parameters and a stable melting regime. Particle morphology images and Particle size distribution data (PSD) are shown in Fig. 1.
+
+The powder had a spherical shape with many small particles forming satellites on the larger particles. Powder size distribution was measured with a Mastersizer3000 (Malvern Instruments Ltd. (UK)). The median particle size distribution value (D50) was $38.0 \mu \mathrm{m}$ and the values of D10 and D90 were 17.2 and $65.3 \mu \mathrm{m}$ respectively. Copper foils supplied from Goodfellow Ltd. UK, with a thickness of $500 \mu \mathrm{m}$ were EDM cut into $1 \mathrm{~cm}$ diameter plates for the absorptivity measurements. Two copper substrate preparations were used: bare substrate 500 grit polished, and the same substrate with a $100 \mu \mathrm{m}$ layer of powder. Acetone was used to clean the substrates prior to experiments. After laser processing and removal of excess powder, the build plates were imaged with the use of a VR-3200 wide-area 3D Measurement System (Keyence Corporation). The substrates with the single tracks were cut perpendicular to the track length direction using a slow speed diamond saw (Model 65001, South Bay Technologies) and mounted in epoxy resin for cross-sectional analysis. Metallographic polishing was performed down to a $1 \mu \mathrm{m}$ diamond finish and samples were then etched using a 3:1 vol mixture of $\mathrm{HCl}$ and HNO3 to reveal the microstructure and melt pools. Imaging of melt pool depth and width was performed using an optical microscope
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_407a3fd0a98d50eaf53dg-03(2)}
+\end{center}
+
+Fig. 1. SEM image of copper powder and particle size distribution data with D10, D50 and D90 values z.
+
+(Olympus STM6 measuring microscope).
+
+\subsection*{2.2. Experimental method}
+\subsection*{2.2.1. Laser processing}
+The LPBF experiments were performed with the use of an in-house at LLNL built LPBF-AM machine equipped with a $600 \mathrm{~W} \mathrm{Yb}, 1070 \mathrm{~nm}$
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_407a3fd0a98d50eaf53dg-03(1)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_407a3fd0a98d50eaf53dg-03}
+\end{center}
+
+Fig. 2. (a) Open-architecture LPBF system, (b) build chamber with micro-calorimetry apparatus and welded thermocouples on the rear side of the substrate disc. Temperature measurement curves are also shown. Solid lines are the temperature responses of the two welded thermocouples for a copper substrate disc and dashed lines are the exponential decay fitting using data ranging from $20 \mathrm{~s}$ to $50 \mathrm{~s}$ after laser scan. The temperature time curve was measured for a total time of $60 \mathrm{~s}$ with a measurement frequency of $20 \mathrm{~Hz}$.\\
+continuous wave fiber laser. The beam was focused using a $450 \mathrm{~mm}$ focal length lens to a nearly Gaussian shape with a 1/e ${ }^{2}$ diameter of $45 \pm$ $5 \mu \mathrm{m}$ and scanned using $\mathrm{x}-\mathrm{y}$ galvanometer scanning mirrors. The optical system was designed to simulate that of a typical commercial SLM machine. The experiments were performed in a custom-built chamber supplied with protective argon gas to ensure an inert atmosphere. The flow rate of argon was set to a fixed value of 2100 and $700 \mathrm{~cm}^{3} / \mathrm{min}$ for the bare discs and the powder samples, respectively. Copper powder was manually spread using a razor blade as a $100 \mu \mathrm{m}$ thick single layer on circular pure copper discs. The overall uncertainty during the experiments was calculated at $8 \%$. A powder layer thickness of $100 \mu \mathrm{m}$ was chosen as the average powder size restricted smaller homogeneous layers. Powder layer height was controlled via a threaded stage on which the substrate was mounted and was calibrated using a plane height gauge. A series of $5 \mathrm{~mm}$ long single tracks was produced by varying laser power and scan speed. Processing parameters were narrowed down, targeting melting conditions in the vicinity of the keyholemode welding regime by reaching the maximum output power of the laser (540 W due to losses of $60 \mathrm{~W}$ in the optical setup), on bare copper substrate discs and discs coated with powder. Laser powers of 400, 450, 500 and $540 \mathrm{~W}$, and scan speeds from 25 to $1000 \mathrm{~mm} / \mathrm{s}$ were used, resulting in linear energy density values between $0.36-21.6 \mathrm{~J} / \mathrm{mm}$. These parameters were chosen after preliminary experimentation and consideration of the literature, and represent practical parameters that are likely to be used for a range of highly reflective materials. The experimental setup illustrating the open architecture and laser calorimetry apparatus is shown in Fig. 2.
+
+\subsection*{2.2.2. Calorimetry approach}
+Two type $\mathrm{K}$ thermocouple probes, with bare wires of $76 \mu \mathrm{m}$ diameter each were spot welded to the backside of the copper substrate discs (see Fig. 2(b)). This enabled the absorbed energy in the substrate to be measured whilst excluding the energy absorbed by metal vapour and energy that is reflected or removed by evaporation. The incident laser power varied from $400 \mathrm{~W}$ up to the maximum of $540 \mathrm{~W}$. In order to avoid the inertial effects of the scanning mirrors, the scanning distance was set to $10 \mathrm{~mm}$ and the laser was turned on after $5 \mathrm{~mm}$ of travelling distance and turned off at the end of the track. Temperature was recorded just before the laser irradiation for a duration of $120 \mathrm{~s}$. A description of the extrapolation of absorptivity data in this system is also described in Trapp et al. (2017). An exponential decay function was fitted to temperature data of each thermocouple for $t>t_{1}$ and temperature was extrapolated to time $\mathrm{t}_{0}$ corresponding to the time the tracks were created, as shown in Fig. 2(b).
+
+This procedure was chosen to compensate for temperature losses before equilibration of temperature over the disc. These losses are primarily caused by radiation and convection. Heat lost through the thin thermocouple wires and the low conductivity sample holder is considered negligible. The total time of energy deposition is in the millisecond range, much shorter then the temperature equilibration time. Assuming a known disc temperature increase, the effective absorptivity can be calculated by dividing the energy necessary to uniformly heat the specimen from starting temperature $T_{0}$ to end temperature $T_{1}(E H)$ by the energy input due to the laser irradiation (EL):
+
+Absorptivity $=\frac{\text { Energy Out }}{\text { Energy In }}=\int_{T_{0}}^{T_{1}} \frac{m C_{p}(T) d T}{l / v P}$
+
+$T(t)=T_{0}+\left(T_{1}-T_{0}\right) e^{-t / \tau}$.
+
+In Eq. (1), $\mathrm{m}$ is the mass of the disc including the powder layer (if applicable), $\mathrm{P}$ is the nominal laser power (W), $v$ the scanning speed $(\mathrm{mm} / \mathrm{s})$ and $l$ the total length of the laser track ( $5 \mathrm{~mm}$ for a single track line). The exponential decay time constant in Eq. (2) is $\tau$. Eq. (2) fits to the cooling section of the raw temperature profile. The intersection of this curve with the time the laser is turned on is $T_{1}$ with the starting tempera- ture of the disc being $\mathrm{T}_{0}$. The temperature-dependent heat capacity over the temperature range measured $\left(25<\mathrm{T}<150{ }^{\circ} \mathrm{C}\right)$ is given by the function $C_{p}(T)=C_{p, 0}(1+T)$ with $C_{p, 0}$ and other physical properties of copper are shown in Table 1.
+
+\section*{3. Results}
+\subsection*{3.1. Track morphology}
+Single tracks were produced using the parameters listed in Section 2.2, i.e. $400,450,500$ and $540 \mathrm{~W}$, with scan speed ranging from 25 to $1000 \mathrm{~mm} / \mathrm{s}$. Tracks were produced on the two substrate types; substrate with $100 \mu \mathrm{m}$ layer thickness powder and polished bare substrate. Fig. 3 shows optical images and height maps for tracks produced at 400 and $500 \mathrm{~W}$ with increasing scan speed, on substrates with $100 \mu \mathrm{m}$ layer thickness copper powder.
+
+A clear difference in track quality and morphology between the two power parameters can be seen. The $500 \mathrm{~W}$ tracks are generally more homogenous and continuous, indicating a more stable welding regime at the higher laser power. It is also observed that the width, height, and denudation zone of tracks, at both $400 \mathrm{~W}$ and $500 \mathrm{~W}$, reduces with increasing speed. Moreover, in the case of the $500 \mathrm{~W}$ tracks, there is a clear change in melting behaviour between $50 \mathrm{~mm} / \mathrm{s}$ and $150 \mathrm{~mm} / \mathrm{s}$ whereby at $150 \mathrm{~mm} / \mathrm{s}$ and above, homogeneous tracks are produced. Morphological irregularities, either in the form of balling or accumulation of material causing an increase in height of the tracks, are represented as red spots on the height maps.
+
+To further characterise track morphology, track width and height measurements for $400 \mathrm{~W}$ and $500 \mathrm{~W}$ tracks for bare substrates and substrates with the $100 \mu \mathrm{m}$ copper layer are shown in Fig. 4. The width and height of the tracks was measured for all tracks, with an average of six measurements along each track.
+
+In the case of the substrates with the copper powder layer, there was a trend of decreasing width with increasing scan speed. This trend was particularly strong with $400 \mathrm{~W}$ power. It is also noted that the 400 and $500 \mathrm{~W}$ widths coincide at higher scan speeds. For the bare plate, no significant trend of track width evolution with scan speed was observed. Under all scenarios, the track widths of the substrate with a powder layer were significantly larger than in the case of the bare substrate, a result that was expected due to the higher powder absorptivity. In the case of bare copper plate, the track width values are low. High conductivity of copper with ultra fast cooling rates is likely to cause selfquenching thus increasing the value of energy input required to fully melt and consolidate the material. The copper disc reflects most of the laser radiation and only a small amount of energy is absorbed and then transformed into thermal energy. On the other hand, the thermal conductivity of powder is lower, hence it may retain a higher fraction of heat leading to melting and spreading out, effectively increasing the width of the laser track.
+
+Track heights in the case of the powder layer were, as expected, much higher than those of the bare substrates. As is the case for the widths, there was no trend of track heights for the bare substrates with increasing scan speed. However, for the powder layer, a trend of
+
+Table 1
+
+Physical properties of copper, $\rho, \mathrm{C}_{\mathrm{p}}, \mathrm{k}$ and $\mathrm{D}$ correspond to room temperature values as previously shown in Davis (2001).
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Property & Value and Units \\
+\hline
+Absorptivity, $A$ & 0.05 \\
+Density, $\rho$ & $8.96 \mathrm{~g} / \mathrm{cm}^{3}$ \\
+Specific heat capacity, $C_{p, o}$ & $384.6 \mathrm{~J} /(\mathrm{kg} \mathrm{K})$ \\
+Melting point, $T_{m}$ & $1358 \mathrm{~K}$ \\
+Thermal conductivity, $k$ & $399 \mathrm{~W} /(\mathrm{m} \mathrm{K})$ \\
+Latent Heat of Fusion & $205 \mathrm{~J} / \mathrm{g}$ \\
+Latent Heat of Evaporation & $4796 \mathrm{~J} / \mathrm{g}$ \\
+Thermal diffusivity, $D$ & $1.11 \times 10^{-4} \mathrm{~m}^{2} / \mathrm{s}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Powder - $400 \mathrm{~W} \quad$ Scan speed (mm/s) Powder - $500 \mathrm{~W}$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_407a3fd0a98d50eaf53dg-05(3)}
+
+Substrate - $500 \mathrm{~W}$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_407a3fd0a98d50eaf53dg-05}
+
+Fig. 3. (a) and (c) Optical micrographs and (b) and (d) height maps for single tracks of $100 \mu \mathrm{m}$ layer thickness copper powder on copper substrates using $400 \mathrm{~W}$ and $500 \mathrm{~W}$ laser powers respectively, at increasing scan speeds. Optical micrograph (e) and height map (f) for single tracks on bare copper substrate using $500 \mathrm{~W}$ laser power at increasing scan speeds. Note the height scales vary between powder coated and bare substrates.
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_407a3fd0a98d50eaf53dg-05(2)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_407a3fd0a98d50eaf53dg-05(1)}
+\end{center}
+
+Fig. 4. (a) Widths and (b) heights of single tracks of copper powder on copper and bare copper substrates processed at increasing scan speeds, at $400 \mathrm{~W}$ and $500 \mathrm{~W}$. The error bars in both cases correspond to the standard deviation of the data across 7 measurements and sampled along each $10 \mathrm{~mm}$ track.\\
+increasing track height from 50 to $200 \mathrm{~mm} / \mathrm{s}$ scan speeds was seen, after which track height remained relatively constant.
+
+\subsection*{3.2. Track cross-sections}
+In order to elucidate the melting behaviour further, cross-sections of tracks were analysed by SEM. Micrographs of key cross-sections at 400 $\mathrm{W}$ and $500 \mathrm{~W}$ for tracks with copper powder layers are shown in Fig. 5. A significant difference in melting behaviour between $400 \mathrm{~W}$ and $500 \mathrm{~W}$ can be seen in the case of the tracks in the copper powder. At $400 \mathrm{~W}$ (Fig. 5 (a), (b)), no penetrating melt pool could be seen irrespective of the scan speed, and at higher speeds, almost no bonding occurred. Moreover, at $\mathrm{P}=400 \mathrm{~W}$, the powder is partially melted, but the substrate is still intact. When the laser power is increased to $500 \mathrm{~W}$, a transition to the keyhole regime can be observed (Fig. 5 (c)). The formation of keyholes with depth being independent from scan speed is shown. High scan speed increases the probability of defects, both for 400 and $500 \mathrm{~W}$. Lower scan speed means more time for voids to be closed. It is worth mentioning that the microstructure of the melted copper is similar to that of bulk virgin copper. As a result, it is difficult to define details of the keyhole structure and our discussion will be mainly qualitative.
+
+Fig. 6 (a-e) shows the melt pool evolution at the maximum laser power of $540 \mathrm{~W}$ with increasing scanning speed for bare copper substrates. In Fig. 6 a) oxides are identified with white arrows. Oxide particles were observed after cross sectioning and polishing the samples leading to the assumption that oxides were formed during metallographic preparation. Deep penetration keyholing is seen, with melt pools reaching a depth of $400 \mu \mathrm{m}$. The depth is independent of scan speed, though some variation in the shape of the melt pools can be explained by the instability of the laser-matter interaction. Overall, it is clear that a number of distinct profiles can be identified that are
+
+(a)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_407a3fd0a98d50eaf53dg-06}
+
+(b)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_407a3fd0a98d50eaf53dg-06(3)}
+
+\section*{$500 \mathrm{~W}$}
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_407a3fd0a98d50eaf53dg-06(1)}
+\end{center}
+
+(c)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_407a3fd0a98d50eaf53dg-06(2)}
+
+Fig. 5. SEM and optical micrographs of (a) polished and (b) etched cross-sections of tracks made using a layer of copper powder on copper substrates at $400 \mathrm{~W}$ and (c) $500 \mathrm{~W}$.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_407a3fd0a98d50eaf53dg-07(1)}
+
+Fig. 6. SEM images in back-scatter mode showing the evolution of a deep melt pool for $540 \mathrm{~W}$ laser power in the transition regime from conduction to keyholing for bare copper substrates with increasing scan speed; From Figure a) to e) scan speed increases with intervals of $100 \mathrm{~mm} / \mathrm{s}$ and the dashed white lines show the melt pool boundaries; note the difference in scale size at the last micrograph.
+
+determined by the melting regime: heating, melting and transition from conduction to keyhole. These melting regimes are critical in determining the overall stability and behaviour of the LPBF process.
+
+Melt pool characteristics for $540 \mathrm{~W}$ at $100 \mathrm{~mm} / \mathrm{s}$ are more consistent with a keyhole melting regime, given the higher aspect ratio melt pool, as opposed to the wider and shallower elliptical type melt pool seen at $500 \mathrm{~mm} / \mathrm{s}$. In the keyhole laser melting regime, the recoil pressure overcomes the surface tension causing a deep and narrow melt pool depression to form.
+
+\subsection*{3.3. In situ absorptivity measurements}
+Fig. 7 shows the effect of laser power at different scan speeds on absorptivity for bare plates and plates with a powder layer. In the case of the bare substrate, absorptivity values start at 0.05 and remain at this value until the laser power reaches $350 \mathrm{~W}$. Above this laser power, a steep increase in absorptivity can be seen, indicating the fast transition from solid to liquid (i.e transition from conduction to a state that supports keyhole formation). It must be noted that, consistent with Fig. 4, scan speed does not have a significant impact on the absorptivity of copper. As presented in (Rubenchik et al., 2018) materials featuring high thermal conductivity are prone to keyhole depression and they are much more dependent on laser power than scan speed.
+
+For the powder layer, this same trend is followed, however the initial absorptivity is notably higher at 0.2 and gradually increases, reaching 0.53 at the maximum laser power of $540 \mathrm{~W}$.
+
+\section*{4. Discussion}
+\subsection*{4.1. Melting behaviour and absorptivity}
+Energy absorption in LPBF is a complex process, which includes the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_407a3fd0a98d50eaf53dg-07}
+\end{center}
+
+Fig. 7. Effect of laser power on absorptivity, for bare plate at 25, 50 and 100 $\mathrm{mm} / \mathrm{s}$ scan speed and for a copper powder layer at $100 \mathrm{~mm} / \mathrm{s}$ scan speed ( $45 \mu \mathrm{m}$ $1 / \mathrm{e}^{2}$ beam diameter).
+
+effects of temperature on absorptivity, laser irradiation interaction with the deformed melt surface, multiple light reflections, energy loss by material evaporation and ablation, absorption and refraction of light by the vapour. This work has used in-situ calorimetry-based absorptivity measurements of copper for the first time to provide a better understanding of its melting behaviour and dependence on typical processing parameters used in LPBF. In addition, this approach can be used to evaluate the different melting regimes (conduction vs keyhole) and to narrow down the process parameter window when deploying new LPBF systems. As will be discussed in subsequent sections in detail, a universal\\
+function of normalised enthalpy can guide parameter optimisation by taking the ratio of the deposited laser energy density to the material's melting enthalpy as shown by Ye et al. (2019). Normalised enthalpy effectively unifies the laser and material parameters for both laser absorptivity and melt pool geometries and will be used to support the following discussion.
+
+Melting behaviour was found to vary substantially with process parameters. Fig. 4 the melt pool width standard deviation is observed to generally decrease with increasing scan speed for $\mathrm{P}=400 \mathrm{~W}$ with a powder layer. This reduction in standard deviation, and implied reduction in melt pool fluctuation, is indicative of a more stable melting regime at higher scan speeds. The increase in width variation for the 400 $\mathrm{W}$ tracks in powder may be explained by the entrainment-denudation phenomenon. This is where partially sintered or unmelted particles adhere to the sides of the scan tracks, causing irregularities in the track morphology as demonstrated by Matthews et al. (2017). However at 500 $\mathrm{W}$, standard deviation of the height and width data, shows a weaker dependence on scan speed than for the $400 \mathrm{~W}$ cases. At $500 \mathrm{~W}$, the copper is in the key hole regime, with evaporation and partial metal ejection; in this regime, melt stretching due to the wetting is less pronounced. This suggests that the transition between stable and unstable melting is between 400 and $500 \mathrm{~W}$ laser power. At both powers, the widths and heights of tracks, and their standard deviations, on the bare substrates show no clear trend with increasing scan speed.
+
+When powder is deposited on a substrate, the powder characteristics (porosity and particle size distribution changes from point to point. The resulting fluctuations of absorptivity can be one of the factors driving the observed track instability. The powder absorptivity is 4-5 times (for copper) higher than that for bulk material. As a result it is possible to have a regime where the laser power is high enough to melt the powder, but not sufficient to melt the substrate (Fig. 5(a)). Even at $400 \mathrm{~W}$ the melt evolves under the effect of surface tension and this evolution can be longer than dwell time. In this situation the track parameters have scan speed dependence (see Fig. 4). It has been shown that melted powder starts to wet the surface of the substrate after $\sim 100 \mu \mathrm{s}$, at a corresponding scan speed $\sim 400 \mathrm{~mm} / \mathrm{sec}$. For higher speeds, a balling effect, yielding a rough surface with low adhesion is to be expected. For a slow scan speed of $\sim 100 \mathrm{~mm} / \mathrm{s}$, wetting results in the stretching of the melt across the track, providing good adhesion to the substrate, but decreasing melt height. This pattern corresponds to the experimental data in Fig. 4.
+
+The absorptivity results in Fig. 7 support these findings. The presence of powder increases the effective absorptivity at all processing parameters. Critically, there is a clear increase in measured absorptivity from 350 to $540 \mathrm{~W}$ in the case of the powder sample, up to a maximum of $\sim 0.5$. This is in contrast to the case of the bare substrate, whereby until $450 \mathrm{~W}$, absorptivity remains low, after which it rapidly increases. This behaviour is explained by multiple reflections and scattering of the laser beam in when interacting with the powder. For example, it has been shown previously that for high reflectivity materials, such as silver and gold, powder absorptivity can be increased by a factor of 4-7 in comparison to a flat surface, owing to the numerous reflections before effective absorption as stated by Rubenchik et al. (2015). This is in contrast to low reflectivity materials, such as stainless steel and titanium, for which this factor is only 1.5-2. The absorptivity behaviour of copper is different to that seen with stainless steel and Ti-6Al-4 V, where the powder melting results in a noticeable initial drop in absorptivity followed by an increase to $0.6-0.7$ due to keyhole formation. This drop in absorptivity, followed by a rapid increase is expected in stainless steel powders where the powder initially forms a melt pool, and the measured absorptivity matches closely to that of the bare substrate. Trapp et al. (2017) observed this trend at both low (100 mm/s) and high (1500 $\mathrm{mm} / \mathrm{s}$ ) scan speeds in the case of stainless steel. However, it is significant that in our results there was no observed sharp decrease in absorptivity values at any particular point.
+
+The scan speed dependence of track width for the powder sample may be related to slow melt motion due to the surface tension mentioned earlier, and it is consistent with the observation that the width of tracks greatly exceed the beam diameter (up to 15 times at low scanning speeds). However, another contribution to instability could arise from the relative length scales of the laser beam and powder particles. In order to drive high temperatures to achieve melting for a fixed maximum laser power we a tightly focused laser beam that was approximately the same size as the average powder particle was used. This results in fluctuations of absorptivity during the scan such that when the laser beam interacts with a larger copper particle, the resulting absorptivity is low and close to the absorptivity of the bare copper substrate. However, when the laser beam scatters between powder particles, absorptivity increases abruptly. As such, the fluctuations of absorptivity during scanning can result in fluctuations of the track structure. For a laser power of $500 \mathrm{~W}$ a transition to the key hole regime was observed. It is important to note that the transition is very sharp as there is no substrate melting at $400 \mathrm{~W}$ (in comparison to over $100 \mu \mathrm{m}$ deep depressions at $500 \mathrm{~W}$ ). This pattern is different from keyhole growth in other materials (e.g. Ti6Al4V, stainless steels and nickel superalloys) as presented by Ye et al. (2019), where keyhole depth grows gradually (linearly) with laser power. This key difference in behaviour can be explained by the following; In the case of copper, the absorptivity of the laser light jumps rapidly, by 1.5 times, at the melting point, and thermal conductivity drops by 2.4 times. As a result, just after the laser heats material to a temperature above the melting point, there is a sharp temperature increase up to the boiling point, resulting in a sharp transition to the keyhole regime.
+
+\subsection*{4.2. Absorptivity scaling behaviour}
+In order to obtain a comparative picture of the melt pool formation behaviour in copper, the bare plate absorptivity of a range of materials should be considered. In the study of Ye et al. (2019) that focused on alloy systems with thermal diffusivities lower than copper (e.g. stainless steel, Ti-6Al-4 V and Inconel 625), it was found that the absorptivity is mainly dependent on two independent dimensionless parameters namely normalised enthalpy $\beta$ and normalised diffusion length $L_{t h}^{*}$. These parameters take into account both material properties and laser processing parameters, and they can be calculated using Eqs. (3) and (4) respectively.
+
+$\beta=\frac{A_{m} P}{\pi H_{m} \sqrt{D a^{3} u}}$
+
+$L_{t h}^{*}=\sqrt{\frac{D}{a u}}$
+
+For a given material with low thermal diffusivity, the transverse thermal diffusion is of minor importance as the increase of melt pool depth or depression depth is driven by vapour recoil pressure and Marangoni shear flow. In the work of Campanelli et al. (2014) it was found that the melt pool depth and absorptivity scale with $\beta L^{*}{ }_{t h}$, which leads to a simplified surface energy density dependence $\left(\propto P u^{-1}\right)$. Thus, for low thermal diffusion materials, the effect of thermal diffusivity will tend to cancel out through the counter-dependence of $\beta$ and $L^{*} t h$ on $D$. When this scaling is applied to copper, as shown in Fig. 8(a), the plots for different scan speeds become further separated. This is because the above scaling relationship is not applicable for high thermally conducting materials such as copper, where the melt pool depth is strongly influenced by thermal diffusion. For example, when comparing the thermal diffusion time, $\tau_{\text {th, }}$, for a $50 \mu \mathrm{m}$ laser spot, copper thermal diffusion times are in the order of $\mu$ s while steel, inconel and titanium are in the order of 100 's of $\mu \mathrm{s}$. This can be compared to an effective scan laser dwell time of $\sim 100 \mu \mathrm{s}$ for $\mathrm{v}=500 \mathrm{~mm} / \mathrm{s}$. When the absorptivity is plotted against the original 'bare' form of normalised enthalpy $\beta$ similar to the work of Hann et al. (2011), which scales as $P u^{-0.5}$, the plots follow
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_407a3fd0a98d50eaf53dg-09(1)}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_407a3fd0a98d50eaf53dg-09(2)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_407a3fd0a98d50eaf53dg-09(3)}
+\end{center}
+
+(d)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_407a3fd0a98d50eaf53dg-09}
+\end{center}
+
+Fig. 8. Laser absorptivity as functions of the power of normalized enthalpy and normalized thermal diffusion length $\beta L^{*}$ th where 'ref' refers to data taken from Ye et al. (2019) (a), the normalized enthalpy $\beta$ (b), the ratio of normalized enthalpy and normalized thermal diffusion length $\beta / L^{*}$ th $(c)$, and $\beta / L^{*}$ th $u^{0.18}$ (d).
+
+a more unified behaviour, however, the threshold for absorptivity jump is still broadly separated (see Fig. 8(b)). Instead, the scanning speed dependency is less significant due to high thermal diffusivity and short diffusion times. In fact, in deriving the normalised enthalpy from laser scan parameters, if one replaces the effective laser dwell time $(a / u)$ with $\tau_{\mathrm{th}}$, the resulting form is $\beta^{\prime}=\frac{A P}{\pi H_{m} D a}=\beta / L_{t h}^{*}$, which cancels out the effect of scanning speed $\left(\propto p u^{-0}\right)$. For a fixed material and laser spot size, this scaling is mainly dependent on power as shown Figs. 7 and 8(c). The increased overlapping of the plots proves that the laser absorptivity of copper is less dependent on scanning speed and is consistent with the observation that $L_{t h}^{*}>1$ for the temperature distribution around melt pool. For the best fit, the scaling exponent of absorptivity of copper bare plate vs scanning speed is found to be -0.18 (Fig. 8(d)). Note that the powder case is still separated from the bare plate cases due to the effect of the lower thermal conductivity of the loosely packed powder layer.
+
+\section*{5. Conclusions}
+Laser calorimetry has been shown as a useful method for revealing melting mechanisms of copper and advancing understanding of material-process-property relationships otherwise difficult to identify. The main findings of this research can be summarised as the following:
+
+\begin{itemize}
+  \item The absorptivity of copper powder is approximately four times higher than for the bare material reaching a value of approximately 0.5 .
+  \item The difference in absorptivity of copper between solid and liquid state is between 6-8\%.
+  \item The presence of copper powder reduces the critical energy density thershold required to sufficiently melt material during laser interaction. The powder layer can be melted at a more stable and consistent manner when compared to the bare disc.
+  \item It was also demonstrated that melted layer quality and adhesion can be controlled by manipulation of scanning speed.
+  \item The onset of increasing absorptivity is shifted to higher power for increased scan speed.
+  \item From an additive manufacturing perspective, higher laser power and powder layer improves the process efficiency by increasing the effective absorptivity. This was attributed to the lower thermal conductivity of the loosely packed powder. However, even at full power $540 \mathrm{~W}$, the energy delivered was insufficient to create a stable keyhole melting regime for bare plate and powder. An explosive behavior and sudden changes in absorptivity even when in the keyhole regime were noticed in the melt pool.
+\end{itemize}
+
+In conclusion, the findings can be used as guidelines for parameter optimisation of copper and copper alloys in LPBF additive manufacturing. The work has also demonstrated that calorimetry can be used a practical method for performing on-line monitoring of process behaviour during LPBF. The presented results regarding the various relationships between absorptivity and processing parameters may also be useful as a reference for LPBF of Copper, and of theoretical value for further research.
+
+\section*{CRediT authorship contribution statement}
+Leonidas Gargalis: Data curation, Conceptualization, Writing original draft, Visualization, Investigation, Formal analysis. Jianchao Ye: Data curation, Writing - original draft, Investigation, Formal analysis. Maria Strantza: Data curation, Writing - original draft, Investigation. Alexander Rubenchik: Data curation, Writing - original draft, Investigation. James W. Murray: Writing - review \& editing, Data curation. Adam T. Clare: Writing - review \& editing. Ian A. Ashcroft: Writing - review \& editing. Richard Hague: Supervision, Funding acquisition, Writing - review \& editing. Manyalibo J. Matthews:
+
+Supervision, Project administration, Funding acquisition, Writing - review \& editing.
+
+\section*{Declaration of Competing Interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Acknowledgements}
+The authors would like to thank Tien T. Roehling, Gabe Guss and Michael Crumb Fredrick for their valuable contribution to the experiments. This work was performed under the auspices of the U.S Department of Energy, by Lawrence Livermore National Laboratory under contract DE-AC52-07NA27344. This research was funded by the Laboratory Directed Research and Development Program at LLNL under project tracking code 18-ERD-003. Leonidas Gargalis received funding by the INNOVATIVE doctoral program. The INNOVATIVE program is partially funded by the Marie Curie Initial Training Networks (ITN) action (project number 665468) and partially by the Institute for Aerospace Technology (IAT) at the University of Nottingham.
+
+\section*{References}
+Auwal, S.T., Ramesh, S., Yusof, F., Manladan, S.M., 2018. A review on laser beam welding of copper alloys. Int. J. Adv. Manuf. Technol. 97, 1071-1098. \href{https://doi}{https://doi}. org/10.1007/s00170-018-2030-x.
+
+Boley, C.D., Khairallah, S.A., Rubenchik, A.M., 2017. Calculation of laser absorption by metal powders in additive manufacturing. In: Additive Manufacturing Handbook: Product Development for the Defense Industry, 54, pp. 507-517. \href{https://doi.org/}{https://doi.org/} 10.1201/9781315119106.
+
+Campanelli, S.L., Casalino, G., Contuzzi, N., Angelastro, A., Ludovico, A.D., 2014. Analysis of the molten/solidified zone in selective laser melted parts. In: Dorsch, F. (Ed.), Proceedings of SPIE -The International Society for Optical Engineering, p. 8963. \href{https://doi.org/10.1117/12.2042170}{https://doi.org/10.1117/12.2042170}, 896311.
+
+Clare, A.T., Reynolds, W.J., Murray, J.W., Aboulkhair, N.T., Simonelli, M., Hardy, M., Grant, D.M., Tuck, C., 2020. Laser calorimetry for assessment of melting behaviour in multi-walled carbon nanotube decorated aluminium by laser powder bed fusion. CIRP Ann. 00, 3-6. \href{https://doi.org/10.1016/j.cirp.2020.04.053}{https://doi.org/10.1016/j.cirp.2020.04.053}.
+
+Colopi, M., Caprio, L., Demir, A.G., Previtali, B., 2018. Selective laser melting of pure $\mathrm{Cu}$ with a $1 \mathrm{~kW}$ single mode fiber laser. Procedia CIRP 74, 59-63. \href{https://doi.org/}{https://doi.org/} 10.1016/j.procir.2018.08.030.
+
+Davis, J.R., 2001. ASM Specialty Handbook: Copper and Copper Alloys. ASM International.
+
+Engler, S., Ramsayer, R., Poprawe, R., 2011. Process studies on laser welding of copper with brilliant green and infrared lasers. Phys. Procedia 12, 342-349. \href{https://doi.org/}{https://doi.org/} 10.1016/j.phpro.2011.03.142.
+
+Frigola, P., Harrysson, O.A., Horn, T.J., West, H.A., Aman, R.L., Rigsbee, J.M. Ramirez, D.A., Murr, L.E., Medina, F., Wicker, R.B., Rodriguez, E., 2014. Fabricating copper components with electron beam melting. Adv. Mater. Processes 172, 20-24.
+
+Hann, D.B., Iammi, J., Folkes, J., 2011. A simple methodology for predicting laser-weld properties from material and laser parameters, 44 (44) (2011), p. 445401. J. Phys. D Appl. Phys. 44, 44-54.\\
+Hess, A., Schuster, R., Heider, A., Weber, R., Graf, T., 2011. Continuous wave laser welding of copper with combined beams at wavelengths of $1030 \mathrm{~nm}$ and of $515 \mathrm{~nm}$. Phys. Procedia 12, 88-94. \href{https://doi.org/10.1016/j.phpro.2011.03.012}{https://doi.org/10.1016/j.phpro.2011.03.012}.
+
+Ikeshoji, T.-T., Nakamura, K., Yonehara, M., Imai, K., Kyogoku, H., 2017. Selective laser melting of pure copper. Jom 3-7. \href{https://doi.org/10.1007/s11837-017-2695-x}{https://doi.org/10.1007/s11837-017-2695-x}.
+
+Jadhav, S.D., Dadbakhsh, S., Goossens, L., Kruth, J.P., Van Humbeeck, J., Vanmeensel, K., 2019a. Influence of selective laser melting process parameters on texture evolution in pure copper. J. Mater. Process. Technol. 270, 47-58. https:/ \href{http://doi.org/10.1016/j.jmatprotec.2019.02.022}{doi.org/10.1016/j.jmatprotec.2019.02.022}.
+
+Jadhav, Suraj Dinkar, Vleugels, J., Kruth, J., Van Humbeeck, J., Vanmeensel, K., 2019 b. Mechanical and electrical properties of selective laser melted parts produced from surface oxidized copper powder. Mater. Des. Proc. Commun. 0-2. \href{https://doi.org/}{https://doi.org/} $10.1002 / \mathrm{mdp} 2.94$
+
+Kaiser, E., Dold, E., Killi, A., Zaske, S., 2018. Application Benefits of Welding Copper With a 1 kW, 515 Nm Continuous Wave Laser, pp. 1-6.
+
+Liebl, S., Wiedenmann, R., Ganser, A., Schmitz, P., Zaeh, M.F., 2014. Laser welding of copper using multi mode fiber lasers at near infrared wavelength. Phys. Procedia 56, 591-600. \href{https://doi.org/10.1016/j.phpro.2014.08.047}{https://doi.org/10.1016/j.phpro.2014.08.047}.
+
+Ly, S., Rubenchik, A.M., Khairallah, S.A., Guss, G., Matthews, M.J., 2017. Metal vapor micro-jet controls material redistribution in laser powder bed fusion additive manufacturing. Sci. Rep. 7, 1-12. \href{https://doi.org/10.1038/s41598-017-04237-z}{https://doi.org/10.1038/s41598-017-04237-z}.
+
+Lykov, P.A., Safonov, E.V., Akhmedianov, A.M., 2016. Selective laser melting of copper. Mater. Sci. Forum 843, 284-288. \href{https://doi.org/10.4028/www.scientific.net/}{https://doi.org/10.4028/www.scientific.net/} MSF.843.284.
+
+Matthews, M.J., Guss, G., Khairallah, S.A., Rubenchik, A.M., Depond, P.J., King, W.E., 2017. Denudation of metal powder layers in laser powder-bed fusion processes. In: Additive Manufacturing Handbook: Product Development for the Defense Industry, 114, pp. 677-693. \href{https://doi.org/10.1201/9781315119106}{https://doi.org/10.1201/9781315119106}.
+
+Matthews, M., Ye, J., Gargalis, L., Guss, G., Khairallah, S., Rubenchik, A., 2019. Absorptivity and energy scaling associated with laser powder bed fusion additive manufacturing. Optics InfoBase Conference Papers Part F127- 5-6. \href{https://doi.org/}{https://doi.org/} 10.1364/CLEO\_AT.2019.AW3I.5.
+
+McVey, R.W., Melnychuk, R.M., Todd, J.A., Martukanitz, R.P., 2007. Absorption of laser irradiation in a porous powder layer. J. Laser Appl. 19, 214-224. \href{https://doi.org/}{https://doi.org/} 10.2351/1.2756854.
+
+Pogson, S.R., Fox, P., Sutcliffe, C.J., O'Neill, W., 2003. The production of copper parts using DMLR. Rapid Prototyp. J. 9, 334-343. \href{https://doi.org/10.1108/}{https://doi.org/10.1108/} 13552540310502239.
+
+Rubenchik, A., Wu, S., Mitchell, S., Golosker, I., LeBlanc, M., Peterson, N., 2015. Direct measurements of temperature-dependent laser absorptivity of metal powders. Appl. Opt. 54, 7230. \href{https://doi.org/10.1364/AO.54.007230}{https://doi.org/10.1364/AO.54.007230}.
+
+Rubenchik, A.M., King, W.E., Wu, S.S., 2018. Scaling laws for the additive manufacturing. J. Mater. Process. Technol. 257, 234-243. \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} j.jmatprotec.2018.02.034.
+
+Silbernagel, C., Gargalis, L., Ashcroft, I., Hague, R., Galea, M., Dickens, P., 2019. Electrical resistivity of pure copper processed by medium-powered laser powder bed fusion additive manufacturing for use in electromagnetic applications. Addit. Manuf. 29, 100831 \href{https://doi.org/10.1016/j.addma.2019.100831}{https://doi.org/10.1016/j.addma.2019.100831}.
+
+Tolochko, N.K., Laoui, T., Khlopkov, Y.V., Mozzharov, S.E., Titov, V.I., Ignatiev, M.B., 2000. Absorptance of powder materials suitable for laser sintering. Rapid Prototyp. J. 6, 155-160. \href{https://doi.org/10.1108/13552540010337029}{https://doi.org/10.1108/13552540010337029}.
+
+Trapp, J., Rubenchik, A.M., Guss, G., Matthews, M.J., 2017. In situ absorptivity measurements of metallic powders during laser powder-bed fusion additive manufacturing. Appl. Mater. Today 9, 341-349. \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. apmt.2017.08.006
+
+Wang, J.T., Weng, C.I., Chang, J.G., Hwang, C.C., 2000. The influence of temperature and surface conditions on surface absorptivity in laser surface treatment. J. Appl. Phys. 87, 3245-3253. \href{https://doi.org/10.1063/1.372331}{https://doi.org/10.1063/1.372331}.
+
+Ye, J., Khairallah, S.A., Rubenchik, A.M., Crumb, M.F., Guss, G., Belak, J., Matthews, M. J., 2019. Energy coupling mechanisms and scaling behavior associated with laser powder bed fusion additive manufacturing. Adv. Eng. Mater. 21, 1900185 https:// \href{http://doi.org/10.1002/adem}{doi.org/10.1002/adem}. 201900185.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

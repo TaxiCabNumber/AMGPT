@@ -1,0 +1,372 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Laser powder bed fusion of a near-eutectic Al-Fe binary alloy: Processing and microstructure }
+
+
+\author{Xing $\mathrm{Qi}^{\mathrm{a}, *}$, Naoki Takata ${ }^{\mathrm{a}}$, Asuka Suzuki ${ }^{\mathrm{a}}$, Makoto Kobashi ${ }^{\mathrm{a}}$, Masaki Kato ${ }^{\mathrm{b}}$\\
+${ }^{a}$ Department of Materials Process Engineering, Graduate School of Engineering, Nagoya University, Furo-cho, Chikusa-ku, Nagoya, 464-8603, Japan\\
+${ }^{\mathrm{b}}$ Aichi Center for Industry and Science Technology, 1267-1 Akiai, Yakusa-cho, Toyota 470-0356, Japan}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Research Paper
+
+
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+Additive manufacturing
+
+Al-Fe binary alloy
+
+Processing parameters
+
+Microstructure
+
+$\mathrm{Al}-\mathrm{Fe}$ intermetallics
+
+\section*{A B S T R A C T}
+\begin{itemize}
+  \item This study focused on additive manufacturing (AM) of the Al-Fe binary alloy samples with a near-eutectic composition of 2.5 mass $\%$ Fe using the laser powder bed fusion (LPBF) process. The melt pool depth, relative density, and hardness of LPBF-fabricated Al-2.5Fe alloy samples under different laser power $(P)$ and scan speed $(v)$ conditions were systematically examined. The results provided optimum laser parameter sets $(P=$ $204 \mathrm{~W}, v \leq 800 \mathrm{~mm} \mathrm{~s}^{-1}$ ) for the fabrication of dense alloy samples with high relative densities $>99 \%$. Additionally, $P v^{-1 / 2}$, which is based on the deposited energy density model, was found to be a more appropriate parameter for additively manufacturing $\mathrm{Al}-2.5 \mathrm{Fe}$ alloy samples, and using it to simplify the relative densities of the samples made the determination of a threshold value for the laser parameters required to fabricate dense alloy samples. The microstructural and crystallographic characterization of the LPBF-built Al-2.5Fe alloy samples revealed a characteristic microstructure consisting of multi-scan melt pools that resulted from local melting and rapid solidification owing to laser irradiation during the LPBF process. Furthermore, a number of columnar grains with a mean width of $\sim 21 \mu \mathrm{m}$ elongated along the building direction were also observed in the $\alpha$ - $\mathrm{Al}$ matrix. Numerous nano-sized particles of the metastable $\mathrm{Al}_{6} \mathrm{Fe}$ intermetallic phase with a mean size $<100 \mathrm{~nm}$ were finely dispersed in the $\alpha$-Al matrix. The hardness of the refined microstructure produced by the LPBF process was high at $\sim 90 \mathrm{HV}$, which is more than twofold higher than that of conventionally casted alloys that contain the coarsened plate-shaped $\mathrm{Al}_{13} \mathrm{Fe}_{4}$ intermetallic phase in equilibrium with the $\alpha$-Al matrix.
+\end{itemize}
+
+\section*{1. Introduction}
+Aluminum (Al) alloys, which are advantageous owing to their low weight, high specific strength, and superior corrosion resistance, have been extensively used in the aerospace and automotive industries. It is generally known that at ambient temperature, $\mathrm{Al}$ and its alloys show high thermal conductivities $\left(\sim 160 \mathrm{~W} \mathrm{~m}^{-1} \mathrm{~K}^{-1}\right)$, and relatively low specific heat capacities ( $\sim 0.9 \mathrm{~J} \mathrm{~g}^{-1} \mathrm{~K}^{-1}$ for pure Al). Thus, they are applied in the manufacture of the heat exchangers destined for refrigeration and air conditioning systems, and/or the radiators with applications ranging from air coils to gas furnaces [1,2]. Additionally, the properties of the materials required for the fabrication of heat exchangers include high thermal conductivity, high specific strength, and sufficient formability, which make the fabrication of complex components, such as plate-fin exchangers possible [3]. Commercial purity Al with iron (Fe) as a major impurity or Al-Fe binary alloys are often used in the fabrication of heat exchangers. These Al-Fe based alloys, which have relatively low strengths compared with conventional age-hardenable alloys (e.g. Al-Mg-Si alloys), exhibit high thermal conductivity owing to the limited solubility of $\mathrm{Fe}(<0.05$ at\%) in the $\alpha-\mathrm{Al}$ (fcc) matrix. Increasing the $\mathrm{Fe}$ content favors the formation of $\mathrm{Al}-\mathrm{Fe}$ intermetallic compounds, such as the $\mathrm{Al}_{13} \mathrm{Fe}_{4}$ phase in equilibrium with the $\alpha-\mathrm{Al}$ (fcc) matrix [4], resulting in an increase in strength. However, the coarsened $\mathrm{Al}_{13} \mathrm{Fe}_{4}$ phase with a plate- or needle-shaped morphology, which is often encountered in several Al-Fe based alloys [5], exhibits brittleness [6], which reduces material formability during plasticforming processes, at ambient temperature. This drawback limits the application of these Al-Fe based alloys in the fabrication of the complex-shaped metal parts of heat exchangers and/or radiators.
+
+Generally, metal additive manufacturing (AM) technologies [7,8] are promising routes for the fabrication of complex-shaped metal components with controllable structures, and one of the most common
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail address: \href{mailto:qi.xing@i.mbox.nagoya-u.ac.jp}{qi.xing@i.mbox.nagoya-u.ac.jp} (X. Qi).
+}
+
+AM processes is laser powder bed fusion (LPBF), which uses laser beam irradiations to melt and fuse metal powder layers successively. The optimization for the processing parameters of the LPBF technique could enable the fabrication of complex geometrical parts, such as plate-fin exchangers using various $\mathrm{Al}$ alloy powders $[9,10]$. Recently, it has been demonstrated that this technique brings about characteristic microstructures of Al alloy parts [11,12], due to the rapid solidification process that occurs at an extremely high cooling rate as a result of the scanning laser irradiations. This rapid solidification rate might be employed to significantly refine microstructures containing coarsened $\mathrm{Al}-\mathrm{Fe}$ intermetallic compounds [13]. The refinement of the Al-Fe intermetallic compounds in the LPBF-fabricated Al-Fe alloys would result in the improvement of not only mechanical properties (strength and ductility) [14] but also corrosion resistance [15]. In order to achieve the manufacturing of Al-Fe alloy heat exchangers with high strength and high thermal conductivity, it is necessary to understand the controlling of the size, morphology, and distribution of the Al-Fe intermetallic phase formed in the $\alpha$-Al matrix by LPBF processing. However, the LPBF process has not been applied to Al-Fe binary alloys. Therefore, any characteristics of microstructure containing Al-Fe intermetallic phases formed in the LPBF-fabricated Al-Fe alloys have not been identified.
+
+In the present study, we made an attempt of additive manufacturing for Al-Fe binary alloy samples with a near-eutectic composition of $\mathrm{Al}-2.5 \mathrm{Fe}$ (mass\%) using the LPBF process for understanding the possibility of controlling the size and morphology of Al-Fe intermetallic phases during rapid solidification in the LPBF process. Thereafter, the microstructural and crystallographic features of the LPBF-fabricated $\mathrm{Al}-2.5 \mathrm{Fe}$ alloy samples were characterized, and the effect of two laser parameters (scan speed and laser power) on their relative density and microhardness were also investigated. The experimental results were used to discuss the optimization of the laser processing parameters that can be employed in the subsequent fabrication of the studied alloy.
+
+\section*{2. Experimental procedure}
+\subsection*{2.1. 1 Al-Fe alloy powder}
+The studied Al-2.5Fe (mass\%) binary alloy powder with mean particle size $\sim 38 \mu \mathrm{m}$, was produced using gas atomization, and scanning electron microscopy (SEM) images showing its surface morphology and cross-sectional microstructure are presented in Fig. 1. The alloy powder particles were less regularly shaped, whereas some nearly spherical particles existed, asymmetric as well as fine satellite particles were often observed. (Fig. 1(a)). The image analyses using SEM images provided a quantitative value of 0.69 in the sphericity of studied powder particles [16]. Additionally, the alloy powder particles also showed a cellular microstructure that consisted mainly of the $\alpha-\mathrm{Al}$ matrix and fine Al-Fe intermetallic phase (Fig. 1(b)), which corresponded to the solidification microstructure formed by rapid cooling process during gas atomization.
+
+The chemical compositions of the studied alloy powder and LPBFfabricated samples were measured using inductively coupled plasmaatomic emission spectrometry and inert gas fusion-infrared absorption spectrometry, and the results are presented in Table 1. The proportions of the major elements ( $\mathrm{Fe}, \mathrm{Si}$, and $\mathrm{O}$ ) in the initial powder were almost the same as those in the LPBF-fabricated sample. Although the alloy powder contained trace amounts of $\mathrm{Si}$ and $\mathrm{O}$ as impurity, and $\mathrm{Al}-\mathrm{Fe}$ binary phase diagram (Fig. 2(a)) indicated a eutectic reaction of liquid (L) $\rightarrow \alpha-\mathrm{Al}+\theta-\mathrm{Al}_{13} \mathrm{Fe}_{4}$ in solidification [4]. In this study, the alloy powder in an alumina tube was melted using high-frequency induction followed by furnace cooling (by cutting off the power source in the furnace) to prepare an as-cast alloy ingot, as schematically illustrated in Fig. 3(d). The cooling rate during solidification measured experimentally using K-type thermocouples was $\sim 0.3^{\circ} \mathrm{C} / \mathrm{s}$ [17]. The SEM images displaying the microstructure of the prepared alloy ingots are shown in\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c6c2dc7a9cf3f465b1a9g-02}
+
+Fig. 1. (a) Surface morphology and (b) cross-section of the studied Al-2.5Fe alloy powder particles.
+
+Table 1
+
+Measured chemical compositions (mass\%) of initial alloy powders and built samples.
+
+\begin{center}
+\begin{tabular}{llllllll}
+\hline
+Element & $\mathrm{Cu}$ & $\mathrm{Fe}$ & $\mathrm{Si}$ & $\mathrm{Mn}$ & $\mathrm{Mg}$ & $\mathrm{O}$ & $\mathrm{Al}$ \\
+\hline
+powder & $<0.01$ & 2.55 & 0.03 & $<0.01$ & $<0.01$ & 0.19 & Bal. \\
+built samples & - & 2.54 & 0.03 & - & - & 0.20 & Bal. \\
+\hline
+\end{tabular}
+\end{center}
+
+Fig. 2(b) and (c). The needle- or plate-like Al-Fe intermetallic phase, with length in the order of a few hundred micrometers, was randomly distributed in the $\alpha$-Al matrix, which is consistent with previous reports on conventionally casted Al-Fe alloys [5]. The observed intermetallic phase was identified as $\theta-\mathrm{Al}_{13} \mathrm{Fe}_{4}$ phase by $\mathrm{X}$-ray diffraction (XRD) analyses, which is described in detail later.
+
+\subsection*{2.2. Laser powder bed fusion (LPBF) process}
+The experimental samples were fabricated via the LPBF process using a 3D Systems ProX 200 (3D SYSTEMS, Rock Hill, SC, USA), equipped with a $\mathrm{Yb}$-fiber laser. Using the following set of design process parameters: bedded-powder layer thickness $(t), 30 \mu \mathrm{m}$; hatch distance between adjacent scanning tracks $(h), 100 \mu \mathrm{m}$; laser power $(P)$, $102-204 \mathrm{~W}$; scan speed $(v), 600-1400 \mathrm{~mm} \mathrm{~s}^{-1}$; and laser spot size $(\sigma)$, $~$ $100 \mu \mathrm{m}$, which was calculated by the extent of negatively defocusing (convergent nature) [18] from the focal position of the laser. Twentyfive $15 \times 15 \times 10 \mathrm{~mm}^{3}$ samples were fabricated in a high-purity argon atmosphere to prevent oxidation. The oxygen concentration was monitored inside the process chamber. The concentration was controlled below $500 \mathrm{ppm}$ in fabricating samples via the LPBF process. The overall appearance of the fabricated samples is shown in Fig. 3(a), while Fig. 3(b) shows the laser conditions applied to fabricate each of the samples. The numbers marked on the samples as shown in Fig. 3(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c6c2dc7a9cf3f465b1a9g-03}
+\end{center}
+
+\section*{Fe content $/ \mathrm{wt} \%$}
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c6c2dc7a9cf3f465b1a9g-03(1)}
+\end{center}
+
+Fig. 2. (a) Al-Fe binary phase diagram of experimental alloy composition, (b) and (c) SEM images showing the microstructure of the cast Al-2.5Fe alloy ingots.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c6c2dc7a9cf3f465b1a9g-04(1)}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c6c2dc7a9cf3f465b1a9g-04}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c6c2dc7a9cf3f465b1a9g-04(4)}
+\end{center}
+
+(d)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c6c2dc7a9cf3f465b1a9g-04(2)}
+\end{center}
+
+Fig. 3. (a) Appearance of experimental samples fabricated under different laser conditions, (b) corresponding scan speed and laser power for the fabricated samples (the numbers in (a) correspond to those in (b)), (c) schematic showing the hexagonal grid laser scanning strategy applied in this experiment, (d) schematic illustration of the sample preparation process.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c6c2dc7a9cf3f465b1a9g-04(3)}
+\end{center}
+
+Fig. 4. Variation of the measured relative density of the fabricated Al-2.5Fe samples as a function of applied laser power.
+
+corresponds to the numbers on the laser power $(P)$-scan speed $(v)$ map shown in Fig. 3(b), while Fig. 3(c) schematically illustrates the hexagonal grid laser scanning strategy that was applied in this experiment. The longest diagonals of the regular hexagons were set as $10 \mathrm{~mm}$, and the laser scanning track was rotated $90^{\circ}$ between two successive bedded-powder layers. The planes perpendicular and parallel to the building direction were designated $\mathrm{XY}$ and $\mathrm{XZ}$, respectively as shown in Fig. 3(c). The preparation process of as-cast samples and LPBF-fabricated samples used in the experiments was schematically illustrated in Fig. 3(d).
+
+\subsection*{2.3. Characterizations}
+The densities of the fabricated samples were measured using the Archimedes' method, which provided the densities of the LPBF-fabricated samples (relative density) as a ratio of the density of the as-cast ingots prepared in this study. The cut samples were mounted and polished mechanically. For microstructural observations using optical microscopy, the sample surfaces were etched using a solution of HF in alcohol (5 vol\%), and to perform SEM, the samples were ion-polished using a JEOL cross-section polisher at $6 \mathrm{~V}$. Thereafter, microstructures were observed using optical microscopy (NIKON ECLIPSE LV150 N, JAPAN) and SEM (JEOL JSM-6610A and JEOL JSM-7401, JAPAN). Analyses of the crystallographic orientation of the $\alpha$-Al (fcc) matrix were conducted using electron backscatter diffraction (EBSD) with a step size of $1 \mu \mathrm{m}$, while the constituent phases were analyzed using an $\mathrm{X}$-ray diffraction (XRD) equipment with a $\mathrm{Cu}$ target at $40 \mathrm{kV}$ and 40 $\mathrm{mA}$, and at a scan speed of $1^{\circ} / \mathrm{min}$ in continuous mode for $2 \theta$ angles ranging from $20^{\circ}$ to $90^{\circ}$. Thin samples for TEM observations were prepared using a JEOL ion slicer at $6 \mathrm{~V}$. TEM observations and energydispersive X-ray spectroscopy (EDS) analyses were performed using a JEOL JEM-2100 F at $200 \mathrm{kV}$. At ambient temperature, the hardness of mounted samples was determined using a Vickers indenter (FUTURETECH CORP., FM-300e) at two different constant loads ( 9.8 and 0.98 N).
+
+\section*{3. Results}
+The relative density variation of the samples fabricated under different scan speeds $(v)$, as a function of the applied laser power $(P)$ is shown in Fig. 4. At all the applied scan speeds, the relative density of\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c6c2dc7a9cf3f465b1a9g-05}
+
+Fig. 5. Optical micrographs showing the cross-section of the fabricated Al-2.5 Fe samples under laser power and scan speeds of (a) $179 \mathrm{~W}$ and $600 \mathrm{~mm} \mathrm{~s}{ }^{-1}$, (b) 204 $\mathrm{W}$ and $600 \mathrm{~mm} \mathrm{~s}^{-1}$, (c) $102 \mathrm{~W}$ and $800 \mathrm{~mm} \mathrm{~s}^{-1}$, and (d) $102 \mathrm{~W}$ and $1400 \mathrm{~mm} \mathrm{~s}^{-1}$, respectively. The small amounts of unmelted powder particles, which suggest that the detachment of powder particles might be responsible for the large number of pores formed during the sample preparation process, remained within the pores in the white dashed circles inserted in (c) and (d).
+
+the samples increased with increasing laser power. It was also observed that samples with higher relative densities could be fabricated using lower scan speeds. The applied laser parameters of high laser power $(P$ $=204 \mathrm{~W}$ ) and low scan speed ( $v \leq 800 \mathrm{~mm} \mathrm{~s}^{-1}$ ) achieved to fabricate dense $\mathrm{Al}-2.5 \mathrm{Fe}$ alloy samples with high relative density values $>99 \%$. The optical micrographs of the samples fabricated under different laser conditions, observed on the XZ plane, are presented in Fig. 5. In samples fabricated under a laser power of $179 \mathrm{~W}$ and a scan speed of 600 $\mathrm{mm} \mathrm{s}^{-1}$, relatively large irregular-shaped pores with sizes above 50 $\mu \mathrm{m}$, which corresponded to "process-introduced porosity" [19] resulting from incomplete melting, owing to insufficient supplied energy, were observed in Fig. 5(a), and as shown in Fig. 5(b), the relatively large pores appeared to decrease with increasing laser power. The decrease in pore number was consistent with the increase in the measured relative densities (Fig. 4). In samples fabricated using a low laser power and a high scan speed, a number of irregular-shaped pores that appeared to connect each other were observed as shown in Fig. 5(c) and (d), and unmelted alloy powders, indicated by the dashed circles in Fig. 5(c) and (d), were also observed in some of the pores, owing to an insufficient laser power supply to completely melt the bed powder layer $[9,20]$. Additionally, a number of fine spherical pores were observed in the samples fabricated under a high laser power and a low scan speed, as presented in Fig. 5(a) and (b). The spherical pores could be attributed to the inert gas atmosphere in the process chamber that was employed to prevent oxidation or to the hydrogen that dissolved in the alloy powder degassed during the fusion process [9].
+
+The optical micrographs (observed on the XZ plane) of the microstructure of the samples fabricated under the following laser parameters: $204 \mathrm{~W}$ and $600 \mathrm{~mm} \mathrm{~s}^{-1}$, and $153 \mathrm{~W}$ and $1200 \mathrm{~mm} \mathrm{~s}^{-1}$, are shown in Fig. 6(a) and (b), respectively, and Fig. 6(c) shows the variation of melt pool depth with the different laser parameters. Two representative optical micrographs (Fig. 6(a) and (b)) showed melt pool morphologies with different depths ranging between $\sim 60$ and $100 \mu \mathrm{m}$, indicating that the melt pool depth changed depending on the laser parameters. Moreover, under the different laser conditions employed in this study, no keyhole-shaped melt pools resulting from the melt pool peak temperature exceeding the boiling and vaporization temperatures of the alloy [21], were observed in the fabricated samples. The summarized melt pool depth data is shown in Fig. 6(c). This provides evidence that melt pool depth increased with increasing laser power $(P)$. The melt pool depth appears less dependent on laser scan speed $(v)$ in comparison with the laser power $(P)$. The tendency is similar to the variation of relative density depending on different laser conditions (Fig. 4).
+
+A summary of the measured Vickers hardness of the fabricated samples is presented in Fig. 7, and the hardness values measured at two different loads of $9.8 \mathrm{~N}$ (Fig. 7(a)) and $0.98 \mathrm{~N}$ (Fig. 7(b)) were designated HV1 and HV0.1, respectively. The indentation tests at a $9.8 \mathrm{~N}$ load were performed on the regions that included pores as shown in Fig. 5, while similar tests at a lower load $(0.98 \mathrm{~N})$ were conducted on the defect-free regions identified using optical microscopy. The hardness measurements revealed that the HV1 hardness values of the samples (Fig. 7(a)) increased with increasing laser power and decreasing scan speed. At higher laser power values $>179 \mathrm{~W}$, the HV1 value\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c6c2dc7a9cf3f465b1a9g-06}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c6c2dc7a9cf3f465b1a9g-06(1)}
+\end{center}
+
+Fig. 6. (a, b) Optical micrographs showing melt pool morphologies of Al-2.5Fe alloy samples fabricated under laser power and scan speeds of (a) $204 \mathrm{~W}$ and $600 \mathrm{~mm}$ $\mathrm{s}^{-1}$ and (b) $153 \mathrm{~W}$ and $1200 \mathrm{~mm} \mathrm{~s}^{-1}$ and (c) variation in melt pool depth of fabricated samples as a function of applied laser power.
+
+practically remained constant at $\sim 70 \mathrm{HV}$ and was independent of the scan speed. Additionally, the hardness of the fabricated samples was approximately twofold higher than that of the as-cast ingots prepared in this study (Fig. 2), and the variation of the HV1 values followed the same trend as the measured relative densities, indicating that porosity defects had an unneglectable effect on the hardness of the LPBF-fabricated samples with lower relative densities. Contrarily, hardness values measured at a lower load (HV0.1) only changed slightly with the laser parameters, $P$ and $v$ (Fig. 7(b)), suggesting that the laser parameters have a slight effect on the microstructure of fabricated samples.
+
+The representative XRD profile of the LPBF-fabricated sample, as well as that of the initial alloy powder and the as-cast alloy ingot, are shown in Fig. 8. The XRD profiles revealed that $\alpha$ - $\mathrm{Al}$ and $\theta-\mathrm{Al}_{13} \mathrm{Fe}_{4}$ constituted the dominant phases of the as-cast alloy ingot [4], indicating that the formation of these thermodynamically stable phases in the as-cast alloy ingot possibly resulted from an equilibrium solidification (Fig. 2(b) and (c)). In LPBF-fabricated samples, there was a considerable change in the diffraction intensities derived from the $\theta$ $\mathrm{Al}_{13} \mathrm{Fe}_{4}$ phase. At $2 \theta$ diffraction angles ranging between $22^{\circ}$ and $28^{\circ}$, no reflections derived from $\theta$ phase were detected, indicating the reduced fraction of $\theta$ phase in LPBF-fabricated samples. Additionally, a relatively high intensity, which corresponded to a reflection derived from the $\mathrm{Al}_{6} \mathrm{Fe}$ phase [22], was detected at a $2 \theta$ diffraction angle of approximately $40^{\circ}$. Several reflections of $\theta$ phase detected in the as-cast alloy ingot were found in the LPBF-fabricated samples, whereas their $2 \theta$ diffraction angles correspond to diffraction intensities derived from lattice planes of both $\theta$ phase and $\mathrm{Al}_{6} \mathrm{Fe}$ phases. These results suggest the metastable $\mathrm{Al}_{6} \mathrm{Fe}$ phase might partially form replacing the stable $\theta$ phase in rapid solidification during the LPBF process. This conclusion is consistent with the XRD profile obtained from the initial alloy powder, which had a fine solidification microstructure (Fig. 1(b)). Furthermore, the LPBF-fabricated sample exhibited $\alpha$-Al phase-derived reflections at a higher $2 \theta$ angle compared with the as-cast alloy ingot, indicating a larger $\alpha$-Al matrix lattice parameter in the LPBF-fabricated samples. Considering the atomic radii of $\mathrm{Al}$ and $\mathrm{Fe}$ atoms, this suggests the formation of a solution of $\mathrm{Fe}$ element in the $\alpha$-Al matrix [23,24].
+
+In order to characterize microstructural and crystallographic features of the $\alpha$-Al matrix in the LPBF-fabricated Al-2.5Fe alloy samples, EBSD analyses were performed on samples with high relative densities ( $>99 \%$ ) i.e., those fabricated under a laser power and scan speed of\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c6c2dc7a9cf3f465b1a9g-07(1)}
+
+Fig. 7. Variation of the Vickers hardness of the fabricated alloy samples measured under two different loads: (a) $9.8 \mathrm{~N}$ and (b) $0.98 \mathrm{~N}$. The black dash line represents the Vickers hardness of the cast alloy as a comparison.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c6c2dc7a9cf3f465b1a9g-07}
+\end{center}
+
+Fig. 8. XRD spectrum of LPBF-fabricated Al-2.5Fe alloy sample (Laser power $(P)=204 \mathrm{~W}$ and scan speed $(v)=600 \mathrm{~mm} \mathrm{~s}^{-1}$ ), initial alloy powder, and ascast alloy ingot.
+
+$204 \mathrm{~W}$ and $600 \mathrm{~mm} \mathrm{~s}^{-1}$, respectively (Fig. 4), and the analyzed results are summarized in Fig. 9. As shown in Fig. 9(a) and (b), even though local fine equiaxed grains were observed, the $\alpha$-Al matrix microstructure predominantly consisted of large columnar grains with a mean size of approximately $21 \mu \mathrm{m}$ (mean width of the high-angle boundaries with misorientations above $15^{\circ}$ was measured by the linear intercept method), which are surrounded by high angle boundaries with misorientations above $15^{\circ}$ and are elongated along the building direction. Moreover, a relatively high density of low-angle boundaries was also detected inside the elongated grains (Fig. 9(c)). The low index stereographic projections indicated the absence of any predominant crystallographic texture in the LPBF-fabricated samples (Fig. 9(d)), which is different from the previous study that identified the $<001$ $>$ texture along the building direction in LPBF-fabricated Al-Si-based alloys [25]. Additionally, no obvious microstructural changes were observed around the melt pool boundaries that are clearly visible in the optical micrographs of the fabricated samples (Fig. 6(a)), suggesting that the epitaxial growth originated from pre-existed $\alpha$-Al grains at the melt pool boundaries during solidification in the LPBF process of the Al-2.5Fe alloy [20].
+
+Fig. 10 depicts high-magnification SEM images showing the microstructure observed from different directions i.e., parallel and perpendicular to the building direction (Z) of the sample built under $204 \mathrm{~W}$ and $600 \mathrm{~mm} \mathrm{~s}^{-1}$. A gradient change in microstructure was observed across melt pool boundaries. Fine intermetallic particles (bright contrast) with mean sizes $<100 \mathrm{~nm}$, were homogeneously distributed inside the melt pools ("fine zone" in Fig. 10), whereas the relatively coarse zone, which consisted of relatively coarsened microstructures, was localized around the melt pool boundaries. The observed intermetallic phases appeared to connect with each other, resulting in the formation of a cellular structure in the coarse zone, within which some coarser granular particles could also be observed. These different microstructural morphologies could be attributed to the variation of local cooling rate and its associated heating effect during the LPBF process [26]. In order to identify the fine particles of the intermetallic phase in the LPBF-fabricated Al-2.5Fe alloy, TEM characterizations were performed, and the summarized results are shown in Fig. 11. The TEM bright-field images (Fig. 11(a) and (b)) showed that the fine particles with a size in the order of several tens of nanometers were distributed in the $\alpha$-Al matrix, while a relatively coarsened local cellar structure was also observed (Fig. 11(a)), and these microstructural morphologies corresponded well to those observed by SEM (Fig. 10). Furthermore, as shown in Fig. 11(b), numerous spherical or granular particles often appeared to connect each other were also observed. A selected area electron diffraction (SAED) pattern (Fig. 11(c)) obtained from the observed region (Fig. 11(b)), indicated a ring diffraction pattern inside several spots derived from the $\alpha-\mathrm{Al}$ (fcc) phase that could be corresponded to a reflection from the (222) lattice plane of the $\mathrm{Al}_{6} \mathrm{Fe}$ phase, which has an orthodromic structure [22], a finding that is consistent with the reflection detected at approximately $42^{\circ}$ in the $2 \theta$ diffraction angles in the XRD profile (Fig. 7). These crystallographic analyses revealed numerous nano-sized particles of the metastable $\mathrm{Al}_{6} \mathrm{Fe}$ phase distributed in the $\alpha$-Al matrix. The ring diffraction pattern indicated that the observed $\mathrm{Al}_{6} \mathrm{Fe}$ phase particles had a random orientation distribution, suggesting that there was no peculiar orientation relationship between the $\mathrm{Al}_{6} \mathrm{Fe}$ phase and the $\alpha$-Al matrix. Scanning-TEM (STEM) images and the corresponding EDS element maps are presented in Fig. 12. The EDS chemical analysis revealed Fe enrichment in the observed fine particles (Fig. 12(d)), confirming the formation of Al-Fe intermetallic particles $\left(\mathrm{Al}_{6} \mathrm{Fe}\right.$ phase) within the $\alpha$-Al phase. Note that local oxygen enrichment was observed (Fig. 12(b)), indicating the local presence of nano-scale oxide particles in the LPBF-fabricated Al-Fe alloy. The source of the $\mathrm{O}$ element was derived from the initial alloy powder (presumably thin oxide layers on the surface of powder particles), as demonstrated by composition analyses (Table 1).\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c6c2dc7a9cf3f465b1a9g-08}
+
+Fig. 9. (a), (b) EBSD orientation color maps for the $\alpha$ - $\mathrm{Al}$ (fcc) matrix in the LBPF-fabricated Al-2.5Fe sample (Laser power $(P)=204 \mathrm{~W}$ and scan speed $(v)=600 \mathrm{~mm}$ $\left.s^{-1}\right)$. The colors represent the orientations along the building direction $(\mathrm{Z})$ according to the orientation color key in the unit triangle. The fine line corresponds to a misorientation ( $\theta$ ) of $1<\theta<15^{\circ}$, while the bold lines represent $\theta>15^{\circ}$. (c) misorientation angle distribution, and (d) representative pole figure for low indices.
+
+\section*{4. Discussion}
+\subsection*{4.1. Processing parameters}
+Given its role in the minimization or elimination of porosity and fusion voids, which have a detrimental effect on mechanical properties of LPBF-fabricated alloys, relative density is considered to be one of the critical characteristics of LPBF-fabricated samples. The present results revealed that at all scan speeds, relative density increased with increasing laser power (Fig. 4). Thus, the high laser power and low scan speed are appropriate laser parameters for the fabrication of dense Al-2.5Fe alloy samples with high relative densities ( $\sim 99 \%)$. However, these fabricated samples had local defects (micron-sized pores) as shown in Fig. 5(b), indicating that the further optimization of the processing parameters is required to eliminate the local defects.
+
+The effect of processing parameters on the relative density of LPBFfabricated metals has been extensively investigated [10,27,28], and the following volumetric energy density $(E)$ equation has been widely used to integrate various LPBF processing parameters $[28,29]$.
+
+$E=\frac{P}{v \cdot h \cdot t}$
+
+where $P, t, h$, and $v$ represent laser power, powder layer thickness, hatch distance between adjacent laser-scanning tracks, and laser scan speed, respectively. This approach has often demonstrated applicability in the fabrication of fully dense or defect-free alloy samples from various alloy powders using the LPBF process $[28,29]$. However, this model works on the assumption that the heat applied is completely transferred through the thickness of the bedded-powder layers, regardless of the varying laser scan speed. In some cases, the model would be invalid because a variation in scan speed could change the laser-irradiation time of the powder layer, resulting in different effective depths, in which heat can be transferred. In this study, to simplify the measured relative densities associated with the laser parameters, a deposited energy density $(\Delta H)$ based model, which takes thermal diffusivity into account, was applied. According to this model [30], the ratio of deposited energy density $(\Delta H)$ to the enthalpy at melting $\left(h_{\mathrm{s}}\right)$ is expressed as:
+
+$\frac{\Delta H}{h_{s}}=\frac{A P}{h_{s} \sqrt{\pi D v \sigma^{3}}}$
+
+where $A, D$, and $\sigma$ represent laser absorptivity, thermal diffusivity, and laser spot size (half-width of Gaussian beam [30]), respectively. The unit of $\Delta H$ (Joule per unit volume) is the same as that of $E$. This model takes into account the dynamic time period $(\tau)$ of laser irradiation, which depends on scan speed variation, and $\tau$ can be approximated as $\sigma$ $/ v$. Therefore, based on the deposited energy density model, the depth to which heat is transferred into the powder layer changes, resulting in a heat-diffusion depth of $(D \tau)^{1 / 2}$ and a heat-distributed region with a\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c6c2dc7a9cf3f465b1a9g-09}
+
+Fig. 10. Representative SEM images showing the microstructure of $\mathrm{Al}-2.5 \mathrm{Fe}$ sample built under Laser power $(P)=204 \mathrm{~W}$ and scan speed $(v)=600 \mathrm{~mm} \mathrm{~s}$ ${ }^{-1}$. These images were observed on different planes: (a) XZ and (b) XY.
+
+volume of $\pi \sigma(D \tau)^{1 / 2}[31,32]$. This model was originally proposed as a simple methodology to predict the laser-weld properties using the laser irradiation at high laser power $(P)$ above $300 \mathrm{~W}$ under an assumption of a Gaussian beam distribution in the applied laser condition [30]. In recent, the model has also been used to investigate the correlation between a transition from conduction to keyhole melting mode occurring on the locally melted surface of materials in the LPBF process using relatively lower $P$ values ranging from 86 to $366 \mathrm{~W}$ [31]. In addition, our previous study demonstrated that $\Delta H$ provides a threshold value for the laser conditions required to fabricate fully dense samples from maraging steel powder using the LPBF process [32]. As proposed in this study, to optimize the laser parameters, both $E$ and $\Delta H$ are applied to simplify the effects of laser power and scan speed on relative density.
+
+In Fig. 13, the variation of melt pool depth as functions of (a) $E$ and (b) $P v^{-1 / 2}$ derived from $\Delta H$ is presented. In this study, $A, D$, and $h_{s}$ for the Al-2.5Fe alloy powder were fixed, and a constant $\sigma(\sim 100 \mu \mathrm{m})$ was applied during the LPBF process. Based on Eq. (2), $P v^{-1 / 2}$ was used to simplify $\Delta H$ associated parameters by removing the constant parameters. It was observed that the melt pool depth increased with both the increasing $E$ and $P v^{-1 / 2}$. A roughly linear relationship between $E$ and melt pool depth could be confirmed under present laser conditions, as shown in Fig. 13(a). However, at $E$ values within the range of $\sim$ 40-58 Jmm $\mathrm{Jm}^{-3}$, relatively scattered melt pool depth values were observed. Additionally, Fig. 13(b) showed a stronger linear relationship between $P v^{-1 / 2}$ and melt pool depth based on the experimental results. In order to quantify the degree of linearity of measured melt pool depth\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c6c2dc7a9cf3f465b1a9g-09(1)}
+
+Fig. 11. (a), (b) TEM bright-field images depicting cellular microstructure around the melt pool boundary as well as the fine particles distributed inside the melt pool in the LPBF-fabricated Al-2.5Fe alloy samples, and (c) corresponding SAED pattern obtained from (b).
+
+with respect to $E$ or $P v^{-1 / 2}$, the linear regression analysis for the experimental data was conducted. The analyses provided a coefficient of determination $\left(R^{2}\right)$ of 0.842 for the linear relationship between melt pool depth and $P v^{-1 / 2}$, which was much higher than that derived from the linear regression analysis of the relationship between the melt pool depth and $E\left(R^{2}=0.586\right)$. These results obviously indicate that $P v^{-1 / 2}$, which is based on $\Delta H$ (taking into account the thermal diffusivity),\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c6c2dc7a9cf3f465b1a9g-10}
+
+Fig. 12. (a) STEM-high angle annular dark-field (HAADF) image, and (b)-(d) corresponding EDS elemental maps for the fine particles in LPBF-fabricated Al-2.5Fe alloy samples.
+
+could be a more appropriate parameter that can be used to identify the effects of laser power and scan speed on the melt pool depth of LPBFfabricated $\mathrm{Al}-2.5 \mathrm{Fe}$ alloy samples. Considering the heat-diffusion depth, $(D \tau)^{1 / 2}$ [31] based on the $\Delta H$ model, it is supposed that thermal diffusivity could significantly contribute to the measured melt pool depth due to local melting of $\mathrm{Al}-2.5 \mathrm{Fe}$ alloy powder layers by laser irradiations, suggesting that keyhole-mode melting could hardly occur under the applied laser conditions in the LPBF process [31]. The supposition is reasonable agreement with the observed melt pool morphologies (Fig. 5). These results represent the high validity of the $\Delta H$ model for rationalizing physical phenomena within the melt pools (closely associated with the melt pool depth) formed in the LPBF process.
+
+Changes in relative density as a function of (a) $E$ and (b) $P v^{-1 / 2}$ are presented in Fig. 14. As shown in Fig. 14(a), relative density tended to increase with increasing $E$; however, at the same $E$ values of 42.5 or $56.7 \mathrm{Jmm}^{-3}$, it tended to be scattered with deviations $>10 \%$. Conversely, its variation with $P v^{-1 / 2}$ could be approximated using a single curve, which indicated that it increased continuously to values above $98 \%$ until a $P v^{-1 / 2}$ value of $6.5 \mathrm{Wmm}^{-1 / 2} \mathrm{~s}^{1 / 2}$, after which it became almost saturated at $\sim 99 \%$. Meanwhile, relative density variation simplified using $P v^{-1 / 2}$ could provide an approximate threshold laser condition to fabricate dense samples with relative densities of $\sim 99 \%$, although a certain degree of relative density variation was still observed in the dense samples. Compared with the variation of melt pool depth with $P v^{-1 / 2}$ (Fig. 13(b)), the threshold $P v^{-1 / 2}$ value of $6.5 \mathrm{Wmm}^{-1 / 2} \mathrm{~s}^{1 /}$ ${ }^{2}$ was associated with a melt pool depth of $\sim 75 \mu \mathrm{m}$, which represents a melt pool depth that is two- or three-fold larger than the powder layer thickness $(30 \mu \mathrm{m})$ is required to fabricate dense samples. These results further support $P v^{-1 / 2}$ as a more appropriate design parameter to optimize laser power and scan speed for fabricating Al-2.5Fe alloy samples via the LPBF process.
+
+The variation of Vickers hardness as a function of relative density measured at two different loads is shown in Fig. 15(a). HV1 hardness values measured at a higher load $(9.8 \mathrm{~N})$ tended to increase with the increasing relative density, clearly indicating that the HV1 hardness could be attributed to the porosity level of the as-fabricated samples, given that the HV1 indent size was $\sim 170 \mu \mathrm{m}$, which is comparable with the pore sizes observed in the optical micrographs (Fig. 5). On the other hand, when the relative density was higher than approximately $84 \%$, HV0. 1 hardness values measured at a lower load $(0.98 \mathrm{~N})$ were constant at $\sim 90 \mathrm{HV}$; however, at low relative densities, it was relatively lower.\\
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c6c2dc7a9cf3f465b1a9g-11}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_c6c2dc7a9cf3f465b1a9g-11(1)}
+\end{center}
+
+Fig. 13. Variation of the melt pool depth of the LPBF-fabricated Al-2.5Fe alloy samples as a function of (a) Volumetric energy density (E) and (b) $P v^{-1 / 2}$, which is based on deposited energy density $(\Delta H)$.
+
+Its smaller indent size $(\sim 42 \mu \mathrm{m})$ was indicative of the micron-scale porosity level of the samples. Both HV1 and HV0.1 hardness values could be simplified using $P v^{-1 / 2}$ as shown in Fig. 15(b). The variation of HV1 values as a function of $P v^{-1 / 2}$, which synchronized with the variation of relative density, was approximated using a single curve, (Fig. 14(b)), indicating that using $P v^{-1 / 2}$, conventional Vickers hardness tests can provide threshold laser parameters for the fabrication of dense samples. At $P v^{-1 / 2}$ values above $4 \mathrm{Wmm}^{-1 / 2} \mathrm{~s}^{1 / 2}$, the HV0.1 value was almost constant at $\sim 90 \mathrm{HV}$, whereas it decreased at $P v^{-1 / 2}$ values $<4 \mathrm{Wmm}^{-1 / 2} \mathrm{~s}^{1 / 2}$, suggesting the presence of numerous micronscale pores in the samples built under $P V^{-1 / 2}$ values $<4 \mathrm{Wmm}^{-1 / 2} \mathrm{~s}^{1 / 2}$.
+
+The aforementioned results demonstrated that $P v^{-1 / 2}$, which is based on the $\Delta H$ model, rather than $E$ should be used to optimize laser parameters ( $P$ and $v$ ) for manufacturing dense $\mathrm{Al}-2.5 \mathrm{Fe}$ alloy samples. In the present study using fixed processing conditions of hatch distance $(h)$, powder layer thickness $(t)$ and laser spot size $(\sigma)$ for one material (fixed laser absorptivity, $A$ and thermal diffusivity, $D$ ), the different models contribute to only the power index of scan speed $\left(v^{-1}\right.$ or $v^{-1 / 2}$ ). The present result can provide significant insights into the selection of laser conditions for the fabrication of larger-sized samples that can be employed in mechanical and thermal tests, whereas the determined $P v^{-1 / 2}$ threshold value might change depending on other processing\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c6c2dc7a9cf3f465b1a9g-11(2)}
+
+Fig. 14. Variation of the relative density of the LPBF-fabricated Al-2.5Fe alloy samples as a function of (a) Volumetric energy density (E) and (b) $\mathrm{Pv}^{-1 / 2}$, which is based on deposited energy density $(\Delta H)$.
+
+parameters, including spot size (beam intensity distribution), hatch distance, and powder layer thickness. It still remains unclear whether the $\Delta H$ model (using a function of $v^{-1 / 2}$ ) is valid for optimizing laser parameters for fabricating any other materials with different properties of $A, D$, and specific heat. Therefore, to propose more appropriate models that cover all the processing parameters of the LPBF process for various materials, further investigations would be required.
+
+\subsection*{4.2. Microstructure characterization}
+In this study, the microstructure of the LPBF-fabricated Al-2.5Fe alloy samples with high relative densities ( $>99 \%$ ) was systematically characterized. A number of melt pools were observed in the LPBFfabricated $\mathrm{Al}-2.5 \mathrm{Fe}$ alloy (Fig. 6) as well as various $\mathrm{Al}$ alloys [11,12]. Numerous fine and connected particles of the metastable $\mathrm{Al}_{6} \mathrm{Fe}$ phase were observed inside melt pools (Figs. 10-12), whereas relatively coarsened microstructures were observed along melt pool boundaries (Fig. 10). The coarsened region may locally form in solidification at relatively slow growth rates, which facilitates the formation of stable $\theta$ $\mathrm{Al}_{13} \mathrm{Fe}_{4}$ phase along the melt pool boundaries. The local formation of $\theta$ $\mathrm{Al}_{13} \mathrm{Fe}_{4}$ phase is in agreement with the XRD profile for the LPBF-fabricated sample (Fig. 8). The present microstructural characterizations suggest the formation of multi Al-Fe intermetallic phases in the LPBFfabricated $\mathrm{Al}-2.5 \mathrm{Fe}$ alloy samples.
+
+The hardness of the LPBF-fabricated Al-2.5Fe alloy samples was found to be twofold higher than that of the cast alloy ingots (Fig. 7),\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_c6c2dc7a9cf3f465b1a9g-12}
+
+Fig. 15. Variation in the Vickers hardness of the LPBF-fabricated Al-2.5Fe alloy samples measured under two different loads ( $9.8 \mathrm{~N}$ and $0.98 \mathrm{~N})$ as a function of (a) Relative density, (b) $\mathrm{Pv}^{-1 / 2}$, which is based on deposited energy density $(\Delta H)$.
+
+which is attributed to the fine particle morphology of the $\mathrm{Al}_{6} \mathrm{Fe}$ phase. The observed morphology was quite different from that of conventionally casted alloy samples (Fig. 2(b) and (c)). It is generally known that during solidification in conventional casting processes, the liquid phase decomposes into the $\alpha$ - $\mathrm{Al}$ and $\theta-\mathrm{Al}_{13} \mathrm{Fe}_{4}$ phases via a eutectic reaction in the Al-rich portion of the Al-Fe binary system (Fig. 2(a)), resulting in the formation of the plate-shaped $\theta-\mathrm{Al}_{13} \mathrm{Fe}_{4}$ phase, which is in equilibrium with the surrounding $\alpha$-Al matrix (Fig. 2(b) and (c)) [33]. Additionally, it has been reported that during solidification at a higher growth rate $\left(>0.1 \mathrm{~mm} \mathrm{~s}^{-1}\right)$ and a higher temperature gradient ( $>10{ }^{\circ} \mathrm{C} / \mathrm{mm}$ ), the eutectic reaction changes to the decomposition of $\alpha$ - $\mathrm{Al}$ and $\mathrm{Al}_{6} \mathrm{Fe}$ phases [34]. The product of growth rate $\left(\mathrm{mm} \mathrm{s}^{-1}\right)$ and temperature gradient $\left(\mathrm{Kmm}^{-1}\right)$ provides the corresponding cooling rate $\left(\mathrm{Ks}^{-1}\right)$, and it is supposed that the eutectic decomposition of the $\alpha$ - $\mathrm{Al}$ and $\mathrm{Al}_{6} \mathrm{Fe}$ phases may occur at cooling rates $>1 \mathrm{Ks}^{-1}$. The cooling rate required for the formation of the $\mathrm{Al}_{6} \mathrm{Fe}$ phase is much lower than that in the LPBF process, which is extremely high $\left(\sim 10^{5} \mathrm{Ks}^{-1}\right.$ ). This high cooling rate has also been found to be associated with the different phases identified in this study (Fig. 8) i.e., both the LPBF-fabricated $\mathrm{Al}-2.5 \mathrm{Fe}$ alloy sample as well as the initial alloy powder, which has a fine solidification microstructure (Fig. 1(b)) that results from gas atomization. In previously observed eutectic microstructure, the spherical or granular $\mathrm{Al}_{6} \mathrm{Fe}$ particles appeared to be somewhat different from the rod-shaped morphology of the $\mathrm{Al}_{6} \mathrm{Fe}$ phase\\
+[35]. The formation of the different $\mathrm{Al}_{6} \mathrm{Fe}$ phase morphologies might be related to either different solidification mode at the high cooling rate or a slight decomposition process (transformation to the stable $\mathrm{Al}_{13} \mathrm{Fe}_{4}$ phase) caused by the additional heating effect of the upper powder layers heated by laser irradiation. Such nano-sized $\mathrm{Al}_{6} \mathrm{Fe}$ particles have also been observed in rapidly solidified $\mathrm{Al}-\mathrm{Fe}$ alloy produced by the twin-roll technique [36]. However, the detailed mechanism still remains unclear. To understand the peculiar fine particle morphology of the $\mathrm{Al}_{6} \mathrm{Fe}$ phase in the LPBF-fabricated $\mathrm{Al}-\mathrm{Fe}$ alloys, an investigation of the thermal stability of the metastable $\mathrm{Al}_{6} \mathrm{Fe}$ phase (and relatively coarsened $\mathrm{Al}-\mathrm{Fe}$ intermetallic phases localized along the melt pool boundaries) at elevated temperatures is required. These future investigations could provide useful insights regarding the microstructural control of LPBF-fabricated Al-2.5Fe alloy samples using post-heat treatment processes.
+
+\section*{5. Conclusions}
+In this study, the effects of laser power $(P)$ and scan speed $(v)$ on the relative density, melt pool depth, and Vickers hardness of LPBF-fabricated Al-Fe binary alloy samples of near-eutectic composition (Al-2.5 mass $\% \mathrm{Fe})$ were investigated. The characterization of the microstructural and crystallographic features of the fabricated alloy samples led to the following conclusions regarding the LPBF process.
+
+(1) The systematic characterization of LPBF-fabricated samples under controlled laser parameters $(P=102-204 \mathrm{~W}, v=600-1400 \mathrm{~mm} \mathrm{~s}$ ${ }^{-1}$ ) provided optimum laser parameter sets $(P=204 \mathrm{~W}, v \leq 800$ $\mathrm{mm} \mathrm{s}{ }^{-1}$ ) for the fabrication of dense samples with high relative densities $>99 \%$. The variation of relative density with $P v^{-1 / 2}$, which is based on the deposited energy density model $(\Delta H)$, could be represented using a single curve, which allowed the identification of a threshold value for the laser parameters required to fabricate dense materials. Thus, compared with the generally used volumetric energy density $(E)$ model, $P v^{-1 / 2}$, could be a more appropriate design parameter for the manufacture of $\mathrm{Al}-2.5 \mathrm{Fe}$ alloy samples using the LPBF process.
+
+(2) The LPBF-fabricated Al-2.5Fe alloy samples exhibited a peculiar microstructure, which consisted of multi-scan melt pools that resulted from local melting and rapid solidification, owing to laser irradiation during the LPBF process. In the $\alpha$-Al matrix, several columnar grains with a mean width of $\sim 21 \mu \mathrm{m}$ were identified. Additionally, numerous nano-scale particles with mean size $<100$ $\mathrm{nm}$ of the metastable $\mathrm{Al}_{6} \mathrm{Fe}$ intermetallic phase were finely dispersed in the $\alpha$-Al matrix inside the melt pool. No predominant crystallographic texture of $\alpha$-Al matrix was identified in the LPBFfabricated samples.
+
+(3) The hardness of the refined microstructure resulting from the LPBF process was very high at $\sim 90 \mathrm{HV}$, which is more than twofold higher than that of conventionally casted Al-2.5Fe alloy, which has a two-phase microstructure consisting of the coarsened plateshaped $\mathrm{Al}_{13} \mathrm{Fe}_{4}$ intermetallic phase and the $\alpha$-Al matrix. The porosity defects had an unneglectable effect on the hardness of the LPBF-fabricated samples when measured at a higher load of $9.8 \mathrm{~N}$. Contrarily, hardness values measured at a lower load of $0.98 \mathrm{~N}$ were almost constant independent of the laser parameters ( $P$ and $v$ ), indicating a slight change in the microstructure of the LPBF-fabricated sample depending on $P$ and $v$.
+
+\section*{Author Contribution}
+X. Qi: Acquistion of data; analysis and/or interpretation of data; drafting the manuscript; revising the manuscript for important intellectual content.
+
+N. Takata: Conception and design by study; analysis and/or interpretation of data; revising the manuscript for important intellectual
+
+\section*{content.}
+A. Suzuki: Conception and design by study; revising the manuscript for important intellectual content.
+
+M. Kobashi: Conception and design by study; revising the manuscript for important intellectual content.
+
+M. Kato: Conception and design by study; revising the manuscript for important intellectual content.
+
+\section*{Declaration of Competing Interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Acknowledgments}
+The authors are grateful for the alloy powder preparation provided by Dr. Isao Murakami (TOYO ALUMINUM K.K.). The support of "Knowledge Hub Aichi", a Priority Research Project of the Aichi Prefectural Government (Japan) was gratefully acknowledged. Xing Qi would also like to acknowledge the fellowship offered by the China Scholarship Council (No. 201806890005), which made his Ph.D. study at Nagoya University possible.
+
+\section*{References}
+[1] A. Aversa, G. Marchese, A. Saboori, E. Bassini, D. Manfredi, S. Biamino, D. Ugues, P. Fino, M. Lombardi, New aluminum alloys specifically designed for laser powder bed fusion: a review, Materials 12 (2019) 1007.
+
+[2] A. Kawahara, A. Niikura, T. Doko, Development of aluminum alloy fin stock for heat exchangers using twin-roll continuous casting method, Furukawa Rev. 24 (2003) 81-87.
+
+[3] P. Rodriguez, Selection of materials for heat exchangers, HEB 97 (1997) 59-72.
+
+[4] P.J. Black, The structure of $\mathrm{FeAl}_{3}$, Acta Cryst. 8 (1955) 175-182.
+
+[5] X. Wang, R.G. Guan, R.D.K. Misra, Y. Wang, H.C. Li, Y.Q. Shang, The mechanistic contribution of nanosized $\mathrm{Al}_{3} \mathrm{Fe}$ phase on the mechanical properties of $\mathrm{Al}-\mathrm{Fe}$ alloy, Mater. Sci. Eng. A 724 (2018) 452-460.
+
+[6] T. Tsukahara, N. Takata, S. Kobayashi, M. Takeyama, Mechanical properties of $\mathrm{Fe}_{2} \mathrm{Al}_{5}$ and $\mathrm{FeAl}_{3}$ intermetallic phases at ambient temperature, Tetsu-To-Hagané 102 (2016) 89-95.
+
+[7] S.M. Thompson, Z.S. Aspin, N. Shamsaei, A. Elwany, L. Bian, Additive manufacturing of heat exchangers: a case study on a multi-layered Ti-6Al-4V oscillating heat pipe, Addit. Manuf. 8 (2015) 163-174.
+
+[8] J.L. Zhang, B. Song, Q.S. Wei, D. Bourell, Y.S. Shi, A review of selective laser melting of aluminum alloys: processing, microstructure, property and developing trends, J. Mater. Sci. Technol. 35 (2019) 270-284.
+
+[9] C. Galy, E.L. Guen, E. Lacoste, C. Arvieu, Main defects observed in aluminum alloy parts produced by SLM: from causes to consequences, Addit. Manuf. 22 (2018) $165-175$
+
+[10] N.T. Aboulkhair, N.M. Everitt, I. Ashcroft, C. Tuck, Reducing porosity in AlSi10Mg parts processed by selective laser melting, Addit. Manuf. 1-4 (2014) 77-86.
+
+[11] T. Kimura, T. Nakamoto, Microstructures and mechanical properties of A356 (AlSi7Mg0.3) aluminum alloy fabricated by selective laser melting, Mater. Des. 89 (2016) 1294-1301.
+
+[12] L. Thijs, K. Kempen, J.P. Kruth, J.V. Humbeeck, Fine-structured aluminum products with controllable texture by selective laser melting of pre-alloyed AlSi10Mg powder, Acta Mater. 61 (2013) 1809-1819.
+
+[13] S.S. Nayak, H.J. Chang, D.H. Kim, S.K. Pabi, B.S. Murty, Formation of metastable phases and nanocomposites structures in rapidly solidified Al-Fe alloys, Mater. Sci.\\
+Eng. A 528 (2011) 5967-5973.
+
+[14] V.V. Stolyarov, R. Lapovok, I.G. Brodova, P.F. Thomson, Ultrafine-grained Al-5 wt. $\% \mathrm{Fe}$ alloy processed by ECAP with backpressure, Mater. Sci. Eng. A 357 (2003) 159-167.
+
+[15] T. Dorin, N. Stanford, N. Birbilis, R.K. Gupta, Influence of cooling rate on the microstructure and corrosion behavior of Al-Fe alloys, Corros. Sci. 100 (2015) 396-403.
+
+[16] ISO 9276-6, Representation of Results of Particle Size Analysis - Part 6: Descriptive and Quantitative Representation of Particle Shape and Morphology, ISO, Geneva, Switzerland, 2008.
+
+[17] N. Takata, T. Okano, A. Suzuki, M. Kobashi, Microstructure of intermetallics-reinforced Al-based alloy composites fabricated using eutectic reactions in $\mathrm{Al}-\mathrm{Mg}-\mathrm{Zn}$ ternary system, Intermetallics 95 (2018) 48-58.
+
+[18] J. Metelkova, Y. Kinds, K. Kempen, C. de Formanoir, A. Witrouw, B. Van Hooreweder, On the influence of laser defocusing in selective laser melting of 316L, Addit. Manuf. 23 (2018) 161-169.
+
+[19] W.J. Sames, F.A. List, S. Pannala, R.R. Dehoff, S.S. Babu, The metallurgy and processing science of metal additive manufacturing, Int. Mater. Rev. 61 (2016) 315-360.
+
+[20] A.T. Sidambe, Y. Tian, P.B. Prangnell, P. Fox, Effect of processing parameters on the densification, microstructure and crystallographic texture during the laser powder bed fusion of pure tungsten, Int. J. Refract. Met. Hard Mater. 78 (2019) 254-263.
+
+[21] U.S. Bertoli, A.J. Wolfer, M.J. Matthews, J.P.R. Delplanque, J.M. Schoenung, On the limitations of volumetric energy density as a design parameter for selective laser melting, Mater. Des. 113 (2017) 331-340.
+
+[22] L.K. Walford, The structure of the intermetallic phase $\mathrm{FeAl}_{6}$, Acta Cryst. 18 (1965) 287-291.
+
+[23] T.T. Sasaki, T. Ohkubo, K. Hono, Microstructure and mechanical properties of bulk nanocrystalline $\mathrm{Al}-\mathrm{Fe}$ alloy processed by mechanical alloying and spark plasma sintering, Acta Mater. 57 (2009) 3529-3538.
+
+[24] H. Jones, On the prediction of lattice parameter vs. concentration for solid solution extended by rapid quenching from the melt, Scr. Metall. Mater. 17 (1983) 97-100.
+
+[25] N. Takata, H. Kodaira, K. Sekizawa, A. Suzuki, M. Kobashi, Change in microstructure of selectively laser melted AlSi10Mg alloy with heat treatments, Mater. Sci. Eng. A 704 (2017) 218-228.
+
+[26] Z.H. Hu, H. Zhang, H.H. Zhu, Z.X. Xiao, X.J. Nie, X.Y. Zeng, Microstructure, mechanical properties and strengthening mechanisms of AlCu5MnCdVA aluminum alloy fabricated by selective laser melting, Mater. Sci. Eng. A 759 (2019) 154-166.
+
+[27] T. Kimura, T. Nakamoto, Thermal and mechanical properties of commercial-purity aluminum fabricated using selective laser melting, J. Jpn Inst. Light Metals 66 (2016) 167-173.
+
+[28] H. Gong, K. Rafi, H. Gu, T. Starr, B. Stucker, Analysis of defect generation in Ti-6Al-4V parts made using powder bed fusion additive manufacturing processes, Addit. Manuf. 1-4 (2014) 87-98.
+
+[29] G. Casalino, S.L. Campanelli, N. Contuzzi, A.D. Ludovico, Experimental investigation and statistical optimisation of the selective laser melting process of a maraging steel, Opt. Laser Technol. 65 (2015) 151-1.
+
+[30] D.B. Hann, J. Iammi, J. Folkes, A simple methodology for predicting laser-weld properties from material and laser parameters, J. Phys. Appl. Phys. 44 (2011) 445401.
+
+[31] W.E. King, H.D. Barth, V.M. Castillo, G.F. Gallegos, J.W. Gibbs, D.E. Hahn, C. Kamath, A.M. Rubenchik, Observation of keyhole-mode laser melting in laser powder-bed fusion additive manufacturing, J. Mater. Process. Technol. 214 (2014) 2915-2925.
+
+[32] A. Suzuki, R. Nishida, N. Takata, M. Kobashi, M. Kato, Design of laser parameters for selectively laser melted maraging steel based on deposited energy density, Addit. Manuf. 28 (2019) 160-168.
+
+[33] G.M. Adam, L.M. Hogan, Crystallography of the $\mathrm{Al}^{-\mathrm{Al}_{3} \mathrm{Fe}}$ eutectic, Acta Metall. 23 (1974) 345-354.
+
+[34] Harumi Kosuge, Intermetallic compounds in Al-Fe alloys, J. Jpn Inst. Light Metals 30 (1980) 217-226.
+
+[35] I.R. Hughes, H. Jones, Coupled eutectic growth in Al-Fe alloys, J. Mater. Sci. 11 (1976).
+
+[36] A. Kamio, H. Tezuka, S. Suzuki, T.T. Long, T. Takahashi, Structure and mechanical properties of rapidly solidified Al-8mass\%Fe alloys, J. Jpn Inst. Light Metals 37 (1987) 109-118.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

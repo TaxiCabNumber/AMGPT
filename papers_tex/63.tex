@@ -1,0 +1,553 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Understanding Crack Formation Mechanisms of Ti-48Al-2Cr-2Nb Single Tracks During Laser Powder Bed Fusion }
+
+
+\author{Seulbi Lee ${ }^{1}$ $\cdot$ Jaewoong Kim ${ }^{1} \cdot$ Jungho Choe $^{2}$ $\cdot$ Seong-Woong Kim ${ }^{3}$. Jae-Keun Hong ${ }^{3} \cdot$ Yoon Suk Choi ${ }^{10}$}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Received: 21 April 2020 / Accepted: 12 May 2020 / Published online: 2 June 2020
+
+(C) The Korean Institute of Metals and Materials 2020
+
+\begin{abstract}
+The crack formation mechanisms of $\mathrm{Ti}-48 \mathrm{Al}-2 \mathrm{Cr}-2 \mathrm{Nb}$ single tracks processed by laser powder bed fusion were extensively investigated in a wide range of laser powers and scan speeds. The crack patterns were categorized by their directionalities, which were parallel (longitudinal crack) and/or perpendicular (transverse crack) to the scan direction. For the representative process conditions of the keyhole, transition, and conduction modes, cracking behaviors were characterized by combining the fractography and the microstructural analysis. Further, thermal-mechanical finite element method simulations were performed to predict the distribution of temperatures and thermal stresses during the melt pool formation. On the basis of the combined results, the cracks formed in keyhole, transition, and conduction modes were clarified as a solidification crack and/or a thermal crack. In addition, the formation of these cracks was thoroughly understood in terms of thermal stresses and microstructural factors that affect the crack susceptibility. Finally, comprehensive mechanisms responsible for cracking of $\mathrm{Ti}-48 \mathrm{Al}-2 \mathrm{Cr}-2 \mathrm{Nb}$ single tracks under laser powder bed fusion were proposed for different process conditions (the keyhole, transition and conduction modes).
+\end{abstract}
+
+Keywords Additive manufacturing (AM) $\cdot$ Titanium aluminide (TiAl) alloy $\cdot$ Melt pool $\cdot$ Crack formation $\cdot$ Fractography $\cdot$ Thermal stress
+
+\section*{1 Introduction}
+Titanium aluminide (TiAl) alloys have been considered to be one of the most advanced structural materials in aerospace, automotive, and energy industries, due to their low density (in the range of $3.9-4.2 \mathrm{~g} / \mathrm{cm}^{3}$ ), superior mechanical properties such as elastic stiffness, strength and creep, and oxidation resistance up to $750{ }^{\circ} \mathrm{C}[1-5]$. However, the processing of TiAl alloys has been deemed challenging because of their intrinsically low plasticity at room temperature and poor hot formability. As an alternative method, additive manufacturing (AM) process has received attention to get over the processing drawbacks of TiAl alloys. The AM
+\footnotetext{Yoon Suk Choi
+
+\href{mailto:choiys@pusan.ac.kr}{choiys@pusan.ac.kr}
+
+1 School of Materials Science and Engineering, Pusan National University, Busan 46241, Republic of Korea
+
+2 3D Printing Materials Center, Korea Institute of Material Science (KIMS), Changwon 51508, Republic of Korea
+
+3 Titanium Alloys Department, Korea Institute of Material Science (KIMS), Changwon 51508, Republic of Korea
+}
+
+process offers many key benefits, that can alter the industrial paradigm in various fields as a tool-free, cost-efficient, and digital approach with short lead times [6]. It is noteworthy that the design freedom of the AM process [7] facilitates manufacturing of TiAl-alloy products with new concept designs, which are difficult to be produced using conventional methods but are required to improve the performance of these products in various industries.
+
+Securing the reliability of additively manufactured TiAl alloys is still problematic because of their high crack susceptibility and $\mathrm{Al}$ vaporization phenomena (especially in electron beam melting (EBM) process due to its vacuum environment). In particular, the high crack susceptibility of $\mathrm{TiAl}$ alloys originates from the rapid solidification involved in the AM process as well as the intrinsic brittleness of TiAl alloys. The latter is attributed to intermetallic characteristics of TiAl alloys by an insufficient slip system, grain boundary weakness, restricted cross slip, difficulty in twinning, and so on. To overcome the problems associated with cracking, the majority of studies have employed the EBM process because it employs a high-temperature process using the preheated powder bed and offers low oxidation potential\\
+under high-vacuum environment [8-12]. In the most EBM processes, the thermal stress accumulated during the AM process has been relieved through the preheating up to 1100 ${ }^{\circ} \mathrm{C}[8,9,12]$. In the laser metal deposition (LMD) technique, which is the earliest adopted AM process of TiAl alloys [13], cracks can be prevented by employing the local heating $[14,15]$ and preheating the substrate [16]. Sharman et al. [14] fabricated crack-free samples by defocusing the laser on the deposition plane. Thomas et al. [15] used a secondary heat source for performing the local preheating and partial post-heating. Even in the laser powder bed fusion (LPBF) process, known to be difficult to apply the preheating, an attempt was made to preheat the fabrication module (by the furnace integrated inside of the LPBF system) up to $450^{\circ} \mathrm{C}$ to avoid crack formation [17].
+
+Even though it is well known that the preheating is necessary to prevent cracking in the AM process of TiAl alloys; the fundamental analysis to understand the crack formation mechanisms has not been established (i.e. amount of the heat required to prevent cracks under different process conditions, quantitative evaluation of the cracks, elucidation of crack formation mechanisms depending on solidification conditions or process conditions, and so on). In the welding process of TiAl alloys, which has similar sequences as those in the AM process in terms of melting and solidification, crack formation mechanisms were reported in previous studies [18-20]. These studies suggested that crack formation is related to the brittleness of the $\alpha_{2}$ phase, which is a hightemperature phase, but stabilized even at room temperature because of rapid cooling. Therefore, the cracking during the welding of TiAl alloys can be avoided by the formation of relatively ductile microstructures (such as $\gamma$ grains and $\gamma / \alpha_{2}$ lamellar structures) by decomposing the $\alpha_{2}$ phase via the preheating [19,21], the secondary heat source [18], and the control of the interpass temperature [20].
+
+However, the cracking mechanisms of the AM process are somewhat different from those of welding process; this is because the AM process is accompanied by severe heating, solidification and cooling in milliseconds at a microscale. Recently, numerous studies have been conducted to understand the crack formation mechanisms during the AM process. The majority of these studies were conducted on Ni-based superalloys by using the EBM [22] and LMD [23-25] processes. Although the cracking mechanisms were identified as solidification cracking [22, 24, 25], liquation cracking [23], and ductility dip cracking [23], these results suggested that the microstructural factors affecting the crack susceptibility were the misorientation angle and grain morphology. For tungsten and its alloys, which are one of the brittle materials used in the AM process, the cracks were attributed to the residual stress in combination with the ductile-to-brittle transition (DBT) [26]. Vrancken et al. [26, 27] conducted in-situ monitoring to capture the exact moment of the crack initiation during the LPBF process. Wang et al. [27] analyzed the crack patterns in multi-layered samples, showing the crack propagation along the grain boundaries. Recently, Gao et al. [28] established the cracking mechanism of TiAl alloy (Ti-40Al-9V-0.5Y) via the LPBF process by comparing the cooling rates and the resultant phase transformation depending on scan speeds. However, their study was conducted for multi-layered deposited samples, which involve the indirect heating effect [29] (i.e. re-melting and reheating), thereby rendering it difficult to identify the cause of crack formation. Although the AM process is composed of multi-layer depositions, understanding the crack behaviors through single track analysis is needed since the crack formation, especially for brittle materials, is closely related with the process parameters and resultant microstructure evolution during the melt pool formation [26, 27].
+
+In this study, single tracks in a wide range of LPBF process conditions were comprehensively analyzed for understanding the crack formation mechanisms as a function of the process parameters. Accordingly, single tracks were intentionally generated without preheating to clarify the cracking behavior in their virgin states. The crack formation behavior was experimentally and computationally analyzed to investigate the nature of crack occurrence in the melt pool scale and to predict the distributions of temperature and thermal stresses. The results obtained herein assist our understanding of the cracking behavior in terms of microstructure evolution and its susceptibility to thermal stress during the melt pool formation.
+
+\section*{2 Experimental and Numerical Analysis}
+The nominal compositions of the substrate and the powders used in this study are $\mathrm{Ti}-48 \mathrm{Al}-2 \mathrm{Cr}-2 \mathrm{Nb}$ and $\mathrm{Ti}-49 \mathrm{Al}-2 \mathrm{Cr}-2 \mathrm{Nb}$ (in at\%), respectively. Considering the $\mathrm{Al}$ losses during the laser irradiations, powders were designed to have additional 1 at $\% \mathrm{Al}$ as compared to the target compositions (Ti-48Al-2Cr-2Nb) [30]. As shown in Fig. 1a, b, pre-alloyed spherical powders (supplied by ATI Specialty Materials, Ltd.) were used to fabricate single tracks, having a mean size of $31 \mu \mathrm{m}$ and the powder size distribution of 15 $\mu \mathrm{m}\left(\mathrm{D}_{10}\right), 32 \mu \mathrm{m}\left(\mathrm{D}_{50}\right)$, and $46 \mu \mathrm{m}\left(\mathrm{D}_{90}\right)$. The substrate with a thickness of $12 \mathrm{~mm}$ was cut from the vacuum pressurized cast product. Figure 1c shows the fully lamellar microstructures of the substrate, which are the typical microstructure of TiAl alloys composed of $\alpha_{2} / \gamma$ constituents.
+
+The LPBF system used in this study was the Mlab-Cusing system (Concept laser $\mathrm{GmbH}$ ), which was equipped with a maximum laser power of $100 \mathrm{~W}$. As shown in Table 1, the LPBF process window was set under the range of laser powers (from 50 to $95 \mathrm{~W}$ in the steps of $15 \mathrm{~W}$ ) and scan speeds (from 200 to $1000 \mathrm{~mm} / \mathrm{s}$ in the steps of $200 \mathrm{~mm} / \mathrm{s}$ ) with the\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_a65eb47b4d7ef04a43d9g-03}
+
+Fig. 1 a SEM image and $\mathbf{b}$ particle size distribution of $\mathrm{Ti}-49 \mathrm{Al}-2 \mathrm{Cr}-2 \mathrm{Nb}$ powders and $\mathbf{c}$ backscattered electron SEM image of Ti-48Al-2Cr$2 \mathrm{Nb}$ substrate, showing a fully lamellar microstructure with $\boldsymbol{\alpha}_{2} / \gamma$ phases
+
+Table 1 LPBF process parameters for $\mathrm{Ti}-48 \mathrm{Al}-2 \mathrm{Cr}-2 \mathrm{Nb}$ single tracks
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Processing parameter & Value \\
+\hline
+Power $(\mathrm{W})$ & $50,65,80,95$ \\
+Scan speed $(\mathrm{mm} / \mathrm{s})$ & $200,400,600,800,1000$ \\
+Beam diameter $(\mu \mathrm{m})$ & 50 \\
+Powder layer thickness $(\mu \mathrm{m})$ & 50 \\
+\hline
+\end{tabular}
+\end{center}
+
+layer thickness of $50 \mu \mathrm{m}$. Single tracks were deposited along a rectangular path $(5 \mathrm{~mm} \times 35 \mathrm{~mm})$ for 20 combinations of laser powers and scan speeds. All processes were performed at room temperature in an inert argon atmosphere.
+
+Microstructures were prepared at the cross-sections in the middle of the $35-\mathrm{mm}$ long single tracks. The cross-sections were polished down to a $0.04-\mu \mathrm{m}$ finish using colloidal silica, and then analyzed by employing an optical microscope (OM) and scanning electron microscope (SEM) that was equipped with electron backscatter diffraction (EBSD). Here, melt pool geometries, such as width and depth, were measured for all single tracks via image analysis, and these values were used to calibrate the laser penetration depth $\left(d_{p}\right)$ and absorptivity $(A)$ for performing the finite element method (FEM) based thermal analysis [31].
+
+In order to identify the crack patterns, single track surfaces were observed using the focus-variation $\mathrm{OM}$. The crack patterns were categorized with respect to the scan direction (SD). The cracks parallel and perpendicular to the SD were defined as longitudinal crack (L-crack) and transverse crack (T-crack), respectively. To quantify the $\mathrm{T}$-cracking frequency, an average $\mathrm{T}$-crack spacing was determined from more than $30 \mathrm{~T}$-crack spacings measured along the single track. To observe the morphologies of the crack surfaces generated under different LPBF conditions ( $80 \mathrm{~W}-200,600$ and $1000 \mathrm{~mm} / \mathrm{s}$ ), the substrate deposited with single tracks was cut into $2.5 \mathrm{~mm}$-thick plates. For each plate, the cracks and their surfaces in the single track were carefully located and delicately retrieved by thinning the plate through manual polishing of the bottom face (the other side of the surface with the single track) of the plate until the plate automatically fell apart due to the presence of cracks. Subsequently, fractorgraphy was performed using the SEM by observing the crack surfaces from those thinned\\
+pieces in order to identify the crack type and crack initiation and propagation and to understand the nature and cause of the cracks. To the authors' knowledge, it is the first time to observe crack surfaces of $\mathrm{Ti}-48 \mathrm{Al}-2 \mathrm{Cr}-2 \mathrm{Nb}$ single tracks processed by different LPBF conditions. Here, cracks were classified as L- and T-cracks by their directionalities, and as solidification and thermal cracks by the nature of their occurrence. A solidification crack can be categorized as a crack formed at the last moment of the solidification process due to the lack of liquid feeding along the micro-scale paths of the last solidification [32]. Its surface can be typified as an intact morphology of last solidification structures. A thermal crack can be defined as a crack formed by thermal stresses in the solid state. For brittle intermetallic materials, like TiAl alloys, thermal cracking typically occurs at temperatures below the ductile-brittle transition temperature (DBTT), and exhibits cleavage-type fracture surfaces.
+
+FEM simulations for the weakly coupled thermo-mechanical analysis were performed using a commercial FEM solver, ABAQUS ${ }^{\text {TM }}$ for the conditions of $80 \mathrm{~W}-200,600$, and $1000 \mathrm{~mm} / \mathrm{s}$. In the FE model, the dimensions of the substrate and the powder bed were designed to be $1000 \times 500 \times$ $1000 \mu^{3}$ and $1000 \times 500 \times 50 \mu \mathrm{m}^{3}$, respectively, as shown in Fig. 2a. In Fig. 2a, uniform fine meshes were applied for the powder bed, compared to coarse gradient meshes for the surrounding substrate. Herein, the number of elements for the powder bed was set to be $80 \times 40 \times 4$ along the $x$-, $y$-, and $\mathrm{z}$ - axes, respectively.
+
+As shown in Fig. 2b, the Goldak heat source Q model [33] was used to simulate a heat input as a double ellipsoidal heat source model. The following equations were used:
+
+$\mathrm{Q}=\mathrm{P} \cdot \mathrm{A}$
+
+$Q_{f}(\mathrm{x}, \mathrm{y}, \mathrm{z})=\frac{6 \sqrt{3} f_{f} P}{a_{f} b c \pi \sqrt{\pi}} \exp ^{-\left[\frac{3 x^{2}}{a_{f}^{2}}+\frac{3 y^{2}}{b^{2}}+\frac{3 z^{2}}{c^{2}}\right]}$
+
+$Q_{r}(\mathrm{x}, \mathrm{y}, \mathrm{z})=\frac{6 \sqrt{3} f_{r} P}{a_{r} b c \pi \sqrt{\pi}} \exp ^{-\left[\frac{3 x^{2}}{a_{r}{ }^{2}}+\frac{3 y^{2}}{b^{2}}+\frac{3 z^{2}}{c^{2}}\right]}$
+
+In Eqs. (1)-(3), $\mathrm{Q}$ is the heat flux ( $\mathrm{J} / \mathrm{ms}), P$ is the input laser power and $\mathrm{A}$ is the laser absorptivity, determining a fraction of the input power actually absorbed by the powder bed and substrate. Also, $Q_{f}$ and $Q_{r}$ are the heat flux located in the front and rear section of the ellipsoid heat source, respectively, and $f_{f}$ and $f_{r}$ are the proportion coefficients\\
+Fig. 2 a Finite element mesh model and $\mathbf{b}$ schematic illustration of Goldak heat source model used in FEM analysis. Here, the temperature contour at $80 \mathrm{~W}-600 \mathrm{~mm} / \mathrm{s}$ is shown in a, captured in the middle of the FEM simulation.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a65eb47b4d7ef04a43d9g-04(1)}
+\end{center}
+
+(b)
+
+\includegraphics[max width=\textwidth, center]{2024_03_10_a65eb47b4d7ef04a43d9g-04}\\
+representing heat apportionment in the front and rear sections of the heat source $\left(f_{f}+f_{r}=2\right)$. Here, $f_{f}$ and $f_{r}$ were set as 0.6 and 1.4, respectively, by adopting the values used in [33]. Also, x, y, and $\mathrm{z}$ are the local coordinates; $a_{f}, a_{r}, \mathrm{~b}$, and $c$ are the parameters defining the three dimensional shape of the heat source (see Fig. 2b). For the current simulations, $a_{f}$, $a_{r}$, and $\mathrm{b}$ were set as $25 \mu \mathrm{m}, 50 \mu \mathrm{m}$ and $25 \mu \mathrm{m}$, respectively, and $c$ corresponds to the laser penetration depth $\left(d_{p}\right)$. Here, note that $d_{p}$ and $\mathrm{A}$ values were calibrated using an algorithm proposed by the authors in the previous study [31] to depict the actual melt pool dimension under different process conditions. In the present study, $d_{p}$ and A values for 200, 600, and $1000 \mathrm{~mm} / \mathrm{s}$ at $80 \mathrm{~W}$ were calibrated to be 405,205 , and $130 \mu \mathrm{m}$ and $0.7,0.7$, and 0.6 , respectively. The heat source was set to move along the $\mathrm{x}$-axis for a distance of $800 \mu \mathrm{m}$. The initial temperature was set $30^{\circ} \mathrm{C}$, and the convection and radiation were neglected because the primary heat transfer mode was conduction and heating time was relatively short [34]. The temperature-dependent thermal properties (including the density) and mechanical properties for the TiAl alloy were taken from previous studies $[35,36]$ and are listed in Tables 2 and 3, respectively. Also, the latent heat effect was accounted for during melting and solidification. The thermal conductivity in the powder bed was set as $1 \%$ of that of the substrate, which was adopted from an analytical result done in [37]. For the simulation, the nodal constraint of substrate edges was applied at the bottom face. Thermal stresses were predicted during the melt pool formation based on the temperature fields, which were obtained in the thermal analysis.
+
+\section*{3 Results and Discussion}
+Figure 3 shows the metallographs of the melt pool crosssections in the power-scan speed process window. The melt pool width-to-depth ratio $(\mathrm{R})$ and the energy density $\left(E_{\rho}\right)$, which is expressed by $E_{\rho}=\frac{P}{v \cdot t}\left(\mathrm{~J} / \mathrm{mm}^{2}\right)$, where $P, v$ and $t$ are the laser power, scan speed, and thickness of the powder bed, were provided in the bottom right and bottom left\\
+Table 3 Mechanical properties used in thermal-mechanical FEM simulations $[35,36,38]$
+
+\begin{center}
+\begin{tabular}{lllll}
+\hline
+\begin{tabular}{l}
+Tem- \\
+perature \\
+$\left({ }^{\circ} \mathrm{C}\right)$ \\
+\end{tabular} & \begin{tabular}{l}
+Young's \\
+modulus \\
+$(\mathrm{GPa})$ \\
+\end{tabular} & \begin{tabular}{l}
+Yield \\
+strength $(\mathrm{N} /$ \\
+$\left.\mathrm{mm}^{2}\right)$ \\
+\end{tabular} & \begin{tabular}{l}
+Thermal \\
+expansion \\
+$\left(10^{-6} /{ }^{\circ} \mathrm{C}\right)$ \\
+\end{tabular} & Poisson's ratio \\
+\hline
+25 & 172 & 359 & 11.0 & 0.22 \\
+150 & - & - & 11.7 & 0.22 \\
+300 & 162 & 358 & 12.3 & 0.22 \\
+450 & - & - & - & - \\
+600 & 153 & - & - & - \\
+900 & - & 259 & 15.0 & - \\
+\hline
+\end{tabular}
+\end{center}
+
+of each micrograph in Fig. 3, respectively. The melt pool geometries changed from conduction $(R \leq 0.5)$ to transition $(0.5<\mathrm{R} \leq 1.0)$ and then keyhole $(\mathrm{R}>1.0)$ modes, with increasing energy density $\left(E_{\rho}\right)$. This confirms that single tracks in this study were generated in a variety of melt pool modes. In particular, deep cracks were observed in the high $E_{\rho}$ domain (i.e., $95 \mathrm{~W}-200 \mathrm{~mm} / \mathrm{s}, 80 \mathrm{~W}-200 \mathrm{~mm} / \mathrm{s}$, and 65 $\mathrm{W}-200 \mathrm{~mm} / \mathrm{s}$ ) and found to be vertically penetrating across the melt pool.
+
+In Fig. 4, surface images of single tracks show various cracking behaviors. It can be seen that the cracks were formed for all process conditions. In particular, two types of cracks, L-crack and T-crack, were observed in the present process window, as indicated by the arrows in Fig. 4. Here, L-cracks were formed in the high $E_{\rho}$ domain ( $95 \mathrm{~W}$-200 and $400 \mathrm{~mm} / \mathrm{s}, 80 \mathrm{~W}-200 \mathrm{~mm} / \mathrm{s}$, and $65 \mathrm{~W}-200 \mathrm{~mm} / \mathrm{s}$ ), revealing the crack propagation along the centerline of the single track. On the other hand, T-cracks were observed for all process conditions. In the high $E_{\rho}$ domain, T-cracks tended to cross the single track asymmetrically depending on the presence of L-cracks. In the low $E_{\rho}$ domain, however, T-cracks tended to completely cross the single track.
+
+The surfaces of L- and T-cracks observed in the single tracks at $80 \mathrm{~W}-200,600$, and $1000 \mathrm{~mm} / \mathrm{s}$ conditions (keyhole, transition, and conduction modes, respectively) were presented in Figs. 5 and 6. Figure 5 shows the surfaces of a L-crack and a T-crack observed at $80 \mathrm{~W}-200 \mathrm{~mm} / \mathrm{s}$
+
+Table 2 Thermal properties used in thermal-mechanical FEM simulations [35, 36, 38]
+
+\begin{center}
+\begin{tabular}{lllllll}
+\hline
+\begin{tabular}{l}
+Temperature \\
+$\left({ }^{\circ} \mathrm{C}\right)$ \\
+\end{tabular} & \begin{tabular}{l}
+Density \\
+$\left(\mathrm{Kg} / \mathrm{m}^{3}\right)$ \\
+\end{tabular} & \begin{tabular}{l}
+Specific heat \\
+$\left(\mathrm{J} / \mathrm{Kg}{ }^{\circ} \mathrm{C}\right)$ \\
+\end{tabular} & \begin{tabular}{l}
+Thermal conduc- \\
+tivity $\left(\mathrm{W} / \mathrm{m}{ }^{\circ} \mathrm{C}\right)$ \\
+\end{tabular} & Solidus temperature $\left({ }^{\circ} \mathrm{C}\right)$ & Liquidus temperature $\left({ }^{\circ} \mathrm{C}\right)$ & Latent heat $(\mathrm{kJ} / \mathrm{Kg})$ \\
+\hline
+25 & 3900 & 610 & 10.5 & 1457 & 1522 & 380 \\
+127 & - & 635 & - &  &  &  \\
+327 & 3879 & - & 21.0 &  &  &  \\
+527 & - & 695 & - & - &  &  \\
+727 & 3853 & - & - & 28.0 &  &  \\
+927 & 3840 & - & 770 & - &  &  \\
+1457 &  &  &  &  &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+Fig. 3 Metallographs showing melt pool geometries under different laser powers and scan speeds. Melt pool boundaries are outlined by the yellow dashed line, and R and $\boldsymbol{E}_{\rho}(\mathrm{J} /$ $\mathrm{mm}^{2}$ ) values are provided in the bottom right and bottom left of each micrograph, respectively. (Color figure online)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a65eb47b4d7ef04a43d9g-06(7)}
+\end{center}
+
+(a) L-crack\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_a65eb47b4d7ef04a43d9g-06(6)}
+
+(c) L-crack\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_a65eb47b4d7ef04a43d9g-06(2)}
+
+$600 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a65eb47b4d7ef04a43d9g-06(9)}
+\end{center}
+
+$800 \mathrm{~mm} / \mathrm{s}$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_a65eb47b4d7ef04a43d9g-06(1)}
+
+(b) L-crack
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a65eb47b4d7ef04a43d9g-06(4)}
+\end{center}
+
+(d)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a65eb47b4d7ef04a43d9g-06(5)}
+\end{center}
+
+$200 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a65eb47b4d7ef04a43d9g-06(3)}
+\end{center}
+
+$400 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a65eb47b4d7ef04a43d9g-06(8)}
+\end{center}
+
+$600 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a65eb47b4d7ef04a43d9g-06}
+\end{center}
+
+$800 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a65eb47b4d7ef04a43d9g-06(10)}
+\end{center}
+
+Fig. 4 Surface images showing crack patterns under different scan speeds at a $95 \mathrm{~W}$, b $80 \mathrm{~W}$, c $65 \mathrm{~W}$, and d $50 \mathrm{~W}$
+
+(keyhole mode). Using the delicate manual polishing technique described in the previous section, we were able to safely retrieve the surfaces of both L- and T-cracks at the same time, as shown in Fig. 5a. Figure 5b is the front view of the L-crack surface in Fig. 5a. In Fig.5b, the L-crack was found to be a typical solidification crack, which shows inter-columnar crack propagations across the region. In the middle of Fig. 5b, horizontal topology transition (indicated by the dashed line) was observed due to the change of the solidification direction. Figure $5 \mathrm{c}, \mathrm{d}$ are the magnified fractographs from the upper part and lower part of the L-crack surfaces of Fig. 5b, respectively, separated\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_a65eb47b4d7ef04a43d9g-07(3)}
+
+Fig. 5 a SEM image showing the L- and T-cracks formed in the single track at $80 \mathrm{~W}-200 \mathrm{~mm} / \mathrm{s}$ (keyhole mode); b a front view of the L-crack surface in a; $\mathbf{c}$ a magnified view of the upper part of the\\
+L-crack surface in $\mathbf{b}$; d a magnified view of the lower part of the L-crack surface in $\mathbf{b} ; \mathbf{e}$ a magnified view of the T-crack surface in $\mathbf{a}$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_a65eb47b4d7ef04a43d9g-07}\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_a65eb47b4d7ef04a43d9g-07(2)}\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_a65eb47b4d7ef04a43d9g-07(1)}
+
+Fig. 6 SEM images showing T-cracks at a $80 \mathrm{~W}-600 \mathrm{~mm} / \mathrm{s}$ (transition mode) and $\mathbf{d} 80 \mathrm{~W}-1000 \mathrm{~mm} / \mathrm{s}$ (conduction mode). b, c, and e, f are the magnified crack surfaces from a and $\mathbf{d}$, respectively
+
+by the transition line. It can be seen that the solidification direction, viz. the direction of the columnar structure, was changed from $30^{\circ}$ in the lower part (in Fig. 5d) to $60^{\circ}$ in the upper part (in Fig. 5c) from the SD. In addition, the keyhole pores were observed in the lower part of the melt pool, as shown in Fig. 5d). It is well known that\\
+the presence of a free surface of the porosity in a liquid acts as a stress riser and allows the strain to be accommodated by a growth of its pre-existing void through the liquid [39-41].
+
+Figure 5e shows the magnified T-crack from Fig. 5a. In Fig. 5e, the cleavage fracture was mainly observed except a local solidification crack trace, which is isolated by the dashed line. Based on the crack propagation (Fig. 5a) and their fracture surfaces (Fig. 5b, e), the overall crack occurrence sequence at $80 \mathrm{~W}-200 \mathrm{~mm} / \mathrm{s}$ (keyhole mode) is that solidification L-crack occurred first, followed by a T-crack as an secondary crack. The T-crack seems to be initiated at the final solidification stage when the most of the melt pool region becomes a solid state, with little liquid coexisting within a solidification region (a local area enclosed by a dashed line in Fig. 5e). Here, the isolated solidification crack does not seem to propagate until the thermal crack in the solid state initiates in the bottom region of the melt pool, as indicated by the arrow, and propagates cross the melt pool.
+
+Figure 6a-f show the T-crack surfaces observed at 80 $\mathrm{W}-600 \mathrm{~mm} / \mathrm{s}$ (transition mode) and at $80 \mathrm{~W}-1000 \mathrm{~mm} / \mathrm{s}$ (conduction mode), respectively. In Fig. 6a, intragranular cleavage fracture was observed on the whole crack surfaces. The crack initiated near the right edge of the melt pool/substrate boundary, as indicated by an arrow in Fig. 6a and in the magnified view of Fig. 6b, and propagated across the melt pool. Here, there is a vertical transition line (indicated by the arrow in Fig. 6c) along the center of the melt pool, which shows a change in fracture topology (an indirect indication of the morphological change of grain structures along the transition line). T-cracking at $80 \mathrm{~W}-1000 \mathrm{~mm} / \mathrm{s}$ (conduction mode) formed stepwise cleavage fracture surfaces, as shown in Fig. 6d. The magnified views of those T-cracks are shown in Fig. 6e (for the left side) and Fig. 6f (for the right side). Here, note that T-cracks were initiated at the bottom of the melt pool, as indicated by arrows in Fig. 6e, $f$ and propagated upward.
+
+Based on fractography done for single tracks at $80 \mathrm{~W}-200$, 600 , and $1000 \mathrm{~mm} / \mathrm{s}$ (keyhole, transition, and conduction modes) the crack formation behaviors can be summarized as follows:
+
+\begin{itemize}
+  \item The L-crack was formed at the keyhole mode and found to be a solidification crack developed along the centerline of the single track surface.
+
+  \item T-cracks were formed in all process conditions (keyhole, transition, and conduction modes). The T-crack in the keyhole mode was a mixture of the solidification and thermal crack, while those in the transition and conduction modes were thermal cracks, which were originated from the side edge of the fusion boundary and from the bottom of the melt pool, respectively.\\
+In order to predict the distribution of the temperature and thermal stresses during single track LPBF, thermal-mechanical FEM simulations were conducted for $80 \mathrm{~W}-200,600$, and $1000 \mathrm{~mm} / \mathrm{s}$ (keyhole, transition, and conduction modes). Simulated temperature and thermal stresses $(S)$ in the middle of the single track were recorded as function of time and exported using MATLAB ${ }^{\circledR}$ for the visualization. Here, the normal stresses in the $\mathrm{x}$-axis (S11, along the SD) and y-axis (S22, along the transverse direction to the SD) are associated with thermal stresses inducing $\mathrm{T}$ - and $\mathrm{L}$-cracking, respectively. Also, these thermal stresses can be used to assess the occurrence for the solidification crack and thermal crack. In general, a solidification crack occurred when a positive (tensile) thermal stress present at the last solidification stage (of course, other physical conditions favourable for solidification cracking, as described in the previous section, should be met as well) [32]. Here, the temperature range susceptible for solidification cracking of Ti-48Al-2Cr-2Nb was estimated to be from 1390 to $1487^{\circ} \mathrm{C}$ based on the solid volume fraction $\left(f_{s}\right)$ in a range from 0.7 to 0.98 (calculated by Scheil equation [9]). For the thermal crack, the crack occurrence can be assessed by $\Delta S\left(\Delta S=S-S_{Y S}\right.$, where $S_{Y S}$ is the yield strength) below the ductile-to-brittle transition temperature (DBTT). In the present study, the temperature range susceptible for the thermal crack of $\mathrm{Ti}-48 \mathrm{Al}-2 \mathrm{Cr}-2 \mathrm{Nb}$ was estimated to be below $800{ }^{\circ} \mathrm{C}$, based on the DBTT measurement previously reported in [42-44]. Therefore, for the assessment of solidification cracking and thermal cracking, simulated $S$ or $\Delta \mathrm{S}$ values were used, depending on temperatures of interest.
+
+\end{itemize}
+
+Figure 7 shows simulated temperature and thermal stress ( $\mathrm{S}$ and $\Delta \mathrm{S}$ ) contours at the last solidification stages for $80 \mathrm{~W}-200,600$, and $1000 \mathrm{~mm} / \mathrm{s}$ (keyhole, transition, and conduction modes). Here, note that $\mathrm{S}$ and $\Delta \mathrm{S}$ contours are separately plotted in the same map for the regions with temperatures between 1390 and $1487^{\circ} \mathrm{C}$ (the solidification range) and below $1390{ }^{\circ} \mathrm{C}$, respectively. In Fig. 7, depending on the scan speed, simulated $\mathrm{S} 11$ and $\mathrm{S} 22$ values show different trends. As the scan speed increases, simulated S11 in last solidification zone increases (maximum values from 117 to $265 \mathrm{MPa}$ ), while simulated S22 in the same zone decreases (maximum values from 125 to $80 \mathrm{MPa}$ ). In particular, the maximum $\mathrm{S} 22$ was higher than the maximum $\mathrm{S} 11$ at $80 \mathrm{~W}-200 \mathrm{~mm} / \mathrm{s}$ (keyhole mode), while the trend was reversed at $80 \mathrm{~W}-600$ and $1000 \mathrm{~mm} / \mathrm{s}$ (transition and conduction modes).
+
+Figure 8 shows simulated temperature and thermal stress $(\Delta \mathrm{S})$ contours at the stage that the temperatures in the bottom of the melt pool are right below BDTT $\left(800{ }^{\circ} \mathrm{C}\right)$. As the scan speed increases, simulated maximum $\Delta \mathrm{S} 11$ tends to increase from 25 to $250 \mathrm{MPa}$, while simulated maximum $\Delta \mathrm{S} 22$ is negligible. Also, these simulated $\Delta \mathrm{S} 11$ hot spots are located near the bottom-part of the melt pool for all conditions, which indicates the bottom part of the melt pool as a
+
+Temp.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_a65eb47b4d7ef04a43d9g-09(2)}
+
+S11 \& $\Delta$ S11\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_a65eb47b4d7ef04a43d9g-09(1)}
+
+$\mathbf{S} 22 \& \Delta \mathbf{S} 22$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_a65eb47b4d7ef04a43d9g-09}
+
+Fig. 7 Simulated temperature and thermal stress $(\boldsymbol{S}$ and $\Delta \boldsymbol{S}$ ) contours at the solidification stage for all scan speeds simulated. Note that $\boldsymbol{S}$ and $\Delta \boldsymbol{S}$ contours are separately plotted in the same map for the regions with temperatures above and below $1390{ }^{\circ} \mathrm{C}$, respectively
+
+preferential 'thermal' crack initiation site, particularly for T-cracks. However, simulated $\Delta \mathrm{S} 22$ values seem to be insignificant to trigger 'thermal' L-cracking for all conditions.
+
+The results of the crack surface observation (Figs. 5, 6) and FEM simulations (Figs. 7, 8) were analyzed together to delineate when and how cracks occur.
+
+In addition, to identify the effect of microstructures on the cracking, the EBSD results of the melt pool cross-sections are presented in Fig. 9. Inverse pole figure (IPF) maps combined with image quality (IQ) maps in Fig. 9a-c show the solidification structures with the orientation distribution for $80 \mathrm{~W}-200,600$, and $1000 \mathrm{~mm} / \mathrm{s}$ (keyhole, transition, and conduction modes). Also, IPFs with respect to the SD are shown in Fig. 9d-f. Here, only orientations of the $\alpha$ phase from the melt pool are shown in Fig. $9 \mathrm{~d}-\mathrm{f}$ because the melt pool was composed of the $\alpha$ phase due to fast cooling rates.
+
+For solidification cracking, the growth direction of solidification structures needs to be considered with respect to the positive (tensile) direction of the thermal stress. If the same value of thermal stress is applied, the solidification structures that are arranged perpendicularly to the thermal stress become a region vulnerable to cracking. In this study, understanding the overall growth directions of solidification structures were determined using the IPF maps of the melt pool cross-sections (Fig. 9a-c) through the orientation analysis with respect to the SD (Fig. 9d-f).
+
+Previous studies $[45,46]$ reported that favourable grain growth of HCP structure ( $\alpha$ phase) is $<11 \overline{2} 0>$ on the basal plane along the thermal gradient. In the case of the 200 and $600 \mathrm{~mm} / \mathrm{s}$ (keyhole and transition modes), the highest texture intensities were observed near $\langle 2 \overline{1} \overline{1} 1>$ (indicated by $\because$ in Fig. 9d, e), implying that the grain growth direction is about 23 degrees away from the SD (refer to the schematic HCP orientation illustrations shown in the boxed region of Fig. 9). it is well matched with the grain growth direction from the fractograph (about $30^{\circ}$ away from the $\mathrm{SD}$ ) in Fig. 5d. Here, grains with $<2 \overline{1} \overline{1} 1>$ texture colored green in Fig. 9a, b. However, the grains with $<2 \overline{1} \overline{1} 5>$ texture were also observed in the keyhole mode, as indicated by ' $x$ ' in Fig. 9d. These grains are colored orange in the IPF map and mostly located in the upper region of the melt pool as shown in Fig. 9a. Theoretically, the grains having $\langle 2 \overline{1} \overline{1} 5>$ texture to the $\mathrm{SD}$ grow $67^{\circ}$ away from $\mathrm{SD}$ (refer to the illustrations shown in the boxed region of Fig. 9). It is consistent with the fractograph of Fig. 5c, showing that the grain growth direction was about $60^{\circ}$ away from the SD. Considering the
+
+\section*{Temp.}
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a65eb47b4d7ef04a43d9g-10(1)}
+\end{center}
+
+$\Delta \mathbf{S} 11$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_a65eb47b4d7ef04a43d9g-10}
+
+$\Delta \mathbf{S 2 2}$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_a65eb47b4d7ef04a43d9g-10(2)}
+
+Fig. 8 Simulated temperature and thermal stress $(\Delta S)$ contours at the stage that the temperatures in the bottom of the melt pool are right below the DBTT $\left(800^{\circ} \mathrm{C}\right)$
+
+melt pool microstructures observed at the cross-sections in Fig. 9a, b, solidification structures grew from the fusion boundaries toward the centerline with the aforementioned growth direction with respect to SD. Then, at the last solidification stage, the liquid distributed along the centerline was solidified upward, resulting in grains arranged vertically in the center of the melt pool in Fig. 9a, b. Such solidification sequences, particularly for the melt pools of the keyhole and transition modes, were also reported in the previous studies done for other metallic alloys [47-49]. For 80 W-1000 $\mathrm{mm} / \mathrm{s}$ (conduction mode), the high intensities in $\langle 10 \overline{1} 0\rangle$ and $\langle 2 \overline{1} \overline{1} 0\rangle$ were observed in Fig. 9f, meaning that the grain growth mainly occurred parallel to the SD (refer to the illustrations shown in the boxed region of Fig. 9). Also, the melt pool cross-section in Fig. 9c showed that almost all grains grow from the fusion boundary toward a center of the top surface.
+
+In Fig. 9a, the grains aligned vertically in the central region of the melt pool are expected to be susceptible to solidification L-cracking when a large positive (tensile) thermal stress, S22, presents, and that was exactly what FEM simulations predicted in the upper right of Fig. 7 (maximum $\mathrm{S} 22=125 \mathrm{MPa}$ ). It means that the melt pool at 80\\
+W-200 mm/s (keyhole mode) is vulnerable for solidification L-cracking. However, solidification L-cracking did not occur for melt pools at $80 \mathrm{~W}-600$ and $1000 \mathrm{~mm} / \mathrm{s}$ (transition and conduction modes), even if those melt pools showed grains aligned vertically in the central region in Fig. 9b, c. It seems to be due to the lack of liquid feeding for the melt pools of the transition and conduction modes. As shown in Fig. 7, the solidification zone (the region with temperatures between 1390 and $1487^{\circ} \mathrm{C}$ ) expands with decreasing scan speed. A wider solidification zone means a longer intercolumnar passageway, which hinders liquid feeding needed to resist cracking [50]. Therefore, no solidification L-cracking in the transition and conduction modes were attributed to the shorter grain boundary channel for liquid feeding, compared to the keyhole mode.
+
+For solidification T-cracking, it is interesting to note that a locally isolated solidification T-crack was observed only at $80 \mathrm{~W}-200 \mathrm{~mm} / \mathrm{s}$ (keyhole mode), as shown in Fig. 5e, although simulated S11 values are relatively high (173 and $265 \mathrm{MPa}$ ) for $80 \mathrm{~W}-600$ and $1000 \mathrm{~mm} / \mathrm{s}$ (transition and conduction modes) in Fig. 7. In order to understand the effect of the microstructure on the solidification T-cracking, it is necessary to consider the solidification direction (viz. the grain
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a65eb47b4d7ef04a43d9g-11(2)}
+\end{center}
+
+(d)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a65eb47b4d7ef04a43d9g-11}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a65eb47b4d7ef04a43d9g-11(6)}
+\end{center}
+
+(e)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a65eb47b4d7ef04a43d9g-11(5)}
+\end{center}
+
+\includegraphics[max width=\textwidth, center]{2024_03_10_a65eb47b4d7ef04a43d9g-11(4)}\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_a65eb47b4d7ef04a43d9g-11(3)}
+
+** $\theta$ is misorientation angle between $\mathrm{SD}$ and basal plane (// favorable grain growth direction of HCP)
+
+\section*{(f)}
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a65eb47b4d7ef04a43d9g-11(1)}
+\end{center}
+
+Fig. 9 Inverse pole figure (IPF) maps (combined with the image quality (IQ) maps) for the cross-sections of single tracks at a $80 \mathrm{~W}-200$ $\mathrm{mm} / \mathrm{s}, \mathbf{b} 80 \mathrm{~W}-600 \mathrm{~mm} / \mathrm{s}$ and $\mathbf{c} 80 \mathrm{~W}-1000 \mathrm{~mm} / \mathrm{s}$. d-f are IPFs corre-
+
+alignment) with respect to the SD (// S11). In Fig. 9a-c, the grains with $\langle 2 \overline{1} \overline{1} 1>,<10 \overline{1} 0>$ and $\langle 2 \overline{1} \overline{1} 0>$ textures tend to show relatively low susceptibility to solidification T-cracking (even under high S11) since their main growth directions are slightly tilted or almost parallel to the SD. However, for the grains having $<2 \overline{1} \overline{1} 5>/ / \mathrm{SD}$ in the keyhole mode (Fig. 9a, d), the solidification direction will be almost perpendicular to ( $67^{\circ}$ away from) the $\mathrm{SD}$, which is expected to be susceptible to solidification T-cracking. These almost vertically aligned grains are colored orange and particularly distributed in the upper region of the melt pool, as shown in Fig. 9a.
+
+At the solid state below the DBTT, FEM simulations in Fig. 8 predicted large $\Delta \mathrm{S} 11$, compared to $\Delta \mathrm{S} 22$, for 80 $\mathrm{W}-600$ and $1000 \mathrm{~mm} / \mathrm{s}$ (transition and conduction modes), which seems to be responsible for 'thermal' (cleavage) T-cracks observed in Figs. 4b and 6. However, the crack initiation sites were somehow different between the transition (Fig. 6a-c) and conduction (Fig. 6d-e) modes. Thermal T-cracks at $80 \mathrm{~W}-1000 \mathrm{~mm} / \mathrm{s}$ (conduction mode) were initiated near the bottom of the melt pool, as shown in Fig. 6d-e, which is in good agreement with the FEM prediction of sponding to melt pools in a-c, respectively. Orientations of the HCP lattice for different crystallographic directions are schematically illustrated in the boxed region
+
+Fig. 8. However, the thermal T-crack at $80 \mathrm{~W}-600 \mathrm{~mm} / \mathrm{s}$ (transition mode) showed an initiation near the right edge of the fusion boundary (indicated by the arrow in Fig. 6a), which is different from the FEM prediction (the crack initiation near the bottom center of the melt pool, as predicted by $\Delta \mathrm{S} 11$ hot spot distribution in Fig. 8). The difference between observed and predicted crack initiation sites seems to be associated with the microstructure. The IPF map of the melt pool cross-section for $80 \mathrm{~W}-600 \mathrm{~mm} / \mathrm{s}$ (transition mode) showed a large $<2 \overline{1} \overline{1} 1>$-oriented (green-colored) grain in Fig. 9b. Such a large grain is believed to suffer from relatively large thermal stresses, compared to those of small grains, due to the lack of the redistribution of thermal stresses among differently oriented grains [18]. In this case, the crack initiation will depend upon the location of the large grain. However, the reason for the development of a large grain at $80 \mathrm{~W}-600 \mathrm{~mm} / \mathrm{s}$ (transition mode) is still in question. It is generally understood that the development of grain morphologies relies on the shape of the fusion boundary $[48,49,51,52]$, which is determined by complex heat flow inside the melt pool during the laser-powder/substrate interaction. Grain morphologies at melt pool cross-sections for\\
+$80 \mathrm{~W}-200$ and $1000 \mathrm{~mm} / \mathrm{s}$ (keyhole and conduction modes) reveal different multidirectional solidification, as shown in Fig. 9a, c, respectively, starting from the fusion boundary. The similar multidirectional solidification was also reported for other alloys [48, 49, 51, 52]. However, for 80 W-600 $\mathrm{mm} / \mathrm{s}$ (transition mode), which is between keyhole and conduction modes, heat flow (and the resulting fusion boundary) seems to favour unidirectional solidification starting from the fusion boundary, leading to the development of large grains, as seen in Fig. 9b. The details remain to be a subject for the future clarification.
+
+Average T-crack spacings were measured under different LPBF process conditions and plotted in Fig. 10 as a function of scan speed (Fig. 10a) and $E_{\rho}$ (Fig. 10b). In Fig. 10a, the T-crack spacing decreases (conversely, the frequency of T-cracking increases) with increasing scan speed. Also, the dependency of T-crack spacings on the scan speed was reduced upon increasing the power. In particular, its tendency is not effective under $200-600 \mathrm{~mm} / \mathrm{s}$, especially in the keyhole mode. Such a trend is clearly revealed when T-crack spacings are plotted as a function of $E_{\rho}$ in Fig. 10b. Here, as the $E_{\rho}$ increases, the T-crack spacing sensitively increases in the conduction and transition modes, and then becomes almost insensitive in the keyhole mode. Generally, upon increasing the scan speed, the cooling rate tends to increase. An increase in cooling rate promotes frequent T-crack occurrence (a decrease in T-crack spacing). Thus, in the domain of conduction and transition modes of Fig. 10b, as the $E_{\rho}$ increases (viz. as the scan speed decreases), the cooling rate decreases, leading to increased T-crack spacing. In the keyhole mode, however, the keyhole phenomenon results in high energy absorption, causing the abnormal temperature increase during the melt pool formation [53]. That is, the dependency of cooling rates on the scan speed (viz. on $E_{\rho}$ ) is reduced in the keyhole mode and the T-cracking occurrence is less sensitive to the $E_{\rho}$ variation than in the conduction and transition modes. It leads to the T-crack spacing nearly insensitive to the $E_{\rho}$ variation in the keyhole mode as shown in Fig. 10b. Also, T-cracks in the keyhole mode were found to be mostly secondary cracks right after the formation of L-cracks (Fig. 4). Perhaps, those secondary T-crack spacings show the $E_{\rho}$ sensitivity different from that of the conduction and transition modes due to the relief of thermal stresses upon primary L-cracking. It seems to give an additional contribution to the different $E_{\rho}$ sensitivity of the T-crack spacing between the conduction/transition and keyhole mode regimes in Fig. 10b.
+
+Figure 11 shows the final summary of crack formation mechanisms responsible for $\mathrm{L}-$ and $\mathrm{T}$-cracking in the keyhole, transition, and conduction modes, based on combined results of the fractography, FEM simulations, and the microstructural analysis performed in the present study. In the keyhole mode, solidification L- and T-cracks were triggered by the presence of the solidification structures (the grain alignment) nearly perpendicular to tensile thermal stresses (S) under the wide solidification zone. In the conduction and transition modes, the occurrence of thermal T-cracks was governed by large thermal stresses along the scan direction $(\Delta S 11)$ at the solid state below the DBTT. Unlike solidification cracks, which were heavily influenced by solidification microstructures, thermal T-cracks were primarily affected by thermal stresses $(\Delta S 11)$ with a minor microstructural influence (particularly, the grain size distribution) on the crack initiation.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_a65eb47b4d7ef04a43d9g-12}
+
+Fig. 10 T-crack spacings as a function of $\mathbf{a}$ scan speed and $\mathbf{b}$ energy density ( $\left.\boldsymbol{E}_{\boldsymbol{\rho}}\right)$
+
+Fig. 11 Schematic illustration for crack formation mechanisms in the keyhole, conduction and transition modes
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a65eb47b4d7ef04a43d9g-13(1)}
+\end{center}
+
+\section*{Conduction \& Transition Modes}
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a65eb47b4d7ef04a43d9g-13}
+\end{center}
+
+T-crack frequency sensitive to the laser power and scan speed
+
+4-...-. Solidification Directions
+
+Thermal Stress $(S \& \Delta S$ ) Directions
+
+\begin{center}
+\begin{tabular}{c|c|c|l}
+\hline
+Process Condition & \begin{tabular}{c}
+Crack \\
+Pattern \\
+\end{tabular} & Crack Type & \multicolumn{1}{c}{Causes} \\
+\hline
+Keyhole Mode & L-crack & Solidification & \begin{tabular}{l}
+Solidification direction (grain alignment) \\
+normal to the tensile thermal stress $(S)$ \\
+under the wide solidification zone \\
+\end{tabular} \\
+\cline { 2 - 2 }
+\begin{tabular}{c}
+ \\
+Transition Modes \\
+\end{tabular} & T-crack & \begin{tabular}{c}
+Thermal \\
+Crack \\
+\end{tabular} & \begin{tabular}{l}
+Large thermal stress $(\Delta S 11)$ below \\
+DBTT; a minor effect of grain size on \\
+the crack initiation \\
+\end{tabular} \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{4 Conclusions}
+The crack formation mechanisms of Ti-48Al-2Cr $-2 \mathrm{Nb}$ single tracks processed by laser powder bed fusion were thoroughly investigated depending on the keyhole, transition, and conduction modes. The fractography, microstructural analysis, and thermal-mechanical FEM simulations were conducted to clarify crack formation mechanisms. On the basis of the results, the following conclusions were drawn.
+
+1 Depending on process conditions (the laser power and scan speed), different types of L- and T-cracks by their directionality, and solidification and thermal cracks were observed by the nature of their occurrence.
+
+2 In the keyhole mode, the solidification L- and T-cracks were observed. The formation of solidification cracks was associated with directionally developed grain structures along with tensile thermal stresses loaded perpendicularly to those grains.
+
+3 In the transition and conduction modes, thermal T-cracks were formed by large thermal stresses $(\Delta \mathrm{S} 11)$ predicted along the scan direction at the temperature below the ductile-to-brittle transition. The microstructure did not seem to give a major influence on the formation of thermal T-cracks, except its minor effect on the crack initiation, particularly for large grains.\\
+4 The variation of T-crack spacings with the energy density showed different trends with the melting modes. In the conduction and transition modes, the T-crack spacing proportionally increased with increasing energy density, while the T-crack spacing was nearly insensitive to the variation of the energy density in the keyhole mode. The proportional relationship between the scan speed and the cooling rate (hence, the T-crack frequency), and the abnormal temperature rise by the keyhole phenomenon (which disturbs the relationship between the scan speed and the T-crack frequency) seemed to be responsible for the former and latter, respectively.
+
+Funding This research was supported by the Industrial Strategic Technology Development Program (10077677) and the Technology Innovation Program (20000201) funded by the Ministry of Trade, Industry and Energy (MOTIE, Korea). This work was also supported by Korea Institute of Energy Technology Evaluation and Planning (KETEP) grant funded by the Korea government (MOTIE) (20193310100050, Technology development of gas turbine blade reengineering specialized for domestic operating environment).
+
+\section*{Compliance with Ethical Standards}
+Conflict of interest The authors declare that they have no conflict of interest.
+
+\section*{References}
+\begin{enumerate}
+  \item H. Clemens, S. Mayer, Mater. High Temp. 33, 560 (2016)
+
+  \item M. Thomas, T. Malot, P. Aubry, C. Colin, T. Vilaro, P. Bertrand, Mater. High Temp. 33, 571 (2016)
+
+  \item W. Chen, Z. Li, Additive Manufacturing of Titanium Aluminides (Elsevier, Amsterdam, 2019)
+
+  \item P.L. Narayana, C.L. Li, J.K. Hong, S.W. Choi, C.H. Park, S.W. Kim, S.E. Kim, N.S. Reddy, J.T. Yeom, Met. Mater. Int. 25, 1063 (2019)
+
+  \item J. Qiu, Z. Fu, B. Liu, Y. Liu, J. Yan, D. Pan, W. Zhang, Met. Mater. Int. 25, 1564 (2019)
+
+  \item S. Gorsse, C. Hutchinson, M. Gouné, R. Banerjee, Sci. Technol. Adv. Mater. 18, 584 (2017)
+
+  \item J. Plocher, A. Panesar, Mater. Des. 183, 108164 (2019)
+
+  \item M. Todai, T. Nakano, T. Liu, H.Y. Yasuda, K. Hagihara, K. Cho, M. Ueda, M. Takeyama, Addit. Manuf. 13, 61 (2017)
+
+  \item E. Cakmak, P. Nandwana, D. Shin, Y. Yamamoto, M.N. Gussev, I. Sen, M.H. Seren, T.R. Watkins, J.A. Haynes, Materialia 6, 100284 (2019)
+
+  \item S. Biamino, A. Penna, U. Ackelid, S. Sabbadini, O. Tassa, P. Fino, M. Pavese, P. Gennaro, C. Badini, Intermetallics 19, 776 (2011)
+
+  \item M. Seifi, A.A. Salem, D.P. Satko, U. Ackelid, S.L. Semiatin, J.J. Lewandowski, J. Alloys Compd. 729, 1118 (2017)
+
+  \item H.P. Tang, G.Y. Yang, W.P. Jia, W.W. He, S.L. Lu, M. Qian, Mater. Sci. Eng. A 636, 103 (2015)
+
+  \item D. Srivastava, D. Hu, I.T.H. Chang, M.H. Loretto, Intermetallics 7, 1107 (1999)
+
+  \item A.R.C. Sharman, J.I. Hughes, K. Ridgway, Intermetallics 93, 89 (2018)
+
+  \item M. Thomas, T. Malot, P. Aubry, Metall. Mater. Trans. A Phys. Metall. Mater. Sci. 48, 3143 (2017)
+
+  \item S.-K. Rittinghaus, A. Weisheit, M. Mathes, W.G. Vargas, in: Proceedings of 13th World Conference Titanium (2016)
+
+  \item M. Doubenskaia, A. Domashenkov, I. Smurov, P. Petrovskiy, Int. J. Mach. Tools Manuf. 129, 1 (2018)
+
+  \item G. Chen, B. Zhang, W. Liu, J. Feng, Intermetallics 19, 1857 (2011)
+
+  \item M.C. Chaturvedi, Q. Xu, N.L. Richards, J. Mater. Process. Technol. 118, 74 (2001)
+
+  \item Y. Ma, D. Cuiuri, C. Shen, H. Li, Z. Pan, Addit. Manuf. 8, 71 (2015)
+
+  \item Q. Xu, M.C. Chaturvedi, N.L. Richards, Metall. Mater. Trans. A Phys. Metall. Mater. Sci. 30, 1717 (1999)
+
+  \item E. Chauvet, P. Kontis, E.A. Jägle, B. Gault, D. Raabe, C. Tassin, J.J. Blandin, R. Dendievel, B. Vayre, S. Abed, G. Martin, Acta Mater. 142, 82 (2018)
+
+  \item X. Zhang, H. Chen, L. Xu, J. Xu, X. Ren, X. Chen, Mater. Des. 183, 108105 (2019)
+
+  \item Y. Chen, F. Lu, K. Zhang, P. Nie, S.R. Elmi Hosseini, K. Feng, Z. Li, J. Alloys Compd. 670, 312 (2016)
+
+  \item Z. Zhou, L. Huang, Y. Shang, Y. Li, L. Jiang, Q. Lei, Mater. Des. 160, 1238 (2018)
+
+  \item B. Vrancken, W.E. King, M.J. Matthews, Procedia CIRP 74, 107 (2018)
+
+  \item D. Wang, Z. Wang, K. Li, J. Ma, W. Liu, Z. Shen, Mater. Des. 162, 384 (2019)
+
+  \item P. Gao, W. Huang, H. Yang, G. Jing, Q. Liu, G. Wang, Z. Wang, X. Zeng, J. Mater. Sci. Technol. 39, 144 (2020)
+
+  \item S. Lee, J. Kim, D.S. Shim, S.H. Park, Y.S. Choi, Met. Mater. Int. 26, $708(2020)$
+
+  \item G. Baudana, S. Biamino, B. Klöden, A. Kirchner, T. Weißgärber, B. Kieback, M. Pavese, D. Ugues, P. Fino, C. Badini, Intermetallics 73, 43 (2016)
+
+  \item J. Kim, S. Lee, J.K. Hong, N. Kang, Y.S. Choi, Met. Mater. Int. (2020). \href{https://doi.org/10.1007/s12540-019-00599-3}{https://doi.org/10.1007/s12540-019-00599-3}
+
+  \item Y.S. Lee, M.M. Kirka, S. Kim, N. Sridharan, A. Okello, R.R. Dehoff, S.S. Babu, Metall. Mater. Trans. A Phys. Metall. Mater. Sci. 49, 5065 (2018)
+
+  \item J. Goldak, A. Chakravarti, M. Bibby, Metall. Trans. B 15, 299 (1984)
+
+  \item S. Bontha, N.W. Klingbeil, P.A. Kobryn, H.L. Fraser, J. Mater. Process. Technol. 178, 135 (2006)
+
+  \item S.Y. Sung, Y.J. Kim, Intermetallics 15, 4 (2007)
+
+  \item M. Balichakra, S. Bontha, P. Krishna, V.K. Balla, Mater. Res. Express 6, 016543 (2019)
+
+  \item S. Yagi, D. Kunii, AIChE J. 3, 373 (1957)
+
+  \item M. Balichakra, S. Bontha, P. Krishna, V.K. Balla, Mater. Res. Express 6, 106550 (2019)
+
+  \item A.B. Phillion, S.L. Cockcroft, P.D. Lee, Mater. Sci. Eng. A 491, $237(2008)$
+
+  \item A.B. Phillion, P.D. Lee, E. Maire, S.L. Cockcroft, Metall. Mater. Trans. A Phys. Metall. Mater. Sci. 39, 2459 (2008)
+
+  \item A.B. Phillion, R.W. Hamilton, D. Fuloria, A.C.L. Leung, P. Rockett, T. Connolley, P.D. Lee, Acta Mater. 59, 1436 (2011)
+
+  \item D. Lin, Y. Wang, J. Liu, C.C. Law, Intermetallics 8, 549 (2000)
+
+  \item V.M. Imayev, R.M. Imayev, G.A. Salishchev, Intermetallics 8, 1 (2000)
+
+  \item Y. Wang, D. Lin, Y. Zhou, Y. Xia, C.C. Law, J. Mater. Sci. 34, 509 (1999)
+
+  \item D. Casari, W.U. Mirihanage, K.V. Falch, I.G. Ringdalen, J. Friis, R. Schmid-Fetzer, D. Zhao, Y. Li, W.H. Sillekens, R.H. Mathiesen, Acta Mater. 116, 177 (2016)
+
+  \item J. Du, A. Zhang, Z. Guo, M. Yang, M. Li, F. Liu, S. Xiong, Acta Mater. 161, 35 (2018)
+
+  \item J.J. Blecher, T.A. Palmer, T. Debroy, Metall. Mater. Trans. A Phys. Metall. Mater. Sci. 45A, 2142 (2014)
+
+  \item H.L. Wei, J.W. Elmer, T. DebRoy, Acta Mater. 126, 413 (2017)
+
+  \item S.H. Sun, T. Ishimoto, K. Hagihara, Y. Tsutsumi, T. Hanawa, T. Nakano, Scr. Mater. 159, 89 (2019)
+
+  \item S. Kou, Acta Mater. 88, 366 (2015)
+
+  \item R. Han, S. Lu, W. Dong, D. Li, Y. Li, J. Cryst. Growth 431, 49 (2015)
+
+  \item B. Vrancken, L. Thijs, J.P. Kruth, J. Van Humbeeck, Acta Mater. 68, 150 (2014)
+
+  \item M. Bayat, A. Thanki, S. Mohanty, A. Witvrouw, S. Yang, J. Thorborg, N.S. Tiedje, J.H. Hattel, Addit. Manuf. 30, 100835 (2019)
+
+\end{enumerate}
+
+Publisher's Note Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations.
+
+
+\end{document}

@@ -1,0 +1,553 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Effective liquid conductivity for improved simulation of thermal transport in laser beam melting powder bed technology }
+
+
+\author{Leila Ladani ${ }^{a, *}$, John Romano ${ }^{b}$, William Brindley ${ }^{c}$, Sergei Burlatsky ${ }^{d}$\\
+${ }^{a}$ Mechanical and Aerospace Engineering, University of Texas at Arlington, Arlington, TX, United States\\
+${ }^{\mathrm{b}}$ Naval Surface Warfare Center Dahlgren Division, Dahlgren, VA, United States\\
+' United Technologies' Pratt \& Whitney, East Hartford, CT, United States\\
+${ }^{\mathrm{d}}$ United Technologies Research Center, East Hartford, CT, United States}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Full Length Article
+
+
+
+\section*{A R T I C L E I N F O}
+\section*{Article history:}
+Received 20 June 2016
+
+Received in revised form
+
+24 December 2016
+
+Accepted 25 December 2016
+
+Available online 28 December 2016
+
+\section*{Keywords:}
+Powder bed melting
+
+Inconel
+
+Laser beam melting
+
+Electron beam melting
+
+\begin{abstract}
+A B S T R A C T An effective liquid conductivity approach has been developed to describe the convective transport modes existing within the melt pool in powder bed additive manufacturing processes. A first principles approach is introduced to derive an effective conductive transport mode that encompasses conduction and advection within the melt pool. A modified Bond number was calculated by comparing surface tension forces with viscous forces within the melt pool region. It was determined, due to the small size scale of melt pools in powder bed processes, that the surface tension gradient driven flow, or the Marangoni effect, is the dominant mass transport phenomenon within the melt pool. Validation was conducted by comparing simulation melt pool widths and depths against experimental measurements for Inconel 718 built at beam powers of $150 \mathrm{~W}, 200 \mathrm{~W}$ and $300 \mathrm{~W}$ and a scan speed of $200 \mathrm{~mm} / \mathrm{s}$. By introducing the effective liquid conductivity, simulated melt pool widths were up to $50 \%$ closer to experimental widths and simulated melt pool depths were up to $80 \%$ closer to experimental measurements. Analytic temperature profiles and melt pool dimensions are compared between Ti6Al4V, Stainless Steel 316L, Aluminum 7075 and Inconel 718 built with similar process parameters, while including effective liquid conductivity. The reasons for differences in temperature and melt pool geometry are discussed.
+\end{abstract}
+
+(C) 2016 Elsevier B.V. All rights reserved.
+
+\section*{1. Introduction}
+The field of additive manufacturing is of great interest due to its ability to create net-shape or near net-shape parts with very little waste material. AM processes are layer-upon-layer fabrication of parts governed and controlled by digital designs and facilitated by computer aided design (CAD) software [1]. While AM theories have existed since the late 19th century [2], the first modern example is the stereolithography process developed by 3D systems in 1986 $[3,4]$. In recent years, however, most reported research efforts have been focused on powder bed processes. While binder materials can be used in powder bed processes [5,6], much of the research is concentrated around metallic powder bed processes such as Electron Beam Melting (EBM) and Selective Laser Melting (SLM). In these technologies, a heating source, such as electron or laser beam, is used to melt metallic powder in a selective and precise manner to form layers and ultimately the parts. The process is complex,
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail address: \href{mailto:Leila.ladani@uta.edu}{Leila.ladani@uta.edu} (L. Ladani).
+}
+
+involving the action and interaction of numerous parameters. In particular, the thermal transport and temperature distribution play critical roles in formation and sustainability of melt pool and melt pool geometry. The melt pool size in turn dictates many features of the final deposit: defect formation, grain formation and growth, grain size and orientation, as well as dimensional accuracy and surface properties of the final parts. The melting and solidification process occurs over a short distance in a very short period of time. Therefore, it is very challenging to conduct in situ experiments in real time to evaluate the process. Furthermore, the complexity of dealing with hardware and heat sources, such as laser or electron beams, makes it more difficult to study these processes. Therefore, process simulation is an attractive alternate path for learning and predicting the behavior of these processes. In particular, this manuscript focuses on developing a more accurate simulation of the thermal transport mechanisms within the SLM process than has been presented to date. Melt pool dimensions predicted with this improved simulation were compared to measurements of the melt pool width and depth for the SLM process run at the same parameters as the simulation. Although the manuscript focuses on
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ee797f1cd32beb952e88g-02}
+\end{center}
+
+Fig. 1. $300 \mathrm{~W}$ temperature profile before thermophysical property refinement. Temperature scale is in Kelvin.
+
+SLM, the theory outlined applies to both electron beam melting (EBM) and SLM processes.
+
+There are a variety of finite element method (FEM) models existing in the literature that discuss thermal transport within metallic powder bed additive manufacturing processes. In the majority of previous FEM modeling studies, a Gaussian distributed moving heat generation term is used to model the beam [7-12]. Roberts et al. [7] discusses the formation of residual stresses within the final part due to thermal cycling as layer after layer is added to the powder bed. Shen [8] discusses maximum temperature and melt pool size in EBM for Ti6Al4V and in particular studied the effects of powder bed porosity on these output parameters. Romano et al. [9-11] also discuss temperature distribution and melt pool geometry in a variety of engineering materials in both SLM and EBM. Additionally, optimized process parameter sets are introduced for each material considered. Dong [12] also presents a model working in Selective Laser Sintering (SLS) in which he discusses phase transformation and sintering phenomena.
+
+Previous work conducted by authors has shown unrealistic values for maximum temperature observed within the melt pool $[9,10]$. Fig. 1 , as an example, shows the temperature profile taken at an arbitrary simulation time of $9 \mathrm{~ms}$ with a beam power of $300 \mathrm{~W}$ and a traverse rate of $200 \mathrm{~mm} / \mathrm{s}$ for lase process. As seen in this figure the max temperature exceeds $8000^{\circ} \mathrm{C}$ which is unrealistically high. In the previous models, melt pools were typically circular opposed to elliptical. Other simulation works [13] suggest that melt pools should in fact be elliptical. The previous works $[9,10]$ overestimates melt pool width, around $500 \mu \mathrm{m}$ for titanium, and under estimates melt pool length, also around $500 \mu \mathrm{m}$. This is due to the fact that the previous work did not include the fluid dynamic in the melt pool. Therefore, it did not include the convection effect of the dynamic melt pool. Including the dynamic of melt pool requires additional physics included in the model which typically adds significantly to the model size and run time. In the present study a theory is evaluated in which the convection effect due to the melt pool dynamic is included into the calculation using an effective conductivity parameter as detailed below.
+
+\section*{2. Theory}
+There are two classes of input parameters that affect the temperature distribution and melt pool geometries output by the FEM model: process parameters and thermophysical properties of the material. Process parameters can include beam characteristics, powder layer thickness and powder bed porosity and these parameters are dependent on the type of powder bed process being simulated. Thermophysical properties are properties of the material being built and are dependent on phase (solid, powder, liquid), powder bed porosity and temperature (i.e. temperature dependent properties). The results shown in Fig. 1 were obtained using thermophysical properties listed in literature. In order to remedy the extreme temperatures observed in results and obtain results closer to experimental observations, in the most recent work by the authors [11], a theory is considered in which the authors modify the thermophysical property descriptions for molten material used in FEM modeling. Literature is generally sparse on thermophysical properties of molten metal materials. These properties are essential to developing a robust model for predicting melt pool behavior within powder bed AM processes. Those properties existing within the literature are presented for quiescent fluids, however fluid motion may be present as well within the melt pool and must be considered. If melt pool dynamics are not considered within the physical description of the FEM model, unrealistic temperatures and melt pool geometries can result. However, including the melt pool dynamic requires combining the solid models with other computational approaches such as Computational Fluid Dynamic (CFD) modeling to obtain realistic values. This means that the models will be computationally extensive and sometimes not feasible using the current computational capabilities. The small size scale, 100 's of $\mu \mathrm{m}$, and time scale, 1's of ms, present added complexity to determining the effects of fluid motion on the heat transfer within the model. To avoid making the models too complex and still achieve reasonable accuracy, an effective thermal conductivity parameter for the liquid material is developed. This effective thermal conductivity includes the conduction effect as well as convection effect in the melt pool. A brief survey of the literature shows that effective liquid conductivity concept is typically used when other accessories of heat transfer such as nano-particles are used in fluid $[14,15]$. The effective conductivity concept as it is presented here, is a new approach in modeling a dynamic melt pool including combined effects of convection and conduction.
+
+Due to the large thermal gradients present within the process, and the temperature dependent nature of the thermophysical properties needed for FEM modeling, two main natural flow considerations are needed. The first effect to consider is the socalled Marangoni or thermocapillary convection phenomenon. The second main effect is buoyancy, or motion induced by density gradients. Thermocapillary convection occurs when a driving surface tension gradient is developed within a fluid field, either at the interface of two fluids with vastly different surface tensions or within a single fluid in the presence of a large thermal gradient. Metallic fluids are known to have large surface tension values due to the presence of metallic bonding within the fluid [16]. This strong effect coupled with the large thermal gradients within the melt pool lead to a large driving potential as surface tension gradients are dispersed through mass transport across the melt pool. The transported mass advectively carries energy through the fluid and plays into the thermal transport equation. Since density is also temperature dependent, the thermal gradients within the system develop density gradients within the melt pool. These density gradients provide a driving potential for buoyancy transport within Earth's gravity field. In most macro-scale applications buoyancy is the dominant convective mode and thermocapillary convection can typically be neglected. However, the micro-scale character of the melt pool in powder bed processes is not consistent with these assumptions. Analysis must be completed to determine the relative effects of buoyancy and thermocapillary convection. By comparing buoyancy and thermocapillary effects, the principles of scale analysis can be used to apply assumptions and simplify the governing equations for this powder bed system.
+
+To determine the relative effects of buoyancy and thermocapillarity, a modified Bond (Bo) number is introduced as Eq. (1). In Bo, the numerator denotes the scale analysis for the buoyant force and the denominator denotes the scale analysis for the thermocapillary force. Bond numbers much larger than one mean that buoyancy is dominant over thermocapillarity and Bond numbers much smaller than one mean thermocapillarity is dominant. Bo for
+
+Table 1
+
+Bond and Marangoni numbers of various engineering materials.
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Material & Bo & Ma \\
+\hline
+Ti6Al4V & $7.94 \mathrm{E}-7$ & $1.08 \mathrm{E} 4$ \\
+SS316 & $1.70 \mathrm{E}-6$ & $8.745 \mathrm{E} 3$ \\
+Al7075 & $1.83 \mathrm{E}-7$ & $3.49 \mathrm{E} 2$ \\
+IN718 & $2.23 \mathrm{E}-5$ & $4.301 \mathrm{E} 3$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 2
+
+Effective thermal transport properties for various engineering materials.
+
+\begin{center}
+\begin{tabular}{lllll}
+\hline
+Material & $\mathrm{Nu}$ & $\mathrm{h}\left(\mathrm{W} / \mathrm{m}^{2}-\mathrm{K}\right)$ & $\mathrm{k}_{\text {eff }}(\mathrm{W} / \mathrm{m}-\mathrm{K})$ & $\frac{\boldsymbol{k}_{\text {eff }}}{\boldsymbol{k}}$ \\
+\hline
+Ti6Al4V & 4.80 & $3.59 \mathrm{E} 6$ & 569 & 19.00 \\
+SS316 & 4.46 & $3.07 \mathrm{E} 6$ & 412 & 14.93 \\
+Al7075 & 1.50 & $6.83 \mathrm{E} 6$ & 269 & 2.73 \\
+IN718 & 3.39 & $2.45 \mathrm{E} 6$ & 473 & 16.00 \\
+\hline
+\end{tabular}
+\end{center}
+
+four popular engineering materials, each representative of a class of engineering materials, are presented in Table 1. These four materials are Ti6Al4V, representative of aerospace grade titanium alloys, aluminum (Al) 7075, representative of high strength aluminum alloys, stainless steel (SS) 316L, representative of medium to high strength steels, and Inconel (IN) 718, representative of aerospace grade nickel based superalloys. As evident from Table 1, in all materials thermocapillarity, or the Marangoni effect, is the dominant mass transport mode over buoyancy. Because Bo is very small in the case of these materials, buoyant effects within the melt pool can be neglected. Furthermore, the temperature gradient in melt pool in SLM processes show decreasing temperatures as distance from surface increases. As the temperature decreases, the density increase which means that the lighter material are naturally on top of the melt pool. This intuitive analysis shows that material have no tendency to move within melt pool due to gravity, which justifies neglecting buoyancy effect.
+
+$B o=\frac{\frac{\partial \rho}{\partial T} g L^{2}}{\frac{\partial \gamma}{\partial T}}$
+
+The following symbols are used in Eq. (1): $\frac{d \gamma}{d T}$ - derivative of surface tension $\gamma$ with respect to temperature $T(\mathrm{~N} / \mathrm{m}-\mathrm{K}) ; L$ - characteristic length of the system, in this case average melt pool radius (m); $\frac{d \rho}{d T}$ - derivative of density $\rho$ with respect to temperature $T$ $\left(\mathrm{kg} / \mathrm{m}^{3}-\mathrm{K}\right) ; \mathrm{g}$ - acceleration of gravity $\left(\mathrm{m} / \mathrm{s}^{2}\right)$.
+
+Straub [17] investigated thermocapillary convection in micro-gravity environments and presents correlations between Marangoni numbers (Ma) and Nusselt numbers (Nu) both considering and disregarding buoyancy effects on the fluid for very high Ma flows. Ma denotes the scale analysis between surface tension gradient driven flow and viscous driven flow. At a high Ma, greater than 300 [18], thermocapillarity is dominant and viscous forces can be neglected. Ma for four engineering materials are also presented in Table 1. Definitions for $\mathrm{Ma}$ and $\mathrm{Nu}$ are labeled Eqs. (2) and (3) respectively. Even though our system is not contained within a micro-gravity environment, micro-gravity experimentation allows for consideration of flows just driven by the Marangoni effect without the influence of buoyancy. Nu values were calculated from a logarithmic fit from Straub's data and are displayed in Table 2. The fit equation is presented as Eq. (4).
+
+$M a=-\frac{d \gamma}{d T} \frac{L \Delta T \rho c}{v k}$
+
+$N u=\frac{h D}{k}$
+
+$N u=1.6129 \ln (M a)-10.183$\\
+Table 3
+
+Model dimensions.
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Dimension & $\mathrm{mm}$ \\
+\hline
+Model X Dimension & 9 \\
+Model Y Dimension & 3 \\
+Powder Layer Thickness (h1) & 0.04 \\
+Solid Layer Thickness (h2) & 0.9 \\
+Build Plate Thickness (h3) & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+Eqs. (2) and (3) make use of the following parameters, not previously defined: $\Delta T$ - change in temperature between the theoretical maximum melt pool temperature, $T_{\max }$, and the solidus temperature of the material, $T_{\text {sol }}(\mathrm{K}) ; c$ - specific heat $(\mathrm{J} / \mathrm{kg}-\mathrm{K}) ; v-$ kinematic viscosity $\left(\mathrm{m}^{2} / \mathrm{s}\right) ; k$ - thermal conductivity of quiescent liquid ( $\mathrm{W} / \mathrm{m}-\mathrm{K}) ; h$ - convective heat transfer coefficient $\left(\mathrm{W} / \mathrm{m}^{2}-\mathrm{K}\right)$; $D$ - characteristic length $(\mathrm{m})$.
+
+With the exception of the change in temperature, $\Delta T$, all parameters in calculating Ma and Bo are readily available material properties or physical constants of the system. The various material properties of interest are shown in the next section of this work and the methodology for determining the change in temperature, $\Delta T$, is explained later in this theory section.
+
+The process starts with calculating the Ma number using Eq. (2). Using the Ma number then the Nu number is calculated using Eq. (4). After determining Nu for each material the convective heat transfer coefficient, $h$, can be calculated from the Nu definition, according to Eq. (3) and is included in Table 2. The thermal conductivity of the quiescent liquid, $k$, is known from Mills [19] and the characteristic length, $D$, is taken to be the melt pool radius.
+
+With the heat transfer coefficient determined, a heat flux balance is considered as seen in Eqs. (5) and (6). On one side of this balance is the actual conductive and convective heat fluxes expected within the system. The conductive transport follows Fourier's Law and the convective transport follows Newton's Law of Cooling. On the opposite side of the balance is an effective conductive transport that will be used within the FEM model.
+
+$q_{\text {cond }}^{\prime \prime}+q_{\text {conv }}^{\prime \prime}=q_{\text {cond,eff }}^{\prime \prime}$
+
+$k_{\text {liq }} \nabla T+h \Delta T=k_{\text {eff }} \nabla T$
+
+In the two conduction flux terms the thermal gradient, $\nabla T$, can be approximated as change in temperature over some characteristic length. In this case, the characteristic length is the melt pool radius and the temperature change is $\Delta T$. This is the theoretical temperature difference from the center of the melt pool to the edge where material is fully solid. The temperature difference term can then be divided out from both sides of the balance. After rearranging, Eq. (7) shows the final definition for the effective liquid conductivity. Applying the definition in Eq. (7), the effective conductivities for each of the four engineering materials considered are listed in Table 2. Additionally Table 2 shows the ratio between the new effective conductivity and the conductivity of the quiescent liquid as a comparison of the relative increase required in each material. The differences in conductivity ratio across materials are directly resulting from the difference in Ma for each material.
+
+$k_{\text {eff }}=k+h L$
+
+The temperature change can be calculated by considering an energy balance within the melt pool region. The energy equation, from Faghri [16], is shown as Eq. (8).
+
+$\rho \frac{D}{D t}\left(e+\frac{v \cdot v}{2}\right)=-\nabla \cdot q^{\prime}+q^{?}+\nabla \cdot(\tau \cdot v)+\sum(\rho X) \cdot v$
+
+The energy balance differential equation uses the following parameters: $\rho$-density $\left(\mathrm{kg} / \mathrm{m}^{3}\right) ; e$ - specific internal energy $(\mathrm{J} / \mathrm{kg})$; $v$ - velocity vector $(\mathrm{m} / \mathrm{s}) ; q^{\prime \prime}$ - heat flux vector $\left(\mathrm{W} / \mathrm{m}^{2}\right) ; q^{\prime \prime \prime}$ - heat
+
+Table 4
+
+Thermophysical properties for various engineering materials.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+Material & $\frac{\mathrm{d} \gamma}{\mathrm{d} T}(\mathrm{~N} / \mathrm{m}-\mathrm{K})$ & $\frac{\mathrm{d} \rho}{\mathrm{d} T}\left(\mathrm{~kg} / \mathrm{m}^{3-} \mathrm{K}\right)$ & $c(\mathrm{~J} / \mathrm{kg}-\mathrm{K})$ & $\mu(\mathrm{Pa}-\mathrm{s})$ & $k(\mathrm{~W} / \mathrm{m}-\mathrm{K})$ & $\alpha$ & $T_{\text {sol }}(\mathrm{K})$ \\
+\hline
+Ti6Al4V & -0.280 & -0.142 & 750 & $3.25 \mathrm{E}-3$ & 27.00 & 0.65 & 1871 \\
+\hline
+SS316 & -0.834 & -1.610 & 699 & $8.00 \mathrm{E}-3$ & 32.44 & 0.55 & 1621 \\
+\hline
+Al7075 & -0.480 & -0.896 & 1206 & $1.30 \mathrm{E}-3$ & 128.74 & 0.15 & 805 \\
+\hline
+IN718 & -0.110 & -0.910 & 682 & $7.20 \mathrm{E}-3$ & 29.44 & 0.85 & 1533 \\
+\hline
+\end{tabular}
+\end{center}
+
+generation $\left(\mathrm{W} / \mathrm{m}^{3}\right) ; \tau$-deviatoric stress tensor $(\mathrm{Pa})$; and $X$ - specific body force acting on the element $(N)$. Also note that $\frac{D}{D t}$ represents a material derivative and can be expanded as seen in Eq. (9) where $\psi$ is some parameter being differentiated.
+
+$\frac{D \psi}{D t}=\frac{\partial \psi}{\partial t}+v \cdot \nabla \psi$
+
+$X$ can be any body force resulting from conservative potential fields acting on the melt pool. The small size scale of the melt pool causes Bo to be small for all materials considered which means that gravity effects may be neglected. Additionally magnetic effects are considered negligible therefore the body force term can also be neglected. Since Ma is high for all materials considered, surface tension forces are dominant over viscous forces. The deviatoric stress term expresses the viscous forces within the fluid. Since viscous forces are determined negligible, the deviatoric stress term is also neglected. By additionally applying a negligible fluid motion assumption within the domain, the kinetic energy term within the material derivative and the stress term both become negligible. Additionally, for the scope of this analysis all flux terms acting on the melt pool are neglected. The goal of this analysis is to determine the theoretical maximum temperature if all heat input into the melt pool was allowed to increase the melt pool temperature. By applying the fundamental thermodynamic relationship between energy, temperature and specific heat outlined in Eq. (10) the energy equation is simplified as seen in Eq. (11).
+
+$d e=c d T$
+
+$\rho \frac{D}{D t}\left(c d T+\frac{v \cdot v}{2}\right)=q^{\prime \prime \prime}$
+
+The heat generation function, $q^{\prime \prime \prime}$, in Eq. (11) is a Gaussian distributed, linearly decaying moving heat source description for the source beam in the powder bed process. A detailed description of the beam model derivation can be found in previous work by the authors $[9,10]$. The model definition is shown as Eq. (12).
+
+$q^{\prime \prime \prime}(x, y, z)=f(z) \frac{8 \alpha \dot{W}}{\pi \Phi^{2}} e^{\frac{-8\left[\left(x-x_{c}\right)^{2}+\left(y-y_{c}\right)^{2}\right]}{\Phi^{2}}}$
+
+With $f(z)=\frac{2}{\delta}\left(1-\frac{z}{\delta}\right)$
+
+In Eq. (12), the following parameters are used; $\alpha$ : thermal absorptivity, $\dot{W}$ : beam power, $\Phi$ : effective beam diameter, and $\delta$ : beam penetration depth. $x_{c}$ and $y_{c}$ describe the center of the beam. Thermal absorptivity is a material property, while beam power, effective beam diameter and penetration depth are user defined parameters for this model. The effective beam diameter is defined as the diameter at which the intensity output by Eq. (12) is equal to $1 / \mathrm{e}^{2}[20]$ and does not represent the true beam diameter. It, rather, shows the diameter in which the beam is adding heat to the powder bed. A thesis by Lee [21] defines the characteristic velocity for Marangoni convection as shown in Eq. (13). In the characteristic velocity definition the undefined term, $\mu$, is the dynamic viscos- ity of the fluid and has units of $\mathrm{Pa}-\mathrm{s}$. The dynamic and kinematic viscosities are related as seen in Eq. (14).
+
+$v=\frac{\partial \gamma}{\partial T} \frac{d T}{\mu}$
+
+$v=\frac{\mu}{\rho}$
+
+If Eq. (11) is integrated over melt pool volume, and a time step defined as Eq. (15) is considered, a quadratic expression in change in temperature is derived. By utilizing the quadratic formula, and considering only the maximum root, Eq. (16) is derived yielding the theoretical change in temperature needed to calculate Ma. This change in temperature is inherently dependent on the process parameters chosen for the heat generation model (beam power, penetration and diameter) since the integrated heat generation function will change dependent on these parameters. The analysis presented in Tables 1 and 2 compare the four material classes with consistent heat generation parameters. A beam power of $150 \mathrm{~W}$, penetration depth of $100 \mu \mathrm{m}$ and a beam diameter of $200 \mu \mathrm{m}$ are considered. The penetration depth and beam diameter are consistent with models previously existing in the literature [7].
+
+$d t=\frac{L}{v_{\text {scan }}}$
+
+$\Delta T=\frac{-c+\sqrt{c^{2}+2\left(\frac{\partial \gamma}{\partial T} \frac{1}{\mu}\right)^{2} d t \int_{V} \frac{q^{\prime \prime \prime}}{\rho}}}{\left(\frac{\partial \gamma}{\partial T} \frac{1}{\mu}\right)^{2}}$
+
+\section*{3. Finite element model}
+ANSYS Mechanical APDL was used to perform the transient FEM analyses including melting and solidification presented in this paper. Fig. 2 shows the geometry used for the ANSYS analysis. Since previous studies have concluded that convective cooling is an insignificant transport mode [7] within the powder bed compared to conduction, only the build volume needs to be considered in this analysis. The build volume is modeled as a rectangular block consisting of a top layer of powder material, followed by a layer of solid material, and an AISI 4130 steel build plate. The solid layer between the powder and the build plate is representative of powder layers that have already been built and the model therefore considers a part in the middle of its build. Thermal history of the powder bed, however, is not considered in this model. Fig. 2 also shows the coordinate system set up for the model, along with the beam line of action. The dimensions of each of these layers are shown in Table 3. The model is approximately 510,000 elements with element type of SOLID278 which is a 3 dimensional 8 node element with thermal properties.
+
+The model considers radiation at the top surface of the powder layer to the build atmosphere. Convective cooling at the top of the powder layer and convective effects within the build volume are neglected because the majority of heat is transferred by conduction from the powder into the solid and the build plate layers [7]. The sides of the block are held constant at the initial temperature and\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_ee797f1cd32beb952e88g-05(1)}
+
+Fig. 2. Block orientation, beam direction and direction of motion. h1, h2 and h3 denote the thickness of powder, solid and build plate layers.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ee797f1cd32beb952e88g-05}
+\end{center}
+
+Fig. 3. Cross-sectional image of the bead formation, melt pool geometry for the single line scan experiment using an optical microscope. the beam starts and ends $3 \mathrm{~mm}$ from the left and right sides of the block respectively to simulate scanning within a larger powder bed.
+
+\section*{4. Material properties}
+All thermophysical properties remaining for the calculation of Ma and Bo are found in Mills [19] and are presented as Table 4. All thermophysical properties considered are functions of temperature, but the value at the solidus temperature of each material is what was considered in calculating Ma and Bo. The variation with temperature within the liquid phase for these properties is small enough that a single value can be used without excessive error being introduced into the calculations.The solidus temperature for each material is also included within Table 4 as a reference. Table 4 additionally includes the absorptivity for each material. This property is found in Touloukain [22] and is dependent on source spectrum rather than temperature. The laser source is assumed to have a wavelength of $1.06 \mu \mathrm{m}$ which is consistent with the process used within EOS machines [23]. The full, temperature dependent, set of thermophysical properties for the four materials considered in this study are outlined in previous models studies by the author [9.11].
+
+\section*{5. Experiment and validation}
+In order to validate the theory presented for determining an effective liquid conductivity value considering thermocapillary convection, three simulations were run in ANSYS APDL [11] and results were compared against experimental findings. All trials were performed using Inconel 718 powder and a scan speed of $200 \mathrm{~mm} / \mathrm{s}$ in the SLM environment. Three beam powers, $150 \mathrm{~W}$, $200 \mathrm{~W}$ and $300 \mathrm{~W}$, were used to determine the accuracy of the conductivity description across the spectrum of popular build powers. To determine if the proper liquid conductivity values are being used the melt pool width and depth from the simulations are compared to melt pool width and depth measurements taken experimentally within the same group [24]. These measurements were conducted for single line scans by the laser on a $40 \mu \mathrm{m}$ powder layer at the same scan speed and power as used in the simulation. Table 5 shows the $\mathrm{Ma}, \mathrm{Nu}$, heat transfer coefficient, effective liquid conductivity and conductivity ratio for the three validation cases. The experiment was conducted using high powered Ytterbium fibre laser with beam diameter of $75 \mu \mathrm{m}$, a beam offset of $0.015 \mathrm{~mm}$ note that beam diameter here has a different definition from the effective beam
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ee797f1cd32beb952e88g-05(2)}
+\end{center}
+
+Fig. 4. Representative images of experimental results cross section of the melt pool and bead dimensions (a) at $150 \mathrm{~W}$ beam power, (b) at $200 \mathrm{~W}$ beam power, and (c) at $300 \mathrm{~W}$ beam power.
+
+Table 5
+
+Validation Measurements.
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+ & Ma & $\mathrm{Nu}$ & $\mathrm{h}\left(\mathrm{W} / \mathrm{m}^{2}-\mathrm{K}\right)$ & $\mathrm{k}_{\text {eff }}(\mathrm{W} / \mathrm{m}-\mathrm{K})$ & $\frac{\boldsymbol{k}_{\text {eff }}}{\boldsymbol{k}_{\text {liq }}}$ \\
+\hline
+150W & 4306 & 3.31 & $2.45 \mathrm{E} 6$ & 473 & 16.00 \\
+200 W & 7418 & 4.19 & $3.10 \mathrm{E} 6$ & 706 & 23.84 \\
+300 W & 13229 & 5.12 & $3.79 \mathrm{E} 6$ & 950 & 32.11 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 6
+
+Process parameters for various engineering materials.
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Process Parameter & Laser Ti, IN and SS & Laser Al \\
+\hline
+Ambient Temperature & $298 \mathrm{~K}$ & $298 \mathrm{~K}$ \\
+Effective Beam Diameter & $200 \mu \mathrm{m}$ & $200 \mu \mathrm{m}$ \\
+Penetration Depth & $100 \mu \mathrm{m}$ & $100 \mu \mathrm{m}$ \\
+Beam Power & $150 \mathrm{~W}$ & $400 \mathrm{~W}$ \\
+Powder Bed Porosity & 0.3 & 0.3 \\
+Beam Scan Velocity & $0.2 \mathrm{~m} / \mathrm{s}$ & $0.2 \mathrm{~m} / \mathrm{s}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ee797f1cd32beb952e88g-06}
+\end{center}
+
+Fig. 5. Model temperature distribution in y direction with effective conductivity.
+
+diameter that is used in calculating the heat deposition using Eq. (12).
+
+The experimental melt pool width and depth values were measured by analyzing cross sectional images of the single scan solidified region taken with an optical microscope at $200 \times$ magnification. For each power, 10 scan lines were analyzed and the results averaged to ensure proper characterization in melt pool geometry while varying process parameters. Using Matlab processing tools the melt pool width, depth, and bead height were measured in pixel count, as seen in Fig. 3. By measuring the pixel count across the scale provided by the optical microscope images, the physical dimensions are calculated.
+
+As expected experimental results show increasing trend in melt pool dimensions as the power increases. Fig. 4 shows representative images of cross section at 150, 200 and $300 \mathrm{~W}$ respectively. The image at $300 \mathrm{~W}$ was taken at lower magnification due to the fact that higher magnification would not show the whole bead and melt pool. Magnification of the first two images is $200 \times$ and the third image is taken at magnification of $100 \times$.
+
+The simulation temperature results were found by mapping the temperature data from ANSYS onto a line along the y direction of the model that intersects the beam scan line of action at the beam center location at an arbitrary simulation time of $9 \mathrm{~ms}$. All thermal data used for this comparison was likewise taken at a simulation time of $9 \mathrm{~ms}$. The y direction (as shown in Fig. 2, perpendicular to the beam movement direction) temperature data is plotted in Figs. 5 and 6, with and without effective conductivity respectively. The solidus and liquidus lines are also included in Fig. 5 to determine the melt pool size. The melt pool width is calculated by taking the difference between $\times$ location intercepts between the temperature profiles and the liquidus or solidus line. Since all materials considered in this study are alloys they melt across a range of temperatures between the solidus and liquidus temperatures rather than melting at a single melting temperature. Figs. 7 and 8 , with
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ee797f1cd32beb952e88g-06(2)}
+\end{center}
+
+Fig. 6. Model temperature distribution in y direction without effective conductivity.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ee797f1cd32beb952e88g-06(1)}
+\end{center}
+
+Fig. 7. Model temperature distribution in $z$ direction (as per Fig. 2) with effective conductivity.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ee797f1cd32beb952e88g-06(3)}
+\end{center}
+
+Fig. 8. Model temperature distribution in z direction without effective conductivity.
+
+and without effective conductivity respectively, shows the temperature profiles projected from the center of the beam at $9 \mathrm{~ms}$ simulation time down into the depth of the model. By determining the distance between the start of the temperature profiles and the intersection point with the solidus or liquidus lines, the melt pool depth can be determined.
+
+Table 7 shows the comparison between simulation and experimental widths both considering and neglecting the effective liquid conductivity derived. There are two sections of data in Table 7. The first set of data corresponds to the purely molten region and the corresponding measurements are taken by determining the distance between intersections between the temperature profiles and the liquidus line. As an example, two vertical lines are included in Fig. 5 to represent this measurement for the $150 \mathrm{~W}$ case. The second set of data considered the entire mushy zone region and corresponding measurements are taken from intersections between the temperature profiles and the solidus line. In both the mushy zone and purely molten zone cases there is an improvement in agreement between\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_ee797f1cd32beb952e88g-07}
+
+Fig. 9. Temperature contour maps on common scale. in Kelvin, for various engineering materials.
+
+experimental measurements and simulation measurements when effective liquid conductivities, calculated in accordance with the theory presented in this work, are used. The inclusion of an effective liquid conductivity is particularly useful in creating agreement between experimental and simulation melt pool depth. Melt pool depths are measured as the distance from the peak temperature and the point at which the temperature profile intersects the liquidus (purely molten case) or solidus (mushy zone case) line. This technique applied for Figs. 7 and 8. As seen in Table 7, when the effective conductivity is included, the melt pool depth is within $4 \%$ for both the $150 \mathrm{~W}$ and $300 \mathrm{~W}$ cases. The authors believe that the $200 \mathrm{~W}$ experimental depth is an outlier and the under-predicted
+
+Table 7
+
+Liquid Conductivity Validation and Comparison with Experimental Data.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+ & \begin{tabular}{l}
+Experimental \\
+width $(\mu \mathrm{m})$ \\
+\end{tabular} & \begin{tabular}{l}
+Simulation width \\
+$(\mu \mathrm{m})$ \\
+\end{tabular} & Difference (\%) & \begin{tabular}{l}
+Experimental \\
+depth $(\mu \mathrm{m})$ \\
+\end{tabular} & \begin{tabular}{l}
+Simulation depth \\
+$(\mu \mathrm{m})$ \\
+\end{tabular} & Difference (\%) \\
+\hline
+\multicolumn{7}{|c|}{With Effective Liquid Conductivity - Molten Zone} \\
+\hline
+$150 \mathrm{~W}$ & $357.2 \pm 44.7$ & 500 & 39.98 & $215.7 \pm 67.5$ & 220 & 2.00 \\
+\hline
+$200 \mathrm{~W}$ & $436.1 \pm 15.9$ & 600 & 37.58 & $280.5 \pm 48.6$ & 230 & -18.00 \\
+\hline
+$300 \mathrm{~W}$ & $527.1 \pm 61$ & 720 & 36.60 & $299.1 \pm 149$ & 310 & 3.64 \\
+\hline
+\multicolumn{7}{|c|}{Without Effective Liquid Conductivity-Molten Zone} \\
+\hline
+$150 \mathrm{~W}$ & $357.2 \pm 44.7$ & 560 & 56.77 & $215.7 \pm 67.5$ & 275 & 27.49 \\
+\hline
+$200 \mathrm{~W}$ & $436.1 \pm 15.9$ & 700 & 60.51 & $280.5 \pm 48.6$ & 340 & 21.21 \\
+\hline
+$300 \mathrm{~W}$ & $527.1 \pm 61$ & 950 & 80.23 & $299.1 \pm 149$ & 460 & 53.79 \\
+\hline
+\multicolumn{7}{|c|}{With Effective Liquid Conductivity-Molten and Mushy Zone} \\
+\hline
+$150 \mathrm{~W}$ & $357.2 \pm 44.7$ & 530 & 48.38 & $215.7 \pm 67.5$ & 240 & 11.17 \\
+\hline
+$200 \mathrm{~W}$ & $436.1 \pm 15.9$ & 640 & 46.76 & $280.5 \pm 48.6$ & 260 & -7.31 \\
+\hline
+$300 \mathrm{~W}$ & $527.1 \pm 61$ & 760 & 44.19 & $299.1 \pm 149$ & 330 & 10.33 \\
+\hline
+\multicolumn{7}{|c|}{Without Effective Liquid Conductivity-Molten and Mushy Zone} \\
+\hline
+$150 \mathrm{~W}$ & $357.2 \pm 44.7$ & 600 & 67.97 & $215.7 \pm 67.5$ & 300 & 39.08 \\
+\hline
+$200 \mathrm{~W}$ & $436.1 \pm 15.9$ & 760 & 74.27 & $280.5 \pm 48.6$ & 360 & 28.34 \\
+\hline
+$300 \mathrm{~W}$ & $527.1 \pm 61$ & 1000 & 89.72 & $299.1 \pm 149$ & 85 & 62.15 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 8
+
+Melt pool geometry in three dimensions.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+ & Mushy Region Length ( $\mu \mathrm{m})$ & Mushy Region Width ( $\mu \mathrm{m})$ & Mushy Region Depth ( $\mu \mathrm{m})$ \\
+\hline
+\multicolumn{4}{|l|}{Molten Zone} \\
+\hline
+Inconel Laser & 600 & 500 & 220 \\
+\hline
+Inconel EBM & 700 & 460 & 275 \\
+\hline
+Stainless Steel Laser & 300 & 300 & 150 \\
+\hline
+Stainless Steel EBM & 450 & 350 & 260 \\
+\hline
+Titanium Laser & 450 & 300 & 175 \\
+\hline
+Titanium EBM & 550 & 300 & 275 \\
+\hline
+Aluminum Laser & 50 & 50 & 10 \\
+\hline
+Aluminum EBM & 200 & 200 & 180 \\
+\hline
+\multicolumn{4}{|c|}{Molten and Mushy Zone} \\
+\hline
+Inconel Laser & 680 & 530 & 240 \\
+\hline
+Inconel EBM & 1400 & 530 & 310 \\
+\hline
+Stainless Steel Laser & 480 & 320 & 175 \\
+\hline
+Stainless Steel EBM & 900 & 400 & 300 \\
+\hline
+Titanium Laser & 650 & 350 & 190 \\
+\hline
+Titanium EBM & 900 & 400 & 290 \\
+\hline
+Aluminum Laser & 100 & 100 & 30 \\
+\hline
+Aluminum EBM & 250 & 300 & 225 \\
+\hline
+\end{tabular}
+\end{center}
+
+SLM:\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_ee797f1cd32beb952e88g-08(1)}
+
+Fig. 10. Temperature contour maps with scales, in Kelvin, for various engineering materials.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ee797f1cd32beb952e88g-08}
+\end{center}
+
+Fig. 11. X direction temperature data-Melt pool length characterization.
+
+simulation measurement for that case can be disregarded because, intuitively, the melt pool depth at $200 \mathrm{~W}$ should be closer to the $150 \mathrm{~W}$ case than to the $300 \mathrm{~W}$ case as seen in the melt pool width measurements.
+
+While an improvement is seen in the melt pool widths for both the purely molten region and the mushy zone region, there is still a large discrepancy. This discrepancy is most likely due to the non-wetting characteristic of the molten Inconel on the solidified\\
+Inconel. As the melt pool is allowed to grow in size, it tends to create a bead above the solid surface rather than spreading out. This is because of the high surface tension within the molten metal and the melt pool radius approaching the ideal droplet radius for the molten Inconel, as governed by the Young-Laplace equation [16]. This ideal radius is a function of the contact angle with the surface, and the surface tensions at the liquid-solid, liquid-vapor, and solidvapor interfaces if they exist. This non-wetting, or balling effect,
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ee797f1cd32beb952e88g-09}
+\end{center}
+
+Fig. 12. Y direction temperature data-Melt pool width characterization.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ee797f1cd32beb952e88g-09(1)}
+\end{center}
+
+Fig. 13. $\mathrm{Z}$ direction temperature data-Melt pool depth characterization.
+
+creates less ideal build characteristics than the lower power cases since adjacent scan lines do not wet the underlying surface to coalesce into a cohesive surface. This increases the void density in the final build part and can lead to issues with delamination of the final part. For this reason, the authors are comfortable moving forward with the derived effective liquid conductivity approach for the low and medium power cases which represent ideal build powers for SLM and EBM processes.
+
+\section*{6. Comparing materials}
+Using the same modeling set up described in the validation section, and the process parameter sets shown in Table 6, the four classes of engineering materials considered in this work are compared against each other to determine the relative melt pool geometries. For this analysis, only trials including the effective liquid conductivities, as shown in Table 4, are considered. The goal of this comparison is to try and keep all process parameters as uniform as possible across all trials. However, due to the thermophysical property differences between aluminum and the other alloys considered, a larger beam power is required to facilitate melting within the model. This phenomenon is outlined in previous work by the authors [9]. In Table 6 the ambient temperature is the initial conditions given to all nodes within the simulation. Since laser melting processes typically do not include an initial preheating of the powder surface, room temperature is taken as the ambient condition. Effective beam diameter, penetration depth and beam power are all input parameters to the beam heat generation model. Powder bed porosity is a measure of the void fraction existing within the powder bed. In the case of this analysis, voids makes up $30 \%$ of the powder by volume. Beam scan velocity dictates the time step used within the model. Velocity and simulation time steps are inversely related.
+
+Figs. 9 and 10 show the temperature contours existing within each model at an arbitrary simulation time of $9 \mathrm{~ms}$. In Fig. 9 a common temperature scale is used to give a more direct comparison between temperatures seen in each material while Fig. 10 presents each material with a unique temperature scale. Both figures show the model cross sectioned about the beam line of action. This cross section is considered because, as seen in Figs. 5 and 6, the temperature profiles existing within the model are symmetric about the beam line of action. In Fig. 9, the front and left face of the block shows the bottom half of the top of the powder layer while the top face shows the temperature profile into the depth of the model. Fig. 10 is taken looking from the top down onto the top of the powder layer only.
+
+From Fig. 9 it is obvious that titanium and Inconel reach higher temperatures and have larger heat affected zones than stainless\\
+steels when subjected to identical thermal loading conditions. This results from the thermophysical property differences existing between the materials, particularly thermal absorptivity and conductivity. Inconel and titanium have the highest absorptivity of the group of materials considered so more energy is transferred from the source beam into the material. Inconel has a larger conductivity than titanium so the energy absorbed from the source beam is more efficiently dissipated into the surrounding powder and solid material in Inconel than in titanium. It is for this reason that titanium has a higher maximum temperature than Inconel. Aluminum exhibits much lower temperatures, even though a higher beam power is used, for the same reasons. Aluminum has a much lower absorptivity than the remaining materials and a much larger conductivity. This means that relatively little energy is transferred into the material and once it has been absorbed it is rapidly dissipated throughout the powder and solid materials surrounding the beam spot.
+
+In Fig. 10, particularly the titanium and Inconel trials, there is a thermal trailing effect that can be noticed. There is a longer trail of elevated temperature behind the beam spot, in the previously scanned area, compared to in front of the beam spot. Since this effect is not as pronounced in the steel and aluminum cases it must also be an artifact of thermophysical property differences as well. Intuitively and as shown in literature powder materials have lower thermal conductivities than the corresponding solid material. Since the material ahead of the beam spot is still powder and the material previously scanned has melted and subsequently solidified heat is preferentially transferred toward the solidified region instead of in front of the beam spot. This is more pronounced in Ti and Inconel because larger volumes have converted to solid in these two materials and therefore more heat is conducted away from back of the beam.
+
+Melt pool geometries have been calculated in the same way as seen in the validation section. Figs. 1-13 show, respectively, the $x$ direction temperature profile, corresponding to melt pool length, the $y$ direction profile, corresponding to width, and the $z$ direction profile, corresponding to depth. As with the validation trials, the melt pool widths and lengths are taken by determining the distance between intersections between the temperature profiles and the solidus of liquidus line for the corresponding material. The depth is determined by finding the distance between the start of the profile and the intersection with the corresponding solidus or liquidus line. Table 8 displays the melt pool length, width and depth compared against both the liquidus (molten zone) and solidus lines (molten and mushy zone). These melt pool geometries, considering effective conductivity due to melt pool dynamics, more accurately represent reality that previous works by the authors $[9,10]$.
+
+\section*{7. Conclusions}
+In this work the authors have shown that previous modeling efforts do not yield realistic melt pool dimensions and temperature profiles for low scan speeds and medium to high beam powers in laser melting processes. To improve the accuracy of melt pool dimensions resulting from FEM modeling an effective liquid thermal conductivity value is introduced to encapsulate thermal transport resulting from melt pool dynamics not considered within the solid FEM model. As a validation, three cases are considered building Inconel 718 at different beam powers and a constant scan speed of $200 \mathrm{~mm} / \mathrm{s}$. Melt pool widths and lengths found from the simulation, both with and without the effective liquid conductivity, are compared with experimental measurements and their agreement is discussed. The addition of effective liquid conductivity improved agreement between both melt pool width and depth. Further work is however needed to reach full agreement between experimentally found melt pool widths and simulated widths. The authors believe that non-wetting effects need to be considered to further reduce the simulated melt pool widths measured. Because the non-wetting effects appear to have an important impact on simulated melt pool geometries, a purely thermal modeling scheme may not be sufficient. Rather, a CFD analysis, determining nonwetting and flow characteristics, coupled with a thermal FEM analysis, determining temperature profiles at each time step, may be required to yield geometries with desired levels of accuracy.
+
+Effective liquid conductivity values were calculated for four novel engineering materials and simulations were run to determine temperature profiles and melt pool dimensions for each material. Titanium, steel and Inconel were run using identical process parameters while beam power needed to be increased to induce melting in aluminum. The effects of thermophysical property differences across materials on temperature profile are discussed and melt pool lengths, widths, and depths are shown for each material. When subjected to the same build conditions, Inconel develops larger melt pools in all three dimensions that steel and titanium. This is in part due to the thermophysical property differences between the different materials. Inconel has a high thermal absorptivity, meaning it efficiently receives energy from the source beam. Inconel also has a relatively low quiescent thermal conductivity, meaning that energy is not efficiently dissipated through the powder bed, and instead causes elevated temperature and phase change under the beam spot. Titanium has similar conductivity and absorptivity to Inconel, however its temperature dependent surface tension variation is much larger than Inconel. That means that the effective conductivity in titanium is larger than in Inconel and more heat is dissipated away from the melt pool, slowing melt rate surrounding the melt pool.
+
+\section*{Acknowledgements}
+The authors would like to express gratitude to United Technologies Corporation located in East Hartford, CT for providing financial support and technical expertise and guidance in realization of this work.
+
+\section*{References}
+[1] X. Gong, T. Anderson, K. Chou, Review on powder-based electron beam additive manufacturing technology, Manuf. Rev. 1 (April) (2014) 2.
+
+[2] D.L. Bourell, J.J. Beaman, M.C. Leu, D.W. Rosen, A brief history of additive manufacturing and the 2009 roadmap for additive manufacturing: looking back and looking forward, US-TURKEY work, Rapid Technol. (September) (2009) 5-11
+
+[3] J.-P. Kruth, M.C. Leu, T. Nakagawa, Progress in additive manufacturing and rapid prototyping, CIRP Ann.-Manuf. Technol. 47 (2) (1998) 525-540.
+
+[4] F.P.W. Melchels, J. Feijen, D.W. Grijpma, A review on stereolithography and its applications in biomedical engineering, Biomaterials 31 (24) (2010) 6121-6130.
+
+[5] E. Sachs, M. Cima, P. Williams, D. Brancazio, J. Cornie, Three dimensional printing: rapid tooling and prototypes directly from a CAD model, J. Eng. Ind. 114 (4) (1992) 481-4888.
+
+[6] B.J. de Gans, P.C. Duineveld, U.S. Schubert, Inkjet printing of polymers: state of the art and future developments, Adv. Mater. 16 (3) (2004) 203-213.
+
+[7] I.A. Roberts, C.J. Wang, R. Esterlein, M. Stanford, D.J. Mynors, A three-dimensional finite element analysis of the temperature field during laser melting of metal powders in additive layer manufacturing, Int. J. Mach. Tools Manuf. 49 (October (12-13)) (2009) 916-923.
+
+[8] N. Shen, K. Chou, Thermal modeling of electron beam additive manufacturing process: powder sintering effects, Int. Manuf. (2012) 1-9.
+
+[9] L. Romano, J. Razmi, M. Sadowski, Temperature distribution and melt geometry in laser and electron-beam melting processes-a comparison among common materials, Addit. Manuf. 8 (2015) 1-11.
+
+[10] J. Romano, L. Ladani, M. Sadowski, Thermal modeling of laser based additive manufacturing processes within common materials, Procedia Manuf. 1 (2015) 238-250.
+
+[11] J. Romano, L. Ladani, M. Sadowski, Laser additive melting and solidification of Inconel 718: finite element simulation and experiment, J. Met. 68 (3) (2015) 967-977.
+
+[12] L. Dong, a. Makradi, S. Ahzi, Y. Remond, Three-dimensional transient finite element analysis of the selective laser sintering process, J. Mater. Process. Technol. 209 (March (2)) (2009) 700-706
+
+[13] N. Shen, K. Chou, Numerical Thermal Analysis in Electron Beam Additive, 2012, pp. 774-784.
+
+[14] B.X. Wang, L.P. Zhou, X.F. Peng, A fractal model for predicting the effective thermal conductivity of liquid with suspension of nanoparticles, Int. J. Heat Mass Transf. 46 (14) (2003) 2665-2672.
+
+[15] Q.-Z. Xue, Model for effective thermal conductivity of nanofluids, Phys. Lett. A 6 (2003) 313-317.
+
+[16] A. Faghri, Y. Zhang, Transport Phenomena in Multiphase Systems, Elsevier, Burlington, MA, 2006.
+
+[17] J. Straub, The role of surface tension for two-phase heat and mass transfer in the absence of gravity, Exp. Therm. Fluid Sci. 9 (3) (1994) 253-273.
+
+[18] M.R. Huber, An Investigation of Low Marangoni Number Fluid Flow in a Cold Corner, Naval Postgraduate School, 1993, 2016.\\
+[19] K.C. Mills, Recommended Values of Thermophysical Properties for Selected Commercial Alloys, Woodhead Publishing, 2002.
+
+[20] Y. Li, D. Gu, Parametric analysis of thermal behavior during selective laser melting additive manufacturing of aluminum alloy powder, Mater. Des. 63 (November) (2014) 856-867.
+
+[21] B.C. Lee, Temperature Gradient Driven Marangoni Convection of a Spherical Liquid-Liquid Interface Under Reduced Gravity Conditions, University of Toronto, 1999.
+
+[22] Y. Touloukian, D. DeWitt, Thermophysical properties of matter-The TPRC data series Thermal Radiative Properties-Metallic Elements and Alloys, vol. 7, 1972
+
+[23] EOS, EOSINT M Technology for Direct Metal Laser-Sintering (DMLS), 2007, pp. $1-53$.
+
+[24] M. Sadowski, L. Ladani, W. Brindley, J. Romano, Optimizing quality of additively manufactured Inconel 718 using powder bed laser melting process, Addit. Manuf. 11 (2016) 60-70.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

@@ -1,0 +1,433 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{In situ synchrotron X-ray imaging of 4140 steel laser powder bed fusion }
+
+
+\author{Andrew Bobel ${ }^{\text {a,*, }}$ Louis G. Hector Jr. ${ }^{a}$, Isaac Chelladurai ${ }^{\text {ab, }}$, Anil K. Sachdev ${ }^{a}$, Tyson Brown ${ }^{a}$,\\
+Whitney A. Poling ${ }^{a}$, Robert Kubic ${ }^{a}$, Benjamin Gould ${ }^{c}$, Cang Zhao ${ }^{d}$, Niranjan Parab ${ }^{d}$,\\
+Aaron Greco ${ }^{\mathrm{c}}$, Tao Sun ${ }^{\mathrm{d}}$}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\def\AA{\mathring{\mathrm{A}}}
+
+\begin{document}
+\maketitle
+Full Length Article
+
+${ }^{\text {a Global Research and Development, General Motors, Warren MI 48092, USA }}$
+
+${ }^{\mathrm{b}}$ Department of Mechanical Engineering, Brigham Young University, Provo, UT 84602, USA
+
+' Applied Materials Division, Argonne National Laboratory, Lemont, IL 60439, USA
+
+${ }^{\mathrm{d}}$ X-ray Science Division, Argonne National Laboratory, Lemont, IL 60439, USA
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+Additive manufacturing (AM)
+
+Selective laser melting
+
+4140 steel
+
+High speed X-ray Imaging
+
+Microstructure
+
+Porosity
+
+\begin{abstract}
+A B S T R A C T An in situ synchrotron X-ray imaging technique was used to examine laser powder bed fusion (LPBF) of a chromemolybedum, AISI 4140, ferrite-bainite steel, from a moving laser source. Since 4140 has received only minimal attention in the AM literature, focus here was on the effects of melt pool dynamics, vapor cavity depths, build layer height, and the origin of porosity on the 4140 as-built microstructure. Four build parameter sets, which enabled variation of laser power, scan speed, laser spot size, and specific energy density (SED), were applied. Vapor cavity and melt pool depths were measured for each single-track laser scan. Direct imaging of the LPBF process demonstrated that the primary source of porosity in the build originates from incorporation of entrapped gas within the powder irrespective of build parameter set. High resolution SEM and EBSD demonstrated that the as-built microstructure did not vary significantly with build parameter set over a broad range of SED. The fast solidification rates observed $(0.06-0.08 \mathrm{~m} / \mathrm{s})$ lead to fine martensite packet/block size distributions $(1-3 \mu \mathrm{m})$ with the potential for increased material strength.
+\end{abstract}
+
+\section*{1. Introduction}
+Metal additive manufacturing (AM) processes, such as laser powder bed fusion (LPBF), and direct energy deposition (DED), have demonstrated greater design flexibility, accuracy, part consolidation, and significant weight savings through topology optimized design compared to conventional manufacturing technologies. In particular, additive techniques for metal component production are very attractive in mobility industries [1], with current applications including motorsport components such as F1 gearboxes, suspension system mounting brackets, oil pump housings, exhaust manifolds and cylinder heads [2]. Capturing the full value of AM will include not only optimized component design, but also the use of unique low-cost additive materials which enable performance that would otherwise be impossible via current materials processing methods. A comprehensive review of additive manufacturing of metals was recently published by DebRoy et al. [3].
+
+The predominant metal AM systems employ the LPBF process in which a high-power, moving laser source (e.g. ytterbium fiber laser) locally melts a thin layer of metallic powder spread layer-by-layer to build up complex 3D shapes. This process is highly dynamic, with rapid heating and cooling rates, complex transport phenomena (e.g. Marangoni
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail address: \href{mailto:andrew.bobel@gm.com}{andrew.bobel@gm.com} (A. Bobel).
+}
+
+convection, recoil pressure), powder ejection and re-distribution, powder porosity, and non-equilibrium phase transformations often resulting in high residual stresses and internal defects (e.g. lack of fusion, entrapped gas and/or keyhole porosity) in the built part. These defects can cause inconsistent performance and degrade mechanical properties in printed parts, requiring that they be reduced or eliminated to allow additive technologies to produce viable parts [4]. To understand the formation of these defects and associated non-equilibrium microstructures, it is critical to observe the complex dynamics inside the melt pool. Current real-time process monitoring in AM machines is limited to surface imaging; however, high-resolution, time-resolved X-ray imaging capable of monitoring the internal laser-material interaction of lab scale LPBF processes have recently been developed. This internal monitoring can provide data for alloy design modeling and for the creation of numerical models with sufficient fidelity to capture the laser-matter interaction and predict defect formation and mitigation and ultimately microstructural evolution and relevant mechanical properties [5,6].
+
+In this paper, an in situ synchrotron X-ray imaging technique at Argonne National Laboratory's Advanced Photon Source (APS) beamline 32-ID-B $[7,8]$ was used to image the LPBF of AISI 4140, a chromemolybdenum steel. A ytterbium fiber laser beam was moved to produce\\
+$2 \mathrm{~mm}$ long single-track scans on the surface of a 4140 build plate with and without powder. There are two features of this study that are of significant interest (1) Imaging occurred while the laser beam moved; (2) LPBF of 4140 has not been adequately addressed in the AM literature since previous studies have focused primarily on common AM alloys such as Al10SiMg, Ti-6Al-4V, and various stainless steels [7,9-13]. Two prior studies of note on 4140 include processing of single-walled deposits using laser engineered net shaping (LENS) [14] and finite element simulation and residual stress work focused on laser cladding [15]. Unlike these more common AM material systems, 4140 has been used in a large volume of automotive applications, as detailed in Grassl et al. [16]. The common AM alloys either do not exhibit desired mechanical property combinations at room and elevated operating temperatures or are too richly alloyed to see wide spread use in automotive applications. Note that 4140 has superior toughness, good ductility and wear resistance, properties that render it suitable for a variety of applications in mobility industries.
+
+Quantitative information on the melt pool dynamics and vapor cavity depths, build layer height, and pore formation and entrapment were obtained for a series of build parameters (laser energy, spot size, and scan speed). The resulting as-built microstructure was analyzed using scanning electron microscopy (SEM) and electron backscatter diffraction (EBSD) to first quantify grain size and then link the resulting microstructure to the build parameters. The in situ X-ray imaging technique captured the processes by which powder-induced and vaporization porosity occur. This data will provide an unprecedented understanding of the laser-material interaction, melt pool dynamics, and porosity defect development in 4140, and will further the optimization of build parameters to provide essentially porosity free additive manufactured parts as well as high fidelity computer models. The remainder of this paper is organized as follows: Section 2 provides background information on 4140 sample preparation and the in situ synchrotron X-ray imaging LPBF system, Section 3 details the results for LPBF of 4140 including melt pool and vapor cavity dynamics, microstructure, and porosity, Section 4 contains the summary remarks and main conclusions of the manuscript.
+
+\section*{2. Methodology}
+\subsection*{2.1. 4140 steel \& characterization}
+The composition of the 4140 powder (Carpenter Powder Products, Woonsocket, RI, USA) is $\mathrm{Fe}-0.4 \mathrm{C}-1.1 \mathrm{Cr}-0.86 \mathrm{Mn}-0.26 \mathrm{Si}-0.19 \mathrm{Mo}$ $-0.008 \mathrm{P}-0.05 \mathrm{O} \mathrm{wt} \%$. The shape of the powder particles is nominally
+
+\includegraphics[max width=\textwidth, center]{2024_03_10_5d6abf0de1bf85882ee9g-02(1)}\\
+range. Thin 4140 plates were machined with EDM from conventionally processed 4140 bar stock, having a ferrite-bainite microstructure with a small amount of pearlite (see Fig. 5(a,Baseplate)), to use as baseplates for the powders. The plates were then polished to a mirror finish using a diamond polishing medium yielding an average thickness of $285 \mu \mathrm{m}$ and $325 \mu \mathrm{m}$, a height of $3.95 \mathrm{~mm}$, and $30 \mathrm{~mm}$ overall length. The thinner plates were used in the in situ LPBF experiments without powder to observe the melt pool in the solid material.
+
+A Zeiss NVision 40 focused-ion beam (FIB) field-emission microscope was used to image the post LPBF microstructures. Samples were mounted transverse and parallel to the beam scan direction and polished to $0.05 \mu \mathrm{m}$ with colloidal silica before EBSD imaging. EBSD data was collected using step sizes between $0.05 \mu \mathrm{m}$ and $0.08 \mu \mathrm{m}$ with ferrite as the reference crystal structure. The EBSD data was analyzed using the OIM TSL Analysis software. Inverse pole figure (IPF) maps, grain diameter, area, and orientations were examined for comparative studies between build parameters. Prior to the data analysis, the raw EBSD datasets were processed to remove all low confidence index points $(\leq 0.1)$ from the scan. Grains with a size less than 2 scan points (separated by the specified step size) were also removed. This cleared the dataset of noise in the form of badly indexed, pixelated points. Additionally, all edge grains and grains less than $1 \mu \mathrm{m}$ in diameter were not considered during grain size analysis from the exported dataset. Post EBSD, the laser processed samples were etched using a Nital ( $2 \%$ nitric acid in methanol) to expose the microstructure and subsequently re-imaged.
+
+\subsection*{2.2. Synchrotron X-ray imaging system for LPBF}
+The in situ synchrotron X-ray imaging system, developed specifically for LPBF, was used for all tests. The main components of this system are a synchrotron X-ray imaging system, a laser system, a powder bed sample, and a stainless steel vacuum chamber. A short-period $(1.8 \mathrm{~cm})$ undulator with the gap set to $12 \mathrm{~mm}$ generated polychromatic X-rays with the first harmonic energy at $24.4 \mathrm{keV}(\lambda=0.508 \AA)$. A pair of slits was used to define the area of the X-ray beam. The imaging detection system is composed of a LuAG:Ce scintillator ( $100 \mu \mathrm{m}$ thick), $45^{\circ}$ reflection mirror, a relay lens, an objective lens (Edmund Optics Inc., Barrington, NJ), and a high-speed camera (Photron FastCam SA-Z, USA). X-ray images were converted to grey scale in the visible spectrum. Images were recorded
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5d6abf0de1bf85882ee9g-02}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5d6abf0de1bf85882ee9g-02(3)}
+\end{center}
+
+(b)
+
+Fig. 1. (a) Top down photograph of the miniature powder bed setup. (b) Schematic representation (not to scale) of the experimental set up (one carbon shim is not shown for clarity). (c) Top down view of the 4140 baseplates post laser scanning with the four build parameters. Laser scan direction was from left to right in this orientation.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5d6abf0de1bf85882ee9g-02(2)}
+\end{center}
+
+(c)\\
+at a resolution of $1.974 \mu \mathrm{m} / \mathrm{pixel}$, with a frame rate of $50 \mathrm{kHz}$, and an exposure time of $1 \mu$ s for each image.
+
+The miniature powder bed sample, shown in Fig. 1(a), consists of two identical pieces of glassy carbon (vitreous) plates (Grade 22, Structure Probe Inc., USA) with a $1.0 \mathrm{~mm}$ thickness and $4.0 \mathrm{~mm}$ height to retain the powder on top of the 4140 baseplate. The gap width between the two plates is determined by the thickness of the 4140 baseplate. On top of the metal baseplate, 4140 powder is spread out evenly to a thickness of $\sim 70 \mu \mathrm{m}$. In experiments without powder, the carbon plates were not used, as the sole purpose of using them is too confine the powder layer.
+
+The laser system consists of a ytterbium fiber laser (IPG YLR-500AC, USA) and a galvonometer laser scanner (IntelliSCAN ${ }_{\mathrm{de}} 30$, SCANLAB GmbH, Puchheim, Germany). The fiber laser provided a Gaussian beam profile with a $1070 \mathrm{~nm}$ wavelength and maximum nomial power of $520 \mathrm{~W}$ in either continuous or pulsed scanning modes. At the focal spot, the laser beam size was $\sim 56 \mu \mathrm{m}$. In the experiments, the sample was positioned 2 and $3.5 \mathrm{~mm}$ below the laser focal plane to achieve spot sizes of $67 \mu \mathrm{m}$ and $88 \mu \mathrm{m}$, respectively. The spot size was measured as the diameter of the vapor cavity depression in the baseplate surface (i.e. without powder) in ancillary experiments with a stationary beam. The laser was operated in continuous scanning mode. This allowed variation of both scanning speed and laser power. The nominal fiber laser beam energy was varied between 156 and $364 \mathrm{~W}$ and the laser scan speed varied from 300 to $600 \mathrm{~mm} / \mathrm{s}$, resulting in specific energy densities (SED) from $3.0-10.4 \mathrm{~J} / \mathrm{mm}^{2}$, where:
+
+$\mathrm{SED}\left[\frac{\mathrm{J}}{\mathrm{mm}^{2}}\right]=\frac{\text { Power }[\mathrm{W}]}{\text { Speed }[\mathrm{mm} / \mathrm{s}] * \text { Diameter }[\mathrm{mm}]}$
+
+Fig. 1(b) is a schematic of the powder bed setup with the 4140 baseplate material positioned between two carbon plates (one carbon plate is omitted for clarity) with powder spread on top. Shown in Fig. 1(b) is the orientation of the laser with respect to the baseplate and powder, it's travel direction, and the generated laser trace where the powder and baseplate have been melted.
+
+The powder bed sample is placed in a stainless-steel vacuum chamber. The laser beam transmits through a fused silica window, enters the chamber, and interacts with the miniature powder bed sample. The Xray beam enters and exits the chamber via two Kapton windows normal to the baseplate. Prior to the experiment, the chamber is pumped down below 500 mTorr and then back filled with Ar gas to inhibit oxidation of the metal powder and subsequent build. The sample, laser beam and $\mathrm{X}$-ray beam are aligned using a set of stepper motors.
+
+\section*{3. Results and discussion}
+\subsection*{3.1. Build parameter sets}
+Table 1 lists four build parameter sets referred to as "Skin", "Fill", "High-Energy (HE)" and "Keyhole". These parameters were chosen to explore the effect of increasing the SED on the material interaction while emulating laser conditions expected in a commercial LPBF setup. The Skin parameter was chosen to emulate the low SED and fast scan speeds, as compared to a Fill parameter, typically used in the up-skin or downskin sections of a printed AM part, while the Fill parameter was chosen to produce a stable vapor cavity and resulting dense solidified layer. The HE parameter was chosen to evaluate the effect of increased laser power relative to the Fill parameter, while maintaining the spot size and scan speed of the Fill parameter. The Keyhole parameter was chosen to create the deep and narrow laser penetration typically seen in keyhole welding with intense beam energies. Ancillary tests were performed on bare 4140 baseplates without powder to determine repeatability of melt pool dynamics and porosity formation independent of the added complexity of a powder layer. Results of one single-track laser scan performed with powder per parameter set follows, and the corresponding results were determined to be representative of results from two single-track laser scans using the same conditions. Fig. 1(c) shows top down views of the laser tracks in both a 4140 baseplate (top) and a powder layer (bottom). The laser beam was scanned across a $2 \mathrm{~mm}$ long strip along the baseplate/powder bed such that the beam starts on the left side of the image and moves toward the right. Melted surfaces $2 \mathrm{~mm}$ long are clearly visible on the top side of the plate where the laser pass occurred.
+
+\subsection*{3.2. Melt pool and vapor cavity dynamics}
+The X-ray beam entered the chamber transverse to the laser beam scan direction (see Fig. 1(b)), providing a side view of the powder bed setup. Fig. 2 shows selected difference images, i.e. frame " $n$ " subtracted from frame 0, during the laser scan process for the Fill (Fig. 2(a)), HE (Fig. 2(b)), and Keyhole (Fig. 2(c)) build parameter sets, with the vapor cavity outlined in blue and the melt pool liquid region outlined in red. The Skin parameter is not shown as no visible vapor cavity penetration into the baseplate was observed. The melt pool liquid boundary was determined by looking at a series of images and tracking the solidification front between the series. The melt pool geometry for all three parameter sets exhibits a decaying tail denoted by the red dashed line in each figure. The vapor cavity for the Fill and HE parameter sets follows a Gaussian profile that progressively widens and deepens. Alternatively, the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5d6abf0de1bf85882ee9g-03}
+\end{center}
+
+Fig. 2. X-ray images (with background subtraction) of the melt pool, keyhole and porosity in a 4140 baseplate (no powder) for three of the build parameters in Table 1. (a) Fill, (b) High-energy (HE), (c) Keyhole. The vapor cavity is outlined in blue and the melt pool in red. The laser beam scan is from left to right as indicated by the black arrow. Fill and HE parameters produce stable gaussian vapor cavities with long melt pool tails while Keyhole conditions lead to unstable vapor cavity necking which produced porosity. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.)
+
+Table 1
+
+Build parameter sets for miniature powder bed system. SED = Specific Energy Density.
+
+\begin{center}
+\begin{tabular}{lllll}
+\hline
+Build parameters & Laser power $(\mathrm{W})$ & Scan speed $(\mathrm{mm} / \mathrm{s})$ & Spot size $(\mu \mathrm{m})$ & SED $\left(\mathrm{J} / \mathrm{mm}^{2}\right)$ \\
+\hline
+Skin & 156 & 600 & $\sim 88$ & 3.0 \\
+Fill & 250 & 500 & $\sim 88$ & 5.7 \\
+High-Energy (HE) & 364 & 500 & $\sim 88$ & 8.3 \\
+Keyhole & 208 & 300 & $\sim 67$ & 10.4 \\
+\hline
+\end{tabular}
+\end{center}
+
+Keyhole parameter set generated a narrow and deep vapor cavity into the baseplate with an unstable cavity tip and rear wall (left side of the vapor cavity in the $\mathrm{X}$-ray image). Observable necking of the vapor cavity is present in Fig. 2(c) where the complex melt flow and abrupt pressure change inside the keyhole lead to porosity formation in its wake. Vapor cavity collapse (described in further detail in Section 3.4) occurs when the cavity closes off and separates into a pore that becomes entrapped in the solidifying material while the keyhole geometry continues along the scan path until the laser is deactivated.
+
+A series of continuous X-ray images, which include those from Fig. 2, for the Fill, HE, and Keyhole parameter sets with and without 4140 powder were analyzed to track the melt pool and vapor cavity depths from image to image as the beam scanned across $2 \mathrm{~mm}$ sections. The reported melt pool and vapor cavity depths were measured from the 4140 baseplate top surface to the maximum depth near the laser position during the melting process. The penetration depth into the 4140 baseplate by the Skin build parameter set was not clearly measurable and is not reported. Fig. 3(a) tracks the cavity depth (blue) and melt pool depth (red) for each build parameter as a function of time across the scan length for two cases: the baseplate alone (top) and the baseplate
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5d6abf0de1bf85882ee9g-04(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5d6abf0de1bf85882ee9g-04}
+\end{center}
+
+(b)
+
+Fig. 3. (a) Depth of the vapor cavity and melt pool as a function of time measured from the X-ray images for the Fill, HE, and Keyhole build parameters set with (top) and without (bottom) 4140 powder. (b) X-ray images of the 4140 LPBF after the laser scan was performed with powder. White arrows point to pores embedded in the newly solidified material as determined at higher magnifications. Note that much of the embedded porosity is not readily apparent because of the small size of the pores. Vapor cavity and melt pool depth increase with increasing SED while the difference between then is consistently $\sim 20 \mu \mathrm{m}$. Porosity in the as-built material is primarily observed to originate from entrapped gas particles present in the powder.\\
+Table 2
+
+Measured cavity and melt pool penetration depths using X-ray imaging. depths in units of $\mu \mathrm{m}$.
+
+\begin{center}
+\begin{tabular}{lllll}
+\hline
+\multicolumn{2}{l}{Build parameter} & Fill & High-Energy (HE) & Keyhole \\
+\hline
+No powder & Cavity depth & $53.4 \pm 10.8$ & $128.3 \pm 8.6$ & $251.7 \pm 21.0$ \\
+ & Melt pool depth & $77.5 \pm 9.8$ & $149.3 \pm 7.0$ & $272.2 \pm 20.4$ \\
+ & Depth difference & 24.1 & 21.0 & 20.5 \\
+With & Cavity depth & $42.3 \pm 6.7$ & $109.5 \pm 5.3$ & $196.5 \pm 16.0$ \\
+powder & Melt pool depth & $62.5 \pm 7.3$ & $134.4 \pm 5.5$ & $213.4 \pm 13.7$ \\
+ & Depth difference & 20.2 & 24.9 & 16.8 \\
+\hline
+\end{tabular}
+\end{center}
+
+with powder (bottom). The Keyhole build parameter has a slower scan speed (see Table 1) and thus more time was required to complete the $2 \mathrm{~mm}$ scan. Fig. 3(a), suggests that for both cases, the maximum cavity and melt pool depths increase with increasing SED (Fill $<\mathrm{HE}<$ Keyhole) and the distance between the maximum cavity and melt pool depths is nearly constant regardless of build parameter. The average vapor cavity and melt pool depths as measured across each $2 \mathrm{~mm}$ laser scan using in situ X-ray imaging are summarized in Table 2, with the reported errors corresponding to one standard deviation. In the absence of powder, the average depth for both the vapor cavity and melt pool increases from $53 \mu \mathrm{m}$ and $78 \mu \mathrm{m}$, respectively, up to 252 and $272 \mu \mathrm{m}$, respectively, with increasing SED. With powder, the average depth for both the vapor cavity and melt pool depths increased from $42 \mu \mathrm{m}$ and $63 \mu \mathrm{m}$, respectively, up to $197 \mu \mathrm{m}$ and $213 \mu \mathrm{m}$, respectively. As compared to the laser scans without powder, the overall penetration depth into the baseplate material is reduced. Regardless of build parameter, the difference between the vapor cavity depth and the melt pool depth was measured to be $\sim 20 \mu \mathrm{m}$ in all six tests without powder. It is important to note that the cavity and melt pool in the Keyhole parameter set exhibited large fluctuations in penetration depth during scanning both with and without powder. This is noted in the more than doubled standard deviation in the depth measurements in Table 2 as compared to the four Fill and HE parameter scans.
+
+The measured average height of the powder manually added on top of the 4140 baseplate positioned between the two carbon plates (see Fig. 1(a)) is reported in Table 3 for all four build parameter sets. The powder height was measured from the top of the 4140 baseplate at a minimum of 40 locations across the $2 \mathrm{~mm}$ long field of view of the X-ray images up to the top surface of any powder particles prior to scanning. The initial powder height was fairly constant between the 4 different scan areas, varying from $64 \mu \mathrm{m}$ to $84 \mu \mathrm{m}$ (on average). The standard deviations in powder heights given in Table 3 across the $2 \mathrm{~mm}$ scan areas (prior to scanning) are less than the average powder particle size. The largest deviation in powder height $(\sim 20 \mu \mathrm{m})$ was in the Skin parameter set scan area which is less than the median powder particle size (d50 of $39.1 \mu \mathrm{m}$ ) demonstrating a consistent level of powder coverage in the miniature LPBF setup in Fig. 1(a).
+
+The resulting build layer height post laser scan was measured from the original flat 4140 baseplate top surface to the top surface of the new 4140 solid layer at a minimum of 40 locations across the $2 \mathrm{~mm}$ scan area. The average build layer height for all four build parameter sets is given in Table 3. The average build layer height between all four build parameters varied from $31 \mu \mathrm{m}$ to $45 \mu \mathrm{m}$, with no direct correlation to the SED. However, the average build layer height was found to correlate closely with the starting average powder height between the various scan areas. The highest initial powder height (Fill scan) resulted in the largest build layer height, and similarly, the smallest initial powder height (Keyhole scan) resulted in the smallest build layer height. Therefore, the height of the new layer of material seemingly depends only on the initial powder layer thickness, even though the melt pool depth into the baseplate varies directly with the SED. The average initial powder height to build layer height ratio across all build parameters was found to be $52 \%$. This corresponds to a $12 \%$ loss of material due to vaporization and spattering when compared to the random packing of equal spheres with a density of $64 \%$.
+
+Table 3
+
+Measured powder and build layer height with respect to the baseplate top surface from $\mathrm{X}$-ray imaging.
+
+\begin{center}
+\begin{tabular}{lllll}
+\hline
+Build parameter & Skin & Fill & High-Energy (HE) & Keyhole \\
+\hline
+Powder height $(\mu \mathrm{m})$ & $76.1 \pm 19.5$ & $84.4 \pm 13.8$ & $72.6 \pm 9.7$ & $63.7 \pm 11.3$ \\
+Build layer height $(\mu \mathrm{m})$ & $38.3 \pm 18.9$ & $45.5 \pm 11.7$ & $40.0 \pm 13.0$ & $31.5 \pm 11.9$ \\
+Build/Powder Ratio $(\%)$ & 50.3 & 53.9 & 55.1 & 49.4 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5d6abf0de1bf85882ee9g-05}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5d6abf0de1bf85882ee9g-05(2)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5d6abf0de1bf85882ee9g-05(1)}
+\end{center}
+
+(c)
+
+Fig. 4. Optical micrographs of etched 4140 baseplate and build layer cross-sections looking parallel to the laser beam scan direction (out of the page) for the (a) Fill, (b) HE, and (c) Keyhole build parameter sets. The large black circle in the Keyhole image is a pore. Dashed lines correspond to the melt boundary with the HAZ (red) and HAZ with the baseplate (yellow) as determined by the transition in microstructure. Melt pool geometry is of parabolic shape with the depth of the HAZ at the lowest point being $\sim 25-30 \mu \mathrm{m}$ regardless of parameter set. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.)
+
+X-ray images of the new build layer after laser scanning for all four build parameter sets are shown in Fig. 3(b). All images have a higher build layer height on the left side of the image where the laser was activated and decreases to the right where the laser was deactivated. This can be attributed to the beam being momentarily stationary on the left side as it ramps up in speed while moving to the right. This scan behavior leads to a larger melt pool in the baseplate and surrounding powder that's highly turbulent and tends to form a liquid "bead" once the beam starts scanning. This "bead" is more noticeable in the Skin parameter, since the "bead" tends to smooth out in the other build parameters due to the resulting larger and longer melt pools thereby reducing the surface tension which acts to spread the "bead" out. The surfaces resulting from the Fill, HE, and Keyhole parameter sets are relatively smooth; however, the Skin parameter set leaves a rougher surface with significantly more un-melted powder particles that adhere to the build layer. The reflectivity of the $2 \mathrm{~mm}$ laser scanned surface in the photograph in Fig. 1(c) (with powder) highlights the smoother surface obtained from the Fill, HE, and Keyhole parameter sets as compared to the Skin parameter set.
+
+\subsection*{3.3. Microstructure analysis}
+Welding of 4140 steel and the resulting microstructure is a common research topic of interest in the automotive community where fast cooling rates lead to hardening of the weld region and heat affected zone (HAZ) due to martensitic transformation $[17,18]$. However, the welding literature does not address 4140 powder. Arc welding of steels exhibits $\sim 100{ }^{\circ} \mathrm{C} / \mathrm{s}$ cooling rates [19] while laser welding exhibits cooling rates in upwards of $1000{ }^{\circ} \mathrm{C} / \mathrm{s}$ [20]. These cooling rates are many orders of magnitude beneath those associated with $\mathrm{AM}\left(10^{5}-10^{6}{ }^{\circ} \mathrm{C} / \mathrm{s}\right)[9,21]$, and hence little to no inferences can be drawn about AM build microstructures from previous studies of weld microstructures. Here, we explore the relationship between build parameter sets, extreme cooling rates, and the resulting microstructure of the AM 4140 material in contrast to the manufactured 4140 bar stock baseplate material.
+
+With a similar experimental setup, Calta et al. [12] indicated that the thermal boundary conditions may affect heat affected zones at Ti-6Al- $4 \mathrm{~V}$ powder/glass carbon interfaces. Etched optical micrographs were taken to provide a view parallel to the laser scan direction (out of the page) as shown in Fig. 4 to observe the cross-sectional view of the melt pool. The micrographs highlight a section of the melt pool geometry for the (a) Fill, (b) HE, and (c) Keyhole parameter sets. The red dashed lines in each figure denote the boundary between the melted region and the HAZ, while the yellow dashed line is the boundary between the HAZ and the baseplate as determined by transitions in observable microstructure. Note that the HAZ in all build parameters sets shown extends to the glass carbon plates. However, the melt boundary region in only the HE and Keyhole build parameters extends to the glassy carbon plates. To mitigate any possible effects of thermal boundary conditions in our study, all high resolution EBSD and SEM were taken from the middle of the baseplates and build layers far from the glassy carbon plates. The maximum depth of the melt pool boundary as measured from the optical images in Fig. 4 for the Fill parameter set was $\sim 100 \mu \mathrm{m}$, for the HE parameter set $\sim 176 \mu \mathrm{m}$, and for the Keyhole parameter set $\sim 270 \mu \mathrm{m}$. These measurements are in very good agreement with the total depth (melt pool penetration and new layer height) as measured by X-ray imaging: $109 \pm 19 \mu \mathrm{m}$ for the Fill parameter set, $174 \pm 19 \mu \mathrm{m}$ for the HE parameter set, and $244 \pm 26 \mu \mathrm{m}$ for the Keyhole parameter set as averaged across the length of the $2 \mathrm{~mm}$ scan. The maximum depth of the HAZ was also measured from the optical micrographs Fig. 4. The HAZ depth for the Fill parameter set was found to be $\sim 30 \mu \mathrm{m}$, for the HE parameter set $\sim 28 \mu \mathrm{m}$, and for the Keyhole parameter set $\sim 25 \mu \mathrm{m}$, indicating that the HAZ depth near the maximum penetration of the melt pool does not correlate strongly with build parameter SED. As can be seen in the optical images, the cross-sectional profiles of the melt pool and the HAZ were greatly affected by the location of the laser spot on the $\sim 300 \mu \mathrm{m}$ thick baseplate. The melt pool and HAZ for the Fill and HE parameters take on the expected parabolic shape associated with LPBF and laser welding [21]. However, because the Keyhole parameter is of such a high SED (see Table 1) it appears to have melted the entire top surface of both the powder layer and baseplate, resulting in the parabolic shape only near the center of the laser scan. More work is needed to determine if the macroscopic features of the melt pool and HAZ have any bearing on material properties.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5d6abf0de1bf85882ee9g-06(7)}
+\end{center}
+
+Fig. 5. FE-SEM micrographs for post-build 4140 processed using the Fill parameter set looking transverse to the beam scan direction (scan direction runs left to right). The red dashed line corresponds to the boundary between the melted region and the HAZ while the yellow dashed line corresponds to the boundary between the HAZ region and the baseplate. (A) Top surface corresponding to solidified powder, (B) HAZ boundary region, (C) baseplate material close to the laser scan region, and (D) an image from the bottom of the baseplate far from the laser scan region. The baseplate microstructure is primarily ferrite-bainite. Upward solidification resulting in a primarily martensitic microstructure is observed post laser melting in (A) and (B), while the baseplate near (C) and far from (D) the melted region consists primarily of a mixture of ferrite and bainite. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.)\\
+High resolution field emission SEM and EBSD were performed for the Fill, HE, and Keyhole parameters sets on samples with powder to determine the resulting grain structure post-build with no subsequent heat treatments. This was done for two different cross-sectional orientations with the sample normal: (1) transverse to the beam scan direction and (2) parallel to the beam scan direction. SEM micrographs for the Fill parameter set with powder, viewing transverse to the scan direction, are shown in Fig. 5, with the red dash line denoting the melt boundary and the yellow dashed line denoting the HAZ boundary as before. High magnification insets in Fig. 5(a) for the microstructure near the top surface are shown in (A), near the HAZ in (B), and for the baseplate near the HAZ in (C), and near the bottom of the baseplate far from the laser scan region in (D). Microstructures in insets A and B have upward branching solidification directionality from the baseplate. The as-built microstructure exhibits a fine branching network near the top surface in (A) while the microstructure in the HAZ (B) exhibits a notably coarser branching network. The lack of etching response to Nital in the HAZ near the baseplate (between inset B and the yellow dashed line in Fig. 5) suggests the HAZ contains fresh martensite after having cooled from an austenitic solidification structure $[22,23]$. The microstructures of the baseplate near the HAZ (inset C) and near the bottom of the baseplate (inset D) are indistinguishable, being a mixture of ferrite and bainite constituents with a small amount of pearlite evident by some lamellar carbides.
+
+High resolution FE-SEM etched micrographs of the as-built 4140 material oriented parallel to the beam path direction are shown in Fig. 6(a)(c) for the Fill, HE, and Keyhole parameters sets, respectively. As
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5d6abf0de1bf85882ee9g-06(5)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5d6abf0de1bf85882ee9g-06(1)}
+\end{center}
+
+(d)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5d6abf0de1bf85882ee9g-06(2)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5d6abf0de1bf85882ee9g-06(4)}
+\end{center}
+
+(e)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5d6abf0de1bf85882ee9g-06(3)}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5d6abf0de1bf85882ee9g-06(6)}
+\end{center}
+
+(f)\\
+Fig. 6. FE-SEM micrographs and inverse pole figure (IPF) maps looking parallel to the beam scan direction (scan direction out of the page) from inside the melt area using the (a,d) Fill, (b,e) High Energy, and (c,f) Keyhole parameters. IPF maps have been filtered for confidence index $\geq 0.1$. IPF maps ( $d, e, f)$ do not correspond to the same SEM image locations in (a,b,c). White-dashed outlines in (d-f) correspond to prior austenite grain boundaries (PAGs). Both equiaxed and elongated PAGs were observed in the as-build 4140 microstructure.
+
+\includegraphics[max width=\textwidth, center]{2024_03_10_5d6abf0de1bf85882ee9g-06}\\
+discussed previously for the transverse micrographs in Fig. 5(a), the melt region microstructure is martensitic based on the appearance of substructure boundaries and light etching of the laths, which is most observable for the HE condition (Fig. 6(b)). The overall weak etching response is consistent with martensite that has undergone very little or no tempering $[22,23]$. The prior austenite grain boundaries (PAGs) and packet/block boundaries can be discerned from similarly oriented features in the IPF maps in Fig. 6(d)-(f) for the Fill, HE, and Keyhole parameters sets, respectively. It should be noted that these IPF maps are not of the same regions as shown in Fig. 6(a)-(c). Possible PAG boundaries have been highlighted in the IPF maps in Fig. 6(d-f) based on similarly oriented martensite packet/blocks. These PAGs show elongation in the build direction due to directional solidification from the Fill and HE parameters sets. The Keyhole parameter set however, does not appear to result in this strong directionality and consists of PAGs that have less anisotropy as outlined in Fig. 6(f). As observed from Xray imaging, the Keyhole parameter set produces a much larger and turbulent melt pool with a deep valley-like shape as in Fig. 2, which may be responsible for the morphology and directionality differences of the austenite grain growth as compared to the Fill and HE conditions. The morphology of the prior austenite grains (PAGs) as observed in these 4140 LPBF samples is comparable to 4140 material processed using LENS [14] where both equiaxed and elongated PAGs were observed in the as-build microstructure. The choice of build parameter sets and the resulting solidification associated with it therefore plays an important role in the grain anisotropy for this 4140 material during LPBF.
+
+Size analysis to determine the effect of build parameter set on the resulting martensite packet/blocks was performed. Size distributions for the Fill, HE, and Keyhole IPF maps (Fig. 6(d-f)) taken parallel to the laser scan direction are shown in Fig. 7(a)-(c). Packet/block diameters were taken from the OIM TSL Analysis software assuming a circular shape and averaged on a per count basis. The size distributions for the as-built material from the Fill, HE, and Keyhole parameter sets are narrow, with grains primarily between 1 and $3 \mu \mathrm{m}$ in diameter. The average diameter for each build parameter set is found to be $1.52 \mu \mathrm{m}$ for the Fill, $1.57 \mu \mathrm{m}$ for the HE, and $1.61 \mu \mathrm{m}$ for the Keyhole parameter sets. This is in contrast to the 4140 baseplate material which has a very broad grain size distribution between 1 and $25 \mu \mathrm{m}$, with about $98 \%$ of the grains by count between 1 and $10 \mu \mathrm{m}$ in diameter and an average grain size $3.27 \mu \mathrm{m}$. The widths of the elongated PAGs (see Fig. $6(\mathrm{~d}, \mathrm{e})$ ) for the Fill and HE build parameter sets are on the order of $5 \mu \mathrm{m}$ or less. While it was identified that the varying energy input of the build parameter sets played a direct role on the melt pool and vapor cavity size and shape, the choice of build parameter set during AM was found to have a very small effect on the block/packet size produced upon solidification. The fine block/packet size of the additive samples can be attributed to the very fast cooling rates. Based on the scan speed and the angle of the solidification front (i.e. the angle between the liquid-solid interface at the rear side of the melt pool and the sample top surface), the solidification rates in the Fill, HE, and Keyhole cases are about 0.08, 0.07, and $0.06 \mathrm{~m} / \mathrm{s}$, respectively. The lower solidification rate under the Keyhole parameter set results in a slightly larger block/packet size. Both packet and block size directly affect strength with finer packet and block sizes leading to higher strength [24,25], indicative of a potential increase in mechanical strength of the as-printed 4140 material via the Hall-Petch effect. It is interesting to note that Jamshidinia et al. [26] in their study of laser powder bed fusion of AISI 4140 on an EOS M280 concluded the as-built microstructure exhibited mechanical properties (yield strength, tensile strength, elongation, toughness) that were comparable to or superior to the conventionally processed and heat treated 4140.
+
+\subsection*{3.4. Sources of porosity}
+Multiple forms of porosity have been observed in AM materials and can be summarized as two classes: process-induced porosity and powder-induced porosity. The process-induced pores are generally of two types: lack of fusion, and vaporization. Lack of fusion porosity is caused by insufficient melting of the powder layer and its adherence to the previously deposited layer. This is commonly caused by insufficient input energy conditions; however, this can also be caused by choices in scan strategy such as hatch spacing and adjacent scan path spacing. Pores that result from lack of fusion are generally quite large $(>100 \mu \mathrm{m})$ and are easily identifiable by their irregular shapes [27]. These were not explored in the present study because the in situ synchrotron X-ray experiments were limited to single layer build and viewing angles. Vaporization porosity, commonly referred to as keyhole porosity, can occur during the AM process due to excessive metal vaporization and the instability of the vapor cavity when operating under keyhole-mode laser melting conditions. These pores are caused by the collapse of the front and rear vapor cavity walls during these high energy input "keyholemode" conditions [28]. These keyhole pores tend to have a relatively large variation in size and shape, as illustrated in Fig. 2. The powderinduced pores refer to those that are transferred from the raw powders (often in gas atomized powders) to the build. When the powder melts, either from laser interaction or by encountering the melt pool, the pore is either able to escape the melt or gets pulled into it and trapped during solidification. This type of porosity is characterized by its near-spherical morphology.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5d6abf0de1bf85882ee9g-07}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5d6abf0de1bf85882ee9g-07(1)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_5d6abf0de1bf85882ee9g-07(2)}
+\end{center}
+
+(c)
+
+Fig. 7. Martensite block diameter distributions looking parallel to the laser scan direction for the resulting as-built melt pool microstructures produced with the (d) Fill, (e) High Energy, and (f) Keyhole build parameter sets. The choice of build parameter was found to have little effect on the block size produced upon solidification with the average diameter being $1.52 \mu \mathrm{m}$ for the Fill, $1.57 \mu \mathrm{m}$ for the HE, and $1.61 \mu \mathrm{m}$ for the Keyhole parameter sets.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_5d6abf0de1bf85882ee9g-08}
+
+Fig. 8. Pore diameter distributions for internal 4140 powder porosity (open circles and dashed line) and pores in the newly solidified 4140 LPBF build material (filled circles and solid line) for all 4 build parameter sets: (a) Skin, (b) Fill, (c) High-Energy, and (d) Keyhole. Porosity in the as-built material matches primarily with entrapped gas present in the original powder; however, larger pores $(20-30 \mu \mathrm{m})$ are observed in the Keyholing condition resulting from vapor cavity necking.\\
+Porosity formation was monitored during the 4140 LPBF process for each build parameter set (see Table 1). Pores in both the new build layer and the baseplate were tracked and measured as they were trapped during solidification. In Fig. 3(b) the pores identified as trapped in the newly solidified material are marked with white arrows. Porosity on the right side of the X-ray image from the Skin build parameter set is too obscured by powder to be identified. Pore diameters were measured in the 4140 powder prior to the laser scanning and for all four build parameter sets post solidification when powder was present and are given in Fig. 8(a)-(d). Over all four scan sections, the average diameter for pores trapped in the original powder was measured to be $7.0 \pm 2.3 \mu \mathrm{m}$ with the frequency distribution in Fig. 8 denoted by open circles and dashed line. The same powder porosity distribution is shown in all four plots for reference. The average pore diameter for the Skin build parameter set (Fig. 8(a)) was $7.2 \pm 1.4 \mu \mathrm{m}, 6.6 \pm 2.3 \mu \mathrm{m}$ for the Fill build parameter set (Fig. 8(b)), $8.6 \pm 2.8 \mu \mathrm{m}$ for the HE build parameter set (Fig. 8(c)), and $10.2 \pm 6.7 \mu \mathrm{m}$ for the Keyhole build parameter set (Fig. 8(d)). The average pore diameters for the Skin, Fill, and HE build parameter sets are similar to that of the internal porosity of the as-received powder (5-10 $\mu \mathrm{m}$ diameter). The Keyhole build parameter set has $70 \%$ of the measured pores $<10 \mu \mathrm{m}$; however, a second distribution of pores is observed with diameters between $20 \mu \mathrm{m}$ and $30 \mu \mathrm{m}$. These larger pores are formed due to necking of the unstable vapor cavity produced during the laser scan process.
+
+Direct observation of pores from the X-ray images and from the pore size distribution suggest that the common source for most of the pores in the newly solidified material is from trapped gas porosity in the asreceived powder. Cunnighman et al. [29] reached a similar conclusion for electron beam melted Ti-6Al-4 V using X-ray microtomography by inference from porosity size distribution but without direct observation. Only the Keyhole laser scans revealed pores that were not observed to originate from the powder. This is consistent with the X-ray images of the laser scans without powder. Little to no porosity was observed in the Skin, Fill, and HE laser scans without powder present. Pores in the\\
+Keyhole build parameter scan without powder are due to excessive material vaporization and necking of the unstable vapor cavity (see Fig. 2). The source of both trapped gas and vaporization pores and the process by which they form in the build material is shown in a series of dynamic X-ray images in Fig. 9. The scale bars in Fig. 9(a) correspond to $50 \mu \mathrm{m}$. Shown are eight steps in a time sequence of a trapped gas powder pore from a previously ejected solid powder particle. The fact that this is a solid powder particle, and not liquid spatter, is made obvious by the presence of a "satellite" near the one o'clock position. The entrapped gas within this solid powder particle is pulled into the melt pool via Marangoni-driven flow during the HE build parameter laser scan. This is denoted by the red arrow that shows the pore trajectory, a white arrow is used to signify the pores final resting place within the build layer. The powder particle lands on the melt pool tail surface at $220 \mu$ s, and is quickly melted thereby incorporating the trapped gas pore $(\sim 12 \mu \mathrm{m}$ diameter) into the liquid region in less than $60 \mu$ s from contact with the liquid surface ( $280 \mu$ s image). The pore continues to get pulled into the melt ( $280 \mu$ s to $580 \mu$ s images) due to Marangoni convection in the melt pool tail. The pore continues to move until finally being trapped in the solidifying material (white arrow in $960 \mu$ s image) about $75 \mu \mathrm{m}$ below the top solidified surface. The size of this particular pore remains unchanged. This source of porosity could certainly be minimized by using porosity-free raw powders. In addition, as shown in this case, ejected porous powder particles can lead to porosity inclusion elsewhere on the powder bed in a previously melted region. Using proper calibration of gas flow over the powder bed and/or innovative scan strategy could potentially minimize such porosity. The current miniature laser powder bed setup does not have a continuous flow of gas over the powder, thus enabling the observation of this effect in the small scan area. Note that the powder particles below the surface of the baseplate in Fig. 9 are trapped between the baseplate and the glassy carbon window and hence play no role in the build process.
+
+Fig. 9(b) is a time sequence of difference images that show the formation of a pore from the collapse of the vapor cavity during a laser scan\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_5d6abf0de1bf85882ee9g-09}
+
+(b)\\
+Fig. 9. Dynamic X-ray images of the LPBF process of 4140 for (a) the HE and (b) (background subtracted) Keyhole parameters. Each image sequence's first frame is set to $t=0$, with time steps given from that first image. In (a) the pore is within the dashed red circle with the red arrow in each image is used to indicate the pore trajectory, and the white arrow in the last frame denotes the pore's final resting place. Contrast has been enhanced in 400-960 $\mu$ s to better show the pore. Image sequence in (b) is a divided image set to enhance the contrast in the baseplate. The red curve in the $240 \mu$ s image denotes the melt pool top surface. All white scale bars in (a) are $50 \mu \mathrm{m}$ and in (b) are $100 \mu \mathrm{m}$. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.) using the Keyhole build parameter set. The scale bars in Fig. 9(b) correspond to $100 \mu \mathrm{m}$. The vapor cavity is seen to fluctuate quite severely in the first $20 \mu$ s of the image sequence. At $40 \mu$ s neck formation occurs and at $60 \mu$ s the neck collapses and a pore is left in the wake of the vapor cavity. At $80 \mu$ s the pore is at its largest diameter ( $\sim 45 \mu \mathrm{m})$ but it continues to shrink as material solidifies around it, leaving a semi-spherical shaped pore with a diameter of $\sim 24 \mu \mathrm{m}$ at about $215 \mu \mathrm{m}$ below the melt pool surface (red curve in $240 \mu$ s image).
+
+Eliminating internal powder porosity and keyhole porosity conditions will be key for creating essentially porosity-free structures using AM. This is critical in fatigue limited parts where it has been previously demonstrated that cracks originating from porosity defects are detrimental to fatigue life [30]. Control of powder porosity is quite difficult in powders made using argon or nitrogen gas atomization and can vary from batch-to-batch. However, alternatives to gas atomization such as plasma atomization lead to powder with very little to no internal porosity [31]. Though keyhole-mode conditions can be avoided by the use of a correct set of build parameters, the occurrence of keyhole-like conditions can still occur due to subpar beam path handling, such as overlapping scan regions or beam turn-around conditions. Fine control of the beam path handling and correction of these occurrences during the pre-build process will be essential for mitigating the formation of unintended keyhole porosity.
+
+\section*{4. Summary remarks and conclusions}
+In situ high-speed synchrotron X-ray imaging of single-track laser passes demonstrates the importance of additive processing conditions on vapor cavity and melt pool formation, as-printed microstructure, and porosity defect formation on 4140 steel. Further experimentation to examine the heating and cooling profiles produced with varying energy input during the LPBF process of 4140 steel using IR imaging and in situ diffraction of the martensitic phase transformation are planned.
+
+The major conclusions from this study are as follows:
+
+\begin{enumerate}
+  \item Direct observation of laser powder bed fusion of AISI 4140 using synchrotron a X-ray imaging technique shows that porosity in the build layer originates primarily from entrapped gas present in the as-received powder irrespective of build parameter set.
+
+  \item In the case of keyhole-mode build parameter conditions obtained with a high global energy density $\left(10.4 \mathrm{~J} / \mathrm{mm}^{2}\right)$, large pores $(20-$ $30 \mu \mathrm{m}$ ) due to vapor cavity necking are observed.
+
+  \item Build parameter set did not cause a significant variation in as-built layer height. As noted in previous studies, the layer height was strongly correlated with the initial powder layer height resulting in an average build/powder height ratio of $52 \%$.
+
+  \item The vapor cavity and melt pool depth increased significantly by $365 \%$ and $241 \%$, respectively, with an increase in global energy density $\left(5.7-10.4 \mathrm{~J} / \mathrm{mm}^{2}\right.$ ); yet the difference in depth between the vapor cavity and melt pool was consistently $\sim 20 \mu \mathrm{m}$.
+
+  \item Solidification rates in the Fill, HE, and Keyhole cases are about $0.08,0.07$, and $0.06 \mathrm{~m} / \mathrm{s}$, respectively, resulting in martensite block/packet size distributions between 1 and $3 \mu \mathrm{m}$ in the as-built material and did not vary significantly with build parameter set. These fine packet/block size distributions potentially suggest a high material strength in the as-printed condition as expected from the Hall-Petch effect.
+
+\end{enumerate}
+
+\section*{Acknowledgments}
+The authors thank Kamel Fezzaa and Alex Deriy at the APS for their assistance with beamline experiments. This research used resources of the Advanced Photon Source, a U.S. Department of Energy (DOE) Office\\
+of Science User Facility operated for the DOE Office of Science by Argonne National Laboratory under Contract No. DE-AC02-06CH11357. I. Birko kindly performed sample preparation for microstructure and imaging. C. Enloe and J. Coryell provided the authors with their expertise on ferrous microstructures.
+
+\section*{Declaration of interest}
+None.
+
+\section*{References}
+[1] C.K. Chua, K.F. Leong, 3D Printing and Additive Manufacturing: Principles and Applications, in: World Scientific Publishing Co. Pte. Ltd., New Jersey, 5th ed., 2015.
+
+[2] N. Guo, M.C. Leu, Additive manufacturing: Technology, applications and research needs, Front. Mech. Eng 8 (2013) 215-243, doi:10.1007/s11465-013-0248-8.
+
+[3] T. DebRoy, H.L. Wei, J.S. Zuback, T. Mukherjee, J.W. Elmer, J.O. Milewski, A.M. Beese, A. Wilson-Heid, A. De, W. Zhang, Additive manufacturing of metallic components - Process, structure and properties, Prog. Mater. Sci. 92 (2018) 112224, doi:10.1016/j.pmatsci.2017.10.001.
+
+[4] J. Günther, D. Krewerth, T. Lippmann, S. Leuders, T. Tröster, A. Weidner, H. Biermann, T. Niendorf, Fatigue life of additively manufactured Ti-6Al-4V in the very high cycle fatigue regime, Int. J. Fatigue. 94 (2017) 236-245, doi:10.1016/j.ijfatigue.2016.05.018.
+
+[5] S.A. Khairallah, A.T. Anderson, A. Rubenchik, W.E. King, Laser powder-bed fusion additive manufacturing: Physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones, Acta Mater. 108 (2016) 36-45, doi:10.1016/j.actamat.2016.02.014.
+
+[6] W. Yan, Y. Lian, C. Yu, O.L. Kafka, Z. Liu, W.K. Liu, G.J. Wagner, An integrated process-structure-property modeling framework for additive manufacturing, Comput. Methods Appl. Mech. Eng. 339 (2018) 184-204, doi:10.1016/j.cma.2018.05.004.
+
+[7] C. Zhao, K. Fezzaa, R.W. Cunningham, H. Wen, F. De Carlo, L. Chen, A.D. Rollett, T. Sun, Real-time monitoring of laser powder bed fusion process using high-speed X-ray imaging and diffraction, Sci. Rep. 7 (2017) 1-11, doi:10.1038/s41598-017-03761-2.
+
+[8] N.D. Parab, C. Zhao, R. Cunningham, L.I. Escano, K. Fezzaa, W. Everhart, A.D. Rollett, L. Chen, T. Sun, Ultrafast X-ray imaging of laser-metal additive manufacturing processes, J. Synchrotron Radiat. (2018) 25, doi:10.1107/S1600577518009554.
+
+[9] U. Scipioni Bertoli, G. Guss, S. Wu, M.J. Matthews, J.M. Schoenung, In-situ characterization of laser-powder interaction and cooling rates through high-speed imaging of powder bed fusion additive manufacturing, Mater. Des. 135 (2017) 385-396, doi:10.1016/j.matdes.2017.09.044.
+
+[10] C.L.A. Leung, S. Marussi, M. Towrie, J. del Val Garcia, R.C. Atwood, A.J. Bodey, J.R. Jones, P.J. Withers, P.D. Lee, Laser-matter interactions in additive manufacturing of stainless steel SS316L and 13-93 bioactive glass revealed by in situ X-ray imaging, Addit. Manuf. 24 (2018) 647-657, doi:10.1016/j.addma.2018.08.025.
+
+[11] C.L.A. Leung, S. Marussi, R.C. Atwood, M. Towrie, P.J. Withers, P.D. Lee, In situ $\mathrm{X}$-ray imaging of defect and molten pool dynamics in laser additive manufacturing, Nat. Commun. 9 (2018) 1-9, doi:10.1038/s41467-018-03734-7.
+
+[12] N.P. Calta, J. Wang, A.M. Kiss, A.A. Martin, P.J. Depond, G.M. Guss, V. Thampy, A.Y. Fong, J.N. Weker, K.H. Stone, C.J. Tassone, M.J. Kramer, M.F. Toney, A. Van Buuren, M.J. Matthews, An instrument for in situ time-resolved X-ray imaging and diffraction of laser powder bed fusion additive manufacturing processes, Rev. Sci. Instrum. (2018) 89, doi:10.1063/1.5017236.\\
+[13] Q. Guo, C. Zhao, L.I. Escano, Z. Young, L. Xiong, K. Fezzaa, W. Everhart, B. Brown, T. Sun, L. Chen, Transient dynamics of powder spattering in laser powder bed fusion additive manufacturing process revealed by in-situ high-speed high-energy $\mathrm{x}$ ray imaging, Acta Mater. 151 (2018) 169-180, doi:10.1016/j.actamat.2018.03.036.
+
+[14] H. El Kadiri, L. Wang, M.F. Horstemeyer, R.S. Yassar, J.T. Berry, S. Felicelli, P.T. Wang, Phase transformations in low-alloy steel laser deposits, Mater. Sci. Eng. A 494 (2008) 10-20, doi:10.1016/j.msea.2007.12.011.
+
+[15] E. Foroozmehr, R. Kovacevic, Effect of path planning on the laser powder deposition process: thermal and structural evaluation, Int. J. Adv. Manuf. Technol. 51 (2010) 659-669, doi:10.1007/s00170-010-2659-6.
+
+[16] K. Grassl, S.W. Thompson, G. Krauss, New options for steel selection for automotive applications, SAE Trans. 89 (1989) 417-430, doi:10.4271/890508.
+
+[17] M.P. Reddy, A.A.S. William, M.M. Prashanth, S.N.S. Kumar, K.D. Ramkumar, N. Arivazhagan, Assessment of mechanical properties of AISI 4140 and AISI 316 dissimilar weldments, Proc. Eng. 75 (2014) 29-33, doi:10.1016/j.proeng.2013.11.006.
+
+[18] R.I. Stephens, J.K. Lim, Fatigue Crack Growth and Retardation in the Welded HAZ of 4140 Steel, Weld. Res. Suppl (1990) 294-304.
+
+[19] W.E. Lukens, R.A. Marris, E.C. Dunn, Infrared Temperature Sensing of Cooling Rates for Arc Welding Control, 1982.
+
+[20] J. Xie, Dual Beam Laser Welding, Weld. Res 81 (2002) 223-230 doi:10-2002-XIE-s.
+
+[21] U. Tradowsky, J. White, R.M. Ward, N. Read, W. Reimers, M.M. Attallah, Selective laser melting of AlSi10Mg: Influence of post-processing on the microstructural and tensile properties development, Mater. Des. 105 (2016) 212-222, doi:10.1016/j.matdes.2016.05.066.
+
+[22] D. De Knijf, R. Petrov, C. Föjer, L.A.I. Kestens, Effect of fresh martensite on the stability of retained austenite in quenching and partitioning steel, Mater. Sci. Eng. A 615 (2014) 107-115, doi:10.1016/j.msea.2014.07.054.
+
+[23] M.J. Santofimia, L. Zhao, R. Petrov, C. Kwakernaak, W.G. Sloof, J. Sietsma, Microstructural development during the quenching and partitioning process in a newly designed low-carbon steel, Acta Mater. 59 (2011) 6059-6068, doi:10.1016/j.actamat.2011.06.014.
+
+[24] T. Swarr, G. Krauss, The effect of structure on the deformation of as-quenched and tempered martensite in an Fe-0.2 pct C alloy, Metall. Trans. A 7 (1976) 41-48, doi:10.1007/BF02644037.
+
+[25] S. Morito, H. Yoshida, T. Maki, X. Huang, Effect of block size on the strength of lath martensite in low carbon steels, Mater. Sci. Eng. A 438-440 (2006) 237-240, doi:10.1016/j.msea.2005.12.048.
+
+[26] M. Jamshidinia, A. Sadek, W. Wang, S. Kelly, Additive manufacturing of steel alloys using laser powder-bed fusion, Adv. Mater. Process 173 (2015) 20-24.
+
+[27] R. Cunningham, S.P. Narra, T. Ozturk, J. Beuth, A.D. Rollett, Evaluating the Effect of Processing Parameters on Porosity in Electron Beam Melted Ti-6Al-4V via Synchrotron X-ray Microtomography 68 (2016) 2-9, doi:10.1007/s11837-015-1802-0.
+
+[28] W.E. King, H.D. Barth, V.M. Castillo, G.F. Gallegos, J.W. Gibbs, D.E. Hahn, C. Kamath, A.M. Rubenchik, Observation of keyhole-mode laser melting in laser powderbed fusion additive manufacturing, J. Mater. Process. Technol. 214 (2014) 29152925, doi:10.1016/j.jmatprotec.2014.06.005.
+
+[29] A. Nicolas, A.D. Rollett, E. Anagnostou, R. Cunningham, M.D. Sangid, E. Fodran, J. Madsen, Analyzing the effects of powder and post-processing on porosity and properties of electron beam melted Ti-6Al-4V, Mater. Res. Lett. 5 (2017) 516-525, doi:10.1080/21663831.2017.1340911.
+
+[30] Q. Wang, D. Apelian, D. Lados, Fatigue behavior of A356-T6 aluminum cast alloys. Part I. Effect of casting defects, J. Light Met. 1 (2001) 73-84, doi:10.1016/S1471-5317(00)00008-0.
+
+[31] M.N. Ahsan, A.J. Pinkerton, R.J. Moat, J. Shackleton, A comparative study of laser direct metal deposition characteristics using gas and plasma-atomized Ti-6Al-4V powders, Mater. Sci. Eng. A 528 (2011) 7648-7657, doi:10.1016/j.msea.2011.06.074.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

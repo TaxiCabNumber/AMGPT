@@ -1,0 +1,213 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\DeclareUnicodeCharacter{2020}{$\dagger$}
+
+\begin{document}
+\section*{3D PRINTING}
+\section*{Keyhole threshold and morphology in laser melting revealed by ultrahigh-speed $x$-ray imaging}
+\begin{abstract}
+Ross Cunningham ${ }^{1 *}$, Cang Zhao ${ }^{2 *}$, Niranjan Parab ${ }^{2}$, Christopher Kantzos ${ }^{1}$, Joseph Pauza', Kamel Fezzaa ${ }^{2}$, Tao Sun ${ }^{2}$, Anthony D. Rollett ${ }^{1}+$\\
+We used ultrahigh-speed synchrotron x-ray imaging to quantify the phenomenon of vapor depressions (also known as keyholes) during laser melting of metals as practiced in additive manufacturing. Although expected from welding and inferred from postmortem cross sections of fusion zones, the direct visualization of the keyhole morphology and dynamics with high-energy $x$-rays shows that (i) keyholes are present across the range of power and scanning velocity used in laser powder bed fusion; (ii) there is a well-defined threshold from conduction mode to keyhole based on laser power density; and (iii) the transition follows the sequence of vaporization, depression of the liquid surface, instability, and then deep keyhole formation. These and other aspects provide a physical basis for three-dimensional printing in laser powder bed machines.
+\end{abstract}
+
+$1 /$ etal additive manufacturing (AM) describes a family of technologies that fabricate complex metallic three-dimensional (3D) parts directly from a digital model. Laser powder bed fusion (LPBF) is common in metal AM and utilizes a scanning laser to melt parallel lines on the order of $100 \mu \mathrm{m}$ wide in each successive layer of powder to develop the desired solid part in 3D. High energy densities at high laser power and low scanning velocity result in a transition in the melt pool shape from shallow and semicircular (conduction mode) to deep and narrow (keyhole mode). The keyhole mode in 3D printing is known to be associated with excessive porosity. The resulting large pores degrade the fatigue life of the part by acting as crack initiators (1). A keyhole is a vapor-filled depression well known in welding and is associated with the onset of vaporization of the liquid metal $(2-4)$ at a critical power density. Our current understanding of keyhole formation is based on indirect cross-sectional measurements of melt pools after freezing combined with occasional videography of the top surface of the melt pool and vapor hole. The importance of the power density under the illuminated spot was understood, but the literature favored a powerlaw relation between penetration and power, taking beam width into account (5).
+
+We used an ultrahigh-speed synchrotron x-ray imaging technique to visualize the development of the melt pool and vapor depression (i.e., keyhole) in solid Ti-6Al-4V under both the stationary beam and scanning beam modes. The synchrotron-
+\footnotetext{${ }^{1}$ Department of Materials Science and Engineering Carnegie Mellon University, 5000 Forbes Ave, Pittsburgh, PA, USA. ${ }^{2}$ X-ray Science Division, Argonne National Laboratory, 9700 S Cass Ave, Lemont, IL, USA. *These authors contributed equally to this work. †Corresponding author. Email: \href{mailto:rollett@andrew.cmu.edu}{rollett@andrew.cmu.edu}
+}
+
+based AM instrumentation and technique development were reported previously by this team and others (6-10). With high spatial (i.e., $2 \mu \mathrm{m}$ ) and temporal (i.e., 50 to $400 \mathrm{kHz}$ ) resolutions afforded by the hard $x$-ray synchrotron facility and the state-of-the-art beamline instruments at Argonne National Laboratory's Advanced Photon Source (APS), we demonstrated that vapor depressions exist under essentially all conditions relevant to LPBF and that the size and shape of such depressions vary in a systematic fashion. This relation contradicts the commonly held belief that the transition from conduction to keyhole mode coincides with the point at which the porosity and high-aspect-ratio melt pools appear. Moreover, strong similarities between laser drilling and the keyholing regime of a moving beam are evident. The presence of a layer of powder results in only a second-order effect. Above all, our high-resolution visualization data reveal the transition kinetics from conduction to keyhole modes at a well-defined threshold power density and support quantitative relationships between drilling rate, keyhole depression depth, front wall angle of the keyhole, and excess power density.
+
+During the evolution of the melt pool and vapor depression under stationary illumination, we found five distinct regimes of behavior: (i) melting, (ii) vapor depression formation and growth, (iii) vapor depression instability, (iv) keyhole formation and growth, and (v) melt pool shape change (Fig. 1 and movie S1) (11). Soon after we turned the laser on, the metal began to melt, and a solid-liquid interface was visible owing to the $\mathrm{x}$-ray absorption contrast (Fig. 1A). Once the surface temperature neared the boiling point, localized vaporization formed a depression from the recoil pressure (Fig. 1B) (12). The pressure pushed liquid up and out of the depression (13), which grew at a constant rate until it began to fluctuate (Fig. 1C). Shortly thereafter, the vapor depression transitioned from shallow and semicircular to a deep, conical depression (Fig. 1D). After this transition, the vapor depression penetrated rapidly through the melt pool, suggesting substantial displacement of liquid from the region at the center of the spot. The vapor depression then penetrated at a much faster rate into the material, and the liquid-vapor interface fluctuated strongly (Fig. 1, $\mathrm{E}$ to $\mathrm{H}$ ). After the vapor depression fluctuation, the melt pool soon changed from a quasisemicircular shape to a bimodal shape with a bowl on top and a spike in the middle at the bottom (Fig. 1, I and J). We observed two different melt pool shapes (Fig. 1, E and J), which resolves previous uncertainty about the transition from conduction to keyhole mode (14).
+
+We measured the maximum depth of the vapor depression for each frame as a function of spot size $D$ and applied laser power (Fig. 2, A and B). We found a clear transition over $\sim 5 \mu \mathrm{s}$ that separated the slow growth of the melt pool through conduction alone and the regime of rapid penetration and keyhole formation. The time leading to this transition decreased nonlinearly with power for a given spot size. We also observed that the drill rate (i.e., slope of depth versus time) in the keyhole regime increased with power. The occurrence of substantial fluctuations as the keyhole forms means that measuring an accurate drill rate is subject to error depending on the duration of the measurement. To mitigate this, we determined the drill rate from both the entire data for each experiment and just the portion of the curve between the transition and the onset of substantial fluctuations. To compare two spot sizes, we calculated the average power density as $\rho=\frac{2 P}{\pi D^{2}}$, where $P$ is the laser power. We ignored laser absorptivity, as we assumed it to be constant across each experiment because we did not vary the material, so $\rho$ is applied power density. Often, a material-dependent critical power density is defined, over which the keyhole mode is active, on the order of $0.5 \mathrm{MW} / \mathrm{cm}^{2}(3,15,16)$. The drill rate in the keyhole regime for our experiments followed approximately a linear relation with power density after the threshold of $\sim 0.4 \mathrm{MW} / \mathrm{cm}^{2}$ (Fig. 2C), consistent with previous estimates $(3,15,16)$.
+
+We analyzed the morphology and dimension of the melt pool and found that the depth-towidth aspect ratio of the melt pool increased with time, with two distinct transitions (fig. S2) (11). The first transition occurred almost simultaneously with the beginning of fluctuations in the vapor depression, after which the increase in aspect ratio accelerated. The second transition occurred when the aspect ratio reached a value close to 0.5 (this number varies with laser power). After this transition, the increase of aspect ratio slowed. We defined the first transition as the vapor depression transition and the second as the melt pool transition. This multistep transition from hemispherical melt pool (i.e., conduction mode) through smooth\\
+depression and instability to developed sharp keyhole stands in contrast to previous analyses that had to rely on indirect information from cross sections of solidified weld pools.
+
+Understanding the boundaries of the process window for metal AM is of critical importance to repeatedly producing parts without defects. We directly observed and identified the conditions at which the transitions detected in the stationary beam experiment take place, as well as the subsequent morphological changes of the vapor depression as a function of processing parameters. The two main process parameters for both laser welding and AM are laser power and velocity, i.e., P-V space (17). Unlike the stationary beam experiments, which showed similar behavior at different powers, the morphologies of the moving beam vapor depressions vary widely across $\mathrm{P}-\mathrm{V}$ space (Fig. $3 \mathrm{~A}$ and movies S2 to S6) (11). Counter to the commonly drawn keyhole boundary in $\mathrm{P}-\mathrm{V}$ space, nearly all combinations of power and velocity exhibited a substantial vapor depression, although only those in the traditional keyhole region (i.e., high power and low velocity) displayed the characteristic deep and narrow depression for which keyholing was named and which is characteristic of deep penetration welds at a much coarser scale. By combining the stationary and scanning beam experiments, we found that only the P-V space below the blue dashed line in Fig. 3A is in the conduction domain, whereas all the space above the red dashed line is in the keyhole domain. The high-power and low-velocity zone in the $\mathrm{P}-\mathrm{V}$ space is known as the unstable keyhole zone. The tendency of spherical pores to occur (fig. S9) in this zone may be related to keyholes that have too high of an aspect ratio, for which the front wall angle may be a proxy for the stability of the bottom of the keyhole (11).
+
+We measured the vapor depression depths as a function of laser power and velocity for laser spot sizes of 95 and $140 \mu \mathrm{m}$ (Fig. 3, B and C). The error bar of each datum point for these measurements, and in other plots to be discussed, represents the standard deviation of more than 30 individual measurement results. We found a highly linear depth versus power relation for most scanning velocities. As the velocity increased, the slope of the curves decreased slowly, although we found some overlap in the curves for 700 to $900 \mathrm{~mm} / \mathrm{s}$ (Fig. 3B), possibly because of some slight variation in laser spot size between experiments. We also found some exceptions at high-power regions in the cases of low to medium velocities, i.e., 400 to $900 \mathrm{~mm} / \mathrm{s}$. The outliers have a "J" shape morphology (Fig. 3A), in which a tail formed that trailed behind the vapor depression but was not directly under the laser illumination. When we adjusted this value to the depth of the depression that was directly under the keyhole opening and laser illumination, the values move back toward a linear relation. We also did experiments on samples in the presence of powder and observed a similar trend of keyhole morphology variation (fig. S4) (11).
+
+Full-field predictions of the morphology and dynamic behavior using multiphysics simulations have been conducted by Tan $e t$ al. (18) and Khairallah et al. (19), among some others (20). However, these simulations are extremely computationally expensive and difficult to scale. Our experiments allow for a simplified approach for predicting the vapor depression size and shape. The portion of the vapor depression lying directly under the laser beam formed a nearly straight (in projection) liquid-vapor interface with
+
+\section*{Fig. 1. Evolutions of melt pool and vapor depression under stationary laser}
+ illumination. (A) Initial formation of a melt pool.(B) Formation of a small, stable vapor depression. (C) Steady growth of the vapor depression. (D) Instabilities form in the vapor depression. ( $\mathbf{E}$ and $\mathbf{F}$ ) Rapid change in the vapor depression shape. ( $\mathbf{G}$ and $\mathbf{H}$ ) Periodic fluctuation of the vapor\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_87c231f4210d1b60569eg-2(1)}\\
+depression. (I and $\mathbf{J}$ ) Change of the melt pool shape from quasisemicircular to bimodal with a bowl on top and a spike in the middle at the bottom. The sample is a Ti-6Al-4V bare plate. The laser spot size is
+
+$140 \mu \mathrm{m}$, and the laser power is $156 \mathrm{~W}$. The images have been backgroundcorrected by the image collected before the laser illumination. The shape of the melt pool is marked with a red shade in (E) and (J).\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_87c231f4210d1b60569eg-2}
+
+Fig. 2. Keyhole drilling under stationary laser illumination.
+
+(A and B) Penetration depth of vapor depression over time at different powers for a spot size of 95 and $140 \mu \mathrm{m}$, respectively. The transition occurs at approximately the same vapor depression depth for a given spot size, with the smaller spot size having a shallower critical depth. (C) Drill rate of the laser as a function of power density after the transition. The black dashed line is the linear fitting to the prefluctuation drill rates.\\
+an inclination angle (Fig. 4A and many other keyhole images in Fig. 3A) that is straightforward to measure with the $\mathrm{x}$-ray imaging technique.
+
+Fabbro et al. suggested a simple model for determining the front wall angle and penetration depth, excluding the influence of multiple reflections and angular dependence of absorption (21). In this model, the front keyhole wall angle is simply determined by $\tan \theta=\frac{V_{\mathrm{d}}}{V_{\mathrm{w}}}$, where $V_{\mathrm{w}}$ is the laser beam velocity, and $V_{\mathrm{d}}(\rho)$ is the drill rate of a stationary laser for a given power density ( $\rho$ ) on a flat surface, comparable to the stationary beam measurements performed in this experiment. After this, and assuming a beam of equal intensity, the penetration depth $(d)$ is immediately obtained as $D \cdot \tan \theta$.
+
+Using the power density-dependent drilling rate (line fit in Fig. 2C), we calculated the front wall angle as a function of power density and beam velocity (Fig. 4C). Despite ignoring a number of other variables that account for more complicated simulations, such as the angular dependence of absorption or the effect of multiple reflections (22), this simple relation evidently captures the trends in the variation of the front wall angle with power density. Moreover, the relation holds over a wide range of power and velocity and at substantially higher velocity and smaller keyholes than encountered in welding. In terms of conditions relevant to $\mathrm{AM}$, the good fit suggests that the front wall angle is mostly dependent on the ratio of the beam velocity and drill rate, with negligible influence of secondary reflections.
+
+After this, we estimated the keyhole depth from the front wall angle. This model clearly captured the behavior of the keyhole depth as a function of processing parameters (Fig. 3, B and C), but using the full beam sizes of 95 and $140 \mu \mathrm{m}$ overestimated the depths by a factor of about 2. The model assumes a top-hat distribution of power instead of the Gaussian distribution of our power source that concentrated the power at the center of the beam. To compensate for this, we used the critical depression widths of $\sim 50$ and $\sim 100 \mu \mathrm{m}$ that we measured at the top of the vapor depression in the $x$-ray images under stationary laser illumination for the $95-$ and $140-\mu \mathrm{m}$ beam widths, respectively. This correction resulted in a very good model fit to our entire dataset (Fig. 4D), validating our simplified approach for estimating keyhole depth and front wall angle. We did experiments on powder bed samples and also different materials. We found that the presence of powder induced more fluctuation of the keyhole (particularly rear wall morphology) compared with bare plate, but the trends are otherwise the same (see figs. S5 and S7), and this relation between the keyhole depth and front wall angle is independent of material (fig. S8) (11).
+
+The linear variation in keyhole depth with power and tangent of the front keyhole wall angle above a well-defined threshold in power density means that users of laser powder bed printers have a reproducible process on which to base predictions. The dependence on power\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_87c231f4210d1b60569eg-3}
+
+Fig. 3. Keyhole morphologies across P-V space. (A) Tableau of representative radiographs in P-V space of Ti-6Al-4V bare plate for a laser spot size of $95 \mu \mathrm{m}$, showing the variation in vapor depression size and morphology. The vapor depression and melt pool transitions, measured in the stationary beam experiment (Fig. 2A and fig. S2) (11), are marked with blue and red dashed lines, respectively. (B and C) Vapor depression depth as a function of laser power at different scanning velocities for laser spot sizes of $95 \mu \mathrm{m}$ (B) and $140 \mu \mathrm{m}$ (C). Error bars indicate SD.
+
+density points out the importance of the focus conditions or spot size, which is a parameter that most machines do not permit to be altered and that is subject to drift over time. Published process maps (23) commonly show an upper limit in power with a line that corresponds to a constant front wall angle. Apart from mechanisms, the ability of ultrahigh-speed $x$-ray imaging to define the physical mechanisms of limits for viable operation in process space will be important for qualification of this technology. Also, the existence of keyholes for the entire gamut of currently typical values of power and scan velocity in LPBF means that
+
+Fig. 4. Relationships between keyhole depth, front wall angle, and laser power density.
+
+(A) Representative $x$-ray image of the vapor depression in a Ti-6Al-4V bare plate, labeling the depression zone depth, $d$, and the front keyhole wall angle, $\theta$. (B) Schematic of keyhole depth and front keyhole wall angle, adapted from Fabbro et al.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_87c231f4210d1b60569eg-4(1)}
+\end{center}
+
+B
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_87c231f4210d1b60569eg-4}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_87c231f4210d1b60569eg-4(3)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_87c231f4210d1b60569eg-4(2)}
+\end{center}
+
+(21). (C) Comparison of the front keyhole wall angles between theoretical predictions (dashed and dash-dotted lines) and experimental measurements (open and solid symbols) for selected beam velocities with spot sizes of 95 and $140 \mu \mathrm{m}$.
+
+(D) Keyhole depth $95-\mu \mathrm{m}$ laser spot size. Two equivalent plots are shown in figs. S5 and $\mathrm{S} 7$, which reveal that adding powder on top of the plate has only a small effect (11). Error bars indicate SD.
+
+users should be aware that the effective heat source is not at all well described by the prototypical moving point as commonly expressed by the Rosenthal equation (24), and the transition from conduction mode at low power levels to keyholing helps to explain the strong variations in effective absorptivity as a function of power density that have been documented (25-28).
+
+\section*{REFERENCES AND NOTES}
+\begin{enumerate}
+  \item R. Cunningham, S. P. Narra, C. Montgomery, J. Beuth, A. Rollett, JOM 69, 479-484 (2017).
+
+  \item E. Metzbower, Metall. Trans. B 24, 875-880 (1993)
+
+  \item J. Elmer, W. Giedt, T. Eagar, Weld. J. 69, 167s-175s (1990).
+
+  \item A. Poueyo-Verwaerde, B. Dabezies, R. Fabbro, in Laser Materials Processing: Industrial and Microelectronics Applications, E. Beyer et al., Eds. (International Society for Optics and Photonics, 1994), vol. 2207, pp. 175-185.
+
+  \item D. Swift-Hook, A. Gick, Weld. J. 52, 492s-499s (1973).
+
+  \item C. Zhao et al., Sci. Rep. 7, 3602 (2017).
+
+  \item Q. Guo et al., Acta Mater. 151, 169-180 (2018)
+
+  \item N. D. Parab et al., J. Synchrotron Radiat. 25, 1467-1477 (2018).
+
+  \item N. P. Calta et al., Rev. Sci. Instrum. 89, 055101 (2018)
+
+  \item C. L. A. Leung et al., Nat. Commun. 9, 1355 (2018).
+
+  \item Materials, methods, and additional data are available as supplementary materials.
+
+  \item K. Hirano, R. Fabbro, M. Muller, J. Phys. D Appl. Phys. 44 , 435402 (2011).
+
+  \item S. Basu, T. DebRoy, J. Appl. Phys. 72, 3317-3322 (1992).
+
+  \item E. Assuncao, S. Williams, D. Yapp, Opt. Lasers Eng. 50, 823-828 (2012)
+
+  \item R. Rai, J. Elmer, T. Palmer, T. DebRoy, J. Phys. D Appl. Phys. 40, 5753-5766 (2007).
+
+  \item T. DebRoy, S. A. David, Rev. Mod. Phys. 67, 85-112 (1995)
+
+  \item A. Vasinonta, J. L. Beuth, M. L. Griffith, J. Manuf. Sci. Eng. 123 , 615-622 (2001)
+
+  \item W. Tan, Y. C. Shin, J. Phys. D Appl. Phys. 47, 345501 (2014).
+
+  \item S. A. Khairallah, A. T. Anderson, A. Rubenchik, W. E. King, Acta Mater. 108, 36-45 (2016).
+
+  \item M. Dal, R. Fabbro, Opt. Laser Technol. 78, 2-14 (2016).
+
+  \item R. Fabbro, K. Chouf, J. Appl. Phys. 87, 4075-4083 (2000)
+
+  \item A. Matsunawa, V. Semak, J. Phys. D Appl. Phys. 30, 798-809 (1997).
+
+  \item J. L. Beuth et al., in Solid Freeform Fabrication Proceeding (University of Texas at Austin, 2013), pp. 655-665.
+
+  \item D. Rosenthal, Weld. J. 20, 220-234 (1941).
+
+  \item J. Trapp, A. M. Rubenchik, G. Guss, M. J. Matthews, Appl. Mater. Today 9, 341-349 (2017).
+
+  \item Y. Kizaki, H. Azuma, S. Yamazaki, H. Sugimoto, S. Takagi, Jpn. J. Appl. Phys. 32, 205-212 (1993).
+
+  \item C. Kamath, B. El-dasher, G. F. Gallegos, W. E. King, A. Sisto, Int. J. Adv. Manuf. Technol. 74, 65-78 (2014).
+
+  \item T. Childs, C. Hauser, Proc. Inst. Mech. Eng. B 219, 379-384 (2005).
+
+\end{enumerate}
+
+\section*{ACKNOWLEDGMENTS}
+This research used resources of the APS, a U.S. Department of Energy (DOE) Office of Science User Facility operated for the DOE Office of Science by Argonne National Laboratory (contract no. DEAC02-06CH11357). We acknowledge J. Elmer and R. Fabbro for fruitful discussions, and we thank A. Deriy at the APS for technical support of the beamline experiments. Funding: The work was supported by the Department of Defense, Office of Economic Adjustment (grant no. ST1605-17-02, M. Gilroy, CTO and Program Director). The work was also supported by the Laboratory Directed Research and Development (LDRD) funding from Argonne National Laboratory, provided by the Director, Office of Science, of the U.S. DOE (contract no. DE-AC02-06CH11357); the National Nuclear Security Administration of the U.S. DOE (contract no. DE-NA0002918); and the National Aeronautics and Space Administration (grant no. NNX17AD03G). Author contributions: R.C. and C.Z. performed the majority of the experiments with assistance from T.S., N.P., C.K., J.P., and A.D.R.. A.D.R. advised R.C. in the course of his doctoral program. T.S., C.Z., K.F., and N.P. conceived and built the apparatus for ultrahigh-speed $x$-ray imaging of laser melting. R.C. and C.Z. performed the image processing and data analysis with help from all authors. The manuscript was written by R.C., C.Z., T.S., and A.D.R. All authors revised and commented on the manuscript. Competing interests: The authors declare no competing interests. Data and materials availability: All data needed to evaluate our conclusions are provided in the manuscript or the supplementary materials.
+
+\section*{SUPPLEMENTARY MATERIALS}
+\href{http://www.sciencemag.org/content/363/6429/849/suppl/DC1}{www.sciencemag.org/content/363/6429/849/suppl/DC1} Materials and Methods
+
+Supplementary Text
+
+Figs. $\mathrm{S} 1$ to $\mathrm{Sg}$
+
+References $(29,30)$
+
+Movies S1 to S14
+
+18 September 2018; accepted 23 January 2019 10.1126/science.aav4687
+
+\section*{Science}
+\section*{Keyhole threshold and morphology in laser melting revealed by ultrahigh-speed x-ray imaging}
+Ross Cunningham, Cang Zhao, Niranjan Parab, Christopher Kantzos, Joseph Pauza, Kamel Fezzaa, Tao Sun and Anthony D. Rollett
+
+Science 363 (6429), 849-852.
+
+DOI: $10.1126 /$ science.aav4687
+
+The key to keyhole formation
+
+The formation of keyholes, or vapor-filled depressions, during laser welding presents a large problem for additive manufacturing. Cunningham et al. used high-speed x-ray imaging to take a detailed look at keyhole formation in a titanium alloy. They found a simplified relationship between operational parameters and keyhole shape, which may allow for the prevention of pore formation going forward.
+
+Science, this issue p. 849 \href{http://science.sciencemag.org/content/363/6429/849#BIBL}{http://science.sciencemag.org/content/363/6429/849\#BIBL}
+
+PERMISSIONS \href{http://www.sciencemag.org/help/reprints-and-permissions}{http://www.sciencemag.org/help/reprints-and-permissions}
+
+
+\end{document}

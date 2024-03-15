@@ -1,0 +1,546 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Heat source model calibration for thermal analysis of laser powder-bed fusion }
+
+
+\author{Shahriar Imani Shahabad ${ }^{1} \cdot$ Zhidong Zhang $^{1} \cdot$ Ali Keshavarzkermani ${ }^{1} \cdot$ Usman Ali $^{1} \cdot$ Yahya Mahmoodkhani $^{1} \cdot$\\
+Reza Esmaeilizadeh ${ }^{1} \cdot$ Ali Bonakdar $^{2} \cdot$ Ehsan Toyserkani $^{1}$}
+\date{}
+
+
+\begin{document}
+\maketitle
+Received: 15 November 2019 / Accepted: 27 December 2019 /Published online: 5 January 2020
+
+(C) Springer-Verlag London Ltd., part of Springer Nature 2020
+
+\begin{abstract}
+Laser powder-bed fusion (LPBF) is one of the mainstream additive manufacturing (AM) processes, which has dominated the metal AM manufacturing market. LPBF has the capability to manufacture complex parts, which pose a manufacturing challenge by conventional methods. In this paper, an efficient numerical-experimental approach has been introduced to calibrate the parameters of a proposed three-dimensional (3D) conical Gaussian moving laser heat source model. For this purpose, several Hastelloy X single tracks are printed with various process parameters. The melt pool depth and width were measured experimentally, and results were used to calibrate and validate the heat source model. An empirical relationship between heat source parameters and laser energy density was also proposed. In addition, temperature gradients and cooling rates around the melt pool were extracted from the numerical model to be used towards microstructure prediction. Estimated microstructure cell spacing, calculated based on predicted cooling rate during solidification, was in good agreement with experimental measurements, indicating the validity of the heat source model.
+\end{abstract}
+
+Keywords Laser powder-bed fusion $(\mathrm{LPBF}) \cdot$ Additive manufacturing $\cdot$ Heat source modeling $\cdot$ Temperature gradient $\cdot$ Cooling rate
+
+\section*{Nomenclature}
+$k_{e} \quad$ Effective thermal conductivity of powder
+
+$k_{g} \quad$ Thermal conductivity of the continuous gas phase
+
+$k_{s} \quad$ Thermal conductivity of skeletal solid
+
+$\varphi \quad$ The porosity of powder bed
+
+$k_{R} \quad$ Thermal conductivity part of the powder bed owing to radiation
+
+$\varnothing \quad$ The flattened surface fraction of particle in contact with another particle
+
+$B$ Deformation parameter of the particle
+
+$k_{\text {contact }}$ Contact conductivity between two particles according to the value of $\varnothing$
+
+$C_{p} \quad$ Specific heat
+
+Ehsan Toyserkani
+
+\href{mailto:ehsan.toyserkani@uwaterloo.ca}{ehsan.toyserkani@uwaterloo.ca}
+
+1 University of Waterloo, 200 University Avenue West, Waterloo, Ontario N2L 3G1, Canada
+
+2 Siemens Canada Limited, 9545 Côte-de-Liesse, Montréal, Québec H9P 1A5, Canada
+
+\begin{center}
+\begin{tabular}{ll}
+$L$ & Latent heat \\
+$\rho$ & Density \\
+$k$ & Thermal conductivity \\
+$Q$ & Internal heat generation \\
+$h_{c}$ & Heat transfer coefficient \\
+$\varepsilon$ & Emissivity coefficient \\
+$\sigma_{s b}$ & Stefan-Boltzmann coefficient \\
+$q_{c}$ & Convective heat dissipation \\
+$q_{r}$ & Radiative heat dissipation \\
+$I$ & Heat intensity distribution \\
+$q_{0}$ & The maximum value of heat intensity \\
+$r_{0}$ & The top radius of heat source \\
+$r_{d}$ & The bottom radius of heat source \\
+$z_{e}$ & Z coordinates of the top surface of heat source \\
+$z_{i}$ & Z coordinates of the bottom surface of heat source \\
+$H$ & Height of heat source \\
+$\alpha$ & Absorption coefficient \\
+$P$ & Laser power \\
+$V$ & Scanning speed \\
+$T$ & Cooling rate \\
+$\lambda_{1}$ & Primary spacing \\
+\end{tabular}
+\end{center}
+
+\section*{1 Introduction}
+Additive manufacturing (AM) is an emerging technology that is becoming more common in different industries such as aerospace and automotive. This process has gained the advantage of producing complex shapes by importing digital drawing data to the machine [1]. The selective laser melting process, which is named as laser powder-bed fusion (LPBF) by the ASTM standard, produces parts in a layer upon layer fashion. After spreading metal powder on the build plate, a laser heat source selectively melts powder particles and the solidified track forms the shape of desired contours. A new layer of powder is then added to the previous layer and this process is repeated until the final part is fabricated [2].
+
+In order to mitigate costs and turnaround time for identifying optimum process parameters and predict the temperature distribution and gradient for further microstructure analysis of printed parts, several numerical analysis methods have been implemented by many researchers [3-5]. Kundakc et al. [6] developed a finite element (FE) model, considering a threedimensional (3D) heat source to predict melt pool geometries and temperature distribution during LPBF. They carried out some experimental tests on Inconel 625 and titanium material for validating their model. Their model was able to predict melt pool shapes within the error range of $11-18 \%$. Liu et al. [7] investigated the LPBF of AlSi10Mg using the FE method for predicting microstructure within the solidified melt pool. They extracted temperature gradient, solidification rate, and cooling rate in order to predict the microstructure behavior of the melt pool. Antony et al. [8] investigated single track formation in LPBF of SS 316 powder on the AISI 316L substrate. They developed an FE model for predicting the temperature distribution in one layer deposited powder. Moreover, the influence of process parameters on melt pool characteristics was studied. Ali et al. [9] proposed a numerical model considering a volumetric heat source model for taking into account heat transfer penetration within the material. They were able to predict the cooling rate, temperature gradient, and residual stress evolution. Their model was validated based on melt pool dimensions extracted experimentally. $\mathrm{Du}$ et al. [10] implemented a 3D Gaussian heat source in their model for predicting temperature field within LPBF. In addition, the variation of laser absorptivity with temperature was considered. Zhidong et al. [11] carried out a comprehensive study of different volumetric heat source models. They proposed a new model including anisotropically thermal conductivity with a variable laser absorption coefficient. Their predicted results were very close to experimental measurements of melt pool dimensions and surface morphologies of tracks.
+
+Many studies on the LPBF modeling have been conducted. However, the literature lacks detailed procedures on calibrating the heat source models in order to develop a relationship between heat source parameters and melt pool geometries. The authors have previously published a work, in which variable thermal conductivity and absorption factors have been incorporated into the exponentially decaying heat source [11]. In this paper, a conical Gaussian heat source model $[12,13]$ with a varying depth of penetration along with a variable absorption factor has been implemented for modeling the melt pool depth and width of single tracks of Hastelloy $\mathrm{X}$ during LPBF. Numerical results showed excellent agreement with experimental melt pool geometries based on the varying laser power and scanning speed. In addition, temperature gradients and cooling rates due to their critical role in microstructure analysis such as predicting cell size are also extracted from the numerical results.
+
+\section*{2 Experimental approach}
+In this study, a commercially gas-atomized Hastelloy $\mathrm{X}$ powder (Table 1), provided from EOS GmbH was utilized with a D10, D50, and D90 of $15.5 \mu \mathrm{m}, 29.3 \mu \mathrm{m}$, and $46.4 \mu \mathrm{m}$, respectively. Hastelloy X (nickel-based superalloy) has several applications in manufacturing gas turbine combustion systems due to its good creep resistance, tensile strength, and ductility at high temperatures [13]. A Zeiss ULTRA plus Scanning Electron Microscopy (SEM) (Carl Zeiss Microscopy GmbH, Jena, Germany) was used to capture the powder distribution (Fig. 1).
+
+Single tracks of Hastelloy $\mathrm{X}$ were produced using an EOS M290 (EOS GmbH, Krailling, Germany) machine with a laser spot size of $100 \mu \mathrm{m}$. The laser of this system is a Ytterbium fiber laser with a wavelength of $1060 \mathrm{~nm}$. Initially, substrates with dimensions of $25 \times 18.5 \times 5 \mathrm{~mm}$ were printed from the same material (Hastelloy $\mathrm{X}$ ) by using the default EOS process parameters (laser power $195 \mathrm{~W}$, scanning speed $1150 \mathrm{~mm} / \mathrm{s}$ with hatch distance of $90 \mu \mathrm{m}$ ). Then, an additional layer thickness of powder was spread on top of the printed substrate to manufacture the single tracks with specified process parameters. For this study, various process parameters such as laser power and laser scanning speed were considered. The range of laser power and scanning speed are listed in (Table 2) which are used for validation of the numerical model. Figure 2 shows the produced single tracks
+
+Table 1 Chemical composition (in wt\%) of Hastelloy X powder [14]
+
+\begin{center}
+\begin{tabular}{llllllllllll}
+\hline
+$\mathrm{Ti}$ & $\mathrm{Al}$ & $\mathrm{Cu}$ & $\mathrm{Mn}$ & $\mathrm{Si}$ & $\mathrm{C}$ & $\mathrm{Co}$ & $\mathrm{W}$ & $\mathrm{Mo}$ & $\mathrm{Fe}$ & $\mathrm{Cr}$ & $\mathrm{Ni}$ \\
+\hline
+$<0.15$ & $<0.5$ & $<0.5$ & $<1$ & $<1$ & $<0.1$ & $1.5 \pm 1$ & $0.6 \pm 0.4$ & $9 \pm 1$ & $18.5 \pm 1.5$ & $21.75 \pm 1.25$ & Balance \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-03}
+\end{center}
+
+Fig. 1 SEM image of Hastelloy X powder
+
+at different process parameters. The distance between every single track was $2.5 \mathrm{~mm}$. Then, the printed specimens were removed from the build plate and cut perpendicular to single tracks using a Buehler ISOMET 1000 (Buehler, IL, USA) precision cutter with $5 \mathrm{~mm}$ distance from the side of samples. Afterward, the specimens were mounted and polished before etching with a Glyceregia solution [15]. Finally, in order to measure the single tracks melt pool geometries, a Keyence VK-X250 confocal laser microscope (Keyence Corporation, Osaka, Japan) was used. In addition, a TESCAN VEGA 3 SEM (TESCAN, Brno, Czech Republic) was used for validating the cooling rate extracted from the numerical results based on cell spacing.\\
+Table 2 Process parameters used for a single track
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Process parameters & Values \\
+\hline
+Laser power $(\mathrm{W})$ & $150-200-250$ \\
+Scanning speed $(\mathrm{mm} / \mathrm{s})$ & $800-1000-1200-1300$ \\
+Laser spot diameter $(\mu \mathrm{m})$ & 100 \\
+Layer thickness $(\mu \mathrm{m})$ & 20 \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{3 Finite element modeling}
+\subsection*{3.1 Model geometry and material properties}
+The commercial software COMSOL Multiphysics ${ }^{\circledR}$ was utilized to predict the melt pool dimensions, cooling rate, and temperature gradient during LPBF of Hastelloy X samples. In order to capture melt pool geometries in the microscale model, a substrate domain of $1 \times 1 \times 0.5 \mathrm{~mm}$ was modeled. A powder layer of a thickness of $0.02 \mathrm{~mm}$ was also applied on top of the substrate (Fig. 3). Finer tetrahedral mesh size $(20 \mu \mathrm{m})$ was implemented in regions close to the laser-material interaction zone for reducing computational cost as shown in Fig. 3.
+
+The properties of Hastelloy X material (Fig. 4) for bulk and powder were assigned to the respective domains. The thermal conductivity of powder material is derived using Eq. (1) [6]:
+
+$\frac{k_{e}}{k_{g}}=(1-\sqrt{1-\varphi})\left(1+\frac{\varphi k_{R}}{k_{g}}\right)+\sqrt{1-\varphi}\left\{(1-\varnothing)\left[\frac{2}{1-\frac{B k_{g}}{k_{s}}}\left(\frac{B}{\left(1-\frac{B k_{g}}{k_{s}}\right)^{2}}\left(1-\frac{k_{g}}{k_{s}}\right) \operatorname{Ln} \frac{k_{s}}{B k_{g}}-\frac{B+1}{2}-\frac{B-1}{1-\frac{B k_{g}}{k_{s}}}\right)+\frac{k_{R}}{k_{g}}\right]+\varnothing \frac{k_{\text {Contact }}}{k_{g}}\right\}$
+
+where $k_{e}$ is the effective thermal conductivity of powder bed, $k_{g}$ is the thermal conductivity of the gas, $k_{s}$ is the thermal conductivity of solid, $\varphi$ is the experimentally measured porosity of the powder bed (52\%) [16], $k_{R}$ is the thermal conductivity of the powder bed due to radiation, $\varnothing$ is the flattened surface fraction between particles, $B$ is the deformation parameter of the particle, and $k_{\text {contact }}$ can be derived from Eq. (2) [17]:
+
+$k_{\text {contact }}=18 \varnothing k_{s} \quad$ if $\varnothing<3 \times 10^{-4} \quad k_{\text {contact }} \approx k_{\mathrm{s}} \quad$ if $\varnothing>0.01$\\
+As shown in Fig. 4 (a), the plot depicts that there is a huge difference between the thermal conductivity of powder and bulk material and the thermal conductivity of the powder is approximately $1 \%$ of bulk material.
+
+In addition, Fig. 4 (b) demonstrates the difference between the density of bulk and powder material which can be calculated based on the porosity of powder bed using (Eq. (3)).
+
+$\rho_{\text {powder }}=(1-\varphi) \rho_{\text {bulk }}$
+
+In order to consider phase change from solid to liquid, apparent heat capacity method [18] is implemented (Eq. (4)):
+
+$C_{p}=\left\{\begin{array}{ccccc}C_{p, \text { sensible }} & \text { if } & T<T_{m}-0.5 \Delta T_{m} & \text { or } & T>T_{m}+0.5 \Delta T_{m} \\ C_{p, \text { modified }}= & C_{p, \text { sensible }}+\frac{L}{\Delta T_{m}} & \text { if } & T_{m}-0.5 \Delta T_{m}<T<T_{m}+0.5 \Delta T_{m}\end{array}\right\}$
+
+Fig. 2 a Produced single tracks on printed substrates. b Schematic of printed single tracks and the substrate
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-04(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-04}
+\end{center}
+
+(b) where $T_{m}$ is the melting temperature which is considered as the center point between solidus and liquidus temperature. $\Delta T_{m}$ is the temperature difference between liquidus and solidus temperature and $L$ is the latent heat of fusion. As shown in Fig. 4 (c), in this method, the latent heat of fusion is compensated with increasing the specific heat between solidus and liquidus such that the extra heat absorbed by the material in this interval is equal to the latent heat of fusion. Therefore, within those ranges of temperatures, the specific heat will be increasing dramatically.
+
+It needs to be mentioned that for simplicity and acceleration of computation, it is assumed that the absorption coefficient is not affected by phase change.
+
+\subsection*{3.2 Governing equation and boundary conditions}
+Governing equation of heat transfer can be described as [11]:
+
+$\rho C_{p} \frac{\partial T}{\partial t}=\frac{\partial}{\partial x}\left(k_{x} \frac{\partial T}{\partial x}\right)+\frac{\partial}{\partial y}\left(k_{y} \frac{\partial T}{\partial y}\right)+\frac{\partial}{\partial z}\left(k_{z} \frac{\partial T}{\partial z}\right)+Q$
+
+where $\rho, C_{p}, k_{x}, k_{y}, k_{z}, T$, and $Q$ are the density of the material $\left(\mathrm{kg} / \mathrm{m}^{3}\right)$, specific heat $(\mathrm{J} / \mathrm{kgK})$, thermal conductivity $(\mathrm{W} / \mathrm{mK})$ of $x, y$, and $z$ directions, temperature $(\mathrm{K})$ and internal heat generation $\left(\mathrm{W} / \mathrm{m}^{3}\right)$, respectively.
+
+In terms of boundary conditions, the convective heat transfer with the ambient environment based on Newton's law was considered on all open surfaces (Eq. (6)).
+
+$q_{c}=h_{c}\left(T_{\text {ext }}-T\right)$\\
+Above, $q_{c}$ is the heat dissipation, $h_{c}$ is the heat transfer coefficient $\left(\mathrm{W} / \mathrm{m}^{2} \mathrm{~K}\right), T_{\text {ext }}$ is the geometry temperature, and $T$ is the ambient temperature (293 K).
+
+In addition, the radiative heat transfer from the top surface of the geometry domain was applied (Eq. (7)). The bottom surface of the geometry domain was set as the ambient temperature (293 K).
+
+$q_{r}=\sigma_{s b} \varepsilon\left(T_{\text {ext }}{ }^{4}-T^{4}\right)$
+
+Above, $\sigma_{s b}$ is the Stefan-Boltzmann coefficient $\left(\mathrm{W} / \mathrm{m}^{2} \mathrm{~K}^{4}\right)$ and $\varepsilon$ is the emissivity coefficient.
+
+\subsection*{3.3 Heat source model calibration}
+\subsection*{3.3.1 Heat source model}
+A moving heat source with a conical Gaussian shape was applied for predicting the melt pool dimensions and temperature distributions (Fig. 5). The conical Gaussian heat source is described as [11]:
+
+$I(x, y, z)=q_{0} \cdot \exp \left(-2 \frac{x^{2}+y^{2}}{r_{0}^{2}}\right)$
+
+$r_{0}(z)=r_{e}+\frac{z}{H}\left(r_{e}-r_{i}\right)$
+
+where $I(x, y, z), q_{0}, r_{e}$, and $r_{i}$ are the heat intensity distribution, the maximum value of heat intensity, and radius on top and bottom of the heat source profile, respectively.\\
+Fig. 3 Simulated single-track model geometry and mesh
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-04(2)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-05(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-05(3)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-05}
+\end{center}
+
+(c)
+
+Fig. 4 Thermo-physical properties of bulk and powder material. a Thermal conductivity. b Density. c Specific heat
+
+Based on the thermal energy conservation (Eq. (10)):
+
+$\alpha . P=\int_{-H}^{0} \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} q_{0} \cdot \exp \left(-2 \frac{x^{2}+y^{2}}{r_{0}^{2}}\right) d x d y d z$
+
+where and $P$ are the laser beam absorptivity and laser power respectively.
+
+$q_{0}$ is derived from Eq. (10) and can be calculated Eq. (11):
+
+$q_{0}=\frac{6 \alpha \cdot P}{\pi H\left(r_{e}^{2}+r_{e} r_{i}+r_{i}^{2}\right)}$
+
+where $H$ is the height of the conical Gaussian heat source.
+
+By substituting $q_{0}$ in Eq. (8) by Eq. (11), the final equation of the intensity distribution can be derived as follows (Eq. (12)):
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-05(2)}
+\end{center}
+
+Fig. 5 Conical Gaussian volumetric heat source $I(x, y, z)=\frac{6 \alpha \cdot P}{\pi H\left(r_{e}^{2}+r_{e} r_{i}+r_{i}^{2}\right)} \cdot \exp \left(-2 \frac{x^{2}+y^{2}}{r_{0}^{2}}\right)$
+
+where $H$ is the height of the conical Gaussian heat source.
+
+The internal heat generated as a result of the heat input and losses is plugged into Eq. 5.
+
+\subsection*{3.3.2 Calibration procedure}
+In order to calibrate the numerical model, the heat source parameters such as height $(H)$ and absorption coefficient $(\alpha)$ are altered to minimize the error between the experimental and simulated melt pool dimensions. Since the upper radius of the conical Gaussian heat source $\left(r_{e}\right)$ is the radius of laser spot size $(50 \mu \mathrm{m})$, the bottom radius of the heat source has a limited range to be varied. In addition, based on Eq. (11) and the calibration iteration, it is found that a lower radius of heat source $r_{i}$ does not have a significant influence on the melt pool depth where it has a slight effect on melt pool width, so it has been fixed in the chosen value $(30 \mu \mathrm{m})$. It is also noted that the height of the conical Gaussian heat source $(H)$ is the most important parameter and numerical results show that as the height of the heat source is increased, the width of the melt pool decreases. In order to compensate for the reduction in melt pool width, the absorption coefficient has been modified for acquiring more accurate melt pool shapes. It is realized that the absorption coefficient has a significant effect on the melt pool width and depth at the same time.
+
+Figure 6 demonstrates a flow chart of the procedure implemented for calibrating heat source model, where $W_{e x}, W_{\text {sim }}$, $D_{e x}$, and $D_{\text {sim }}$ are the experimental melt pool width, predicted melt pool width, experimental melt pool depth, and predicted melt pool depth, respectively. The maximum acceptable deviation of model predictions for the melt pool width and height is identified as $\varepsilon_{1}$ and $\varepsilon_{2}$ respectively. As the flow chart shows, in the first step, the initial values of the height of the heat source and absorption coefficient are selected and based on those values numerical simulation was carried out. Due to the complexity of the laser powder-bed fusion process,
+
+Fig. 6 Flow chart showing the calibration procedure for the heat source
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-06}
+\end{center}
+
+researchers use a lot of underlying assumptions to capture the model accurately $[19,20]$. As a result, numerical results have some deviations from experimental and the current studies show a $\pm 30 \%$ as a fair and acceptable range [21,22]. By comparing the experimental and numerical results of melt pool depth and width, the values of the absorption coefficient and height of heat source are modified such that the difference between the numerical with experimental ones is within an acceptable range.
+
+\section*{4 Results and discussion}
+\subsection*{4.1 Experimental measurements of the melt pool, calibration, and validation results}
+Based on Section 3.3, the heat source model was calibrated using the power and scanning speed values listed in Table 2.
+
+Validation of the melt pool dimensions with experimental measurements is done in such a way that melt pool depth and width below the powder layer are compared with experimental results $[6,11]$. Evaporation and shrinkage of the powder layer are ignored due to modeling complexities.
+
+Figure 7 illustrates that the experimentally measured melt pool geometries are in good agreement with the numerical results. The average percentage differences between the simulation results and experimental ones for the melt pool depth and width are $13 \%$ and $6 \%$, respectively.
+
+The melt pool dimensions can be represented as a function of deposited energy density for various process parameters based on the findings in [23]. It has been reported that the absorbed energy density has a relationship with the ratio of the laser power to the root square of scanning speed $\left(\frac{P}{\sqrt{V}}\right)$, where $P$ is the laser power and $V$ is the scanning speed [11].
+
+It is realized that the absorption coefficient and height of conical Gaussian heat source has a linear relationship with the $\frac{P}{\sqrt{V}}$. The physical reason behind this is due to the fact that as the energy density increases, melt pool depth becomes larger due to higher heat penetration to the powder-bed. On the other hand, by increasing the energy density, the material tends to absorb more energy [24]. Therefore, the absorption coefficient and the height of conical Gaussian heat source should be adapted based on the $\frac{P}{\sqrt{V}}$. As a result, a higher $\frac{P}{\sqrt{V}}$ will cause a higher absorption coefficient and a larger height of the conical Gaussian heat source.
+
+Empirical equations (Eqs. (13) and (14)) show the relationship between the $\frac{P}{\sqrt{V}}$, height of conical Gaussian heat source and absorption coefficient which were derived based on the calibration of the heat source with experimental results. It should be mentioned that this empirical equation would be valid for the energy density within the range of 4.74 to 7.90 $(\mathrm{W} / \sqrt{\mathrm{mm} / \mathrm{s}})$ which falls within the conduction mode of the melt pool and ensures near full dense parts.
+
+$\alpha=a_{1} \frac{P}{\sqrt{V}}+b_{1}$
+
+$H=a_{2} \frac{P}{\sqrt{V}}+b_{2}$
+
+where $P[W], V\left[\frac{\mathrm{mm}}{\mathrm{s}}\right], H[\mu \mathrm{m}]$ and are the laser power, scanning speed, the height of the conical Gaussian heat source and the absorption coefficient, respectively. In addition, $a_{1}, a_{2}, b_{1}$,\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_e4cf3633ae941c3dd044g-07(2)}
+
+(a)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_e4cf3633ae941c3dd044g-07(1)}
+
+(b)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_e4cf3633ae941c3dd044g-07}
+
+(c)
+
+Fig. 7 Experimental and numerical results of melt pool geometries with various process parameters. a Power: 150 W. b Power: 200 W. c Power: 250 W
+
+Table 3 The coefficient in the empirical equation for deriving absorption coefficient and height of heat source
+
+\begin{center}
+\begin{tabular}{llll}
+\hline
+$a_{1}$ & $b_{1}$ & $a_{2}$ & $b_{2}$ \\
+\hline
+0.126 & -0.297 & 15.82 & -24.99 \\
+\hline
+\end{tabular}
+\end{center}
+
+and $b_{2}$ are parameters which will be established by experimental results (Table 3).
+
+The porosity of the powder and the convection heat transfer of the melt pool have a significant increase in heat penetration to the powder bed. By doing the calibration procedure the height of the conical Gaussian heat source have been found to be in the range of 50 to $100 \mu \mathrm{m}$ for the energy density range of 4.74 to $7.90(\mathrm{~W} / \sqrt{\mathrm{mm} / \mathrm{s}})$.
+
+\subsection*{4.2 Effect of process parameters on melt pool dimensions}
+Experimental single tracks with the various range of laser scanning speeds and power were printed, cross-sectioned and polished to measure the melt pool depth and width.
+
+The results show that by increasing the laser power from $150 \mathrm{~W}$ to $250 \mathrm{~W}$ while keeping other process parameters constant, the depth and width of the melt pool will also elevate, whereas increasing the scanning speed from 800 to $1300 \mathrm{~mm} / \mathrm{s}$ will cause a decrease in the melt pool dimensions. Figure 8 (a) shows that with the increasing laser power from $150 \mathrm{~W}$ to $250 \mathrm{~W}$, the depth and width of the melt pool will increase from 26 to $82 \mu \mathrm{m}$ and 88 to $129 \mu \mathrm{m}$, respectively. Figure 8 (b) demonstrates the effect of scanning speed on melt pool dimensions. With increasing scanning speed from 800 to $1300 \mathrm{~mm} / \mathrm{s}$, the melt pool depth and width will decrease from 72 to $34 \mu \mathrm{m}$ and 127 to $90 \mu \mathrm{m}$, respectively. This phenomenon happens due to a changing energy density, which is fluxing into the material. Therefore, as mentioned previously, higher laser power and a lower scanning speed will result in a higher energy density, which is absorbed by the material;
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-08(1)}
+\end{center}
+
+Fig. 9 Influence of energy density on melt pool depth and width
+
+consequently, the melt pool geometries including the melt pool depth and width will be increasing. The same scenario will also happen when a lower energy density is given to the material. Therefore, a lower $\frac{P}{\sqrt{V}}$ will cause smaller melt pool dimensions. Figure 9 shows the effect of $\frac{P}{\sqrt{V}}$ on the melt pool dimensions. It is found that increasing the $\frac{P}{\sqrt{V}}$ from 4.74 to 7.9 $(\mathrm{W} / \sqrt{\mathrm{mm} / \mathrm{s}})$, the melt pool depth and width will increase from 26 to $82 \mu \mathrm{m}$ and 88 to $129 \mu \mathrm{m}$, respectively.
+
+Experimental results demonstrate that increasing scanning speed from 800 to $1300 \mathrm{~mm} / \mathrm{s}$ will lead to a reduction in the melt pool depth by $52 \%$. On the other hand, decreasing the laser power from $250[\mathrm{~W}]$ to 150 [W] causes a reduction in the melt pool depth up to $68 \%$. Therefore, it can be concluded that the laser power has a stronger influence on the melt pool dimensions compared to the laser scanning speed [25].
+
+\subsection*{4.3 Temperature distribution}
+In order to derive temperature distribution along the $X$ - and $Y$ axis of the melt pool, two paths have been identified on the top
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-08}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-08(2)}
+\end{center}
+
+(b)
+
+Fig. 8 a Effect of laser power on melt pool depth and width. b Effect of scanning speed on melt pool depth and width
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-09(2)}
+\end{center}
+
+Fig. 10 Top view of moving laser heat source with identifying two paths along with $\mathrm{X}$ and $\mathrm{Y}$ directions
+
+of the powder surface where the laser heat source is applied (Fig. 10). Figure 11 demonstrates the effect of different scanning speed on the temperature distribution. By increasing the scanning speed from 1000 to $1600 \mathrm{~mm} / \mathrm{s}$, the laser energy input to the material will be decreased, which results in decreasing the peak temperatures. On the other hand, the temperature distribution in the $\mathrm{X}$ direction illustrates that the maximum temperature occurs in the melt pool front. In addition, the temperature distribution along $Y$-axis clearly shows the Gaussian distribution of laser heat source.
+
+\subsection*{4.4 Temperature gradient}
+Due to the fast solidification within LPBF [26], the temperature gradient and cooling rates play a crucial role in predicting the microstructure, grain orientation, and growth within the melt pool. In order to extract temperature history from the numerical results, several points were set in the $z$-axis from the top of the powder layer towards the bulk material at $5 \mu \mathrm{m}$ intervals as shown in Fig. 12.
+
+For obtaining temperature gradient within the melt pool at the specific time from $20 \mu \mathrm{m}$ under the surface of powder $(Z=20 \mu \mathrm{m})$ to $150 \mu \mathrm{m}$ below the surface, the temperature distributions along the $\mathrm{Z}$ direction for different scanning speeds are extracted. Figure 13 (a) shows that the temperature will drop from the powder to the bulk material due to the higher thermal conductivity of the bulk region compared to the powder material. Moreover, the heat source is decaying linearly along the $\mathrm{Z}$ direction. The results show that a higher scanning speed leads to a reduction in the temperature gradient within the melt pool. This could be due to providing less energy density input to the material so that the peak transient temperature will decrease. As a result, the temperature difference from the top to the bottom surface will be decreasing which means that by increasing the scanning speed, the temperature gradient will be reduced. In addition, it has been found that the maximum temperature gradient for different scanning speeds, $1000 \mathrm{~mm} / \mathrm{s}, 1200 \mathrm{~mm} / \mathrm{s}, 1600 \mathrm{~mm} / \mathrm{s}$ is $69 \mathrm{~K} / \mu \mathrm{m}, 63 \mathrm{~K} / \mu \mathrm{m}$, and $52 \mathrm{~K} / \mu \mathrm{m}$, respectively, which has occurred at $52 \mu \mathrm{m}$ below the powder surface, close to the interface of solid and liquid phase within the melt pool (Fig. 13 (b)).
+
+\subsection*{4.5 Cooling rate}
+Figure 14 shows the effect of laser scanning speed on the transient temperature corresponding to different points within the melt pool. Increasing the scanning speed leads to the less amount of energy density that fluxes to the material. Therefore, peak temperatures will be decreasing by increasing the scanning speed. On the other hand, by moving down from the powder to the bulk material along the $\mathrm{Z}$ direction, the temperature peak will be reduced. This is happening firstly because the conical Gaussian heat source is decaying linearly
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-09(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-09}
+\end{center}
+
+(b)
+
+Fig. 11 Effect of laser scanning speed on temperature distribution $\mathbf{a}$ along $\mathrm{X}$ direction and $\mathbf{b}$ along the $\mathrm{Y}$ direction
+
+Fig. 12 Probes along melt pool depth and model predicted the temperature distribution in melt pool cross-section normal to the laser movement direction
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-10(2)}
+\end{center}
+
+along the $\mathrm{Z}$ direction. Secondly, moving from the powder to the bulk material, the heat conductivity will increase drastically such that heat will dissipate more in the bulk regions, which causes the cooling rate to increase. Figure 14 depicts slope changing when the temperature is below the melting point due to the phase change. In addition, the cooling rate has been derived from different points, which are located within the melt pool and the effect of laser power on the cooling rate is investigated (Fig. 15). It has been found that by increasing the laser power, the cooling rate will be increased. It is attributed to the fact that as the laser power is increased, a higher energy density is given to the material so that the peak transient temperature will be increasing. Therefore, the maximum cooling rate will be increased due to drastically decreasing temperatures. The results illustrate that the maximum cooling rate for a different range of laser power, $150 \mathrm{~W}, 200 \mathrm{~W}$, and $250 \mathrm{~W}$ is $1.7 \times 10^{7} \mathrm{~K} / \mathrm{s}, 2.5 \times 10^{7} \mathrm{~K} / \mathrm{s}$, and $3.1 \times 10^{7} \mathrm{~K} / \mathrm{s}$ which occurs at the top surface of melt pool $(Z=20 \mu \mathrm{m})$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-10}
+\end{center}
+
+(a)
+
+\subsection*{4.6 Experimental validation of cooling rate and predicting primary dendrite spacing}
+Figure 16 (a) displays the simulated melt pool temperature distribution of a produced single track using the laser power of $200 \mathrm{~W}$, the scan speed of $1000 \mathrm{~mm} / \mathrm{s}$, and the layer thickness of $20 \mu \mathrm{m}$ with four points located in the middle of the melt pool with different depths from the surface of the substrate. Figure 16 (b, c) shows low and high magnification SEM images from a cross-sectioned single track. The cellular structure of the solidified material is also shown in Fig. 16 (c) where primary cell spacing was measured to be around $320 \mathrm{~nm}$. These fine features in the microstructure are a result of the rapid solidification of molten metal during LPBF [27-29]. It is well known that higher cooling rates significantly reduce the feature size of the solidified microstructure. Here in the LPBF, both the high-temperature gradient and solidification rate result in outstandingly high cooling rates $[27,30]$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-10(1)}
+\end{center}
+
+(b)
+
+Fig. 13 a Temperature distribution along build direction. b Temperature gradient within the melt pool
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-11}
+\end{center}
+
+Fig. 14 The model-predicted temperature history of probes from powder to the bulk region with fixed laser power of $150 \mathrm{~W}$ and different laser scanning speed of $1000 \mathrm{~mm} / \mathrm{s}, 1200 \mathrm{~mm} / \mathrm{s}$, and $1600 \mathrm{~mm} / \mathrm{s}$
+
+Primary spacing $\left(\lambda_{1}\right)$ of either cells or dendrites in the microstructure of Ni-base superalloys is directly related to the cooling rate with an empirical Eq. (15) reported by [30]:
+
+$\lambda_{1}=97(\dot{T})^{-0.36}$
+
+where $\dot{T}$ is the cooling rate of the interface of solid/liquid during solidification. Considering the average $\lambda_{1}$ to be around $0.32 \mu \mathrm{m}$ (Fig. 16 (c)), the cooling rate can be calculated $\left(\sim 7.82 \times 10^{6} \mathrm{~K} / \mathrm{s}\right)$. On the other hand, a maximum value for the cooling rate related to the probe in the same location of the melt pool has been calculated to be around $\sim 8.82 \times 10^{6} \mathrm{~K} / \mathrm{s}$ which is very close to the calculated cooling rate with an estimated dendrite spacing of $0.32 \mu \mathrm{m}$. A detailed effect of energy density on primary dendrite spacing is demonstrated in Fig. 17. It is found that simulation results are very close to experimental ones for different process parameters and predict
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-11(1)}
+\end{center}
+
+Fig. 15 Model-predicted cooling rate for different probes within melt pool with fixed scanning speed $1000 \mathrm{~mm} / \mathrm{s}$ and varying laser power of $150 \mathrm{~W}, 200 \mathrm{~W}$, and $250 \mathrm{~W}$ dendrite spacing accurately. Increasing the energy density leads to higher cooling rates which cause smaller primary dendrite spacing. Since the SEM images extracted from each grain may be observed from the projection of the image derived from different cutting planes, there were some variations of primary dendrite spacing for each specimen. However, the simulation results were within the range of experimental results.
+
+Sensitivity analysis on heat source parameter and absorption coefficient is done for confirming the fact that selecting the most optimum parameters for the Conical Gaussian heat source and absorption coefficient results in a more accurate prediction of cooling rate and cell space. These results confirm the strength and accuracy of the model.
+
+The sensitivity plot for various heat source parameters on the cooling rate with a fixed process parameter of laser power of $150 \mathrm{~W}$ and scanning speed of $1000 \mathrm{~mm} / \mathrm{s}$ at the interface of solidus and liquidus $(Z=40 \mu \mathrm{m})$ is shown in Fig. 18. It clearly shows that with implementing a height of $50 \mu \mathrm{m}$ and the absorption coefficient of 0.3 , the cooling rate is $8.7 \times 10^{6} \mathrm{~K} /$ $\mathrm{s}$ which is comparable to the experimental results derived from Eq. (15). On the other hand, changing the height or the absorption coefficient results in larger errors. Therefore, it can be concluded that by implementing the calibrated heat source model, the numerical results will predict the microstructure within the melt pool more precisely.
+
+\section*{5 Conclusions}
+In this work, experimental and numerical investigations of single tracks of Hastelloy X made by LPBF were carried out and the melt pool dimensional features were measured experimentally. The main conclusions can be summarized as follows:
+
+\begin{enumerate}
+  \item Based on the experimental results, the heat source model was calibrated and the proposal empirical equations show the relationship between the energy density $\left(\alpha=a_{1} \frac{P}{\sqrt{V}}+b_{1}, H=a_{2} \frac{P}{\sqrt{V}}+b_{2}\right)$, the height of the heat source and the absorption coefficient. However, these empirical equations are only valid for the specific range of energy density which provides conduction mode of the melt pool.
+
+  \item The simulated results for the melt pool dimensions show a good agreement with the experimental data. The percentage difference between the simulated and experimental melt pool depth and width results is around $13 \%$ and $6 \%$, respectively.
+
+\end{enumerate}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-12}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-12(3)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-12(1)}
+\end{center}
+
+(c)
+
+Fig. 16 a Simulated temperature distribution in the melt pool area, $\mathbf{b}$ low magnification, and $\mathbf{c}$ high magnification SEM image from a cross-section of single track deposited by laser power of $200 \mathrm{~W}$ and scanning speed of $1000 \mathrm{~mm} / \mathrm{s}$
+
+Fig. 17 Effect of energy density on the primary dendrite spacing
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-12(2)}
+\end{center}
+
+\begin{enumerate}
+  \setcounter{enumi}{2}
+  \item The influence of laser power and scanning speed on the melt pool depth and width was investigated. By decreasing the laser power from $250 \mathrm{~W}$ to $150 \mathrm{~W}$ in fixed
+\end{enumerate}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_e4cf3633ae941c3dd044g-12(4)}
+\end{center}
+
+Fig. 18 Sensitivity plot of heat source parameter on cooling rate with a laser power of $150 \mathrm{~W}$ and scanning speed of $1000 \mathrm{~mm} / \mathrm{s}$ scanning speed $(1000 \mathrm{~mm} / \mathrm{s})$, the melt pool depth and width decrease $68 \%$ ( 82 to $26 \mu \mathrm{m}$ ) and $32 \%$ (129 to $88 \mu \mathrm{m}$ ), respectively. On the other hand, by increasing the laser scanning speed from 800 to $1300 \mathrm{~mm} / \mathrm{s}$ in fixed laser power $(200 \mathrm{~W})$, the melt pool depth and width reduce $53 \%$ ( 72 to $34 \mu \mathrm{m}$ ) and 29\% (127 to $90 \mu \mathrm{m}$ ), respectively. It is concluded that the effect of laser power on the melt pool geometry is more dominant than the scanning speed.
+
+\begin{enumerate}
+  \setcounter{enumi}{3}
+  \item It is found that the cooling rate increases with increasing laser power. The results illustrate that the maximum cooling rate is $3.1 \times 10^{7} \mathrm{~K} / \mathrm{s}$ corresponding to a laser power of $250 \mathrm{~W}$ which occurs at the top surface of the melt pool.
+
+  \item On the other hand, with increasing the scanning speed, the temperature gradient decreases significantly. Moreover, the maximum temperature gradient $69 \mathrm{~K} / \mu \mathrm{m}$ is achieved by implementing the scanning speed of $1000 \mathrm{~mm} / \mathrm{s}$ which occurs at $52 \mu \mathrm{m}$ below the powder surface, close to the interface of solid and liquid phase within the melt pool.
+
+  \item The effect of energy density on the primary cell spacing is also studied and numerical results of cooling rates validated with experimental results. The results show that dendrite cell spacing decreased from 0.365 to $0.330 \mu \mathrm{m}$ by increasing energy density from 4.74 to 7.22 $(W / \sqrt{m m / s})$.
+
+  \item The sensitivity analysis is also carried out which indicates that by implementing the calibrated heat source model, the cooling rate and estimated primary dendrite spacing are predicted more precisely.
+
+\end{enumerate}
+
+Acknowledgments The authors would like to appreciate the Federal Economic Development Agency for Southern Ontario (FedDev Ontario), Natural Sciences and Engineering Research Council of Canada (NSERC), and Siemens Canada Limited, for supporting financially. In addition, special thanks to Jerry Ratthapakdee and Karl Rautenberg for assisting in preparing the LPBF setup and printing the samples, National Research Council Canada (NRC) and Adhitan Rani Kasinathan for their contributions to the LPBF modeling.
+
+\section*{References}
+\begin{enumerate}
+  \item Stavropoulos P, Foteinopoulos P (2018) Modelling of additive manufacturing processes: a review and classi fi cation. Manuf Rev 2
+
+  \item Fayazfar $\mathrm{H}$ et al (2018) A critical review of powder-based additive manufacturing of ferrous alloys: process parameters, microstructure and mechanical properties. Mater Des 144:98-128
+
+  \item Chiumenti M et al (2017) Numerical modelling and experimental validation in selective laser melting. Addit Manuf 18:171-185
+
+  \item Luo C, Qiu J, Yan Y, Yang J, Uher C, Tang X (2018) Finite element analysis of temperature and stress fields during the selective laser melting process of thermoelectric SnTe. J Mater Process Technol 261(June):74-85
+
+  \item Peng $\mathrm{H}$ et al (2018) Fast prediction of thermal distortion in metal powder bed fusion additive manufacturing: part 2 , a quasi-static thermo-mechanical model. Addit Manuf 22(2010):869-882
+
+  \item Kundakc E et al (2018) Thermal and molten pool model in selective laser melting process of Inconel 625. Int J Adv Manuf Technol
+
+  \item Liu S, Zhu H, Peng G, Yin J, Zeng X (2018) Microstructure prediction of selective laser melting AlSi10Mg using finite element analysis. Mater Des 142:319-328
+
+  \item Antony K, Arivazhagan N, Senthilkumaran K (2014) Numerical and experimental investigations on laser melting of stainless steel 316L metal powders. J Manuf Process 16(3):345-355
+
+  \item H. Ali, H. Ghadbeigi, and K. Mumtaz, "Residual stress development in selective laser-melted Ti6A14V: a parametric thermal modelling approach" 2018
+
+  \item Du Y, You X, Qiao F, Guo L, Liu Z (2019) A model for predicting the temperature field during selective laser melting. Results Phys 12(November 2018):52-60
+
+  \item Zhang $\mathrm{Z}$ et al (2019) 3-dimensional heat transfer modeling for laser powder-bed fusion additive manufacturing with volumetric heat sources based on varied thermal conductivity and absorptivity. Opt Laser Technol 109:297-312
+
+  \item Wu CS, Wang HG, Zhang YM (2006) A new heat source model for keyhole plasma arc welding in FEM analysis of the temperature profile. Weld J 85(12):284
+
+  \item Bonakdar A, Molavi-Zarandi M, Chamanfar A, Jahazi M, Firoozrai A, Morin E (2017) Finite element modeling of the electron beam welding of Inconel-713LC gas turbine blades. J Manuf Process 26: 339-354
+
+  \item EOS GmbH - Electro Optical Systems (2015) Material data sheet EOS NickelAlloy HX Material data sheet Technical data
+
+  \item Esmaeilizadeh R, Ali U, Keshavarzkermani A, Mahmoodkhani Y, Marzbanrad E, Toyserkani E (2019) On the effect of spatter particles distribution on the quality of Hastelloy X parts made by laser powder-bed fusion additive manufacturing. J Manuf Process 37(November 2018):11-20
+
+  \item Ali U et al (2018) On the measurement of relative powder-bed compaction density in powder-bed additive manufacturing processes. J Mater Des
+
+  \item Sih SS, Barlow JW (2004) The prediction of the emissivity and thermal conductivity of powder beds. Part Sci Technol 22(4):427440
+
+  \item Promoppatum P, Yao S, Pistorius PC, Rollett AD (2017) A comprehensive comparison of the analytical and numerical prediction of the thermal history and solidification microstructure of Inconel 718 products made by laser powder-bed fusion. Engineering 3(5):685694
+
+  \item Huang W, Zhang Y (2019) Finite element simulation of thermal behavior in single-track multiple-layers thin wall without-support during selective laser melting. J Manuf Process 42(April):139-148
+
+  \item Luo C, Qiu J, Yan Y, Yang J, Uher C, Tang X (2018) Finite element analysis of temperature and stress fields during the selective laser melting process of thermoelectric SnTe. J Mater Process Technol 261(February):74-85
+
+  \item Gouge M, Michaleris P (2017) Thermo-mechanical modeling of additive manufacturing, 1st edn. Elsevier Inc.
+
+  \item Kreith F, Manglik RM, Bohn MS (2012) Principles of heat transfer. Cengage Learning
+
+  \item King WE et al (2014) Observation of keyhole-mode laser melting in laser powder-bed fusion additive manufacturing. J Mater Process Technol 214(12):2915-2925
+
+  \item Trapp J, Rubenchik AM, Guss G, Matthews MJ (2017) In situ absorptivity measurements of metallic powders during laser powder-bed fusion additive manufacturing. Appl Mater Today 9: 341-349
+
+  \item Keshavarzkermani A et al (2019) An investigation into the effect of process parameters on melt pool geometry, cell spacing, and grain refinement during laser powder bed fusion. Opt Laser Technol 116(January):83-91
+
+  \item Acharya R, Sharon JA, Staroselsky A (2017) Prediction of microstructure in laser powder bed fusion process. Acta Mater 124:360371
+
+  \item Darvish K, Chen ZW, Phan MAL, Pasang T (2018) Materials characterization selective laser melting of $\mathrm{Co}-29 \mathrm{Cr}-6 \mathrm{Mo}$ alloy with laser power 180-360 W: cellular growth, intercellular spacing and the related thermal condition. Mater Charact 135(November 2017): 183-191
+
+  \item Kurz W, Trivedi R (1994) Rapid solidification processing and microstructure formation. 17:46-51
+
+  \item S. Kou, Welding metallurgy. 2002
+
+  \item Harrison NJ, Todd I, Mumtaz K (2015) Reduction of microcracking in nickel superalloys processed by selective laser melting: a fundamental alloy design approach. Acta Mater 94:59-68
+
+\end{enumerate}
+
+Publisher's note Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations.
+
+
+\end{document}

@@ -1,0 +1,308 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Melt pool geometry and morphology variability for the Inconel 718 alloy in a laser powder bed fusion additive manufacturing process }
+
+
+\author{Luke Scime*, Jack Beuth\\
+NextManufacturing Center, Department of Mechanical Engineering, Carnegie Mellon University, 5000 Forbes Ave., Pittsburgh PA 15213, United States}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Full Length Article
+
+
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+Additive manufacturing
+
+Inconel 718
+
+Statistical behavior
+
+Melt pool variability
+
+Melt pool morphology
+
+\begin{abstract}
+A B S T R A C T Expanding on prior process mapping work by the authors, multiple melt pool cross-sections are measured at multiple process parameter combinations for the Inconel 718 alloy in a Laser Powder Bed Fusion (L-PBF) process. Collection of such data enables the study of the variability of melt pool geometry (e.g. width, depth, and cross-sectional area) across process space. Furthermore, the statistical distribution of the measured melt pool geometries is compared to that of an equivalent normal distribution and intriguing outliers are observed. The cross-sectional morphology of the melt pools are associated with defects such as keyholing porosity and balling and the variability of the defects is quantified. The final product of this work is a robust description of L-PBF In718 melt pool behavior, based on ex-situ observations, which can be linked to in-situ observations of melt pool morphology in future work.
+\end{abstract}
+
+\section*{1. Introduction}
+In their endeavors to exploit the design freedoms that come with Additive Manufacturing (AM), designers must push the boundaries of the machine processing parameters. It therefore becomes necessary for them to understand how those parameters impact the final part quality and what kinds of defects and degree of melt pool dimensional and morphological variability they can expect. Currently, AM machine manufacturers offer only a limited set of "approved" processing parameters for each material system, limiting the design freedom of the end user. Beuth and Klingbeil [1] were among the first to study the effects of processing parameters on melt pool geometry in the AM space. Since then, such effects have been studied extensively by many researchers. For example, Promoppatum et al. [2] investigated the influence of laser beam power and velocity on melt pool size and microstructure in the Ti$6 \mathrm{Al}-4 \mathrm{~V}$ alloy system using both experiments and heat transfer simulations. Similarly, Francis [3] demonstrated the effects of laser beam diameter across multiple steel alloys. Tang et al. [4] discussed the fundamental relationships between laser beam power, travel velocity, and a processing defect known as lack-of-fusion porosity. Despite this large body of extant work, the variability of the melt pool behavior is often left unexplored, often due to the relatively small number of measurements collected. As observed by Clymer [5], such variability could have significant consequences for process parameter design and optimization in real-world scenarios. Furthermore, meaningful interpretation of data from in-situ process monitoring schema often requires correlation with data from ex-situ analyses and this linkage requires a truly representative sampling of melt pool behavior.
+
+This work studies melt pool behavior across Laser Powder Bed Fusion (L-PBF) process space for the Inconel 718 (In718) alloy (Ni $50-55$ wt $\%$, Cr $17.0-21.0$ wt $\%$, Nb $4.75-5.5$ wt $\%$, Mo $2.8-3.3$ wt $\%$, Ti $0.65-1.15 \mathrm{wt} \%$ ) [6]. In718 is of significant interest to the AM community owing to a variety of desirable material properties including high temperature performance and excellent corrosion resistance. Indeed, Zhang et al. [7] have explicitly studied high temperature performance in the case of additively-manufactured In718 while Mannan et al. [8] described and collated significant information relating to the corrosion resistance of several nickel super-alloys. As a result, In718 has multiple applications in the aerospace [9] and energy sectors [8]. Unfortunately, as explored by Thakur et al. [10], In718 remains difficult to machine via traditional, subtractive manufacturing processes. In contrast to subtractive manufacturing, additively-produced parts are built layer-wise. During L-PBF AM in particular, a laser beam is used to selectively melt a thin layer of metal powder in the shape of a crosssection of the desired final part. After each layer is fused, the build platform is lowered and a new layer of powder is deposited. The entire, layer-wise, process is typically referred to as a "build" and occurs within a build chamber purged with an inert gas.
+
+Many of the most important melt pool-scale defects in metal AM can be identified by the ex-situ morphology of the melt tracks themselves.
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail address: \href{mailto:lscime@alumni.cmu.edu}{lscime@alumni.cmu.edu} (L. Scime).
+}
+
+In this work, morphologies of interest are those characteristic of process outcomes including porosity formed by the keyholing mechanism, under-melting, and the surface tension-related balling phenomenon. Cunningham et al. [11] provide a comprehensive overview of porosity formation, due to a variety of mechanisms, in Laser and Electron Beam PBF AM. Keyhole and under-melting porosity are further explored by Gong et al. [12] for the Ti-6Al-4V alloy. Gratzke et al. [13] provide an excellent theoretical basis for understanding balling during welding processes while Yadroitsev et al. [14] studied this phenomenon in LPBF specifically. Keyhole-mode melting occurs in the high energy density (high beam power, low beam velocity) region of process space, where significant vaporization of the molten material can occur. Under certain conditions, the resultant vapor pocket may become trapped as porosity in the solidified melt pool [12]. Under-melting occurs when the melt pool does not fully penetrate the powder layer [12]. Francis [3] has found that balling primarily occurs in the higher beam velocity and beam power regime of process space [3]. Specifically, as the melt pools lengthen relative to their widths, Rayleigh instabilities driven by surface tension forces cause the tail of the melt pool to first form "humps" and eventually cease to be a continuous melt track, instead breaking up into discrete "balls" as discussed by Yadroitsev et al. [14].
+
+Importantly, these characteristic morphologies are known to occur with varying degrees of periodicity within a single melt track and the statistical behavior of these deviations are a central focus of this work. Such periodicity has been observed ex-situ in L-PBF by Olakanmi et al. [15] for an aluminum alloy. Recently, Zhao et al. [16] has observed much of this behavior in-situ via high speed X-ray imaging. Similarly, the geometry of the melt pool is generally accepted to vary along the length of a melt track, even when process parameters and local build geometry remain constant. Francis [3] and Wei et al. [17] have characterized the variable behavior of melt pool depth in keyhole-mode melting for L-PBF and GTAW welding respectively, and extensive research exists within the welding community on variability due to humping, as summarized by Wei [18]. Nonetheless, the existing literature is relatively sparse with regards to the statistical study of general melt pool variability in the AM processes. For this reason, this work constructs a statistically significant database of melt pool geometry and morphology for the In718 material system. In addition to providing insights into such variability, the presented results are also used by the authors in concurrent work to facilitate the training of a Machine Learning algorithm for in-situ flaw detection [19].
+
+One method for correlating process parameters with process outcomes (e.g. melt pool geometry, porosity, and as-built microstructure) is known as "process mapping." Developed by Beuth and Klingbeil [1], this technique is used in this work to summarize the effects of laser beam power and travel velocity on the size of the melt pools as well as to delineate certain defect regimes. While process mapping of L-PBFprocessed In718 has been reported by Narra [20], those data are based on single cross-sections of each process parameter combination - precluding the study of morphological and dimensional variability. Furthermore, as found by Aboulkhair et al. [21] for balling and Montgomery [22] for melt pool depth, melt pool morphology can vary significantly depending the presence of a powder layer (vs. no powder). Therefore the use of the no-added powder experiments performed by [20] would be inappropriate for the purposes of linking in-situ and exsitu observations during construction of a bulk part, which is the goal of the authors' concurrent work [19].
+
+\section*{2. Experimental procedure and methods}
+\subsection*{2.1. Build conditions}
+The experiment was performed on an EOS M290 (EOS GmbH, Germany) L-PBF machine at Carnegie Mellon University's (CMU) NextManufacturing Center and consisted of 10 melt tracks at each of 36 different process parameter combinations. The tested beam powers range between $100 \mathrm{~W}$ and $370 \mathrm{~W}$ (the maximum power of the EOS M290 machine) and the beam travel velocities range between $200 \mathrm{~mm} /$ $\mathrm{s}$ and $1400 \mathrm{~mm} / \mathrm{s}$ - spanning the majority of the EOS M290's operating range. These parameter combinations are subsequently indicated in Fig. 7 and were chosen based on the Rosenthal analytical heat transfer model of a moving point heat source [23]. The Rosenthal model by no means fully describes the physics driving melt pool formation as it assumes steady-state conditions and a point heat source [3] as well as neglecting temperature-dependent material properties, the latent heat of fusion, and all non-conduction heat transfer mechanisms including fluid flow within the melt pool itself. However, when fit to experimental data ${ }^{1}$ it is sufficient to inform experiment design decisions. Specifically, the Rosenthal results were combined with the work of [20] and the balling threshold presented by Francis [3] to ensure that the test region of process space would include multiple instances of keyholing and balling anomalies. Additionally, the Rosenthal results allowed for the estimation of a maximum expected melt pool width $(350 \mu \mathrm{m})$ and length $(860 \mu \mathrm{m})$, thus enabling the determination of a conservative hatch spacing $(500 \mu \mathrm{m})$ and melt track length $(20 \mathrm{~mm})$. All of the melt tracks were exposed with a preheat temperature of $80^{\circ} \mathrm{C}$ and a nominal D86 beam diameter of $100 \mu \mathrm{m}$.
+
+The melt tracks were exposed on a 6 in $\times 6$ in $\times 0.25$ in In718 plate (Fig. 1a) sourced from McMaster-Carr (P/N: 1099N8). Each melt track is $20 \mathrm{~mm}$ long to ensure steady-state ${ }^{2}$ melt pool conditions in the crosssectioned regions. The melt tracks were exposed on top of a single layer of powder as opposed to a bare substrate and were spaced sufficiently far apart $(500 \mu \mathrm{m})$ to avoid any overlap between adjacent melt pools. Due to the importance of a consistent powder layer for these experiments, denudation of the region around the melt track is also an important consideration. Work by Matthews et al. [24] finds that the denudation zone extends between $100 \mu \mathrm{m}$ and $200 \mu \mathrm{m}$ from the center of the melt track for processing conditions similar to those explored in this work. Therefore the denudation zones of adjacent melt tracks are not expected to have influenced the observed melt pool morphologies. To mitigate the effects of residual heating due to adjacent melt tracks the exposure order of the melt tracks was adjusted such that a minimum of $1.6 \mathrm{~s}$ elapsed between the lasing of adjacent melt tracks. For more information on residual heating due to laser scan strategy the authors refer the reader to the work of Parry et al. [25].
+
+To maintain a consistent powder layer thickness for all of the melt tracks, the In718 plate was first mounted to a modified steel EOS build plate and then surface ground. Because the In718 plate had to be removed from the modified steel EOS build plate before being placed inside of the EOS M290, their relative orientations during surface grinding were recorded. Note that layer-wise post-fusion consolidation, described by Jacob et al. [26], of the metal powder results in an effective powder layer thickness that is greater than the thickness of the layers within the AM part (i.e. the nominal layer thickness). To better match the nominal $40 \mu \mathrm{m}$ thick layers used in the authors' concurrent
+\footnotetext{${ }^{1}$ A laser beam absorptivity of $50 \%$ and temperature-dependent material properties [43] evaluated at $1427^{\circ} \mathrm{C}$ were used to roughly fit the Rosenthal results to the measured melt pool dimensions determined by [20]. Note that existing work by Rubenchik et al. [44] supports the choice of evaluating temperature-dependent material properties near the melting temperature of the material. A preheat temperature of $80^{\circ} \mathrm{C}$ was used and the melt pool dimensions were calculated based on the liquidus isotherm of $1336^{\circ} \mathrm{C}$.
+
+${ }^{2}$ Work by Fox [45] indicates that the response distance is proportional to the initial and final steady-state melt pool sizes. Specifically, it was found a melt pool should reach steady-state conditions within a travel distance of approximately three melt pool (final) depths. The deepest measured melt pools were on the order $500 \mu \mathrm{m}$, suggesting a response distance of approximately $1.5 \mathrm{~mm}$. Alternatively, the largest steady-state melt pool length predicted by the Rosenthal model is on the order of $900 \mu \mathrm{m}$. Both of these measures for response distance are substantially shorter than the approximately $10 \mathrm{~mm}$ distance from the end of the melt track to the cross-sectioning point.
+}
+\includegraphics[max width=\textwidth, center]{2024_03_10_2abb72027620dac265ceg-3(1)}
+
+Fig. 1. (a) The layout of the melt tracks; there are 36 different beam power and velocity combinations (PV). Note that the exposure order follows the parameter naming convention, that is, the first melt track of PV \#1 was exposed first, followed by the first melt track of PV \#2 through PV \#36. After the first 36 melt tracks are exposed, the exposure sequence is repeated for the second through tenth melt tracks of each parameter combination. (b) An image, taken through the EOS M290 viewing window, of the powder layer covering the In718 plate after the melt tracks were exposed.
+
+work [19], a $70 \mu \mathrm{m} \pm 20 \mu \mathrm{m}$ thick powder layer was chosen. This choice was made assuming a consolidation factor $\left(1-\rho_{\text {powder }} / \rho_{\text {fused }}\right)$ of $40 \%$ [26]. Note that the true consolidation percentage is dependent upon the particle size distribution of the specific powder system used; however such a measurement is beyond the scope of this work. The uncertainty in powder layer thickness was quantified by measuring the change in the separation distance between recoater blade and the build plate over the entire area of the In718 build plate; relative gap measurements were performed using a Käfer dial depth gauge. Systematic error in the powder layer thickness is assumed to be minimal (less than $10 \mu \mathrm{m}$ ) as a result of the procedure used to determine the gap between the recoater blade and the In718 plate. During this procedure, after leveling of the plate with the profilometer was complete, the gap was systematically decreased in increments of $1 \mu \mathrm{m}$ until the recoater blade was unable to travel across the In718 plate. At this point, the plate was dropped $70 \mu \mathrm{m}$ relative to the recoater blade. Fig. $1 \mathrm{~b}$ show the powder layer after the exposure of the melt tracks.
+
+\subsection*{2.2. Sample preparation}
+The samples were sectioned perpendicular the laser beam travel beam direction using a Wire Electrical Discharge Machine. The sectioned samples were hot-mounted, with the cut face visible, in Buehler ${ }^{\circledR}$ Konductomet sample pucks. Each puck contains 10 melt tracks and 20 cross-sections from each of three process parameter combinations. After mounting, each sample was ground and polished according to ASTM E3-11, Table 6 [27]; special care was taken to use an Apex ${ }^{\mathrm{TM}}$ Hercules S Pad during the $9 \mu \mathrm{m}$ diamond solution polishing. The samples were electro-etched using $10 \mathrm{wt} \%$ oxalic acid $\left(\mathrm{C}_{2} \mathrm{H}_{2} \mathrm{O}_{4}\right)$ for $15 \mathrm{~s}$ at $6 \mathrm{~V}$ as described by Devendranath Ramkumar et al. [28]. Note that additional polishing using $0.06 \mu \mathrm{m}$ colloidal silica for $30 \mathrm{~s}$ to 45 was performed immediately prior to electro-etching in order to the remove the aggressive oxide layer discussed by Small et al. [29]. Finally, each polished sample was imaged using an Alicona Infinite-Focus optical microscope at either $10 \times$ or $20 \times$ magnification.
+
+\subsection*{2.3. Measurement techniques}
+The 720 melt pool cross-sectional widths, depths, and areas were manually measured using the Image J software package [30] as shown in Fig. 2. To quantify the uncertainty in the manual measurement of melt pool dimensions, a representative melt pool at each magnification was measured 10 times consecutively. The measurement errors range
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_2abb72027620dac265ceg-3}
+\end{center}
+
+Fig. 2. A representative micrograph $(285 \mathrm{~W}, 960 \mathrm{~mm} / \mathrm{s})$. The cross-sectional area is the region enclosed by the dotted white polygon.
+
+from sample standard deviations that are $0.35 \%-0.75 \%$ of the corresponding mean melt pool dimension.
+
+Based on the cross-sectional micrographs, each parameter combination was categorized as producing one or more of five different types of melt pools: desirable, balling, severe keyholing, keyholing porosity, or under-melting using both qualitative and quantitative measures. Specifically, balling melt pools were defined as those exhibiting the characteristic balling morphology [14]. Processing parameters were considered to produce severely keyholed melt pools if the average depth to half-width ratio was greater than 2.5. Note that previous studies such as those by Francis [3] strictly define keyhole-mode melting as occurring for any aspect ratio greater than 1.0. As discussed by Elmer et al. [31], this is the largest aspect ratio which can be modeled under purely conduction-mode melting conditions. It should be noted that vapor cavities (and therefore non-conduction mode melting) are observed throughout AM processing space [32,33]. Because all of the tested process parameter combinations produced keyholing melt pools, the 2.5 threshold was used as a means of differentiating cross-sectional melt pool morphologies. If any of the melt pool cross-sections for a given parameter combination contained keyholing porosity, that process parameter combination was categorized as keyholing porosity. Process parameter combinations producing melt pools with average depths less than the powder layer thickness of $70 \mu \mathrm{m}$ were considered to be under-melting. Note that building a bulk part with these\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_2abb72027620dac265ceg-4}
+
+Fig. 3. (a) Normalized cumulative probability plots of cross-sectional melt pool areas for all 36 samples. The process parameter combinations that produced melt pools with variabilities deviating the most significantly from a normal distribution are indicated in the legend and with heavier line weights. (b) Normal probability plot of the measured areas for $285 \mathrm{~W}, 960 \mathrm{~mm} / \mathrm{s}$ and (c) for $300 \mathrm{~W}$ and $400 \mathrm{~mm} / \mathrm{s}$.
+
+parameters would not necessarily result in lack-of-fusion porosity as seen in work by Tang et al. [4] due to the aforementioned post-fusion consolidation of the powder layer. Finally, any melt pools not otherwise categorized are considered desirable.
+
+\section*{3. Results}
+\subsection*{3.1. Distribution of melt pool geometries}
+As a first step toward understanding the variability of melt pool geometry across process space, the measured size distributions were converted into cumulative probability plots such as that presented for cross-sectional area in Fig. 3a. Normalization of the distribution curves was implemented by converting each individual measurement to its percent difference from the mean value for that power-velocity combination. Fig. 3b and c show normal probability plots for both the EOS nominal process parameters and the process parameter combination which deviated the most from a normal distribution, respectively. In a normal probability plot the data are sorted as they would be in a cumulative distribution function and then they are plotted on a nonlinear vertical axis representing the normal order statistic medians. If the data are samples which "come from a population with a normal distribution" [34] then they will fall along a straight line [34]. Note also that in the implementation [34] used to generate the normal probability plots in this manuscript, the equivalent normal distribution is calculated using only data from the second and third data quartiles.
+
+It is evident from Fig. 3 that the melt pools with cross-sectional areas deviating the most significantly from the equivalent normal distribution form a lower tail. That is, while most of the melt pools follow a normal distribution, in some samples several melt pools of a significantly smaller size are present. Similar outlier behavior is found for both cross-sectional width and depth. These deviations are quantified by calculating $R^{2}$ fit values between the data and its equivalent normal distribution (both of which have been linearized); insufficient data are available for a Chi-square test which would typically require 25-40 measurements [35]. The majority of the cross-sectional geometry measurements follow normal distributions with the outliers following the trend discussed above, suggesting that the use of confidence\\
+intervals based on Student's t-distribution [35] in Section 3.3 is appropriate. Overall, out of the 36 process parameter combinations, six produced cross-sectional area distributions with $R^{2}$ values less than 0.80. For the same $R^{2}$ threshold, the cross-sectional width and depth distributions significantly deviated from a normal distribution for eight and nine process parameter combinations, respectively. Note that the negative $R^{2}$ values reported in Fig. 3 indicate that the model (i.e. a normal distribution) fits the data more poorly than a horizontal line.
+
+The precise driver(s) for these outlier melt pools is unknown and warrants further study; however the literature suggests multiple, nonexclusive possibilities. Work by Ladewig et al. [36] indicates that the highly dynamic interaction between the vapor plume and the incident laser beam can significantly reduce the amount of beam power absorbed by the substrate. Such interference would reduce the size of the melt pool and would likely be highly stochastic and therefore difficult to predict. Similar interactions are observed by Bidare et al. [37], with an additional focus on the interactions between vapor flow and the powder bed such as powder particle entrainment, denudation, and spatter formation. Ly et al. [38] further investigate spatter generation as a mechanism for carrying energy away from the melt pool proper. Another possible explicatory mechanism is an interaction between the melt pool and solidified spatter particles deposited on the powder bed by previous melt tracks. This distortion of the nominal melt track is directly observed by Nassar et al. [39]. While deviations in the powder bed caused by dragged spatter particles [39] and spatter particles impacted by the recoater blade [40] have also been proposed as potential stochastic flaw-formation mechanisms, the single layer nature of the experiments presented in this work preclude this possibility. A review of the research surrounding spatter-induced defects is also provided by Grasso et al. [41]. With multiple mechanisms capable of distorting the topology of the powder surface as well as ejected powder particles affecting the energy absorbed by the melt pool, flow conditions and spatter ejection may be responsible for much of the observed stochastic variability. For these reasons, the authors consider this behavior to be further motivation for the development of methodologies for in-situ observation of the melt pool and surrounding vapor plume.
+
+\subsection*{3.2. Variability of melt pool geometry across process space}
+The magnitude of the variability of melt pool geometry across process space was also investigated. Fig. 4a shows the standard deviation (as a percentage of the mean melt pool dimension) for the crosssectional melt pool width. As discussed in the introduction and by researchers including Tang et al. [4], such variability must be carefully considered when designing optimal process parameters, as the occurrence of smaller-than-average melt pools could lead to insufficient overlap between adjacent melt tracks and lack-of-fusion porosity. Overall, the measured variabilities in melt pool width, depth, and area respectively range from approximately $2.9 \%-14 \%, 4.5 \%-37 \%$, and $3.8 \%-26 \%$ of the mean melt pool dimension. In all cases, the melt pool dimension variations are at least one order of magnitude larger than the measurement errors reported in Section 2.3. The variability of melt pool depth is notably higher for the melt pools produced using high beam powers and low beam velocities (Fig. 4b). Higher variability in this processing regime has been observed by Pastor et al. [42] in laser welding and by Francis [3] in L-PBF for multiple alloy systems. Zhao et al. [16] has found that, in this regime, drastic changes to the morphology of the vapor pocket can occur rapidly which can lead to sudden changes in the total absorption of the incident laser beam and the depth of the melt pool.
+
+\subsection*{3.3. Melt pool geometry}
+Application of the process mapping approach allowed for the generation of lines of constant melt pool geometries (Fig. 5). Specifically, $2 \mathrm{D}$ linear interpolation was used to generate a dense matrix of melt pool geometry values across beam power and beam travel velocity process space. This dense matrix was then queried such that a set of points in process space was produced at which the relevant melt pool geometry is the same. Linear functions were then fit to this set of points. The $R^{2}$ values between the linear fit functions and the melt pool geometry data were $0.92,0.97$, and 0.99 for cross-sectional width, depth, and area, respectively. Strictly, the reported $R^{2}$ values are calculated based the agreement between the model (e.g. linear fit) and the data from each sample with a measurement (e.g. melt pool width) within the range presented in the corresponding process map. For example, the reported $R^{2}$ values for the melt pool width are based on data from the samples with a measured melt pool width between $100 \mu \mathrm{m}$ and $200 \mu \mathrm{m}$ (see the legend of Fig. 5a). The melt pool size trends (e.g. higher beam powers and lower beam velocities produce larger melt pools) closely match those found in the existing process mapping literature. The focus of this work is on the dimensional and morphological variability observed for this material system, as discussed in the following sections.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_2abb72027620dac265ceg-5}
+
+Fig. 4. (a) The standard deviation of the melt pool widths as a percentage of the mean width. The error bars represent a $95 \%$ confidence interval about the sample (percent) standard deviation. (b) Interpolated heat map of the standard deviation of the melt pool depths as a percentage of the mean depth.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_2abb72027620dac265ceg-6(1)}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_2abb72027620dac265ceg-6}
+\end{center}
+
+Fig. 5. Process map of the cross-sectional melt pool (a) width, (b) depth, and (c) area. The error bars represent a $95 \%$ confidence interval about the mean.
+
+\subsection*{3.4. Melt pool morphology classifications}
+Fig. 6 shows examples of the various cross-sectional morphologies while Fig. 7 summarizes the morphologies in processing space and is heavily utilized in the authors' concurrent work [19]. It is worth noting that even the most extreme keyholing porosity and balling process parameter combinations do not always produce melt pool cross-sections that exhibit those defects. Indeed, for the parameter combinations characterized as balling, only between $5 \%$ and $85 \%$ of the cross-sections exhibited an obvious balling morphology. Similarly, for the parameter combinations characterized as producing keyholing porosity, only between $5 \%$ and $55 \%$ of the cross-sections contained keyholing porosity. This is not surprising as both of these flaw formation mechanisms are known in the literature to be periodic in nature (Section 1).
+
+It is also worth noting that despite all of the tested process parameter combinations producing melt pools with depth to half-width ratios greater than 1.0, indicating keyhole-mode melting [31], keyholing porosity was only observed in melt pools produced by four of the thirty-six process parameter combinations. Indeed, keyholing porosity was not observed for beam velocities higher than $400 \mathrm{~mm} / \mathrm{s}$, even for high aspect ratio melt pools. Prior welding research [42] and a growing body of AM research [16] indicates that regimes of stable keyhole-mode melt pools exist. In these regimes, the melt pool morphology is such that periodic collapse of the vapor pocket, and subsequent entrapment of the keyholing pore by the liquid front, is relatively infrequent. The authors refer the readers to the works of Zhao et al. [16] for videos of the process by which the vapor pocket "pinches off" at the base to generate a keyholing pore.
+
+\section*{4. Conclusions}
+In this work, a relatively large number of cross-sectional measurements allowed for an investigation of the statistical distribution of melt pool dimensions for each process parameter combination. Analysis of the distributions revealed that cross-sectional melt pool widths, depths, and areas primarily follow a normal distribution with the exception of a handful of outliers which clearly diverge from a normal distribution. Interestingly, the divergent melt pools almost exclusively formed lower tails (visible in Fig. 3a), that is, the divergent melt pools were significantly smaller than the majority of the melt pools produced by that process parameter combination. The authors propose that the behavior of these outliers be studied further, particularly to determine if it is due to an interaction between the laser beam and the vapor plume and if the behavior differs across material systems.
+
+The large sample size also allowed for the quantification of the variability of the melt pool dimensions across process space. This\\
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_2abb72027620dac265ceg-7(3)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_2abb72027620dac265ceg-7(1)}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_2abb72027620dac265ceg-7}
+\end{center}
+
+(d)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_2abb72027620dac265ceg-7(2)}
+\end{center}
+
+(e)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_2abb72027620dac265ceg-7(5)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_2abb72027620dac265ceg-7(6)}
+\end{center}
+
+Fig. 6. Representative examples of cross-sectional melt pool morphologies. (a) desirable ( $285 \mathrm{~W}, 960 \mathrm{~mm} / \mathrm{s}$ ), (b) balling (370 W, $1200 \mathrm{~mm} / \mathrm{s}$ ), (c) under-melting $(100 \mathrm{~W}, 1000 \mathrm{~mm} / \mathrm{s})$, (d) severe keyholing ( $250 \mathrm{~W}, 400 \mathrm{~mm} / \mathrm{s})$, and (e) keyholing porosity $(150 \mathrm{~W}, 200 \mathrm{~mm} / \mathrm{s})$. All micrographs are presented at the same size scale.
+
+information is critical for designers as they work at the edges of viable L-PBF processing space, particularly for the determination of the appropriate (to ensure overlap) spacing between adjacent melt tracks. As has been previously reported for welding by Pastor et al. [42] and PBF AM by Francis [3], melt pool depth variability was highest within the severe keyholing regime - where the morphology of the vapor cavity directly under the beam spot can vary abruptly. It is important to note that, even with the addition of a powder layer, the presented experiments represent a simplification of the environment found during L-PBF fabrication of bulk components. For example, closer spacing between the melt tracks will result in denudation of powder particles around the melt pool as well as more complex wetting behavior due to the presence of a solidified melt track on one side of the melt pool. Furthermore, there is no guarantee that the machined surface finish of the substrate in this work is perfectly analogous to the topology of the AM-fabricated surfaces upon which subsequent layers are deposited. These factors can be reasonably expected to further increase the variability of the melt pool morphology; therefore the variability observed in this work should be considered as a minimum variability which may occur during part
+
+\section*{fabrication.}
+Linear curves of constant melt pool cross-sectional width, depth, and area are reported across L-PBF beam power and beam velocity process space. The presented curves of constant geometry are bounded by confidence intervals based on a total of 720 melt pool cross-sections. While correlations between process parameters and melt pool geometry have previously been reported for this material system by Narra [20], those cross-sectional results were based on single measurements of each process parameter combination and the experiments were performed on a bare substrate without a powder layer. The authors are currently studying the influence of the presence of a powder layer (compared to a bare substrate) on melt pool size and morphology for the In718 material system.
+
+Finally, each process parameter combination was classified based on the morphology of its melt pool cross-sections. Interestingly, even though all of the process parameter combinations produced melt pools with depth to half-width ratios greater than unity (keyhole-mode melting), only a small subset of the combinations resulted in porosity trapped in the solidified melt pool. This behavior implies the existence
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_2abb72027620dac265ceg-7(4)}
+\end{center}
+
+Fig. 7. Cross-sectional melt pool morphologies plotted in process space. The annotations indicate the percentage of cross-sections which either contained keyholing porosity or exhibited the balling morphology. Two lines of constant melt pool geometry are overlaid. The line of constant depth is based on experimental measurements (Section 3.3) while the line of constant width to length ratio is based on the Rosenthal mode.\\
+of a stable keyholing regime, an occurrence which has been observed in the prior welding literature. Notably, even the most extreme keyholing porosity and balling process parameter combinations did not always produce melt pool cross-sections exhibiting those defects. These ex-situ classifications and defect frequencies are used extensively in the authors' concurrent in-situ monitoring work [19]. The authors also observe that the occasional drastic departures of melt pool dimensions from a normal distribution further motivate the need for robust in-situ process monitoring methodologies to ensure part quality for critical applications.
+
+\section*{Conflict of interest}
+This work was funded by Carnegie Mellon University's Manufacturing Futures Initiative under grant number 062900.005.105.100020.01. It would not be appropriate for anyone directly affiliated with either CMU's Mechanical Engineering or Materials Science and Engineering Departments in the last 5 years to review this work. As the lead author now works at Oak Ridge National Laboratory, it would also be inappropriate for anyone currently affiliated with ORNL's Manufacturing Demonstration Facility to review this work. There are no other known conflicts of interest to disclose.
+
+\section*{Acknowledgements}
+The authors would like to thank Dr. Sneha Prabha Narra (CMU) and Dr. Colt Montgomery (CMU) for their advice on polishing and etching In718, Dr. Brian Fisher (CMU) for their advice on experiment design, and Prof. Anthony Rollett (CMU) for their insight into appropriate statistical metrics. Funding for this work was provided by CMU's Manufacturing Futures Initiative (internal grant number 062900.005.105.100020.01).
+
+\section*{References}
+[1] J. Beuth, N. Klingbeil, The role of process variables in laser-based direct metal solid freeform fabrication, J. Mater. (JOM) 53 (2001) 36-39, \href{https://doi.org/10.1007/}{https://doi.org/10.1007/} s11837-001-0067-y.
+
+[2] P. Promoppatum, R. Onler, S.C. Yao, Numerical and experimental investigations of micro and macro characteristics of direct metal laser sintered Ti-6Al-4V products, J. Mater. Process. Technol. 240 (2017) 262-273, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. jmatprotec.2016.10.005,
+
+[3] Z. Francis, The Effects of Laser and Electron Beam Spot Size in Additive Manufacturing Processes, Carnegie Mellon University, 2017.
+
+[4] M. Tang, P.C. Pistorius, J.L. Beuth, Prediction of lack-of-fusion porosity for powder bed fusion, Addit. Manuf. 14 (2017) 39-48, \href{https://doi.org/10.1016/j.addma}{https://doi.org/10.1016/j.addma}. 2016.12.001.
+
+[5] D.R. Clymer, J. Cagan, J. Beuth, Power-velocity process design charts for powder bed additive manufacturing, J. Mech. Des. 139 (2017) 100907, \href{https://doi.org/10}{https://doi.org/10}. $1115 / 1.4037302$.
+
+[6] EOS GmbH, Material Data Sheet for EOS NickelAlloy IN718, (2014) \href{http://ip-saaseos-cms.s3.amazonaws.com/public/4528b4a1bf688496/}{http://ip-saaseos-cms.s3.amazonaws.com/public/4528b4a1bf688496/} ff974161c2057e6df56db5b67f0f5595/EOS\_NickelAlloy\_IN718\_en.pdf.
+
+[7] D. Zhang, W. Niu, X. Cao, Z. Liu, Effect of standard heat treatment on the microstructure and mechanical properties of selective laser melting manufactured Inconel 718 superalloy, Mater. Sci. Eng. A 644 (2015) 32-40, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. msea.2015.06.021.
+
+[8] S.K. Mannan, E.L. Hibner, B.C. Puckett, Physical metallurgy of alloys 718, 925, 725, and 725HS for service in aggressive corrosion environments, Corrosion 3125 (2003).
+
+[9] S. Safdar, A.J. Pinkerton, L. Li, M.A. Sheikh, P.J. Withers, An anisotropic enhanced thermal conductivity approach for modelling laser melt pools for Ni-base super alloys, Appl. Math. Model. 37 (2013) 1187-1195, \href{https://doi.org/10.1016/j.apm}{https://doi.org/10.1016/j.apm}. 2012.03.028.
+
+[10] D.G. Thakur, B. Ramamoorthy, L. Vijayaraghavan, Effect of high speed cutting parameters on the surface characteristics of superalloy Inconel, World Congress on Engineering, (2010) London, U.K..
+
+[11] R. Cunningham, S.P. Narra, C. Montgomery, J. Beuth, A.D. Rollett, Synchrotronbased X-ray microtomography characterization of the effect of processing variables on porosity formation in laser power-bed additive manufacturing of Ti-6Al-4V, J. Mater. (JOM) 69 (2016), \href{https://doi.org/10.1007/s11837-016-2234-1}{https://doi.org/10.1007/s11837-016-2234-1}.
+
+[12] H. Gong, K. Rafi, H. Gu, T. Starr, B. Stucker, Analysis of defect generation in Ti-6Al-4V parts made using powder bed fusion additive manufacturing processes, Addit. Manuf. 1-4 (2014) 87-98, \href{https://doi.org/10.1016/j.addma.2014.08.002}{https://doi.org/10.1016/j.addma.2014.08.002}.
+
+[13] U. Gratzke, P.D. Kapadia, J. Dowden, J. Kroos, G. Simon, Theoretical approach to the humping phenomenon in welding processes, J. Phys. D: Appl. Phys. 25 (2000) 1640-1647, \href{https://doi.org/10.1088/0022-3727/25/11/012}{https://doi.org/10.1088/0022-3727/25/11/012}.
+
+[14] I. Yadroitsev, A. Gusarov, I. Yadroitsava, I. Smurov, Single track formation in selective laser melting of metal powders, J. Mater. Process. Technol. 210 (2010) 1624-1631, \href{https://doi.org/10.1016/j.jmatprotec.2010.05.010}{https://doi.org/10.1016/j.jmatprotec.2010.05.010}.
+
+[15] E.O. Olakanmi, R.F. Cochrane, K.W. Dalgarno, A review on selective laser sintering/ melting (SLS/SLM) of aluminium alloy powders: processing, microstructure, and properties, Prog. Mater. Sci. 74 (2015) 401-477 (Accessed 22 June 2017), http:// \href{http://ac.els-cdn.com/S0079642515000389/1-s2.0-S0079642515000389-main.pdf?_}{ac.els-cdn.com/S0079642515000389/1-s2.0-S0079642515000389-main.pdf?\_} tid $=$ bb7814ac-5784-11e7-9b15-00000aacb35e\&acdnat $=1498161505 \_$ 52ad3b2dc2561ca22bb81b0d07fa77c0.
+
+[16] C. Zhao, K. Fezzaa, R.W. Cunningham, H. Wen, F. De Carlo, L. Chen, A.D. Rollett, T. Sun, Real-time monitoring of laser powder bed fusion process using high-speed Xray imaging and diffraction, Sci. Rep. 7 (2017) 1-11, \href{https://doi.org/10.1038/}{https://doi.org/10.1038/} s41598-017-03761-2.
+
+[17] P.S. Wei, K.C. Chuang, J.S. Ku, T. Debroy, Mechanisms of spiking and humping in keyhole welding, IEEE Trans. Compon. Packag. Manuf. Technol. 2 (2012) 383-394, \href{https://doi.org/10.1109/TCPMT.2011.2178412}{https://doi.org/10.1109/TCPMT.2011.2178412}.
+
+[18] P.S. Wei, Thermal science of weld bead defects: a review, J. Heat Transfer 133 (2010) 031005, \href{https://doi.org/10.1115/1.4002445}{https://doi.org/10.1115/1.4002445}.
+
+[19] L. Scime, J. Beuth, Using machine learning to identify in-situ melt pool signatures indicative of flaw formation in a laser powder bed fusion additive manufacturing process, Addit. Manuf. 25 (2019) 151-165, \href{https://doi.org/10.1016/j.addma}{https://doi.org/10.1016/j.addma}. 2018. 11.010 .
+
+[20] S.P. Narra, Melt Pool Geometry and Microstructure Control Across Alloys in Metal Based Additive Manufacturing Processes, Carnegie Mellon University, 2017.
+
+[21] N.T. Aboulkhair, I. Maskery, C. Tuck, I. Ashcroft, N.M. Everitt, On the formation of AlSi10Mg single tracks and layers in selective laser melting: microstructure and nano-mechanical properties, J. Mater. Process. Technol. 230 (2016) 88-98, https:// \href{http://doi.org/10.1016/j.jmatprotec.2015.11.016}{doi.org/10.1016/j.jmatprotec.2015.11.016}.
+
+[22] C. Montgomery, The Effect of Alloys, Powder, and Overhanging Geometries in Laser Powder Bed Additive Manufacturing, Carnegie Mellon University, 2017.
+
+[23] D. Rosenthal, The Theory of Moving Sources of Heat and Its Application to Metal Treatments, Transactions of the ASME, 1946.
+
+[24] M. Matthews, G. Guss, S. Khairallah, A. Rubenchick, P. Depond, W. King, Denudation of metal powder layers in laser bed fusion, Acta Mater. 114 (2016) 33-42.
+
+[25] L. Parry, I.A. Ashcroft, R.D. Wildman, Understanding the effect of laser scan strategy on residual stress in selective laser melting through thermo-mechanical simulation, Addit. Manuf. 12 (2016) 1-15, \href{https://doi.org/10.1016/j.addma}{https://doi.org/10.1016/j.addma}. 2016. 05.014 .
+
+[26] G. Jacob, A. Donmez, J. Slotwinski, S. Moylan, Measurement of powder bed density in powder bed fusion additive manufacturing processes, Meas. Sci. Technol. 27 (2016), \href{https://doi.org/10.1088/0957-0233/27/11/115601}{https://doi.org/10.1088/0957-0233/27/11/115601}.
+
+[27] ASTM, E3-11 Standard Guide for Preparation of Metallographic Specimens 1, ASTM, 2011, \href{https://doi.org/10.1520/E0003-11.2}{https://doi.org/10.1520/E0003-11.2}.
+
+[28] K. Devendranath Ramkumar, S.D. Patel, S. Sri Praveen, D.J. Choudhury, P. Prabaharan, N. Arivazhagan, M.A. Xavior, Influence of filler metals and welding techniques on the structure-property relationships of Inconel 718 and AISI 316L dissimilar weldments, Mater. Des. 62 (2014) 175-188, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. matdes.2014.05.019.
+
+[29] K.B. Small, D.A. Englehart, T.A. Christman, Guide to Etching Specialty Alloys, Advanced Materials and Processes, 2008, pp. 32-37 \href{https://www.google.co.kr/%25}{https://www.google.co.kr/\%} 5Cnpapers3://publication/uuid/7B149A4D-2255-4F6E-A331-EFE5F5D70DE7.
+
+[30] US National Institutes of Health, ImageJ, (n.d.). \href{https://imagej.nih.gov/ij/}{https://imagej.nih.gov/ij/}. (Accessed 13 June 2017)
+
+[31] J.W. Elmer, W.H. Giedt, T.W. Eager, The transition from shallow to deep penetration during electron beam welding, Weld. J. 69 (1990) 167-176.
+
+[32] Q. Guo, C. Zhao, L.I. Escano, Z. Young, L. Xiong, K. Fezzaa, W. Everhart, B. Brown, T. Sun, L. Chen, Transient dynamics of powder spattering in laser powder bed fusion additive manufacturing process revealed by in-situ high-speed high-energy $\mathrm{x}$-ray imaging, Acta Mater. 151 (2018) 169-180, \href{https://doi.org/10.1016/j.actamat}{https://doi.org/10.1016/j.actamat}. 2018.03.036.
+
+[33] R.W. Cunningham, Deffect Formation Mechanism in Powder-Bed Metal Additive Manufacturing, Carnegie Mellon University, 2018, \href{https://kilthub.cmu.edu/}{https://kilthub.cmu.edu/} articles/Defect Formation\_Mechanisms in Powder-Bed Metal Additive Manufacturing/6715691.
+
+[34] MathWorks, Normplot, (2017) (Accessed 31 December 2017), \href{https://www}{https://www}. \href{http://mathworks.com/help/stats/normplot.html}{mathworks.com/help/stats/normplot.html}.
+
+[35] M. Baron, Probability and Statistics for Computer Scientists, second edition, CRC Press, Boca Raton, FL, 2016.
+
+[36] A. Ladewig, G. Schlick, M. Fisser, V. Schulze, U. Glatzel, Influence of the shielding gas flow on the removal of process by-products in the selective laser melting process, Addit. Manuf. 10 (2016) 1-9, \href{https://doi.org/10.1016/j.addma.2016.01.004}{https://doi.org/10.1016/j.addma.2016.01.004}.
+
+[37] P. Bidare, I. Bitharas, R.M. Ward, M.M. Attallah, A.J. Moore, Fluid and particle dynamics in laser powder bed fusion, Acta Mater. 142 (2018) 107-120, \href{https://doi}{https://doi}. org/10.1016/j.actamat.2017.09.051.
+
+[38] S. Ly, A.M. Rubenchik, S.A. Khairallah, G. Guss, M.J. Matthews, Metal vapor microjet controls material redistribution in laser powder bed fusion additive manufacturing, Nat. Sci. Rep. 7 (2017) 1-12, \href{https://doi.org/10.1038/s41598-01704237-z}{https://doi.org/10.1038/s41598-01704237-z}.
+
+[39] A.R. Nassar, M.A. Gundermann, E.W. Reutzel, P. Guerrier, M.H. Krane, M.J. Weldon, Formation processes for large ejecta and interactions with melt pool formation in powder bed fusion additive manufacturing, Sci. Rep. 9 (2019) 1-11, \href{https://doi.org/10.1038/s41598-019-41415-7}{https://doi.org/10.1038/s41598-019-41415-7}.
+
+[40] H. Gong, K. Rafi, T. Starr, B. Stucker, Generation and detection of defects in metallic\\
+parts fabricated by selective laser melting and electron beam melting and their effects on mechanical properties, Solid Freeform Fabrication, (2013), pp. 424-439, \href{https://doi.org/10.18297/etd/515}{https://doi.org/10.18297/etd/515} Austin, TX.
+
+[41] M. Grasso, B.M. Colosimo, Process defects and in situ monitoring methods in metal powder bed fusion: a review, Meas. Sci. Technol. 28 (2017) 044005, \href{https://doi}{https://doi}. org/10.1088/1361-6501/aa5c4f.
+
+[42] M. Pastor, H. Zhao, R.P. Martukanitz, T. Debroy, Porosity, underfill and magnesium loss during continuous wave Nd:YAG laser welding of thin plates of aluminum alloys 5182 and 5754, Weld. J. 78 (1999) 207s-216s.\\
+[43] K.C. Mills, Thermophysical Properties for Selected Commercial Alloys, Woodhead Publishing, 2002, \href{http://app.knovel.com/hotlink/toc/id:kpRVTPSCA1/}{http://app.knovel.com/hotlink/toc/id:kpRVTPSCA1/} recommended-values-thermophysical/recommended-values-thermophysical,
+
+[44] A.M. Rubenchik, W.E. King, S. Wu, Scaling laws for the additive manufacturing, J. Mater. Process. Technol. 257 (2018) 234-243, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. jmatprotec.2018.02.034 July 2018.
+
+[45] J. Fox, Transient Melt Pool Response in Additive Manufacturing of Ti-6Al-4V, Carnegie Mellon University, 2015.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

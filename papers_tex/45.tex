@@ -1,0 +1,486 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Evaporation model for beam based additive manufacturing using free surface lattice Boltzmann methods }
+
+
+\author{Alexander Klassen, Thorsten Scharowsky and Carolin Körner\\
+Chair of Metals Science and Technology, University of Erlangen-Nuremberg, Martensstr. 5, D-91058\\
+Erlangen, Germany\\
+E-mail: alexander.klassen@ww.uni-erlangen.de}
+\date{}
+
+
+\begin{document}
+\maketitle
+PAPER
+
+\section*{Evaporation model for beam based additive manufacturing using free surface lattice Boltzmann methods}
+To cite this article: Alexander Klassen et al 2014 J. Phys. D: Appl. Phys. 47275303
+
+View the article online for updates and enhancements.
+
+Recent citations
+
+\begin{itemize}
+  \item Preventing Evaporation Products for High-\\
+Quality Metal Film in Directed Energy\\
+Deposition: A Review\\
+Kang-Hyung Kim et al
+  \item Semi-coupled resolved CFD-DEM\\
+$\frac{\text { simulation of powder-based selective laser }}{\text { melting for additive manufacturing }}$\\
+Tao Yu and Jidong Zhao
+  \item Modified Cellular Automaton Simulation of\\
+$\frac{\text { Metal Additive Manufacturing }}{\text { Jun Kubo et al }}$
+\end{itemize}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_9f4c77949db3cee9cebfg-01}
+\end{center}
+
+\section*{IOP ebooks"}
+Bringing together innovative digital publishing with leading authors from the global scientific community.
+
+Start exploring the collection-download the first chapter of every title for free.
+
+Received 24 January 2014, revised 28 April 2014
+
+Accepted for publication 12 May 2014
+
+Published 13 June 2014
+
+\begin{abstract}
+Evaporation plays an important role in many technical applications including beam-based additive manufacturing processes, such as selective electron beam or selective laser melting (SEBM/SLM). In this paper, we describe an evaporation model which we employ within the framework of a two-dimensional free surface lattice Boltzmann method. With this method, we solve the hydrodynamics as well as thermodynamics of the molten material taking into account the mass and energy losses due to evaporation and the recoil pressure acting on the melt pool. Validation of the numerical model is performed by measuring maximum melt depths and evaporative losses in samples of pure titanium and Ti-6Al-4V molten by an electron beam. Finally, the model is applied to create processing maps for an SEBM process. The results predict that the penetration depth of the electron beam, which is a function of the acceleration voltage, has a significant influence on evaporation effects.
+\end{abstract}
+
+Keywords: evaporation, thermal lattice Boltzmann method, free surfaces, selective electron beam melting
+
+(Some figures may appear in colour only in the online journal)
+
+\section*{1. Introduction}
+The adaptation of optical or particle beams to materials processing applications allows the precise machining of parts and the manufacturing of arbitrary components and devices. These processes are limited by thermal conduction at low and medium irradiances and by evaporation at high irradiances. This applies, for example, to the selective melting by an electron or laser beam (SEBM/SLM), welding or cladding, where heating and melting are inherent to the process. Apart from mass and energy transfer to the vapour phase, evaporation also generates recoil onto the melt surface. These effects can be taken advantage of, e.g. for deep penetration welding, or they can unintentionally impact the process itself by forming melt pool instabilities. Thus, the properties of the fabricated product such as bulk porosity or local alloy composition can be adversely influenced. As the interplay between beam absorption, conduction and phase changes is complex and depends on the process parameters, predictions based on numerical methods require a rigorous mathematical description of evaporation on the macroscopic scale. The kinetics of evaporation is well determined theoretically since the original work of Hertz in 1882 [1] and has been further elaborated upon by Anisimov [2], Ytrehus [3] and Knight [4]. The Knudsen layer that forms at the direct interface between the condensed matter and the vapour phase and that, in a macroscopic sense, constitutes a contact discontinuity is thereby described by analytical jump conditions. Following the literature on beam-based manufacturing processes, this theoretical approach is widely used for numerical computations of evaporation effects, particularly in laser keyhole welding, e.g. [5-7].
+
+In this paper, we implement the evaporation model in an existing code based on the lattice Boltzmann method (LBM) with free surfaces. The main field of application is additive manufacturing by SEBM/SLM. Intense evaporation is not expected in the irradiance regime of interest, so that the emerging vapour plume and the gas phase do not have to be
+
+\section*{(a) Subsonic flow}
+(b) Supersonic flow
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_9f4c77949db3cee9cebfg-03}
+\end{center}
+
+Figure 1. Schematic of the flow structure generated by an expanding vapour plume for (a) subsonic and sonic and (b) supersonic flow. Encircled letters denote flow regions of interest and are used as subscripts in the equations throughout this paper.
+
+resolved numerically. The model is hence simplified to the point that evaporation is represented by a local loss of mass and energy inducing a recoil pressure acting normal to the free surface. The theoretical approach is then validated against SEBM experiments in terms of melt pool depth and evaporative mass loss. Since the numerical model is currently limited to single-component evaporation, both a pure metal (titanium) and an alloy (Ti-6Al-4V) are considered in the experiments, in which the alloy has effective physical properties. Finally, an SEBM process conducted under given conditions is evaluated using numerically generated processing maps. In addition to the $60 \mathrm{kV}$ electron gun of the deployed SEBM machine, the impact of the beam acceleration voltage on the process window is numerically predicted.
+
+\section*{2. Mathematical model}
+\subsection*{2.1. Flow structure of the vapour plume}
+The evaporation of condensed matter under conditions imposed by heating using a laser or electron beam induces a vapour flow, as depicted in figure 1. The emerging vapour plume is characterized by a total of three transition layers across which the properties of the medium change from one equilibrium state to another and which separate the region of undisturbed ambient gas from the vapour at the surface of the target. In a macroscopic sense, these disturbances can be mathematically treated as gas dynamic discontinuities. The first upstream discontinuity in the immediate vicinity of the evaporating surface is the Knudsen layer. It typically has a thickness of the order of a few molecular mean free paths within which the evaporated particles approach translational equilibrium. The front of the expanding plume is a shock wave that propagates into the stagnant ambient gas. The shock wave causes a sharp increase in temperature and pressure of the ambient gas just behind it [8]. The regions of compressed ambient gas and expanding vapour phase are separated by a third contact discontinuity across which the pressure and velocity field is uniform, but the temperature and density undergo significant changes $[9,10]$. This flow structure as shown in figure 1(a) is typical of SLM processes, since these are generally conducted at atmospheric pressure using medium laser intensities, so that the vapour flow remains subsonic. In an expansion into a vacuum as is the case for SEBM processes or under conditions of intense evaporation (e.g. laser welding or drilling), though, a non-equilibrium rarefaction fan develops between the Knudsen layer and the vapour phase [3], see figure 1(b). The flow field in front of the Knudsen layer thus expands at supersonic speeds, while the flow at the outer boundary of the Knudsen layer is choked [4,11].
+
+How the expanding vapour acts upon the condensed phase in terms of mass, momentum and energy is predominantly determined by the processes within the Knudsen layer. Therefore, an analytical solution of the Knudsen layer will be introduced into the evaporation model. The vapour phase in front of the Knudsen layer, on the other hand, will be disregarded in the numerical model. For manufacturing processes using an electron beam as energy source the neglect of the vapour phase is justified by the fact that the density of the vapour is much lower than that of its condensed phase. Thus, the interaction of free electrons with the vapour is considered to be insignificant. This holds for selective electron beam melting (SEBM) and electron beam welding where maximum temperatures are typically well below the critical temperature of the sample material, $T_{\text {crit }}$. In this regard, however, it is worth noting that the occurrence of a vapour plume may be of importance to laser-based manufacturing technologies as it can strongly affect laser attenuation and absorption.
+
+\subsection*{2.2. Evaporation and condensation fluxes}
+The evaporation of condensed matter can be rigorously described by the flux of particles leaving the surface of the condensed phase, $j^{+}$, and the flux of particles returning to the surface, $j^{-}$. The net mass transport from the evaporating surface per unit time is then given by
+
+
+\begin{equation*}
+j^{\mathrm{net}}=j^{+}-j^{-}=\left(\frac{j^{+}-j^{-}}{j^{+}}\right) \cdot j^{+}=\phi \cdot j^{+} \tag{1}
+\end{equation*}
+
+
+The evaporation coefficient $\phi$ yields the fraction of the net flux of particles that are able to escape into the half space with respect to the evaporation flux $j^{+}$. The accommodation coefficients for upstream and downstream flow are taken to be unity and are thus not included in equation (1) $[12,13]$. These coefficients define the probability of a particle to be emitted from the surface or to stick onto the surface upon impingement and not being scattered back into the corresponding half space, respectively. The fluxes may be found by assuming a half-range Maxwellian distribution function in the velocity space for evaporating particles and a full-range Maxwellian for condensing particles and by applying the principles of conservation of mass, momentum and translational energy. The basic procedure outlined in the following is based on a one-dimensional formulation of the problem. Furthermore, the vapour phase is expected to obey the ideal gas law. From\\
+this, the evaporation flux is given by [1]
+
+
+\begin{equation*}
+j^{+}=p_{\mathrm{s}} \sqrt{\frac{m_{\mathrm{A}}}{2 \pi \cdot k_{\mathrm{B}} T_{\mathrm{s}}}} \tag{2}
+\end{equation*}
+
+
+where $m_{\mathrm{A}}$ is the atomic mass, $k_{\mathrm{B}}$ is Boltzmann's constant and $p_{\mathrm{s}}$ and $T_{\mathrm{s}}$ are the pressure and temperature at the vapour side of the phase interface, respectively. The pressure $p_{\mathrm{s}}$ can be interpreted as the saturated vapour pressure at surface temperature $T_{\mathrm{s}}$, which follows from the assumption that prior to vaporization the particles were in equilibrium with their condensed phase. This holds for pure metals. In the case of an alloy, the evaporation fluxes of each alloying element have to be considered individually taking into account the different partial vapour pressures [5]. In this paper, though, alloys are treated as pure materials having effective physical properties. The saturated vapour pressure is derived using the ClausiusClapeyron equation in its approximate form:
+
+
+\begin{equation*}
+\frac{1}{p_{\mathrm{s}}} \mathrm{d} p_{\mathrm{s}}=\frac{L_{\mathrm{vap}}\left(T_{\mathrm{s}}\right) \cdot m_{\mathrm{A}}}{k_{\mathrm{B}}} \cdot \frac{1}{T_{\mathrm{s}}^{2}} \mathrm{~d} T_{\mathrm{s}} \tag{3}
+\end{equation*}
+
+
+Introducing the temperature-dependent latent heat of vaporization, $L_{\text {vap }}\left(T_{\mathrm{s}}\right)$, as [14]
+
+
+\begin{equation*}
+L_{\text {vap }}\left(T_{\mathrm{s}}\right)=L_{\text {vap }, 0} \cdot \sqrt{1-\left(\frac{T_{\mathrm{s}}}{T_{\text {crit }}}\right)^{2}} \tag{4}
+\end{equation*}
+
+
+and carrying out the integration, the resulting expression for the saturated vapour pressure is
+
+
+\begin{align*}
+p_{\mathrm{s}}= & p_{\text {atm }} \cdot \exp \left\{-\frac{L_{\text {vap }, 0} \cdot m_{\mathrm{A}}}{k_{\mathrm{B}}} \cdot\left[\frac{1}{T_{\mathrm{s}}} \sqrt{1-\left(\frac{T_{\mathrm{s}}}{T_{\text {crit }}}\right)^{2}}\right.\right. \\
+& -\frac{1}{T_{\text {boil }}} \sqrt{1-\left(\frac{T_{\text {boil }}}{T_{\text {crit }}}\right)^{2}} \\
+& \left.\left.-\frac{1}{T_{\text {crit }}}\left(\sin ^{-1}\left(\frac{T_{\mathrm{s}}}{T_{\text {crit }}}\right)-\sin ^{-1}\left(\frac{T_{\text {boil }}}{T_{\text {crit }}}\right)\right)\right]\right\} . \tag{5}
+\end{align*}
+
+
+Here, $L_{\mathrm{vap}, 0}$ is the latent heat of vaporization at absolute zero temperature, $p_{\text {atm }}=1$ bar and $T_{\text {boil }}$ and $T_{\text {crit }}$ are the boiling temperature at standard atmosphere (1 bar) and the critical temperature, respectively.
+
+Considering non-equilibrium effects within the Knudsen layer, the condensation flux reads [15]
+
+
+\begin{equation*}
+j^{-}=p_{\mathrm{Kn}} \sqrt{\frac{m_{\mathrm{A}}}{2 \pi \cdot k_{\mathrm{B}} T_{\mathrm{Kn}}}} \cdot \beta \cdot F^{-} \tag{6}
+\end{equation*}
+
+
+where $p_{\mathrm{Kn}}$ and $T_{\mathrm{Kn}}$ are the pressure and temperature in the vapour at the outer side of the Knudsen layer and $\beta$ and $F^{-}$are dimensionless functions that account for collisional effects in downstream flow. The function $\beta$ as well as $p_{\mathrm{Kn}}$ and $T_{\mathrm{Kn}}$ additionally require jump conditions due to the abrupt change in temperature and density across the Knudsen layer, $T_{\mathrm{Kn}} / T_{\mathrm{S}}$ and $\rho_{\mathrm{Kn}} / \rho_{\mathrm{s}}$, respectively. These are detailed within the appendix. Note that neglecting downstream collisional effects, i.e. $\beta=1$ and $F^{-}=1$, and disregarding the temperature jump across the Knudsen layer one arrives at the well-known Hertz-Knudsen formula.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_9f4c77949db3cee9cebfg-04}
+\end{center}
+
+Figure 2. Evaporation coefficient as a function of Mach number. The maximum value of 0.82 is attained when vapour flow approaches the sonic state.
+
+As indicated in equation (1), the net mass transport considering condensation can be subsumed within the evaporation coefficient $\phi$ which, using equations (2), (6) and equations in the appendix, reads [4]
+
+
+\begin{equation*}
+\phi=\sqrt{2 \pi \gamma_{v}} \cdot M a_{\mathrm{Kn}}\left(T_{\mathrm{s}}\right) \cdot \frac{\rho_{\mathrm{Kn}}}{\rho_{\mathrm{s}}} \sqrt{\frac{T_{\mathrm{Kn}}}{T_{\mathrm{s}}}} \tag{7}
+\end{equation*}
+
+
+where $\gamma_{v}$ is the ratio of specific heats and $M a_{\mathrm{Kn}}\left(T_{\mathrm{S}}\right)$ is the flow Mach number at the outer boundary of the Knudsen layer as a function of the surface temperature $T_{\mathrm{s}}$. For monoatomic gases $\gamma_{v}$ is $5 / 3$. The Mach number is considered known in this formula and will be derived later. Equation (7) shows that $\phi$ is a function of $M a_{\mathrm{Kn}}\left(T_{\mathrm{s}}\right)$ alone, which is also reflected in figure 2. The evaporation coefficient approaches its maximum value of $\phi_{\max }=0.82$ when the vapour flow outside the Knudsen layer becomes sonic. Due to the rarefaction fan that develops upon passing the sonic point (see figure 1(b)), supersonic flow can be observed in front of the Knudsen layer with $M a_{v}\left(T_{\mathrm{s}}\right)>1$, whereas the flow at the outer boundary of the Knudsen layer is choked. Consequently, even under vacuum conditions or conditions of intense evaporation, $M a_{\mathrm{Kn}}\left(T_{\mathrm{s}}\right) \leqslant 1$ holds, hence preserving a maximum value of 0.82 for the evaporation coefficient $[2,4,13,16]$. This is consistent with values published in the literature. Anisimov and Rakhmatulina [17] studied the accuracy of the hydrodynamic solution of vapour expanding into a vacuum as compared to the kinetic solution. They obtained an evaporation coefficient of roughly 0.8 , once gas dynamic flow is established. Also Fischer [18] found that $\phi$ approaches 0.85 as the Knudsen number tends to 0.1 , i.e. when vapour motion is within the gas dynamic expansion regime. Sibold and Urbassek [19] determined a value of 0.84 using Monte Carlo simulations of the evaporation into a vacuum.
+
+In order to couple the Mach number to known quantities like the surface temperature, $T_{\mathrm{s}}$, flow states diagrams can be\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_9f4c77949db3cee9cebfg-05}
+
+Figure 3. (left) Flow states diagram for pure titanium in a helium atmosphere and different external pressures $p_{\mathrm{a}}$. Curves calculated using equations (5) and (8) and values from table 1. (right) Temperatures $T_{\mathrm{s}, 0}$ at $M a_{\mathrm{Kn}}=0$ and $T_{\mathrm{s}, 1}$ at $M a_{\mathrm{Kn}}=1$ as function of $p_{\mathrm{a}}$ computed from the flow states diagram. For a given ambient pressure, the curves span the temperature range where the evaporation coefficient, $\phi$, increases from 0 to its maximum value of 0.82 .
+
+used [4]. These diagrams define the possible flow states of the vapour phase at given ambient conditions and temperatures $T_{\mathrm{s}}$. A flow states diagram for pure titanium vapour in a helium atmosphere at $T_{\mathrm{a}}=298 \mathrm{~K}$ is exemplarily shown in figure 3 , left. The allowed flow states for the vapour are thereby determined by the intersections of two sets of curves that are defined in terms of the pressure ratio $p_{\mathrm{s}} / p_{\mathrm{a}}$, where $p_{\mathrm{s}}$ is the pressure directly at the surface of the target and $p_{\mathrm{a}}$ that of the ambient atmosphere. The full curves represent $p_{\mathrm{s}} / p_{\mathrm{a}}$ based on fluid mechanic considerations [4]:
+
+
+\begin{align*}
+\frac{p_{\mathrm{s}}}{p_{\mathrm{a}}} & =\left[1+\gamma_{\mathrm{a}} \cdot M a_{\mathrm{Kn}}\left(T_{\mathrm{s}}\right) \cdot \frac{c_{\mathrm{Kn}}}{c_{\mathrm{a}}} \cdot\left[\frac{\gamma_{\mathrm{a}}+1}{4} \cdot M a_{\mathrm{Kn}}\left(T_{\mathrm{s}}\right)\right.\right. \\
+& \left.\left.\cdot \frac{c_{\mathrm{Kn}}}{c_{\mathrm{a}}}+\sqrt{1+\left(\frac{\gamma_{\mathrm{a}}+1}{4} \cdot M a_{\mathrm{Kn}}\left(T_{\mathrm{s}}\right) \cdot \frac{c_{\mathrm{Kn}}}{c_{\mathrm{a}}}\right)^{2}}\right]\right] \\
+& \times\left[\frac{\rho_{\mathrm{Kn}}}{\rho_{\mathrm{s}}} \cdot \frac{T_{\mathrm{Kn}}}{T_{\mathrm{s}}}\right]^{-1} \tag{8}
+\end{align*}
+
+
+where $\gamma_{\mathrm{a}}$ is the ratio of specific heats of the ambient gas and $c_{\mathrm{Kn}} / c_{\mathrm{a}}$ the ratio of the speeds of sound:
+
+
+\begin{equation*}
+\frac{c_{\mathrm{Kn}}}{c_{\mathrm{a}}}=\sqrt{\frac{m_{\mathrm{A}, \mathrm{a}} \cdot \gamma_{v} \cdot T_{\mathrm{Kn}}}{m_{\mathrm{A}, v} \cdot \gamma_{\mathrm{a}} \cdot T_{\mathrm{a}}}} \tag{9}
+\end{equation*}
+
+
+The dashed curves in figure 3, left, can be obtained from the ratio of the saturated vapour pressure from equation (5) to the ambient pressure, $p_{\mathrm{a}}$. For example, at an ambient atmosphere as specified in figure 3 and an external pressure of $p_{\mathrm{a}}=1 \mathrm{bar}$, evaporation would start at a surface temperature of $T_{\mathrm{s}}=3558 \mathrm{~K}$, which is the boiling point at standard atmosphere, and reach its maximum for temperatures $T_{\mathrm{S}} \geqslant 4230 \mathrm{~K}$. Between these two temperature values the Mach number is approximately a linear function of $T_{\mathrm{s}}$. Thus, to correlate $\phi$ from equation (7) with the surface temperature, it is sufficient to determine $T_{\mathrm{s}, 0}$ and $T_{\mathrm{s}, 1}$, where $M a_{\mathrm{Kn}}\left(T_{\mathrm{s}, 0}\right)=0$ and $M a_{\mathrm{Kn}}\left(T_{\mathrm{s}, 1}\right)=1$. Figure 3, right, shows the variation of $T_{\mathrm{s}, 0}$ and $T_{\mathrm{s}, 1}$ with ambient pressure $p_{\mathrm{a}}$.
+
+\subsection*{2.3. Recoil pressure}
+Due to the conservation of momentum, the expanding vapour generates a recoil pressure, $p_{\text {recoil }}$, onto the evaporating surface. In the state of thermodynamic equilibrium between the vapour and its condensed phase, the flux of evaporating particles matches those of condensing particles. For $\phi=0, p_{\text {recoil }}$ thus originates in equal measure from the recoil of leaving particles and from collisions of condensing particles with the surface $[1,6]$, giving the recoil pressure as $p_{\text {recoil }}=$ $0.5 p_{\mathrm{s}}+0.5 p_{\mathrm{Kn}}=p_{\mathrm{s}}$. Note that $p_{\mathrm{Kn}}=p_{\mathrm{s}}$ in this case, see equations in the appendix. For higher evaporation fluxes, i.e. $\phi>0$, the contribution of returning particles to the recoil is governed by the evaporation coefficient. The condensing vapour thereby not only originates from the outer side of the Knudsen layer where $p_{\text {Kn }}$ prevails but from the whole Knudsen layer. Assuming the pressure to be linear throughout the Knudsen layer region between the values $p_{\mathrm{s}}$ and $p_{\mathrm{Kn}}$, we derive the following formulation for the recoil pressure:
+
+
+\begin{align*}
+p_{\text {recoil }} & =\frac{1}{2} p_{\mathrm{s}}+\frac{1}{2} \cdot(1-\phi) \cdot\left(\frac{1}{2} p_{\mathrm{Kn}}+\frac{1}{2} p_{\mathrm{s}}\right) \\
+& =\frac{1}{2} p_{\mathrm{s}} \cdot\left[1+\frac{1}{2} \cdot(1-\phi) \cdot\left(1+\frac{\rho_{\mathrm{Kn}}}{\rho_{\mathrm{s}}} \frac{T_{\mathrm{Kn}}}{T_{\mathrm{s}}}\right)\right] \tag{10}
+\end{align*}
+
+
+with $(1-\phi)$ being the fraction of returning particles. Evaporation into high vacuum and/or under powerful\\
+irradiation hence results in a minimum recoil pressure of $p_{\text {recoil }}=0.56 p_{\mathrm{s}}$, which is comparable to the values used by other researchers [6, 20-22].
+
+\section*{3. Numerical model}
+The evaporation model introduced in the preceding section is implemented in an existing code based on the LBM. The LBM employed is a two-dimensional (2D) single phase free surface method [23] that is capable of simulating hydrodynamics as well as thermodynamics, including wetting and capillary forces [24, 25], convective mass and heat transport and melting and solidification [26]. The specific enthalpy is modified by the energy deposited into the material by the beam within each computational time step. For the experiments conducted in this paper, an electron beam is considered as the energy source. Local energy absorption is accurately modelled as a function of target material, acceleration voltage, depth and local surface obliquity using appropriate depth-dose profiles [27]. The free surface between the liquid and the gas phase is implicitly tracked by a volume of fluid method where the fluid fraction of each surface cell is monitored by tracking the net mass exchange to neighbouring cells. When a cell is entirely filled or emptied, the state of this cell is changed accordingly thus inducing a movement of the free surface [23]. Fluid transport is driven by capillary forces and by the recoil due to evaporation. In this regard, it should be emphasized that Marangoni convection has not been taken into account in the numerical simulations presented herein.
+
+The numerical procedure for the evaporation is illustrated in the flow chart in figure 4 . The specific enthalpy, $h_{E}(x, t)$, is easily transferred into an equivalent temperature value, $T(x, t)$, by means of the specific heat capacity, $c_{p}$ [26]. Here, $x$ is the location of the cell within the numerical grid and $t$ is time. The temperature controlling the evaporation process is the surface temperature $T_{\mathrm{s}}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)$. Evaporation is performed directly at the free surface of the condensed phase, so that $x_{\mathrm{s}}$ comprises surface cells only. Other driving parameters are the physical properties of the sample material as well as those of the ambient gas, both of which are input values provided by the user. Note that multicomponent evaporation is not considered in the evaporation model, so that the sample material has effective physical properties. Provided that diffusive evaporation is negligible, the requirement for evaporation to take place is that the saturated vapour pressure exceeds the external pressure, i.e. $p_{\mathrm{s}}\left(T_{\mathrm{s}}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)\right)>p_{\mathrm{a}}$ and thus $M a_{v}\left(T_{\mathrm{s}}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)\right)>0$ or $T_{\mathrm{s}}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)>T_{\mathrm{s}, 0}$. If the latter condition is fulfilled, $p_{\mathrm{s}}$ and the net evaporation flux, $j^{\text {net }}$, are computed as per equations (5) and (1), respectively.
+
+Evaporation involves both the transfer of mass, $\Delta m_{\text {rvap }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)$, and energy, $\Delta E_{\text {rvap }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)$, from the condensed to the gas phase as well as recoil onto the evaporating surface generated by the expanding vapour, $\Delta p_{\text {recoil }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)$. These quantities can be calculated as
+
+$\Delta p_{\text {recoil }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)=p_{\text {recoil }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)-p_{\mathrm{a}}$
+
+$\Delta m_{\text {vap }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)=j^{\text {net }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right) \cdot \Delta t \cdot \Delta x^{2}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_9f4c77949db3cee9cebfg-06}
+\end{center}
+
+Figure 4. Flow chart of the numerical procedure for the evaporation from a free surface cell.
+
+
+\begin{align*}
+& \Delta E_{\text {vap }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)=\Delta m_{\text {vap }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right) \cdot\left[L_{\text {vap }}\left(T_{\mathrm{s}}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)\right)+L_{\text {melt }}\right. \\
+& \left.\quad+c_{p, \mathrm{~s}} \cdot T_{\text {liquidus }}+c_{p, 1} \cdot\left(T_{\mathrm{s}}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)-T_{\text {liquidus }}\right)\right] \tag{13}
+\end{align*}
+
+
+with $\Delta x$ being the spatial resolution, $L_{\text {melt }}$ the heat of fusion, $c_{p, \mathrm{~s}}$ and $c_{p, 1}$ the specific heat capacity in the solid and the liquid state, respectively, and $T_{\text {liquidus }}$ being the liquidus temperature. Since the vapour phase is neglected in the free surface formulation used in our numerical model, the evaporated mass and energy is removed from the surface cells. Accordingly, the state variables of the lattice are updated applying equations (11) to (13). In the following, a subscript 'pre' denotes values before and 'post' values after the evaporation procedure:
+
+$p_{\mathrm{G}, \text { post }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)=p_{\mathrm{G}, \text { pre }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)+\Delta p_{\text {recoil }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)$
+
+$m_{\text {post }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)=m_{\text {pre }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)-\Delta m_{\text {vap }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)$
+
+$h_{\mathrm{E}, \text { post }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)=\frac{h_{\mathrm{E}, \text { pre }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right) \cdot m_{\text {pre }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)-\Delta E_{\text {vap }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)}{m_{\text {pre }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)-\Delta m_{\text {vap }}\left(\boldsymbol{x}_{\mathrm{s}}, t\right)}$.
+
+Thereby, the recoil pressure is treated as a modification of the local gas pressure, $p_{\mathrm{G}}[23]$, where $p_{\mathrm{G}, \text { pre }}$ includes a pressure term for the surface tension which counteracts the evaporation recoil pressure.
+
+\section*{4. Experimental verification}
+Experimental verification is given by ex situ measurements on samples processed by SEBM. SEBM is an additive
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_9f4c77949db3cee9cebfg-07}
+\end{center}
+
+Figure 5. Schematic of the SEBM system showing the key components.
+
+manufacturing technology where parts are built in a layerwise manner by applying metal powder in layers of constant thickness. Figure 5 illustrates a schematic view of the SEBM system. The powder is loaded into hoppers, fed to the build area and then raked into a uniform layer. Each raked layer is preheated using the electron beam as the energy source and then selectively molten following a 2D cross section of a 3D CAD model with the electron beam. The major factors having an impact on the quality of the fabricated part are the beam power, $P$, and the scanning speed, $v$, of the electron beam. The adjustment of the beam power can be achieved by a change in beam current or acceleration voltage, respectively. Details of the SEBM process are described elsewhere [28,29].
+
+For the experimental verification carried out within this section, we use a modified SEBM process on an Arcam EBM S12 system (Arcam AB, Mölndal, Sweden). Therefore, continuous single tracks are molten in solid samples of pure titanium and Ti-6Al-4V (grade 5 titanium alloy). The application of powder layers as well as the preheating of the sample is disabled, so that the experiments are conducted at room temperature. Helium is used as the processing gas, whereby the external pressure is set to a value of $p_{\mathrm{a}}=0.2 \mathrm{~Pa}$. The acceleration voltage of the electron beam is $60 \mathrm{kV}$.
+
+Numerical experiments are performed within a domain that only comprises a small section of the real sample where the electron beam passes through the 2D plane with a predefined scanning speed. This approach implies that the thermal field of each single track is not affected by its neighbouring track. In fact, the experiments are designed in a way that prevents such an overlap. Since simulations are carried out in 2D, the electron beam is deflected out-of-plane and is represented by a 2D Gaussian distribution with a width of $w=4 \sigma=400 \mu \mathrm{m}$, with $\sigma$ being the standard deviation. The sample material has effective physical properties that are listed in table 1.\\
+Table 1. Physical properties of pure titanium and the titanium alloy Ti-6Al-4V as used for the numerical calculations.
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Physical property & Pure Ti & Ti-6Al-4V \\
+\hline
+$m_{\mathrm{A}}(\mathrm{u})$ & $47.9[30]$ & $46.77^{\mathrm{a}}[30]$ \\
+density, liquid $\left(\mathrm{kg} \mathrm{m}^{-3}\right)$ & $4130[30]$ & $4122[36]$ \\
+dyn. viscosity $\left(\mathrm{mPa} \mathrm{s}^{2}\right)$ & $3.3[31]$ & $4.76[37]$ \\
+surface tension $\left(\mathrm{J} \mathrm{m}^{-2}\right)$ & $1.52[32]$ & $1.52[37]$ \\
+$c_{p, \mathrm{~s}}$, mean $\left(\mathrm{J} \mathrm{kg}^{-1} \mathrm{~K}^{-1}\right)$ & $605[33]$ & $670[38]$ \\
+$c_{p, 1}\left(\mathrm{~J} \mathrm{~kg}^{-1} \mathrm{~K}^{-1}\right)$ & $966[33]$ & $1126[38]$ \\
+$T_{\text {solidus }}(\mathrm{K})$ & - & $1878[39]$ \\
+$T_{\text {liquidus }}(\mathrm{K})$ & $1940[34]$ & $1928[39]$ \\
+$T_{\text {boil }}(\mathrm{K})$ & $3558[34]$ & $3315[40]$ \\
+$T_{\text {crit }}(\mathrm{K})$ & $7890[35]$ & $7890^{\mathrm{b}}[35]$ \\
+$L_{\text {melt }}\left(\mathrm{kJ} \mathrm{kg}^{-1}\right)$ & $305[30]$ & $290[38]$ \\
+$L_{\text {vap }, 0}\left(\mathrm{~kJ} \mathrm{~kg}^{-1}\right)$ & $9700[30]$ & $9700^{\mathrm{b}}[30]$ \\
+\hline
+\end{tabular}
+\end{center}
+
+${ }^{a}$ Average atomic mass.
+
+${ }^{\mathrm{b}}$ Values from pure titanium.
+
+\subsection*{4.1. Melt pool geometry}
+Model validation is accomplished by comparing single tracks produced by SEBM in dense Ti-6Al-4V samples in terms of shape and dimensions with model predictions. The simulation results of the temporal evolution of the melt pool for a line energy of $E_{\mathrm{L}}=P / v=0.25 \mathrm{~kJ} \mathrm{~m}^{-1}$ at a beam power of $300 \mathrm{~W}$ are exemplarily shown in figure 6 . The electron beam initially heats up and then melts the material directly beneath it. In the irradiance regime typical of SEBM, there is severe local superheating of the melt. As the surface temperature exceeds approximately $2950 \mathrm{~K}$, the recoil of the expanding vapour becomes large enough (about $0.05 \mathrm{bar}$ ) to accelerate the melt from the centre of the beam interaction zone towards its periphery inducing deformation of the melt pool. The temperature and thus the flow velocity approach their maximum values of $3225 \mathrm{~K}$ and $1.3 \mathrm{~m} \mathrm{~s}^{-1}$, respectively, when the electron beam is about to pass through the 2D plane, figure $6(a)$, whereas the maximum melt pool depth is attained behind the beam at a distance of about $1 \sigma$, figure $6(b)$. The high flow velocity indicates that recoil pressure has to be considered under these conditions, which are common to SEBM. After the electron beam has traversed the plane, the surface temperature falls rapidly and the melt that was first expelled from the interaction zone fills the formed small cavity again, figure $6(c)$, and solidifies there.
+
+Figures $7(a)-(c)$ show the simulation results of the temporal evolution of the melt pool for the line energies 0.15 and $0.50 \mathrm{~kJ} \mathrm{~m}^{-1}$ at a beam power of $300 \mathrm{~W}$. Liquid melt is thereby represented by red areas, the heat affected zone by different shades of blue and the electron beam, if being within the 2D plane, by yellow areas. Temperatures during the trial peak at $3150 \mathrm{~K}$ for the track melted with the low $E_{\mathrm{L}}$ and $3250 \mathrm{~K}$ for that with the high $E_{\mathrm{L}}$, resulting in maximum recoil pressures of around 0.2 bar and 0.4 bar, respectively. The corresponding micrograph cross sections of the single track experiments are depicted in figure $7(d)$. The numerical model, even though $2 \mathrm{D}$, matches the experimental results remarkably well. Note that within the model hydro- as well as thermodynamics are not solved in the third dimension. That is, in the lateral direction melt flow is solely perpendicular to the\\
+(a) centre of the beam
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_9f4c77949db3cee9cebfg-08(2)}
+\end{center}
+
+(b) at $1 \times \sigma$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_9f4c77949db3cee9cebfg-08(1)}
+\end{center}
+
+(c) at $1.5 \times \sigma$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_9f4c77949db3cee9cebfg-08}
+\end{center}
+
+Figure 6. Simulated melt pool formation in a dense Ti-6Al-4V sample under the action of a $60 \mathrm{kV}$ electron beam of power $300 \mathrm{~W}$ and line energy $0.25 \mathrm{~kJ} \mathrm{~m}^{-1}$ at different beam positions, (a)-(c). Temperature plots are shown on the left and flow velocity on the right. The beam width is $4 \sigma=400 \mu \mathrm{m}$. Spatial resolution is $1 \mu \mathrm{m}$.
+
+direction of beam movement. Also, heat conduction out of the simulated plane is not accounted for, which is why for titanium and its alloys scanning speeds considerably below about 0.2 to $0.3 \mathrm{~m} \mathrm{~s}^{-1}$ may yield inaccurate predictions of the melt pool due to the thermal front preceding the electron beam. For higher scanning speeds, experimental and numerical results exhibit similar overall characteristics, not only with regard to the melt pool shape, but also the melt pool width and depth. The latter is thereby measured from the unprocessed surface where no protrusions exist at the melt pool periphery. The maximum attainable melt pool depth for beam powers of 120 and $300 \mathrm{~W}$ and different scanning speeds, as plotted in figure 8 , shows that numerical results are in good agreement with experimental data.
+
+\subsection*{4.2. Mass loss}
+The loss of mass due to evaporation is determined from the difference in mass before and after the trial. The samples are plates of pure titanium and Ti-6Al- $4 \mathrm{~V}$, respectively, with dimensions of about $40 \times 30 \mathrm{~mm}^{2}$ and a thickness of $5 \mathrm{~mm}$. The electron beam is deflected following a rectangular, closed contour with an edge length of $35 \mathrm{~mm} \times 25 \mathrm{~mm}$. This procedure is repeated a total of 200 to 500 times per sample and trial depending on process parameters. In order to prevent the plates from heating up beyond room temperature during the trial, the process is paused for $30 \mathrm{~s}$ after each contour. For the experiments at hand, beam powers of 150,300 and $450 \mathrm{~W}$ at a constant line energy of $E_{\mathrm{L}}=0.15 \mathrm{~kJ} \mathrm{~m}^{-1}$ are used. The scanning speeds are $1.0 \mathrm{~m} \mathrm{~s}^{-1}, 2.0 \mathrm{~m} \mathrm{~s}^{-1}$ and $3.0 \mathrm{~m} \mathrm{~s}^{-1}$, respectively. Sample masses are measured on an analytical balance with $0.1 \mathrm{mg}$ readability.
+
+In figure 9 simulation results are compared with experimental data. The mass loss was found to be a strong function of the beam width, $w$, obeying an exponential decay. This is in contrast to the melt pool geometry investigated in section 4.1 which, to a certain extent, is only weakly dependent on $w$. Since the beam width is difficult to access experimentally, the value of $w$ is varied in steps of $25 \mu \mathrm{m}$ within the range of 375-425 $\mu \mathrm{m}$. The numerical calculations show that for a constant beam width the mass loss increases exponentially with beam power. The measured mass loss, however, does not follow this trend, indicating that the electron beam widens with increasing beam power. Taking that as a premise, good agreement between numerical and experimental data is observed. By this means, the beam width would be slightly below $400 \mu \mathrm{m}$ for beam powers of $150 \mathrm{~W}$ and slightly above $400 \mu \mathrm{m}$ for $450 \mathrm{~W}$, which applies to both the experiments with pure titanium and Ti-6Al-4V. It is apparent from the results in figure 9 that total mass loss from the titanium alloy samples is approximately twice that from pure titanium under identical process conditions. The additional mass loss may be related to the aluminium which has a vapour pressure that, in the temperature regime of interest, is roughly one to two orders of magnitude higher than that of pure titanium. As noted above, multicomponent evaporation is currently not included in the evaporation model, requiring effective physical properties for the sample material, see table 1 . Since predicted mass losses are in accordance with experimental findings, these effective properties appear to accurately reproduce the behaviour of the titanium alloy.
+
+\section*{5. Simulation of processing maps for SEBM}
+The use of radiative energy sources for technical applications entails a process window that is well defined in terms of scanning speed $v$ (or pulse duration), beam power $P$ and line energy $E_{\mathrm{L}}$, respectively. This process window constitutes particular parameter sets within a processing map that are suited for producing sound parts. In this section, such processing maps are computed for an SEBM process. Thereby, instead of manufacturing parts by melting powder layer by layer, we simulate continuous single tracks obtained by selectively melting solid samples of Ti-6Al-4V. The energy source is a $60 \mathrm{kV}$ electron beam which has also been employed for experiments conducted in section 4 . In addition, processing maps for an electron beam with an acceleration voltage of $120 \mathrm{kV}$ are generated and compared with those obtained with the $60 \mathrm{kV}$ beam. The electron beam is deflected out of the simulated 2D plane. The intensity of the beam obeys a 2D Gaussian distribution with a constant width of $4 \sigma=400 \mu \mathrm{m}$ which is assumed to be independent of the beam power. Prior to melting the single tracks, the temperature of the sample material is set to an initial value of $800^{\circ} \mathrm{C}$. This substitutes for the preheating step which is typical for processing powder in SEBM. The processing gas $(\mathrm{He})$ is assumed to be at $800^{\circ} \mathrm{C}$ and at a pressure of $p_{\mathrm{a}}=0.2 \mathrm{~Pa}$.
+
+Factors limiting the SEBM process are the maximum melt pool depth to provide for a sufficient connection between two consecutive layers, strong melt pool dynamics due to the recoil of the expanding vapour and evaporative losses. These effects occur at opposite ends of the line energy spectrum
+
+$$
+\boldsymbol{E}_{\mathrm{L}}=0.15 \mathrm{~kJ} / \mathrm{m}: P=300 \mathrm{~W}, v=2.0 \mathrm{~m} / \mathrm{s} \quad \boldsymbol{E}_{\mathrm{L}}=\mathbf{0 . 5 0} \mathbf{~ k J} / \mathbf{m}: P=300 \mathrm{~W}, v=0.6 \mathrm{~m} / \mathrm{s}
+$$
+
+(a) centre of the beam\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_9f4c77949db3cee9cebfg-09(3)}
+
+(b) at $1 \times \sigma$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_9f4c77949db3cee9cebfg-09}
+
+(c) at $>2 \times \sigma$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_9f4c77949db3cee9cebfg-09(1)}
+
+(d) micrographs\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_9f4c77949db3cee9cebfg-09(2)}
+
+Figure 7. Continuous single tracks in dense Ti-6Al-4V samples melted by a $60 \mathrm{kV}$ electron beam with a power of $300 \mathrm{~W}$ at different line energies. (a) $-(c)$ Simulated temporal evolution of the melt pool with $\sigma=100 \mu \mathrm{m}$. Spatial resolution is $1 \mu \mathrm{m}$. (d) Micrograph cross sections of the experimental single tracks, whereby the molten area is indicated by a solid line and the computed envelope of the melt pool by a broken line.
+
+and thus span the aforementioned process window. The simulated processing maps for the $60 \mathrm{kV}$ electron beam are shown in figure 10, left. The melt pool depth, figure 10(a), increases with the line energy as expected. Generally, for a constant $E_{\mathrm{L}}$ and supposing the entire energy provided by the electron beam to be consumed for melting, the melt pool depth should be independent of the scanning speed hence leading to horizontal contour lines. However, owing to heat losses by thermal conduction into the bulk at very low scanning speeds and molten metal expulsion to the periphery of the melt pool due to evaporation at high scanning speeds (and high irradiance) the melt pool depth reaches its maximum somewhere in between, resulting in V-shaped contour lines. From the mass loss and recoil pressure contour plots in figures $10(b)$ and (c) it becomes apparent that a deep melt pool implicates considerable melt pool hydrodynamics and mass removal. These effects are most pronounced at higher scanning speeds. Melt pool oscillations induced by the recoil pressure lead to an unsteady melt pool surface. For instance, the 1 bar and 10 bar lines nearly coincide with a maximum velocity in the melt zone directly affected by the beam of approximately $10 \mathrm{~m} \mathrm{~s}^{-1}$ and $20 \mathrm{~m} \mathrm{~s}^{-1}$, respectively. The melt track, when solidified, exhibits characteristic corrugations that could not be balanced by surface tension, see also [41]. The dashed curve in figure $10(b)$ additionally illustrates the threshold above which maximum temperatures reached on the melt pool surface are in excess of the boiling temperature at standard atmosphere, $T_{\text {boil }}$. The evaporation of mass, on the other hand, is particularly important when processing alloys. Multicomponent evaporation may cause a local change in alloy composition, and eventually create gradients in the mechanical properties of the final part.
+
+The processing maps for the $120 \mathrm{kV}$ electron beam are depicted in figure 10, right. The main difference between the two acceleration voltages lies in the maximum depth of penetration. While for the $60 \mathrm{kV}$ beam most of the electron beam energy is dissipated within a distance of about $10 \mu \mathrm{m}$ from the target surface, it is about $30 \mu \mathrm{m}$ for the $120 \mathrm{kV}$ beam. This effectively increases the maximum melt pool depth by roughly $5-10 \%$, seen in the shift of the isolines to lower line
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_9f4c77949db3cee9cebfg-10}
+\end{center}
+
+Figure 8. Maximum melt pool depth of continuous single tracks in dense Ti-6Al-4V samples for beam powers of 120 and $300 \mathrm{~W}$.
+
+energies in figure $10(d)$. The gain in melt pool depth is not considered significant, so that the lower bound of the process window can be defined irrespective of the electron beam's acceleration voltage. In contrast, the recoil pressure and the mass loss are severely affected by the acceleration voltage, since they are strong functions of the surface temperature. The contour lines of both the recoil pressure and the mass loss run into saturation at high scanning speeds. Consequently, there exists a line energy such that the recoil and the mass loss become largely independent of the scanning speed. This enables a reduction of the total process time without causing additional adverse effects due to evaporation. As the impact of the recoil pressure is not only connected with its peak value but also the duration of action which is not taken into account in figures $10(b)$ and $(e)$, the mass loss is more appropriate for defining the upper bound of the process window. The increase in acceleration voltage shifts the lines of constant mass loss to higher line energies by a value of about $0.05 \mathrm{~kJ} \mathrm{~m}^{-1}$. Due to more distinct volume heating in the case of the $120 \mathrm{kV}$ beam, the process window is thus considerably enlarged as compared to the $60 \mathrm{kV}$ beam. Hence, the $120 \mathrm{kV}$ beam can operate at higher $E_{\mathrm{L}}$ if porosity is an issue or at higher scanning speeds if total process time is of importance.
+
+For technical applications involving (partial) melting of the target it appears preferable to employ radiative energy sources with which bulk heating rather than surface heating can be achieved. This is most interesting for precise material processing, since thereby superheating of the target is less pronounced minimizing evaporative losses while preserving a certain melt pool depth.
+
+\section*{6. Conclusion}
+An evaporation model that accounts for the loss of mass and energy as well as the recoil pressure onto the melt surface has\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_9f4c77949db3cee9cebfg-10(1)}
+
+Figure 9. Mass loss of pure titanium and Ti-6Al-4V samples due to evaporation for different beam powers at a constant line energy of $0.15 \mathrm{~kJ} \mathrm{~m}^{-1}$. Simulation results are plotted for different beam widths $w=4 \sigma$.
+
+been successfully implemented into a 2D lattice Boltzmann method. Numerical results were shown to compare very well with experimental measurements obtained by melting continuous single tracks by an electron beam. Finally, the model has been applied to create processing maps under conditions typical for selective electron beam melting (SEBM). The goal of this investigation has been to determine the impact of the electron beam's acceleration voltage on the attainable melt depth, the mass loss and the recoil due to evaporation. We conclude that due to a wider process window, an increase in acceleration voltage from 60 to $120 \mathrm{kV}$ for medium atomic number materials like titanium or its alloys is most promising.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_9f4c77949db3cee9cebfg-11}
+
+Figure 10. Computed processing maps for single tracks in Ti-6Al-4V samples at a preheating temperature of $800^{\circ} \mathrm{C}$. The tracks are melted by an electron beam with an acceleration voltage of $60 \mathrm{kV}$ (left) and $120 \mathrm{kV}$ (right), respectively. The processing gas is He at a temperature of $800^{\circ} \mathrm{C}$ and a pressure of $0.2 \mathrm{~Pa}$.
+
+\section*{Acknowledgments}
+The authors gratefully acknowledge funding of the German Research Foundation (DFG) within the project KO 1984/9-1 and partial funding within the Collaborative Research Center 814 'Additive Manufacturing', project B2.
+
+\section*{Appendix. Knudsen layer jump conditions}
+The contact discontinuity at the direct interface between the condensed and the vapour phase can be modelled using macroscopic jump conditions for the temperature and the density, $T_{\mathrm{Kn}} / T_{\mathrm{S}}$ and $\rho_{\mathrm{Kn}} / \rho_{\mathrm{s}}$, respectively. In the following,\\
+all functions are defined in terms of the dimensionless velocity $S_{\text {Kn }}[4,15]$ :
+
+
+\begin{equation*}
+S_{\mathrm{Kn}}=\sqrt{\frac{\gamma_{v}}{2}} \cdot M a_{\mathrm{Kn}}\left(T_{\mathrm{s}}\right) \tag{A1}
+\end{equation*}
+
+
+with $\gamma_{v}$ being the ratio of specific heats and $M a_{\mathrm{Kn}}\left(T_{\mathrm{s}}\right)$ being the flow Mach number of the vapour phase. For the Knudsen layer the following system of equations applies $[2-4,16]$ :
+
+
+\begin{equation*}
+\sqrt{\frac{T_{\mathrm{Kn}}}{T_{\mathrm{s}}}}=\sqrt{1+\pi\left(\frac{\gamma_{v}-1}{\gamma_{v}+1} \cdot \frac{S_{\mathrm{Kn}}}{2}\right)^{2}}-\sqrt{\pi} \cdot \frac{\gamma_{v}-1}{\gamma_{v}+1} \cdot \frac{S_{\mathrm{Kn}}}{2} \tag{A2}
+\end{equation*}
+
+
+$$
+\begin{aligned}
+& \frac{\rho_{\mathrm{Kn}}}{\rho_{\mathrm{s}}}=\sqrt{\frac{T_{\mathrm{S}}}{T_{\mathrm{Kn}}}} \cdot\left[\frac{1}{2}\left(2 S_{\mathrm{Kn}}^{2}+1\right) \cdot \exp \left(S_{\mathrm{Kn}}^{2}\right)\right. \\
+& \left.\cdot \operatorname{erfc}\left(S_{\mathrm{Kn}}\right)-\frac{S_{\mathrm{Kn}}}{\sqrt{\pi}}\right] \\
+& +\frac{1}{2} \frac{T_{\mathrm{S}}}{T_{\mathrm{Kn}}} \cdot\left[1-\sqrt{\pi} \cdot S_{\mathrm{Kn}} \cdot \exp \left(S_{\mathrm{Kn}}^{2}\right) \cdot \operatorname{erfc}\left(S_{\mathrm{Kn}}\right)\right] \\
+& \beta\left(S_{\mathrm{Kn}}\right)=\left[\left(2 S_{\mathrm{Kn}}^{2}+1\right)-\sqrt{\pi} \cdot S_{\mathrm{Kn}} \cdot \sqrt{\frac{T_{\mathrm{s}}}{T_{\mathrm{Kn}}}}\right] \\
+& \cdot \exp \left(S_{\mathrm{Kn}}^{2}\right) \cdot \frac{\rho_{\mathrm{s}}}{\rho_{\mathrm{Kn}}} \sqrt{\frac{T_{\mathrm{s}}}{T_{\mathrm{Kn}}}} \\
+& F^{-}\left(S_{\mathrm{Kn}}\right)=\exp \left(-S_{\mathrm{Kn}}^{2}\right)-\sqrt{\pi} \cdot S_{\mathrm{Kn}} \cdot \operatorname{erfc}\left(S_{\mathrm{Kn}}\right)
+\end{aligned}
+$$
+
+where $\gamma_{v}$ is the ratio of specific heats which is $5 / 3$ for monoatomic gases and erfc the complementary error function. From the ideal gas law, the pressure in the vapour at the outer side of the Knudsen layer, $p_{\mathrm{Kn}}$, can now be expressed as
+
+
+\begin{equation*}
+p_{\mathrm{Kn}}=p_{\mathrm{s}} \cdot \frac{\rho_{\mathrm{Kn}}}{\rho_{\mathrm{s}}} \frac{T_{\mathrm{Kn}}}{T_{\mathrm{s}}} \tag{A6}
+\end{equation*}
+
+
+and the temperature $T_{\mathrm{Kn}}$ as
+
+
+\begin{equation*}
+T_{\mathrm{Kn}}=T_{\mathrm{s}} \cdot \frac{T_{\mathrm{Kn}}}{T_{\mathrm{s}}} \tag{A7}
+\end{equation*}
+
+
+\section*{References}
+[1] Hertz H 1882 Ueber die Verdunstung der Flüssigkeiten, insbesondere des Quecksilbers, im luftleeren Raume Ann. Phys. Chem. 17 177-93
+
+[2] Anisimov S I 1968 Vaporization of metal absorbing laser radiation Sov. Phys.-JETP 27 182-3
+
+[3] Ytrehus T 1975 Kinetic theory description and experimental results for vapor motion in arbitrary strong evaporation von Karman Institute for Fluid Dynamics Technical Note 112
+
+[4] Knight C J 1979 Theoretical modeling of rapid surface vaporization with back pressure AIAA J. 17 519-23
+
+[5] Mundra K and DebRoy T 1993 Calculation of weld metal composition change in high-power conduction mode carbon dioxide laser-welded stainless steel Metall. Trans. B 24 145-55
+
+[6] Ki H, Mohanty P S and Mazumder J 2002 Modeling of laser keyhole welding: I. Mathematical modeling, numerical methodology, role of recoil pressure, multiple reflections, and free surface evolution Metall. Mater. Trans. A 33 1817-30\\
+[7] Tan W, Bailey N S and Shin Y C 2013 Investigation of keyhole plume and molten pool based on a three-dimensional dynamic model with sharp interface formulation J. Phys. D: Appl. Phys. 46055501
+
+[8] Zhang Z and Gogos G 2005 Effects of laser intensity and ambient conditions on the laser-induced plume Appl. Surf. Sci. 252 1057-64
+
+[9] Aden M, Beyer E and Herziger G 1990 Laser-induced vaporisation of metal as a Riemann problem J. Phys. D: Appl. Phys. 23 655-61
+
+[10] Zhang Z and Gogos G 2004 Theory of shock wave propagation during laser ablation Phys. Rev. B 69235403
+
+[11] Zhang Z and Sheng B 2007 Thermal choke of the evaporation wave during laser ablation AIAA J. 45 3006-9
+
+[12] Langmuir I 1913 The vapor pressure of metallic tungsten Phys. Rev. 2 329-42
+
+[13] Tsai C-H and Olander D R 1986 Numerical modelling of heat and mass transport during rapid heating and vaporization of binary solids by absorbing radiation-application to $\mathrm{UO}_{2}$ J. Nucl. Mater. 137 279-87
+
+[14] Yilbas B S 1997 Laser heating process and experimental validation Int. J. Heat Mass Transfer 40 1131-43
+
+[15] Ytrehus T and Ostmo S 1996 Kinetic theory approach to interphase processes Int. J. Multiphase Flow 22 133-55
+
+[16] Luikov A V, Perelman T L and Anisimov S I 1971 Evaporation of a solid into vacuum Int. J. Heat Mass Transfer 14 177-84
+
+[17] Anisimov S I and Rakhmatulina A K 1973 The dynamics of the expansion of a vapor when evaporated into a vacuum Sov. Phys.-JETP 37 441-4
+
+[18] Fischer J 1976 Distribution of pure vapor between two parallel plates under the influence of strong evaporation and condensation Phys. Fluids 19 1305-11
+
+[19] Sibold D and Urbassek H M 1993 Monte Carlo study of Knudsen layers in evaporation from elemental and binary media Phys. Fluids A $5243-56$
+
+[20] Batanov V A, Bunkin F V, Prokhorov A M and Fedorov V B 1973 Evaporation of metallic targets caused by intense optical radiation Sov. Phys.-JETP 36 311-22
+
+[21] Mazhukin V I and Samokhin A A 1984 Kinetics of a phase transition during laser evaporation of a metal Sov. J. Quantum Electron. 14 1608-11
+
+[22] Semak V and Matsunawa A 1997 The role of recoil pressure in energy balance during laser materials processing J. Phys. D: Appl. Phys. 30 2541-52
+
+[23] Körner C, Thies M, Hofmann T, Thürey N and Rüde U 2005 Lattice Boltzmann model for free surface flow for modeling foaming J. Stat. Phys. 121 179-96
+
+[24] Attar E and Körner C 2009 Lattice Boltzmann method for dynamic wetting problems $J$. Colloid Interface Sci. 335 84-93
+
+[25] Körner C, Attar E and Heinl P 2011 Mesoscopic simulation of selective beam melting processes J. Mater. Process. Technol. 211 978-87
+
+[26] Attar E and Körner C 2011 Lattice Boltzmann method for thermal free surface flows with liquid-solid phase transition Int. J. Heat Fluid Flow 32 156-63
+
+[27] Klassen A, Bauereiß A and Körner C 2014 Modelling of electron beam absorption in complex geometries $J$. Phys. D: Appl. Phys. 47065307
+
+[28] Heinl P, Rottmair A, Körner C and Singer R F 2007 Cellular titanium by selective electron beam melting $A d v$. Eng. Mater. $9360-4$
+
+[29] Heinl P, Müller L, Körner C, Singer R F and Müller F A 2008 Cellular Ti-6Al-4V structures with interconnected macro porosity for bone implants fabricated by selective electron beam melting Acta Biomater. 4 1536-44
+
+[30] Iida T and Guthrie R I L 1988 The Physical Properties of Liquid Metals (Oxford: Clarendon)
+
+[31] Ishikawa T, Paradis P-F, Okada J T and Watanabe Y 2012 Viscosity measurements of molten refractory metals using an electrostatic levitator Meas. Sci. Technol. 23025305
+
+[32] Lu H M and Jiang Q 2005 Surface tension and its temperature coefficient for liquid metals J. Phys. Chem. B 109 15463-8
+
+[33] Desai P D 1987 Thermodynamic properties of titanium Int. J. Thermophys. 8 781-94
+
+[34] Brandes E A and Brook G B 1992 Smithells Metals Reference Book 7th edn (Oxford: Butterworth-Heinemann) p 14-2
+
+[35] Ablesimov N E, Verkhoturov A D and Pyachin S A 1998 On the energy criterion for the erosion resistance of metals Powder Metall. Met. C 37 94-8
+
+[36] Li J J Z, Johnson W L and Rhim W-K 2006 Thermal expansion of liquid Ti-6Al-4V measured by electrostatic levitation Appl. Phys. Lett. 89111913
+
+[37] Wunderlich R K 2008 Surface tension and viscosity of industrial Ti-alloys measured by the oscillating drop method on board parabolic flights High Temp. Mater. Process. 27 401-12
+
+[38] Boivineau M, Cagran C, Doytier D, Eyraud V, Nadal M-H, Wilthan B and Pottlacher G 2006 Thermophysical properties of solid and liquid Ti-6Al-4V (TA6V) alloy Int. J. Thermophys. 27 507-29
+
+[39] Boyer R, Welsch G and Collings E W 1998 Materials Properties Handbook: Titanium Alloys (Materials Park, $\mathrm{OH}$ : ASM International) p 513
+
+[40] Rai R, Burgardt P, Milewski J O, Lienert T J and DebRoy T 2009 Heat transfer and fluid flow during electron beam welding of $21 \mathrm{Cr}-6 \mathrm{Ni}-9 \mathrm{Mn}$ steel and Ti-6Al- $\mathrm{V}$ alloy J. Phys. D: Appl. Phys. 42025503
+
+[41] Fabbro R 2010 Melt pool and keyhole behaviour analysis for deep penetration laser welding J. Phys. D: Appl. Phys. 43445501
+
+
+\end{document}

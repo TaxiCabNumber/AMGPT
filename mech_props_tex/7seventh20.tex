@@ -1,0 +1,2386 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{multirow}
+
+\title{Heat Treatment }
+
+\author{}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Other Designations: DIN 12379, ASTM A681, UNS T30402, BD 2
+
+D2 Tool Steel is a high carbon, high chromium air-hardening tool steel that can be heat treated to high hardness and compressive strength. D2 Tool Steel offers excellent wear resistance and is widely used in cold work applications that require sharp edges, abrasion resistance, and compressive strength. Markforged D2 Tool Steel meets chemical requirements of ASTM A681.
+
+\begin{center}
+\begin{tabular}{lc}
+Composition & Amount \\
+\hline
+Chromium & $11-13 \%$ \\
+\hline
+Carbon & $1.4-1.6 \%$ \\
+\hline
+Molybdenum & $0.7-1.2 \%$ \\
+\hline
+Vanadium & $0.5-1.1 \%$ \\
+\hline
+Nickel + Copper & $0.75 \%$ max \\
+\hline
+Manganese & $0.1-0.6 \%$ \\
+\hline
+Silicon & $0.1-0.6 \%$ \\
+\hline
+Phosphorus & $0.03 \%$ max \\
+\hline
+Sulfur & $0.03 \%$ max \\
+\hline
+Iron & bal \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-01}
+\end{center}
+
+\begin{center}
+\begin{tabular}{lccc}
+Typical Mechanical Properties & Standard & \begin{tabular}{c}
+Markforged \\
+Heat-Treated $^{1}$ \\
+\end{tabular} & \begin{tabular}{c}
+Wrought \\
+Heat Treated $^{2}$ \\
+\end{tabular} \\
+\hline
+$0.2 \%$ Compressive Yield Strength & ASTM E9 & $1690 \mathrm{MPa}$ & $2200 \mathrm{MPa}$ \\
+\hline
+Elastic Modulus & ASTM E9 & $187 \mathrm{GPa}$ & $210 \mathrm{GPa}$ \\
+\hline
+Hardness $^{3,5}$ & ASTM E18 & $55 \mathrm{HRC}$ & $62 \mathrm{HRC}$ \\
+\hline
+Relative Density $^{4}$ & ASTM B923 & $97 \%$ & $100 \%$ \\
+\hline
+\end{tabular}
+\end{center}
+
+D2 Tool Steel can be heat-treated to increase hardness and durability after an optional annealing step and machining work. Markforged recommends heat-treating D2 Tool Steel to optimize material properties for target applications.
+
+\begin{enumerate}
+  \item Slowly heat to $760^{\circ} \mathrm{C}\left(1400^{\circ} \mathrm{F}\right)$, hold at temperature for 30 minutes minimum.
+
+  \item Heat to $1040^{\circ} \mathrm{C}\left(1904^{\circ} \mathrm{F}\right)$. Hold part at temperature for $30-45$ minutes.
+
+  \item Air quench part to below $65^{\circ} \mathrm{C}\left(150^{\circ} \mathrm{F}\right)$.
+
+  \item Temper part. For each temper, heat part to $200^{\circ} \mathrm{C}\left(392^{\circ} \mathrm{F}\right)$ and temper for 30 minutes. If double tempering, let part cool to room temperature between tempers. Note: Higher temperature tempers may also be used — which will increase toughness but reduce hardness.
+\footnotetext{  \begin{enumerate}
+    \item Markforged heat-treated D2 Tool Steel was heated to $1040^{\circ} \mathrm{C}\left(1904^{\circ} \mathrm{F}\right)$ and single tempered at $200^{\circ} \mathrm{C}\left(392^{\circ} \mathrm{F}\right)$ for 30 minutes.
+
+    \item Wrought heat treatment data from Bohler-Uddeholm: \href{http://cdna.terasrenki.com/ds/1.2379_X153CrMoV12_AISI-D2_SS-2310_Datasheet_2.pdf}{http://cdna.terasrenki.com/ds/1.2379\_X153CrMoV12\_AISI-D2\_SS-2310\_Datasheet\_2.pdf}
+
+    \item Markforged hardness was measured on sample coupons that were printed with solid fill.
+
+    \item Relative density for D2 Tool Steel assumes a density of $7.7 \mathrm{~g} / \mathrm{cm}^{3}$.
+
+    \item As-sintered hardness can vary significantly based on furnace loading and ambient environment. Markforged recommends post-sinter heat treatment for maximum hardness and compression strength.
+
+  \end{enumerate}
+}
+
+\end{enumerate}
+
+These data represent typical values for Markforged D2 Tool Steel. Markforged samples were printed with solid fill. Density data was tested in house, and all other data were tested and confirmed by outside sources. These representative data were tested, measured, or calculated using standard methods and are subject to change without notice. Markforged makes no warranties of any kind, express or implied.
+
+ADDITIVE
+
+MANUFACTURING
+
+OF SMALL AND
+
+COMPLEX
+
+METAL PARTS
+
+\section*{RAPID 3D PRINTING \\
+ FOR YOU}
+The proprietary technology of Digital Meta ${ }^{\circledR}$ is making great strides into territories previously ruled by conventional manufacturing technologies. High productivity, excellent surface quality and great resolution have brought our 3D metal printing services out of the prototyping phase, and into large series manufacturing. This is what's in it for you.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-03}
+\end{center}
+
+\section*{WHAT'S SO GOOD ABOUT IT?}
+For a start, the process requires no complex or costly tools and keeps waste material down to an absolute minimum. But that's not all. Here are just a few of the other advantages:
+
+\section*{CERTIFIED FOR YOUR SECURITY}
+\begin{itemize}
+  \item CE-Certified in accordace with EC Machinery Directive 2006/42/EC
+
+  \item UL-Certified, file nr. E496006
+
+\end{itemize}
+
+\section*{'IMPOSSIBLE' OBJECTS BECOME POSSIBLE}
+$3 \mathrm{D}$ metal printing enables the production of complex objects that would be costly - if not impossible to produce - using conventional methods. This is music to the ears of industrial designers, who can at last unleash their full creativity and explore the new territory that 3D metal printing opens up.
+
+\section*{FAST TRACK FROM CONCEPT}
+\section*{TO COMPLETION}
+In today's fast-paced, competitive environment, producers face ever shorter product life cycles and ever greater product variety. You need new, quicker ways to innovate and get your innovations to market. 3D printing is the answer. With this technology, Digital Metal can take your product from concept to completion in a short time.
+
+\section*{COST-EFFECTIVE PRODUCTION}
+Not only does 3D metal printing provide a much more costeffective way of manufacturing complex metal parts, it is also the ideal solution.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-04}
+\end{center}
+
+The DM P2500 is a robust machine for both serial production and prototyping.
+
+\section*{WHERE CAN YOU USE IT?}
+\section*{INDUSTRIAL APPLICATIONS}
+$3 D$ metal printing makes it possible to quickly and costeffectively produce complex metal components for industrial use. They can be hollow or meshed, with undercuts, ducts, cavities and internal structures. Almost any design, no matter how complicated, is achieveable using this technique.
+
+\section*{DENTAL/MEDICAL}
+Dental/medical 3D metal printing also opens up the possibility of making radically new tools and components designed for optimal functionality instead of complying to the restrictions of traditional manufacturing.
+
+\section*{AEROSPACE}
+By making lightweight but strong metal components, with hollow or meshed interiors, Digital Metal can also contribute to advances in aircraft design.
+
+\section*{DESIGN}
+3D metal printing enables a whole new level of creative freedom!
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-04(1)}
+\end{center}
+
+\section*{THIS IS HOW IT WORKS}
+Are you looking for an additive manufacturing (AM) system that delivers fine tolerances, surface finish and resolution, while maximizing productivity for small complex components? Then high-precision binder jetting on powder bed is the solution you are looking for.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-05(2)}
+\end{center}
+
+\section*{LAYER BY LAYER}
+Our process begins with an object described in a CAD file. This is materialised in our $3 \mathrm{D}$ printer, which builds the object layer by layer, using metal powder and high-precision binder jetting. Once complete, the object is sintered for strength.
+
+The result? A metal component with high resolution and tolerance. An additional third step can be added to refine surface quality.
+
+Digital Metal offers a range of different materials to print with. New materials are constantly under development and will be readily available after rigorous testing.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-05}
+\end{center}
+
+High-precision binder jetting on powder bed
+
+The fine metal powder and high-precision binder jetting technology provide consistent high resolution.\\
+\includegraphics[max width=\textwidth, center]{2024_03_11_54e4b04eb5efe63bec03g-05(1)}\\
+\includegraphics[max width=\textwidth, center]{2024_03_11_54e4b04eb5efe63bec03g-06(6)}
+
+\section*{DETAIL ACCURACY}
+Growing up, this man probably never expected turning into a man of steel, 10 mm tall. However, unlike a well-known super hero, this transformation from human to steel will not pass unnoticed. The very fine detail makes it impossible to keep his true identity safe.
+
+\section*{ITSY BITSY}
+It may be hard to grasp the small size of this pair of happy twins. Apart from the precision required, our small friends visualise yet another advantage of Digital Metal: high productivity. In just one batch, we are able to manufacture very large numbers of similar, or - even better dissimilar objects.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-06(5)}
+\end{center}
+
+\section*{INTERNAL CHANNELS}
+A major advantage of Digital Metal is the free form design capability offered. Nowhere is this more evident than in the case of internal channels that easily can be utilised to provide complex, optimised internal structures. The average surface quality of merely $\operatorname{Ra} 6 \mu$ ensures a good flow in the channels.
+
+\section*{INTEGRATED DESIGN}
+The pea of the whistle is not visible, but rest assured - it is in there. In our 3D printing process, the integrated pea is built resting on the surrounding layers of metal powder. Once the powder is removed, prepare yourself to get blown away.
+
+\section*{ADVANCED GEOMETRY}
+This complex geometry is a prime example of what Digital Metal is all about: making the seemingly impossible possible. Simply put, this is what we call design beyond your imagination.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-06(1)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-06(3)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-06(2)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-06}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-06(4)}
+\end{center}
+
+\section*{SERIAL PRODUCTION OF CUSTOMISED PARTS}
+In the manufacturing of small and complex components, Digital Metal is a very competitive alternative to conventional mass production technologies. You may also consider the possibility of making every part a unique product.
+
+\section*{HIGH-VOLUME PRODUCTION}
+Small part sizes means there is plenty of room for large numbers of components to be printed simultaneously. This is in particular true for Digital Metal. Our high-precision process does not require any support structures, nor does it involve any heat transfer, which means we are able to pack the build box densely. Required spacing between parts to be printed is less than 1 millimetre. Parts can be placed in several layers on top of each other.
+
+Printing without support structures also minimizes waste and post treatment, which speeds up the production process. The high productivity explains why Digital Metal today is one of the first service providers in the world supplying large series of $3 \mathrm{D}$ printed products.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-07(1)}
+\end{center}
+
+\section*{MASS CUSTOMISATION}
+There is time to be saved and money to be earned taking a closer look at the flexibility of Digital Metal. Every single part in a batch of components can be custom-made, no matter the number. This opens up for creative thinking and added marketing value as you are able to supply products customised for your market. Consequently, Digital Metal also enables simultaneous printing of different product series in the same production run.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-07}
+\end{center}
+
+\section*{CAPABILITY}
+MATERIAL DATA - TYPICAL VALUES
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|}
+ & \begin{tabular}{c}
+Ultimate \\
+tensile \\
+strength \\
+\end{tabular} & \begin{tabular}{c}
+Yield \\
+strength \\
+$(0.2 \%)$ \\
+\end{tabular} & Elongation & \multicolumn{2}{|c|}{Hardness} \\
+\hline
+ & MPa & MPa & $\%$ & HRB & HRC \\
+\hline
+316L & 520 & 180 & 50 & 55 &  \\
+\hline
+17-4PH & 900 & 730 & 6 &  & 25 \\
+\hline
+Ti6AI4V & 890 & 790 & 8 &  & 25 \\
+\hline
+DM 625 & 660 & 310 & 50 & 78 &  \\
+\hline
+DM 247 & 1,200 & 750 & 16 &  & 25 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-08(2)}
+\end{center}
+
+CHEMICAL COMPOSITION (\%)
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|}
+\hline
+ & Fe & Cr & Ni & Mo & Cu & Nb+Ta & Ti & Al & V \\
+\hline
+316L & Bal & $16-18$ & $10-14$ & $2-3$ & n.a. & n.a. & n.a. & n.a. & n.a. \\
+\hline
+17-4PH & Bal & $15.5-17.5$ & $3-5$ & n.a. & $3-5$ & $0.15-0.45$ & n.a. & n.a. & n.a. \\
+\hline
+Ti6AI4V & n.a. & n.a. & n.a. & n.a. & n.a. & n.a. & Bal & 5-7 & 3-5 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+ & C & Cr & Mo & Nb & Co & B & Ti & Hf & Ta & $\mathbf{Z r}$ & W & Al & Fe & Ni \\
+\hline
+DM 625 & n.a. & 22.0 & 9.0 & 3.6 & n.a. & n.a. & n.a. & n.a. & n.a. & n.a. & n.a. & n.a. & 5.0 & Bal \\
+\hline
+DM 247 & 0.13 & 8.4 & 0.65 & n.a. & 10.0 & 0.015 & 1.0 & 1.3 & 3.0 & 0.05 & 9.8 & 5.4 & n.a. & Bal \\
+\hline
+\end{tabular}
+\end{center}
+
+PROCESS CAPABILITY
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Feature & Typical \\
+\hline
+Geometrical capability &  \\
+\hline
+Maximum length & Preferably $<50 \mathrm{~mm}$ \\
+\hline
+Minimum length & $1 \mathrm{~mm}$ \\
+\hline
+Minimum size & $1 \times 1 \times 3 \mathrm{~mm}$ \\
+\hline
+Corner R & $35 \mu \mathrm{m}$ \\
+\hline
+Chamfer & Steps of $35 \mu \mathrm{m}$ in z direction \\
+\hline
+Wall thickness & Preferably $>300 \mu \mathrm{m}$. Minimum $>150 \mu \mathrm{m}$ \\
+\hline
+Resolution & Maximum $35 \mu \mathrm{m}$ in z direction \\
+\hline
+Holes & $>200 \mu \mathrm{m}$ depending on hole length \\
+\hline
+Productivity & $60 \mathrm{~cm}^{3} / \mathrm{h}$ scaled; $100 \mathrm{~cm}^{3} / \mathrm{h}$ unscaled \\
+\hline
+Accepted file formats & STL, STEP \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-08(1)}
+\end{center}
+
+\section*{SURFACE QUALITY}
+With the Digital Metal technology, an average surface quality of Ra 6 m can be obtained already without any post processing, while other AM processes typically leave a much rougher surface. Surface quality is important for components with internal channels, as post processing of those surfaces are very challenging. Additional operations can be added on external surfaces to achieve a surface that matches your specific need.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-08(4)}
+\end{center}
+
+As sintered, an average surface quality of Ra $6.0 \mu \mathrm{m}$ is achievable.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-08(3)}
+\end{center}
+
+Peening, blasting and tumbling increase surface quality to an average of $\mathrm{Ra} 3.0 \mu \mathrm{m}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-08}
+\end{center}
+
+Superfinish enables even higher surface quality, around Ra $1.0 \mu \mathrm{m}$.
+
+\section*{PART OF HÖGANÄS GROUP}
+Digital Metal is part of Höganäs Group, the world's largest producer of iron and non-ferrous metal powders with an annual turnover of approximately 1 BUSD. Nearly 99 per cent of the Group's products are sold on international markets. Höganäs was founded in 1797 and has today 3,000 customers in 75 countries. Headquartered in Höganäs, Sweden, the Group offers more than 3,500 products from 18 production centres situated in all main continents.
+
+Read more about Höganäs at \href{http://hoganas.com}{hoganas.com}\\
+\includegraphics[max width=\textwidth, center]{2024_03_11_54e4b04eb5efe63bec03g-10}
+
+DM D2 is an alloy based on D2 tool steel, qualified for metal AM in Digital Metal's binder jetting system.
+
+D2 tool steel exhibits high resistance to abrasive wear and good hardenability with decent toughness, making it suitable for a wide range of applications. It is most commonly used for cutting and deformation tools, such as shear cutters, punches, dies and stamping tools.
+
+The material is stable during heat treatments, which allows for tailoring of the final properties through various heat treatments after sintering.
+
+COMPOSITION - TYPICAL VALUES
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Cr & Mo & V & Mn & Si & C & Fe \\
+\hline
+12.0 & 1.0 & 0.9 & 0.5 & 0.3 & 1.5 & Bal \\
+\hline
+\end{tabular}
+\end{center}
+
+Related standards: UNS T30402, ASTM A681, 1.2379 and SKD11
+
+PHYSICAL PROPERTIES - TYPICAL VALUES
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Density & \multicolumn{3}{|c|}{Hardness HRC} \\
+\hline
+Relative & As sintered & Hardened & \begin{tabular}{c}
+Hardened + \\
+Tempered \\
+\end{tabular} \\
+\hline
+$98 \%$ & 35 & 62 & 58 \\
+\hline
+\end{tabular}
+\end{center}
+
+Hardening consists of a solution treatment with subsequent air quenching. Single tempering provides the results displayed.
+
+\section*{METALLOGRAPHIC STRUCTURE}
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-10(1)}
+\end{center}
+
+As sintered
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-10(3)}
+\end{center}
+
+Hardened
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-10(4)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-10(2)}
+\end{center}
+
+Hardened + Tempered
+
+Specimens with subsequent process steps, bottom to top: as sintered, after hardening, after tempering and after blasting.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-10(5)}
+\end{center}
+
+\section*{FEATURES}
+\begin{itemize}
+  \item Tool steel alloy
+  \item Provides an effective combination of abrasive wear resistance and toughness
+  \item Suitable for a wide range of applications
+  \item Most commonly used for cutting and deformation tools
+\end{itemize}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-10(6)}
+\end{center}
+
+HRC
+
+\section*{DM}
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-11(2)}
+\end{center}
+
+DM Cu is a $99.9 \%$ commercially pure copper quality for use with Digital Metal's proprietary metal binder jetting system.
+
+The excellent electrical and thermal conductivity properties of pure copper make it ideal for a wide range of applications. It is mostly used for electronics, heat exchangers, heat sinks, engine parts as well as in a variety of industry applications that require good conductivity. Printing in copper offers freedom of design and enables optimal functionality with few restrictions.
+
+PHYSICAL PROPERTIES - TYPICAL VALUES
+
+\begin{center}
+\begin{tabular}{|l|c|}
+\hline
+ & Typical DM Cu \\
+\hline
+Ultimate tensile strength (MPa) & 195 \\
+\hline
+Yield strength $(\mathrm{MPa})$ & 30 \\
+\hline
+Elongation $(\%)$ & 35 \\
+\hline
+Sintered density $\left(\mathrm{g} / \mathrm{cm}^{3}\right)$ & 8.6 \\
+\hline
+\end{tabular}
+\end{center}
+
+COMPOSITION - TYPICAL VALUES
+
+\begin{center}
+\begin{tabular}{|l|c|}
+\hline
+Composition (\% weight) & Typical DM Cu \\
+\hline
+$\mathrm{Cu}$ & 99.9 \\
+\hline
+$\mathrm{Fe}$ & 0.04 \\
+\hline
+$\mathrm{Ni}$ & 0.015 \\
+\hline
+$\mathrm{C}$ & 0.02 \\
+\hline
+$\mathrm{O}$ & 0.003 \\
+\hline
+Others & Balance \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-11(3)}
+\end{center}
+
+LOM images: DM Cu etched with Klemm's reagent plus polarized light
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-11(1)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-11(4)}
+\end{center}
+
+FEATURES
+
+\begin{itemize}
+  \item $99.9 \%$ pure copper
+  \item Excellent thermal and electrical conductivity
+  \item Suitable for a variety of industry applications
+  \item Commonly used for heat sinks, heat exchangers, engine parts and electronics
+\end{itemize}
+
+\section*{TENSILE TEST BEHAVIOUR OF DM CU}
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-11}
+\end{center}
+
+\section*{4140 chromoly steel}
+One of the most versatile steels, 4140 is characterized by its toughness, abrasion resistance, and impact resistance, making it a great all-purpose steel for industrial applications.
+
+\section*{Composition \%}
+\begin{center}
+\begin{tabular}{ll}
+$\mathrm{Cr}$ & $0.8-1.2$ \\
+\hline
+Mo & $0.2-0.3$ \\
+\hline
+$\mathrm{C}$ & 0.3 (typical) \\
+\hline
+$\mathrm{Si}$ & 0.6 (max) \\
+\hline
+$\mathrm{Mn}$ & 1.0 (max) \\
+\hline
+$\mathrm{Fe}$ & Balance \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{Other standard designations ${ }^{1}$}
+\begin{center}
+\begin{tabular}{ll}
+AISI & 4140 \\
+\hline
+UNS & G41400 \\
+\hline
+DIN & 1.7200 \\
+\hline
+JIS & G4105 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{lllll}
+Mechanical properties $^{2}$ &  & Studio System & MPIF 35-MIM & \begin{tabular}{l}
+Wrought \\
+heat treated, \\
+for reference $^{3}$ \\
+\end{tabular} \\
+\hline
+Yield strength (MPa) & standard & ASTME8 & 1060 & heat treated (min) \\
+\hline
+Ultimate Tensile Strength (MPa) & ASTME8 & 1450 & 1070 & 1500 \\
+\hline
+Elongation at break & ASTME8 & $5.5 \%$ & 1380 & 1990 \\
+\hline
+Hardness (HRC) & ASTME18 & 40 & $3 \%$ & $10 \%$ \\
+\hline
+Density (relative) &  & $95 \%$ & 96 (typical) & 52 \\
+\hline
+\end{tabular}
+\end{center}
+
+Listed designations are for reference purposes only. Composition and mechanical properties may vary.
+
+2 Properties shown reflect beta processing parameters. Properties were obtained for sintering loads between $1.5 \mathrm{~kg}$ and $3 \mathrm{~kg}$. Heat treated samples were oil quenched from $857^{\circ} \mathrm{C}$ and tempered at $204^{\circ} \mathrm{C}$ for 2 hours.
+
+${ }^{4}$ Per MPIF Standard 35, Materials Standards for Metal Injection Molded Parts (MPIF 35-MIM, 2018).
+
+End-use material performance is impacted (+/-) by certain factors including but not
+
+limited to part geometry and design, application and evaluation conditions, etc.
+
+\section*{H13 tool steel}
+Characterized by its stability in heat treatment, exceptional hot hardness, and abrasion resistance, $\mathrm{H} 13$ is a tool steel widely used in both hot and cold work applications.
+
+\section*{Composition \%}
+\begin{center}
+\begin{tabular}{ll}
+Cr & $4.8-5.5$ \\
+\hline
+Mo & $1.1-1.7$ \\
+\hline
+Si & $0.8-1.2$ \\
+\hline
+$\mathrm{V}$ & $0.8-1.2$ \\
+\hline
+$\mathrm{C}$ & $0.3-0.45$ \\
+\hline
+Mn & $0.2-0.6$ \\
+\hline
+$\mathrm{P}$ & 0.03 Max \\
+\hline
+$\mathrm{S}$ & 0.03 Max \\
+\hline
+$\mathrm{Fe}$ & Balance \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-13}
+\end{center}
+
+Other standard designations ${ }^{4}$
+
+\begin{center}
+\begin{tabular}{ll}
+UNS & T20813 \\
+\hline
+DIN & 1.2344 \\
+\hline
+JIS & SKD61 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-13(1)}
+\end{center}
+
+Studio System heat treated microstructure.
+
+Mechanical properties ${ }^{1}$
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+ & standard & \begin{tabular}{l}
+Studio System \\
+as-sintered \\
+\end{tabular} & \begin{tabular}{l}
+Studio System \\
+heat treated ${ }^{3}$ \\
+\end{tabular} & \begin{tabular}{l}
+Wrought \\
+heat treated, \\
+for reference ${ }^{3}$ \\
+\end{tabular} \\
+\hline
+Yield strength (MPa) & ASTM E8 ${ }^{2}$ & 650 & 1250 & 1525 \\
+\hline
+Ultimate Tensile Strength (MPa) & ASTM E8² & 1325 & 1720 & 1950 \\
+\hline
+Elongation at break & ASTM E8² & $2.3 \%$ & $5.8 \%$ & $9 \%$ \\
+\hline
+Hardness (HRC) & ASTM E18 & 35 & 45 & 54 \\
+\hline
+Density (relative) &  & $\geq 93.5 \%$ & - & $100 \%$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Properties shown reflect beta processing parameters. Properties were obtained for sintering loads between $1.5 \mathrm{~kg}$ and $3 \mathrm{~kg}$
+
+Specimens tested according to ASTM E8 with a modified crosshead displacement rate of $0.009 \mathrm{~mm} / \mathrm{mm} / \mathrm{min}$.
+
+Heat treated samples were air quenched at $1040^{\circ} \mathrm{C}$ and double tempered at $540^{\circ} \mathrm{C}$.
+
+${ }^{4}$ Listed designations are for reference purposes only. Composition and mechanical properties may vary.
+
+End-use material performance is impacted (+/-) by certain factors including but not
+
+limited to part geometry and design, application and evaluation conditions, etc
+
+\section*{Aluminum AIS10Mg}
+DIRECT METAL LASER MELTING MATERIAL SPECIFICATIONS
+
+Highlights
+
+\begin{itemize}
+  \item Low weight
+
+  \item Good thermal properties, strength and hardness
+
+  \item Fast building
+
+  \item Excellent machinability
+
+\end{itemize}
+
+\section*{Applications}
+\begin{itemize}
+  \item Thin walls
+
+  \item Complex geometries
+
+  \item Lower cost prototypes
+
+  \item Aerospace and automotive
+
+\end{itemize}
+
+\section*{TYPICAL PHYSICAL PROPERTIES}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multirow[t]{2}{*}{MECHANICAL PROPERTIES} & ENGLISH & METRIC & ENGLISH & METRIC \\
+\hline
+ & \multicolumn{2}{|c|}{STRESS RELIEVED - 35 C PLATFORM} & \multicolumn{2}{|c|}{HIP + T6 HEAT TREAT} \\
+\hline
+Ultimate Tensile Strength & $55 \mathrm{ksi}$ & $379 \mathrm{MPa}$ & $41 \mathrm{ksi}$ & $281 \mathrm{MPa}$ \\
+\hline
+$0.2 \%$ Yield Strength & $34 \mathrm{ksi}$ & $232 \mathrm{MPa}$ & $32 \mathrm{ksi}$ & $221 \mathrm{MPa}$ \\
+\hline
+Elongation & $6.9 \%$ & $6.9 \%$ & $14.1 \%$ & $14.1 \%$ \\
+\hline
+Reduction of Area & $10.2 \%$ & $10.2 \%$ & $20.7 \%$ & $20.7 \%$ \\
+\hline
+Modulus of Elasticity & $9.91 \mathrm{msi}$ & $68.3 \mathrm{GPa}$ & $10.29 \mathrm{msi}$ & $71.0 \mathrm{GPa}$ \\
+\hline
+Hardness, Rockwell B & 64 & 64 & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{ALUMINUM ALSI10MG COMPOSITION}
+\section*{ELEMENT}
+TYPICAL PERCENTAGES
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Aluminum (AI) & balance \\
+\hline
+Copper (Cu) & $\leq 0.05$ \\
+\hline
+Iron (Fe) & $\leq 0.55$ \\
+\hline
+Magnesium (Mg) & $0.2-0.45$ \\
+\hline
+Manganese (Mn) & $\leq 0.45$ \\
+\hline
+Silicon (Si) & $9.0-11.0$ \\
+\hline
+Titanium (Ti) & $\leq 0.15$ \\
+\hline
+Zinc (Zn) & $\leq 0.10$ \\
+\hline
+\end{tabular}
+\end{center}
+
+The information presented represents typical values intended for reference and comparison purposes only. It should not be used for design specifications or quality control purposes. End-use material performance can be impacted (+/-) by, but not limited to, part design, end-use conditions, test conditions, color etc. Actual values will vary with build conditions. Product specifications are subject to change without notice. ${ }^{*}$ Chemical analysis for specific lots available upon request.
+
+The performance characteristics of these materials may vary according to application, operating conditions, or end use. Each user is responsible for determining that the material is safe, lawful, and technically suitable for the intended application. Stratasys makes no warranties of any kind, express or implied, including, but not limited to, the warranties of merchantability, fitness for a particular use, or warranty against patent infringement.
+
+\section*{Highlights}
+\begin{itemize}
+  \item High tensile strength and hardness, biocompatible, corrosion and wear resistance, and low ductility.
+\end{itemize}
+
+\section*{Applications}
+\begin{itemize}
+  \item Applications would include medical devices/implants, turbine engines, industrial/mechanical components, and oil and gas.
+\end{itemize}
+
+\section*{TYPICAL PHYSICAL PROPERTIES}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+MECHANICAL PROPERTIES & DMLM (AS BUILT) & \begin{tabular}{c}
+STRESS RELIEVING @ $750^{\circ} \mathrm{C}$ FOR 1 HR \\
+\& FIRING @ 880 8 FOR 5 MIN \\
+\end{tabular} \\
+\hline
+Ultimate tensile strength & \begin{tabular}{l}
+Min.: $800 \mathrm{MPa}, 116 \mathrm{ksi}$ \\
+(typical: $1050 \pm 100 \mathrm{MPa}, 152 \pm 15 \mathrm{ksi})$ \\
+\end{tabular} & \begin{tabular}{l}
+Min.: $900 \mathrm{MPa}, 131 \mathrm{ksi}$ \\
+(typical: $1100 \pm 100 \mathrm{MPa}, 160 \pm 15 \mathrm{ksi})$ \\
+\end{tabular} \\
+\hline
+Proof strength (Rp $0.2 \%$ ) & \begin{tabular}{l}
+Min.: $600 \mathrm{MPa}, 87 \mathrm{ksi}$ \\
+(typical: $750 \pm 80 \mathrm{MPa}, 109 \pm 12 \mathrm{ksi})$ \\
+\end{tabular} & \begin{tabular}{l}
+Min.: $700 \mathrm{MPa}, 102 \mathrm{ksi}$ \\
+(typical: $900 \pm 80 \mathrm{MPa}, 131 \pm 12 \mathrm{ksi})$ \\
+\end{tabular} \\
+\hline
+Elongation at break, A5 & \begin{tabular}{l}
+Min.: $10 \%$ \\
+(typical: $14 \% \pm 2 \%$ ) \\
+\end{tabular} & \begin{tabular}{l}
+Min.: $2 \%$ \\
+(typical: $10 \% \pm 2 \%$ ) \\
+\end{tabular} \\
+\hline
+Young's Modulus & \begin{tabular}{l}
+Min.: $170 \mathrm{GPa}$ \\
+(typical: $200 \pm 20 \mathrm{GPa})$ \\
+\end{tabular} & \begin{tabular}{l}
+Min.: $180 \mathrm{GPa}$ \\
+(typical: $200 \pm 10 \mathrm{GPa})$ \\
+\end{tabular} \\
+\hline
+Hardness HV10 & \begin{tabular}{l}
+Min.: $320 \mathrm{HV}$ \\
+(typical: $360 \pm 20 \mathrm{HV}$ ) \\
+\end{tabular} & \begin{tabular}{l}
+Min.: $350 \mathrm{HV}$ \\
+(typical: $420 \pm 30 \mathrm{HV}$ ) \\
+\end{tabular} \\
+\hline
+Coefficient of thermal expansion $\left(25-500^{\circ} \mathrm{C}\right)$ & - & \begin{tabular}{l}
+$14.0-14.5 \times 10-6 \mathrm{~m} / \mathrm{m}^{\circ} \mathrm{C}$ \\
+$7.78-8.06 \times 10-6 \mathrm{in} / \mathrm{in}^{\circ} \mathrm{F}$ \\
+\end{tabular} \\
+\hline
+Coefficient of thermal expansion $\left(20-600^{\circ} \mathrm{C}\right)$ & - & \begin{tabular}{l}
+$14.2-14.6 \times 10-6 \mathrm{~m} / \mathrm{m}^{\circ} \mathrm{C}$ \\
+$7.89-8.11 \times 10-6 \mathrm{in} / \mathrm{in}^{\circ} \mathrm{F}$ \\
+\end{tabular} \\
+\hline
+Melting interval & - & \begin{tabular}{l}
+$1380-1440^{\circ} \mathrm{C}$, \\
+$2516-2624^{\circ} \mathrm{F}$ \\
+\end{tabular} \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{COBALT CHROME COMPOSITION}
+ ELEMENT\section*{TYPICAL PERCENTAGE}
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Cobalt (Co) & $61.8-65.8 \mathrm{wt}-\%$ \\
+\hline
+Chromium (Cr) & $23.7-25.7 \mathrm{wt}-\%$ \\
+\hline
+Molybdenum (Mo) & $4.6-5.6 \mathrm{wt}-\%$ \\
+\hline
+Tungsten (W) & $4.9-5.9 \mathrm{wt}-\%$ \\
+\hline
+Silicon (Si) & $0.8-1.2 \mathrm{wt}-\%$ \\
+\hline
+Iron (Fe) & max. $0.50 \mathrm{wt} \%$ \\
+\hline
+Manganese (Mn) & max. $0.10 \mathrm{wt} \%$ \\
+\hline
+\end{tabular}
+\end{center}
+
+The information presented represents typical values intended for reference and comparison purposes only. It should not be used for design specifications or quality control purposes. End-use material performance can be impacted (+/-) by, but not limited to, part design, end-use conditions, test conditions, color etc. Actual values will vary with build conditions. Product specifications are subject to change without notice. ${ }^{*}$ Chemical analysis for specific lots available upon request.
+
+The performance characteristics of these materials may vary according to application, operating conditions, or end use. Each user is responsible for determining that the material is safe, lawful, and technically suitable for the intended application. Stratasys makes no warranties of any kind, express or implied, including, but not limited to, the warranties of merchantability, fitness for a particular use, or warranty against patent infringement.
+
+\section*{Nickel Alloy K500}
+\section*{DIRECT METAL LASER MELTING MATERIAL SPECIFICATIONS}
+\section*{Highlights}
+\begin{itemize}
+  \item Liquid Oxygen (LOX) Compatible
+
+  \item Corrosion resistant
+
+  \item Ti, Al precipitates create high strength
+
+\end{itemize}
+
+\section*{Heat Treatment Options}
+\begin{itemize}
+  \item HIP Hot Isostatic Press \& Age Hardenable
+\end{itemize}
+
+\section*{Applications}
+\begin{itemize}
+  \item Liquid Rocket Engine Components
+
+  \item LOX Manifolds and Injectors
+
+  \item Parts requiring ductility and high strength
+
+  \item Parts requiring high corrosion resistance
+
+\end{itemize}
+
+\section*{TYPICAL PHYSICAL PROPERTIES}
+\begin{center}
+\begin{tabular}{l|l|l|l|l|}
+MECHANICAL PROPERTIES & \multicolumn{1}{c}{}\begin{tabular}{c}
+TYPICAL WROUGHT \\
+Hot Finished Annealed \\
+(AS BUILT) \\
+\end{tabular} & \multicolumn{1}{c}{}\begin{tabular}{c}
+DMLM \\
+(HIP) \\
+\end{tabular} & 127 &  \\
+\hline
+$0.02 \%$ Yield (ksi) & $40-60$ & 53.3 & 69 & 77.8 \\
+\hline
+Ultimate Tensile (ksi) & $90-110$ & 70.5 & 121 & 27.6 \\
+\hline
+Elongation (\%) & $45-25$ & 40.2 & 28.8 & 42 \\
+\hline
+Reduction of Area (\%) & $70-80$ & 76 & 50 & 80 \\
+\hline
+Hardness (HRB) & $75-90$ & 85 & 85 & 90 \\
+\hline
+\end{tabular}
+\end{center}
+
+HIP - Hot Isostatic Press, 2125 F at 14.75ksi for 240 min; SHT - Solution Heat Treat, 1850F for 30 minutes Air quench; PHT - Precipitation Heat Treat, 1100F for $8 \mathrm{hrs}$, cool to $900 \mathrm{~F}$ at $25 \mathrm{~F} /$ hour, air cool below $900 \mathrm{~F}$
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+PROMOTED COMBUSTION PROPERTIES & \multicolumn{1}{c}{TYPICAL WROUGHT} & \multicolumn{1}{l}{DMLM} \\
+NASA-STD-6001B, ASTM G124 & $>10,000$ & AS BUILT, HIP, ANNEALED \& AGE \\
+\hline
+Threshold Pressure (psi) & - & $>10,000$ \\
+\hline
+Burn Length $(\mathrm{in})$ & 0.22 &  \\
+\hline
+\end{tabular}
+\end{center}
+
+NICKEL ALLOY K500 COMPOSITION
+
+ELEMENT
+
+TYPICAL PERCENTAGE
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Nickel (Ni) & Balance \\
+\hline
+Carbon (C) & 0.25 max \\
+\hline
+Manganese (Mn) & 1.5 max \\
+\hline
+Sulfur (S) & 0.01 max \\
+\hline
+Silicon (Si) & 0.5 max \\
+\hline
+Iron (Fe) & 2.0 max \\
+\hline
+Aluminum (Al) & $2.3-3.1$ \\
+\hline
+Copper (Cu) & $27.0-33.0$ \\
+\hline
+Titanium (Ti) & $0.35-0.85$ \\
+\hline
+\end{tabular}
+\end{center}
+
+The information presented represents typical values intended for reference and comparison purposes only. It should not be used for design specifications or quality control purposes. End-use material performance can be impacted (+/-) by, but not limited to, part design, end-use conditions, test conditions, color etc. Actual values will vary with build conditions. Product specifications are subject to change without notice. ${ }^{*}$ Chemical analysis for specific lots available upon request.
+
+The performance characteristics of these materials may vary according to application, operating conditions, or end use. Each user is responsible for determining that the material is safe, lawful, and technically suitable for the intended application. Stratasys makes no warranties of any kind, express or implied, including, but not limited to, the warranties of merchantability, fitness for a particular use, or warranty against patent infringement.
+
+\section*{Highlights}
+\begin{itemize}
+  \item Nickel based super alloy
+
+  \item Non-Magnetic
+
+  \item Corrosion resistant
+
+\end{itemize}
+
+\section*{Applications}
+\begin{itemize}
+  \item High heat
+
+  \item Turbine engine components and fuel systems
+
+  \item Oil well, petroleum, and natural gas industry
+
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+MECHANICAL PROPERTIES & \begin{tabular}{l}
+AMS 5599, \\
+5666 (MIN) \\
+\end{tabular} & \begin{tabular}{c}
+DMLM \\
+AS BUILT \\
+\end{tabular} & \begin{tabular}{l}
+DMLM \\
+SR \\
+\end{tabular} & \begin{tabular}{l}
+DMLM \\
+HIP'ED \\
+\end{tabular} & \begin{tabular}{l}
+DMLM \\
+SHT \\
+\end{tabular} \\
+\hline
+Ultimate Tensile Strength & $120 \mathrm{ksi}$ & $146 \mathrm{ksi}$ & $138 \mathrm{ksi}$ & $132 \mathrm{ksi}$ & $128 \mathrm{ksi}$ \\
+\hline
+$0.02 \%$ Yield Strength & $60 \mathrm{ksi}$ & $97 \mathrm{ksi}$ & $93 \mathrm{ksi}$ & $57 \mathrm{ksi}$ & $61 \mathrm{ksi}$ \\
+\hline
+Modulus & - & $26 \mathrm{msi}$ & $27 \mathrm{msi}$ & $27 \mathrm{msi}$ & $27 \mathrm{msi}$ \\
+\hline
+Elongation & $30 \%$ & $42 \%$ & $36 \%$ & $50 \%$ & $41 \%$ \\
+\hline
+Reduction of Area & - & $54 \%$ & $37 \%$ & $45 \%$ & $38 \%$ \\
+\hline
+Hardness (HRC) & 24 (MAX) & 29 & 13 & TBD & TBD \\
+\hline
+\end{tabular}
+\end{center}
+
+*SR - Stress Relief, $1950^{\circ} \mathrm{F}$ for 1.5 hours *HIP'ed - Hot Isostatic Press, $2125^{\circ} \mathrm{F}$ for $240 \mathrm{~min}$ at $14.75 \mathrm{ksi}$
+
+${ }^{*}$ SHT - Solution Heat Treat, (Per AMS5599G) Heat to $1900^{\circ} \mathrm{F}$, time commensurate with thickens heating equipment and procedure. *SR - Stress Releived, $100^{\circ} \mathrm{F}$ for 1.5 hours, air cooled
+
+\section*{NICKEL ALLOY 625 COMPOSITION}
+ELEMENT
+
+\section*{TYPICAL PERCENTAGE}
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Carbon (C) & 0.10 max \\
+\hline
+Silicon (Si) & 0.50 max \\
+\hline
+Manganese (Mn) & 0.50 max \\
+\hline
+Phosphorus (P) & 0.015 max \\
+\hline
+Sulfur (S) & 0.015 max \\
+\hline
+Chromium (Cr) & $20.00-23.00$ \\
+\hline
+Molybdenum (Mo) & $8.00-10.00$ \\
+\hline
+Iron (Fe) & 5.00 max \\
+\hline
+Niobium (Nb) & $3.15-4.15$ \\
+\hline
+Aluminum (Al) & 0.40 max \\
+\hline
+Titanium (Ti) & 0.40 max \\
+\hline
+Nickel (Ni) & 58.00 min \\
+\hline
+\end{tabular}
+\end{center}
+
+The information presented represents typical values intended for reference and comparison purposes only. It should not be used for design specifications or quality control purposes. End-use material performance can be impacted (+/-) by, but not limited to, part design, end-use conditions, test conditions, color etc. Actual values will vary with build conditions. Product specifications are subject to change without notice. ${ }^{*}$ Chemical analysis for specific lots available upon request.
+
+The performance characteristics of these materials may vary according to application, operating conditions, or end use. Each user is responsible for determining that the material is safe, lawful, and technically suitable for the intended application. Stratasys makes no warranties of any kind, express or implied, including, but not limited to, the warranties of merchantability, fitness for a particular use, or warranty against patent infringement.
+
+\section*{Highlights}
+\begin{itemize}
+  \item Nickel based super alloy
+
+  \item Non-Magnetic
+
+  \item Corrosion resistant
+
+\end{itemize}
+
+\section*{Applications}
+\begin{itemize}
+  \item High heat
+
+  \item Turbine engine components, fasteners \& instrumentation parts
+
+  \item Oil well, petroleum, and natural gas industry
+
+\end{itemize}
+
+\section*{TYPICAL PHYSICAL PROPERTIES}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+\begin{tabular}{l}
+MECHANICAL \\
+PROPERTIES \\
+\end{tabular} & \begin{tabular}{l}
+AMS 5596,5663 \\
+SHT (MAX) \\
+\end{tabular} & \begin{tabular}{l}
+AMS 5596,5663 \\
+PHT (MIN) \\
+\end{tabular} & \begin{tabular}{l}
+DMLM \\
+AS BUILT \\
+\end{tabular} & \begin{tabular}{l}
+DMLM \\
+$\mathrm{SR}^{*}$ \\
+\end{tabular} & \begin{tabular}{l}
+DMLM \\
+HIP'ed* \\
+\end{tabular} & \begin{tabular}{l}
+DMLM \\
+SHT* $^{*}$ \\
+\end{tabular} & \begin{tabular}{l}
+DMLM \\
+PHT* $^{*}$ \\
+\end{tabular} \\
+\hline
+Tensile Strength & $140 \mathrm{ksi}$ & $180 \mathrm{ksi}$ & 127 ksi & $133 \mathrm{ksi}$ & $185 \mathrm{ksi}$ & 119 ksi & 198 ksi \\
+\hline
+$0.02 \%$ Yield Strength & $80 \mathrm{ksi}$ & $150 \mathrm{ksi}$ & $112 \mathrm{ksi}$ & $75 \mathrm{ksi}$ & $135 \mathrm{ksi}$ & $46 \mathrm{ksi}$ & $153 \mathrm{ksi}$ \\
+\hline
+Modulus (msi) & - & - & $26 \mathrm{msi}$ & $28 \mathrm{msi}$ & $29 \mathrm{msi}$ & $26 \mathrm{msi}$ & $28 \mathrm{msi}$ \\
+\hline
+Elongation & $30 \%$ & $12 \%$ & $30 \%$ & $42 \%$ & $24 \%$ & $29 \%$ & $20 \%$ \\
+\hline
+Reduction of Area & - & - & $40 \%$ & $48 \%$ & $49 \%$ & $44 \%$ & $28 \%$ \\
+\hline
+Hardness (HRC) & 25 & 36 & TBD & TBD & TBD & TBD & TBD \\
+\hline
+\end{tabular}
+\end{center}
+
+*SR - Stress Relief, $1950^{\circ} \mathrm{F}$ for 1.5 hours
+
+*HIP'ed - Hot Isostatic Press, $2125^{\circ} \mathrm{F}$ for $240 \mathrm{~min}$ at $14.75 \mathrm{ksi}$
+
+*SHT - Solution Heat Treat, (Per AMS5596K) Heat to $1725^{\circ} \mathrm{F}$ to $1850^{\circ} \mathrm{F}$, hold for time commensurate with product thickness air cool (or faster) *PHT - Percipitation Heat Treatment, (Per AMS5596K) Heat to $1325^{\circ} \mathrm{F}$ to $1400^{\circ} \mathrm{F}$, hold for approx 8 hours, cool at $100^{\circ} \mathrm{F} / \mathrm{hr}$ to $1150^{\circ} \mathrm{F}$, hold for approx 8 hrs, air cool
+
+\section*{NICKEL ALLOY 718 COMPOSITION}
+\section*{ELEMENT}
+\section*{TYPICAL PERCENTAGE}
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Carbon (C) & 0.08 max \\
+\hline
+Silicon (Si) & 0.35 max \\
+\hline
+Manganese (Mn) & 0.35 max \\
+\hline
+Phosphorus (P) & 0.015 max \\
+\hline
+Sulfur (S) & 0.015 max \\
+\hline
+Chromium (Cr) & $17.00-21.00$ \\
+\hline
+Molybdenum (Mo) & 3.3 max \\
+\hline
+Copper (Cu) & 0.30 max \\
+\hline
+Iron (Fe) & Balance \\
+\hline
+Niobium (Nb) & 5.5 max \\
+\hline
+Aluminum (Al) & 0.3 max \\
+\hline
+Titanium (Ti) & 1.15 max \\
+\hline
+Nickel (Ni) & $50.00-55.00$ \\
+\hline
+\end{tabular}
+\end{center}
+
+The information presented represents typical values intended for reference and comparison purposes only. It should not be used for design specifications or quality control purposes. End-use material performance can be impacted (+/-) by, but not limited to, part design, end-use conditions, test conditions, color etc. Actual values will vary with build conditions. Product specifications are subject to change without notice. ${ }^{*}$ Chemical analysis for specific lots available upon request.
+
+The performance characteristics of these materials may vary according to application, operating conditions, or end use. Each user is responsible for determining that the material is safe, lawful, and technically suitable for the intended application. Stratasys makes no warranties of any kind, express or implied, including, but not limited to, the warranties of merchantability, fitness for a particular use, or warranty against patent infringement.
+
+\section*{Stainless Steel $17-4$}
+\section*{DIRECT METAL LASER MELTING MATERIAL SPECIFICATIONS}
+Highlights
+
+\begin{itemize}
+  \item Pre-alloyed, precipitation hardenable stainless steel
+  \item Good welding and machining characteristics
+  \item Good mechanical properties
+\end{itemize}
+
+\section*{Applications}
+\begin{itemize}
+  \item Parts requiring post-production processing
+
+  \item Oil and gas industry
+
+  \item Parts requiring ductility and high strength
+
+  \item Parts requiring high corrosion resistance
+
+\end{itemize}
+
+\section*{Heat Treatment Options}
+\begin{itemize}
+  \item Annealed: $1900^{\circ} \mathrm{F}$ for 2 hours in a vacuum
+
+  \item H900: Hardens part at $900^{\circ} \mathrm{F}$ in argon for 1 hour
+
+  \item H1150: Anneals part at $1150^{\circ} \mathrm{F}$ in argon for 4 hours
+
+  \item Heat Treatment 1: HIP + AMS 5604 (SHT+H900)
+
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+MECHANICAL PROPERTIES & \begin{tabular}{c}
+AMS 5604/5643 \\
+(MIN REQ.) \\
+\end{tabular} & \begin{tabular}{c}
+TYPICAL \\
+WROUGHT \\
+\end{tabular} & \begin{tabular}{c}
+DMLM \\
+(AS BUILT) \\
+\end{tabular} & \begin{tabular}{l}
+DMLM \\
+(HT1) \\
+\end{tabular} & \begin{tabular}{l}
+DMLM \\
+(HIP) \\
+\end{tabular} & \begin{tabular}{c}
+DMLM \\
+(ANNEALED) \\
+\end{tabular} \\
+\hline
+$0.02 \%$ Yield & - & - & $106 \mathrm{ksi}$ & $180 \mathrm{ksi}$ & $119 \mathrm{ksi}$ & $103 \mathrm{ksi}$ \\
+\hline
+Ultimate Tensile & - & - & $151 \mathrm{ksi}$ & $211 \mathrm{ksi}$ & $166 \mathrm{ksi}$ & $175 \mathrm{ksi}$ \\
+\hline
+Elongation & - & - & $17 \%$ & $11 \%$ & $12 \%$ & $12 \%$ \\
+\hline
+Hardness & - & - & $\sim 30 \mathrm{HRC}$ & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{STAINLESS STEEL 17-4 PH COMPOSITION}
+ELEMENT
+
+TYPICAL PERCENTAGE
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Carbon (C) & 0.07 max \\
+\hline
+Manganese (Mn) & 1.00 max \\
+\hline
+Phosphorus (P) & 0.040 max \\
+\hline
+Sulfur (S) & 0.030 max \\
+\hline
+Silicon (Si) & 1.00 max \\
+\hline
+Chromium (Cr) & $15.00-17.50$ \\
+\hline
+Nickel (Ni) & $3.00-5.00$ \\
+\hline
+Copper (Cu) & $3.00-5.00$ \\
+\hline
+Niobium plus Tantalum (Cb, Ta) & $0.15-0.45$ \\
+\hline
+\end{tabular}
+\end{center}
+
+The information presented represents typical values intended for reference and comparison purposes only. It should not be used for design specifications or quality control purposes. End-use material performance can be impacted (+/-) by, but not limited to, part design, end-use conditions, test conditions, color etc. Actual values will vary with build conditions. Product specifications are subject to change without notice. *Chemical analysis for specific lots available upon request.
+
+The performance characteristics of these materials may vary according to application, operating conditions, or end use. Each user is responsible for determining that the material is safe, lawful, and technically suitable for the intended application. Stratasys makes no warranties of any kind, express or implied, including, but not limited to, the warranties of merchantability, fitness for a particular use, or warranty against patent infringement.
+
+\section*{Stainless Steel 316L}
+DIRECT METAL LASER MELTING MATERIAL SPECIFICATIONS
+
+\section*{Highlights}
+\begin{itemize}
+  \item Good strength and creep resistance
+
+  \item Excellent weldability due to low-carbon
+
+  \item Molybdenum gives improved corrosion resistance
+
+\end{itemize}
+
+\section*{Applications}
+\begin{itemize}
+  \item Parts requiring post-production processing
+
+  \item Consumer/Automotive/Aerospace
+
+  \item Parts requiring ductility and high strength
+
+  \item Parts requiring high corrosion resistance
+
+\end{itemize}
+
+\section*{Heat Treatment Options}
+\begin{itemize}
+  \item Solution annealing not necessary
+
+  \item Cannot be hardened by heat treat
+
+\end{itemize}
+
+\section*{TYPICAL PHYSICAL PROPERTIES}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multirow[t]{2}{*}{MECHANICAL PROPERTIES} & \multirow{2}{*}{}\begin{tabular}{c}
+TYPICAL WROUGHT \\
+AMS5507G \\
+\end{tabular} & \multicolumn{2}{|c|}{}\begin{tabular}{c}
+DMLM \\
+(AS BUILT) \\
+\end{tabular} \\
+\hline
+ &  & XY AXIS & Z AXIS \\
+\hline
+$0.02 \%$ Yield & 172.4 MPa & $530 \pm 60 \mathrm{MPa}$ & $470 \pm 90 \mathrm{MPa}$ \\
+\hline
+Ultimate Tensile & $482-689 \mathrm{MPa}$ & $93 \pm 8 \mathrm{ksi}$ & $78 \pm 8 \mathrm{ksi}$ \\
+\hline
+Elongation & $45 \%$ & $40 \pm 15 \%$ & $50 \pm 20 \%$ \\
+\hline
+Hardness & $79 \mathrm{HRB}$ & typ 85 HRB &  \\
+\hline
+\end{tabular}
+\end{center}
+
+STAINLESS STEEL 316L COMPOSITION
+
+ELEMENT
+
+TYPICAL PERCENTAGE
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Iron (Fe) & balance \\
+\hline
+Carbon (C) & 0.030 max \\
+\hline
+Manganese (Mn) & 2.00 max \\
+\hline
+Phosphorus (P) & 0.025 max \\
+\hline
+Sulfur (S) & 0.010 max \\
+\hline
+Silicon (Si) & 0.750 max \\
+\hline
+Chromium (Cr) & $17.50-18.00$ \\
+\hline
+Nickel (Ni) & $12.500-13.00$ \\
+\hline
+Copper (Cu) & 0.50 max \\
+\hline
+Molybdenum (Mo) & $2.25-2.50$ \\
+\hline
+\end{tabular}
+\end{center}
+
+The information presented represents typical values intended for reference and comparison purposes only. It should not be used for design specifications or quality control purposes. End-use material performance can be impacted (+/-) by, but not limited to, part design, end-use conditions, test conditions, color etc. Actual values will vary with build conditions. Product specifications are subject to change without notice. *Chemical analysis for specific lots available upon request.
+
+The performance characteristics of these materials may vary according to application, operating conditions, or end use. Each user is responsible for determining that the material is safe, lawful, and technically suitable for the intended application. Stratasys makes no warranties of any kind, express or implied, including, but not limited to, the warranties of merchantability, fitness for a particular use, or warranty against patent infringement.
+
+\section*{Highlights}
+\begin{itemize}
+  \item $\quad$ Light alloy characterized by having excellent mechanical properties and corrosion resistance combined with low specific weight and biocompatibility.
+\end{itemize}
+
+\section*{Applications}
+\begin{itemize}
+  \item Ideal for high-performance engineering applications such as aerospace and motor racing and for the production of biomedical implants.
+\end{itemize}
+
+\section*{TYPICAL PHYSICAL PROPERTIES}
+MECHANICAL PROPERTIES
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Ultimate tensile strength & $1150 \pm 60 \mathrm{MPa}(166 \pm 9 \mathrm{ksi})$ \\
+\hline
+Yield strength (Rp 0.2\%) & $1030 \pm 70 \mathrm{MPa}(150 \pm 10 \mathrm{ksi})$ \\
+\hline
+Elongation at break & $11 \% \pm 2 \%$ \\
+\hline
+Young's Modulus & $110 \pm 7 \mathrm{GPa}(16 \pm 1 \mathrm{msi})$ \\
+\hline
+Hardness & Approx. $400-430 \mathrm{HV}(41-44 \mathrm{HRC})$ \\
+\hline
+Maximum long-term operating temperature & $350^{\circ} \mathrm{C}\left(660^{\circ} \mathrm{F}\right)$ \\
+\hline
+Relative density with standard parameters & Approx. $100 \%$ \\
+\hline
+Density with standard parameters & $4.43 \mathrm{~g} / \mathrm{cm}^{3}\left(0.160 \mathrm{lb} / \mathrm{in}^{3}\right)$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{TITANIUM TI64 COMPOSITION}
+ELEMENT
+
+TYPICAL PERCENTAGE
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Aluminium (A) & $(5.5-6.5 \%)$ \\
+\hline
+Vanadium (V) & $(3.5-4.5 \%)$ \\
+\hline
+Oxygen (O) & $<2000 \mathrm{ppm}$ \\
+\hline
+Nitrogen (N) & $<500 \mathrm{ppm}$ \\
+\hline
+Carbon (C) & $<800 \mathrm{ppm}$ \\
+\hline
+Hydrogen (H) & $<120 \mathrm{ppm}$ \\
+\hline
+Iron (Fe) & $<2500 \mathrm{ppm}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+The information presented represents typical values intended for reference and comparison purposes only. It should not be used for design specifications or quality control purposes. End-use material performance can be impacted (+/-) by, but not limited to, part design, end-use conditions, test conditions, color etc. Actual values will vary with build conditions. Product specifications are subject to change without notice. *Chemical analysis for specific lots available upon request.
+
+The performance characteristics of these materials may vary according to application, operating conditions, or end use. Each user is responsible for determining that the material is safe, lawful, and technically suitable for the intended application. Stratasys makes no warranties of any kind, express or implied, including, but not limited to, the warranties of merchantability, fitness for a particular use, or warranty against patent infringement.
+
+\section*{Grade 2 Titanium}
+\section*{Grade 2 Titanium}
+\section*{General characteristics}
+The high strength, low weight ratio and outstanding corrosion resistance inherent to titanium and its alloys has led to demand high levels of reliable performance in surgery and medicine as well as in aerospace, automotive chemical plan power generation, oil and gas extraction, sports, and ther major industries.
+
+In the majority of these and other engineering applications titanium has replaced heavier less servicente or less cost titanium has replaced heavier, less serviceable or less cost-\\
+effective materials. Designing with titanium taking all factors into account has resulted in reliable, economic and more durable systems and components, which in many situation have substantially exceeded performance and service life have substanti
+
+Titanium is available in different grades, unalloyed or alloyed.
+
+\section*{Special characteristics}
+Unalloyed Commercially Pure (CP) Titanium is available in ur different grades, 1, 2, 3 and 4, which are used based on the corrosific application Grade 1 has the highest formbility of while Grade 4 has the highest strength and moderate formability.
+
+CP Titanium users utilize its excellent corrosion resistance, formability and weldable characterresistance, formability and weldable\\
+istics in many critical applications.
+
+Titanium Grade 2 is stronger than Grade 1 and equally corrosion-resistant against most applications.
+
+Titanium Grade 2 has numerous appliTitanium Grade 2 has numerous\\
+cations in the medical industry. cations in the medical industry.\\
+Biocompatibility of Titanium Grade 2 is excellent, especially when direct contact with tissue or bone is required.
+
+\section*{Applications}
+nium Grade 2 is typically used for:
+
+Airframe and aircraft engine parts
+
+Marine chemical part
+
+Condenser tubing
+
+\section*{Powder specification}
+The Arcam Titanium Grade 2 powder has a particle size between 45 and 100 microns. This limit on the minimum particle size ensures safe handling of the powder.
+
+Please refer to the Arcam MSDS (Material Safety Data Sheet) for more information about the handling and safety of the Arcam Titanium Grade 2.
+
+\begin{center}
+\begin{tabular}{lll}
+CHEMICAL SPECIFICATION &  &  \\
+ & \begin{tabular}{c}
+Arcam Titanium \\
+Grade 2, Typical \\
+\end{tabular} & \begin{tabular}{l}
+Titanium Grade 2, \\
+Required ${ }^{*}$ \\
+\end{tabular} \\
+\hline
+Carbon, $\mathrm{C}$ & $0,005 \%$ & $<0,08 \%$ \\
+\hline
+Iron, $\mathrm{Fe}$ & $0,05 \%$ & $<0,3 \%$ \\
+\hline
+Oxygen, $\mathrm{O}$ & $0,19 \%$ & $<0,25 \%$ \\
+\hline
+Nitrogen, $\mathrm{N}$ & $0,004 \%$ & $<0,03 \%$ \\
+\hline
+Hydrogen, $\mathrm{H}$ & $0,0009 \%$ & $<0,015 \%$ \\
+\hline
+Titanium, $T i$ & Balance &  \\
+\hline
+*STro7 &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+MECHANICAL PROPERTIES
+
+\begin{center}
+\begin{tabular}{lll}
+ & \begin{tabular}{l}
+Arcam Titanium \\
+Grade 2, Typical \\
+\end{tabular} & \begin{tabular}{l}
+Titanium Grade 2, \\
+Required \\
+\end{tabular} \\
+\hline
+Yield Strength (Rp 0,2) & $540 \mathrm{MPa}$ & $275 \mathrm{MPa}$ \\
+\hline
+Ultimate Tensile Strength (Rm) & $570 \mathrm{MPa}$ & $345 \mathrm{MPa}$ \\
+\hline
+Elongation & $21 \%$ & $>20 \%$ \\
+\hline
+Reduction of Area & $55 \%$ & $>30 \%$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-23}
+\end{center}
+
+\section*{POST PROCESSING}
+\section*{Heat treatmen}
+Hot Isostatic Pressing (HIP) is recommended for fatigue-loaded component The following HIP parameters are recommended
+
+$920^{\circ} \mathrm{C}$
+
+$100 \mathrm{MPa}$
+
+Machining
+
+Titanium Grade 2 parts manufacture
+
+in the EBM process feature good
+
+machinability and can be machine
+
+as stock parts. The following factors
+
+contribute to efficient machining of
+
+Titanium Grade 2 parts
+
+Low cutting speeds
+
+\begin{itemize}
+  \item High feed rate
+\end{itemize}
+
+Generous quantities of cutting fluid Sharp tools
+
+\section*{Welding}
+Titanium Grade 2 may be welded by conventional fusio chemical reactivity typically requires special measures and procedures
+
+\section*{Microstructure}
+Titanium Grade 2 parts manufactured in the EBM process have a microstructure consisting of fine $\alpha$-grains, thanks to the rapid cooling of the melt pool.
+
+The build chamber is kept at an elevated temperature throughout the entire build, and the material thus comes out of the EBM process in a naturally aged condition.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-24(1)}
+\end{center}
+
+Micrograph of Arcam Titanium Grade 2 material, 100x.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-24(2)}
+\end{center}
+
+Micrograph of Arcam Titanium Grade 2 material, 200x.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_11_54e4b04eb5efe63bec03g-24}
+\end{center}
+
+Arcam AB | Krokslätts Fabriker 27A, SE 43137 Mölndal, Sweden | Phone: +46 317103200 | Fax: +46 317103201 | \href{mailto:info@arcam.com}{info@arcam.com} | \href{http://www.arcam.com}{www.arcam.com}
+
+Arcam provides Free Form Fabrication machines for Direct Manufacturing of metal parts. The technology offers ultimate geometric freedom combined with first class material properties. Arcam is guided by our vision to revolutionize the art of manufacturing. Use Arcam to manufacture your future.
+
+\section*{Material data sheet - FlexLine}
+\section*{EOS NickeIAlloy HX}
+EOS NickelAlloy HX is a nickel metal alloy powder intended for processing on
+
+EOS DMLS systems.
+
+This document provides information and data for parts built using EOS NickelAlloy HX powder (EOS art.-no. 9011-0023) on the following specifications:
+
+\begin{itemize}
+  \item EOS DMLS system M400-4
+  \item EOSYSTEM: EOSPRINT v.1.5/HCS v.2.4.14
+  \item EOS Parameter set HX FlexLine 40um
+\end{itemize}
+
+\section*{Description}
+EOS NickelAlloy HX is a nickel-chromium-iron-molybdenum alloy in fine powder form. Its composition corresponds to UNS N06002. While the wrought and cast versions of the alloy generally are solution annealed, the laser sintered version has a high strength and good elongation already in the as-built condition. Solution annealing of the laser sintered material will homogenize the microstructure, relax internal stresses and increase the elongation, while slightly decreasing the strength.
+
+This type of alloy is characterized by having high strength and oxidation resistance also at elevated temperatures, and is often used up to $1200^{\circ} \mathrm{C}$. Therefore its applications can be found in aerospace technology, gas turbine parts, etc.
+
+Parts built from EOS NickelAlloy HX can be heat treated and material properties can be varied within specified range. In both as-built and solution heat treated states the parts can be machined, spark-eroded, welded, micro shot-peened, polished, and coated if required. Unexposed powder can be reused.
+
+\section*{Material data sheet - FlexLine}
+\section*{Technical Data}
+\section*{Powder properties}
+The chemical composition of the powder is reported in the table below.
+
+\begin{center}
+\begin{tabular}{lllll}
+\hline
+Material composition & Element & Min & Max \\
+\hline
+ & $\mathrm{Ni}$ &  & Balance \\
+\hline
+ & $\mathrm{Cr}$ & 20.5 & 23.0 \\
+\hline
+ & $\mathrm{Fe}$ & 17.0 & 20.0 \\
+\hline
+ & Mo & 8.0 & 10.0 \\
+\hline
+ & $\mathrm{W}$ & 0.2 & 1.0 \\
+\hline
+ & $\mathrm{Co}$ & 0.5 & 2.5 \\
+\hline
+ & $\mathrm{C}$ & - & 0.1 \\
+\hline
+ & $\mathrm{Si}$ & - & 1.0 \\
+\hline
+ & $\mathrm{Mn}$ & - & 1.0 \\
+\hline
+ & $\mathrm{S}$ & - & 0.03 \\
+\hline
+ & $\mathrm{P}$ & - & 0.04 \\
+\hline
+ & $\mathrm{B}$ & - & 0.01 \\
+\hline
+ & $\mathrm{Se}$ & - & 0.0050 \\
+\hline
+$\mathrm{Cu}$ & - & 0.5 &  \\
+\hline
+$\mathrm{Al}$ & - & 0.5 &  \\
+\hline
+$\mathrm{Ti}$ & - & 0.15 &  \\
+\hline
+\end{tabular}
+\end{center}
+
+Max. particle size
+
+Particles $>63 \mu \mathrm{m}[1]$
+
+max. 0.5 wt.- $\%$
+
+[1] Sieve analysis according to ASTM B214.
+
+\section*{Material data sheet - FlexLine}
+\section*{General process data}
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Layer thickness & $40 \mu \mathrm{m}$ \\
+\hline
+Volume rate [2] & $16.8 \mathrm{~mm}^{3} / \mathrm{s}\left(60.8 \mathrm{~cm}^{3} / \mathrm{h}\right)$ \\
+\hline
+\end{tabular}
+\end{center}
+
+[2] The volume rate is a measure of build speed during laser exposure of the skin area. The total build speed depends on this volume rate and many other factors such as exposure parameters of contours, supports, up and downskin, recoating time, Home-In or LPM settings.
+
+\section*{Physical and chemical properties of parts}
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Part density [3] & $\min .8 .2 \mathrm{~g} / \mathrm{cm}^{3}$ \\
+\hline
+Surface roughness after shot peening [4] & Ra 4-6.5 $\mu \mathrm{m} ; \mathrm{Rz}$ 20-50 $\mu \mathrm{m}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+[3] Weighing in air and water according to ISO 3369.
+
+[4] Measurement according to ISO 4287. The numbers were measured at the horizontal (up-facing) and all vertical surfaces of test cubes. Due to the layerwise building the roughness strongly depends on the orientation of the surface, for example sloping and curved surfaces exhibit a stair-step effect.
+
+\section*{Tensile data at room temperature $[5,6]$}
+\begin{center}
+\begin{tabular}{lll}
+\hline
+ & As built & Heat treated [7] \\
+\hline
+Ultimate tensile strength, Rm & $770 \mathrm{MPa}$ & $710 \mathrm{MPa}$ \\
+\hline
+Yield strength, Rpo.2 & $610 \mathrm{MPa}$ & $345 \mathrm{MPa}$ \\
+\hline
+Elongation at break, A & $31 \%$ & $45 \%$ \\
+\hline
+\end{tabular}
+\end{center}
+
+[5] The numbers are average values and are determined from samples with horizontal and vertical orientation.
+
+[6] Tensile testing according to ISO 6892-1 B10, proportional test pieces, diameter of the neck area $5 \mathrm{~mm}(0.2$ inch), original gauge length $25 \mathrm{~mm}$ (1 inch).
+
+[7] Heat treatment procedure: According to AMS2773 and AMS5390: Solution anneal at $1177^{\circ} \mathrm{C}$ for 1 hour, followed by rapid air cooling to below $60^{\circ} \mathrm{C}$.
+
+\section*{Material data sheet - FlexLine}
+\section*{Abbreviations}
+min. minimum
+
+max. maximum
+
+wt. weight
+
+\section*{Legal notes}
+The quoted values refer to the use of this material with above specified EOS DMLS system, EOSYSTEM software version, parameter set and operation in compliance with parameter sheet and operating instructions. All measured values are average numbers. Part properties are measured with specified measurement methods using defined test geometries and procedures and. Further details of the test procedures used by EOS are available on request. Any deviation from these standard settings may affect the measured properties.
+
+The data correspond to EOS knowledge and experience at the time of publication and they are subject to change without notice as part of EOS' continuous development and improvement processes. EOS does not warrant any properties or fitness for a specific purpose, unless explicitly agreed upon. This also applies regarding any rights of protection as well as laws and regulations.
+
+EOS $^{\circledR}$, EOSINT $^{\circledR}$, DMLS $^{\circledR}$, DirectTool $^{\circledR}$ and DirectPart ${ }^{\circledR}$ are registered trademarks of EOS GmbH.
+
+CC2016 EOS GmbH - Electro Optical Systems. All rights reserved.
+
+\section*{Material data sheet - FlexLine}
+\section*{EOS NickelAlloy IN718}
+EOS NickelAlloy IN718 is a heat and corrosion resistant nickel alloy powder intended for processing on EOS DMLS'T systems.
+
+This document provides information and data for parts built using
+
+\begin{itemize}
+  \item EOS Powder: EOS NickelAlloy IN718 (EOS art.-no. 9011-0020)
+
+  \item EOS Laser Sintering Machine: EOS M400-4
+
+  \item HSS Recoater Blade (EOS art.-no. 300007610)
+
+  \item DirectBase S40 Building Platform (EOS art.-no. 300000729)
+
+  \item Argon atmosphere
+
+  \item $63 \mu \mathrm{m}$ mesh for powder sieving recommended (EOS art.-no. 9044-0032 for IPCM M Extra Sieving Module or EOS art.-no. 200001059 for IPM M Powder Station L)
+
+  \item EOSYSTEM v. 2.6 or higher
+
+  \item EOS Software:
+
+  \item EOSPRINT v. 1.6 (EOS art.-no. 7501-4031) / 2.0 (EOS art.-no. 7012-0119) or higher
+
+  \item EOS Process:
+
+  \item IN718 ParameterEditor (EOS art.-no. 7500-3084)
+
+  \item Name of the Default Job: IN718\_040\_FlexM404\_100.eosjob
+
+\end{itemize}
+
+\section*{Description}
+EOS NickelAlloy IN718 chemical composition corresponds to UNS N07718, AMS 5662, AMS 5664, \href{http://W.Nr}{W.Nr} 2.4668, DIN NiCr19Fe19NbMo3. This material is ideal for many high temperature applications such as gas turbine parts, instru-mentation parts, power and process industry parts etc. It also has excellent potential for cryogenic applications. This kind of precipitationhardening nickel-chromium alloy is characterized by having good tensile, fatigue, creep and rupture strength at temperatures up to $700^{\circ} \mathrm{C}\left(1290^{\circ} \mathrm{F}\right)$.
+
+\section*{Material data sheet - FlexLine}
+Parts can be easily post-hardened by precipitation-hardening heat treatments. In both as-built and age-hardened states the parts can be machined, spark eroded, welded, micro shot-peened, polished and coated if required. Due to the layerwise building method, the parts have a certain anisotropy.
+
+\section*{Technical Data}
+\section*{Powder properties}
+The chemical composition of the powder is reported in the table below.
+
+\section*{Material composition}
+\begin{center}
+\begin{tabular}{ccc}
+Element & Min & Max \\
+\hline
+$\mathrm{Ni}$ & 50 & 55 \\
+\hline
+$\mathrm{Cr}$ & 17 & 21 \\
+\hline
+$\mathrm{Nb}$ & 4.75 & 5.5 \\
+\hline
+$\mathrm{Mo}$ & 2.8 & 3.3 \\
+\hline
+$\mathrm{Ti}$ & 0.65 & 1.15 \\
+\hline
+$\mathrm{Al}$ & 0.20 & 0.80 \\
+\hline
+$\mathrm{Co}$ & - & 1.0 \\
+\hline
+$\mathrm{Cu}$ & - & 0.30 \\
+\hline
+$\mathrm{C}$ & - & 0.08 \\
+\hline
+$\mathrm{Si}, \mathrm{Mn}$ & - & 0.35 \\
+\hline
+$\mathrm{P}, \mathrm{S}$ & - & 0.015 \\
+\hline
+$\mathrm{B}$ & - & 0.006 \\
+\hline
+$\mathrm{Fe}$ & - & Balance \\
+\hline
+\end{tabular}
+\end{center}
+
+Max. particle size
+
+$>63 \mu \mathrm{m}[1] \quad \max 0.3 \mathrm{wt} .-\%$
+
+[1] Sieve analysis according to ASTM B214.
+
+\section*{Material data sheet - FlexLine}
+\section*{General process data}
+\begin{center}
+\begin{tabular}{lc}
+\hline
+Layer thickness & $40 \mu \mathrm{m}$ \\
+\hline
+Volume rate [2] & Up to $4 \times 4.2 \mathrm{~mm}^{3} / \mathrm{s}\left(4 \times 15.1 \mathrm{~cm}^{3} / \mathrm{h}\right)$ \\
+\hline
+\end{tabular}
+\end{center}
+
+[2] The volume rate is a measure of build speed during laser exposure of the skin area per laser scanner. The total build speed depends on this volume rate and other factors such as exposure parameters of contours, supports, up and downskin, recoating time, Home-In or LPM settings, Job design (load, part geometry or overlap settings).
+
+\section*{Physical properties of parts}
+\begin{center}
+\begin{tabular}{lc}
+\hline
+Part density [3] & $\min .8 .15 \mathrm{~g} / \mathrm{cm} 3$ \\
+\hline
+Min. wall thickness [4] & Approx. $0.3-0.4 \mathrm{~mm}$ \\
+\hline
+Surface roughness after shot peening [5] & $\mathrm{Ra}<6.5 \mu \mathrm{m} ; \mathrm{Rz} 50 \mu \mathrm{m}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+[3] Weighing in air and water according to ISO 3369.
+
+[4] Mechanical stability is dependent on geometry (wall height etc.) and application.
+
+[5] Measurement according to ISO 4287. The numbers were measured at the horizontal (up-facing) and all vertical surfaces of test cubes. Due to the layerwise building the roughness strongly depends on the orientation of the surface, for example sloping and curved surfaces exhibit a stair-step effect.
+
+\section*{Material data sheet - FlexLine}
+\section*{Tensile data at room temperature [6]}
+\section*{Heat treated [7] [8]}
+\begin{center}
+\begin{tabular}{lcc}
+\hline
+ & Horizontal & Vertical \\
+\hline
+Ultimate tensile strength, Rm & $1510 \mathrm{MPa}$ & $1420 \mathrm{MPa}$ \\
+\hline
+Yield strength, Rp0.2 & $1305 \mathrm{MPa}$ & $1215 \mathrm{MPa}$ \\
+\hline
+Elongation at break, A [9] & $15 \%$ & $16 \%$ \\
+\hline
+\end{tabular}
+\end{center}
+
+[6] Tensile testing according to. IS0 6892-1 B10, proportional test pieces, diameter of the neck area $5 \mathrm{~mm}$, original gauge length $25 \mathrm{~mm}$.
+
+[7] Heat treatment procedure conform to Aerospace Material Specification AMS 5662:
+
+\begin{enumerate}
+  \item Solution Anneal at $980^{\circ} \mathrm{C}\left(1796{ }^{\circ} \mathrm{F}\right.$ ) for 1 hour per $25 \mathrm{~mm}$ ( 0.98 inch) of thickness, air (/argon) cool.
+
+  \item Ageing treatment; hold at $718{ }^{\circ} \mathrm{C}\left(1325^{\circ} \mathrm{F}\right) 8$ hours, furnace cool to $621^{\circ} \mathrm{C}\left(1150{ }^{\circ} \mathrm{F}\right)$ and hold at $621^{\circ} \mathrm{C}$ $\left(1150^{\circ} \mathrm{F}\right.$ ) for total precipitation time of 18 hours., air (/argon) cool.
+
+\end{enumerate}
+
+[8] The numbers are average values determined from samples with horizontal and vertical orientation respectively
+
+[9] Elongation values are averaged and subject to variations depending on process conditions
+
+\section*{Material data sheet - FlexLine}
+\section*{Abbreviations}
+min. minimum
+
+max. maximum
+
+wt. weight
+
+The quoted values refer to the use of this material with above specified EOS DMLS system, EOSYSTEM software version, parameter set and operation in compliance with parameter sheet and operating instructions. All measured values are average numbers. Part properties are measured with specified measurement methods using defined test geometries and procedures and. Further details of the test procedures used by EOS are available on request. Any deviation from these standard settings may affect the measured properties.
+
+The data correspond to EOS knowledge and experience at the time of publication and they are subject to change without notice as part of EOS' continuous development and improvement processes.
+
+EOS does not warrant any properties or fitness for a specific purpose, unless explicitly agreed upon. This also applies regarding any rights of protection as well as laws and regulations.
+
+EOS $^{\circledR}$, EOSINT $^{\circledast}$, DMLS $^{\circledR}$, DirectTool $^{\circledast}$ and DirectPart ${ }^{\circledR}$ are registered trademarks of EOS GmbH.
+
+(C2018 EOS GmbH - Electro Optical Systems. All rights reserved.
+
+\section*{Material data sheet - Flexline}
+\section*{EOS Titanium Ti64}
+EOS Titanium Ti64 is a titanium alloy powder intended for processing on EOS DMLS ${ }^{\text {Tm }}$ machines. This document provides information and data for parts built using
+
+\begin{itemize}
+  \item EOS Powder: EOS Titanium Ti64 (EOS art.-no. 9011-0014)
+  \item EOS Laser Sintering Machine: EOS M400-4
+  \item HSS Recoater Blade (EOS art.-no. 300007610)
+  \item DirectBase Ti40 Building Platform (EOS art.-no. 300013128)
+  \item Argon atmosphere
+  \item $63 \mu \mathrm{m}$ mesh for powder sieving recommended (EOS art.-no. 9044-0032 for IPCM M Extra Sieving Module or EOS art.-no. 200001059 for IPM M Powder Station L)
+  \item EOSYSTEM v. 2.6 or higher
+  \item EOS Software:
+  \item EOSPRINT v. 1.6 (EOS art. no. 7501-4031) / 2.0 (EOS art.-no. 7012-0119) or higher
+  \item EOS Process:
+  \item Ti64 ParameterEditor (EOS art.-no. 7500-3086)
+  \item Name of the Default Job: Ti64\_060\_FlexM404\_100.eosjob
+\end{itemize}
+
+\section*{Description}
+EOS Titanium Ti64 has a chemical composition corresponding to ASTM F1472 and ASTM F2924.
+
+Ti64 is well-known light alloy, characterized by having excellent mechanical properties and corrosion resistance combined with low specific weight. Ti64 material is ideal for many highperformance applications.
+
+Parts built with EOS Titanium Ti64 powder can be machined, shot-peened and polished in asbuilt and heat treated states. Due to the layerwise building method, the parts have a certain anisotropy.
+
+\section*{Material data sheet - Flexline}
+\section*{Technical Data}
+\section*{Powder properties}
+The chemical composition of the powder (wt-\%):
+
+\section*{Material composition}
+\begin{center}
+\begin{tabular}{ccc}
+Element & Min & Max \\
+\hline
+$\mathrm{Al}$ & 5.50 & 6.75 \\
+\hline
+$\mathrm{V}$ & 3.50 & 4.50 \\
+\hline
+$\mathrm{O}$ & - & 0.20 \\
+\hline
+$\mathrm{N}$ & - & 0.05 \\
+\hline
+$\mathrm{C}$ & - & 0.08 \\
+\hline
+$\mathrm{H}$ & - & 0.015 \\
+\hline
+$\mathrm{Fe}$ & - & 0.30 \\
+\hline
+$\mathrm{Y}$ & - & 0.005 \\
+\hline
+Other elements, each & - & 0.10 \\
+\hline
+Other elements, total & - & 0.40 \\
+\hline
+$\mathrm{Ti}$ &  & Bal. \\
+\hline
+\end{tabular}
+\end{center}
+
+Max. particle size
+
+$>63 \mu \mathrm{m}[1]$
+
+$\max .0 .3 \mathrm{wt} \%$
+
+[1] Sieve analysis according to ASTM B214.
+
+\section*{Material data sheet - Flexline}
+\section*{General process data}
+\begin{center}
+\begin{tabular}{lc}
+\hline
+Layer thickness & $60 \mu \mathrm{m}$ \\
+\hline
+Volume rate [2] & Up to $4 \times 9,0 \mathrm{~mm}^{3} / \mathrm{s}\left(4 \times 32,4 \mathrm{~cm}^{3} / \mathrm{h}\right)$ \\
+\hline
+\end{tabular}
+\end{center}
+
+[2] The volume rate is a measure of build speed during laser exposure of the skin area per laser scanner. The total build speed depends on this volume rate and other factors such as exposure parameters of contours, supports, up and downskin, recoating time, Home-In or LPM settings, job design (load, part geometry or overlap settings).
+
+\section*{Physical and chemical properties of parts}
+\begin{center}
+\begin{tabular}{lc}
+\hline
+Part density [3] & Approx. $4.41 \mathrm{~g} / \mathrm{cm} 3$ \\
+\hline
+Min. wall thickness [4] & Approx. $0.3-0.4 \mathrm{~mm}$ \\
+\hline
+Surface roughness after shot peening [5] & Ra $6-15 \mu \mathrm{m} ; \mathrm{Rz} 30-75 \mu \mathrm{m}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+[3] Weighing in air and water according to ISO 3369.
+
+[4] Mechanical stability is dependent on geometry (wall height etc.) and application.
+
+[5] Measurement according to ISO 4287. Due to the layerwise building the roughness strongly depends on the orientation of the surface, for example sloping and curved surfaces exhibit a stair-step effect.
+
+\section*{Hardness}
+Hardness as build [6]
+
+Approx. $330 \pm 30 \mathrm{HV} 5$
+
+[6] Hardness measurement according to standard EN ISO 6507-1 with load 5kg (HV5).
+
+\section*{Material data sheet - Flexline}
+\section*{Tensile data at room temperature $[7,9]$}
+Heat treated [8]
+
+\begin{center}
+\begin{tabular}{lcc}
+\hline
+ & Horizontal & Vertical \\
+\hline
+Ultimate tensile strength, Rm & $1070 \mathrm{MPa}$ & $1080 \mathrm{MPa}$ \\
+\hline
+Yield strength, Rp0.2 & $955 \mathrm{MPa}$ & $990 \mathrm{MPa}$ \\
+\hline
+Elongation at break, A [10] & $13 \%$ & $15 \%$ \\
+\hline
+\end{tabular}
+\end{center}
+
+[7] Tensile testing according to ISO 6892-1 A14, proportional test pieces, diameter of the neck area $5 \mathrm{~mm}$, original gauge length $20 \mathrm{~mm}$.
+
+[8] Heat treatment procedure: Specimens were heat treated at $800^{\circ} \mathrm{C}$ for 2 hours in argon inert atmosphere.
+
+[9] The numbers are average values determined from samples with horizontal and vertical orientation respectively
+
+[10] Values are averaged and subject to variations depending on process conditions.
+
+\section*{Material data sheet - Flexline}
+\section*{Abbreviations}
+Min. Minimum
+
+Max. Maximum
+
+Approx. Approximately
+
+Wt. Weight
+
+The quoted values refer to the use of this material with above specified type of EOS DMLS system, EOSYSTEM software version, parameter set and operation in compliance with parameter sheet and operating instructions. Part properties are measured with specified measurement methods using defined test geometries and procedures. Further details of the test procedures used by EOS are available on request. Any deviation from these standard settings may affect the measured properties.
+
+The data correspond to EOS knowledge and experience at the time of publication and they are subject to change without notice as part of EOS' continuous development and improvement processes.
+
+EOS does not warrant any properties or fitness for a specific purpose, unless explicitly agreed upon. This also applies regarding any rights of protection as well as laws and regulations.
+
+EOS $^{\circledR}$, EOSINT $^{\circledR}$, DMLS $^{\circledR}$, DirectTool $^{\circledR}$ and DirectPart ${ }^{\circledR}$ are registered trademarks of EOS GmbH.
+
+(c) 2018 EOS GmbH - Electro Optical Systems. All rights reserved.
+
+\section*{Material data sheet}
+\section*{EOS Titanium Ti64}
+EOS Titanium Ti64 is a titanium alloy powder intended for processing on EOS DMLS ${ }^{\text {TM }}$ machines.
+
+This document provides information and data for parts built using:
+
+\begin{itemize}
+  \item EOS Titanium Ti64 powder (EOS art.-no. 9011-0014 and 9011-0039)
+  \item EOS DMLS'м machine: EOSINT M 290400 W
+  \item HSS blade (2200-4073)
+  \item Argon atmosphere
+  \item IPCM extra sieving module with $63 \mu$ mesh (9044-0032) recommended
+  \item EOSYSTEM:
+  \item EOSPRINT v 1.5 or newer
+  \item HCS v 2.4.14 or newer
+  \item EOS Parameter set: Ti64\_Performance\_M291 1.10
+\end{itemize}
+
+\section*{Description}
+EOS Titanium Ti64 has a chemical composition corresponding to ASTM F1472 and ASTM F2924.
+
+Ti64 is well-known light alloy, characterized by having excellent mechanical properties and corrosion resistance combined with low specific weight. Ti64 material is ideal for many highperformance applications.
+
+Parts built with EOS Titanium Ti64 powder can be machined, shot-peened and polished in asbuilt and heat treated states. Due to the layerwise building method, the parts have a certain anisotropy.
+
+\section*{Material data sheet}
+\section*{Technical Data}
+\section*{Powder properties}
+The chemical composition of the powder (wt-\%):
+
+\section*{Material composition}
+\begin{center}
+\begin{tabular}{ccc}
+Element & Min & Max \\
+\hline
+$\mathrm{Al}$ & 5.50 & 6.75 \\
+\hline
+$\mathrm{V}$ & 3.50 & 4.50 \\
+\hline
+$\mathrm{O}$ & - & 0.20 \\
+\hline
+$\mathrm{N}$ & - & 0.05 \\
+\hline
+$\mathrm{C}$ & - & 0.08 \\
+\hline
+$\mathrm{H}$ & - & 0.015 \\
+\hline
+$\mathrm{Fe}$ & - & 0.30 \\
+\hline
+$\mathrm{Y}$ & - & 0.005 \\
+\hline
+Other elements, each & - & 0.10 \\
+\hline
+Other elements, total & - & 0.40 \\
+\hline
+Ti &  & Bal. \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{Max. particle size}
+\begin{center}
+\begin{tabular}{ll}
+$>63 \mu \mathrm{m}$ & $0.3 \mathrm{wt} \%$ \\
+\end{tabular}
+\end{center}
+
+\section*{General process data}
+\begin{center}
+\begin{tabular}{lc}
+\hline
+Layer thickness & $30 \mu \mathrm{m}$ \\
+\hline
+Volume rate [1] & $5 \mathrm{~mm}^{3} / \mathrm{s}\left(18 \mathrm{~cm}^{3} / \mathrm{h}\right)$ \\
+ & $1.1 \mathrm{in}^{3} / \mathrm{h}$ \\
+\end{tabular}
+\end{center}
+
+[1] The volume rate is a measure of build speed during laser exposure of the skin area per laser scanner. The total build speed depends on this volume rate and many other factors such as exposure parameters of contours, supports, up and downskin, recoating time, Home-In or LPM settings.
+
+\section*{Material data sheet}
+\section*{Physical and chemical properties of parts}
+\begin{center}
+\begin{tabular}{lc}
+\hline
+Part density [2] & Approx. $4.41 \mathrm{~g} / \mathrm{cm}^{3}$ \\
+ & Approx. $0.159 \mathrm{lb} / \mathrm{in}^{3}$ \\
+\hline
+Min. wall thickness [3] & Approx. $0.3-0.4 \mathrm{~mm}$ \\
+\hline
+Surface roughness after shot peening [4] & Approx. $0.012-0.016 \mathrm{inch}$ \\
+ & Ra $5-9 \mu \mathrm{m} ; \mathrm{Rz} 20-50 \mu \mathrm{m}$ \\
+ & Ra $0.20-0.35 \times 10-3 \mathrm{inch}$ \\
+ & $R z 0.79-1.96 \times 10-3$ inch \\
+\hline
+\end{tabular}
+\end{center}
+
+[2] Weighing in air and water according to ISO 3369.
+
+[3] Mechanical stability is dependent on geometry (wall height etc.) and application.
+
+[4] Measurement according to ISO 4287. Due to the layerwise building the roughness strongly depends on the orientation of the surface, for example sloping and curved surfaces exhibit a stair-step effect.
+
+\section*{Hardness}
+Hardness as build [5]
+
+Approx. 320 HV5
+
+[5] Hardness measurement according to standard EN ISO 6507-1 with load 5kg (HV5)
+
+\section*{Material data sheet}
+\section*{Tensile data at room temperature $[6,7]$}
+\section*{Heat treated [8]}
+\begin{center}
+\begin{tabular}{lcc}
+\hline
+ & Horizontal & Vertical \\
+\hline
+Ultimate tensile strength, Rm & $1055 \mathrm{MPa}$ & $1075 \mathrm{MPa}$ \\
+\hline
+Yield strength, Rp0.2 & $945 \mathrm{MPa}$ & $965 \mathrm{MPa}$ \\
+\hline
+Elongation at break, A & $13 \%$ & $14 \%$ \\
+\hline
+Reduction of area, Z & $>25 \%$ & $>25 \%$ \\
+\hline
+\end{tabular}
+\end{center}
+
+[6] Tensile testing according to ISO 6892-1 A14, proportional test pieces. Horizontal: diameter of the neck area 5 $\mathrm{mm}$ ( 0.2 inch), original gauge length $20 \mathrm{~mm}$ ( 0,79 inch). Vertical: diameter of the neck area $4 \mathrm{~mm}$ ( $0.16 \mathrm{inch})$, original gauge length $16 \mathrm{~mm}$ (0.63 inch).
+
+[7] The numbers are average values determined from samples with horizontal and vertical orientation respectively. Values are subject to variations depending on process conditions.
+
+[8] Heat treatment procedure: Specimens were heat treated at $800^{\circ} \mathrm{C}$ for 2 hours in argon inert atmosphere.
+
+\section*{Material data sheet}
+\section*{Abbreviations}
+Min. Minimum
+
+Max. Maximum
+
+Approx. Approximately
+
+Wt. Weight
+
+The quoted values refer to the use of this material with above specified type of EOS DMLS system, EOSYSTEM software version, parameter set and operation in compliance with parameter sheet and operating instructions. Part properties are measured with specified measurement methods using defined test geometries and procedures. Further details of the test procedures used by EOS are available on request. Any deviation from these standard settings may affect the measured properties.
+
+The data correspond to EOS knowledge and experience at the time of publication and they are subject to change without notice as part of EOS' continuous development and improvement processes.
+
+EOS does not warrant any properties or fitness for a specific purpose, unless explicitly agreed upon. This also applies regarding any rights of protection as well as laws and regulations.
+
+EOS $^{\circledR}$, EOSINT $^{\circledR}$, DMLS $^{\circledR}$, DirectTool $^{\circledR}$ and DirectPart ${ }^{\circledR}$ are registered trademarks of EOS GmbH.
+
+(C) 2017 EOS GmbH - Electro Optical Systems. All rights reserved.
+
+\section*{Material data sheet - FlexLine}
+\section*{EOS Titanium Ti64}
+EOS Titanium Ti64 is a titanium alloy powder intended for processing on EOS DMLS ${ }^{T M}$ machines. This document provides information and data for parts built using EOS Titanium Ti64 powder (EOS art.-no. 9011-0039) on the following system setup:
+
+\begin{itemize}
+  \item EOS DMLS ${ }^{\text {тм }}$ system: EOS M400 SF
+  \item HSS recoating blade
+  \item Argon atmosphere
+  \item IPCM M extra sieving module with $63 \mu$ mesh recommended
+  \item EOSPRINT v.1.5/HCS v.2.4 or newer
+  \item EOS Parameter set Ti64\_030\_FlexM400\_100
+\end{itemize}
+
+\section*{Description}
+Parts built in EOS Titanium Ti64 have a chemical composition corresponding to ASTM F1472 and ASTM F2924.
+
+Ti64 is well-known light alloy, characterized by having excellent mechanical properties and corrosion resistance combined with low specific weight. Ti64 material is ideal for many highperformance applications.
+
+Parts built with EOS Titanium Ti64 powder can be machined, shot-peened and polished in asbuilt and heat treated states. Due to the layerwise building method, the parts have a certain anisotropy.
+
+\section*{Quality Assurance}
+The quality of the EOS Titanium Ti64 powder lots is ensured by the Quality Assurance procedures. The procedures include sampling (ASTM B215), PSD analysis (ISO 13320), chemical analyses (ASTM E2371, ASTM E1409, ASTM E1941, ASTM E1447), and mechanical testing (IS0 6892-1).
+
+The results of the quality assurance tests are given in the lot specific Mill Test Certificates (MTC) according to EN 10204 type 3.1.
+
+Material data sheet - FlexLine
+
+\section*{Technical Data}
+\section*{Powder properties}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Material composition [wt.\%] & Element & Min & Max \\
+\hline
+ & $\mathrm{Al}$ & 5.50 & 6.75 \\
+\hline
+ & V & 3.50 & 4.50 \\
+\hline
+ & 0 & - & 0.20 \\
+\hline
+ & $\mathrm{N}$ & - & 0.05 \\
+\hline
+ & $\mathrm{C}$ & - & 0.08 \\
+\hline
+ & $\mathrm{H}$ & - & 0.015 \\
+\hline
+ & $\mathrm{Fe}$ & - & 0.30 \\
+\hline
+ & Y & - & 0.005 \\
+\hline
+ & \begin{tabular}{l}
+Other elements, \\
+each \\
+\end{tabular} & - & 0.10 \\
+\hline
+ & \begin{tabular}{l}
+Other elements, \\
+total \\
+\end{tabular} & - & 0.40 \\
+\hline
+ & $\mathrm{Ti}$ &  & bal. \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{Particle size}
+d50 [1]
+
+$39 \pm 3 \mu \mathrm{m}$
+
+[1] Particle size distribution analysis according to ISO 13320
+
+\section*{Material data sheet - FlexLine}
+\section*{General process data}
+\begin{center}
+\begin{tabular}{lc}
+\hline
+Layer thickness & $30 \mu \mathrm{m}$ \\
+\hline
+Volume rate [2] & $5 \mathrm{~mm}^{3} / \mathrm{s}\left(18 \mathrm{~cm}^{3} / \mathrm{h}\right)$ \\
+\hline
+\end{tabular}
+\end{center}
+
+[2] The volume rate is a measure of build speed during laser exposure of the skin area. The total build speed depends on this volume rate and many other factors such as exposure parameters of contours, supports, up and downskin, recoating time, Home-In or LPM settings.
+
+\section*{Physical properties of parts}
+\begin{center}
+\begin{tabular}{lc}
+\hline
+Part density [3] & $4.4 \mathrm{~g} / \mathrm{cm} 3$ \\
+\hline
+Surface roughness after shot peening [4] & Approx. Ra $5-10 \mu \mathrm{m} ; \mathrm{Rz} 15-30 \mu \mathrm{m}$ \\
+\hline
+Hardness as built [5] & typ. $340 \mathrm{HV} 5$ \\
+\hline
+\end{tabular}
+\end{center}
+
+[3] Weighing in air and water according to ISO 3369.
+
+[4] The numbers were measured at the horizontal (up-facing) and all vertical surfaces of test cubes. Due to the layerwise building the roughness strongly depends on the orientation of the surface, for example sloping and curved surfaces exhibit a stair-step effect.
+
+[5] Hardness measurement according to standard EN ISO 6507-1 with load 5kgf (HV5)
+
+Tensile data at room temeprature $[6,7]$
+
+\begin{center}
+\begin{tabular}{lcc}
+\hline
+ & As built & Heat treated [8] \\
+\hline
+Ultimate tensile strength & typ. $1270 \mathrm{MPa}$ & typ. $1040 \mathrm{MPa}$ \\
+\hline
+Yield strength, Rp0.2\% & typ. $1100 \mathrm{MPa}$ & typ. $930 \mathrm{MPa}$ \\
+\hline
+Elongation at break A & typ. $8.7 \%$ & typ. $14.0 \%$ \\
+\hline
+\end{tabular}
+\end{center}
+
+[6] The numbers are average values and are determined from samples with horizontal and vertical orientation.
+
+[7] Tensile testing according to ISO 6892-1 A14, proportional test pieces, diameter of the neck area $5 \mathrm{~mm}(0.2$ inch), original gauge length $20 \mathrm{~mm}$ (0,79 inch).
+
+[8] Heat treatment procedure: 2 hours at $800^{\circ} \mathrm{C}$ in Argon atmosphere.
+
+\section*{Material data sheet - FlexLine}
+\section*{Abbreviations}
+min. minimum
+
+max. maximum
+
+wt. weight
+
+The quoted values refer to the use of this material with above specified EOS DMLS system, EOSYSTEM software version, parameter set and operation in compliance with parameter sheet and operating instructions. All measured values are average numbers. Part properties are measured with specified measurement methods using defined test geometries and procedures and. Further details of the test procedures used by EOS are available on request. Any deviation from these standard settings may affect the measured properties.
+
+The data correspond to EOS knowledge and experience at the time of publication and they are subject to change without notice as part of EOS' continuous development and improvement processes. EOS does not warrant any properties or fitness for a specific purpose, unless explicitly agreed upon. This also applies regarding any rights of protection as well as laws and regulations.
+
+EOS $^{\circledR}$, EOSINT $^{\circledR}$, DMLS $^{\circledR}$, DirectTool $^{\circledR}$ and DirectPart ${ }^{\circledR}$ are registered trademarks of EOS $\mathrm{GmbH}$.
+
+(C2017 EOS GmbH - Electro Optical Systems. All rights reserved.
+
+\begin{enumerate}
+  \item 
+  \item 
+  \item 
+  \item 
+  \item 
+\end{enumerate}
+
+
+\end{document}

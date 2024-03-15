@@ -1,0 +1,430 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+
+\title{Detecting keyhole pore defects and monitoring process signatures during laser powder bed fusion: A correlation between in situ pyrometry and ex situ $\mathrm{X}$-ray radiography }
+
+
+\author{Jean-Baptiste Forien ${ }^{\mathrm{a}, *}$, Nicholas P. Calta ${ }^{\mathrm{a}}$, Philip J. DePond ${ }^{\mathrm{a}}$, Gabe M. Guss ${ }^{\mathrm{b}}$, Tien T. Roehling ${ }^{\mathrm{a}}$,\\
+Manyalibo J. Matthews ${ }^{\mathrm{a}, *}$}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_994a358cd51e5346d75bg-01}
+\end{center}
+
+${ }^{\mathrm{b}}$ Engineering Directorate, Lawrence Livermore National Laboratory, Livermore, CA, USA
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+Additive manufacturing
+
+Laser powder bed fusion
+
+In situ monitoring
+
+Pyrometry
+
+High-speed imaging
+
+X-ray radiography
+
+Keyhole pores
+
+\begin{abstract}
+A B S T R A C T Creation of pores and defects during laser powder bed fusion (LPBF) can lead to poor mechanical properties and thus must be minimized. Post-build inspection is required to ensure the printed parts contain acceptably low defect concentrations. These inspections are time consuming and costly, especially for large or complex parts. As a potential solution, in situ process monitoring can be used to detect the creation of defects, characterize local material behavior and predict expected component properties. However, the precise relationship between pore creation and in situ process monitoring still needs to be understood. In this work, high-speed infrared diodebased pyrometry and high-speed optical imaging signals were used to monitor LPBF printing of 446 stainless steel $316 \mathrm{~L}$ single tracks with varying laser power and velocity. Results indicate an increase in pyrometer signal and melt pool dimensions with increasing laser power and decreasing velocity in agreement with previous work. In addition, careful analysis of pyrometer signal reveals a distinct signature of the conduction-to-keyhole mode transition which was confirmed by metallography. Critically, pore defect initiation as characterized by ex situ Xray radiography was correlated with in situ thermal monitoring signals to derive the probability of defect creation. Our results show that, in principle, a probabilistic prediction of pore formation can be achieved based on in situ high-speed pyrometry monitoring of the LPBF melt pool.
+\end{abstract}
+
+\section*{1. Introduction}
+Laser powder bed fusion (LPBF) is a metal additive manufacturing process that uses high-power laser irradiation as a heat source to fuse together successive thin layers of metal powder to form objects with a desired shape. This technique offers several advantages such as the possibility to create unique personalizable parts or complex shapes [1]. Although it was recently shown that the highest performing LPBFproduced specimens of stainless steel $316 \mathrm{~L}$ (SS316 L) can mechanically outperform conventionally-processed SS316 L [2], materials produced by LPBF often exhibit lower mechanical behavior not exceeding that of wrought or machined metals [3]. These inconsistent properties are the consequence of different types of defects such as cracks, pores, underfill, spatter, and balling [4-6]. While non-destructive post-build part inspection is time-consuming and often challenging, in situ monitoring of process variability using pyrometry or high-speed imaging offers a low-cost, high-sensitivity and fast data acquisition solution to detect defects as they form [7]. A detection capability of this sort would significantly assist in post-build part inspection routines.
+
+Keyhole porosity is one of the main classes of defects created during LPBF. This type of porosity occurs in the high energy density processing regime, when an unstable keyhole-shaped melt pool collapses on itself, trapping gas bubbles from the vapor depression. The dynamics of keyhole pore formation [8-11] and LPBF processes [12,13] have been investigated using in situ high-speed X-ray radiography during laser melting. Porosity induced by keyholing was also studied using computational modelling [14,15], showing good agreement between simulation and experimental work [15]. Changes in laser scanning velocity and the associated local energy density were found to be the key reason for the formation of end-of-track and turnaround pores [16]. However, while recent in situ X-ray studies of the LPBF process have greatly enhanced our understanding of defect formation mechanisms, optical methods are still generally sought as a practical means to monitor process dynamics during component manufacturing.
+\footnotetext{\begin{itemize}
+  \item Corresponding authors.
+\end{itemize}
+
+E-mail addresses: \href{mailto:forien1@1lnl.gov}{forien1@1lnl.gov} (J.-B. Forien), \href{mailto:matthews11@1lnl.gov}{matthews11@1lnl.gov} (M.J. Matthews).
+}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_994a358cd51e5346d75bg-02}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_994a358cd51e5346d75bg-02(1)}
+\end{center}
+
+Fig. 1. Schematic of the LPBF experiment with co-axial in situ monitoring and X-ray radiography experiments. (a) As single tracks were printed into a stainless steel $316 \mathrm{~L}$ powder layer, the surface melt pool brightness signal was collected using an inline IR pyrometer while 2D images of the melt pool were obtained using highspeed imaging. Wavelength separation was achieved using a trichroic filter system based on two dichroic (coated) mirrors. (b) X-ray projections of the $\sim 0.1 \times 3 \times 7$ $\mathrm{cm}^{3}$ plate containing printed tracks were collected to quantify pore locations.
+
+Surface temperature monitoring of the melt pool is believed to enable the detection of some of the defects created during LPBF. One- and two-dimensional pyrometers were shown to have the potential for realtime temperature measurement for different laser applications such as heat treatment, welding, cladding and alloying [17-21]. Pyrometry measurements collected during LPBF experiments on Inconel were shown to be sensitive to layer thickness, hatch distance and fabrication strategy [22,23]. Large pore defects $(>>100 \mu \mathrm{m})$ created by overheating of the melt pool were monitored during a LPBF experiment on Ti-6Al-4 V using a combination of near-infrared thermal camera and photodiode sensor and validated by analyzing cross-sections with an optical microscope while full parts were analyzed using X-ray tomography [24]. Defects created at the extremities of stainless steel scan tracks were also detected using pyrometry [25], and both keyhole pores and lack-of-fusion defects created by z-displacement errors of the LPBF machine were detected using a high-speed photodiode that captured the surface temperature of the melt pool during LPBF process [26]. Recent applications of machine learning technologies also enable detection of intentional and unintentional cavities using two-color pyrometry [27].
+
+The melt pool geometry also plays a key role in influencing the conditions of the heat affected zone and solidification rate that determine the final microstructure of the parts $[28,29]$. Track dimensions measured by post-build metallography were shown to vary with laser parameters in titanium alloy Ti-6Al-4 V [30], stainless steel grades 316 L [31], 904 L [32,33], 304 L [32], and Inconel alloy 625 [34]. Highspeed thermal imaging was used in these studies to gain information about melt pool geometries based on radiant temperature information. For example, the liquid-solidus transition discontinuity measured with high-speed imaging enables assessment of the melt pool width and length and was shown to vary with laser parameters for different materials such as bare Inconel 625 plate [35] and Inconel 718 powder [36]. Melt pool area, length and width were also measured by considering the total pixel counts above a certain brightness within a region of interest of the heat affected zone [24,37]. It was recently shown that successful identification of pore creation is more likely to occur when several characteristics of the melt pool are considered together in the context of directed energy deposition process [38], highlighting the influence of melt pool geometry on defect formation. Similar work shows the influence of the scan type, such as adjacent scan path, overhangs and corner scans, on the geometry of melt pool [39].
+
+Gaining knowledge for better interpretation of in situ monitoring signals collected during LPBF is crucial for quality assurance and eventual implementation of closed-loop defect correction. In this paper, we studied the detection of defects by measuring thermal emission and physical dimensions of the melt pool in single tracks experiment using a large range of laser powers and velocities. We directly measured the location of pores by ex situ X-ray imaging and correlated those pore locations to the in situ collected pyrometer signal maps. Correlations between the pyrometer signal and pore presence could then be determined and a probability curve of pore creation for a given pyrometer signal was derived. For the first time we propose and demonstrate a probabilistic relationship of pore creation as a function of pyrometer signal to predict keyhole pore formation within a confidence interval. This analysis can lead the way to in situ evaluation of expected component performance based on local porosity expectation values. Another key finding in this work was to observe distinct distributions of pyrometer signals at low and high energy density, using the normalized enthalpy scaling framework. Based on detailed analysis of the histograms, we identified thermal signatures corresponding to the conduction-to-keyhole transition, which was confirmed by metallography. This detection method of LPBF process operating mode, coupled with the probabilistic prediction of pore formation, will provide LPBF users with a powerful in situ monitoring tool to track process stability and predict defect creation.
+
+\section*{2. Material and methods}
+\subsection*{2.1. Laser powder bed fusion apparatus and sample preparation}
+LPBF experiments were performed using an open architecture system (Aconity3D, Aachen, Germany) equipped with a continuous wave fiber laser source capable of delivering $400 \mathrm{~W}$ output power with an estimated spot diameter of $\sim 95 \pm 5 \mu \mathrm{m}\left(1 / \mathrm{e}^{2}\right)$. All experiments were conducted in an $\mathrm{Ar}$ atmosphere $\left(<500 \mathrm{ppm} \mathrm{O}_{2}\right.$ ) with continuous recirculation to remove metal vapor and condensate. A simplified schematic of the relevant optical components and sample layout are shown in Fig. 1a. A $50 \mu \mathrm{m}$-thick layer of SS316 L powder with concentration in wt.\% of $69.5 \mathrm{Fe}, 16.5 \mathrm{Cr}, 10.4 \mathrm{Ni}, 2.02 \mathrm{Mo}$ and 1.27 Mn was spread on a SS316 L substrate plate. The powder (Additive Metal Alloys Ltd., Holland, OH, USA) was manufactured via gas atomization and sieved to obtain particles size ranging from 15 to $45 \mu \mathrm{m}$. Combinations of 121 laser powers and scan velocities ranging at regular intervals from 50 to $375 \mathrm{~W}$ and from 100 to $400 \mathrm{~mm} / \mathrm{s}$ were used to print\\
+$5 \mathrm{~mm}$ length single tracks. Either 5 or 6 duplicate tracks of each set of laser scan parameters were printed but only samples measured with Xray radiography were considered for analysis, resulting in a total number of 446 tracks. A map of the actual number of duplicates for each set of scan parameters used in this study is shown in Fig. A1.
+
+\subsection*{2.2. In situ pyrometry}
+A dichroic mirror allowing light from to $1500-1700 \mathrm{~nm}$ to pass through while reflecting $\sim 1070 \mathrm{~nm}$ was inserted in the path of the build laser, with the transmitted light directed to a co-axially aligned, fiber-coupled InGaAs-based infrared pyrometer (Kleiber KGA 740LO, Kleiber Infrared GmbH, Unterwellenborn, Germany) operating at 100 $\mathrm{kHz}$ acquisition frequency and a collection wavelength of $1600 \pm 100$ $\mathrm{nm}$. Thermal emission from the melt pool was imaged with a $200 \mu \mathrm{m}$ core multimode fiber that transports the light to the pyrometer. This imaging system collected all thermal emissions in a circular field of view with $\mathrm{a} \sim 635 \mu \mathrm{m}$ diameter at the substrate surface, ensuring that thermal emission from essentially the entire melt pool was collected. Thermal emission from regions in this field of view other than the melt pool are many orders of magnitude less intense and can be ignored for the purpose of this analysis. Pyrometer signals were recorded simultaneously with the measured mirror positions of the Aconity3D system, making the spatiotemporal location of a given pyrometer signal precisely known with $\pm 10 \mu \mathrm{m}$ accuracy. More details on the experimental setup are reported in DePond et al. and Yuan et al. [40,41]. No attempt was made to calibrate the pyrometer signal to perform true temperature measurements of the melt pool since process monitoring requires only relative changes that correlate with variations in defect population. Therefore, the pyrometry results reported in this study are given in unitless values of digital number (DN). The measured pyrometer signal were integers ranging from 0 to $400 \mathrm{DN}$. The values of the pyrometer signal oscillated by as much as $1 \mathrm{DN}$ at times when the laser was turned off. Therefore, we regarded $1 \mathrm{DN}$ as the noise level of the measurement and any pyrometry measurements below $1 \mathrm{DN}$ were excluded in analysis.
+
+\subsection*{2.3. High-speed imaging}
+A high-speed machine vision camera (model MC1362, Mikrotron, Landshuter, Germany) was co-axially mounted to image the melt pool incandescence through a $780-820 \mathrm{~nm}$ optical band pass filter. Type 8bit images of $256 \times 256$ pixels with measured effective pixel size of 17 $\mu \mathrm{m} /$ pixel were captured at a sampling rate of $1 \mathrm{kHz}$ and exposure time of $200 \mu$ s. Neutral density filters were added to reduce saturation from the melt pool. No secondary illumination source was used so all collected light was from melt pool incandescence.
+
+\subsection*{2.4. X-ray radiography}
+Three plates of $\sim 0.1 \times 3 \times 7 \mathrm{~cm}^{3}$ containing the laser printed tracks were raster scanned at the X-ray imaging 8.3.2 beamline endstation of the Advanced Light Source at Lawrence Berkeley National Laboratory in Berkeley, California using a parallel polychromatic X-ray beam filtered with a $0.5 \mathrm{~mm}$ thick copper plate to remove low-energy $\mathrm{X}$-rays. Projected images of $2560 \times 2160$ pixels were collected with 1.5 s exposure time using a PCO Edge sCMOS camera positioned $\sim 100 \mathrm{~mm}$ away from the plates, and a $5 x$ lens resulting in an effective pixel size of $\sim 1.3 \mu \mathrm{m}$ (Fig. 1b). Plates were raster scanned with 100 pixels overlap over $\sim 30$ rows and $\sim 15$ columns, depending on the plate size.
+
+\subsection*{2.5. Metallography}
+Laser tracks were cross-sectioned at the center of their lengths using a water-cooled, low-speed diamond saw. The samples were mounted in epoxy, and then ground with sequentially finer $\mathrm{SiC}$ grinding papers.\\
+Polishing was performed using $3 \mu \mathrm{m}$ and $1 \mu \mathrm{m}$ polycrystalline diamond suspensions, respectively, followed by $0.05 \mathrm{~mm}$ colloidal silica. The tracks were electrolytically etched using a $10 \%$ oxalic acid solution at 6 $\mathrm{V}$ for $20 \mathrm{~s}$. To measure the melt track dimensions, optical microcopy was performed using a Keyence VHX-6000 digital microscope.
+
+\subsection*{2.6. Data analysis}
+High-speed imaging of melt pool incandescence allows the extraction of information about melt pool size and shape. Line profiles of the melt pool drawn along and orthogonally to the print direction were filtered to remove saturated datapoints and fitted with a Gaussian function (Fig. A2). The full width at half maximum (FWHM) of the Gaussian profile was designated as the apparent melt pool size for each direction. Further normalization based on melt pool width obtained from metallography results was applied to the apparent melt pool width (obtained by Gaussian fitting) and the same normalization factor was applied to the melt pool length.
+
+X-ray projections were conventionally flat-field corrected with background and dark images. Hot and cold outliers were removed and an average of 2nd order polynomial fits of each individual projection was used to further normalize projections to compensate for X-ray beam inhomogeneity. Images were further cropped and stitched together to obtain a large mosaic image. An extra normalization with 2nd order polynomial fits on the entire mosaic image was applied to correct for intensity changes over time. The positions of the pores were manually obtained using on the X-ray radiography montage of the projections. Xray radiograph processing and pore extraction was performed using Fiji software [42].
+
+A montage of X-ray radiographs containing all tracks on a given plate was overlaid on a pyrometry map based on the mirror positions recorded during data collection. The pyrometer traces overlap with the melt tracks, which are visible in the radiographs, and registration was achieved by translating the pyrometer map relative to the radiograph until the tracks aligned by eye with the pyrometry data. Pore locations were identified manually in the radiographs. Pyrometer signals were assigned to pores by considering all pyrometry counts within a radius of $65 \mu \mathrm{m}$ around each pore location. Since the spatial resolution of the pyrometry signals was finer than the pore size, this procedure resulted in multiple pyrometry signals for a given pore. In rare cases, two pores formed close enough to one another that the $65 \mu \mathrm{m}$ radius for the two pores overlapped. In this case, those overlapping pyrometry signals were associated with both pores and counted twice in the pyrometry histograms. This was a rare occurrence, and has an insignificant influence on the overall results. Alignment of X-ray radiography with pyrometry and processing of pyrometry data was performed using Python 3.6.1 with NumPy 1.16.1 and SciPy 1.2.0 libraries (Fig. 2).
+
+\subsection*{2.7. Calculation of normalized enthalpy}
+Normalized enthalpy of the different laser power and velocity parameters were calculated following the model developed by Hann et al. [44]. This model predicts laser-weld properties based on mean surface enthalpy values that can be calculated based on material properties and laser scan parameters, assuming constant and laser power-independent absorptivity. The model is described as
+
+$\frac{\Delta H}{h_{s}}=\frac{A P}{\pi h_{s} \sqrt{D \nu \sigma^{3}}}$
+
+where $\Delta H$ is the deposited energy density, $h_{s}$ is the enthalpy at melting $\left(9.1 \times 10^{9} \mathrm{~J} \mathrm{~m}^{-3}\right)$ derived from $h_{s}=\rho c T_{m}$, where $\rho$ is the density at melting ( $7305 \mathrm{~kg} \mathrm{~m}^{-3}$ ) [43], $c$ is the specific heat capacity at melting (744.6 $\mathrm{J} \mathrm{kg}^{-1} \mathrm{~K}^{-1}$ ) [43] and $T_{m}$ is the melting temperature (1673 K), $A$ is the laser absorptivity (0.34) [46], $P$ is the laser power, $D$ is the thermal diffusivity of the material $\left(5.46 \times 10^{-6} \mathrm{~m}^{2} \mathrm{~s}^{-1}\right)$ derived from $D=k / c \rho$,\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_994a358cd51e5346d75bg-04}
+
+Fig. 2. Representative X-ray radiograph images of tracks and their corresponding pyrometry profile printed with (a) $375 \mathrm{~W}$, (b) $147.5 \mathrm{~W}$ and (c) $50 \mathrm{~W}$ laser power and $220 \mathrm{~mm} / \mathrm{s}$ laser speed. Pores location were identified via X-ray radiograph projections (red circles), and reported on pyrometry spatial maps. The corresponding pyrometer signal at pores location were defined as the spatially shortest distance between pore and pyrometer signal position.
+
+where $k$ is the thermal conductivity $\left(29.7 \mathrm{~W} \mathrm{~m}^{-1} \mathrm{~K}^{-1}\right)$ [43], $\sigma$ is the $1 / \mathrm{e}^{2}$ radius of the laser beam spot $\left(4.25 \times 10^{-5} \mathrm{~m}\right)$ and $\nu$ is the laser scan speed. A power-velocity map of normalized enthalpy with the laser parameters used in this paper is shown in Fig. A3.
+
+\section*{3. Results and discussion}
+\subsection*{3.1. Effect of process parameters on thermal emission, melt pool dimensions, and porosity}
+The influence of laser parameters on the thermal emission from the melt pool was studied on single tracks printed with different combinations of power and velocity. Mean pyrometer signal of tracks having the same laser power and velocity were averaged and plotted in a power-velocity process map (Fig. 3a). Note that only the steady state part of the tracks was considered, and that $0.5 \mathrm{~mm}$ of signal was discarded at the beginning and end of each track to avoid effects arising from the different physics that govern behavior at these locations. The pyrometer signal was generally found to be the lowest at high velocity and low laser power, gradually increasing with increasing normalized enthalpy reaching a maximum value at low velocity and high laser power, as expected. Similar results showing the influence of laser power and velocity on melt pool temperature were observed in LPBF and laser welding using pyrometry [20,47-50] and high-speed digital imaging [51].
+
+X-ray radiography imaging performed on the printed tracks yielded sufficient contrast for the detection of pores. The average number of pores per track is plotted (Fig. 3b) as a function of laser power and velocity. Pore occurrence rate is low for a wide range of laser power and velocity and increases with laser velocity lower than $250 \mathrm{~mm} / \mathrm{s}$ and laser power higher than $250 \mathrm{~W}$. In these single track experiments, most of the pores are being created at high deposited energy and are likely due to be caused by an incomplete collapse of the vapor cavity, similar to the conclusion made in another study where pores have been created in the keyhole mode regime in $316 \mathrm{~L}$ alloy single tracks [45]. Other type of pores such as end-of-track and turnaround pores are unlikely to be present in single tracks experiment, as well as lack of fusion since it would require at a second layer. Spatter particles are visible in the X-ray images appearing as dark spots near the track in Fig. 2b, but no pores were found around these defects. Thus, pores created in this study are believed to be mainly keyhole type of pores. The increase of porosity with increasing deposited energy was also observed with X-ray imaging measurements performed on Ti-6Al-4 V alloy single tracks [52,53] and $1 \times 1 \times 1.5 \mathrm{~mm}^{3}$ samples [54]. An opposite effect showing decrease of porosity with increasing deposited energy was also identified in X-ray tomography studies of full build SS316 L samples [55,56]. However, in the case of full builds, porosity can be attributed not only to keyhole pores but also to other types of defects such as to lack-of-fusion, turnaround and end-of-track pores, and scan strategy.
+
+High-speed imaging provided additional information on the melt pool shape with varying deposited energy. Relative melt pool dimensions were determined by calculating full width at the half maximum of a fitted Gaussian function along and across the scan direction. All the frames of a given track as well as results of tracks having identical laser parameters were averaged together. Both melt pool width and length show that dimensions of the molten pool vary with laser parameters (Fig. 3c, d). The smallest melt pool is observed at high velocity and low laser power, whereas the largest melt pool is obtained at low velocity and high laser power. These results are consistent with other melt pool imaging observations in Inconel 768 [36], 304 stainless steel [57], and Ti-6Al-4 V alloy [52].
+
+Since it is difficult to evaluate the true pore volume since the depth dimension is missing, we use 2-dimensional diameter from the measured X-ray projections to quantify pore size. A histogram of pore diameters indicates a near-normal distribution of sizes ranging from 10 to $125 \mu \mathrm{m}$ with a mean value of $53 \mu \mathrm{m}$ and a standard deviation of 17 $\mu \mathrm{m}$ (Fig. 4a). A two-dimensional histogram representing occurrence of pores with pyrometry values and diameters is shown in Fig. 4b. The graph indicates that most pores have a diameter ranging from 20 to 80 $\mu \mathrm{m}$ with pyrometry values ranging from 250 to $350 \mathrm{DN}$. Additional distribution of pores diameters for each laser parameters and corresponding power-velocity map of averages are presented in the supplementary information section (Fig. A4). Histograms in the $100-220 \mathrm{~mm} /$ s and 245-375 W region, where average pores per track is higher than 10, show near-normal distributions of pores size with an increase of average pore diameter with increasing deposited energy (Fig. A4). Binned averages of pyrometer signal at each pore location (Fig. 4b) indicates a weak increase with pore diameters. However, due to large standard deviation it is difficult to draw general conclusions related to this weak correlation.
+
+The cross-sections of single tracks with different laser parameters were analyzed by metallography (Fig. A5). At high velocity and low laser power, deposited energy was insufficient to completely melt the tracks, leading to either no tracks being printed or discontinuous tracks. Above a certain threshold of deposited heat, measurements of melt pool dimensions indicate that width and depth increase with higher power\\
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_994a358cd51e5346d75bg-05(6)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_994a358cd51e5346d75bg-05(4)}
+\end{center}
+
+(d)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_994a358cd51e5346d75bg-05(5)}
+\end{center}
+
+60
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_994a358cd51e5346d75bg-05(3)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_994a358cd51e5346d75bg-05(1)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_994a358cd51e5346d75bg-05}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_994a358cd51e5346d75bg-05(2)}
+\end{center}
+
+Fig. 3. Power-velocity maps of (a) averaged pyrometer signal, (b) number of pores, melt pool (c) width and (d) length determined by high-speed imaging. The pyrometer signal shows a constant increase with decreasing laser velocity and increasing laser power, similar to the observed changes in melt pool width and length. The average number of voids per track remains low for a wide range of laser power and velocity, but rapidly increases above a certain threshold of laser parameter. Open black circles represent laser power and velocity used to print single tracks.
+
+and lower velocity (Fig. 5a, b). Similar observations were made with metallography on stainless steel 904 L [32], 316 L [58,59], Ti-6Al-4 V [30], and Inconel 625 [34] and with high-speed X-ray radiography of Ti-6Al-4 V [8].
+
+Volume of the melt pool was estimated by simplifying its geometry to a triangular pyramid (Figs. 6 and A6). Melt pool width and depth, as well as length measurements obtained respectively by metallography and high-speed imaging were considered for volume calculation. The resulting two-dimensional power-velocity map indicates an increase of the melt pool volume with increasing laser power and decreasing laser speed. Variation of melt pool volumes with similar order of magnitude were observed in Aluminum AlSi10Mg alloy [60].
+
+\subsection*{3.2. Conduction-to-keyhole mode transition}
+Representative examples of normalized histograms of the pyrometer signal taken during the steady state portion of the single tracks can be observed for low, moderate and high normalized enthalpy in Fig. 7, corresponding to 50, 147.5 and $375 \mathrm{~W}$ at $220 \mathrm{~mm} / \mathrm{s}$ respectively. Pyrometer signal profiles as a function of time for the same tracks are shown in Fig. 2. As shown in Fig. 7, a single narrow peak centered near the origin is observed for the low normalized enthalpy case. The high normalized enthalpy case also exhibits a single peak, but it is broader and centered around $270 \mathrm{DN}$. The precise center of these peaks varies as a function of laser power. However, for the moderate normalized enthalpy case, the histogram exhibits a bimodal distribution that we attribute to be a contribution from both low and high normalized enthalpy peaks. These two characteristic peaks - a narrow one at low pyrometer signal and a broader one at high pyrometer signal - exist in different proportions depending on laser conditions. This is more completely described by the pyrometer signal distributions for all laser parameters presented in supplementary Fig. A7. For cases with low normalized enthalpy $(\Delta H / h<2)$, only a narrow distribution of pyrometry values ranging from 0 to $\sim 50 \mathrm{DN}$ is present. At moderate normalized enthalpy $(\Delta H / h \sim 5)$, a bimodal distribution of pyrometer signal is observed with two distributions: one, ranging from 0 to $\sim 50$ $\mathrm{DN}$ and another above from $50 \mathrm{DN}$. The center of the distribution above $50 \mathrm{DN}$ varies significantly as a function of laser scan parameters. At high normalized enthalpy $(\Delta H / h>12)$ the low pyrometer signal distribution vanishes and only one distribution of high pyrometer signal is observed. To quantify the behavior of these distributions, the histograms were fitted with a double Gaussian function from which peak parameters including peak center and full width half maximum were extracted.
+
+A normalized ratio of areas $\left(A_{R}\right)$ under the low and high pyrometer signal distributions is calculated for the different laser conditions as:
+
+$A_{R}=A_{H} /\left(A_{H}+A_{L}\right)$
+
+with $A_{L}$ and $A_{H}$ representing the area of the Gaussian distributions fit to the low and high pyrometer signal distribution respectively. Evolution of normalized area ratio with normalized enthalpy was plotted in Fig. 8a along with melt pool depth. The normalized area ratio shows a sharp linear increase from 0 to $\sim 0.9$ at normalized enthalpies below $\sim 5$ until reaching a plateau of 1 at normalized enthalpy of $\sim 7$ and above,\\
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_994a358cd51e5346d75bg-06}
+\end{center}
+
+Fig. 4. (a) Distribution of pore diameter from all pores present in printed tracks, and (b) two-dimensional distribution of pyrometers signal at pore locations with corresponding pore diameter. Black dots are binned averages of pyrometer signal for pore diameter with error bars as standard deviations.
+
+where $A_{L}$ has dropped to 0 and only $A_{H}$ contributes to the pyrometer signal. The change in slope of the melt pool depth evolution with normalized enthalpy occurring at 7.3 is characteristic of the transition from conduction-to-keyhole mode melting [45,61]. The threshold normalized enthalpy value of $\sim 30$ from King et al. [45] corresponds with $\Delta H / h$ definition and materials properties constants used in this paper to a value of $\sim 5.32$. The dashed lines appearing on the melt pool data correspond to linear fitting of datapoints before and after change of slope. This conduction-to-keyhole transition coincides well with the normalized area ratio reaching a value of 1 . This suggests that two distributions in the pyrometer signal histogram relate specifically to the two processing regimes, with the narrow distribution at low pyrometry values $\left(A_{L}\right)$ correlated with conduction mode and the presence of a single, broader distribution centered at high pyrometer signal $\left(A_{H}\right)$ corresponding to the keyhole regime. In examining the metallography results in Fig. A5, this assertion is further supported as the melt pool morphology evolves from balling regime, to conduction mode to keyhole mode. It is interesting to note that the conduction-to-keyhole transition is also the tipping point of absorptivity [61-63], which increases upon growth of melt pool depression and keyhole formation. The onset of absorptivity increase is found at a value of normalized enthalpy times normalized thermal diffusion length of $\sim 2$ in Ye et al. [62], and corresponds to a value of $\sim 4$ with the normalized enthalpy definition and constant absorptivity used in the current paper. The multiple reflections that the light undergoes as soon as the recoil pressure starts to form a keyhole depression causes a drastic increase in absorptivity and is also a valid reason to explain the bimodal distribution of pyrometer signal observed in this study. The "low" and "high" normalized enthalpy examples in Fig. 7 illustrate cases where only one melting mode is present, while the "moderate" normalized enthalpy case exhibits behavior from both regimes and exhibits a bimodal distribution at a single set of laser conditions.
+
+The evolution of melt pool volume with increasing normalized enthalpy indicates that the melt pool remains small below the conductionto-keyhole transition and rapidly increases above this threshold (Fig. 8a). While the volume estimates may not accurately represent the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_994a358cd51e5346d75bg-06(1)}
+\end{center}
+
+Fig. 5. Two-dimensional maps of laser power and velocity of melt pool (a) width, (b) depth and depth-width ratio measured by metallography. Melt pool width and depth increase with increasing laser power and decreasing velocity. Metallography images are presented in Fig. A5.
+
+melt pool volume in the deep keyhole regime with a very high aspect ratio melt pool, the data presented here do not include any such cases. Therefore, any systematic uncertainty introduced by our simple volume estimate is negligible. This result reflects those of Kamath et al. [59], where Archimedes density measurements performed on $10 \times 10 \times 7$ $\mathrm{mm}^{3}$ square columns reveals a log-shape curve when plotted against normalized enthalpy values. In these full built parts, the large increase in density reaches a plateau at normalized enthalpy of $\sim 7$ and is explained by the decrease of lack-of-fusion porosity when the melt pool changes morphology and enters keyhole mode and marked with the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_994a358cd51e5346d75bg-07}
+\end{center}
+
+Fig. 6. Two-dimensional map of laser power and velocity of the estimated melt pool volume. The volume of the melt pool was simplified to a triangular based pyramid (Fig. A6). Width and depth measurements from metallography, as well as length results from high-speed imaging were considered to calculate the melt pool volume.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_994a358cd51e5346d75bg-07(1)}
+\end{center}
+
+Fig. 7. Normalized histograms of pyrometer signal collected at low, moderate and high normalized enthalpy, corresponding to $50.0 \mathrm{~W}, 147.5 \mathrm{~W}$ and $375.0 \mathrm{~W}$ at $220 \mathrm{~mm} / \mathrm{s}$, and $\Delta H / \mathrm{h}$ of $1.7,4.9$, and 12.4 respectively. These histograms do not reflect all data collected, but instead illustrate three representative cases to illustrate trends. At low normalized enthalpy, the histogram shows a sharp peak at low pyrometer signal. With increasing normalized enthalpy, a second peak appears at higher pyrometer signal with a broader distribution. At moderate normalized enthalpy, both peaks are present. At high normalized enthalpy, the low-signal peak disappears and only the high-signal peak is present.
+
+vertical lines in Fig. 8. We also note that the full density point in the Kamath data at $\Delta H / h \sim 7$ corresponds well to pyrometry histogram area transition ( $\left.A_{R} \sim 1\right)$ shown in Fig. 8a.
+
+\subsection*{3.3. Onset of the keyhole instability}
+The conduction-to-keyhole transition was found to occur at lower normalized enthalpy values than the onset of the deep keyhole regime that corresponds to an unstable behavior of the melt pool and creation of pores, which is observed at a normalized enthalpy of $\sim 11$ in Fig. 8c. This result is consistent with other observations $[8,61]$ suggesting that most LPBF processing occurs in the keyhole regime but prior to the onset of keyhole instabilities that lead to pore formation. Note that the change in slope of the pyrometry value occurring at a normalized enthalpy of 9.6 is very close to the appearance of pores, and just above the full density point from the Kamath et al. [59] data. This slope change is likely caused by the saturation of the melt pool surface temperature due to the influence of evaporative cooling, which is the dominant heat loss mechanism of the melt pool surface at high energy density. The continued increase of pyrometry data above the normalized enthalpy of 9.6 shown in Fig. 8c is likely due to an increased surface area of the melt pool reaching the saturation temperature filling more of the field of view of the pyrometer. Therefore, we cannot conclude that there is a causal relationship between the change in slope and the onset of pore formation as it may be an artifact of the optical setup of our experiment. The increase of number of pores above $\Delta H / h$ of $\sim 11$ indicates that density of a full part will likely decrease with higher normalize enthalpy values. This result combined with lack-of-fusion and conduction to keyhole mode threshold reveal that optimal laser parameters should yield normalized enthalpy values ranging from $\sim 7$ to $\sim 11$ in order to print with highest possible density and minimized porosity. The evolution of melt pool width and length with normalized enthalpy show a change of slopes aligned with the beginning of the keyhole instability (Fig. 8d). The changes of slope are less distinct than for pyrometry due more scattered datapoints, attributed to lower number of datapoints than for pyrometry (the relatively low frame rate) and presence of spatters and plume that influence measurements. Consequently, we focus on the pyrometer signal as the primary process monitoring metric to correlate with pore formation.
+
+\subsection*{3.4. Probability of pore creation using pyrometry}
+Alignment of X-ray radiography information with pyrometry maps permitted us to correlate pyrometer signals of the melt pool at locations where pores form. The histogram of the distribution of pyrometer signals at pore locations as compared to signals for the rest of the track area were calculated for all tracks (Fig. 9). The two distributions vary from 0 to $\sim 300 \mathrm{DN}$ and from $\sim 200$ to $\sim 375 \mathrm{DN}$ for pyrometer signal without pores and with pores respectively. The histograms overlap each other when pyrometer signal spans a range from $\sim 200$ to $\sim 300 \mathrm{DN}$. It is therefore possible to distinguish three distinct regimes in the pyrometer signal, where the probability of creating pores varies. Quantitatively, the probability of pore presence is calculated as the ratio of histogram counts for pores with the sum of the counts for pores and no pores as given in Eq. (3) by:
+
+$P=N_{p} /\left(N_{p}+N_{n p}\right)$
+
+where $P$ is the probability of pore occurrence for a given pyrometer signal, $N_{n p}$ is the number of instances in the histogram of no pore formation that pyrometer signal occurred, and $N_{p}$ is the number of instances in the histogram of pore formation. The standard error in the probability $(\sigma)$ can be calculated to establish error bars using:
+
+$\sigma=(P(1-P))^{1 / 2} /\left(N_{p}+N_{n p}\right)^{1 / 2}$
+
+We noted that, due to the large number of data samples in the pyrometry data, $\sigma$ is relatively small compared to 1 . The probability curve indicates that there is less than a $\sim 5 \%$ chance for a pore to be created when pyrometer signal is below $200 \mathrm{DN}$. The probability of pore creation increases along a sigmoid curve from $~ 5 \%$ to $95 \%$ for pyrometer signals between 200 and $300 \mathrm{DN}$, and increases to a greater than $95 \%$ chance of pore creation when the pyrometer signal is above $300 \mathrm{DN}$. These probabilities permit, in principle, a prediction of the likelihood of keyhole pore formation at a given location in an AM build based only on in situ pyrometry data measuring emission from the LPBF melt pool. Taken a step further, an assessment of local material quality in terms of pores defect probability, couple with finite element analysis, could be used to evaluate probability of component performance and the likelihood of failure under certain external loading conditions. Thus, the analysis presented here could represent a powerful new way to quantitatively harness diagnostics for LPBF that allows meaningful characterization of final properties and performance.\\
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_994a358cd51e5346d75bg-08(3)}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_994a358cd51e5346d75bg-08(1)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_994a358cd51e5346d75bg-08}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_994a358cd51e5346d75bg-08(2)}
+\end{center}
+
+Fig. 8. Plots of sample quantities as a function of normalized enthalpy. (a) The change in slope of the melt pool depth curve measured by metallography corresponds to the conduction-to-keyhole transition and coincides with the normalized ratio of high and low pyrometry distributions ( $\left.A_{R}\right)$ reaching its maximum value. (b) The volume of the melt pool remains small below the conduction-to-keyhole transition and rapidly increases upon this threshold. (c) The average pyrometer signal linearly increases with increasing normalized enthalpy and contains a change of slope corresponding to a dramatic increase of number of pores. This transition corresponds to the onset of the unstable keyhole regime. (d) Average melt pool width and length determined with high-speed imaging as a function of normalized enthalpy show a less distinct yet present change of slope upon onset of the unstable keyhole regime. Dashed lines correspond to linear fits before and after change of slopes, and vertical lines correspond to full density point described in Kamath et al. [59] at $\Delta H / h \sim 7$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_994a358cd51e5346d75bg-08(4)}
+\end{center}
+
+Fig. 9. Histograms of the pyrometer signal distribution at pore locations (red) and non-pore locations (grey). Pyrometer signal in the range of 0 to $200 \mathrm{DN}$ corresponds to regions with no pores, while those in the range of 200 to $300 \mathrm{DN}$ indicate a transition zone with the potential presence of pores. Above 300 DN pores are predominantly present. The probability of pore formation (P) for a given pyrometer signal is shown as the orange curve with black error bars representing the standard error.
+
+\section*{4. Conclusions}
+Robust correlations between an in situ monitoring technique and defect formation are essential if one wants to use in situ process monitoring as part of a larger quality control framework for LPBF. In this study, in situ high-speed pyrometry and melt pool imaging, as well as ex situ metallography and X-ray radiography measurements were used to quantitatively characterize the LPBF process during single track melting experiments in stainless steel. We showed that the amplitude of pyrometer signal varies with laser parameters and can be used to clearly identify conduction and keyhole mode laser processing conditions. We also demonstrated that a change in slopes in the pyrometer signal and melt pool dimensions with increasing normalized enthalpy corresponds very closely with an increase in the number of pores, likely caused by keyhole instability. Additionally, we determined a probability of pore creation curve by correlating pore locations measured by X-ray radiography to pyrometer signals. We subsequently defined three distinct zones in the pyrometer signal corresponding to low ( $<5 \%)$ and high ( $>95 \%$ ) probabilities of pores creation, and a transition zone in between which the probability of pore creation increases sharply.
+
+Notably, this probabilistic correlation has the potential to quantify defects continuously throughout a build and allow component manufacturers to estimate the expected material and mechanical behavior of a given part. For example, by using quantitative defect distributions in a part to characterize local material properties, finite element models could be applied to simulate part performance. This level of detailed information and predictability in 3D printed components has been long sought after and our results here might offer some guidance as to how\\
+online monitoring can be used to that end [64]. While work remains to extend these results to multilayer builds, these results illustrate the power of using a simple, high-speed pyrometer as an LPBF process monitor for quality control purposes.
+
+\section*{Data availability}
+The data that support the findings of this study are available from the corresponding author on reasonable request.
+
+\section*{CRediT authorship contribution statement}
+Jean-Baptiste Forien: Conceptualization, Formal analysis, Investigation, Writing - review \& editing. Nicholas P. Calta: Conceptualization, Formal analysis, Investigation, Writing - review \& editing. Philip J. DePond: Conceptualization, Formal analysis, Investigation, Writing - review \& editing. Gabe M. Guss: Conceptualization, Formal analysis, Investigation, Writing - review \& editing. Tien T. Roehling: Conceptualization, Formal analysis, Investigation, Writing - review \& editing. Manyalibo J. Matthews: Conceptualization, Writing - review \& editing, Investigation, Supervision, Project administration, Funding acquisition.
+
+\section*{Declaration of Competing Interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Acknowledgements}
+This work was performed under the auspices of the U.S. Department of Energy by Lawrence Livermore National Laboratory under Contract DE-AC52-07NA27344, supported by the Office of Laboratory Directed Research and Development (LDRD), tracking numbers 15-ERD-037 and 18-SI-003. The Advanced Light Source is supported by the Director, Office of Science, Office of Basic Energy Sciences, of the U.S. Department of Energy under Contract No. DE-AC02-05CH11231; special thanks for Harold Barnard and Dula Parkinson for beamtime support.
+
+\section*{Appendix A. Supplementary data}
+Supplementary data associated with this article can be found, in the online version, at \href{https://doi.org/10.1016/j.addma.2020.101336}{https://doi.org/10.1016/j.addma.2020.101336}.
+
+\section*{References}
+[1] S.A.M. Tofail, E.P. Koumoulos, A. Bandyopadhyay, S. Bose, L. O'Donoghue, C. Charitidis, Additive manufacturing: scientific and technological challenges, market uptake and opportunities, Mater. Today 21 (2018) 22-37, \href{https://doi.org/}{https://doi.org/} 10.1016/j.mattod.2017.07.001.
+
+[2] Y.M. Wang, T. Voisin, J.T. McKeown, J. Ye, N.P. Calta, Z. Li, Z. Zeng, Y. Zhang, W. Chen, T.T. Roehling, R.T. Ott, M.K. Santala, P.J. Depond, M.J. Matthews, A.V. Hamza, T. Zhu, Additively manufactured hierarchical stainless steels with high strength and ductility, Nat. Mater. 17 (2018) 63-71, \href{https://doi.org/10.1038/}{https://doi.org/10.1038/} nmat5021.
+
+[3] T.M. Mower, M.J. Long, Mechanical behavior of additive manufactured, powderbed laser-fused materials, Mater. Sci. Eng. A 651 (2016) 198-213, \href{https://doi.org/}{https://doi.org/} 10.1016/j.msea.2015.10.068
+
+[4] M. Grasso, B.M. Colosimo, Process defects and in situ monitoring methods in metal powder bed fusion: a review, Meas. Sci. Technol. 28 (2017) 044005, , \href{https://doi}{https://doi}. org/10.1088/1361-6501/aa5c4f.
+
+[5] P. Norman, H. Engström, A.F.H. Kaplan, State-of-the-art of monitoring and imaging of laser welding defects, Proc. 11th Nolamp Conf. Laser Process. Mater. Lappeenranta University of Technology, Lappeenranta, 2007.
+
+[6] D.Y. You, X.D. Gao, S. Katayama, Review of laser welding monitoring, Sci. Technol. Weld. Join. 19 (2014) 181-201, \href{https://doi.org/10.1179/1362171813Y}{https://doi.org/10.1179/1362171813Y}. 0000000180 .
+
+[7] T.G. Spears, S.A. Gold, In-process sensing in selective laser melting (SLM) additive manufacturing, Integrating Mater. Manuf. Innov. 5 (2016), \href{https://doi.org/10}{https://doi.org/10}. 1186/s40192-016-0045-4
+
+[8] R. Cunningham, C. Zhao, N. Parab, C. Kantzos, J. Pauza, K. Fezzaa, T. Sun, A.D. Rollett, Keyhole threshold and morphology in laser melting revealed by ultrahigh-speed x-ray imaging, Science 363 (2019) 849-852, \href{https://doi.org/10}{https://doi.org/10}. 1126/science.aav4687.
+
+[9] F. Fetzer, P. Berger, H. Hu, R. Weber, T. Graf, Pores in laser beam welding: generation mechanism and impact on the melt flow, High-Power Laser Mater. Process. Appl. Diagn. Syst. VII, International Society for Optics and Photonics (2018) 105250D, , \href{https://doi.org/10.1117/12.2295798}{https://doi.org/10.1117/12.2295798}.
+
+[10] A.A. Martin, N.P. Calta, J.A. Hammons, S.A. Khairallah, M.H. Nielsen, R.M. Shuttlesworth, N. Sinclair, M.J. Matthews, J.R. Jeffries, T.M. Willey, J.R.I. Lee, Ultrafast dynamics of laser-metal interactions in additive manufacturing alloys captured by in situ X-ray imaging, Mater. Today Adv. 1 (2019) 100002, , https:// \href{http://doi.org/10.1016/j.mtadv.2019.01.001}{doi.org/10.1016/j.mtadv.2019.01.001}.
+
+[11] M. Miyagi, Y. Kawahito, H. Kawakami, T. Shoubu, Dynamics of solid-liquid interface and porosity formation determined through $\mathrm{x}$-ray phase-contrast in laser welding of pure Al, J. Mater. Process. Technol. 250 (2017) 9-15, \href{https://doi.org/}{https://doi.org/} 10.1016/j.jmatprotec.2017.06.033
+
+[12] N.P. Calta, J. Wang, A.M. Kiss, A.A. Martin, P.J. Depond, G.M. Guss, V. Thampy, A.Y. Fong, J.N. Weker, K.H. Stone, C.J. Tassone, M.J. Kramer, M.F. Toney, A. Van Buuren, M.J. Matthews, An instrument for in situ time-resolved X-ray imaging and diffraction of laser powder bed fusion additive manufacturing processes, Rev. Sci. Instrum. 89 (2018) 055101, , \href{https://doi.org/10.1063/1.5017236}{https://doi.org/10.1063/1.5017236}.
+
+[13] N.D. Parab, C. Zhao, R. Cunningham, L.I. Escano, B. Gould, S. Wolff, Q. Guo, L. Xiong, C. Kantzos, J. Pauza, K. Fezzaa, A. Greco, A. Rollett, L. Chen, T. Sun, Highspeed synchrotron x-ray imaging of laser powder bed fusion process, Synchrotron Radiat. News 32 (2019) 4-8, \href{https://doi.org/10.1080/08940886.2019.1582280}{https://doi.org/10.1080/08940886.2019.1582280}.
+
+[14] S.A. Khairallah, A.T. Anderson, A. Rubenchik, W.E. King, Laser powder-bed fusion additive manufacturing: physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones, Acta Mater. 108 (2016) 36-45, \href{https://doi}{https://doi}. org/10.1016/j.actamat.2016.02.014.
+
+[15] F. Lu, X. Li, Z. Li, X. Tang, H. Cui, Formation and influence mechanism of keyholeinduced porosity in deep-penetration laser welding based on 3D transient modeling, Int. J. Heat Mass Transf. 90 (2015) 1143-1152, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. ijheatmasstransfer.2015.07.041.
+
+[16] A.A. Martin, N.P. Calta, S.A. Khairallah, J. Wang, P.J. Depond, A.Y. Fong, V. Thampy, G.M. Guss, A.M. Kiss, K.H. Stone, C.J. Tassone, J.N. Weker, M.F. Toney, T. van Buuren, M.J. Matthews, Dynamics of pore formation during laser powder bed fusion additive manufacturing, Nat. Commun. 10 (2019) 1987, \href{https://doi.org/10}{https://doi.org/10}. 1038/s41467-019-10009-2.
+
+[17] Ph. Bertrand, I. Smurov, D. Grevey, Application of near infrared pyrometry for continuous Nd:YAG laser welding of stainless steel, Appl. Surf. Sci. 168 (2000) 182-185, \href{https://doi.org/10.1016/S0169-4332(00)00586-9}{https://doi.org/10.1016/S0169-4332(00)00586-9}.
+
+[18] M. Ignatiev, I.Yu. Smurov, G. Flamant, V. Senchenko, V. Dozhdikov, Two-dimensional resolution pyrometer for real-time monitoring of temperature image in laser materials processing, Appl. Surf. Sci. 109-110 (1997) 498-508, \href{https://doi.org/10}{https://doi.org/10}. 1016/S0169-4332(96)00795-7.
+
+[19] M. Ignatiev, I. Smurov, G. Flamant, Real-time optical pyrometer in laser machining, Meas. Sci. Technol. 5 (1994) 563, \href{https://doi.org/10.1088/0957-0233/5/5/016}{https://doi.org/10.1088/0957-0233/5/5/016}.
+
+[20] I. Smurov, Laser process optical sensing and control, Proc. Fourth Int. WLT-Conf. Lasers Manuf. Munich, 2007, 2007.
+
+[21] I. Smurov, Pyrometry applications in laser machining, Laser-Assist. Microtechnology, International Society for Optics and Photonics, 2000, pp. 55-66, \href{https://doi.org/10.1117/12.413774}{https://doi.org/10.1117/12.413774} 2001.
+
+[22] M. Doubenskaia, M. Pavlov, Y. Chivel, Optical system for on-line monitoring and temperature control in selective laser melting technology, Key Eng. Mater. (2010), \href{https://doi.org/10.4028/www.scientific.net/KEM.437.458}{https://doi.org/10.4028/www.scientific.net/KEM.437.458}.
+
+[23] M. Pavlov, M. Doubenskaia, I. Smurov, Pyrometric analysis of thermal processes in SLM technology, Phys. Procedia 5 (2010) 523-531, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. phpro.2010.08.080.
+
+[24] S. Clijsters, T. Craeghs, S. Buls, K. Kempen, J.-P. Kruth, In situ quality control of the selective laser melting process using a high-speed, real-time melt pool monitoring system, Int. J. Adv. Manuf. Technol. 75 (2014) 1089-1101, \href{https://doi.org/10}{https://doi.org/10}. 1007/s00170-014-6214-8.
+
+[25] U. Thombansen, A. Gatej, M. Pereira, Process observation in fiber laser-based selective laser melting, Opt. Eng. 54 (2015) 011008, , \href{https://doi.org/10.1117/1.OE}{https://doi.org/10.1117/1.OE} 54.1.011008.
+
+[26] S. Berumen, F. Bechmann, S. Lindner, J.-P. Kruth, T. Craeghs, Quality control of laser- and powder bed-based Additive Manufacturing (AM) technologies, Phys. Procedia 5 (2010) 617-622, \href{https://doi.org/10.1016/j.phpro.2010.08.089}{https://doi.org/10.1016/j.phpro.2010.08.089}.
+
+[27] J.A. Mitchell, T.A. Ivanoff, D. Dagel, J.D. Madison, B. Jared, Linking pyrometry to porosity in additively manufactured metals, Addit. Manuf. 31 (2020) 100946, , \href{https://doi.org/10.1016/j.addma.2019.100946}{https://doi.org/10.1016/j.addma.2019.100946}.
+
+[28] B. Fotovvati, S.F. Wayne, G. Lewis, E. Asadi, A review on melt-pool characteristics in laser welding of metals, Adv. Mater. Sci. Eng. (2018), \href{https://doi.org/10.1155/}{https://doi.org/10.1155/} 2018/4920718.
+
+[29] T.T. Roehling, S.S.Q. Wu, S.A. Khairallah, J.D. Roehling, S.S. Soezeri, M.F. Crumb, M.J. Matthews, Modulating laser intensity profile ellipticity for microstructural control during metal additive manufacturing, Acta Mater. 128 (2017) 197-206, \href{https://doi.org/10.1016/j.actamat.2017.02.025}{https://doi.org/10.1016/j.actamat.2017.02.025}.
+
+[30] I. Yadroitsev, P. Krakhmalev, I. Yadroitsava, Selective laser melting of Ti6Al4V alloy for biomedical applications: temperature monitoring and microstructural evolution, J. Alloys. Compd. 583 (2014) 404-409, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. jallcom.2013.08.183.
+
+[31] I. Yadroitsev, P. Krakhmalev, I. Yadroitsava, S. Johansson, I. Smurov, Energy input effect on morphology and microstructure of selective laser melting single track from\\
+metallic powder, J. Mater. Process. Technol. 213 (2013) 606-613, \href{https://doi.org/}{https://doi.org/} 10.1016/j.jmatprotec.2012.11.014.
+
+[32] I. Yadroitsev, A. Gusarov, I. Yadroitsava, I. Smurov, Single track formation in selective laser melting of metal powders, J. Mater. Process. Technol. 210 (2010) 1624-1631, \href{https://doi.org/10.1016/j.jmatprotec.2010.05.010}{https://doi.org/10.1016/j.jmatprotec.2010.05.010}.
+
+[33] I. Yadroitsev, Ph. Bertrand, I. Smurov, Parametric analysis of the selective laser melting process, Appl. Surf. Sci. 253 (2007) 8064-8069, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. apsusc.2007.02.088.
+
+[34] J.J.S. Dilip, A. Anam, D.P.B. Stucker, A short study on the fabrication of single track deposits in slm and characterization, Proc. 26th Annu. Int. Solid Free. Fabr. Symp. Austin, TX, 2016, p. 16.
+
+[35] J.C. Heigel, B.M. Lane, Measurement of the melt pool length during single scan tracks in a commercial laser powder bed fusion process, Proc. ASME 2017 Int. Manuf. Sci. Eng. Conf. MSEC, Los Angeles, CA, 2017, pp. 575-591, , \href{https://doi}{https://doi}. org/10.1115/MSEC2017-2942.
+
+[36] B. Cheng, J. Lydon, K. Cooper, V. Cole, P. Northrop, K. Chou, Melt pool dimension measurement in selective laser melting using thermal imaging, SFF Symp. Int. Solid Free. Fabr. Symp. (2017) 12.
+
+[37] S. Ocylok, E. Alexeev, S. Mann, A. Weisheit, K. Wissenbach, I. Kelbassa, Correlations of melt pool geometry and process parameters during laser metal deposition by coaxial process monitoring, Phys. Procedia 56 (2014) 228-238, \href{https://doi.org/10}{https://doi.org/10}. 1016/j.phpro.2014.08.167.
+
+[38] T. Stockman, C. Knapp, K. Henderson, J. Carpenter, J. Schneider, Stainless steel 304L LENS AM process monitoring using in-situ pyrometer data, JOM 70 (2018) 1835-1843, \href{https://doi.org/10.1007/s11837-018-3033-7}{https://doi.org/10.1007/s11837-018-3033-7}.
+
+[39] T. Craeghs, S. Clijsters, E. Yasa, F. Bechmann, S. Berumen, J.-P. Kruth, Determination of geometrical factors in Layerwise Laser Melting using optical process monitoring, Opt. Lasers Eng. 49 (2011) 1440-1446, \href{https://doi.org/10}{https://doi.org/10}. 1016/j.optlaseng.2011.06.016.
+
+[40] P.J. DePond, G. Guss, S. Ly, N.P. Calta, D. Deane, S. Khairallah, M.J. Matthews, In situ measurements of layer roughness during laser powder bed fusion additive manufacturing using low coherence scanning interferometry, Mater. Des. 154 (2018) 347-359, \href{https://doi.org/10.1016/j.matdes.2018.05.050}{https://doi.org/10.1016/j.matdes.2018.05.050}.
+
+[41] B. Yuan, G.M. Guss, A.C. Wilson, S.P. Hau-Riege, P.J. DePond, S. McMains, M.J. Matthews, B. Giera, Machine-learning-based monitoring of laser powder bed fusion, Int. J. Adv. Mater. Technol. 3 (2018) 1800136, , \href{https://doi.org/10.1002/}{https://doi.org/10.1002/} admt. 201800136.
+
+[42] J. Schindelin, I. Arganda-Carreras, E. Frise, V. Kaynig, M. Longair, T. Pietzsch, S. Preibisch, C. Rueden, S. Saalfeld, B. Schmid, J.-Y. Tinevez, D.J. White, V. Hartenstein, K. Eliceiri, P. Tomancak, A. Cardona, Fiji: an open-source platform for biological-image analysis, Nat. Methods 9 (2012) 676-682, \href{https://doi.org/10}{https://doi.org/10}. 1038/nmeth. 2019.
+
+[43] U. Bertoli, G. Guss, S. Wu, M.J. Matthews, J.M. Schoenung, In-situ characterization of laser-powder interaction and cooling rates through high-speed imaging of powder bed fusion additive manufacturing, Mater. Des. 135 (2017) 385-396, \href{https://doi.org/10.1016/j.matdes.2017.09.044}{https://doi.org/10.1016/j.matdes.2017.09.044}.
+
+[44] D.B. Hann, J. Iammi, J. Folkes, A simple methodology for predicting laser-weld properties from material and laser parameters, J. Phys. Appl. Phys. 44 (2011) 445401, , \href{https://doi.org/10.1088/0022-3727/44/44/445401}{https://doi.org/10.1088/0022-3727/44/44/445401}.
+
+[45] W.E. King, H.D. Barth, V.M. Castillo, G.F. Gallegos, J.W. Gibbs, D.E. Hahn, C. Kamath, A.M. Rubenchik, Observation of keyhole-mode laser melting in laser powder-bed fusion additive manufacturing, J. Mater. Process. Technol. 214 (2014) 2915-2925, \href{https://doi.org/10.1016/j.jmatprotec.2014.06.005}{https://doi.org/10.1016/j.jmatprotec.2014.06.005}.
+
+[46] C.D. Boley, S.C. Mitchell, A.M. Rubenchik, S.S.Q. Wu, Metal powder absorptivity: modeling and experiment, Appl. Opt. 55 (2016) 6496, \href{https://doi.org/10.1364/}{https://doi.org/10.1364/} AO.55.006496.
+
+[47] M. Hirvimäki, M. Manninen, A. Lehti, A. Happonen, A. Salminen, O. Nyrhilä, Evaluation of different monitoring methods of laser additive manufacturing of stainless steel, Adv. Mater. Res. 651 (2013) 812-819, \href{https://doi.org/10.4028/}{https://doi.org/10.4028/} \href{http://www.scientific.net/AMR.651.812}{www.scientific.net/AMR.651.812}.
+
+[48] T. Hua, C. Jing, L. Xin, Z. Fengying, H. Weidong, Research on molten pool temperature in the process of laser rapid forming, J. Mater. Process. Technol. 198\\
+(2008) 454-462, \href{https://doi.org/10.1016/j.jmatprotec.2007.06.090}{https://doi.org/10.1016/j.jmatprotec.2007.06.090}.
+
+[49] M. Islam, T. Purtonen, H. Piili, A. Salminen, O. Nyrhilä, Temperature profile and imaging analysis of laser additive manufacturing of stainless steel, Phys. Procedia 41 (2013) 835-842, \href{https://doi.org/10.1016/j.phpro.2013.03.156}{https://doi.org/10.1016/j.phpro.2013.03.156}.
+
+[50] A. Lehti, L. Taimisto, H. Piili, O. Nyrhilä, A. Salminen, Correlation Between Pyrometer Monitoring and Active Illumination Imaging of Laser Assisted Additive Manufacturing of Stainless Steel, ICALEO, 2011, pp. 196-204, \href{https://doi.org/10}{https://doi.org/10}. 2351/1.5062235.
+
+[51] B.A. Fisher, B. Lane, H. Yeung, J. Beuth, Toward determining melt pool quality metrics via coaxial monitoring in laser powder bed fusion, Manuf. Lett. 15 (2018) 119-121, \href{https://doi.org/10.1016/j.mfglet.2018.02.009}{https://doi.org/10.1016/j.mfglet.2018.02.009}.
+
+[52] S. Shrestha, K. Chou, Single track scanning experiment in laser powder bed fusion process, Procedia Manuf. 26 (2018) 857-864, \href{https://doi.org/10.1016/j.promfg}{https://doi.org/10.1016/j.promfg}. 2018.07.110.
+
+[53] A.M. Kiss, A.Y. Fong, N.P. Calta, V. Thampy, A.A. Martin, P.J. Depond, J. Wang, M.J. Matthews, R.T. Ott, C.J. Tassone, K.H. Stone, M.J. Kramer, A. van Buuren, M.F. Toney, J.N. Weker, Laser-induced keyhole defect dynamics during metal additive manufacturing, Adv. Eng. Mater. 21 (2019) 1900455, , \href{https://doi.org/10}{https://doi.org/10}. 1002/adem. 201900455.
+
+[54] R. Cunningham, S.P. Narra, C. Montgomery, J. Beuth, A.D. Rollett, Synchrotronbased X-ray microtomography characterization of the effect of processing variables on porosity formation in laser power-bed additive manufacturing of Ti-6Al-4V, JOM 69 (2017) 479-484, \href{https://doi.org/10.1007/s11837-016-2234-1}{https://doi.org/10.1007/s11837-016-2234-1}.
+
+[55] H. Choo, K.-L. Sham, J. Bohling, A. Ngo, X. Xiao, Y. Ren, P.J. Depond, M.J. Matthews, E. Garlea, Effect of laser power on defect, texture, and microstructure of a laser powder bed fusion processed 316L stainless steel, Mater. Des. 164 (2019) 107534, , \href{https://doi.org/10.1016/j.matdes.2018.12.006}{https://doi.org/10.1016/j.matdes.2018.12.006}.
+
+[56] J.-B. Forien, P.J. Depond, G.M. Guss, B.H. Jared, J.D. Madison, M.J. Matthews, Effect of laser power on roughness and porosity in laser powder bed fusion of stainless steel 316L alloys measured by X-ray tomography, Int. J. Mater. Res. (2019), \href{https://doi.org/10.3139/146.111816}{https://doi.org/10.3139/146.111816}.
+
+[57] P. Norman, H. Engström, A.F.H. Kaplan, Theoretical analysis of photodiode monitoring of laser welding defects by imaging combined with modelling, J. Phys. Appl. Phys. 41 (2008) 195502, , \href{https://doi.org/10.1088/0022-3727/41/19/195502}{https://doi.org/10.1088/0022-3727/41/19/195502}.
+
+[58] W. Di, Y. Yongqiang, S. Xubin, C. Yonghua, Study on energy input and its influences on single-track, multi-track, and multi-layer in SLM, Int. J. Adv. Manuf. Technol. 58 (2012) 1189-1199, \href{https://doi.org/10.1007/s00170-011-3443-y}{https://doi.org/10.1007/s00170-011-3443-y}.
+
+[59] C. Kamath, B. El-dasher, G.F. Gallegos, W.E. King, A. Sisto, Density of additivelymanufactured, 316L SS parts using laser powder-bed fusion at powers up to $400 \mathrm{~W}$, Int. J. Adv. Manuf. Technol. 74 (2014) 65-78, \href{https://doi.org/10.1007/s00170014-5954-9}{https://doi.org/10.1007/s00170014-5954-9}.
+
+[60] Q. Guo, C. Zhao, M. Qu, L. Xiong, L.I. Escano, S.M.H. Hojjatzadeh, N.D. Parab, K. Fezzaa, W. Everhart, T. Sun, L. Chen, In-situ characterization and quantification of melt pool variation under constant input energy density in laser powder bed fusion additive manufacturing process, Addit. Manuf. 28 (2019) 600-609, https:// \href{http://doi.org/10.1016/j.addma.2019.04.021}{doi.org/10.1016/j.addma.2019.04.021}.
+
+[61] J. Trapp, A.M. Rubenchik, G. Guss, M.J. Matthews, In situ absorptivity measurements of metallic powders during laser powder-bed fusion additive manufacturing, Appl. Mater. Today. 9 (2017) 341-349, \href{https://doi.org/10.1016/j.apmt.2017.08}{https://doi.org/10.1016/j.apmt.2017.08}. 006.
+
+[62] J. Ye, S.A. Khairallah, A.M. Rubenchik, M.F. Crumb, G. Guss, J. Belak, M.J. Matthews, Energy coupling mechanisms and scaling behavior associated with laser powder bed fusion additive manufacturing, Adv. Eng. Mater. 0 (2019) 1900185, , \href{https://doi.org/10.1002/adem.201900185}{https://doi.org/10.1002/adem.201900185}.
+
+[63] M. Matthews, J. Trapp, G. Guss, A. Rubenchik, Direct measurements of laser absorptivity during metal melt pool formation associated with powder bed fusion additive manufacturing processes, J. Laser Appl. 30 (2018) 032302, , \href{https://doi}{https://doi}. org/10.2351/1.5040636.
+
+[64] M. Seifi, M. Gorelik, J. Waller, N. Hrabe, N. Shamsaei, S. Daniewicz, J.J. Lewandowski, Progress towards metal additive manufacturing standardization to support qualification and certification, JOM 69 (2017) 439-455, \href{https://doi.org/}{https://doi.org/} 10.1007/s11837-017-2265-2.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

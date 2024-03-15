@@ -1,0 +1,385 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+
+\title{Characterization of 17-4PH Single Tracks Produced at Different Parametric Conditions towards Increased Productivity of LPBF Systems-The Effect of Laser Power and Spot Size Upscaling }
+
+
+\author{Nkutwane Washington Makoana $^{1,2, *}$, Ina Yadroitsava ${ }^{2}$, Heinrich Möller ${ }^{3}$ and Igor Yadroitsev ${ }^{2}$\\
+1 Council for Scientific and Industrial Research, National Laser Centre, Pretoria 0001, South Africa\\
+2 Department of Mechanical Engineering, Central University of Technology, Free State 9301, South Africa;\\
+iyadroitsava@cut.ac.za (I.Y.); iyadroitsau@cut.ac.za (I.Y.)\\
+3 Department of Materials Science and Metallurgical Engineering, University of Pretoria,\\
+Pretoria 0002, South Africa; heinrich.moller@up.ac.za\\
+* Correspondence: nmakoana@csir.co.za; Tel.: +27-12-841-4019}
+\date{}
+
+
+\begin{document}
+\maketitle
+Article
+
+Received: 7 May 2018; Accepted: 2 June 2018; Published: 22 June 2018
+
+\begin{abstract}
+Global industrial adoption of laser-based powder bed fusion (LPBF) technology is still limited by the production speed, the size of the build envelope, and therefore the maximum part size that can be produced. The cost of LPBF can be driven down further by improving the build rates without compromising structural integrity. A common approach is that the build rate can be improved by increasing the laser power and beam diameter to instantly melt a large area of powder, thus reducing the scanning time for each layer. The aim of this study was to investigate the aspects of upscaling LPBF processing parameters on the characteristic formation of stable single tracks, which are the primary building blocks for this technology. Two LPBF systems operating independently, using different parameter regimes, were used to produce the single tracks on a solid substrate deposited with a thin powder layer. The results obtained indicate that higher laser power and spot size can be used to produce stable tracks while the linear energy input is increased. It was also shown statistically that the geometrical characteristics of single tracks are mainly affected by the laser power and scanning speed during the scanning of a thin powder layer.
+\end{abstract}
+
+Keywords: laser based powder bed fusion; metal powder; molten pool; process mapping; stainless steel
+
+\section*{1. Introduction}
+Laser-based powder bed fusion (LPBF) technology is gaining popularity in the manufacturing sector worldwide due to its attractive advantages over traditional manufacturing. Despite the well-known benefits and the availability of commercial LPBF systems on the world market, several challenges remain for LPBF to be overcome. Affordability and wide adoption of this technology is limited by the speed of part production and the maximum part size that can be manufactured [1-3]. One major drawback of LPBF is that the actual production of big complex parts is slow, with parts taking as much as one week or longer to produce. By improving the building rates, the cost of LPBF can be driven down further [4]. There are several ways to improve the productivity of the LPBF process; one is the increase in the number of laser systems, which can lead to a significant increase in the cost of the LPBF machine, and the second option is to utilize high-powered lasers with a beam focal spot that has a larger diameter to instantly melt a large area of powder, thus reducing the time required to scan each layer $[5,6]$.
+
+Increasing the layer thickness is also considered to be a key method for improving the building rate of the LPBF technology. For example, Ma et al. found that by increasing the layer thickness from $60 \mu \mathrm{m}$ to $150 \mu \mathrm{m}$ using 1Cr18Ni9Ti stainless steel (SS), the building rate can be increased, and the relative densities ranged from 99.3-99.8\% [7]. Shi et al. used Ti6Al4V to investigate the performance of a higher layer thickness and found that the building rate can be improved by up to $7.2 \mathrm{~mm}^{3} / \mathrm{s}$ [8]. Wang et al. investigated AISI grade 316 SS powder using a layer thickness of $150 \mu \mathrm{m}$, and obtained a higher building rate and relative density of $12 \mathrm{~mm}^{3} / \mathrm{s}$ and $99.9 \%$, respectively [ 9 ].
+
+The presence of defects, often related to non-optimal processing parameters (unmolten particles, entrapped gas, and lack of fusion), also inhibit wide adoption of LPBF technology. Mower and Long found that the fatigue strength exhibited by the LPBF AlSi10Mg and Ti6Al4V in the as-built condition was significantly lower than that of conventional material because of multiple fatigue cracks initiating at the surface defects, internal voids and microcracks [10]. Razavi et al. performed fatigue assessment of the Ti6Al4V circular notched specimens produced by LPBF, and observed very low notch sensitivity attributed to both the microstructure and the surface defects induced by the LPBF process itself [11]. Similarly, Branco et al. studied the cyclic plastic behavior of the $18 \mathrm{Ni} 300$ maraging steel processed by LPBF, and observed cracks initiated from the surface and inner defects which propagated through the rest of the cross section [12]. Rausch et al. used numerical simulation to examine the influence of the stochastic powder bed on the process window for dense parts-an increase in the porosity and the surface roughness for samples produced with lower powder bulk densities was observed [13]. Read et al. applied statistical design of experiments to study the influence of process parameters on the porosity development in an AlSi10Mg alloy, and a two-factor interaction model showed that the laser power, scanning speed, and the interaction between the scanning speed and scan spacing have the major influence on the porosity development in the built components [14]. Guzanová et al. studied the influence of the build orientation, heat treatment, and the laser power on the hardness of Ti6Al4V alloy processed by LPBF-the influence of laser power, heat treatment, and the building direction were found to be statistically significant [15]. Lastly, Gong et al. found that the defect morphology in Ti6Al4V parts processed by LPBF and electron based powder bed fusion was mainly influenced by the process parameters as a result the variation in the molten pool [16].
+
+In this study, we investigate the effects of using low laser power and a smaller beam diameter versus high laser power and a larger beam diameter, while maintaining the power density, on the stability and geometrical characteristics of single tracks as a first step to improving the performance of LPBF systems. When changing the process parameters, it is essential to carry out a series of experiments to study the morphology of single tracks produced using different combinations of parameters (laser power, scanning speed, spot size), since the single tracks are the base units for LPBF manufacturing. An analysis of unfavorable effects such as inconsistent melt pool formation, humping and balling effects (spheroidization of the melt pool and formation of beads), and spattering and satellites, is important for understanding the formation of 3D objects. Continuity of the track is necessary, but it is not a sufficient condition for LPBF process optimization. An analysis of cross-sections is also important in order to determine the mode of LPBF processing-i.e., keyhole, transition, or conduction-and accordingly to set optimal process parameters for effective penetration depth into the substrate (previous layer). Measuring the geometric characteristics of single tracks (width, penetration depth, height, and so on) against laser power, scanning speeds, and spot size provides information for the next steps such as hatch distance for single layers and layer thickness with respect to the penetration depth. The surface morphology of the produced single layers provides useful information about the optimal hatch distance for a chosen scanning strategy. Thus, the experiments with single tracks are the first step in a long chain for the optimization of the LPBF process.
+
+\section*{2. Materials and Methods}
+\subsection*{2.1. Material}
+Stainless steel 17-4PH powder from EOS GmbH (Krailling, Germany) was used to conduct the experiments, with the nominal composition as follows in weight percent (wt. \%): Cr-15.79, Ni-4.10, $\mathrm{Cu}-3.65, \mathrm{Si}-0.029, \mathrm{Mn}-0.046, \mathrm{C}-0.005, \mathrm{Nb}+\mathrm{Ta}-0.32, \mathrm{P}-0.01$, and $\mathrm{S}<0.005$. The powder was gas-atomized, and most particles were fairly spherical with smooth surfaces (Figure 1a). Particle size distribution of the powder obtained using Microtac Bluewave/S3500-SDC (Microtac, SD, USA) was found in the range from $20 \mu \mathrm{m}$ to approximately $100 \mu \mathrm{m}$ (Figure 1b). The 10th, 50th, and 90th percentiles of the equivalent diameters were $D_{10}=30.5 \mu \mathrm{m}, D_{50}=40.3 \mu \mathrm{m}$, and $D_{90}=64.1 \mu \mathrm{m}$, respectively. The substrate material had a similar composition to that of the powder.
+
+The choice of $17-4 \mathrm{PH}$ SS was industrially driven due to its outstanding combination of high strength, good corrosion resistance, and good mechanical properties up to $300^{\circ} \mathrm{C}$, making it highly attractive for industries such as aerospace.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_82058eecb2c03800b5c5g-03}
+
+Figure 1. Scanning electron micrograph (a) and particle size distribution (b) of the 17-4PH SS powder.
+
+\subsection*{2.2. Experimental Methods}
+Two LPBF systems operating independently were used to produce the single tracks on a solid substrate deposited with a thin powder layer of 17-4PH stainless steel. One system is a commercial LPBF machine, EOSINST M280 (EOS GmbH, Krailling, Germany), equipped with a single-mode continuous-wave Ytterbium fibre laser operating at $1075 \mathrm{~nm}$ wavelength and $80 \mu \mathrm{m}$ spot size. The second setup is an in-house built LPBF system equipped with a multi-mode continuous-wave Ytterbium fibre laser operating at $1071 \mathrm{~nm}$ and a focused beam diameter of $240 \mu \mathrm{m}$. In both cases, single tracks were formed by varying the laser power density between $19.9-59.7 \mathrm{~kW} / \mathrm{mm}^{2}$. The build chamber was filled with an argon protective atmosphere to prevent oxidation. Table 1 presents the design of experiments involving both systems. The powder layer thickness was about $50 \mu \mathrm{m}$.
+
+Table 1. Design of experiments.
+
+\begin{center}
+\begin{tabular}{ccc}
+\hline
+Parameter & Low-Power System & High-Power System \\
+\hline
+Beam diameter, $2 r_{0}(\mu \mathrm{m})$ & 80 & 240 \\
+Laser power, $P(\mathrm{~W})$ & $100-300$ & $900-2700$ \\
+Scanning speed, $V(\mathrm{~m} / \mathrm{s})$ & $0.4-2.8$ & $0.4-2.8$ \\
+Laser-matter interaction time, $2 r_{0} / V(\mu \mathrm{s})$ & $200-29$ & $600-86$ \\
+Laser power density, $P /\left(\pi \cdot r_{0}{ }^{2}\right)\left(\mathrm{kW} / \mathrm{mm}^{2}\right)$ & $19.9-59.7$ & $19.9-59.7$ \\
+Linear energy input, $P / V(\mathrm{~J} / \mathrm{m})$ & $35.7-750$ & $321-6750$ \\
+\hline
+\end{tabular}
+\end{center}
+
+The temperature-dependent properties of the $17-4 \mathrm{PH}$ stainless steel from Comsol material database (COMSOL Multiphysics ${ }^{\circledR}$ Version 5.2a, Comsol Inc., Burlington, MA, USA) were used for numerical simulations of single tracks produced by a moving laser beam with a Gaussian energy distribution on the substrate using Comsol 'Heat Transfer in Solids' module. A 3D conductive model was investigated for the solid block with $100 \mu \mathrm{m}$ upper layer with finer mesh. Around the scanning line, mesh size was extremely fine with a maximum size of $5 \mu \mathrm{m}$ and a minimum of $0.1 \mu \mathrm{m}$. The geometry of the sample and the meshed model are presented in Figure 2.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_82058eecb2c03800b5c5g-04}
+\end{center}
+
+(b)
+
+$\times \underbrace{2} \times$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_82058eecb2c03800b5c5g-04(1)}
+\end{center}
+
+Figure 2. Schematic of the geometry (a) and the mesh model (b) used for the numerical simulations.
+
+The evolution of the temperature due to heat conduction was as follows:
+
+
+\begin{equation*}
+\nabla(k \nabla T)+q=\rho C_{p} \frac{\partial T}{\partial t} \tag{1}
+\end{equation*}
+
+
+The laser beam heat source has Gaussian distribution in the radial direction with exponential decay in the thickness direction [17], as shown below:
+
+
+\begin{equation*}
+q=\frac{2 P(1-R) \beta}{\pi r_{0}^{2}} e^{\frac{-2\left((x-V t)^{2}+y^{2}\right)}{r_{0}^{2}}-\beta \cdot z} \tag{2}
+\end{equation*}
+
+
+where $T$ is the temperature; $t$ is the time; $\rho$ is the density; $C_{p}$ is the specific heat capacity; $k$ is the thermal conductivity; $P$ is the laser power; $R$ is the surface reflectivity for the given wavelength; $\beta$ is the coefficient of absorption; $r_{0}$ is the characteristic radius of the laser beam; $x, y, z$ are dimensional values; and $V$ is the scanning speed.
+
+The thermal conductivity was $0.0162 \mathrm{~T}+5.5817 \mathrm{~W} /(\mathrm{m} \cdot \mathrm{K})$; specific heat capacity was chosen as $0.963743 \mathrm{~T}-14.57509 \mathrm{~J} /(\mathrm{kg} \cdot \mathrm{K})$ for $273 \mathrm{~K}<\mathrm{T}<954 \mathrm{~K} ; 725 \mathrm{~J} /(\mathrm{kg} \cdot \mathrm{K})$ for the temperature range of $954 \mathrm{~K}$; and $0.3961449 \mathrm{~T}+153.2494 \mathrm{~J} /(\mathrm{kg} \cdot \mathrm{K})$ for $996 \mathrm{~K}<\mathrm{T}<1474 \mathrm{~K}$ with extrapolation for higher temperatures as a constant value. The density for temperatures up to $1550 \mathrm{~K}$ was $7906.957-0.4706124 T+4.471352 \times$ $10^{-4} \mathrm{~T}^{2}-2.789323 \times 10^{-7} \mathrm{~T}^{3}+2.245476 \times 10^{-11} \mathrm{~T}^{4} \mathrm{~kg} / \mathrm{m}^{3}$. Surface reflectivity was 0.65 , while the coefficient of absorption was chosen as $10^{6} \mathrm{~m}^{-1}$.
+
+The initial and boundary conditions were as follows: initial $\left(T_{0}\right)$ and external $\left(T_{\text {ext }}\right)$ temperatures were assumed to equal $293 \mathrm{~K}$; all surfaces except the upper surface were thermally insulated. The heat transfer coefficient of $10 \mathrm{~W} / \mathrm{m}^{2} \mathrm{~K}$ was taken into account for the top surface heat loss:
+
+
+\begin{equation*}
+q_{0}=h \times\left(T_{e x t}-T\right) \tag{3}
+\end{equation*}
+
+
+The general approach, meshed model geometry, and boundary conditions were similar to those published in previous works [18]. The simulated molten pool dimensions were compared to the experimental results.
+
+\section*{3. Results and Discussion}
+\subsection*{3.1. Surface Morphology and Melt Pool Profiles: Experimental Results}
+\subsection*{3.1.1. Low-Power System}
+Figure 3 summarises the low-power system results, which indicate dissimilar surface morphology for single tracks formed using different combinations of laser power and scanning speed. Three distinctive morphologies were observed at different laser powers and scanning speeds: continuous tracks with stable geometrical characteristics, irregular tracks (pre-balling effect), and tracks with an expressed balling effect. The single tracks formed were fairly continuous when the laser power and scanning speed were varied between 100-200 W and 0.4-1.2 m/s, respectively. Irregular tracks caused by strong dynamical melt flow, were formed at higher scanning speeds greater than $1.2 \mathrm{~m} / \mathrm{s}$. The balling effect was observed when the laser power and scanning speed were varied between 200-300 W and 1.4-2.8 m/s, respectively.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_82058eecb2c03800b5c5g-05}
+\end{center}
+
+Figure 3. Process map obtained on the 100-300 W laser power and $80 \mu \mathrm{m}$ laser spot diameter (“low-power system”).
+
+\subsection*{3.1.2. High-Power System}
+For the high-power system, continuous stable tracks were formed only at $900 \mathrm{~W}$ when the scanning speed varied between $0.4-0.5 \mathrm{~m} / \mathrm{s}$. The balling effect and spatter formation were revealed at all other sets of process parameters (Figures 4 and 5). These results clearly show that the maximum scanning speed for the formation of a continuous track with stable geometrical characteristics was reduced when a larger beam diameter was used. In comparison, at $80 \mu \mathrm{m}$ beam diameter, the maximum scanning speed was $1.2 \mathrm{~m} / \mathrm{s}$, whereas for the larger beam diameter employed here, the maximum scanning speed was $0.5 \mathrm{~m} / \mathrm{s}$, which is 2.4 times slower. It should be noted that with an increase in the laser spot diameter from $80 \mu \mathrm{m}$ to $240 \mu \mathrm{m}$, at correspondent optimal scanning speeds, the time of interaction of laser radiation with the powder increased by 7.2 times, and the linear laser energy input increased from $83-125 \mathrm{~J} / \mathrm{m}$ for 100-150 W laser power to $1800 \mathrm{~J} / \mathrm{m}$ at $900 \mathrm{~W}$ for stable tracks (Table 1).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_82058eecb2c03800b5c5g-06(6)}
+\end{center}
+
+\begin{itemize}
+  \item continuous tracks $\Delta$ irregular tracks / balling effect $\quad x$ spatter formation
+\end{itemize}
+
+Figure 4. Process map obtained on $900-2700 \mathrm{~W}$ laser power and $240 \mu \mathrm{m}$ laser spot diameter ("high-power system”).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_82058eecb2c03800b5c5g-06(1)}
+\end{center}
+
+(a) without powder
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_82058eecb2c03800b5c5g-06(2)}
+\end{center}
+
+$100 \mathrm{~W} 0.6 \mathrm{~m} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_82058eecb2c03800b5c5g-06(3)}
+\end{center}
+
+$300 \mathrm{~W} \quad 1.8 \mathrm{~m} / \mathrm{s} \quad 20 \mu \mathrm{m}$ (b)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_82058eecb2c03800b5c5g-06(5)}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_82058eecb2c03800b5c5g-06}
+\end{center}
+
+$900 \mathrm{~W} 0.6 \mathrm{~m} / \mathrm{s}$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_82058eecb2c03800b5c5g-06(4)}
+
+$2700 \mathrm{~W} \quad 1.8 \mathrm{~m} / \mathrm{s}$
+
+Figure 5. Solidified tracks profiles: (a) stable track at $P=100 \mathrm{~W}, V=0.6 \mathrm{~m} / \mathrm{s}$ (top) and expressed humping effect when scanning the substrate and balling effect in LPBF at $P=300 \mathrm{~W}, V=1.8 \mathrm{~m} / \mathrm{s}$ (bottom); (b) humping and irregularity at $P=900 \mathrm{~W}, V=0.6 \mathrm{~m} / \mathrm{s}$ (top) and spatter formation at $P=2700 \mathrm{~W}$, $V=1.8 \mathrm{~m} / \mathrm{s}$ (bottom).
+
+The formation of irregular tracks in LPBF can occur as a result of Plateau-Rayleigh capillary instability of the molten pool $[19,20]$. Thermo-capillary force and recoil pressure induced by the material evaporation are the major driving forces for the melt flow and are the reasons for the formation of irregular tracks [21]. The gradient in the surface tension driven by random attachment of the molten pool to the partially melted particles near the boundaries also causes irregularities [22]. Ambient gas pressure is another influencing factor on the shape of the tracks [23]. The balling effect occurs as a result of the molten pool attempting to find an optimum geometry upon the break-up of a liquid cylinder, and poor wetting of the solid substrate beneath [24]. In other words, the material tends to reach an optimum value between surface area and volume due to surface tension and wetting. Thus, the formation of irregular tracks can be considered as the culmination of a complex hydrodynamic\\
+phenomenon occurring in LPBF. These statements are supported by an analysis of cross-sections of produced single tracks without and with powder delivered on the substrate. Without powder, when the laser beam melts the solid substrate, an instable molten pool and a humping effect was found (Figure 5). Similar to welding, instabilities were provoked by differences in gas/liquid velocities and pressures, density and surface tension gradients [25].
+
+Since the $240 \mu \mathrm{m}$ beam diameter is three times bigger than $80 \mu \mathrm{m}$ spot size, the time of interaction also increases by three times at the same scanning speed. Longer periods of interaction combined with higher laser power lead to an increased temperature up to boiling point. The recoil pressure creates the depression and spattering of the molten pool (Figure 5b), and this confirms the results of numerical simulation by Khairallah et al. [26] where similar profiles of molten pools were presented.
+
+\subsection*{3.2. Parameters Affecting the Molten Pool Size}
+The general linear model by IBM SPSS Statistics was used to perform ANOVA to determine if the width and penetration depth of single tracks were statistically different when compared (i.e., with and without powder) at different laser powers $(P)$ and scanning speeds $(V)$, and their interactions (Figures 6 and 7 ). It was found that all factors were statistically significant; the most influential factors were laser power and scanning speed (Table 2, Figure 8).
+
+The laser-beam-matter interaction time decreases with an increasing scanning speed, and consequently reduces the width of the molten pool. Generally, as it was shown before in [27], the minimal width of the molten pool is defined by the laser spot diameter. At chosen process parameters, the maximal width of the molten pool was approximately two times larger than the laser spot diameter. A combination of laser power and the presence of a powder layer was the third influencing factor for the width of the track. At higher laser powers, the width of the tracks was slightly less with the presence of the powder layer, which indirectly indicates the stabilizing role of the powder layer. Further experiments with thicker powder layers need be done to confirm this assumption.
+
+(a)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_82058eecb2c03800b5c5g-07}
+
+Figure 6. Width of the tracks at different laser powers and scanning speeds with powder (a) and without powder (b).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_82058eecb2c03800b5c5g-08(1)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_82058eecb2c03800b5c5g-08}
+\end{center}
+
+Figure 7. Penetration depth at different laser powers and scanning speeds with powder (a) and without powder (b).
+
+Table 2. Univariate analysis of variance, tests of between-subjects effects: the width of the track.
+
+\begin{center}
+\begin{tabular}{ccccccc}
+\hline
+Source & Type III Sum of Squares & $d f$ & Mean Square & $\boldsymbol{F}$ & Sig. & Partial $^{\mathbf{2}}$ \\
+\hline
+Corrected Model & $5,471,735.346^{\mathrm{a}}$ & 139 & $39,365.002$ & 968.846 & 0.000 & 0.998 \\
+Intercept & $14,999,811.89$ & 1 & $14,999,811.89$ & $369,173.171$ & 0.000 & 0.999 \\
+$P$ & $5,301,134.139$ & 7 & $757,304.877$ & $18,638.677$ & 0.000 & 0.998 \\
+$V$ & $191,424.337$ & 15 & $12,761.622$ & 314.087 & 0.000 & 0.944 \\
+$P \times$ powder & $45,185.119$ & 7 & 6455.017 & 158.87 & 0.000 & 0.799 \\
+$P \times V$ & $37,439.075$ & 47 & 796.576 & 19.605 & 0.000 & 0.767 \\
+$P \times V \times$ powder & $14,765.419$ & 47 & 314.158 & 7.732 & 0.000 & 0.565 \\
+Powder & $12,016.96$ & 1 & $12,016.96$ & 295.76 & 0.000 & 0.514 \\
+$V \times$ powder & 4340.016 & 15 & 289.334 & 7.121 & 0.000 & 0.276 \\
+Error & $11,376.632$ & 280 & 40.631 & - & - & - \\
+Total & $22,832,609.23$ & 420 & - & - & - & - \\
+Corrected Total & $5,483,111.978$ & 419 & - & - & - & - \\
+\hline
+\multicolumn{2}{c}{$R^{2}=0.998$ (Adjusted $\left.R^{2}=0.997\right)$} &  &  &  &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+Calculations of the proportion of variance accounted for the effect (partial $\eta^{2}$ ) of laser power and scanning speed, and their combination also had very high effect on the penetration depth (Table 3). All factors and their combination had a stronger effect on the penetration depth variation than on the width of the tracks (Figure 8). The presence of a powder enhanced the absorptivity of the material, which resulted in higher temperatures and strong flows within the molten pool and a stronger effect on the depth of the molten pool than on the width.
+
+Table 3. Univariate analysis of variance, tests of between-subjects effects: the penetration depth.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Source & Type III Sum of Squares & $d f$ & Mean Square & $F$ & Sig. & Partial $\eta^{2}$ \\
+\hline
+Corrected Model & $1,569,172.893^{\mathrm{a}}$ & 139 & $11,289.014$ & 1639.041 & 0.000 & 0.999 \\
+\hline
+Intercept & $2,916,511.823$ & 1 & $2,916,511.823$ & $423,445.601$ & 0.000 & 0.999 \\
+\hline
+$P$ & $1,211,746.604$ & 7 & $173,106.658$ & $25,133.192$ & 0.000 & 0.998 \\
+\hline
+$V$ & $509,356.538$ & 15 & $33,957.103$ & 4930.2 & 0.000 & 0.996 \\
+\hline
+$P \times V$ & $137,073.879$ & 47 & 2916.466 & 423.439 & 0.000 & 0.986 \\
+\hline
+$P \times$ powder & 9250.968 & 7 & 1321.567 & 191.877 & 0.000 & 0.827 \\
+\hline
+$P \times V \times$ powder & 5023.967 & 47 & 106.893 & 15.52 & 0.000 & 0.723 \\
+\hline
+Powder & 3650.127 & 1 & 3650.127 & 529.958 & 0.000 & 0.654 \\
+\hline
+$V \times$ powder & 2279.275 & 15 & 151.952 & 22.062 & 0.000 & 0.542 \\
+\hline
+Error & 1928.52 & 280 & 6.888 & - & - & - \\
+\hline
+Total & $482,8881.17$ & 420 & - & - & - & - \\
+\hline
+Corrected Total & $1,571,101.413$ & 419 & - & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_82058eecb2c03800b5c5g-09}
+\end{center}
+
+Figure 8. Experimental values (data points) and calculated width (dotted lines) of the tracks at different laser power and beam diameter versus scanning speed.
+
+ANOVA analysis indicates that the geometric characteristics of single tracks were mainly affected by the laser power and scanning speed during the processing of the thin powder layer (Tables 2 and 3). The dimensions of the molten pool, such as the width, remelted-depth, and length were also simulated and evaluated experimentally when the laser scanned the substrate without powder. The experimental results on the width of the molten pool were in relatively good agreement with the numerical simulations. Numerical simulations also showed that the width of the molten pool as well as penetration depth reduced with scanning speed (Figures 8 and 9). However, both laser power and interaction time significantly affected the penetration depth (Figure 9c). The model did not take into account flows in the molten pool that had a significant influence in this material thus, there were differences in the predicted penetration depth and the experimental values determined from the cross-sectioning of single tracks. In addition, different coefficients of absorption $\beta$ could be tested for better predictions of the molten pool size (Equation (2)).\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_82058eecb2c03800b5c5g-10(2)}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_82058eecb2c03800b5c5g-10}
+\end{center}
+
+(c)
+
+Figure 9. Calculated (a) and experimental effect (b,c) of scanning speed (b) and interaction time (c) on the penetration depth at different laser powers and beam diameters.
+
+At the chosen process parameters, the length of the simulated molten pool varied significantly for similar laser power densities but different beam diameters (Figure 10). The results show that the determining factor of the molten pool length is the laser power. At a high laser power, when evaporation was not very pronounced, a long molten pool provoked capillary instability of the solidifying cylinder. For example, the ratio of the circumference of the cylinder to the length of the molten pool was less than 1 for $P=300 \mathrm{~W}, V \geq 1.2 \mathrm{~m} / \mathrm{s}$ and for $P=900 \mathrm{~W}, V>0.5 \mathrm{~m} / \mathrm{s}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_82058eecb2c03800b5c5g-10(1)}
+\end{center}
+
+Figure 10. Calculated length of the molten pool versus scanning speed, laser power and spot size.
+
+Normally, a higher laser power leads to a higher temperature gradient, which, in turn, contributes to strong flows in the molten pool, evaporation and splashes. The laser power and beam diameter played the decisive role in the molten pool size. High laser power resulted in very long molten pools, and even the higher penetration depths could not stabilise the melted track. An increase in the volume of the molten pool provoked flows that led to instability in the molten pool and irregularities in the solidified tracks.
+
+\section*{4. Summary and Conclusions}
+Increasing the productivity of LPBF systems without a loss of quality of fabricated parts is an urgent and important task. One of the ways to increase LPBF productivity is to enlarge the focal spot size and, accordingly, the power of the laser radiation in order to maintain an adequate amount of energy to melt the metal powder. The productivity of LPBF manufacturing is proportional to powder layer thickness ( $h$ ), scanning speed ( $V$ ), and hatch distance (s). A higher value of $V \times d \times h$ will lead to a higher productivity in the process. However, our research shows that achieving this will not be easy. When the focal spot diameter was increased threefold, the width of the tracks also increased. This increased the hatch distance significantly, but the optimal scanning speed dropped greatly, thus achieving no gain in the performance in productivity. Lastly, the layer thickness is an unpredictable parameter, since even a small change can easily lead to an unstable mode of forming single tracks and correspondingly to a larger fraction of porosity or even impossibility to complete the final 3D product.
+
+In this work, two LPBF systems operating independently were used to investigate the effects of upscaling process parameters such as laser power and spot size, while keeping similar laser power density, on the process of forming single tracks. It was found that the optimal scanning speed for continuous and stable track was reduced when using a larger beam diameter and higher laser powers. The width and penetration depth of the track generally decreased with an increasing scanning speed and increases with an increase in the laser power. Numerical simulations also showed that the length of the molten pool was greatly affected by the laser power and beam diameter. Based on the above observations, the following conclusions can be drawn:
+
+\begin{enumerate}
+  \item The formation of continuous single tracks has a threshold character and depends on the process parameters. There are stability zones where the tracks formed are continuous and without defects, and instability zones where the tracks formed are irregular or in the form of beads, especially at higher scanning speeds and laser powers.
+
+  \item A larger beam diameter and higher laser power can be used to form stable tracks when the scanning speed is reduced.
+
+  \item The larger beam diameter and higher laser power result in a wider and deeper molten pool, which allows an increase in the hatch distance and the layer thickness.
+
+  \item Numerical simulation has shown that a higher laser power leads to a longer molten pool, which can provoke instabilities.
+
+  \item Excessive energy input leads to depression of the molten pool and spatter formation.
+
+  \item The laser power and scanning speed exert the most influence on the width and penetration depth of the single track.
+
+  \item The process of forming 3D objects will be more complicated. Thus, the next stage of the research should be devoted to the study of the influence of the layer thickness on single track formations and hatch distance on single layer formation.
+
+\end{enumerate}
+
+Author Contributions: Idea, I.Y. (Igor Yadroitsev); Analysis and numerical simulations, I.Y. (Ina Yadroitsava) and I.Y. (Igor Yadroitsev); Funding acquisition, I.Y. (Igor Yadroitsev); Investigation, N.W.M.; Project administration, N.W.M.; Supervision, H.M., I.Y. (Igor Yadroitsev) and I.Y. (Ina Yadroitsava); Writing, review \& editing-all authors.
+
+Funding: This research was funded by the Department of Science and Technology and National Research Foundation of South Africa (Grant number 97994).
+
+Acknowledgments: This work was also based on the research supported by the Collaborative Program in Additive Manufacturing of South Africa, the South African Research Chairs Initiative (SARChI) program contractt number CSIR-NLC-CPAM-15-MOA-CUT-01.
+
+Conflicts of Interest: The authors declare no conflicts of interest.
+
+\section*{References}
+\begin{enumerate}
+  \item Bourell, D.L.; Rosen, D.W.; Leu, M.C. The roadmap for additive manufacturing and its impact. 3D Print. Addit. Manuf. 2014, 1, 1. [CrossRef]
+
+  \item Gao, W.; Zhang, Y.; Ramanujan, D.; Ramani, K.; Chen, Y.; Williams, C.B.; Wang, C.C.L.; Shin, Y.C.; Zhang, S.; Zavattieri, P.D. The status, challenges, and future of additive manufacturing in engineering. Comput.-Aided Des. 2015, 69, 65-89. [CrossRef]
+
+  \item Ford, S.; Despeisse, M. Additive manufacturing and sustainability: An exploratory study of the advantages and challenges. J. Clean. Prod. 2016, 137, 1573-1587. [CrossRef]
+
+  \item Baumers, M.; Dickens, P.; Tuck, C.; Hague, R. The cost of additive manufacturing: Machine productivity, economies of scale and technology-push. Technol. Forecast. Soc. Chang. 2016, 102, 193-201. [CrossRef]
+
+  \item Schleifenbaum, H.; Meiners, W.; Wissenbach, K.; Hinke, C. Individualized production by means of high power Selective Laser Melting. CIRP-JMST 2010, 2, 161-169. [CrossRef]
+
+  \item Yadroitsava, I.; Els, J.; Booysen, G.; Yadroitsev, I. Peculiarities of single track formation from Ti6AL4V alloy at different laser power densities by selective laser melting. SAJIE 2015, 26, 86-95. [CrossRef]
+
+  \item Ma, M.; Wang, Z.; GAO, M.; Zeng, X. Layer thickness dependence of performance in high-power selective laser melting of 1Cr18Ni9Ti stainless steel. J. Mater. Process. Technol. 2015, 215, 142-150. [CrossRef]
+
+  \item Shi, X.; Ma, S.; Liu, C.; Chen, C.; Wu, Q.; Chen, X.; Lu, J. Performance of high layer thickness in selective laser melting of Ti6Al4V. Materials 2016, 9, 975. [CrossRef] [PubMed]
+
+  \item Wang, S.; Liu, Y.; Shi, W.; Qi, B.; Yang, J.; Zhang, F.; Han, D.; Ma, Y. Research on high layer thickness fabricated of 316L by selective laser melting. Materials 2017, 10, 1055. [CrossRef] [PubMed]
+
+  \item Mower, T.M.; Long, M.J. Mechanical behavior of additive manufactured powder-bed laser-fused material. Mater. Sci. Eng. A 2016, 651, 198-213. [CrossRef]
+
+  \item Razavi, S.M.J.; Ferro, P.; Berto, F. Fatigue assessment of Ti-6Al-4V circular notched specimens produced by selective laser melting. Metals 2017, 7, 291. [CrossRef]
+
+  \item Branco, R.; Costa, J.D.; Berto, F.; Razavi, S.M.J.; Ferreira, J.A.M.; Capela, C.; Santos, L.; Antunes, F. Low-Cycle Fatigue Behaviour of AISI 18Ni300 Maraging Steel Produced by Selective Laser Melting. Metals 2018, 8, 32. [CrossRef]
+
+  \item Rausch, A.M.; Küng, V.E.; Pobel, C.; Markl, M.; Körner, C. Predictive Simulation of Process Windows for Powder Bed Fusion Additive Manufacturing: Influence of the Powder Bulk Density. Materials 2017, 10, 1117. [CrossRef] [PubMed]
+
+  \item Read, N.; Wang, W.; Essa, K.; Attallah, M.M. Selective laser melting of AlSi10Mg alloy: Process optimisation and mechanical properties developed. Mater. Des. 2015, 65, 417-424. [CrossRef]
+
+  \item Guzanová, A.; Ižaríková, G.; Brezinová, J.; Živčák, J.; Draganovská, D.; Hudák, R. Influence of Build Orientation, Heat Treatment, and Laser Power on the Hardness of Ti6Al4V Manufactured Using the DMLS Process. Metals 2017, 7, 318. [CrossRef]
+
+  \item Gong, H.; Rafi, K.; Karthik, N.; Starr, T.; Stucker, B. Defect morphology in Ti-6Al-4V parts fabricated by selective laser melting and electron beam melting. In Proceedings of the 24rd Annual International Solid Freeform Fabrication Symposium: An Additive Manufacturing Conference, Austin, TX, USA, 12-14 August 2013.
+
+  \item Mazumder, J.; Steen, W. Heat transfer model for CW laser material processing. J. Appl. Phys. 1980, 51, 941-947. [CrossRef]
+
+  \item Yadroitsev, I.; Krakhmalev, P.; Yadroitsava, I. Hierarchical design principles of selective laser melting for high quality metallic objects. Addit. Manuf. 2015, 7, 45-56. [CrossRef]
+
+  \item Childs, T.; Hauser, C.; Badrossamay, M. Mapping and modelling single scan track formation in direct metal selective laser melting. CIRP Ann. Manuf. Technol. 2004, 53, 191-194. [CrossRef]
+
+  \item Yadroitsev, I.; Gusarov, A.; Yadroitsava, I.; Smurov, I. Single track formation in selective laser melting of metal powders. J. Mater. Process. Technol. 2010, 210, 1624-1631. [CrossRef]
+
+  \item Dai, D.; Gu, D. Tailoring surface quality through mass and momentum transfer modeling using a volume of fluid method in selective laser melting of TiC/AlSi10Mg powder. Int. J. Mach. Tools Manuf. 2015, 88, 95-107. [CrossRef]
+
+  \item Yan, W.; Ge, W.; Qian, Y.; Lin, S.; Zhou, B.; Liu, W.K.; Lin, F.; Wagner, G.J. Multi-physics modeling of single/multiple-track defect mechanisms in electron beam selective melting. Acta Mater. 2017, 134, 324-333. [CrossRef]
+
+  \item Matthews, M.J.; Guss, G.; Khairallah, S.A.; Rubenchik, A.M.; Depond, P.J.; King, W.E. Denudation of metal powder layers in laser powder bed fusion processes. Acta Mater. 2016, 114, 33-42. [CrossRef]
+
+  \item Das, S. Physical aspects of process control in selective laser sintering of metals. Adv. Eng. Mater. 2003, 5, 701-711. [CrossRef]
+
+  \item Wei, P.S. The physics of weld bead defects. In Welding Processes; Kovacevic, R., Ed.; InTech: London, UK, 2012; pp. 395-414.
+
+  \item Khairallah, S.A.; Anderson, A.T.; Rubenchik, A.; King, W.E. Laser powder-bed fusion additive manufacturing: Physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones. Acta Mater. 2016, 108, 36-45. [CrossRef]
+
+  \item Yadroitsev, I. Selective Laser Melting: Direct Manufacturing of 3D-Objects by Selective Laser Melting of Metal Powders; Lambert Academic Publishing: Saarbrücken, Germany, 2009.
+
+\end{enumerate}
+
+C 2018 by the authors. Licensee MDPI, Basel, Switzerland. This article is an open access article distributed under the terms and conditions of the Creative Commons Attribution (CC BY) license (\href{http://creativecommons.org/licenses/by/4.0/}{http://creativecommons.org/licenses/by/4.0/}).
+
+
+\end{document}

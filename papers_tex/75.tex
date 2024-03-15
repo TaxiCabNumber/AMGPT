@@ -1,0 +1,579 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Effect of energy density on laser powder bed fusion built single tracks and thin wall structures with $100 \mu \mathrm{m}$ preplaced powder layer thickness }
+
+
+\author{S.K. Nayak, S.K. Mishra, C.P. Paul*, A.N. Jinoop, K.S. Bindra\\
+Homi Bhabha National Institute, Anushaktinagar, Mumbai 400094, Maharashtra, India\\
+Laser Technology Division, Raja Ramanna Centre for Advanced Technology, Indore 452013, Madhya Pradesh, India}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+
+
+\section*{H I G HL I G H T S}
+\begin{itemize}
+  \item Laser Powder Bed Fusion of single tracks and thin walls at $100 \mu \mathrm{m}$ layer thickness.
+  \item Process window identified in terms of energy density for stable single tracks.
+  \item Parametric investigation on track morphology, track geometry and wall geometry.
+  \item Analytical and regression models developed for track and wall geometry.
+  \item Geometrical variation from single track to thin walls investigated.
+\end{itemize}
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+Laser additive manufacturing
+
+Powder bed fusion
+
+Thin walls
+
+Single track
+
+Geometry
+
+\begin{abstract}
+A B S T R A C T Laser Powder Bed Fusion (LPBF) is one of the advanced manufacturing technologies used for fabricating near net shaped components directly from CAD model data by selectively melting pre-placed layer of powder in layer by layer fashion. LPBF process is widely researched with layer thickness up to $60 \mu \mathrm{m}$ and is now commercially deployed for many metallic materials. However, very limited literature is available in public domain for LPBF with layer thickness $>60 \mu \mathrm{m}$ as the process in this window has many challenges in geometry control and reproducibility due to inherent process instability. However, higher layer thickness with larger beam diameter can bring better productivity and shorter built time with limited compromise on minimum feature size. The present work focuses on a systematic parametric study on single track and thin wall fabrication using LPBF at layer thickness of $100 \mu \mathrm{m}$ by varying laser power (150-450 W) and scan speed (0.02-0.08 m/s) using SS 316L powder. For the range of parameters under investigation, process window yielding stable tracks (regular and uniform) is obtained for energy density between 87.5 and $140 \mathrm{~J} / \mathrm{mm}^{3}$. An analytical model for predicting the width of the track and a regression model for the depth of re-melted zone in the substrate subsurface and track area during single track fabrication is developed in terms of energy density. The average difference in predicted and experimental values for width and area of the track are $3.18 \%$ and $7.61 \%$, respectively within the process window. Width of thin walls built at the same parameters is measured and the variation between width of thin wall and track is estimated in terms of energy density. The width of thin walls fabricated are observed to be larger than that of single track built at the same combinations of process parameters primarily due to preheating effect. For the range of parameters under investigation, the highest values of width of thin wall and its difference from corresponding width of track is observed at $112.5 \mathrm{~J} / \mathrm{mm}^{3}$ in the process window. The study paves a way in understanding the effect of higher layer thickness on the geometry of LPBF built components.
+\end{abstract}
+
+\section*{1. Introduction}
+Laser Additive Manufacturing (LAM) is the process of fabricating components by adding materials in a layer-wise fashion using high energy laser as heat source [1,2]. Also previously known as Laser Rapid Manufacturing, the process provides feature based design and manufacturing approach that facilitates multi-functional and multimaterials fabrication of engineering and prosthetic components for customised applications [3]. Laser Powder Bed Fusion (LPBF) is one of the widely deployed LAM process for fabricating complex shaped metallic components by using the shape design freedom of LAM $[2,4]$. It involves laying a thin layer of metal powder on a substrate and selective
+\footnotetext{\begin{itemize}
+  \item Corresponding author at: Laser Technology Division, Raja Ramanna Centre for Advanced Technology, Indore 452013, Madhya Pradesh, India.
+\end{itemize}
+
+E-mail address: \href{mailto:paulcp@rrcat.gov.in}{paulcp@rrcat.gov.in} (C.P. Paul).
+}
+melting using a focused laser energy to fuse a region of the powder bed as per the geometry data obtained from solid model $[1,5,6]$. A number of such layers are laid one over the other and near net shaped components are obtained [7]. LPBF is widely known with different commercial names, such as Direct Metal Laser Sintering by EOS GmbH, Laser CUSING by Concept Laser, Direct Metal Printing by 3D System and Selective Laser Melting by SLM Solutions [2]. LPBF can fabricate components with unlimited complexity, light weight designs and porous geometry involving thin walls and solid structures, eliminating the many steps involved in conventional manufacturing routes resulting in reduced lead time. One of the exciting applications of LPBF is fabrication of thin wall structures for light weight applications. Thin wall structures are built by laying single tracks one over another and thus, single track is the basic building block for building thin wall structures.
+
+Many researchers have investigated and reported LPBF of single track and thin walls in published literature. Ning et al. developed an analytical model by considering moving point heat source solution with stationary coordinate and origin at boundary of part. The model found close agreements with experimental values on LPBF of IN625 in previous literature [8]. Rosso et al. presented a complete strategy for process modelling that includes Finite Element Analysis (FEA) based model development with simplified assumptions like no melt pool fluid dynamics and homogenised bed. The model was validated from previous literature and in-house experiments involving in-situ melt pool thermal field measurements [4]. Verhaeghe et al. modelled LPBF process using enthalpy formulation by taking the penetration of laser and shrinkage into account. The influence of incorporating or neglecting evaporation effects in the model was studied. The model results were compared with the experimental results and it was concluded that evaporation in the process modelling of LPBF yielded results closer to experimental values [9]. Chen et al. derived a volumetric heat source model on LPBF of ceramics based on Beer-Lamberts law and used Newtonian constitutive law to consider the shrinkage due to consolidation from powder to liquid and a semi-implicit formulation is used to capture the liquid and gas interface. The final bead shape is well related to surface tension and viscosity [10]. Arisoy et al. presented a 3D nonlinear finite element based model that uses different energy density values to simulate LPBF process for both single and multi-tracks and used it to predict melt pool sizes of IN625 at $20 \mu \mathrm{m}$ layer thickness with reasonable accuracy [11]. Schwalbach et al. developed a discrete source model for thermal history prediction during LPBF and verified it against an analytical model for single track geometry. The model was calibrated successfully using single track deposits with $25 \mu \mathrm{m}$ layer thickness to match the melt pool depth and width for Ti-6Al-4V [12]. Keshavarzkermani et al. investigated the effect of laser energy density on Hastelloy-X single track during LPBF for maximum layer thickness of $60 \mu \mathrm{m}$. It was observed from parametric studies that, for a fixed value of laser energy density, laser power has greater influence than scan speed on the melt pool geometry [13]. Guo et al. investigated the effect of process parameters during LPBF of Tungsten single tracks at layer thickness of $80 \mu \mathrm{m}$. It was observed that, with increase in linear energy (ratio of laser power and scan speed) width and penetration depth of the tracks increases [14]. Yadroitsev et al. investigated the effect of layer thickness up to $400 \mu \mathrm{m}$ and reported that as the layer thickness is increased for a particular power, the scanning speeds can be varied within a smaller range for obtaining continuous tracks [15].
+
+LPBF of thin walls was also investigated by several researchers. Calignano et al. investigated the effect on process parameters during LPBF of AlSi10Mg thin walls using a layer thickness of $25 \mu \mathrm{m}$ and found that the walls built perpendicular to the direction of scrapper movement were more prone to distortions or trace breaks due to frictional forces [16]. Lin et al. built Lobster eyed AlSi10Mg thin walled components by placing two groups of thin walls perpendicular to each other using LPBF at $30 \mu \mathrm{m}$ layer thickness. Systematic investigation was performed to obtain the effect of laser processing parameters on densification behaviour, dimensional accuracy, surface roughness and forming defects. It was found that with increase in laser power, outside surface roughness (surface roughness on the outer surface of the component) reduced and inside surface roughness (surface roughness on the inner surface of the component) increased for the built walls [17]. Li et al. systematically studied the heat losses to loose powder in LPBF of thin walls with $40 \mu \mathrm{m}$ layer thickness by using conductivity dependant and wall thickness dependant convection coefficients in FEM. It was found that the boundary conditions defined by the later coefficient yielded better peak temperature prediction accuracy than former by $36 \%$, while at the same time decreasing the computation time by $75 \%$ [18].
+
+The above reported researches are mostly focused on LPBF of single track and thin wall with layer thickness less than $60 \mu \mathrm{m}$ primarily due to process instabilities issues at higher layer thickness [19]. Only few reports $[14,15]$ are available for higher layer thickness and they observed unstable molten pool yielding non-repeatable track geometry. Further, very limited parametric investigations supported by analytical and regression models are explored and reported in published literature to understand the geometry variation and geometry correlation between single track and thin wall structures at higher layer thickness [20]. It motivates us to investigate LPBF with higher layer thickness of $100 \mu \mathrm{m}$.
+
+In the present work, a number of single tracks and thin walls are built at different process parameter combinations with the layer thickness of $100 \mu \mathrm{m}$ using an indigenously developed LPBF system. Track geometry, i.e., track width, track depth and track area (refer
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_38cd4cb3d836d7daf3f5g-02}
+\end{center}
+
+Fig. 1. Typical cross-section of LPBF built single track.
+
+Fig. 1) is systematically investigated. It may be noted in Fig. 1 that the layer thickness is the thickness of the preplaced powder on the bed in as-spread condition, which is derived from the displacement of buildplate. The pre-placed powder in as-spread condition is loosely packed, which gets densified due to laser melting and subsequent consolidation/solidification. Hence, track height is less than the layer thickness. Subsequently, in our work, the track geometry is analysed and the process window is identified in terms of energy density for stable tracks. The effect of process parameters including energy density on the track width, track depth and track area is investigated. A simplified model in terms of energy density is developed to predict the track width and regression models in terms of energy density are developed for track depth and track area. Further, effect of process parameters including energy density on width of the thin walls and the difference between width of thin walls and track widths are investigated. Corresponding regression models in terms of in terms of energy density are also developed for width of thin walls and the difference between width of thin wall and track width.
+
+\section*{2. Materials and methods}
+\subsection*{2.1. Materials}
+SS 316L is a material with excellent corrosion resistance, high toughness, good ductility, moderate strength and high temperature oxidation resistance up to $870{ }^{\circ} \mathrm{C}$ [21]. The material possesses good oxidation resistance in intermittent and continuous service. The material also possess excellent weldability by all standard fusion and resistance welding methods [21]. It finds wide applications in the field of food preparation equipment, medical implants, medical equipment, structural applications, marine environment applications etc. due to its excellent corrosion resistance. Commercially available SS 316L powder with spherical shape and size ranging from 45 to $100 \mu \mathrm{m}$ is used. Fig. 2 shows the morphology of SS 316L powders obtained by Scanning Electron Microscope (SEM). Sandblasted SS 304L of $75 \mathrm{~mm}$ diameter and $10 \mathrm{~mm}$ thickness is used as the substrate material for building single track and thin walls. Tables 1 and 2 presents the composition of powder and properties of SS316L, respectively.
+
+\subsection*{2.2. Experimental setup}
+In the present work, a $500 \mathrm{~W}$ fibre laser based indigenously developed LPBF system at Raja Ramanna Centre for Advanced Technology (RRCAT), Indore, India is deployed. Fig. 3(a) and (b) presents the pictorial representation and schematic diagram of LPBF system, respectively. It essentially consists of a $500 \mathrm{~W}$ fibre laser, galvano scanner,
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_38cd4cb3d836d7daf3f5g-03}
+\end{center}
+
+Fig. 2. SEM image of SS 316L Powder.\\
+Table 1
+
+Composition of SS316L Powder used for present work.
+
+\begin{center}
+\begin{tabular}{lcccccccccl}
+\hline
+Element & Fe & $\mathrm{Cr}$ & $\mathrm{Ni}$ & $\mathrm{Mo}$ & $\mathrm{Mn}$ & $\mathrm{Si}$ & $\mathrm{P}$ & $\mathrm{S}$ & $\mathrm{C}$ \\
+\hline
+Percentage composition & Bal & 17.4 & 10.9 & 2.8 & 1.4 & 0.5 & 0.024 & 0.010 & 0.01 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 2
+
+Properties of SS316L.
+
+\begin{center}
+\begin{tabular}{llll}
+\hline
+Property & Value & Unit & Reference \\
+\hline
+Density & $\sim 8$ & $\mathrm{~g} / \mathrm{cc}$ & $[22]$ \\
+Specific Heat Capacity & 0.5 & $\mathrm{~J} / \mathrm{g}{ }^{\circ} \mathrm{C}$ & $[23]$ \\
+Enthalpy of Fusion & 280 & $\mathrm{~J} / \mathrm{g}$ & $[23]$ \\
+Melting Point & $\sim 1500$ & ${ }^{\circ} \mathrm{C}$ & $[24]$ \\
+\hline
+\end{tabular}
+\end{center}
+
+controller, powder hopper, powder spreading unit and build plate. Galvano-Scanner provides the $\mathrm{x}$ and $\mathrm{y}$ movement for laser beam as per the geometry of each layers. The build volume of the system is $250 \times 250 \times 250 \mathrm{~mm}^{3}$ with a laser spot diameter of about $500 \mu \mathrm{m}$. Full factorial experimental design is deployed for building single tracks and thin walls by varying laser power. Laser power is varied from $150 \mathrm{~W}$ to $450 \mathrm{~W}$ with four levels and scan speed is varied from 0.02 to $0.08 \mathrm{~m} / \mathrm{s}$ with three levels. A constant layer thickness of $100 \mu \mathrm{m}$ is used for the study. Each thin wall is built by laying 40 single tracks one over the other.
+
+For characterizing track geometry, wire EDM is used to cut the built tracks along the transverse direction and the samples are extracted for analysing the cross-section. The samples are prepared using standard metallographic procedure. Subsequently, electrolytic etching is carried out in a solution of $10 \mathrm{~g}$ of oxalic acid in $100 \mathrm{ml}$ distilled water at $12 \mathrm{~V}$ for 10-15 s. These etched samples are studied under optical microscope (Make: Olympus). Quantimet-image analysis software is used to analyse the geometry of the track cross-section. The track area is measured using Quantimet image processing software from images obtained from optical-microscope. Further, 3D Laser scanner is used to obtain the 3D model geometry information in as-built condition of the wall structures. Inspect software is used to obtain transverse cross section profile of the built walls and analyse the wall width at different locations.
+
+\section*{3. Results and discussion}
+\subsection*{3.1. Track geometry}
+Track geometry is one of the important features to be considered during LPBF process, as it is the basic building block for this layer-bylayer process. It directly affects the properties of built structure. Among the various process parameters in LPBF, layer thickness is one of the most dominating parameters and it governs the availability of material during LPBF process. A higher layer thickness makes the availability of more powder and yields higher build rate, but its value can be increased within certain limit. At one end, a higher layer thickness changes the dynamics of molten pool and may result in non-uniform and irregular tracks. On the other end, higher layer also results in a lower track aspect ratio (the ratio of track width to track height) that may cause lack of fusion zones along the tracks during multiple overlapped track deposition [25]. Our experimental observations about the effect of layer thickness on the track geometry is as follows: Though a lower layer thickness $(20-50 \mu \mathrm{m})$ results in a higher gradient of thermo-physical properties within the layer, the limited powder volume restricts the instability of molten material flow during LPBF. It is because the surface tension forces greatly overwhelm gravitational forces at these layer thickness. The higher layer thickness ( $>60 \mu \mathrm{m})$ results in the availability of larger volume of material and non-simultaneous melting of entire layer, which generates greater instability in the molten pool. For higher layer thickness, the laser energy is absorbed in top most layer
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_38cd4cb3d836d7daf3f5g-04(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_38cd4cb3d836d7daf3f5g-04}
+\end{center}
+
+(b)
+
+Fig. 3. LPBF system at RRCAT (a) Photographic view (b) Schematic diagram.
+
+and it melts instantly. Thereafter, the melting of material is because of two competitive phenomena: melting due to heat conduction; and melting due to conglomeration of powder and molten metal within the layer. This results in larger gradient in thermo-physical properties and the presence of powder layer underneath the molten pool facilitating more fluid flow freedom and greater molten pool instability during the process. Further, the gravity and Marangoni effect also affect the shape of the molten pool. From processing parameter point of view, a larger dwell time at a particular spot is required for proper melting and consolidation, which results in lower thermal gradient and significantly affects the surface tension in the melt pool, which in turn affect the Marangoni convection. These observations are in agreement with the earlier report by King et al. [26].
+
+The surface topography of the tracks and the values of track width, track depth and track cross-section area at various processing parameters are summarized in Table 3. The obtained result matrix is assessed using the combined parameter Energy Density (ED). ED is expressed mathematically in Eq. (1).
+
+$\mathrm{ED}=\frac{\mathrm{P}}{\mathrm{v}_{\mathrm{s}} \times \mathrm{D} \times \mathrm{t}}$
+
+where $\mathrm{P}, \mathrm{v}_{\mathrm{s}}, \mathrm{t}$ and $\mathrm{D}$ represent the laser power $(\mathrm{W})$, scan speed $(\mathrm{mm} / \mathrm{s})$, layer thickness ( $\mathrm{mm}$ ) and beam diameter ( $\mathrm{mm}$ ), respectively.
+
+\subsection*{3.1.1. Overall track morphology}
+A number of single tracks are laid at different laser power and scan speeds for parametric investigation and process window development. Fig. 4 presents the top view of the LPBF built single tracks at various processing parameters. Surface topography examination shows that the
+
+Table 3
+
+Track Geometry at different process conditions.
+
+\begin{center}
+\begin{tabular}{lllllll}
+\hline
+S.No. & \begin{tabular}{l}
+Laser \\
+Power \\
+$(\mathrm{W})$ \\
+\end{tabular} & \begin{tabular}{l}
+Scan \\
+Speed \\
+$(\mathrm{m} / \mathrm{s})$ \\
+\end{tabular} & \begin{tabular}{l}
+Track \\
+Width \\
+$(\mu \mathrm{m})$ \\
+\end{tabular} & \begin{tabular}{l}
+Track Cross \\
+Section \\
+Area $\left(\mathrm{mm}^{2}\right)$ \\
+\end{tabular} & \begin{tabular}{l}
+Track \\
+Depth \\
+$(\mu \mathrm{m})$ \\
+\end{tabular} & Remarks \\
+\hline
+1 & 150 & 0.02 & 423.3 & 0.04431 & 134.833 & Non-uniform \\
+2 & 250 & 0.02 & 510.2 & 0.0534 & 187.59 & Non-uniform \\
+3 & 350 & 0.02 & 549.2 & 0.05749 & 361.6 & Non-uniform \\
+4 & 450 & 0.02 & 665.0 & 0.0696 & 422.7 & Non-uniform \\
+5 & 150 & 0.05 & 340.2 & 0.03561 & 60.02 & Irregular \\
+6 & 250 & 0.05 & 469.7 & 0.04916 & 132.19 & Stable \\
+7 & 350 & 0.05 & 484.3 & 0.05069 & 226.37 & Stable \\
+8 & 450 & 0.05 & 545.4 & 0.05373 & 247.32 & Non-uniform \\
+9 & 150 & 0.08 & 282.1 & 0.02953 & 51.78 & Irregular \\
+10 & 250 & 0.08 & 377.3 & 0.0395 & 124.5 & Irregular \\
+11 & 350 & 0.08 & 431.2 & 0.04044 & 175.45 & Stable \\
+12 & 450 & 0.08 & 497 & 0.04061 & 212.73 & Stable \\
+\hline
+\end{tabular}
+\end{center}
+
+tracks can be classified into stable and unstable tracks. Stable tracks show proper wetting with the substrate and minimal variation in the width along the track length. Unstable tracks display either improper wetting or significant width variation $(\geq 2 \%)$ along the track length. Unstable tracks can be further classified into irregular and non-uniform tracks. Irregular tracks are unstable tracks that show poor wetting with the substrate. While, non-uniform tracks are unstable tracks that show proper wetting with substrate, but with significant variation in the track width along the track length. The experimental result matrix (refer Table 3) is evaluated using combined parameter, ED and it is observed that for $\mathrm{ED}<87.5 \mathrm{~J} / \mathrm{mm}^{3}$, the tracks are irregular which can be attributed to the lack of sufficient ED preventing the flow of the melt over the substrate, resulting in poor wetting of the substrate by the melt pool. For ED between $87.5 \mathrm{~J} / \mathrm{mm}^{3}$ and $140 \mathrm{~J} / \mathrm{mm}^{3}$, the tracks are observed to be stable. In this case, ED is sufficient to cause the melt and flow of molten material over the substrate causing proper wetting and thereby, displaying uniform width along the track length. For ED > $140 \mathrm{~J} / \mathrm{mm}^{3}$, the tracks are observed to be non-uniform. In this case, very high value of ED causes significant turbulence inside the melt pool leading to melt instabilities. Further, excess ED causes powder adjacent to beam spot to melt due to heat conduction. This melting also creates a low pressure region around the melt pool that would pull the adjacent powder into the melt pool. This phenomenon is referred to as denudation [27]. Thus, significant turbulence, melting due to conduction and denudation effect are the reasons for non-uniformity along the track length for ED $>140 \mathrm{~J} / \mathrm{mm}^{3}$. Therefore, ED between $87.5 \mathrm{~J} / \mathrm{mm}^{3}$ and $140 \mathrm{~J} / \mathrm{mm}^{3}$ is selected as the process window for stable tracks at $100 \mu \mathrm{m}$ layer thickness.
+
+\subsection*{3.1.2. Track width}
+It is the distance between two extreme points on transverse cross section of the track in contact with the substrate surface (Refer Fig. 1). It is observed in Table 3 that track width increases with laser power and reduces with increase in scan speed. As the laser power increases from $150 \mathrm{~W}$ to $450 \mathrm{~W}$, an increase in track width is observed mainly due to the increase in the size of the melt pool. The increase in track width is $\sim 39 \mu \mathrm{m}, 15 \mu \mathrm{m}$ and $54 \mu \mathrm{m}$, when the laser power is increased from $250 \mathrm{~W}$ to $350 \mathrm{~W}$ at $0.02 \mathrm{~m} / \mathrm{s}, 0.05 \mathrm{~m} / \mathrm{s}$ and $0.08 \mathrm{~m} / \mathrm{s}$, respectively. Between $250 \mathrm{~W}$ and $350 \mathrm{~W}$, at $0.08 \mathrm{~m} / \mathrm{s}$ the increase in track width is due to direct melting under laser beam influence. At $0.05 \mathrm{~m} / \mathrm{s}$, the increase in track width is restricted as it approaches beam diameter. At $0.02 \mathrm{~m} / \mathrm{s}$, the powders neighbouring the laser beam spot also start melting due to conduction mode and it increases with increase in laser power. Further, increase in the laser power from $350 \mathrm{~W}$ to $450 \mathrm{~W}$ leads to significant variation in track width with maximum increase of $21 \%$ at $450 \mathrm{~W}$ and $0.02 \mathrm{~m} / \mathrm{s}$. The reason for this increment is the significant
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_38cd4cb3d836d7daf3f5g-05(1)}
+\end{center}
+
+Fig. 4. LPBF built track at different laser power and scan speed. The process window for desirable laser power and scan speed values inside the dotted line.
+
+contribution of powder melting by both direct melting and heat conduction.
+
+The results obtained for track width are compiled in terms of ED and presented in Fig. 5. It can be seen in Fig. 5 that the track width increases with increase in ED. Pearson correlation is used to co-relate the variation between ED and track width. Pearson correlation varies from -1 and 1 and shows the extent of linear relation between two variables. In the present work, Pearson correlation coefficient of 0.918 is observed between ED and track width with $\mathrm{P}$ value of 0.00 , which indicates strong and positive correlation between track width and ED. An increase in ED results in the increase in the amount of material melted which enhances the melt pool size and track width. It can be seen that the track width is more than the laser beam spot beam diameter for the value of $\mathrm{ED} \geq 180 \mathrm{~J} / \mathrm{mm}^{3}$. For the value of $\mathrm{ED}<180 \mathrm{~J} / \mathrm{mm}^{3}$, the track formation is primarily dominated by laser melting of the powder. For the value of ED $\geq 180 \mathrm{~J} / \mathrm{mm}^{3}$, the track formation is governed by both laser melting of the powder and melting of neighbouring powder particles (powder particles outside the laser beam incident zone) due to conduction. This results in track width wider than the laser beam spot diameter. Due to higher layer thickness $(100 \mu \mathrm{m})$ the effects of gravity forces become significant and melt pool viscosity is reduced due to decreased heat dissipation which, causes the melt pool to flow outwards entrapping neighbourhood powders and increasing the melt pool width.
+
+Further, ANOVA is performed on track width to estimate the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_38cd4cb3d836d7daf3f5g-05}
+\end{center}
+
+Fig. 5. Variation of track width with Energy Density.\\
+Table 4
+
+ANOVA for effect of laser power and scan speed on track width.
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+Source & \begin{tabular}{l}
+Degree of \\
+Freedom \\
+\end{tabular} & \begin{tabular}{l}
+Sum of \\
+Squares \\
+\end{tabular} & \begin{tabular}{l}
+Mean Sum of \\
+Squares \\
+\end{tabular} & F-value & P-value \\
+\hline
+Power & 3 & 75,318 & 25106.1 & 77.25 & 0.000 \\
+Scan speed & 2 & 39,345 & 19672.6 & 60.53 & 0.000 \\
+Error & 6 & 1950 & 325 &  &  \\
+Total & 11 & 116,613 &  &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+contribution of laser power and scan speed on track width. Table 4 presents the Degree of Freedom, Sum of Squares, Mean Sum of Squares, F-values and P-value obtained from ANOVA studies of track width. It is seen that, both laser power and scan speed have significant effect on the track width. However, laser power is more significant with a contributing factor of $64.58 \%$ and the percentage contribution of scan speed towards track width is $33.73 \%$. During laser scanning, part of the incident energy is utilised for melting and the rest is dissipated. One of the determining factors of the melt-pool size is laser beam interaction time with the powder and conductivity of the powder. Since the conductivity of the powder is much less than that of the bulk, the beampowder interaction time that is determined by scan speed has lesser influence on the width of the melt pool as compared to laser power.
+
+There has been many research efforts to predict the processing parameters for LPBF [4,9,28]. Most of these requires intensive calculations, while other requires domain expertise. To provide a simplified and quicker solution to predict the track width for single layer during LPBF, an analytical model is developed assuming that the (a) thermophysical properties are independent of temperature (b) heat losses due to conduction, convection and radiation is assumed to be $55 \%$ [29]. (c) absorptivity value is taken as same as in case of continuous flat surface material and it is assumed not to vary with beam angle of incidence with respect to melt pool surface. Laser absorptivity is taken as 0.3 [26].
+
+The green density of the metal powder on pre-placed powder bed is experimentally determined and its value found to be $80 \%$ of solid metal.
+
+Fig. 6 presents the schematic diagram for track width modelling. In this model, the track width is computed by comparing local laser energy available as per Gaussian laser beam profile with energy required to melt locally available mass of metal powder on the powder bed along the laser beam diameter. For all values of local laser energy more than energy required to melt local metal powder mass available, the metal powder is melted and deposited. The rapidity of LPBF process and poor
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_38cd4cb3d836d7daf3f5g-06}
+\end{center}
+
+Fig. 6. Schematic for Track Width Modelling.
+
+thermal conductivity of pre-placed bed powder governs the instantaneous melting of powder by local energy balance. Therefore, the laser energy available after absorption should be just equal to the energy required for the melting of entire powder layer at that location. This energy balance in terms of Minimum Energy Density $\left(E D_{\min }\right)$ and local laser fluence ( $\mathrm{I}_{\text {edge }}$ ) can be written as:
+
+$E D_{\text {min }} \times t=I_{\text {edge }} \times \frac{D}{v_{s}} \times \frac{(100-\eta)}{100}$
+
+After rearrangement, it can be rewritten as
+
+$\mathrm{W}=\mathrm{D} \sqrt{\frac{1}{2} \ln \left(\frac{8 \cdot \alpha \cdot \mathrm{ED}}{\pi \cdot \rho\left(\mathrm{c}_{\mathrm{p}}\left(\mathrm{T}_{\mathrm{m}}-\mathrm{T}_{0}\right)+\mathrm{L}\right)} \times \frac{(100-\eta)}{100}\right)}$
+
+where $t, D, \alpha, \rho, \eta, T_{m}, L, c_{p}, T_{0}$ and $W$ are layer thickness, laser beam diameter, laser absorptivity, green density of the metal powder on prepowder bed, percentage of heat energy loss, melting temperature of SS316L, latent heat of fusion for SS316L, specific heat of SS316L, ambient temperature and track width respectively.
+
+Fig. 5 also presents the comparison of model and experimental track width data for various value of ED. The mean difference between model and experimental results within the process window $\left(87.5-140 \mathrm{~J} / \mathrm{mm}^{3}\right.$ ) is found to be $14.73 \%$. At higher ED values, the maximum difference is found to be $20.51 \%$. Higher ED value causes increase in process instabilities due to Marangoni convection in melt pool and results in increased spatter in melt pool. A difference of $20.51 \%$ between model and experimental results is achieved for low value of process parameters $\left(\mathrm{P}=150 \mathrm{~W} \& \mathrm{v}_{\mathrm{s}}=0.02 \mathrm{~m} / \mathrm{s}\right)$. The low value of laser power has poor laser penetration that results in poor wetting of the substrate, while the low scan speed provides sufficient energy to create the melt pool. Both these factors contribute to the Plateau-Rayleigh instability in melt pool, resulting in balling effect [30] as shown in Fig. 4. The mean difference between computed and experimental results for the process window zone is found to be $3.18 \%$. The experimental observations show that the values of track width are lesser than the laser beam diameter for the ED below $180 \mathrm{~J} / \mathrm{mm}^{3}$, while it is lesser than the laser beam diameter for ED below $140 \mathrm{~J} / \mathrm{mm}^{3}$ as per the developed analytical model. This variation in experimental and analytical values in the range of ED between 140 and $180 \mathrm{~J} / \mathrm{mm}^{3}$ is primarily due to hunting phenomena between the two defined mechanism ("pure laser melting" and "laser melting and melting of neighbouring powder due to conduction") yielding unstable and non-uniform track formation. Hence, the limiting value of ED is chosen as $140 \mathrm{~J} / \mathrm{mm}^{3}$ for defining the process window.
+
+\subsection*{3.1.3. Track depth}
+Track depth is the vertical distance between the substrate's surface to the lowest point in the intermixing or remelting zone on the substrate subsurface created due to the moving laser spot. ED affects the extent of substrate melting and higher layer thickness decreases the energy
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_38cd4cb3d836d7daf3f5g-06(1)}
+\end{center}
+
+Fig. 7. Variation of track depth with ED.
+
+reaching the substrate that affects the track depth.
+
+Fig. 7 shows the variation of track depth with ED. Track depth shows a general increasing trend with ED. The calculated value of Pearson correlation is calculated to be 0.913 with P-value of 0.000 for relationship between track depth and ED, which indicates strong and positive correlation between track depth and ED. Thus, an increase in ED causes increased melting of the substrate. An increase in ED by increasing laser power at constant scan speed enhances the laser energy penetration into the substrate leading to increase in track depth. An increase in ED by decrease in scan speed at constant laser power increases the dwell time of the laser spot at a particular point which in turn increases the amount of energy incident at a point. Higher amount of energy at a point increases the size of the melt pool and eventually the track depth. It is observed that within the defined process window, the track depth values lie between 125 and $150 \mu \mathrm{m}$ that are in order of the layer thickness. This is in agreement with King et al. [24]. The track depth values are logarithmically fitted and Chi-square values (measure of how well do the observed data correspond to the fitted model) for sets of four consecutive track depth values are calculated. It is observed that the set of values within the defined process window yield Chisquare value of 0.022 confirming the goodness of fit. These observations are in-line with Beer-Lamberts law [31].
+
+It is observed that at high values of process parameters (laser power: $350-450 \mathrm{~W}$ and scan speed: $0.05-0.08 \mathrm{~m} / \mathrm{s}$ ) and low values of process parameters (laser power: $150-250 \mathrm{~W}$ and scan speed: 0.02-0.05 m/s), the track depth variation with ED follows logarithmic fit with best $\mathrm{R}^{2}$ value ( $>0.9$ ). High laser power and low scan speed shows that track depth varies linearly with ED with $\mathrm{R}^{2}=0.9993$. At lower power and higher speed, poor $\mathrm{R}^{2}$ value $(<0.65)$ is observed for both linear and logarithmic fitting. Within ED range of $60-250 \mathrm{~J} / \mathrm{mm}^{3}$, total energy that is incident on the top most surface of the powder bed decreases exponentially due to heat dissipation across the $100 \mu \mathrm{m}$ powder layer thickness. Therefore, at high laser power-high scan speed and low laser power-low scan speed, logarithmic variation of track depth with ED is observed. This is in accordance with Beer-Lamberts law [31]. At high laser power and low scan speed (ED between $140 \mathrm{~J} / \mathrm{mm}^{3}$ and $450 \mathrm{~J} /$ $\mathrm{mm}^{3}$ ), heat penetration into substrate increases due to high ED. For high ED, excessive localised vaporisation leading to high spattering is observed implying transition towards keyhole mode. Any further increase in ED implies unrestricted increase of depth due to eventual formation of keyhole. At lower laser power and higher scan speed (ED between $37.5 \mathrm{~J} / \mathrm{mm}^{3}$ and $100 \mathrm{~J} / \mathrm{mm}^{3}$ ) i.e. at low $\mathrm{ED}$ values, it is observed that the tracks are irregular and show a tendency for balling implying poor wetting with the substrate and improper penetration of laser energy into the substrate. This results in poor $R^{2}$ value with logarithmic fit for track depth as a function of ED. It is also observed
+
+Table 5
+
+ANOVA for effect of laser power and scan speed on track depth.
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+Source & \begin{tabular}{l}
+Degree of \\
+Freedom \\
+\end{tabular} & \begin{tabular}{l}
+Sum of \\
+Squares \\
+\end{tabular} & \begin{tabular}{l}
+Mean Sum of \\
+Squares \\
+\end{tabular} & F-value & P-value \\
+\hline
+Power & 3 & 84,927 & 28309.0 & 19.17 & 0.002 \\
+Scan speed & 2 & 41,555 & 20777.7 & 14.07 & 0.005 \\
+Error & 6 & 8860 & 1476.6 &  &  \\
+Total & 11 & 135,342 &  &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+that the combination of high laser power and high scan speed results in higher track depth values as compared to low laser power and low scan speed values. It can be reasoned that at low laser power and low scan speed, the diffusivity of incident laser energy is significantly reduced at higher powder layer thickness as the conductivity of metal in powder form can be 100 times lower than in bulk form [20].
+
+Further, ANOVA is conducted on track depth to find the significant contribution of laser power and scan speed. Table 5 presents the Degree of Freedom, Sum of Squares, Mean Sum of Squares, F-values and Pvalue obtained from ANOVA studies of track depth. It is seen that laser power has a dominating effect on track depth with a percentage contribution of $62.74 \%$ and $30.7 \%$ for laser power and scan speed, respectively. Changing laser power instantly changes the depth of the melt pool, while changing the scan speed causes slower spread of melt pool due to poor conductivity and hence poorer penetration. This leads to higher significance for laser power over scan speed.
+
+\subsection*{3.1.4. Track area}
+Track area (TA) is the area of the cross-section of the track above the substrate surface. Track area is the combined parameter of both track width and track height (vertical distance from substrate surface to top most point on the track). The track area provides information about the amount of material consolidated at a place due to laser scanning. The track area also provides compiled information of track width and track height i.e. track geometry. Thus, considering these added advantages track area is measured in the present study.
+
+Fig. 8 presents the variation of TA with ED. It is seen that the TA shows an increasing trend with ED. The Pearson's correlation coefficient between TA and ED and $\mathrm{P}$ value is 0.92 and 0 , respectively indicating a positive and strong correlation between TA and ED. This can be primarily due to melting of more amount of powder at higher values of ED. Higher ED increases the melting of powder adjacent to beam spot due to higher heat conduction. A higher ED also leads to low pressure region around the melt pool and subsequent convection currents pulling the nearby powder particles towards the melt pool. These powder particles are sucked by the melt pool through capillary action and contribute to the increase in volume and cross-section area of the track by denudation. This is just because the higher layer thickness yields
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_38cd4cb3d836d7daf3f5g-07}
+\end{center}
+
+Fig. 8. Variation of track area with ED.\\
+Table 6
+
+ANOVA for effect of laser power and scan speed on track area.
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+Source & \begin{tabular}{l}
+Degree of \\
+Freedom \\
+\end{tabular} & Sum of Squares & \begin{tabular}{l}
+Mean Sum of \\
+Squares \\
+\end{tabular} & F-value & P-value \\
+\hline
+Power & 3 & 0.0005269 & 0.0001756 & 12.81 & 0.005 \\
+Scan speed & 2 & 0.0006984 & 0.0003492 & 25.46 & 0.001 \\
+Error & 6 & 0.0000823 & 0.0000137 &  &  \\
+Total & 11 & 0.0013076 &  &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+poor heat dissipation due to lower thermal conductivity of powder in green density form. This makes the availability of higher laser energy and generates molten pool at higher temperature and lower viscosity. Low viscous molten metal along with density generates Marangoni flow and entrapment of neighbouring powder particles yielding larger TA. Further, it may be noted that the slope of TA with respect to ED decreases as ED value increases. This can be due to the fact that the track width is restricted as it approaches beam diameter, which in turn causes restriction in track area. The track area values for different ED are logarithmically fitted. It is observed that the regression model has mean and maximum difference of $7.61 \%$ and $11.89 \%$ respectively from the experimental data showing a good fit. The maximum and minimum difference in experimental and the regression model within the process window is $11.89 \%$ and $2.52 \%$ respectively.
+
+Further, ANOVA is conducted on track area to find the significant contribution of laser power and scan speed. Table 6 presents the Degree of Freedom, Sum of Squares, Mean Sum of Squares, F-values and Pvalue obtained from ANOVA studies of TA. It is seen that scan speed is the most significant factor affecting the TA. The percentage contribution of laser power and scan speed towards track cross section area are $40.29 \%$ and $53.41 \%$, respectively. It means that that laser-powder interaction time plays a vital role in consolidating amount of material at a place. The extent of interaction determines the material melted due to conduction and denudation effects. Thus, scan speed is significant than laser power, as scan speed directly relates to interaction time.
+
+Further, the build rate (BR) of the tracks are computed, which. BR is the volume of metal powder melted and consolidated by LPBF process per unit time. It determines the total time required for final component to be built by LPBF process. The BR is a function of cross section area and the scanning speed and presented in equation (4). The Pearson correlation factor between ED and BR is found to be -0.6 and P-value to be 0.039 . The greater significance of scan speed over laser power supports the negative correlation between BR and ED.
+
+$\mathrm{BR}=\mathrm{TA} \times \mathrm{v}_{\mathrm{s}}$
+
+Further, ANOVA is conducted on BR of tracks to find the significant contribution of laser power and scan speed. Table 7 presents the Degree of Freedom, Sum of Squares, Mean Sum of Squares, F-values and Pvalue obtained from ANOVA studies of track BR. It is seen that, both laser power and scan speed have significant effect on the BR with scan speed having more contribution. The percentage contribution of laser power and scan speed are $12.05 \%$ and $86.24 \%$, respectively i.e. scan speed has more effect on the BR as compared to laser power. The laser power positively influences the track width and the influence gets limited as the track width approaches beam diameter, while the scan speed positively influences rate of increase in track length without any
+
+Table 7
+
+ANOVA for effect of laser power and scan speed on BR.
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+Source & \begin{tabular}{l}
+Degree of \\
+Freedom \\
+\end{tabular} & \begin{tabular}{l}
+Sum of \\
+Squares \\
+\end{tabular} & \begin{tabular}{l}
+Mean Sum of \\
+Squares \\
+\end{tabular} & F-value & P-value \\
+\hline
+Power & 3 & 1.01965 & 0.33988 & 14.11 & 0.004 \\
+Scan speed & 2 & 7.29420 & 3.64710 & 151.44 & 0.000 \\
+Error & 6 & 0.14450 & 0.02408 &  &  \\
+Total & 11 & 8.45835 &  &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_38cd4cb3d836d7daf3f5g-08(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_38cd4cb3d836d7daf3f5g-08}
+\end{center}
+
+(b)
+
+Fig. 9. LPBF fabricated thin wall (a) typical cross-section (b) average geometrical profile.
+
+limiting factor for the chosen range of parameters. Hence, the scan speed shows greater significance over laser power.
+
+\subsection*{3.2. Wall structures}
+Thin wall structures in LPBF can be built by layer-wise addition of single tracks. Wall structures are built using the parameters presented in Table 3 by laying 40 layers one over the other. Fig. 9 presents the typical transverse cross section and geometrical profile of thin walls built using LPBF obtained by Laser 3D scanning.
+
+\subsection*{3.2.1. Wall width}
+Wall width is defined as the horizontal distance between two sides of the cross section of the wall. It is obtained by taking the average of three width measurements along the wall cross section at $1.5 \mathrm{~mm}$ (Meas. 1), $2.5 \mathrm{~mm}$ (Meas. 2) and $3.5 \mathrm{~mm}$ (Meas. 3) from the base as indicated in Fig. 9(b). Fig. 10(a) presents the variation of wall width with laser power at different scan speeds. It is observed that the wall width shows a positive relation with laser power and inverse relation with scan speed. Fig. 10(b) presents the variation of wall width with ED. It is observed that the wall width shows an increasing trend with ED. Pearson correlation of 0.965 is observed between ED and wall width with $\mathrm{P}$-value of 0 , indicating strong and positive correlation between track width and ED. The primary reason for increase in wall width with increase in laser power and decrease in scan speed is due to improved melting of metal powders at higher values of ED. Preheating from previous layers also contributes to the width of the layer being built. A higher ED results in higher preheat and hence, an incremental effect is seen on the wall width. The energy provided by moving laser spot and the energy from previous layers would contribute to higher temperature in melt pool. This positively affects the melting of adjacent powder melting due to heat conduction and denudation of adjacent powders. A higher temperature of melt pool due to higher ED also decreases viscosity and surface tension, therefore assisting sideways spread of the melt pool. Due to higher layer thickness heat dissipation is poor which contributes to Marangoni flow of the melt pool due to reduced viscosity and significant gravity effects. An increment in the wall width at a particular layer can also be due to outward melt pool flow due to partial remelting occurring when the subsequent layers is being built. It is observed that the wall width increases with ED significantly for low values of ED. But, further increase in ED value leads to reduction in the slope of wall width values mainly because of relatively reduced influence of the laser outside the beam diameter. A logarithmic fit is applied to the wall width values at different ED. The logarithmic regression model shows a good fit with mean difference between experimental and modelled values equal to $4.8 \%$ within the process window. The highest value of wall width is found for $112.5 \mathrm{~J} / \mathrm{mm}^{3}$ within the process window.
+
+ANOVA is conducted on wall width to find the significant contribution of laser power and scan speed. Table 8 presents the Degree of Freedom, Sum of Squares, Mean Sum of Squares, F-values and P-value obtained from ANOVA studies of wall width. It is seen that, both laser power and scan speed have significant effect on the wall width with scan speed having more contribution. The percentage contribution of laser power and scan speed are $37.12 \%$ and $61.37 \%$, respectively. This can be due to higher preheat energy leading to increase in thermal
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_38cd4cb3d836d7daf3f5g-08(3)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_38cd4cb3d836d7daf3f5g-08(2)}
+\end{center}
+
+(b)
+
+Fig. 10. Variation of wall width with (a) laser power at different scan speeds (b) ED.
+
+Table 8
+
+ANOVA studies on wall structures for effect of laser power and scan speed on wall width.
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+Source & \begin{tabular}{l}
+Degree of \\
+Freedom \\
+\end{tabular} & \begin{tabular}{l}
+Sum of \\
+Squares \\
+\end{tabular} & \begin{tabular}{l}
+Mean Sum of \\
+Squares \\
+\end{tabular} & F-value & P-value \\
+\hline
+Power & 3 & 0.125591 & 0.041864 & 49.79 & 0.000 \\
+Scan speed & 2 & 0.207623 & 0.103812 & 123.46 & 0.000 \\
+Error & 6 & 0.005025 & 0.000841 &  &  \\
+Total & 11 & 0.338260 &  &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_38cd4cb3d836d7daf3f5g-09}
+\end{center}
+
+Fig. 11. Variation of difference in wall and track widths with ED.
+
+conductivity of the metal powder and substrate. Because of higher conductivity, the laser beam-powder interaction time governed by scan speed has significant effect on the width of the melt pool while the influence of laser power over melt pool size is limited by beam diameter.
+
+\subsection*{3.2.2. Variation between track width and wall width}
+Fig. 11 shows the variation of the difference between wall width and track width with ED. It is observed that the difference in width is positive for all values of ED and it increases with increase in ED. The Pearson correlation coefficient between the difference in width and ED is 0.917 and $\mathrm{P}$-value is 0 , showing a strong and positive correlation between ED and difference in wall and track widths. It can be said that the greater width of wall as compared to track built at same ED values is majorly due to excess pre-heat available in previous layers that leads to spreading of melt pool and melting of excess material from the vicinity. The excess preheat increases the temperature of previous layers yielding lower thermal gradient and slower cooling rate. The difference between wall width and track width is observed to increase with ED. The reason can be attributed to increase in the preheating of lower layers at higher ED. Other factors that contribute to the increase in the width are increased denudation and increased melting due to heat conduction which are caused by the increase in energy available due to increased pre-heat energy. The values of difference between wall width and track width are linearly fit. It is also observed that for ED $\leq 150 \mathrm{~J} /$ $\mathrm{mm}^{3}$ the experimental values show very high fluctuation from the linear regression model in the range of $6 \%$ to $34 \%$. It is just because the preheating effect at these values is much lower yielding random and unstable melting and deposition of material. For ED $\geq 150 \mathrm{~J} / \mathrm{mm}^{3}$ a lower difference in linear regression model in the range of $2 \%-6 \%$ is observed. It is because the preheat effect in this case is sufficiently higher which impedes heat dissipation due to lower thermal gradient and causes uniform and reproducible material deposition. Further, highest value of difference between wall width and track width is found for $\mathrm{ED}$ values of $112.5 \mathrm{~J} / \mathrm{mm}^{3}$.
+
+\section*{4. Conclusions}
+In the present work, an indigenously designed and developed LPBF system is used to build SS316L single tracks and thin wall structures at a layer thickness of $100 \mu \mathrm{m}$. Full factorial experiments are performed by varying the laser power from $150 \mathrm{~W}$ to $450 \mathrm{~W}$ at four levels and scanning speed from $0.02 \mathrm{~m} / \mathrm{s}$ to $0.08 \mathrm{~m} / \mathrm{s}$ at three levels. Analytical and regression models are suggested to predict the track width, track depth and track area and to correlate the track geometry and LPBF parameters. The following conclusions can be derived:
+
+i. While LPBF of tracks it was experimentally found that stable tracks are obtained in the ED range of $87.5 \mathrm{~J} / \mathrm{mm}^{3}$ and $140 \mathrm{~J} / \mathrm{mm}^{3}$. Irregular tracks are formed for ED $<87.5 \mathrm{~J} / \mathrm{mm}^{3}$ because of poor wetting and non-uniform tracks are formed for ED $>140 \mathrm{~J} / \mathrm{mm}^{3}$ because of turbulence inside the melt pool leading to melt instabilities.
+
+ii. Track width shows positive correlation with laser power and negative correlation with scan speed and an overall positive correlation with energy density. The track width values less than beam diameter are primarily attributed to pure melting and the track width values greater than beam diameter are attributed to both pure melting and melting due to heat conduction. Laser power and scan speed show significant effect on track width though the significance of laser power is higher. An analytical model is developed to predict the track width and the model shows good prediction $(<5 \%)$ for experimental values with mean difference of $3.18 \%$ within the process window.
+
+iii. Track depth shows positive correlation with laser power and negative correlation with scan speed and positive correlation with energy density because the depth is positively affected by the extent of laser penetration and increase in melt pool size with dwell time. Both laser power and scan speed shows significant effect on track depth although significance of laser power is higher. The laser energy incident at a given spot gets distributed across the powder layer and the substrate following Beer-Lambert's law and therefore a logarithmic regression fit for track depth values at different ED show best fit within the process window with chisquare value 0.022 .
+
+iv. Track area shows positive correlation with laser power and negative correlation with scan speed and a positive correlation with energy density because energy density positively affects the degree of melting occurring at a particular spot that in turn positively affects the track area. Track area is observed to vary logarithmically with ED and the mean difference between the experimental and logarithmically fit model is $7.61 \%$ within the process window. Both laser power and scan speed shows significant effect on track area although the significance of scan speed is higher. Track area is used to calculate build rate. The build rate shows negative correlation with ED. Scan speed shows nearly 7 times more significance effect on the build rate.
+
+v. Wall width shows positive correlation with laser power and negative correlation with scan speed and a positive correlation with energy density because energy for melting at a particular layer is provided by both moving laser and preheat energy stored from previous layers which, positively affects the wall width. The wall width is observed to vary logarithmically with energy density with a mean difference of $4.8 \%$ within the process window. Both laser power and scan speed show significant effect on track width though the significance of scan speed is higher. Highest value of wall width is found to be at the value of $112.5 \mathrm{~J} / \mathrm{mm}^{3}$.
+
+vi. The wall width is greater than the corresponding track width and the difference between the wall width and track width shows positive trend with energy density which can be attributed to preheat energy stored in previously built layers that increase with energy density. The difference values are linearly fitted and observed to\\
+vary from $6 \%$ to $34 \%$ for energy density less than $150 \mathrm{~J} / \mathrm{mm}^{3}$ and from $2 \%$ to $6 \%$ for energy density greater than $150 \mathrm{~J} / \mathrm{mm}^{3}$. Highest value of difference between wall width and track width is found to be at the value of $112.5 \mathrm{~J} / \mathrm{mm}^{3}$.
+
+vii. The present study involving LPBF of wall at $100 \mu \mathrm{m}$ thickness shows that it is possible to achieve reproducible continuous deposition with the maximum variation in track width, track depth, track area and wall width are $2 \%, 7 \%, 4.5 \%$ and $4 \%$, respectively for the process window of $87.5-140 \mathrm{~J} / \mathrm{mm}^{3}$.
+
+viii. The study paves the way for LPBF of defect free thin walled engineering components with layer thickness of $100 \mu \mathrm{m}$. Material properties for these applications are being studied. Further, it is being planned to generate the process window for fabricating solid structures.
+
+\section*{Declaration of Competing Interest}
+None.
+
+\section*{Acknowledgement}
+S.K. Nayak and A.N. Jinoop acknowledge the financial support by Raja Ramanna Centre for Advanced Technology (RRCAT), Department of Atomic Energy, Government of India and Homi Bhabha National Institute, Mumbai. The authors thank Mr. C S Mandloi of LAM lab, RRCAT for their help during sample preparation. The authors thank the support of Mr. S. Raghavendra, Mr. Ganapati V. Kane and Mr. Anurag Chaturvedi of Proton Accelerator Group, RRCAT for providing Laser scanning facilities for 3D imaging of LPBF built thin wall samples. The authors thank Mr. S Yadav, Mr. A Sahu, Mr. K Dileep and other members of Laser Additive Manufacturing Lab at RRCAT, Indore, India.
+
+\section*{Appendix A. Supplementary material}
+Supplementary data to this article can be found online at https:// \href{http://doi.org/10.1016/j.optlastec.2019.106016}{doi.org/10.1016/j.optlastec.2019.106016}.
+
+\section*{References}
+[1] A.N. Jinoop, C.P. Paul, K.S. Bindra, Laser assisted direct energy deposition of Hastelloy-X, Opt. Laser Technol. 109 (2019) 14-19.
+
+[2] C.P. Paul, A.N. Jinoop, K.S. Bindra, Metal additive manufacturing using lasers, in: R. Singh, J.P. Davim (First Eds.), Additive Manufacturing : applications and innovations, CRC Press, Boca Raton, 2018, pp. 37--88.
+
+[3] A. Kumar, C.P. Paul, A.K. Pathak, P. Bhargava, L.M. Kukreja, Optics \& Laser Technology A finer modeling approach for numerically predicting single track geometry in two dimensions during Laser Rapid Manufacturing, Opt. Laser Technol. 44 (2012) 555-565.
+
+[4] C. Bruna-rosso, A.G. Demir, B. Previtali, Selective laser melting finite element modeling: validation with high-speed imaging and lack of fusion defects prediction, Mater. Des. 156 (2018) 143-153.
+
+[5] J. Zhuang, Y. Lee, W. Hsieh, A. Yang, Determination of melt pool dimensions using DOE-FEM and RSM with process window during SLM of Ti6Al4V powder, Opt. Laser Technol. 103 (2018) 59-76.
+
+[6] Z. Yan, W. Liu, Z. Tang, X. Liu, N. Zhang, M. Li, Review on thermal analysis in laserbased additive manufacturing, Opt. Laser Technol. 106 (2018) 427-441.\\
+[7] A.M. Vilardell, G. Fredriksson, I. Yadroitsev, P. Krakhmalev, T. Eli, Fracture mechanisms in the as-built and stress-relieved laser powder bed fusion Ti6Al4V ELI alloy, Opt. Laser Technol. 109 (2019) 608-615.
+
+[8] J. Ning, D.E. Sievers, H. Garmestani, S.Y. Liang, Analytical modeling of in-process temperature in scanning strategy and powder packing, Materials 5 (2019) 1-16.
+
+[9] F. Verhaeghe, T. Craeghs, J. Heulens, L. Pandelaers, A pragmatic model for selective laser melting with evaporation, Acta Mater. 57 (2009) 6006-6012.
+
+[10] Q. Chen, G. Guillemot, C. Gandin, M. Bellet, Three-dimensional finite element thermomechanical modeling of additive manufacturing by selective laser melting for ceramic materials, Addit. Manuf. 16 (2017) 124-137.
+
+[11] Y.M. Arisoy, L.E. Criales, Modeling and simulation of thermal field and solidification in laser powder bed fusion of nickel alloy IN625, Opt. Laser Technol. 109 (2019) 278-292.
+
+[12] E.J. Schwalbach, S.P. Donegan, M.G. Chapman, K.J. Chaput, M.A. Groeber, A discrete source model of powder bed fusion additive manufacturing thermal history, Addit. Manuf. 25 (2019) 485-498.
+
+[13] A. Keshavarzkermani, et al., An investigation into the effect of process parameters on melt pool geometry, cell spacing, and grain refinement during laser powder bed fusion, Opt. Laser Technol. 116 (2019) 83-91.
+
+[14] M. Guo, D. Gu, L. Xi, L. Du, H. Zhang, J. Zhang, Formation of scanning tracks during Selective Laser Melting (SLM) of pure tungsten powder : morphology, geometric features and forming mechanisms, Int. J. Refract. Metals Hard Mater. 79 (2019) 37-46.
+
+[15] I. Yadroitsev, I. Smurov, Selective laser melting technology: from the single laser melted track stability to 3D parts of complex shape, Phys. Procedia. 5 (2010) 551-560.
+
+[16] F. Calignano, G. Cattano, D. Manfredi, Manufacturing of thin wall structures in AlSi10Mg alloy by laser powder bed fusion through process parameters, J. Mater. Process. Tech. 255 (2018) 773-783.
+
+[17] K. Lin, L. Yuan, D. Gu, Influence of laser parameters and complex structural features on the bio-inspired complex thin-wall structures fabricated by selective laser melting, J. Mater. Process. Tech. 267 (2019) 34-43.
+
+[18] C. Li, Y. Guo, X. Fang, F. Fang, CIRP Annals - Manufacturing Technology A scalable predictive model and validation for residual stress and distortion in selective laser melting, CIRP Ann. - Manuf. Technol. 67 (2018) 249-252.
+
+[19] H. Schleifenbaum, A. Diatlov, C. Hinke, Direct photonic production: towards high speed additive manufacturing of individualized goods, Prod. Eng. Res. Devel. 5 (2011) 359-371.
+
+[20] A.V. Gusarov, I. Smurov, Modeling the interaction of laser radiation with powder bed at selective laser melting, Physics Procedia. 5 (2010) 381-394.
+
+[21] Stainless Steel - Grade 316L - Properties, Fabrication and Applications (UNS S31603). < \href{https://www.azom.com/article.aspx?ArticleID}{https://www.azom.com/article.aspx?ArticleID} = $2382>$ (accessed 02 August 2019).
+
+[22] W.E. King, et al., Observation of keyhole-mode laser melting in laser powder-bed fusion additive manufacturing, J. Mater. Process. Tech. 214 (2014) 2915-2925.
+
+[23] Stainless Steel - Grade 316 (UNS S31600). < \href{https://www.azom.com/properties}{https://www.azom.com/properties}. aspx?ArticleID = $863>$, 2019 (accessed 2 August 2019).
+
+[24] J. Chipman, Thermodynamics and phase diagram of the Fe-C system, Metall. Mater. Trans. B. 3 (1972) 55-56.
+
+[25] Laser Rapid Manufacturing: Technology, Applications, Modeling and Future Prospects, in: J.P. Davim (First Eds.), Lasers in Manufacturing, John Wiley \& Sons, Inc., Hoboken, 2012, pp. 1-60.
+
+[26] W.E. King, et al., Laser powder bed fusion additive manufacturing of metals; physics, computational, and materials challenges, Appl. Phys. Rev. 2 (2015) $041304-$ 1-041304-26.
+
+[27] M.J. Matthews, G. Guss, S.A. Khairallah, A.M. Rubenchik, P.J. Depond, W.E. King, Denudation of metal powder layers in laser powder bed fusion processes, Acta Mater. 114 (2016) 33-42.
+
+[28] Y. Saadlaoui, É. Feulvarch, A. Delache, J. Leblond, J. Bergheau, A new strategy for the numerical modeling of a weld pool, Comptes Rendus Mec. 346 (2018) 999-1017.
+
+[29] P. Mishra, et al., Energy efficiency contributions and losses during selective laser melting, J. Laser Appl. 30 (2018) 032304-1-032304-9.
+
+[30] A.V. Gusarov, I. Yadroitsev, P. Bertrand, I. Smurov, Model of radiation and heat transfer in laser-powder interaction zone at selective laser melting, J. Heat Transf. 131 (2014) 1-10
+
+[31] H.W.T. Bode, C.W.P. Wriggers, Investigation of heat source modeling for selective laser melting, Comput. Mech. 63 (2018) 949-970.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

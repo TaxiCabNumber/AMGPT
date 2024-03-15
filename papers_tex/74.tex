@@ -1,0 +1,484 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Additive manufacturing of dense WE43 Mg alloy by laser powder bed fusion }
+
+
+\author{Holden Hyer ${ }^{\mathrm{a}}$, Le Zhou ${ }^{\mathrm{a}, \mathrm{b}, *}$, George Benson ${ }^{\mathrm{a}}$, Brandon McWilliams ${ }^{\mathrm{c}}$, Kyu Cho ${ }^{\mathrm{c}}$, Yongho Sohn ${ }^{\mathrm{a}, \mathrm{b}, *}$\\
+a Department of Materials Science and Engineering, University of Central Florida, Orlando, FL, 32816, USA\\
+${ }^{\mathrm{b}}$ Advanced Materials Processing and Analysis Center, University of Central Florida, Orlando, FL, 32816, USA\\
+${ }^{\mathrm{c}}$ Weapons and Materials Research Directorate, U.S. Army Research Laboratory, Aberdeen Proving Ground, MD 21005, USA}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\def\AA{\mathring{\mathrm{A}}}
+
+\begin{document}
+\maketitle
+Full Length Article
+
+
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+WE43
+
+Mg alloy
+
+Laser powder bed fusion
+
+Additive manufacturing
+
+\begin{abstract}
+A B S T R A C T WE43 is a high-strength, corrosion-resistant Mg-alloy containing rare earths such as Y and Nb, and has potential for many lightweight structural or bioresorbable prosthetic applications. In this study, additive manufacturing of dense WE43 alloy by laser powder bed fusion (LPBF) from gas atomized powders has been accomplished through studies involving single track scan of wrought WE43, parametric variation of LPBF, microstructural analysis and mechanical testing, both in compression and tension. The Archimedes method and image analyses from optical micrographs were employed to document the LPBF of dense ( $>99 \%$ relative density) WE43 using optimum parameters of $200 \mathrm{~W}$ laser power, $1100 \mathrm{~mm} / \mathrm{sec}$ scan speed, $0.13 \mathrm{~mm}$ hatch spacing, and $0.03 \mathrm{~mm}$ slice thickness. Moreover, the LPBF processing window for dense ( $>99 \%$ ) WE43 alloy was observed to exist for a range of power, $100 \sim 250 \mathrm{~W}$, using an energy density range of $32-37 \mathrm{~J} / \mathrm{mm}^{3}$. The as-built microstructure consisted of fine $(<10 \mu \mathrm{m}) \alpha-\mathrm{Mg}$ (hcp) grains with globular $\beta_{1}-\mathrm{Mg}_{3} \mathrm{Nd}$ precipitates and $(\mathrm{Y}, \mathrm{Zr})_{2} \mathrm{O}_{3}$ oxides. After the heat treatment, which consisted of solutionizing at $536{ }^{\circ} \mathrm{C}$ for $24 \mathrm{~h}$ and subsequent ageing at $205^{\circ} \mathrm{C}$ for $48 \mathrm{~h}$, the globular $\beta_{1}-\mathrm{Mg}_{3} \mathrm{Nd}$ precipitates were observed to have dissolved and re-precipitate into thin sheets. The $(\mathrm{Y}, \mathrm{Zr})_{2} \mathrm{O}_{3}$ oxides were not found to dissolve or coalesce, but were agglomerated within $\alpha$ - $\mathrm{Mg}$ (hcp) matrix. Under compression, the as-built LPBF WE43 had, on average, yield strength of $224 \mathrm{MPa}$, compressive strength of $417 \mathrm{MPa}$ and strain at failure of $9.5 \%$. In tension, the as-built LPBF WE43 had, on average, yield strength of $215 \mathrm{MPa}$, tensile strength of $251 \mathrm{MPa}$ and strain at failure of $2.6 \%$. After the heat treatment, the LPBF WE43 had yield strength of $219 \mathrm{MPa}$, tensile strength of $251 \mathrm{MPa}$ and strain at failure of $4.3 \%$. These values are comparable to those of WE43 design data specified by Magnesium Elektron.
+\end{abstract}
+
+\section*{1. Introduction}
+Mg-alloys warrants interests in automotive, aerospace and biomedical applications because of its attractive properties such as strengthto-weight ratio, corrosion resistance, creep resistance, and bioresorbability (i.e., controlled corrosion and biocompatibility). Mg alloyed with rare earths such as $\mathrm{Y}, \mathrm{Nd}, \mathrm{Sc}, \mathrm{Yb}$ are known as the high strength ( $>160 \mathrm{MPa}$ tensile strength), high creep resistant alloys [1,2]. WE43 is a high strength ( $\sigma_{\mathrm{y}}=172 \mathrm{MPa}$ [3]) Mg-alloy with good creep resistance $[1,2]$ containing up to $4.3 \mathrm{wt} . \%$ yttrium ( $\mathrm{Y}$ ) and other rare earth elements such as Nd and Gd, up to $4.8 \mathrm{wt} . \%$ [3]. WE43 has been used in structural components for helicopters and automobiles as frames, gear boxes, casings, etc. [2,4,5]. Recently, it has been also considered for lightweight armors and protective helmets [4]. With increasing interests, WE43 has been also considered for bioresorbable prosthetic implants [6,7], because the high oxygen affinity of the rare earths can be utilized to control the corrosion behavior of the $\mathrm{Mg}$-alloy, i.e., dissolution rate, passivation mechanism, etc. [6,7].
+
+Casting Mg-alloys demands technical attention due to $\mathrm{Mg}$ reactivity with $\mathrm{O}_{2}$, high flammability, and high vaporization pressure [8,9]. In addition, thermo-mechanical processing of $\mathrm{Mg}$-alloy remains challenging due to anisotropic hexagonal-closed-packed (hcp) crystal structure of $\mathrm{Mg}[10,11]$. Therefore, working of Mg-alloys is typically done at elevated temperatures and under an inert atmosphere, which increases the resources and time required for manufacturing of $\mathrm{Mg}$-alloys. To that end, additive manufacturing (AM), which can produce dense, complex shapes, could be an efficient route to manufacture Mg-alloy component.
+
+Powder bed fusion (PBF) is an AM technology in which selected regions of a powder bed are melted, by either a laser or an electron beam, to build a component layer by layer [12-16]. Laser powder bed fusion (LPBF) has become popular in recent years as complex parts can be generated by computer aided design (CAD) and can be rapidly manufactured (e.g., $\sim 25 \mathrm{~cm}^{3}$ per hour for single laser unit) [17]. Moreover, alloys with high vapor pressures such as $\mathrm{Al}$ and $\mathrm{Mg}$ can be
+\footnotetext{*Corresponding authors at: Department of Materials Science and Engineering, University of Central Florida, Orlando, FL, 32816, USA.
+
+E-mail addresses: \href{mailto:le.zhou@ucf.edu}{le.zhou@ucf.edu} (L. Zhou), \href{mailto:yongho.sohn@ucf.edu}{yongho.sohn@ucf.edu} (Y. Sohn).
+}
+built with LPBF as the melting is local and performed in an inert atmosphere (i.e., does not require vacuum). However, many commercial alloys such as high strength $\mathrm{Al}$ alloy, e.g., AA7075, and high strength Ni based superalloy, e.g., CM247, cannot be built without large pores and/ or solidification cracks $[16,18,19]$. Therefore, there is a need to explore the processing behavior of existing commercial alloys, and to identify those that are suitable for LPBF.
+
+Typically, in LPBF, there are four main, independent processing parameters: laser power $(\mathrm{W})$, the laser scan speed $(\mathrm{mm} / \mathrm{sec})$, the hatch spacing (distance between consecutive laser scans, $\mathrm{mm}$ ), and the powder bed layer thickness, commonly referred to as slice thickness (mm). These four parameters can be normalized with a term known as energy density $[12,15,16]$ :
+
+
+\begin{equation*}
+\text { EnergyDensity }=\frac{\text { LaserPower }}{\text { ScanSpeed } * \text { HatchSpacing } * \text { SliceThickness }} \tag{1}
+\end{equation*}
+
+
+Processing maps through optimization strategy for various metallic alloys can be determined by varying the four aforementioned parameters, frequently as a function of normalized value of energy density, until the right combination is identified where pores and/or solidification cracks are minimized, i.e., full density with structural integrity.
+
+$\mathrm{AM}$ investigation on $\mathrm{Mg}$ and its alloys is scarce compared to that of Al- or Fe-alloys, but there exist various studies on a few different Mgalloys processed by different AM technologies [20-34]. Table 1 lists key parameters and results from LPBF studies of Mg-alloys. $\mathrm{Ng}$ et al. $[20,24,25]$ studied the interaction between pure Mg powder and single track laser scan, however, without printing any 3-D samples and/or components. Zhang et al. [32] examined LPBF build of a Mg - $9 \mathrm{wt} \% \mathrm{Al}$ (similar to $\mathrm{Mg}$ alloy, AZ91 which is composed of ( $\mathrm{Mg}-9 \mathrm{wt} . \% \mathrm{Al}-1 \mathrm{wt}$. $\% \mathrm{Zn})$ ) as functions of LPBF parameters, and reported build up to $82 \%$ relative density.
+
+Wei et al. [29] also examined LPBF processing window for AZ91 and AZ31 ( $\mathrm{Mg}-3$ wt.\% Al - 1 wt.\% Zn), as well as for ZK60 (Mg - 5.2 wt.\% $\mathrm{Zn}-0.5 \mathrm{wt} \% \mathrm{Zr}$ ) [30] with detailed analyses of evaporation and microstructure. For AZ91 (Mg-9 wt\%Al-1 wt\%Zn) and AZ31 (Mg-3 wt\%Al$1 \mathrm{wt} \% \mathrm{Zn})$ alloys, energy density higher than $214 \mathrm{~J} / \mathrm{mm}^{3}$ yielded too much evaporation and excessive porosity, whereas that below $77 \mathrm{~J} /$ $\mathrm{mm}^{3}$ lead to excessive balling of the melt. The best parameters were found at an energy density of $166.7 \mathrm{~J} / \mathrm{mm}^{3}$, which had a corresponding laser power, scan speed, hatch spacing, and slice thickness of $200 \mathrm{~W}$, $333.33 \mathrm{~mm} / \mathrm{sec}, 0.09 \mathrm{~mm}$, and $0.04 \mathrm{~mm}$, respectively. For ZK60 alloy, the best processing parameters were identified at an energy density of $416.66 \mathrm{~J} / \mathrm{mm}^{3}$, which had a corresponding laser power, scan speed, hatching spacing, and slice thickness of $200 \mathrm{~W}, 300 \mathrm{~mm} / \mathrm{sec}, 0.08 \mathrm{~mm}$, and $0.02 \mathrm{~mm}$, respectively. Wei et al. [29] reported microhardness of these alloys comparable to traditionally manufactured Mg-alloys.
+
+Recently, Jauer et al. [22] examined the feasibility of AZ91 and WE43 and reported that a set of optimum parameters (200 W laser power, $700 \mathrm{~mm} / \mathrm{sec}$ scan speed, $0.04 \mathrm{~mm}$ hatch spacing, and $0.03 \mathrm{~mm}$ slice thickness, corresponding to an energy density of $40.7 \mathrm{~J} / \mathrm{mm}^{3}$ ) produced a $99 \%$ dense part with a tensile strength of $\sim 300 \mathrm{MPa}$. The microstructure was investigated recently, which showed that there were possible $\mathrm{Mg}_{3} \mathrm{Gd}$ phases that could not be fully identified [34]. Given that the $\mathrm{Mg}_{3} \mathrm{Gd}$ phase is typically observed in conventionally produced WE43 alloy, the mechanism responsible for the extraordinary tensile strength of $300 \mathrm{MPa}$ still remains unclear. Gangireddy et al. [21] also released a recent study on LPBF of WE43 that reported optimum parameters of laser power, scan speed, hatch spacing, and slice thickness of $195 \mathrm{~W}, 800 \mathrm{~mm} / \mathrm{sec}, 0.2 \mathrm{~mm}$, and $0.03 \mathrm{~mm}$, respectively, corresponding to an energy density of $238.1 \mathrm{~J} / \mathrm{mm}^{3}$. These parameters, however, did not correspond to LPBF of fully dense WE43 alloy in their study. They reported the formation of Nd rich precipitates in the microstructure, but could not fully identify the phases formed. In addition, neither Jauer et al. [22] nor Gangireddy et al. [21] reported a systematic approach or results to understand the occurrence of pores and/ or solidification cracking as functions of LPBF. Moreover, neither study gave a detailed microstructural assessment as functions of LPBF for WE43, nor gave repeatable tensile and compressive properties of LPBF WE43.
+
+Therefore, a systematic study for LPBF of WE43 was carried out, first by exploring the laser-WE43 interaction through single track scan study, and then by examining the development of solidification microstructure of LPBF WE43 samples as functions of LPBF parameters. Using the optimum parameters identified, mechanical behavior of LPBF WE43, before and after the heat treatment, was assessed to determine its strength and ductility, both in compression and tension. Finally, comprehensive microstructural analyses, including a detailed constituent phase analysis by transmission electron microscopy, were carried out to gain insights into LPBF solidification and mechanical behavior of LPBF WE43. Findings from this study would help establish AM capability for the existing WE43 alloy composition, and for newly designed Mg-alloys specific for AM technology such as LPBF.
+
+\section*{2. Experimental details}
+\subsection*{2.1. Single track scan}
+To assess the processability of WE43 by LPBF, a feasibility study was performed with single track scan (STS) on wrought WE43 samples. A chill cast and cold rolled WE43 alloy was used for this study. Samples $25 \mathrm{~mm} \times 12 \mathrm{~mm} \times 12 \mathrm{~mm}$ in geometry were prepared by grinding with $\mathrm{SiC}$, polishing with diamond paste, and finishing with $0.05 \mu \mathrm{m}$ colloidal silica. Samples were then leveled with the build chamber floor so that the polished surface lay in the focus range of the laser. The sample was then laser scanned using a SLM $125 \mathrm{HL}$ LPBF system equipped with a continuous $\mathrm{Yb}$ fiber laser with a spot size of approximately $70 \mu \mathrm{m}$ and a
+
+Table 1
+
+Processing parameters of LPBF examined for Mg alloys in literature.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Alloy & Laser Power (W) & Scan Speed $(\mathrm{mm} / \mathrm{sec})$ & Hatch Spacing (mm) & Slice Thickness (mm) & Energy Density $\left(\mathrm{J} / \mathrm{mm}^{3}\right)$ & Reference \\
+\hline
+Pure Mg & None reported &  &  &  &  & $\mathrm{Ng}$ et al. [20,24,25] \\
+\hline
+Mg-9 wt.\% Al & $10-20$ & $10-40$ & 0.05 & 0.08 & $93.75-250$ & Zhang et al. [32] \\
+\hline
+AZ31, AZ91 & 200 & 333.3 & 0.09 & 0.04 & 167 & Wei et al. [29] \\
+\hline
+ZK60 & 200 & 300 & 0.08 & 0.02 & 416 & Wei et al. [30] \\
+\hline
+Mg-0, 1, 3, 5, 7 wt.\% Sn & 60 & 11.16 & Not reported & 0.05 & Not reported & Zhou et al. [33] \\
+\hline
+AZ91 & 90 & 700 & 0.03 & 0.035 & 122 & Schmid et al. [26] \\
+\hline
+AZ91 and WE43 & 100,200 & 800,700 & 0.03 & 0.04 & 104.16, 238.1 & Jauer et al. [22] \\
+\hline
+Mg-4Y-3Zr & $20-100$ & $200-10000$ & $0.015-0.12$ & 0.05 &  & Tandon et al. [28] \\
+\hline
+Mg-0, 1, 2, 3 wt.\% Mn & None reported &  &  &  &  & Yang et al. [31] \\
+\hline
+ZK60 & 50 & 600 & 0.1 & 0.1 & 8.33 & Shaui et al. [27] \\
+\hline
+Mg-3 wt.\% Zn-0, 1, 3, 5 wt.\% Dy & 60 & 3.33 & Not reported & 0.05 & Not reported & Long et al. [23] \\
+\hline
+WE43 & 195 & 800 & 0.2 & 0.03 & 40.7 & Gangireddy et al. [21] \\
+\hline
+WE43 & 200 & 700 & 0.04 & 0.03 & 238.1 & Zumdick et al. [34] \\
+\hline
+WE43 & 200 & 1100 & 0.13 & 0.04 & 35 & This Study \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 2
+
+Processing parameters examined and melt pool width and depth determined from single track scan investigation of WE43 using laser powder bed fusion.
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+\begin{tabular}{l}
+Speed \\
+$(\mathrm{mm} / \mathrm{sec})$ \\
+\end{tabular} & Power $(\mathrm{W})$ & Depth $(\mu \mathrm{m})$ & Width $(\mu \mathrm{m})$ & \begin{tabular}{l}
+Depth-to- \\
+width \\
+Ratio \\
+\end{tabular} & \begin{tabular}{l}
+Linear Energy \\
+Density $(\mathrm{J} /$ \\
+$\mathrm{mm})$ \\
+\end{tabular} \\
+\hline
+50 & 50 & 38.1 & 87.6 & 0.44 & 1.000 \\
+50 & 75 & 346.3 & 206.7 & 1.68 & 1.500 \\
+50 & 100 & 620.9 & 354.1 & 1.75 & 2.000 \\
+50 & 125 & 919.9 & 387.8 & 2.37 & 2.500 \\
+200 & 50 & 30.7 & 91.5 & 0.34 & 0.250 \\
+200 & 75 & 227.4 & 232.1 & 0.98 & 0.375 \\
+200 & 100 & 409.6 & 246.7 & 1.66 & 0.500 \\
+200 & 125 & 575.5 & 278.3 & 2.07 & 0.625 \\
+800 & 50 & 13.2 & 53.4 & 0.25 & 0.063 \\
+800 & 100 & 140.1 & 165.1 & 0.85 & 0.125 \\
+800 & 150 & 216.5 & 206.6 & 1.05 & 0.188 \\
+800 & 200 & 326.1 & 169.8 & 1.92 & 0.250 \\
+\hline
+\end{tabular}
+\end{center}
+
+wavelength of $1070 \mathrm{~nm}$. Processing parameters examined during the STS are reported in Table 2. After STS, the samples were cross-sectioned, polished down to $0.05 \mu \mathrm{m}$, and etched with $1.0 \mathrm{vol}$. \% picric acid in distilled water for approximately $20 \mathrm{~s}$ for microstructural analysis.
+
+\subsection*{2.2. Powder characterization}
+WE43 powders were acquired from Magnesium-Elektron with a size distribution of $20 \sim 63 \mu \mathrm{m}$. The powder size distribution was refined by sieving the powders with finer mesh down to $4 \sim 40 \mu \mathrm{m}$ distribution in order to remove as many of the asymmetric powders as possible. Powder sampling was performed in accordance with ASTM B215 for sampling packaged powders. Powder particle morphology was analyzed with the FE-SEM, and the particle size distribution was determined by laser diffraction analyzer (Beckman Coulter LSTM 13 320).
+
+\subsection*{2.3. Laser powder bed fusion parametric study}
+STS provided insight into the development of melt pool, e.g., high power produced deep penetration and porosity, while low power produced smaller melt pools than the powder layer thickness. Based on results from STS investigation, the laser power for LPBF examined in this study ranged from 100 to $250 \mathrm{~W}$, while the scan speed was varied for each power as reported in Table 3. A hatch spacing of $0.13 \mathrm{~mm}$ was chosen as a constant to compensate for smaller melt pools and to reduce the impact of hatch spacing on the processing condition. WE43 has a high thermal conductivity ( $\sim 51 \mathrm{~W} / \mathrm{mK}[3,35]$ ), so a slice thicknesses $0.04 \mathrm{~mm}$ was chosen as a compromise as to reduce the impact of slice thickness on the processing condition. A $67^{\circ}$ scan rotation with a $10 \mathrm{~mm}$ striping pattern was employed to minimize texturing, if any, of the grains.
+
+Using the LPBF parameters listed in Table 3, cubic samples with dimensions of $12 \mathrm{~mm} \times 12 \mathrm{~mm} \times 12 \mathrm{~mm}$ were built by SLM $125 \mathrm{HL}$. The cubes were built onto an AZ31 build plate for minimum thermal mismatch and good thermal conduction. Preheating of the build plate was set at $100^{\circ} \mathrm{C}$. The build was performed in an inert Ar atmosphere with an $\mathrm{O}_{2}$ content lower than $0.1 \%$. After the samples were removed from the build plate, relative density of each sample was measured via Archimedes method (in accordance with ASTM B962) 3 times by different ndividuals. The theoretical density used for the determination of reative density was $1.84 \mathrm{~g} / \mathrm{cm}^{3}$. Then, the samples were cross-sectioned and polished down to $0.05 \mu \mathrm{m}$ for optical microscopy. Percentage of flaws (e.g., porosity) was determined by image analyses of optical mirographs using ImageJ (National Institute of Health) for each of the ubic sample. At least 6 randomly selected locations at a magnification f $50 \mathrm{X}$ were analyzed for quantitative determination of porosity conent. The samples were then etched with 1.0 vol.\% picric acid in dislled water for approximately $20 \mathrm{~s}$ for microstructural analysis.
+
+\subsection*{2.4. Heat treatment and mechanical testing}
+From the parametric study described above, an optimum set of LPBF parameter, defined by the highest relative density and the lowest porosity, was found using a laser power of $200 \mathrm{~W}$ at a scan speed of $1100 \mathrm{~mm} / \mathrm{sec}$ while the hatch spacing of $0.13 \mathrm{~mm}$ and the slice thickness of $0.04 \mathrm{~mm}$ were held constant. Several samples for the assessment of mechanical behavior were built using the above parameters with $0^{\circ}$ tilt. In addition, subsequent $\mathrm{T} 6$ heat treatment, optimized by Jahedi et al. [10] for WE43, was employed, in which, the samples were solution heat treated (SHT) at $536{ }^{\circ} \mathrm{C}$ for $24 \mathrm{~h}$, and subsequently aged at $205^{\circ} \mathrm{C}$ for $48 \mathrm{~h}$. The sample that was SHT and aged is hereafter denoted as fully heat treated (FHT). During the heat treatment, the samples were encased in a quartz tube under an inert Ar atmosphere that was backfilled after a $10^{-6}$ torr vacuum.
+
+For the assessment of mechanical behavior, both compression and tension testings were carried out. As shown by schematics in Fig. 1, cylindrical rods, $12 \mathrm{~mm}$ in diameter and $12 \mathrm{~mm}$ in height, were built by LPBF for compression testing, while the traditional dog-bone specimens with a gauge length of $25 \mathrm{~mm}$ were built for tensile testing according to ASTM E8M-3856. For consistency, 3 compressive specimens in as-built condition, and 3 tensile specimens in as-built and 3 in FHT conditions were tested using an MTS ${ }^{\mathrm{TM}}$ instrument. A quasi-static strain rate of $2 \times 10^{-4} / \mathrm{s}$ was employed, and the strain deformation was measured and recorded by a digital image correlation (DIC) camera positioned perpendicular to the loading direction. All samples were lightly ground with 1200 grit SiC paper so that optical measurement in tension and compression can be carried out by using DIC. Changes in sample dimension due to grinding were negligible, all less than $0.1 \mathrm{~mm}$ from those reported in Fig. 1. Care was taken to ensure the gauge length of $25 \mathrm{~mm}$ specified by ASTM E8M-3856. The DIC yielded the strain in tension, and failure in tension occurred within the gauge section for all samples. The DIC system consisted of a Tokina AT-X Pro macro $100 \mathrm{~mm}-\mathrm{f} / 2.8-\mathrm{d}$ lens with a resolution of $2448 \times 2048$ and VIC-2D 2009 software by Correlated Solutions, Inc. The capture frequency was $1 \mathrm{~Hz}$.
+
+\subsection*{2.5. Microstructural characterization}
+Microstructural features of starting powders, STS bulk samples, and the as-built, SHT, FHT samples were examined by a variety of characterization techniques including optical microscopy (OM), X-ray diffraction (XRD), field emission scanning electron microscopy (SEM) equipped with X-ray energy dispersive spectroscopy (XEDS), and
+
+Table 3
+
+Processing parameters examined during LPBF optimization study for WE43.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Power (W) & Scan Speed $(\mathrm{mm} / \mathrm{sec})$ & Hatch Spacing (mm) & Slice Thickness (mm) \\
+\hline
+100 & $100,200,300,400,500,600,700,800,900,1000$ & 0.13 & 0.04 \\
+\hline
+150 & $200,400,600,800,900,1000,1100,1200,1400,1600$ & 0.13 & 0.04 \\
+\hline
+200 & $400,600,800,1000,1100,1200,1300,1400,1600$ & 0.13 & 0.04 \\
+\hline
+250 & $800,1000,1100,1200,1300,1400,1600$ & 0.13 & 0.04 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_23039e81728c252f41ddg-04}
+\end{center}
+
+Fig. 1. WE43 alloy sample produced by LPBF for the assessment of mechanical behavior under (a) compression and (b) tension. All units are in mm.
+
+transmission electron microscopy (TEM) equipped with XEDS and high angle annular dark field (HAADF) through scanning TEM (STEM). Nikon Metaphot optical microscope was employed to acquire optical micrographs that were used to determine the porosity content and melt pool dimension. Quantitative microscopy was carried out using ImageJ (National Institutes of Health). Constituent phase analyses were carried out for starting powders and LPBF samples, before and after the heat treatment using Panalytical Empyrean X-ray diffractometer set up with $\mathrm{Cu} \mathrm{K}_{\alpha}$ radiation operating at $45 \mathrm{kV}$ and $40 \mathrm{~mA}$. The $\theta-2 \theta \mathrm{XRD}$ scan was performed from $15-90^{\circ}$ with a $0.008^{\circ}$ step size and acquisition time of $0.4 \mathrm{~s}$ per step. A Zeiss Ultra-55 FE-SEM was used for microstructural analyses of starting powders, STS bulk samples, and the as-built, SHT, FHT samples. An accelerating voltage of $25 \mathrm{kV}$ was employed for yield $\mathrm{K}_{\alpha}$ radiation of $\mathrm{Mg}, \mathrm{Y}$, and $\mathrm{Zr}$, as well as $\mathrm{L}_{\alpha}$ radiation of $\mathrm{Nd}$ and $\mathrm{Gd}$, which were used for compositional analyses by XEDS. The Si-Drift XEDS detector employed was Thermo-Fisher-Noran System 7, coupled with Thermo Scientific NSS Version 3 analytical software. Detailed analyses for phase constituents and microstructure were carried out by using FEI/ Tecnai ${ }^{\text {TM }}$ F30 TEM operating with an accelerating voltage of $300 \mathrm{kV}$. Bright-field, dark-field, and selected area electron diffraction (SAED) along with HAADF-STEM and XEDS were utilized. In-situ liftout (INLO) technique was employed to obtain site-specific TEM thin foils by using a FEI TEM200 Focused Ion Beam (FIB).
+
+\section*{3. Results}
+\subsection*{3.1. Single track scan}
+Fig. 2 presents selected optical micrographs of the melt pools observed from the STS study using the bulk sample of wrought WE43. The depth and width of the melt pool from the STS were measured as indicated in Fig. 2(c), and depth-to-width ratio was determined as reported in Table 2 as functions of processing parameters. As presented in Figs. 3(a) and 3(b), at constant scanning speed, 50, 200 or $800 \mathrm{~mm} / \mathrm{sec}$, an increase in laser power increased the depth and width, respectively, of the melt pool. Within the LPBF parameters examined, the depth varied linearly with power, while the width varied parabolically with power. The same measurements of the melt pool depth and width as a function of linear energy density (i.e., defined without slice thickness and hatch spacing) is presented in Figs. 3(c) and (d), respectively. At constant power, an increase in scanning speed decreased the depth and width of the melt pool as shown in Figs. 4(a) and (b), respectively. Correspondingly, an increase in energy density increased the depth and width of the melt pool as shown in Figs. 4(c) and 4(d), respectively. Variation of depth and width appear to be non-linear as a function of scan speed (or linear energy density) at constant power. Utilizing a combination of higher laser power and faster scan speed gave a more dramatic change in melt pool depth. Fig. 5 presents the depth-to-width ratio plotted against linear energy density, and demonstrates that a wide range of linear energy density can be employed to produce same depth-to-width ratio. For example, to produce depth-to-width ratio of 1.5 , a linear energy density can be varied approximately from 0.3 to $1.5 \mathrm{~J} / \mathrm{mm}$. This may suggest that linear energy density is not best way to normalize the data.
+
+While STS may not be able to quantitatively determine LPBF parameters due to many differences in bulk and powder bed, for WE43 alloy, STS demonstrated that cracks were not observed in any of the solidified melt pools and melt-pool/bulk boundaries as shown in Fig. 6. Porosity was observed at the bottom of some of the deeper melt pools, i.e., high depth-to-width ratio. In wrought WE43 alloy away from the melt pool, $\alpha-\mathrm{Mg}$ (hcp) grains with $10-20 \mu \mathrm{m}$ in size, were observed, and their boundaries were decorated with segregated rare-earth additions (e.g., Y, Gd, Zr, Nd) as presented by the bright backscatter contrast in Fig. 6(a). However, within the melt pool, much finer structural features were observed, with grain size ranging from 1 to $3 \mu \mathrm{m}$ as shown in Fig. 6(b). Segregation of rare-earth addition, similar to that shown in Fig. 6(a) by the bright backscatter contrast was observed at this fine scale.
+
+\subsection*{3.2. Powder characterization}
+Fig. 7(a) presents secondary electron micrograph of the WE43 powders used for LPBF investigation. They were, in general, spherical in shape, free of satellites, and exhibited good flowability. Cross-sections of these powders were also examined as shown in Fig. 7(b) by backscatter electron micrograph. Typical powder alloy microstructure with inter-dendritic regions heavily segregated with alloying additions for WE43, such as Y, Gd, Zr, Nd, was observed, and this is somewhat similar to the microstructure observed within the melt pool from the STS study. The D10, D50, D90, and mean particle sizes were 4.4, 18.1, 38.7, and $20.1 \mu \mathrm{m}$ respectively, as presented by the particle size distribution in Fig. 7(c).
+
+\subsection*{3.3. Laser powder bed fusion parametric investigation}
+Parameters listed in Table 3 were employed to manufacture cube\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_23039e81728c252f41ddg-05}
+
+Fig. 2. Optical micrographs of selected melt pool geometry observed in single track study: (a) $150 \mathrm{~W}$ at $800 \mathrm{~mm} / \mathrm{sec}$; (b) $75 \mathrm{~W}$ at $200 \mathrm{~mm} / \mathrm{sec}$; (c) $75 \mathrm{~W}$ at $50 \mathrm{~mm} / \mathrm{sec}$; (d) $125 \mathrm{~W}$ at $200 \mathrm{~mm} / \mathrm{sec}$; (e) $125 \mathrm{~W}$ at $50 \mathrm{~mm} / \mathrm{sec}$.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_23039e81728c252f41ddg-05(1)}
+
+Fig. 3. Melt pool measurements from single track scan study: (a) depth as a function of power; (b) width as a function of power; (c) depth as a function of linear energy density; and (d) width as a function of linear energy density.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_23039e81728c252f41ddg-06(1)}
+
+Fig. 4. Melt pool measurements from single track scan study: (a) depth as a function of scan speed; (b) width as a function of scan speed; (c) depth as a function of linear energy density; and (d) width as a function of linear energy density.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_23039e81728c252f41ddg-06}
+\end{center}
+
+Fig. 5. Depth-to-width ratio of the melt pool as a function of linear energy density determined from the single track scan study. samples ( $12 \mathrm{~mm} \times 12 \mathrm{~mm} \times 12 \mathrm{~mm}$ ) for LPBF parametric examination and optimization investigation. Relative density of each cube sample was determined, first volumetrically by Archimedes method, and then by image analysis of cross-sectional optical micrographs. The theoretical density used in Archimedes determination of relative density was kept constant at $1.84 \mathrm{~g} / \mathrm{cm}^{3}$ for WE43. Fig. 8 presents the relative density of all the cube samples as a function of volumetric energy density, defined in Eq. (1). In general, relative density was observed to be low ( $\sim 90 \%)$ when the energy density was low $\left(\sim 20 \mathrm{~J} / \mathrm{mm}^{3}\right)$. With an increase in energy density up to $40 \mathrm{~J} / \mathrm{mm}^{3}$, a sharp increase in relative density was observed for all laser power used. However, inconsistency in change of relative density as a function of energy density was observed with a further increase above $50 \mathrm{~J} / \mathrm{mm}^{3}$. For example, samples produced using the laser power of $250 \mathrm{~W}$, a decrease in relatively density was observed above the energy density of $50 \mathrm{~J} / \mathrm{mm}^{3}$ as shown in Fig. 8(d). However, relative density of some above $100 \%$ was recorded for samples produced with very high energy density. To clarify this inconsistency, composition of all as-built samples was examined.
+
+The inconsistency in density measurement by Archimedes method was found to be due to evaporation of $\mathrm{Mg}$ when excessive energy density was employed. The $\mathrm{Y}$ and $\mathrm{Nd}$ are the largest alloying addition in WE43. The nominal composition of WE43 has approximately $7 \mathrm{wt} \%$ rare earth. Fig. 9 presents the composition of rare earth, i.e., sum of Y and other rare earth, mostly $\mathrm{Nd}$, that was observed to vary with the\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_23039e81728c252f41ddg-07}
+
+Fig. 6. Cross-sectional backscatter electron micrographs from (a) a melt-pool/ bulk interface and (b) within a melt pool produced for WE43 with $125 \mathrm{~W}$ laser power and $200 \mathrm{~mm} / \mathrm{sec}$ scan speed.
+
+energy density employed during LPBF. All four plots have the same limits for the y-axis ( $5 \sim 10 \mathrm{wt} . \%$ ). The sample built with the highest energy density using $100 \mathrm{~W}$ laser power yielded the highest relative density, however, had nearly $10 \mathrm{wt} \%$ rare earth content (i.e., lower Mg content). This change in composition produced relative density above $100 \%$ of standard density $1.84 \mathrm{~g} / \mathrm{cm}^{3}$. In other words, the samples built with low power and low scan speed (i.e., high energy density) yielded high density, including some above $100 \%$, because of Mg evaporation or rare earth enrichment. Cubic samples built with the laser power of $200 \mathrm{~W}$ and $250 \mathrm{~W}$ had a composition of $7 \sim 8 \mathrm{wt} . \%$ total rare earth, independent of energy density employed, because the scan rate was relatively higher at a fixed energy density.
+
+Fig. 10 presents selected secondary electron micrographs from WE43 alloy samples built using various powers and scan speeds. There were no solidification cracks observed in any of the samples. Observation of porosity/flaws with the variation of power and scan speed can be qualitatively described as: (1) porosity formation due to vaporization at high energy density, (2) an optimum LPBF with minimal defects, and (3) flaws due to lack of fusion at low energy density. Fully dense WE43 alloy with a relative density of $99.7 \%$, was produced by LPBF using the laser power of $200 \mathrm{~W}$ and scan speed of $1100 \mathrm{~mm} / \mathrm{sec}$ as highlighted in Fig. 10. Therefore based on density measurement ( $>99.7$ $\%$ ) by Archimedes and image analyses, and with due consideration for compositional consistency in WE43 and build-rate (i.e., preference for higher scan speed), a laser power of $200 \mathrm{~W}$ and scan speed $1100 \mathrm{~mm} /$ sec were chosen as the optimum LPBF parameters for WE43 to be built in SLM125HL. Aforementioned, the hatch spacing and slice thickness remained constant at $0.13 \mathrm{~mm}$ and $0.04 \mathrm{~mm}$, respectively. This optimized parameter set corresponded to $35 \mathrm{~J} / \mathrm{mm}^{3}$.
+
+\subsection*{3.4. Phase constituents and microstructure}
+Fig. 11 presents XRD patterns from the LPBF WE43 that were asbuilt, after SHT (solution heat treated at $536{ }^{\circ} \mathrm{C}$ for $24 \mathrm{~h}$ ), and FHT (SHT at $536{ }^{\circ} \mathrm{C}$ for $24 \mathrm{~h}$, and subsequently aged at $205^{\circ} \mathrm{C}$ for $48 \mathrm{~h}$ ). For all samples, $\alpha-\mathrm{Mg}, \mathrm{Mg}_{3} \mathrm{Nb}$, and $\mathrm{Y}_{2} \mathrm{O}_{3}$ phases were identified in XRD patterns, although diffraction from the $\mathrm{Mg}_{3} \mathrm{Nb}$ was more evident in FTH sample. The $\alpha-\mathrm{Mg}$ phase had lattice parameters determined to be a $=3.21 \AA$ and $\mathrm{c}=5.21 \AA$, which are nearly identical to the reported\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_23039e81728c252f41ddg-07(1)}
+
+Fig. 7. Characterization of WE43 powders employed for LPBF: (a) powder morphology examined by secondary electron micrograph; (b) dendritic microstructure observed from the cross-sectional backscatter electron micrograph; and (c) particle size distribution analyzed by laser diffraction analysis.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_23039e81728c252f41ddg-08}
+
+Fig. 8. Relative density measured for LPBF WE43 samples by using Archimedes method and image analysis of optical micrographs as a function of volumetric energy density with laser power of (a) $100 \mathrm{~W}$, (b) $150 \mathrm{~W}$, (c) $200 \mathrm{~W}$ and (d) $250 \mathrm{~W}$.
+
+value for $\mathrm{Mg}$ [11,36]. Lattice parameter determined for $\mathrm{Y}_{2} \mathrm{O}_{3}$ was a $=10.67 \AA$, which is slightly larger than the reported value [36]. The oxygen source for the formation of $\mathrm{Y}_{2} \mathrm{O}_{3}$ phase includes oxide scale on alloy powders and LPBF build chamber kept below $0.1 \%$ oxygen. Lattice parameter determined for $\mathrm{Mg}_{3} \mathrm{Nd}$ was $\mathrm{a}=7.36 \AA$, which closely match the value reported in literature [36,37].
+
+A typical melt pool microstructure was observed parallel to the build direction as presented in Fig. 12(a) under optical microscopy after picric acid etch (with some etch pits). Within these melt pools, no discernable grain structure was readily observable using backscatter electrons, however, many spherical and flaky white particles $(1$ $5 \mu \mathrm{m}$ ) were observed with picric acid etch as labelled in Fig. 12(b). Based on XEDS, these white particles were all rich in rare earth, and some of the larger ones contained $\mathrm{O}$ along with rare earths, particularly the $\mathrm{Y}$.
+
+Fig. 13(a) presents a high angle annular dark field (HAADF) TEM micrograph of as-built WE43 alloy. Similar to backscatter electron micrographs, white particles and particle-agglomerates due to larger average atomic number were observed. A selected region marked in Fig. 13(a), was analyzed further using XEDS mapping as presented in Figs. 13(b) for Mg, 13(c) for Nd, 13(d) for Y, 13(e) for O, 13(f) for Zr and $13(\mathrm{~g})$ for Al. They confirmed that small dispersed precipitates were rich in $\mathrm{Nd}$ corresponding to the $\mathrm{Mg}_{3} \mathrm{Nd}$ observed in XRD, some particles were rich in $\mathrm{Y}$ and $\mathrm{O}$ corresponding to the $\mathrm{Y}_{2} \mathrm{O}_{3}$ observed in XRD, and some contained $\mathrm{Al}$ and $\mathrm{Zr}$. The particles rich in $\mathrm{Al}$ and $\mathrm{Zr}$ are most likely $\mathrm{Al}_{3} \mathrm{Zr}$, which have been known to form, and can act as heterogenous nucleation sites in Al alloys modified with $\mathrm{Zr}[38,39]$. Selected area electron diffraction (SAED) presented in Fig. 13(h) confirmed that the matrix was hcp $\alpha-\mathrm{Mg}$. High resolution TEM micrograph in Fig. 13(i) and subsequent Fast Fourier Transform (FFT inset) confirmed that the small white precipitates were $\mathrm{Mg}_{3} \mathrm{Nd}$.
+
+Fig. 14 shows backscatter electron micrographs of the FHT (i.e., SHT at $536{ }^{\circ} \mathrm{C}$ for $24 \mathrm{~h}$, then subsequently aged at $205^{\circ} \mathrm{C}$ for $\left.48 \mathrm{~h}\right)$ WE 43 sample. Microstructure appeared to be similar to that of the as-built sample, however, in general, with better definition: Mg matrix and white particles, some containing O. At higher magnification, the larger flake-like particles were resolved to consist of even smaller particles embedded in Mg matrix as shown in Fig. 14(b). The XEDS from larger particle-agglomerates consisted of $\mathrm{Y}, \mathrm{Zr}$ (minor) and $\mathrm{O}$, corresponding to the XRD observation of $\mathrm{Y}_{2} \mathrm{O}_{3}$ with a slightly larger lattice parameter, i.e., $(\mathrm{Y}, \mathrm{Zr})_{2} \mathrm{O}_{3}$ solution phase. Smaller particles that are dispersed evenly throughout contained Nd, but not O, in XEDS, therefore would correspond to the $\mathrm{Mg}_{3} \mathrm{Nd}$ intermetallic phase. Grain structure corresponding to the grain size of several micrometers was observed as presented in Fig. 14(b).
+
+In LPBF WE43 alloy after FHT, many plate-like precipitate structures were observed as shown by the bright-field TEM micrograph in Fig. 15(a). The corresponding HAADF micrograph in Fig. 15(b) show a\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_23039e81728c252f41ddg-09}
+
+Fig. 9. Sum of rare earth $(\mathrm{Y}+\mathrm{Nd})$ content measured by XEDS as a function of relative density for WE43 samples produced by LPBF using the laser power of (a) $100 \mathrm{~W}$, (b) $150 \mathrm{~W}$, (c) $200 \mathrm{~W}$ and (d) $250 \mathrm{~W}$.
+
+rather small grain structure (e.g., $2 \sim 5 \mu \mathrm{m}$ ) with well-defined platelike precipitates, and HAADF micrograph in Fig. 15(c) presents the microstructural arrangement of these plates. Fig. 15(d) presents high resolution TEM micrograph for $\mathrm{Mg}_{3} \mathrm{Nd}$ plates along with SAED pattern that yielded the lattice parameter of $7.40 \AA$, which has increased from the one determined for as-built sample ( $7.26 \AA$ ).
+
+XEDS mapping of LPBF WE43 after FHT supported the phase constituent analyses: $\alpha-\mathrm{Mg}$ matrix, $\mathrm{Mg}_{3} \mathrm{Nd}$ plates, $\mathrm{Y}_{2} \mathrm{O}_{3}$ particles and possibly $\mathrm{Al}_{3} \mathrm{Zr}$ as presented in Fig. 16. In particular, after FHT, as observed in Fig. 15(b), particle-agglomerate region that contain $\mathrm{Y}$ and $\mathrm{O}$ were observed to consist of a mixture of $\alpha-\mathrm{Mg}$ and $\mathrm{Y}_{2} \mathrm{O}_{3}$ as shown by Figs. 16(b), 1(d) and 16(e). Therefore, the larger bright flake-like regions observed in Figs. 12(b), 13(a), 14, and 15(b) do not correspond to single, large $\mathrm{Y}_{2} \mathrm{O}_{3}$ particles.
+
+\subsection*{3.5. Mechanical behavior under compression and tension}
+Mechanical behavior of WE43 under compression for the as-built samples was examined using three samples. Results were repeatable for the three samples tested and they are reported in Table 4 and presented in Fig. 17(a). The as-built WE43 had an average compressive strength of $223.6 \mathrm{MPa}$, the maximum \% strain at failure was determined to be 9.5 $\%$, and the maximum compressive strength was recorded at $416.9 \mathrm{MPa}$ for the LPBF as-built WE43.\\
+Mechanical behavior under tension for the as-built and FHT WE43 was examined using three samples for each. Results were repeatable for the 3 samples tested for each condition, and they are reported in Table 4 and presented in Fig. 17(b). The as-built WE43 had an average yield strength of $214.4 \mathrm{MPa}$, similar to $218.8 \mathrm{MPa}$ for the FHT WE43. However, the FHT WE43 had a larger \% strain with an average value of $4.3 \%$. The maximum $\%$ strain of for the as-built WE43 was determined to be $2.6 \%$. The average ultimate tensile strength (UTS) was about the same for both the as-built and FHT WE43 at 250.9 and $250.7 \mathrm{MPa}$, respectively. These values for both the as-built and FHT WE43 are comparable to WE43 design data (Magnesium Elektron Datasheet 467) [3] with yield strength, tensile strength, and strain at failure of $172 \mathrm{MPa}, 220 \mathrm{MPa}$, and $2 \%$, respectively.
+
+\section*{4. Discussion}
+\subsection*{4.1. Interaction of WE43 with laser}
+WE43 microstructure was observed to develop favorably for the LPBF by (1) displaying the classical keyhole-mixed-conduction mode transition, (2) solidifying without cracking, and (3) solidifying with substantial grain refinement. As presented in Fig. 2, melt pool characteristic transition from conduction, to mixed mode, and to keyhole was observed as a function of energy input controlled by laser power\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_23039e81728c252f41ddg-10(1)}
+
+Fig. 10. Selected secondary electron micrographs from WE43 alloy samples produced with various power and scan speed of LPBF. An optimized parameter, $200 \mathrm{~W}$ in laser power and $1100 \mathrm{~mm} / \mathrm{sec}$ in scan speed, was found to yield nearly-fully-dense ( $>99.7 \%$ ) WE43 without any solidification cracking.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_23039e81728c252f41ddg-10}
+\end{center}
+
+Fig. 11. X-ray diffraction patterns from the as-built, solution heat treated (SHT), and fully-heat-treated (FHT) samples of WE43 produced by LPBF. and scan speed. As mentioned before, in this study, hatch spacing and slice thickness were held constant, although their variations may change the energy input slightly. Therefore, focus was placed on effects of laser power and scan speed. During STS investigation, higher energy input (laser power of $125 \mathrm{~W}$ and scan speed of $50 \mathrm{~mm} / \mathrm{sec}$ ) represented by a high linear energy density $(2.5 \mathrm{~J} / \mathrm{mm})$, was observed to produce deeper melt pool with a large depth-to-width ratio, and more importantly porosity due to entrapped gas (e.g., keyhole mode) [14]. At lower energy input (laser power of $150 \mathrm{~W}$ and scan speed of $800 \mathrm{~mm} /$ sec) corresponding to a low linear energy density $(0.188 \mathrm{~J} / \mathrm{mm})$, a shallow melt pool would develop, as the heat is readily conducted into the bulk, which would not be effective for LPBF (e.g., conduction mode) [14]. Therefore, a mix-mode would be favored for LPBF to allow for enough penetration of melt into the previous powder-solidified layer, but not enough to cause trapped gas porosity. Microstructural development and the measurement of melt pool geometry, as presented in Fig. 2-5, demonstrated that WE43 exhibits this transition gradually and therefore favorably for LPBF. As seen in Fig. 10 from LPBF parametric optimization study, this transition translates to porosity at higher energy density, flaws due to insufficient melting at lower density, and near-fully density at appropriate intermediate energy density.
+
+In addition, during the STS study, WE43 melt pool was observed to solidify without cracking and with a substantial grain refinement as shown in Figs. 2 and 6, respectively. The nucleation and growth of large-and-columnar matrix grains (e.g., much larger than the melt pool\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_23039e81728c252f41ddg-11(1)}
+
+Fig. 12. Cross-sectional (a) optical and (b) backscatter electron micrographs of the LPBF as-built WE43 alloy.
+
+size), at least for some aluminum alloys $[38,39]$ have been documented to be related to the intergranular solidification cracking. In this study, WE43 produced by LPBF had fine grains $(1 \sim 3 \mu \mathrm{m})$ after STS by laser.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_23039e81728c252f41ddg-11}
+
+Fig. 14. Cross-sectional backscatter electron micrographs of the fully heat treated LPBF WE43 alloy at (a) low and (b) high magnification.
+
+Fine grain structure in WE43, associated with high nucleation rate and low growth rate, has been also reported by Dhahri et al. [5] who performed high laser power scans with a $\mathrm{CO}_{2}$ pulse laser on WE43.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_23039e81728c252f41ddg-11(2)}
+
+Fig. 13. (a) High angle annular dark field TEM micrograph from the LPBF as-built WE43 alloy, and corresponding XEDS mapping for (b) Mg, (c) Nd, (d) Y, (e) O, (f) $\mathrm{Zr}$, and (g) Al from the region marked in (a). Electron diffraction analyses via TEM confirmed the presence of (h) $\alpha-\mathrm{Mg}$ and (i) $\mathrm{Mg}_{3} \mathrm{Nd}$.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_23039e81728c252f41ddg-12}
+
+Fig. 15. (a) Bright field and (b) corresponding HAADF TEM micrograph from the fully heat treated LPBF WE43 sample; (c,d) Microstructure consisted of well-defined $\mathrm{Mg}_{3} \mathrm{Nd}$ plates in $\alpha$ - $\mathrm{Mg}$ matrix.
+
+Furthermore, corresponding to the solidification into small grains, no solidification cracking was observed in any of the LPBF-produced WE43 samples as presented in Fig. 10. Similar to the STS study results, fine matrix grains $(2 \sim 5 \mu \mathrm{m})$ were observed in LPBF WE43 as presented Fig. 14(b) and 15(a). Therefore, for LPBF WE43, a systematic LPBF study is warranted to examine the presence of rare earth as heterogeneous nucleation agents and their role in mitigating solidification cracking (i.e., LPBF of Mg-alloys with and without rare earth).
+
+\subsection*{4.2. LPBF processing behavior of WE43}
+As presented in Figs. 8 and 10, nearly fully-dense WE43 alloy was produced with LPBF using an energy density of $32 \sim 37 \mathrm{~J} / \mathrm{mm}^{3}$ from all four laser powers, $100,150,200$, and $250 \mathrm{~W}$ with varying scan speed examined in study. This may suggest that WE43 can be built at low laser powers to conserve energy or at high speeds with high laser power to increase the build-rate. However, the composition of WE43 varied as a function of power-scan-speed employed. One of the main concerns with processing Mg alloys is the high vapor pressure of Mg. Fig. 18(a) shows the calculated vapor pressure for pure $\mathrm{Mg}, \mathrm{Y}, \mathrm{Zr}, \mathrm{Nd}$, and Gd. Overwhelmingly, $\mathrm{Mg}$ has the highest vapor pressure by almost 20 or more orders of magnitude difference. Understandably, it is concerning that $\mathrm{Mg}$ would vaporize faster than the rare earth elements, thus increasing the overall weight of the part and making the alloy more enriched with rare earth than the nominal composition.
+
+As was discussed with Fig. 9, the relative content of rare earth was observed to increase with an increase in energy density for the cubic samples built with low laser powers, i.e., $100 \mathrm{~W}$ and $150 \mathrm{~W}$, using slow scan speed. This yielded an increase in relative density of WE43 as presented in Fig. 8, sometimes greater than $100 \%$ of its theoretical density at $1.84 \mathrm{~g} / \mathrm{cm}^{3}$, because of relative enrichment of rare earth. However, the relative content of the rare earths, at $7 \sim 8 \mathrm{wt} . \%$, did not change when laser power of 200 and $250 \mathrm{~W}$ were employed with appropriate scan speed. This observation proves rather useful as the composition of commercial WE43 does not need to be adjusted to compensate for the loss of $\mathrm{Mg}$, and optimum parameters for LPBF can be found at an energy density of $32 \sim 37 \mathrm{~J} / \mathrm{mm}^{3}$ as long as the laser power remains sufficiently high, at 200 and $250 \mathrm{~W}$, with appropriate scan speed. This observation also points to a needed study to understand the heat transfer kinetics as functions of power and scan speed, as the "static" quantity of energy density does not capture the dynamics of melting and solidification.
+
+\subsection*{4.3. Precipitation behavior of WE43 built by LPBF}
+WE43 is an age hardenable $\mathrm{Mg}$ alloy with an ageing sequence of $\beta^{\prime \prime} \rightarrow \beta^{\prime} \rightarrow \beta_{1} \rightarrow \beta[10,37]$. The $\beta^{\prime \prime}$ phase is a metastable hcp structure with the composition of $\mathrm{Mg}_{3}(\mathrm{Y}, \mathrm{Nd})[10,37,42,43]$. The $\beta^{\prime}$ phase develops during heat treatment between $200 \sim 250{ }^{\circ} \mathrm{C}$ [42]. There is still some debate as to the structure, and its stoichiometry can be either $\mathrm{Mg}_{24} \mathrm{Y}_{2} \mathrm{Nd}_{3}$, or the more common $\mathrm{Mg}_{12} \mathrm{NdY}$. Prior to the equilibrium phase, $\beta-\mathrm{Mg}_{14} \mathrm{Nd}_{2} \mathrm{Y}$, the $\beta_{1}$ phase, identified as $\mathrm{Mg}_{3} \mathrm{Nd}$, has been reported to form as well. The $\beta_{1}-\mathrm{Mg}_{3} \mathrm{Nd}$ has a face-centered-cubic (fcc) $\mathrm{BiF}_{3}$ (cF16) structure and its presence has been associated with enhanced creep resistance [1,2,44].
+
+The precipitate phase identified in both the as-built and aged WE43 was confirmed to be $\beta_{1}-\mathrm{Mg}_{3} \mathrm{Nd}$ by XRD analysis and analytical TEM as presented in Figs. 11,13, and 15, respectively. The LPBF process that consists of initial laser energy input, solidification and subsequent heat-\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_23039e81728c252f41ddg-13}
+
+Fig. 16. (a) High angle annular dark field TEM micrograph from the LPBF WE43 alloy after full heat treatment, and corresponding XEDS mapping for (b) Mg, (c) Nd, (d) $\mathrm{Y}$, (e) $\mathrm{O}$, (f) $\mathrm{Zr}$, and (g) Al from the region marked in (a).
+
+exposure (i.e., laser scan for layers above) allowed the formation of $\beta_{1}$ $\mathrm{Mg}_{3} \mathrm{Nd}$, bypassing the formation of $\beta$ " and $\beta$ ' phases. More importantly the $\beta_{1}-\mathrm{Mg}_{3} \mathrm{Nd}$ remained and only grew after solutionizing and aging, and did not transform to the equilibrium $\beta-\mathrm{Mg}_{14} \mathrm{Nd}_{2} \mathrm{Y}$ phase. The $\beta_{1^{-}}$ $\mathrm{Mg}_{3} \mathrm{Nd}$ phase was found to grow into plate-like structure after the solution heat treatment at $536{ }^{\circ} \mathrm{C}$ and subsequent age hardening at $205^{\circ} \mathrm{C}$. Under a certain orientation, the plate-like structures appear bright white in HAADF corresponding to the basal plane of hcp-Mg, as shown in Fig. 15(c). TEM observation with various tilt angles demonstrated that they are not needles.
+
+Table 4
+
+Tensile and compressive mechanical behavior of WE43 manufactured by laser powder bed fusion.
+
+\begin{center}
+\begin{tabular}{lllll}
+\hline
+Sample & Testing Type & $0.2 \%$ Yield Strength (MPa) & Ultimate Strength (MPa) & $\%$ Strain at Failure \\
+\hline
+As-built & Compression & 221.8 & 420.0 & 9.60 \\
+ &  & 219.8 & 418.2 & 9.70 \\
+ & 229.3 & 412.4 & 9.20 &  \\
+ &  & Avg $=223.6 \pm 4.09$ & 249.5 & Avg $=9.5 \pm 0.20$ \\
+ &  & 209.4 & 255.0 & 2.78 \\
+ &  & 217.7 & 248.3 & 2.20 \\
+Heat-treated $^{*}$ & 215.9 & Avg $=250.9 \pm 2.92$ & Avg $=2.62 \pm 0.29$ &  \\
+ &  & Avg $=214.4 \pm 3.54$ & 258.4 & 4.78 \\
+ &  & 225.5 & 247.1 & 3.53 \\
+ &  & 214.7 & 246.6 & 4.63 \\
+ &  & Avg $=250.7 \pm 5.47$ & Avg $=4.31 \pm 0.55$ &  \\
+\hline
+\end{tabular}
+\end{center}
+
+\footnotetext{" Note: solutionizing at $536{ }^{\circ} \mathrm{C}$ for $24 \mathrm{~h}$ and subsequent ageing at $205^{\circ} \mathrm{C}$ for $48 \mathrm{~h}$.
+}
+\includegraphics[max width=\textwidth, center]{2024_03_10_23039e81728c252f41ddg-14}
+
+Fig. 17. Engineering stress vs. engineering strain observed during (a) compressive and (b) tensile test for the WE43 alloy samples produced by LPBF.
+
+The absence of $\beta-\mathrm{Mg}_{14} \mathrm{Nd}_{2} \mathrm{Y}$ may be related to the presence of fine $\mathrm{Y}_{2} \mathrm{O}_{3}$ dispersoids embedded in Mg matrix presented in Figs. 12-16. Although they appear as large particles, several micrometers in size in Fig. 12(b), 13(a), and 14(a), detailed observation demonstrated that they are dense agglomerates of nano-scale $\mathrm{Mg}+\mathrm{Y}_{2} \mathrm{O}_{3}$ embedded in $\mathrm{Mg}$ matrix as shown in Figs. 14(b), 15(b), 16(a), 16(d), and 16(e). The $\mathrm{Y}_{2} \mathrm{O}_{3}$ has the largest formation of energy (e.g., Ellingham diagram shown in Fig. 18(b)) among elemental constituents in WE43, and can perhaps act as a heterogenous nucleation site for the $\alpha-\mathrm{Mg}$ matrix. However, no such confirmation can be made in this study because they are distributed evenly throughout the alloy, and not necessarily located along the grain boundaries. The $\mathrm{Zr}$ alloying addition was also observed, mostly in $\mathrm{Al}_{3} \mathrm{Zr}$, given that $\mathrm{Zr}$ is immiscible with $\mathrm{Mg}$. The $\mathrm{Al}_{3} \mathrm{Zr}$ has shown to help nucleate the $\alpha$-Al matrix in many $\mathrm{Al}$ alloys, both wrought and AM'ed alloys [38,39]. However, it cannot be confirmed what type of role it plays in $\mathrm{Mg}$ solidification. Given the presence of $\mathrm{Y}$ in $\mathrm{Y}_{2} \mathrm{O}_{3}$, it may not have been possible for either the $\beta^{\prime \prime}$ or $\beta$ ' phases to develop during LPBF and subsequent heat treatment totaling at $72 \mathrm{~h}$.
+
+\section*{5. Summary}
+The following summarizes the findings from the investigation of\\
+LPBF manufacturing of WE43 alloy:
+
+1 Using single track scan as an assessment for determining printability of an alloy, no cracking was observed in any of the melt pools. Furthermore, limited porosity content was observed, mainly found at the bottom of melt pools due to trapping of gas from keyhole formation. Overall, a fine grain structure was observed in each of the melt pools.
+
+2 Through process mapping, the best processing parameters to use for the LPBF of WE43 with a near-full density of $99.7 \%$ was found at a laser power, scan speed, hatch spacing, and slice thickness of $200 \mathrm{~W}$, $1100 \mathrm{~mm} / \mathrm{sec}, 0.13 \mathrm{~mm}$, and $0.04 \mathrm{~mm}$ respectively. Moreover, the mapping can be divided into three regions: lack of fusion due to low energy density, an optimized parameter set with > $99 \%$ density, and spherical pore formation due to high energy density. Overall, high density ( $>99 \%$ ) could be achieved with an energy density of $32 \sim 37 \mathrm{~J} / \mathrm{mm}^{3}$. However, laser power of $200 \mathrm{~W}$ and $250 \mathrm{~W}$ with correspondingly appropriate scan speed were observed to produce WE43 with proper compositions.
+
+3 The $\beta_{1}-\mathrm{Mg}_{3} \mathrm{Nd}$ precipitates smaller than a micrometer were found distributed throughout the matrix of the as-built WE43. After heat treatment, the $\beta_{1}-\mathrm{Mg}_{3} \mathrm{Nd}$ phase was found to dissolve, and develop into plate like precipitates. The $\mathrm{Y}_{2} \mathrm{O}_{3}$ dispersoids was also found distributed uniformly throughout WE43 as a part of flake-like structure that consisted of dense nano-scale $\mathrm{Mg}+\mathrm{Y}_{2} \mathrm{O}_{3}$ agglomerate. The $\mathrm{Y}_{2} \mathrm{O}_{3}$ phase did not dissolve or coalesce after the heat treatment.
+
+4 Compressive yield strength of $224 \mathrm{MPa}$ in the as-built condition was obtained for LPBF WE43. Maximum compressive strength and strain reached $417 \mathrm{MPa}$ and $9.5 \%$, respectively. Tensile yield strength of $214 \mathrm{MPa}$ in the as-built condition, and of $219 \mathrm{MPa}$ in the FHT condition were obtained from LPBF WE43. Moreover, the maximum tensile strain at fracture increased from 2.6 to $4.3 \%$ after the heat treatment. The tensile strength was similar for both the as-built and FHT WE43 at $251 \mathrm{MPa}$.
+
+\section*{CRediT authorship contribution statement}
+Holden Hyer: Conceptualization, Methodology, Validation, Formal analysis, Investigation, Data curation, Writing - original draft, Writing review \& editing, Visualization. Le Zhou: Validation, Formal analysis, Investigation, Data curation. George Benson: Validation, Formal analysis, Investigation, Data curation. Brandon McWilliams: Resources, Supervision, Project administration, Funding acquisition. Kyu Cho: Resources, Supervision, Project administration, Funding acquisition. Yongho Sohn: Conceptualization, Methodology, Resources, Writing review \& editing, Visualization, Supervision, Project administration, Funding acquisition.
+
+\section*{Declaration of Competing Interest}
+Authors of this manuscript do not have any financial and personal relationships with other people or organizations that could inappropriately influence (bias) our work. So we have no conflict of interests to declare.
+
+\section*{Acknowledgements}
+This research was sponsored by the U.S. Army Research Laboratory under a cooperate agreement contract, W911NF1720172. The views, opinions and conclusions made in this document are those of the authors and should not be interpreted as representing the official policies, either expressed or implied, of the U.S. Army Research Laboratory or the U.S. Government. The U.S. Government is authorized to reproduce and distribute reprints for Government purposes notwithstanding any copyright notation herein.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_23039e81728c252f41ddg-15}
+
+Fig. 18. Calculated (a) Ellingham diagram and (b) vapor pressure for major elemental constituents of WE43, i.e., Mg, Y, Nd, Zr, and Gd [40,41].
+
+\section*{Appendix A. Supplementary data}
+Supplementary material related to this article can be found, in the online version, at doi:\href{https://doi.org/10.1016/j.addma.2020.101123}{https://doi.org/10.1016/j.addma.2020.101123}.
+
+\section*{References}
+[1] B. Mordike, Creep-resistant magnesium alloys, Mater. Sci. Eng. A 324 (1-2) (2002) 103-112.
+
+[2] B. Mordike, T. Ebert, Magnesium: properties-applications-potential, Mater. Sci. Eng. A 302 (1) (2001) 37-45.
+
+[3] M. Elektron, Elektron WE43 Datasheet.
+
+[4] K. Cho, T. Sano, K. Doherty, C. Yen, G. Gazonas, J. Montgomery, P. Moy, B. Davis, R. DeLorme, Magnesium Technology and Manufacturing for Ultra Lightweight Armored Ground Vehicles, (2009) ARMY RESEARCH LAB ABERDEEN PROVING GROUND MD.
+
+[5] M. Dhahri, J.E. Masse, J.F. Mathieu, G. Barreau, M. Autric, Laser welding of AZ91 and WE43 magnesium alloys for automotive and aerospace industries, Adv. Eng. Mater. 3 (7) (2001) 504-507.
+
+[6] M. Ascencio, M. Pekguleryuz, S. Omanovic, An investigation of the corrosion mechanisms of WE43 Mg alloy in a modified simulated body fluid solution: the influence of immersion time, Corros. Sci. 87 (2014) 489-503.
+
+[7] M. Ascencio, M. Pekguleryuz, S. Omanovic, An investigation of the corrosion mechanisms of WE43 Mg alloy in a modified simulated body fluid solution: the effect of electrolyte renewal, Corros. Sci. 91 (2015) 297-310
+
+[8] N.R. Kumar, J. Blandin, M. Suery, E. Grosjean, Effect of alloying elements on the ignition resistance of magnesium alloys, Scr. Mater. 49 (3) (2003) 225-230.
+
+[9] M. Liu, D.S. Shih, C. Parish, A. Atrens, The ignition temperature of Mg alloys WE43, AZ31 and AZ91, Corros. Sci. 54 (2012) 139-142.
+
+[10] M. Jahedi, B.A. McWilliams, M. Knezevic, Deformation and fracture mechanisms in WE43 magnesium-rare earth alloy fabricated by direct-chill casting and rolling, Mater. Sci. Eng. A 726 (2018) 194-207.
+
+[11] M.O. Pekguleryuz, K. Kainer, A.A. Kaya, Fundamentals of magnesium alloy metallurgy, Elsevier (2013).
+
+[12] D.D. Gu, W. Meiners, K. Wissenbach, R. Poprawe, Laser additive manufacturing of metallic components: materials, processes and mechanisms, Int. Mater. Rev. 57 (3) (2012) 133-164.
+
+[13] D. Herzog, V. Seyda, E. Wycisk, C. Emmelmann, Additive manufacturing of metals, Acta Mater. 117 (2016) 371-392.
+
+[14] W. King, A. Anderson, R. Ferencz, N. Hodge, C. Kamath, S. Khairallah, A. Rubenchik, Laser powder bed fusion additive manufacturing of metals; physics, computational, and materials challenges, Appl. Phys. Rev. 2 (4) (2015) 041304.
+
+[15] E.O. Olakanmi, R.F. Cochrane, K.W. Dalgarno, A review on selective laser sintering/ melting (SLS/SLM) of aluminium alloy powders: processing, microstructure, and properties, Prog. Mater. Sci. 74 (2015) 401-477.
+
+[16] C. Yap, C. Chua, Z. Dong, Z. Liu, D. Zhang, L. Loh, S. Sing, Review of selective laser melting: materials and applications, Appl. Phys. Rev. 2 (4) (2015) 041101.
+
+[17] S. Solutions, SLM 125 Brochure, (2018).\\
+[18] A. Mauduit, Study of the suitability of aluminum alloys for additive manufacturing by laser powder bed fusion, Univ. Politehnica Bucharest Sci. Bull. Ser. B Chem. Mater. Sci. (2017).
+
+[19] J.H. Boswell, D. Clark, W. Li, M.M. Attallah, Cracking during thermal post-processing of laser powder bed fabricated CM247LC Ni-superalloy, Mater. Des. 174 (2019) 107793.
+
+[20] C. Chung Ng, M. Savalani, H. Chung Man, Fabrication of magnesium using selective laser melting technique, Rapid Prototyp. J. 17 (6) (2011) 479-490.
+
+[21] S. Gangireddy, B. Gwalani, K. Liu, E.J. Faierson, R.S. Mishra, Microstructure and mechanical behavior of an additive manufactured (AM) WE43-Mg alloy, Addit. Manuf. 26 (2019) 53-64.
+
+[22] L. Jauer, W. Meiners, S. Vervoort, C. Gayer, N.A. Zumdick, D. Zander, Selective laser melting of magnesium alloys, European Congress and Exhibition on Powder Metallurgy. European PM Conference Proceedings, The European Powder Metallurgy Association, 2016, pp. 1-6.
+
+[23] T. Long, X. Zhang, Q. Huang, L. Liu, Y. Liu, J. Ren, Y. Yin, D. Wu, H. Wu, Novel Mgbased alloys by selective laser melting for biomedical applications: microstructure evolution, microhardness and in vitro degradation behaviour, Virtual Phys. Prototyp. 13 (2) (2018) 71-81.
+
+[24] C. Ng, M. Savalani, M. Lau, H. Man, Microstructure and mechanical properties of selective laser melted magnesium, Appl. Surf. Sci. 257 (17) (2011) 7447-7454.
+
+[25] C. Ng, M. Savalani, H. Man, I. Gibson, Layer manufacturing of magnesium and its alloy structures for future applications, Virtual Phys. Prototyp. 5 (1) (2010) 13-19.
+
+[26] D. Schmid, J. Renza, M.F. Zaeh, J. Glasschroeder, Process influences on laser-beam melting of the magnesium alloy AZ91, Phys. Procedia 83 (2016) 927-936.
+
+[27] C. Shuai, Y. Yang, P. Wu, X. Lin, Y. Liu, Y. Zhou, P. Feng, X. Liu, S. Peng, Laser rapid solidification improves corrosion behavior of Mg-Zn-Zr alloy, J. Alloys Compd. 691 (2017) 961-969.
+
+[28] R. Tandon, T. Wilks, D.I.M. Gieseke, D.I.C. Noelke, S. Kaierle, T. Palmer, Additive manufacturing of electron ${ }^{\circledR} 43$ alloy using laser powder bed and directed energy deposition, International Power Metallurgy Congress and Exhibition, Euro PM 2015, European Powder Metallurgy Association (EPMA), 2015.
+
+[29] K. Wei, M. Gao, Z. Wang, X. Zeng, Effect of energy input on formability, microstructure and mechanical properties of selective laser melted AZ91D magnesium alloy, Mater. Sci. Eng. A 611 (2014) 212-222.
+
+[30] K. Wei, Z. Wang, X. Zeng, Influence of element vaporization on formability, composition, microstructure, and mechanical performance of the selective laser melted Mg-Zn-Zr components, Mater. Lett. 156 (2015) 187-190.
+
+[31] Y. Yang, P. Wu, Q. Wang, H. Wu, Y. Liu, Y. Deng, Y. Zhou, C. Shuai, The enhancement of $\mathrm{Mg}$ corrosion resistance by alloying Mn and laser-melting, Materials 9 (4) (2016) 216
+
+[32] B. Zhang, H. Liao, C. Coddet, Effects of processing parameters on properties of selective laser melting Mg-9\% Al powder mixture, Mater. Des. 34 (2012) 753-758.
+
+[33] Y. Zhou, P. Wu, Y. Yang, D. Gao, P. Feng, C. Gao, H. Wu, Y. Liu, H. Bian, C. Shuai, The microstructure, mechanical properties and degradation behavior of lasermelted MgSn alloys, J. Alloys Compd. 687 (2016) 109-114.
+
+[34] N.A. Zumdick, L. Jauer, L.C. Kersting, T.N. Kutz, J.H. Schleifenbaum, D. Zander Additive manufactured WE43 magnesium: a comparative study of the microstructure and mechanical properties with those of powder extruded and as-cast WE43, Mater. Charact. 147 (2019) 384-397.
+
+[35] M. Bauccio, ASM Metals Reference Book, ASM international, 1993.
+
+[36] F.I.Z. Karlsruhe, ICSD - Inorganic Crystal Structure Database, (2019).
+
+[37] L.L. Rokhlin, Magnesium Alloys Containing Rare Earth Metals: Structure and Properties, Crc Press, 2003.
+
+[38] L. Zhou, H. Hyer, S. Park, H. Pan, Y. Bai, K.P. Rice, Y. Sohn, Microstructure and mechanical properties of Zr-modified aluminum alloy 5083 manufactured by laser powder bed fusion, Addit. Manuf. (2019).
+
+[39] L. Zhou, H. Pan, H. Hyer, S. Park, Y. Bai, B. McWilliams, K. Cho, Y. Sohn, Microstructure and tensile property of a novel AlZnMgScZr alloy additively manufactured by gas atomization and laser powder bed fusion, Scr. Mater. 158 (2019) 24-28.\\
+[40] C. Alcock, V. Itkin, M. Horrigan, Vapour pressure equations for the metallic elements: 298-2500K, Can. Metall. Q. 23 (3) (1984) 309-313.
+
+[41] B. Ihsan, Thermochemical Data of Pure Substances, and 934, (1995), p. 587.
+
+[42] T. Rzychoń, A. Kiełbus, Microstructure of WE43 casting magnesium alloys, J. Achiev. Mater. Manuf. Eng. 21 (1) (2007) 31-34.
+
+[43] P. Mengucci, G. Barucca, G. Riontino, D. Lussana, M. Massazza, R. Ferragut, E.H. Aly, Structure evolution of a WE43 Mg alloy submitted to different thermal treatments, Mater. Sci. Eng. A 479 (1-2) (2008) 37-44.
+
+[44] Z. Xu, M. Weyland, J.F. Nie, On the strain accommodation of $\beta 1$ precipitates in magnesium alloy WE54, Acta Mater. 75 (2014) 122-133.
+
+
+\end{document}

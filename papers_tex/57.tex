@@ -1,0 +1,750 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{multirow}
+
+\title{Data mining and statistical inference in selective laser melting }
+
+
+\author{Chandrika Kamath $^{1}$}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Received: 13 October 2015 / Accepted: 18 December 2015 / Published online: 11 January 2016
+
+(C) Springer-Verlag London (outside the USA) 2016
+
+\begin{abstract}
+Selective laser melting (SLM) is an additive manufacturing process that builds a complex three-dimensional part, layer-by-layer, using a laser beam to fuse fine metal powder together. The design freedom afforded by SLM comes associated with complexity. As the physical phenomena occur over a broad range of length and time scales, the computational cost of modeling the process is high. At the same time, the large number of parameters that control the quality of a part make experiments expensive. In this paper, we describe ways in which we can use data mining and statistical inference techniques to intelligently combine simulations and experiments to build parts with desired properties. We start with a brief summary of prior work in finding process parameters for high-density parts. We then expand on this work to show how we can improve the approach by using feature selection techniques to identify important variables, data-driven surrogate models to reduce computational costs, improved sampling techniques to cover the design space adequately, and uncertainty analysis for statistical inference. Our results indicate that techniques from data mining and statistics can complement those from physical modeling to provide greater insight into complex processes such as selective laser melting.
+\end{abstract}
+
+Keywords Additive manufacturing $\cdot$ Selective laser melting $\cdot$ Design of experiments $\cdot$ Sampling $\cdot$ Feature selection $\cdot$ Code surrogates $\cdot$ Uncertainty analysis
+\footnotetext{$\boxtimes$ Chandrika Kamath
+
+\href{mailto:kamath2@1lnl.gov}{kamath2@1lnl.gov}
+
+1 Lawrence Livermore National Laboratory, 7000 East Avenue, Livermore, CA 94551, USA
+}
+
+\section*{1 Introduction}
+Additive manufacturing (AM) is a process for fabricating parts, layer-by-layer, directly from a three-dimensional digital model. It presents an opportunity for producing complex parts not possible with traditional manufacturing processes, such as medical implants that are customized to each individual and lattices that reduce weight while maintaining the strength of structures. AM can also reduce both the time to market and material waste. However, a number of technical issues must still be addressed before widespread use of AM technology becomes a reality, including dimensional accuracy of AM parts, process optimization to quickly build complex parts with desired properties, and increased confidence in properties of parts fabricated using this process [1, $2,24]$.
+
+In this paper, we consider selective laser melting (SLM), which is an additive manufacturing process that uses a laser beam to create three-dimensional metal parts by fusing fine metal powders together. The process, also referred to as laser powder-bed fusion, starts by first slicing a threedimensional model of the part into two-dimensional layers, each of a specified thickness, usually in the range of 30 to $100 \mu \mathrm{m}$. A thin layer of metal powder is then spread on a base plate and the first layer is created by selectively melting the powder in the locations indicated in the first slice of the part. The process is repeated for the second slice, and the part is built, layer by layer, with the power and speed of the laser selected so that the energy density is sufficient to melt the powder and the layer below it, thus integrating the new layer into the rest of the part.
+
+The design freedom afforded by AM comes with associated complexity. The modeling of the process is complicated as the physical phenomena occur over a broad range of length and time scales. Three-dimensional computer\\
+simulations to understand the relationship between processing parameters and the thermal behavior of the material as it is melted by the laser, for example, see $[9,11,17,19,22]$, can be quite expensive to run, even on high-performance computer systems, especially if they include various aspects of the physics underlying SLM. Exploring the design space using experiments can also be challenging as there are a large number of parameters, more than 130 by some estimates [31], that influence the process and thus the final quality of the part. Figure 1 shows some of the parameters related to the laser and the powder bed. These include:
+
+\begin{itemize}
+  \item The laser parameters such as (i) the laser power, ranging from 50 to $400 \mathrm{~W}$, though higher-powered lasers are also available; (ii) the laser beam profile, usually Gaussian, though flat-top is also used; (iii) the laser scan speed, ranging from $100 \mathrm{~mm} / \mathrm{s}$ to over $5000 \mathrm{~mm} / \mathrm{s}$; (iv) the scan-line overlap, which is the distance between adjacent scan lines and must be chosen to ensure no unmelted powder remains between scan lines; and (v) the scan strategy, which is the path taken by the laser to melt the powder in appropriate places in a slice.
+
+  \item The powder bed parameters, which include the layer thickness, the particle size distribution in the powder, and the porosity of the powder bed. The layer thickness is the amount by which the build platform is lowered for each slice. To build a part, this is set to a fixed value, typically in the range of $30-50 \mu \mathrm{m}$, with a larger layer thickness resulting in a reduced build time but requiring a larger energy density for melting. The layer thickness is determined by considering the particle size distribution of the powder; a layer thickness much smaller than the mean particle size would result in poor utilization of the powder as most of the particles would be swept away by the coater used to spread the layer of powder. The powder size distribution tends to change when the powder is recycled; to maintain the size distribution over time, the powder may need to be mixed with fresh powder or sieved to remove large clusters of particles sintered together. The porosity of the powder bed introduces an added complication. When a layer of powder of a given thickness is melted, its height reduces due to the elimination of the voids in between the powder particles. The next layer of powder therefore is deeper than the amount by which the build platform drops at each layer. This thickness of the powder increases until it reaches a steady state of $l t /(1-v f)$,where $l t$ is the layer thickness and $v f$ is the void fraction. For a typical void fraction of $0.4-0.5$, the actual thickness of the powder, at steady state, is $1.667-2.0$ times the set layer thickness. Therefore, the laser parameters, such as the speed and the power, must be selected to melt through the steady-state powder thickness into the substrate below.
+
+  \item The material properties, such as density, thermal conductivity, heat capacity, and latent heat of the material being processed also determine the amount of energy required to melt the powder and the substrate. In addition, these properties determine the width and height of the melt bead, which, in turn, influence the parameters in the scanning strategy, such as the scan-line overlap.
+
+\end{itemize}
+
+Using additive manufacturing technology to build a part with certain desired properties such as part density, dimensional accuracy, weight, or surface smoothness can be challenging for several reasons. First, as we have just discussed, the number of parameters that have to be set in an AM system is large. Second, the parameters can vary during the build of a part. For example, the laser beam size may change as the optics used to focus the laser get heated during use. Or the porosity of the powder bed may change depending on the distribution of the powder size particles in a layer of powder. Third, the parameters could vary across builds, for example, when the laser beam becomes uncalibrated over time and no longer remains Gaussian, or when the measured value of the laser power drifts from the set value over time, or when the powder size distribution changes as it is re-used many times. Finally, some of the material properties, such\\
+Fig. 1 Schematic illustrating the SLM process and some of the parameters that influence the properties of a part
+
+\includegraphics[max width=\textwidth, center]{2024_03_10_ac9eb55e466d65629094g-02}\\
+as the absorptivity, may not be known precisely, may take values within a range, or may depend on whether the material in the path of the laser beam is liquid, powder, or solid, as the absorptivity of these forms is different. All these factors introduce uncertainties that influence the repeatability of the process and create uncertainties in the properties of the additively manufactured part.
+
+In this paper, we describe the use of techniques from data mining and statistical inference to build high-density ( $>99 \%$ ) parts using selective laser melting. We use an iterative approach, described in Section 2, that allows us to explore the design space efficiently. We then summarize our prior work in Section 3 where we demonstrate the use of simple simulations and experiments to determine the process parameters for high-density 316L stainless steel (SS) parts. The main contribution of this paper is to build on this prior work to gain additional insight into the SLM process and improve our approach. Specifically, we consider feature selection techniques to identify the important parameters (Section 4), data-driven surrogate models to reduce computational costs (Section 5), improved sampling techniques to reduce the number of sample points in design space (Section 6), complex models to improve predictions (Section 7), and uncertainty analysis for statistical inference (Section 8). We conclude with a summary of our observations and plans for future work in Section 9.
+
+A brief note on the terminology used in this paper-we use the term "model" to mean both physical models as well as data-driven models. As the main focus of this paper is the use of data mining and statistical techniques, to make the paper accessible to a multi-disciplinary audience, we will also describe the terms used in these fields when we first introduce them.
+
+\section*{2 Approach for process optimization}
+There are a number of approaches to find the optimal parameters for creating additively manufactured parts with desired properties (see, for example, the summary in [15] for the work done in 316L stainless steel for $>99 \%$ density parts). Typically, carefully designed experiments are used to study how various process parameters, such as powder quality, layer thickness, laser power, laser speed, and scanning strategies, would influence the properties, such as density and surface roughness, of a part. In some cases, small cubes are built and their properties evaluated [20,29, 34], while in others [16,21,32], a process window is first identified by using single track experiments. In these experiments, single tracks are made on a layer of powder using a range of laser power and speed values. As these experiments are simpler than building small pillars, they can be more costeffective in narrowing the range of design space for optimal parameters. Principled techniques from the field of design and analysis of experiments $[8,25]$ are also gaining acceptance. For example, Delgado et al. [5] used a full factorial experimental design with three factors (layer thickness, scan speed, and build direction), and two levels per factor, in their study on part quality for a fixed laser power. The outputs of interest were dimensional accuracy, mechanical properties, and surface roughness and an analysis of variance (ANOVA) approach was used to understand the effects of various factors on the outputs.
+
+Much of this early work was done using systems with relatively low laser powers of 50-100 W. As a result, the design space spanned by laser power and speed was not very large and optimization through experimentation was a practical option. However, as machines with higher laser powers (of $400 \mathrm{~W}$ or greater) have become common, using just experiments to identify optimal parameters can be prohibitively expensive. In addition, as the types of SLM machines have proliferated, the use of different beam sizes, scanning parameters, and powder size distributions has enlarged the design space so that determining the optimal parameters for each machine for different materials has become more challenging.
+
+To address these issues in the context of identifying parameters for high-density AM parts, we devised an iterative approach that combines experiments and computer simulations. Our work was motivated by the fact that our AM machine, a Concept Laser (CL) M2 system, had a relatively narrow beam, with $\mathrm{D} 4 \sigma=52 \mu \mathrm{m}$, and maximum power of $400 \mathrm{~W}$. (D4 $\sigma$ is the beam diameter and, for a perfect Gaussian beam, is four times the standard deviation of the Gaussian.) This meant that we could not use the parameters for optimal density available in the literature as these were for machines with lower powers of $<225 \mathrm{~W}$ and larger beam sizes of $\mathrm{D} 4 \sigma \approx 120 \mu \mathrm{m}$. Given the large range of power (100-400 W) for our machine, exploring the design space using just experiments was prohibitively expensive, especially as we processed different materials, and a more efficient approach was required.
+
+Figure 2 illustrates our iterative approach that combines computer simulations and experiments using techniques from data mining and statistical inference; a practical application of this approach is illustrated in the rest of the paper. Starting with a densely sampled design space of parameters, we run simple, and relatively inexpensive, simulations and experiments to progressively narrow the space of parameters as we move toward more expensive and accurate simulations and experiments. In each cycle, we have a set of samples that span the space of input SLM parameters. We run the experiments and/or simulations at the sample points, extract the characteristics of interest (such as the melt-pool dimensions or the part density), and analyze the data that relate the sample points to the characteristics of interest.
+
+Fig. 2 Schematic illustrating the iterative process that uses data mining and statistical inference to combine simulations and experiments to reduce the time and costs to determine optimal process parameters
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-04}
+\end{center}
+
+This analysis could include visualization using scatter plots or parallel-coordinate plots (Section 3.1), feature selection to identify important parameters (Section 4), building surrogate models for prediction (Sections 5 and 7.2), and uncertainty analyses (Section 8) to find regions that are less sensitive to minor changes in the parameters. From this analysis, we identify a subset of samples that meets our requirements. We then perform more complex simulations and experiments at these sample points, and iterate until we have obtained the desired results.
+
+This iterative approach has several benefits. First, by starting with simple simulations and experiments, we can quickly and efficiently identify which regions of the design space are viable as they yield melt pools that are deep enough so that a part can be built. This is particularly relevant when we are working with materials that may not have been additively manufactured before, or with machines with different process parameters, or with powders with different particle size distributions. Second, the large number of SLM process parameters implies that we need to identify sample points in a high-dimensional space, where the dimension of the space is the number of parameters. To span a space adequately, the number of samples required is exponential in the dimension. This makes it prohibitively expensive to start exploring the entire space by building many parts. Using simpler experiments and simulations lowers the cost of exploring the space of parameters more fully, thus increasing the chance of finding all sets of parameters that yield desired properties. Third, the iterative approach enables us to progressively make bigger samples and perform more complex simulations, while building on what we have learned from simpler experiments and simulations. This reduces costs as the complex simulations are computationally more expensive and it takes longer to build the bigger samples and evaluate their properties. Finally, by using data mining techniques to analyze the data from the simulations and experiments at each step, we can fully exploit the data we do collect and better guide the next set of experiments and simulations. We next describe how we used this approach to identify process parameters for highdensity 316L SS parts. We have also successfully used this approach to create parts with $>99 \%$ density for other materials, and the ideas can also be extended to other properties of a part.
+
+\section*{3 Creating high-density 316L SS parts}
+This section summarizes our prior work as described in Kamath et al. [15] and provides the background for the contributions of this paper. Our primary goal was to determine the process parameters that would result in 316L stainless steel parts with > $99 \%$ density on our Concept Laser M2 machine. A secondary goal was to understand how the density varied as we varied the laser power and speed.
+
+\subsection*{3.1 Using simple simulations}
+To identify the viable range of process parameters, we started with the very simple Eagar-Tsai (E-T) model [6] to determine under what conditions we would obtain melt pools that were deep enough to melt a layer of powder and the substrate below. Eagar-Tsai is a thermal conduction model that considers a Gaussian beam on a flat plate to describe conduction-mode laser melting. The resulting temperature distribution is used to compute the melt-pool width, depth, and length as a function of four parameters-laser power, laser speed, beam size, and laser absorptivity of the powder.
+
+The Eagar-Tsai model does not directly relate the process parameters to the density of a part, which is the property of interest. It also does not consider powder other than the effect of powder on the laser absorptivity, so its results provide only an estimate of the melt-pool characteristics. However, this estimate was sufficient to guide the next steps in our work. In addition, the simplicity of the model makes it computationally inexpensive, taking $\approx 1 \mathrm{~min}$ to run on a laptop. This allows us to sample the input parameter space
+
+Table 1 Ranges and levels for the full factorial sampling of the EagarTsai model input parameter space
+
+\begin{center}
+\begin{tabular}{lllc}
+\hline
+Parameter & Minimum & Maximum & Levels \\
+\hline
+Power $(\mathrm{W})$ & 50 & 400 & 7 \\
+Speed $(\mathrm{mm} / \mathrm{s})$ & 50 & 2250 & 11 \\
+Beam size D4 $\sigma(\mu \mathrm{m})$ & 50 & 68 & 3 \\
+Absorptivity $\eta$ & 0.3 & 0.5 & 2 \\
+\hline
+\end{tabular}
+\end{center}
+
+rather densely, ensuring that we consider all possible viable cases.
+
+We sampled the four-parameter input space using a full factorial design of computer experiments ([25] and [8]). This method divides the range of each parameter into several levels, and then randomly selects a point in each cell. Table 1 lists the minimum and maximum values for each of the four input parameters, as well as the number of levels, which result in 462 simulations. The upper bound on the laser power was set to the maximum of the CL M2 machine. The lower limit on the speed was set to ensure sufficient melting at the low-power values such that the melt-pool depth would be at least $30 \mu \mathrm{m}$, which was the layer thickness selected for our experiments based on the prior work of Yasa [34]. The upper limit on the speed was estimated at a value that would likely result in a relatively shallow melt pool at the high-power value. The lower and upper limits on the beam size were obtained from measurements of the beam size at focus offsets of 0 and $1 \mathrm{~mm}$. The absorptivity was assumed to be around 0.4 . By varying the beam size and the absorptivity, we accounted for possible variations in these parameters over time or build conditions as we built each part.
+
+The output from the Eagar-Tsai model was processed to extract the melt-pool depth, width, and length. Of these three dimensions, the depth was of greatest interest as it indicates if the energy is sufficient to melt through the powder to the substrate for the given values of power and speed, under the assumption that the beam size and absorptivity might vary by a small amount. To understand how the depth was related to the four input parameters, we used parallel coordinate plots [12]. These plots are a way of displaying high-dimensional, multi-variate data. First, the values of each variable for all simulations are scaled so they lie in the same range and can be displayed in a single plot. For our data, we chose this range to be 0.0 through 4.0. Next, the five dimensions, $\left(f_{1}, f_{2}, f_{3}, f_{4}, f_{5}\right)$, are indicated along the $\mathrm{x}$-axis, and their scaled values along the $\mathrm{y}$-axis. Each simulation is represented as a poly-line connecting the values of the scaled variables, $\left(x_{1}, x_{2}, x_{3}, x_{4}, x_{5}\right)$, for that simulation.
+
+Figure 3 shows the parallel coordinate plot for our 462 simulations. The values of the depth were divided into three groups for small $(<60 \mu \mathrm{m}$ ), moderate (between 60 and $120 \mu \mathrm{m}$ ), and large $(>120 \mu \mathrm{m}$ ), and the polylines in each group were assigned a different color. The simulations with small depth were discarded as they were likely to leave unmelted particles. The simulations with large depth were also discarded as they are the result of the energy density being too high, possibly resulting in keyhole-mode melting [18], where the laser drills into the material, leaving voids as the material vaporizes. The thresholds for identifying moderate depth were obtained as follows: For a powder layer thickness of $30 \mu \mathrm{m}$ and a void fraction of 0.4 , the steadystate powder thickness would be $1.667 * 30=50 \mu \mathrm{m}$ and, for a void fraction of 0.5 , it would be $60 \mu \mathrm{m}$ (see Section 1). So, the energy density must be sufficient to melt through a powder layer of 50-60 $\mu \mathrm{m}$ into the substrate. We ensure this by selecting the minimum depth of a viable simulation in the Eagar-Tsai model to be $60 \mu \mathrm{m}$. The upper threshold was set to twice the lower threshold to ensure that we had sufficient number of viable cases, though we did recognize that some of these cases could result in keyhole-mode melting.
+
+The parallel plot also sheds some light on the relative importance of the four input parameters. Based on the clustering of the colors in the speed and power columns, we observe that simulations with low speed and high power have deep melt pools, while simulations with high speed and low power have shallow melt pools, which is what one would expect. However, there is no such clear clustering of colors in the beam size and absorptivity, indicating\\
+Fig. 3 Parallel coordinate plot of the melt-pool depth as a function of the input parameters-laser speed, power, beam size, and absorptivity. Each simulation, represented by the scaled values
+
+$\left(x_{1}, x_{2}, x_{3}, x_{4}, x_{5}\right)$ of the inputs and output, is shown on the left as a poly-line connecting these values. The polylines are colored based on the depth
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-05}
+\end{center}
+
+\includegraphics[max width=\textwidth, center]{2024_03_10_ac9eb55e466d65629094g-05(1)}\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_ac9eb55e466d65629094g-06}
+
+Fig. 4 Single track experiments: Left-the 14 track tilted plate. Right-cross-sections of two tracks at $30 \mu \mathrm{m}$ layer thickness: (top) track 4 at $300 \mathrm{~W}$ and $1800 \mathrm{~mm} / \mathrm{s}$, (bottom) track 5 at $300 \mathrm{~W}$ and $1500 \mathrm{~mm} / \mathrm{s}$
+
+that these inputs are less relevant to the determination of the depth, allowing us to focus on the power and speed parameters in our experiments. In Section 4, we will arrive at a similar result using quantitative techniques from data mining.
+
+\subsection*{3.2 Using simple experiments}
+The full sampling of the design space of the Eagar-Tsai model gives us a viable set of power and speed values as indicated by the model. However, the depth of the melt pool obtained from this simplified model is only an approximation to the actual depth of the melt pool in an experiment. Since we do not know how far the Eagar-Tsai approximation is from reality, we next performed a set of single-track experiments to obtain the melt pool dimensions for a set of power-speed combinations chosen from the viable range of parameters.
+
+Single-track experiments [32] are a simple way to evaluate the melt pool dimensions for a material for specific values of laser power, laser speed, layer thickness, and powder size distribution. A single layer of powder at a specific layer thickness is spread on the plate, and multiple tracks made at different laser power and speed values. The plate is then cut so the cross-section of a track can be measured to obtain the melt-pool depth, height, and width. Figure 4 shows the plate with the 14 single tracks used in our experiments. The plate is $40 \mathrm{~mm}$ by $40 \mathrm{~mm}$ and is bolted to the build platform at the center. It is tilted so that the powder thickness is 0 at the left and increases linearly to $200 \mu \mathrm{m}$ at the right. This allows us to evaluate the melt-pool dimensions at several different values of layer thickness [33]. For example, a vertical cut $6 \mathrm{~mm}$ from the left edge gives the cross-sections of the 14 tracks at a powder layer thickness of $30 \mu \mathrm{m}$, as shown for the two tracks in the figure, where the laser direction is perpendicular to the plane of the paper.
+
+Table 2 shows the depth of the melt pool obtained using the Eagar-Tsai model, as well as the experiments at powder layer thickness of 30 and $50 \mu \mathrm{m}$, for the 14 tracks. The results for the Eagar-Tsai model were generated using a fixed value for the beam size of $\mathrm{D} 4 \sigma=54 \mu \mathrm{m}$ and absorptivity of 0.3 . Our results indicate that the Eagar-Tsai model typically under-predicts the depth, though given that the model has no powder, it is difficult to compare the results with experiments that do include powder. Note that the Eagar-Tsai results use values of D $4 \sigma$ and absorptivity that are nearer to the lower end of the ranges used in our sampling of the design space as indicated in Table 1.\\
+Table 2 The depth for each track from the Eagar-Tsai model and the single track experiments at layer thickness of 30 and $50 \mu \mathrm{m}$. The Eagar-Tsai results were obtained assuming D $4 \sigma$ of $54 \mu \mathrm{m}$ and absorptivity of 0.3 . Note the inconsistency in experiment at $50 \mu \mathrm{m}$ between track 5 and 6 , where a lower speed results in lower depth
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+\multirow[t]{2}{*}{Track\#} & \multirow{2}{*}{}\begin{tabular}{l}
+Power \\
+(W) \\
+\end{tabular} & \multirow{2}{*}{}\begin{tabular}{l}
+Speed \\
+$(\mathrm{mm} / \mathrm{s})$ \\
+\end{tabular} & \multirow{2}{*}{}\begin{tabular}{l}
+E-T depth \\
+$(\mu \mathrm{m})$ \\
+\end{tabular} & \multicolumn{2}{|c|}{Depth $(\mu \mathrm{m})$ from experiment} \\
+\hline
+ &  &  &  & Layer thickness $30 \mu \mathrm{m}$ & Layer thickness $50 \mu \mathrm{m}$ \\
+\hline
+1 & 400 & 1800 & 50.4 & 105 & 90 \\
+\hline
+2 & 400 & 1500 & 57.6 & 119 & 137 \\
+\hline
+3 & 400 & 1200 & 62.4 & 182 & 183 \\
+\hline
+4 & 300 & 1800 & 43.2 & 65 & 58 \\
+\hline
+5 & 300 & 1500 & 48.0 & 94 & 86 \\
+\hline
+6 & 300 & 1200 & 55.2 & 114 & 76 \\
+\hline
+7 & 300 & 800 & 67.2 & 175 & 207 \\
+\hline
+8 & 200 & 1500 & 38.4 & 57 & 43 \\
+\hline
+9 & 200 & 1200 & 43.2 & 68 & 62 \\
+\hline
+10 & 200 & 800 & 52.8 & 116 & 106 \\
+\hline
+11 & 200 & 500 & 67.2 & 195 & 179 \\
+\hline
+12 & 150 & 1200 & 36.0 & 30 & 37 \\
+\hline
+13 & 150 & 800 & 43.2 & 67 & 63 \\
+\hline
+14 & 150 & 500 & 55.2 & 120 & 104 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 2 also shows that the experimental data for $30 \mu \mathrm{m}$ layer thickness is consistent, with higher powers and lower speeds resulting in deeper melt pools. In contrast, there are some inconsistencies in the $50 \mu \mathrm{m}$ results; for example, track 6 at $300 \mathrm{~W}, 1200 \mathrm{~mm} / \mathrm{s}$ has a smaller depth than track 5 at $1500 \mathrm{~mm} / \mathrm{s}$. In some cases, the depth of a track at $50 \mu \mathrm{m}$ layer thickness is greater than at $30 \mu \mathrm{m}$. These inconsistencies are to be expected in experiments. Since we are spreading a thin layer of powder, with a particle size distribution, over a tilted plate, it is difficult to ensure that the layer thickness at the location of the cut is exactly what we expect it to be. This variation is usually small when we are in the stable regime of conduction-mode melting, as our experiments using a flat plate have shown [18]. However, it introduces a source of uncertainty in our analysis.
+
+\subsection*{3.3 Building 316L SS density pillars}
+Next, we used the results from the single-track experiments to guide the selection of parameters for building small pillars for density measurements. We built $10 \mathrm{~mm} \times 10 \mathrm{~mm} \times 8 \mathrm{~mm}$ high pillars using a layer thickness of $30 \mu \mathrm{m}$ and a variety of power and speed combinations that were chosen to ensure sufficiently deep melt-pools at steady-state powder layer thickness. We used default values for all remaining process parameters [15].
+
+The density of the pillars, measured using the Archimedes method, is shown in Fig. 5 for the first two sets of pillars, each set consisting of 24 pillars on a build plate. The first set was used to determine if we could obtain $>99 \%$ dense pillars and the second set was used to fill the gaps in the curves. The results show that it is possible to use our approach to create high-density pillars for power values ranging from 150 to $400 \mathrm{~W}$. For a given power value, increasing the speed leads to insufficient melting and
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-07}
+\end{center}
+
+Fig. 5 The density of 316L pillars built using Concept Laser (CL) powder for several power and speed values lower density, which is expected. The density also reduces at low speed due to voids resulting from keyhole mode laser melting; this reduction is, however, not as large as the reduction due to insufficient melting. We also observe that at higher powers, the density is high over a wider range of scan speeds, unlike at lower powers. This indicates that higher powers could provide greater flexibility in choosing process parameters that optimize various properties of a manufactured part. However, it remains to be seen if operating at higher powers will have other negative effects on the microstructure or properties of a part.
+
+\subsection*{3.4 Improving the process}
+We have successfully used the approach outlined in Section 3.1 through Section 3.3 on other materials and powders of different sizes. We improved the process by using a flat plate instead of a tilted plate as we found that we often used just one value for the layer thickness. This allowed us to double the number of tracks on a plate, resulting in a more extensive exploration of the design space. We have also explored ways in which we can use data mining and statistical techniques to gain insight and improve the process. We next describe how we have built on our prior work by using feature selection techniques to identify the important parameters, surrogate models for prediction, improved sampling, more complex simulations, and uncertainty analysis.
+
+\section*{4 Identifying important variables}
+In Section 3.1, we used parallel coordinate plots to gain a qualitative understanding of the relative importance of the four input parameters to the Eagar-Tsai model. In data mining, dimension reduction techniques [13] are often used to identify important variables and reduce the dimension of a problem, which is the number of variables or features that describe the objects in a data set. In our problem, the objects are the simulations or experiments and the features are the input or process parameters. Reducing the dimension of a problem provides several benefits. By focusing on just the important variables, it becomes easier to understand how the outputs might be related to the inputs. Furthermore, as the number of sample points required to adequately sample the design space is exponential in the number of dimensions, reducing the dimension lowers the cost of expensive simulations and experiments. We can also build more accurate surrogate models (Sections 5 and 7.2) if irrelevant variables are removed from the data set.
+
+There are a variety of dimension reduction techniques, including linear and non-linear methods that transform the data into a lower-dimensional space, as well as feature subset selection methods that rank the features in order\\
+of importance. We prefer feature subset methods as they directly inform us which features are important, unlike transform methods, where the interpretation of the variables in the transformed space may not be straightforward. We consider two methods that operate directly on continuous inputs and outputs, as methods that first discretize the variables could be sensitive to the discretization used.
+
+The correlation-based feature selection (CFS) method [10] is a simple approach that calculates a figure of merit for a feature subset of $k$ features as
+
+Merit $=\frac{k \overline{r_{c f}}}{\sqrt{k+k(k-1) \overline{r_{f f}}}}$
+
+where $\overline{r_{c f}}$ is the average feature-output correlation and $\overline{r_{f f}}$ is the average feature-feature correlation. We use the Pearson correlation coefficient between two vectors, $X$ and $Y$, defined as
+
+$\frac{\operatorname{Cov}(X, Y)}{\sigma_{X} \sigma_{Y}}$
+
+where $\operatorname{Cov}(X, Y)$ is the covariance between the two vectors and $\sigma_{X}$ is the standard deviation of $X$. A higher value of Merit results when a subset of features has a high correlation $\left(\overline{r_{c f}}\right)$ with the output and a low correlation $\left(\overline{r_{f f}}\right)$ among themselves.
+
+In the second feature selection method, the features are ranked using the mean squared error (MSE) as a measure of the quality of a feature [3]. This metric is used in regression trees (see Section 5) to determine which feature to use to split the samples at a node of the tree. Given a numeric feature $x$, the feature values are first sorted $\left(x_{1}<x_{2}<\right.$ $\left.\ldots<x_{n}\right)$. Then, each intermediate value, $\left(x_{i}+x_{i+1}\right) / 2$, is proposed as a split point, and the samples split into two depending on whether the feature value of a sample is less than the split point or not. The MSE for a split $A$ is defined as
+
+$\operatorname{MSE}(A)=p_{L} \cdot s\left(t_{L}\right)+p_{R} \cdot s\left(t_{R}\right)$
+
+where $t_{L}$ and $t_{R}$ are the subset of samples that go to the left and right, respectively, by the split based on $A, p_{L}$, and $p_{R}$ are the proportion of samples that go to the left and right, and $s(t)$ is the standard deviation of the $N(t)$ output values, $c_{i}$, of samples in the subset $t$ :
+
+$s(t)=\sqrt{\frac{1}{N(t)} \sum_{i=1}^{N(t)}\left(c_{i}-\overline{c(t)}^{2}\right)}$
+
+and $\overline{c(t)}$ is the mean of the values in subset $t$. For each feature, the minimum MSE across the values of the feature is obtained and the features are rank ordered by increasing values of their minimum. This method considers a feature to be important if it can split the data set into two, such that the standard deviation of the samples on either side of the split is minimized, that is, the output values are relatively similar on\\
+Table 3 Rank order of subsets of input parameters to the Eagar-Tsai model using the CFS method. The best subset of $k$ features is the one with the $k$ highest ranks
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+\begin{tabular}{l}
+Melt \\
+pool \\
+\end{tabular} & Speed & Power & \begin{tabular}{l}
+Beam \\
+size \\
+\end{tabular} & Absorptivity & Noise \\
+\hline
+Width & 5 & 4 & 2 & 3 & 1 \\
+Length & 3 & 5 & 2 & 4 & 1 \\
+Depth & 5 & 4 & 2 & 3 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+each side. Note that while CFS considers subsets of features, the MSE method considers each feature individually.
+
+Table 3 presents the ordering of subsets of input features by importance, obtained using the CFS method, for the melt-pool width, length, and depth. A noise feature was added as another input; this is consistently ranked as the least important variable, as might be expected. The table indicates that for the melt-pool depth and width, the single most important input is the speed, while the two most important inputs are the speed and power. In contrast, for the length of the melt pool, the most important single input is the power, while the two most important inputs are power and absorptivity. The results for the MSE method in Table 4 are very similar, with the exception that the beam size is ranked lower than the noise variable for the depth of the melt pool. For all three melt-pool characteristics, the three lowest ranked variables have similar MSE values, so they have roughly the same order of importance.
+
+In our problem, the depth and the width are the most important melt-pool characteristics; the depth indicates when the energy density is sufficient enough to melt through the powder into the substrate below, while the width is used to determine the distance between adjacent scan lines so that no unmelted powder particles remain between them. As the laser power and speed are the most relevant inputs to determining the melt-pool depth and width, it makes sense to focus on them first in our experiments.
+
+In the Eagar-Tsai simulations, we chose to vary just four inputs. However, as we move to more complex simulations, feature selection and other dimension reduction techniques will become more useful in helping us to identify the important variables, potentially limiting the number of expensive
+
+Table 4 Rank order of the input parameters to the Eagar-Tsai model using the MSE method. A higher rank indicates a more relevant input
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+\begin{tabular}{l}
+Melt \\
+pool \\
+\end{tabular} & Speed & Power & \begin{tabular}{l}
+Beam \\
+size \\
+\end{tabular} & Absorptivity & Noise \\
+\hline
+Width & 5 & 4 & 2 & 3 & 1 \\
+Length & 3 & 5 & 2 & 4 & 1 \\
+Depth & 5 & 4 & 1 & 3 & 2 \\
+\hline
+\end{tabular}
+\end{center}
+
+experiments or simulations required to create parts with desired properties.
+
+\section*{5 Building data-driven surrogate models}
+The Eagar-Tsai model (Section 3.1) is a physical model that provides an approximation to the melt-pool dimensions given the laser power, laser speed, beam size, and absorptivity. When we run the model with various values of the input parameters to explore the design space, we create a data set that relates the specific values of the inputs to the corresponding outputs. If the design space is sampled adequately, we can use the data set to build a data-driven model which, given a set of values for the continuous inputs, will predict the continuous outputs. There are many algorithms we can use to build such a regression model, ranging from parametric techniques that fit multi-variate functions, such as polynomials, to the data, to machine learning methods such as neural networks, regression trees, locally weighted learning, and support vector machines [13].
+
+We consider two data-driven predictive models in this paper. This section focuses on regression trees, while the more complex Gaussian process models are discussed in Section 7.2. A regression tree [3] is a structure that is either a leaf, indicating a continuous value, or a decision node that specifies some test to be carried out on a feature, with a branch and sub-tree for each possible outcome of the test. If the feature is continuous, there are two branches, depending on whether the condition being tested is satisfied or not. The decision at each node of the tree is made to reveal the structure in the data. Regression trees tend to be relatively simple to implement, yield results that can be interpreted, and have built-in dimension reduction.
+
+A regression tree is built in two phases. In the training phase, the algorithm is "trained" by presenting it with a set of examples with known output values, such as the data obtained using the Eagar-Tsai model. In the test phase, the data-driven model created in the training phase is tested to determine how accurately it performs in predicting the output for known examples that were not used in building the model. If the results meet expected accuracy, the model can be put into operation to predict the output for a new sample point whose inputs are used to traverse the tree, following the decision at each node, until a leaf node is reached. The predicted value assigned to the sample is the mean of the output values of the training data that end up at that leaf node.
+
+In building the regression tree, the test at each node is determined by examining each feature and finding the split that optimizes an impurity measure. We use the meansquared error, MSE, as defined in Section 4, as the impurity measure. The split at each node of the tree is the one that minimizes MSE across all features for the samples at that node. To avoid over fitting, we stop the splitting if the number of samples at a node is less than 5 or the standard deviation of the values of the output variable at a node has dropped below $5 \%$ of the standard deviation of the output variable of the original data set. Note that each split creates a decision surface perpendicular to one of the axes (the feature selected for the split), dividing the data at that node into two, corresponding to sample points on the right and left side of the split location (the value of the feature used in the split). Depending on the data and the options used to build the tree, this splitting of the data can lead to a "block" structure in the regression model.
+
+A common approach to improving the accuracy of regression algorithms is to use an ensemble, where many models, built from the same training data using randomization, are created $[13,27,28]$. The final prediction is the mean of the prediction from each of the models. In our work, we consider ten trees in the ensemble, with randomization introduced through sampling. Instead of using all the sample points at a node to determine a split, we use a random subset of the samples [14], making each tree in the ensemble different from the others.
+
+We consider two different measures to evaluate the accuracy of the predictive model. The first is $k$ runs of $m$-fold cross validation, where the data are divided randomly into $m$ parts, the model is trained on $(m-1)$ parts and evaluated on the part that is held out. This is repeated for each of the $m$ parts. The process is repeated $k$ times, each with a different random partition of the data. The final accuracy metric is the average of the accuracy for each of the $k \times m$ parts. We use the relative mean-squared error metric, defined as
+
+$\sum_{i=1}^{n}\left(p_{i}-a_{i}\right)^{2} / \sum_{i=1}^{n}\left(\bar{a}-a_{i}\right)^{2}$
+
+where $p_{i}$ and $a_{i}$ are the predicted and actual values, respectively, of the $i$ th sample point in the test data consisting of $n$ points, and $\bar{a}$ is the average of the actual values in the test data. This is essentially the ratio of the variance of the residual to the variance of the target (that is, actual) values and is equal to $\left(1.0-R^{2}\right)$, where $R^{2}$ is the coefficient of determination. The second metric is the leave-one-out (LOO) approach, where a model, which is built using all but one of the sample points, is used to predict the value at the point that is held out. For a data set with $N$ points, this is essentially $N$-fold cross validation.
+
+Figure 6 shows the accuracy of the regression tree model in predicting the depth using the 462 simulations of the Eagar-Tsai model. Panels (a) and (b) show the predicted vs. actual values using LOO for one tree and ten trees, respectively. We observe that most of the points are near the blue
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-10(7)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-10(6)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-10}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-10(1)}
+\end{center}
+
+(d)
+
+Fig. 6 Leave-one-out prediction using $\mathbf{a}$ one tree and $\mathbf{b}$ ten trees. $\mathbf{c}$ Depth prediction in $\mu \mathrm{m}$ over a uniform grid in the power-speed space, with the beam size and absorptivity fixed. d Sample points in the viable region of (c)
+
+line at $45^{\circ}$ (indicating perfect prediction), though the scatter is greater at larger melt-pool depths. The scatter reduces with the use of ensembles as would be expected. Using five runs of fivefold cross validation as the error metric, we obtain a relative mean-squared error of $8 \%$ with a single tree and $3.6 \%$ with an ensemble of ten trees.
+
+The regression tree can be considered as a surrogate for the data from the Eagar-Tsai simulations and can be used to predict the width, depth, and length of the melt pool for a given set of inputs. Figure $6 \mathrm{c}$ shows the depth prediction at data points on a $40 \times 40$ grid over the power-speed design space, using a fixed value of $\mathrm{D} 4 \sigma=52 \mu \mathrm{m}$ and absorptivity of 0.4. The prediction was obtained using the 462 EagarTsai points to build a model with 10 regression trees. Panel (d) shows the viable space in the power-speed plot, where viability is defined as $60 \mu \mathrm{m} \leq$ depth $\leq 120 \mu \mathrm{m}$. While each Eagar-Tsai simulation takes $\approx 1 \mathrm{~min}$ on a laptop, it takes a few micro-seconds to build the surrogate from the 462 simulations and practically no time to use it to generate the melt-pool depth for a set of input variables.
+
+The accuracy of the regression tree depends on the number and location of the sample points, as well as the complexity of the function being modeled. If there are too few sample points, or they are in the wrong location, then the prediction can be poor, especially if the function being predicted is quite complex. For our set of simulations, the accuracy obtained is reasonable, though it could be improved further by adding new sample points in appropriate locations.
+
+\section*{6 Improving sampling of design space}
+The locations of the sample points chosen to run simulations, such as the Eagar-Tsai model, are critical to building an accurate data-driven, surrogate model based on these points. In our work, we started with stratified random sampling (Section 3.1) as we wanted to reduce the over- and under-sampling commonly associated with random sampling (see Fig. 7a). However, stratified random sampling lacks flexibility as the number of samples is determined by the number of levels along each dimension and new samples cannot be added easily. In addition, as shown in Fig. 7b, it still results in under- and over-sampled regions, though less than the regular random sampling.
+
+In our work, we want to generate an arbitrary number of samples that are randomly placed as far from each other as possible. Since the samples points are inputs to simulations, some of which may be computationally expensive unlike the Eagar-Tsai model, we want greater control over the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-10(5)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-10(4)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-10(3)}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-10(2)}
+\end{center}
+
+(d)
+
+Fig. 7 Sampling in a two-dimensional space: 100 samples distributed using a random sampling, $\mathbf{b}$ stratified random sampling, $\mathbf{c}$ Poisson-disk sampling, and $\mathbf{d}$ best-candidate sampling
+
+Fig. 8 Distance to the nearest neighbor for a set of 100 samples distributed in a fourdimensional space using (left) stratified random sampling and (right) best-candidate sampling
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-11}
+\end{center}
+
+number of samples. We want to start with a small initial set, and, if necessary, add an arbitrary number of new samples, while maintaining the randomness and the constraint on the distance between samples. To accomplish this, we considered low-discrepancy sampling, defined as follows: let $X$ be a $d$-dimensional measure space, such as $[0,1]^{d}$. Let $R$, the collection of subsets of $X$, denote the range space. Typically, $R$ is chosen as the set of axis-aligned rectangular subsets. Then the discrepancy for a given point set $P$ of $N$ points and range space $R$ is given by
+
+$\operatorname{Discrepancy}(P, R)=\sup _{r \in R}\left\{\left|\frac{|P \cap r|}{N}-\frac{\mu(r)}{\mu(X)}\right|\right\}$
+
+where $|P \cap r|$ is the number of points in $P \cap r$, and $\mu(r)$ is a Lebesgue measure (this can be considered to be the area in two dimensions and volume in three dimensions). Each term in the supremum indicates how well the number of points in $r$ can be used to estimate the hyper-volume of $r$. In a low discrepancy sampling, if the volume of $r$ is a certain fraction of the volume of $X$, then the number of points in $r$ will be the same fraction of the total number of points $N$.
+
+We investigated two low-discrepancy sampling approaches-the Poisson-disk sampling [4] and Mitchell's best-candidate sampling [23]. The Poisson-disk sampling distributes random samples such that no two samples are closer than a pre-specified distance (Fig. 7c), meeting our requirements. However, the method is not easily extensible to higher dimensions, requires the specification of the minimum distance between the samples instead of the number of samples, and does not lend itself to the addition of an arbitrary number of new samples. In contrast, Mitchell's best candidate algorithm (Fig. 7d) met all our constraints. Though it does not explicitly place samples at least a fixed distance away from each other, the process of generating the samples ensures that they are placed far apart from each other. The method itself is straightforward. It starts by placing the first point randomly. Then, for each new point, it generates randomly a pre-specified number of candidate points and selects as the next sample the candidate that has the largest nearest-neighbor distance to the current set of samples. It thus incrementally adds new sample points until the desired number have been generated.
+
+To compare the stratified random sampling with the bestcandidate sampling on the four-dimensional input space of the Eagar-Tsai model, we generated a set of 100 samples using each method and calculated the distance to the nearest neighbor for each sample. Figure 8 shows the distances for each of the 100 samples in the two methods. Both plots have the same scale. It is clear that stratified random sampling, despite the use of grids to avoid under- or over-sampling, has a large range of nearest-neighbor distances ranging from 0.1 to more than 0.4. In contrast, most of the points in the best-candidate sampling have a nearest-neighbor distance of 0.3 , with none below 0.25 .
+
+When we use a small number of samples in our initial set, especially in higher-dimensional problems, it is obvious to ask how this affects the accuracy of the surrogate model built using these sample points. The answer is dependent on the problem (the complexity of the variable being modeled) and the surrogate used. We ran the Eagar-Tsai model at the 100 sample points generated using the stratified random and the best-candidate sampling methods, and evaluated the accuracy of the model using both the LOO and cross validation metrics. Table 5 presents the relative mean-squared error resulting from five runs of five-fold cross-validation. As expected, the use of a smaller number of samples increases the cross-validation error, while using ensembles reduces it. For a single tree, the random stratified samples give slightly better results compared to the best candidate. One explanation might be that the points in the random stratified sampling are closer to each other (see
+
+Table 5 Relative mean-squared error using five runs of fivefold crossvalidation using the Eagar-Tsai model with samples generated using different methods
+
+\begin{center}
+\begin{tabular}{lrr}
+\hline
+Method & \multicolumn{1}{c}{1 tree} & 10 trees \\
+\hline
+Random stratified (462 samples) & $8.0 \%$ & $3.6 \%$ \\
+Random stratified (100 samples) & $24.0 \%$ & $12.4 \%$ \\
+Best candidate (100 samples) & $27.1 \%$ & $12.3 \%$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-12(6)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-12}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-12(1)}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-12(7)}
+\end{center}
+
+(d)
+
+Fig. 9 Leave-one-out prediction using for a sample of 100 points generated using stratified sampling with $\mathbf{a} 1$ tree and $\mathbf{b} 10$ trees and bestcandidate sampling with $\mathbf{c} 1$ tree and $\mathbf{d} 10$ trees
+
+Fig. 8) and therefore are better predictors. For 100 samples, using an ensemble of 10 trees removes any differences between the random stratified and best candidate methods. Though the results are less accurate in comparison with the larger number of samples, they are nonetheless sufficient for our use in identifying viable regions of design space. The results for LOO metric are shown in Fig. 9; there is little difference between the two sampling methods, and, as expected, the use of ensembles reduces the scatter for both methods.
+
+As with our larger sample set, we also created an ensemble of 10 regression trees using the 100 samples from each method and used them to generate the melt-pool depth at the sample points in the $40 \times 40$ grid over the power-speed design space, as shown in Fig. 10. We used a fixed value of $\mathrm{D} 4 \sigma=52 \mu \mathrm{m}$ and absorptivity of 0.4 . The prediction now has a more pronounced "block" form, which is expected given the small number of points and the use of regression trees with the axis-parallel division of the design space. We also observe that the region with deep melt-pools at low speeds is no longer considered non-viable; this is likely because the small number of sample points is not sufficient to capture the rapidly increasing depth in this region.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-12(3)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-12(5)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-12(2)}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-12(4)}
+\end{center}
+
+(d)
+
+Fig. 10 Prediction using the 100 samples from random stratified sampling (a, b) and best-candidate sampling (c, d). a, c: prediction of depth in $\mu \mathrm{m}$ over a uniform grid in the power-speed space, with the beam size and absorptivity fixed. b, d: the sample points in the viable region in (a, c), respectively\\
+explore the design space extensively, it lacks much of the physics involved in SLM. In particular, it does not include powder, making it challenging to compare the melt-pool dimensions with experiments. An obvious improvement is to use a more complex model, with additional physics. As these models are computationally expensive, we can only run a small number of sample points. Therefore, we need to consider more sophisticated data-driven surrogates to address the small-sample issues with regression trees. We next describe two complex models-one physical and one data-driven-to alleviate these concerns. This fits into our iterative approach outlined in Section 2, where we progressively use more complex experiments and simulations.
+
+\subsection*{7.1 More complex physical models}
+The Verhaeghe model [30] starts by considering the different physical phenomena that are involved in the laser melting of powder on a substrate. The laser beam interacts with the powder particles that melt into liquid. The heat transfer is different in the low-conductivity powder and the densified material. The temperature gradients in the melt pool can give rise to convection, both natural and Marangoni. Surface tension effects may lead to wetting or balling of the liquid melt pool. To incorporate all these aspects into a simple and pragmatic model, the authors use an enthalpy-based formulation of the heat transfer equation. This accounts for the various phase transitions in the material, including evaporation, where the vapor phase is assumed to be removed by the inert gas that flows over the powder bed. Unlike the Eagar-Tsai and other simplified models, the reference frame does not move with the heat source, enabling the study of the effect of changing substrate structure from a powder bed to a dense metal. A Gaussian heat source is assumed. To keep the model simple, certain important phenomena, such as surface-tension-driven shape evolution of the liquid bath, are not considered. However, the compaction of the powder bed due to melting is accounted for by using an iterative shrinking procedure.
+
+The Verhaeghe model, given the additional physics that is included, is more computationally expensive than the Eagar-Tsai model, requiring about 1-3 $\mathrm{h}$ of computational time (depending on the laser speed) on a small 8 processor cluster. While this is a moderate requirement in terms of computational resources, the Verhaeghe model has a larger number of parameters, such as the powder layer thickness, the void fraction, and the material properties, such as the absorptivity and conductivity of the various material phases, not all of which are known precisely. While the addition of the new physics in the Verhaeghe model makes it more realistic relative to the Eagar-Tsai model, the new parameters introduce new sources of uncertainties and lead to a higherdimensional design space. Therefore, our initial work has focused mainly on exploring the effects of two parameters to understand the model - the layer thickness and the void fraction of the powder.
+
+Table 6 shows the depth predictions obtained using the Verhaeghe model for the power and speed values used in the 14 track experiment described in Section 3.2. We report results for two values of void fraction for the powder, 0.4 and 0.5 , as the void fraction is typically in this range. The grid spacing used in the Verhaeghe model is $2.5 \mu \mathrm{m}$. We\\
+Table 6 Single-track experiments with predictions using the Verhaeghe model with void fractions of 0.4 and 0.5
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+\multirow{3}{*}{}\begin{tabular}{l}
+Track \\
+number \\
+\end{tabular} & \multirow{3}{*}{}\begin{tabular}{l}
+Power \\
+(W) \\
+\end{tabular} & \multirow{3}{*}{}\begin{tabular}{l}
+Speed \\
+$(\mathrm{mm} / \mathrm{s})$ \\
+\end{tabular} & \multicolumn{3}{|c|}{Depth (layer thickness $=30 \mu \mathrm{m})$} & \multicolumn{3}{|c|}{Depth (layer thickness $=50 \mu \mathrm{m})$} \\
+\hline
+ &  &  & \multirow{2}{*}{}\begin{tabular}{l}
+Experiment \\
+$(\mu \mathrm{m})$ \\
+\end{tabular} & \multicolumn{2}{|c|}{Verhaeghe $(\mu \mathrm{m})$} & \multirow{2}{*}{}\begin{tabular}{l}
+Experiment \\
+$(\mu \mathrm{m})$ \\
+\end{tabular} & \multicolumn{2}{|c|}{Verhaeghe $(\mu \mathrm{m})$} \\
+\hline
+ &  &  &  & $\mathrm{vf}=0.4$ & $v f=0.5$ &  & $\mathrm{vf}=0.4$ & $\mathrm{vf}=0.5$ \\
+\hline
+1 & 400 & 1800 & 105 & 105.0 & 97.5 & 90 & 100.0 & 100.0 \\
+\hline
+2 & 400 & 1500 & 119 & 127.5 & 117.5 & 137 & 122.5 & 122.5 \\
+\hline
+3 & 400 & 1200 & 182 & 163.5 & 147.5 & 183 & 157.5 & 157.5 \\
+\hline
+4 & 300 & 1800 & 65 & 75.0 & 67.5 & 58 & 67.5 & 70.0 \\
+\hline
+5 & 300 & 1500 & 94 & 90.0 & 82.5 & 86 & 85.0 & 85.0 \\
+\hline
+6 & 300 & 1200 & 114 & 115.0 & 105.0 & 76 & 110.0 & 110.0 \\
+\hline
+7 & 300 & 800 & 175 & 172.5 & 155.0 & 207 & 170.0 & 170.0 \\
+\hline
+8 & 200 & 1500 & 57 & 55.0 & 50.0 & 43 & 47.5 & 50.0 \\
+\hline
+9 & 200 & 1200 & 68 & 70.0 & 62.5 & 62 & 62.5 & 65.0 \\
+\hline
+10 & 200 & 800 & 116 & 105.0 & 95.0 & 106 & 97.5 & 100.0 \\
+\hline
+11 & 200 & 500 & 195 & 165.0 & 147.5 & 179 & 162.5 & 160.0 \\
+\hline
+12 & 150 & 1200 & 30 & 47.5 & 45.0 & 37 & 40.0 & 42.5 \\
+\hline
+13 & 150 & 800 & 67 & 72.5 & 67.5 & 63 & 65.0 & 67.5 \\
+\hline
+14 & 150 & 500 & 120 & 112.5 & 102.5 & 104 & 107.5 & 107.5 \\
+\hline
+\end{tabular}
+\end{center}
+
+make several observations on Table 6. First, the results for both 30 and $50 \mu \mathrm{m}$ layer thickness using the Verhaeghe model is closer to the experiment than the Eagar-Tsai results in Table 2. Second, the change in void fraction does not have an appreciable effect on the depth when the layer thickness is $50 \mu \mathrm{m}$. However, for layer thickness of $30 \mu \mathrm{m}$, the melt-pool depth at void fraction of 0.5 is lower than at 0.4 , suggesting that a larger amount of metal in the powder layer gives deeper melt pools. Also, we might intuitively expect that with a deeper layer of powder at $50 \mu \mathrm{m}$, the melted region in the substrate would be shallower as more powder has to melt first before the substrate melts. However, this is true only at void fraction of 0.4 , but not at 0.5. These results indicate that the predictions from the Verhaeghe model depend in a complex way on the void fraction and the layer thickness - the two factors that determine how much metal is in the powder layer.
+
+\subsection*{7.2 More complex data-driven surrogate models}
+There are other more complex surrogate models that could be used as an alternative to the regression tree model discussed in Section 5, such as model trees, neural networks or support vector machines. We chose Gaussian process (GP) models [26] for our work as they provide not just a prediction but also an uncertainty on the prediction, which is useful, given the many sources of uncertainty in building additively manufactured parts.
+
+There are several ways in which we can interpret Gaussian processes. A simple explanation in a brief tutorial by Ebden [7] considers a one-dimensional problem with a training set of $N$ samples, $\left\{x_{1}, \ldots, x_{N}\right\}$ and the associated output values $\mathbf{y}=\left\{y_{1}, \ldots, y_{N}\right\}$. A Gaussian process is a collection of random variables, any finite number of which have a joint Gaussian distribution [26]. GPs can be considered to be an extension of multivariate Gaussian distributions to infinite dimensions. Since our training data with $N$ samples can be thought of as a single point sampled from an $\mathrm{N}$-variate Gaussian distribution, they can be partnered with a Gaussian process. The mean of this GP is often taken to be zero.
+
+Two samples $x_{i}$ and $x_{j}$ in the training data are related to each other through the covariance function $k\left(x_{i}, x_{j}\right)$. We chose the squared-exponential function
+
+$k\left(x_{i}, x_{j}\right)=\sigma_{f}^{2} \exp \left(\frac{-\left(x_{i}-x_{j}\right)^{2}}{2 l^{2}}\right)$
+
+where the maximum allowable covariance is $\sigma_{f}^{2}$ and $l$ is a length parameter that determines the extent of influence of each point. $\sigma_{f}^{2}$ should be set to a large value for functions that cover a broad range of values. If points $x_{i}$ and $x_{j}$ are close to each other, the covariance is near maximum, so the values of the outputs at the two points are highly correlated.\\
+If the two points are far away, then the correlation is near zero, so the value at one point does not influence the value at the other point. Therefore, the parameter $l$ controls the smoothness of the interpolation.
+
+Suppose we want to use the training data to predict the output at a new sample point $x_{*}$. Then, as the data can be represented as a sample from a multivariate Gaussian distribution, we have
+
+$\left[\begin{array}{c}\mathbf{y} \\ y_{*}\end{array}\right]=\mathcal{N}\left(\mathbf{0},\left[\begin{array}{ll}K_{*} & K_{*}^{T} \\ K_{*} & K_{* *}\end{array}\right]\right)$,
+
+where $\mathbf{y}$ is the output variable corresponding to the $N$ training data, $y_{*}$ is the prediction of the output at point $x_{*}$, and the submatrices are defined as follows:
+
+$K=\left[\begin{array}{cccc}k\left(x_{1}, x_{1}\right) & k\left(x_{1}, x_{2}\right) & \ldots & k\left(x_{1}, x_{N}\right) \\ k\left(x_{2}, x_{1}\right) & k\left(x_{2}, x_{2}\right) & \ldots & k\left(x_{2}, x_{N}\right) \\ \vdots & \vdots & . . & \vdots \\ k\left(x_{N}, x_{1}\right) & k\left(x_{N}, x_{2}\right) & \ldots & k\left(x_{N}, x_{N}\right)\end{array}\right]$,
+
+$K_{*}=\left[k\left(x_{*}, x_{1}\right) k\left(x_{*}, x_{2}\right) \ldots k\left(x_{*}, x_{N}\right)\right]$,
+
+and
+
+$K_{* *}=k\left(x_{*}, x_{*}\right)$
+
+The probability of $y_{*}$, that is, the output at the new sample point, is then given by
+
+$\bar{y}_{*}=K_{*} K^{-1} \mathbf{y}$
+
+and the uncertainty in the estimate is given by the variance
+
+$\operatorname{var}\left(y_{*}\right)=K_{* *}-K_{*} K^{-1} K_{*}^{T}$
+
+The parameters $l$ and $\sigma_{f}$ of the Gaussian process can be calculated from the training data using a maximum likelihood approach. It is also possible to include a Gaussian noise component in the output variable, but in our current analysis, we have assumed the noise to be zero.
+
+Since the Gaussian process is a more complex model, it is obvious to ask if it can give accurate predictions with a small number of sample points and perform better than regression trees by avoiding the "block" structure in the predictions seen in Figs. 6 and 10. To evaluate this, we used the 462 Eagar-Tsai samples generated using random stratified sampling and the 100 Eagar-Tsai samples generated using the best candidate algorithm as our two training data sets, and used GP to predict the depth at data points on a $40 \times 40$ grid over the power-speed design space, using a fixed value of $\mathrm{D} 4 \sigma=52 \mu \mathrm{m}$ and absorptivity of 0.4 . Our results are presented in Fig. 11. We also include the standard deviation in the prediction, which represents the uncertainty, and the viable region consisting of points where $60 \mu \mathrm{m} \leq$ depth $\leq 120 \mu \mathrm{m}$.
+
+We make a number of observations. First, regardless of the number of points used to build the model, the predictions are more continuous and the block structure seen with
+
+Fig. 11 GP prediction using the Eagar-Tsai model with the 462 random stratified samples (left) and the 100 best candidate samples (right). Top to bottom: depth prediction in $\mu \mathrm{m}$, the standard deviation in the prediction, and the sample points in the viable region\\
+Depth, Gaussian process, 462 training points
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-15(4)}
+\end{center}
+
+Std-dev of depth, 462 training points
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-15(1)}
+\end{center}
+
+Viable points
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-15}
+\end{center}
+
+Depth, Gaussian process, 100 training points
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-15(2)}
+\end{center}
+
+Std-dev in depth, 100 training points\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_ac9eb55e466d65629094g-15(3)}
+
+regression trees is not present. The viable region using just 100 points is close to the viable region using 462 points though the predicted values are different. This indicates that, for our problem, the GP model gives an accurate viable region even with the smaller number of sample points. Second, the uncertainty in prediction using 462 samples is high at high speeds. This is due to extrapolation as the sample points had a maximum speed of $2250 \mathrm{~mm} / \mathrm{s}$ (Table 1), while the maximum speed on the grid of test points is $2500 \mathrm{~mm} / \mathrm{s}$. Third, for the same reason, there are three viable test points in the top right of the bottom left plot that have a depth greater than $60 \mu \mathrm{m}$ and a standard deviation of nearly 16 . This indicates that GP predictions can be poor in regions outside the training data and the high uncertainty is an indication that we should not trust these results. However, this behavior is not seen when we build the model with fewer training samples. We suspect that the larger distance between the sample points leads to greater smoothness of the interpolating function so that the depth at high power and speed remains below the cut off threshold of $60 \mu \mathrm{m}$. Finally, there is greater uncertainty in predictions at low speed and high powers; this is due to extrapolation in this region as well as the rapidly changing values of the depth. However, the uncertainty using 100 points is smaller than using 462 points.
+
+\section*{8 Statistical inference}
+We have shown that the Verhaeghe model gives results that are closer to the experimental data in comparison with the Eagar-Tsai model (Section 7.1) and that the Gaussian process model can give reasonable predictions even with few sample points (Section 7.2). We next investigate if we can combine the two types of models to build a surrogate with few sample points that will give results comparable with
+
+Fig. 12 GP prediction of depth as a function of a power for different speed values and $\mathbf{b}$ speed for different power values, using the Verhaeghe model run at the 34 viable Eagar-Tsai samples. $D 4 \sigma=52 \mu \mathrm{m}$ and $\eta=0.40$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_ac9eb55e466d65629094g-16(3)}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-16}
+\end{center}
+
+(b) experiments, along with an associated uncertainty on the predictions. We follow the iterative approach for process optimization (Section 2), starting with simple simulations and experiments and progressively using more complex simulations and experiments to constrain the space of process parameters.
+
+We start with the 100 simulations of the Eagar-Tsai model generated using the best-candidate sampling method (Section 6). Of these, 34 samples have depth $>60 \mu \mathrm{m}$ and form the viable set of points. These range in power from 150 to $400 \mathrm{~W}$ and in speed from 500 to $1600 \mathrm{~mm} / \mathrm{s}$. We then run the Verhaeghe model at these points using a void fraction of 0.5 and a layer thickness of $30 \mu \mathrm{m}$ and build a Gaussian process surrogate with the resulting melt-pool depth values.\\
+Figures 12 and 13 show the prediction from the Gaussian process at various values of laser power, speed, beam size, and absorptivity, with the other variables held constant. The uncertainty range shown is at two standard deviations. We observe larger uncertainty during extrapolation, for example, Fig. 12a at values of power less than $150 \mathrm{~W}$ and Fig. $12 \mathrm{~b}$ at values of speed greater than $1600 \mathrm{~mm} / \mathrm{s}$. The behavior seen in the curves is as expected-increasing power or reducing speed increases the depth as does reducing the beam size or increasing the absorptivity. For a given power, the variation of the depth with speed is non-linear (Fig. 12b), while the variation in depth with power for a fixed speed is close to, but not quite, linear. Figure 13 indicates that the depth varies linearly with both beam size and absorptivity.\\
+Fig. 13 GP prediction of depth as a function of $\mathbf{a} 2 \sigma$ for different $\eta$ values and $\mathbf{b} \eta$ for different $2 \sigma$ values using the Verhaeghe model run at the 34 viable Eagar-Tsai samples. Power $=250 \mathrm{~W}$ and speed $=$ $1200 \mathrm{~mm} / \mathrm{s}$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_ac9eb55e466d65629094g-16(2)}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-16(1)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-17(4)}
+\end{center}
+
+Fig. 14 Comparing 14 track experiments with GP prediction using depth from the Verhaeghe model at the 34 viable Eagar-Tsai samples. Layer thickness $=30 \mu \mathrm{m}$, void fraction $=0.5$. Error bars are at one standard deviation
+
+Next, we used the Gaussian process surrogate to predict the depth at the power and speed values for the 14 single tracks described in Section 3.2, with $D 4 \sigma=52 \mu \mathrm{m}$ and $\eta=0.40$, and compared the results with the experiments as shown in Fig. 14. We notice that when the depth is large, the surrogate under-predicts the depth. To confirm that this was not due to the resolution used in the Verhaeghe model, we repeated one of the cases using (i) double the cell size and (ii) double the number of grid points in all dimensions. There was no change in the results in either case, indicating that the Verhaeghe model might not include all the physics required for predicting deep melt pools.
+
+We also observed that the error bars are larger at smaller values of the depth. These are all tracks at higher speeds, and in some cases, have speeds outside the range of the 34 sample points used in building the surrogate. To confirm that this large uncertainty was due to extrapolation, we included additional sample points that had an EagarTsai depth of $55 \mu \mathrm{m}$ or higher, instead of $60 \mu \mathrm{m}$ or higher. The seven new points included some with speed larger than $1600 \mathrm{~mm} / \mathrm{s}$, bringing the samples used for building the surrogate closer to the speed values used in the experiments. For these 41 sample points, we ran the Verhaeghe model for four cases: layer thickness of 30 and $50 \mu \mathrm{m}$ and void fractions of 0.4 and 0.5 . For each case, we built a Gaussian process surrogate and used it to predict the depth of the 14 track experiments as before. Our results in Fig. 15 indicate
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-17(2)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-17(3)}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-17}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ac9eb55e466d65629094g-17(1)}
+\end{center}
+
+(d)
+
+Fig. 15 Comparing 14 track experiments with GP prediction using depth from the Verhaeghe model at the 41 viable Eagar-Tsai samples. Error bars are at one standard deviation. Layer thickness and void fraction are as follows: $\mathbf{a} 30 \mu \mathrm{m}, 0.4 ; \mathbf{b} 30 \mu \mathrm{m}, 0.5 ; \mathbf{c} 50 \mu \mathrm{m}, 0.4 ;$ and $\mathbf{d} 50 \mu \mathrm{m}, 0.5$\\
+that we were able to reduce the uncertainty associated with small values of melt-pool depth in Fig. 14. Comparing panels (a) and (b) in Fig. 15, we find that using a void fraction of 0.4 gives GP predictions that are closer to the experiments than a void fraction of 0.5 for a layer thickness of $30 \mu \mathrm{m}$. Changing the void fraction for the $50 \mu \mathrm{m}$ layer thickness has little effect as was observed in Table 6.
+
+These results show that the Verhaeghe model, combined with predictions using a GP surrogate, can give reasonable results for melt-pool depths for 316L stainless steel. The uncertainty associated with the predictions is small, giving us greater confidence in the results.
+
+\section*{9 Conclusions}
+In this paper, we demonstrated several different ways in which techniques from data mining and statistical inference can be used to provide scientific insight and improve process optimization in selective laser melting, enabling us to quickly build parts with desired properties, such as high density. We showed how we can combine more complex physical and data-driven models to improve accuracy of prediction and, through uncertainty analysis, gain confidence in the process parameters selected for SLM. Our future work will include using the Verhaeghe model, coupled with Gaussian processes, to understand the effects of other variables such as powder size distributions and material parameters. We will also extend our work to other materials to understand if results are broadly applicable.
+
+Acknowledgments The author acknowledges the contributions of Wayne King (implementation and execution of the Eagar-Tsai model), John W. Gibbs (implementation of the Verhaeghe model), Paul Alexander (operation of the Concept Laser M2), and Mark Pearson and Cheryl Evans (metallographic preparation and measurement). We also thank the Sheffield Machine Learning group for making the Gaussian process freely available at \href{http://sheffieldml.github.io/GPy/}{http://sheffieldml.github.io/GPy/}. LLNLJRNL-680063: This work was performed under the auspices of the U.S. Department of Energy by Lawrence Livermore National Laboratory under Contract DE-AC52-07NA27344. This work was funded by the LDRD Program at LLNL under project tracking code 13-SI-002.
+
+\section*{References}
+\begin{enumerate}
+  \item Bourell DL, Leu MC, Rosen DW (2009) Roadmap for additive manufacturing - Identifying the future of freeform processing. The University of Texas at Austin
+
+  \item Bourell DL, Rosen DW, Leu MC (2014) The roadmap for additive manufacturing and its impact. 3D Print Addit Manuf 1:6-9
+
+  \item Breiman L, Friedman JH, Olshen RA, Stone CJ (1984) Classification and regression trees. CRC Press, Boca Raton
+
+  \item Bridson R (2007) Fast Poisson disk sampling in arbitrary dimensions. In: ACM SIGGRAPH 2007 sketches. ACM, New York
+
+  \item Delgado J, Ciurana J, Rodriguez C (2012) Influence of process parameters on part quality and mechanical properties for DMLS and SLM with iron-based materials. Int J Adv Manuf Technol 60:601-610
+
+  \item Eagar T, Tsai N (1983) Temperature-fields produced by traveling distributed heat-sources. Weld J 62:S346-S355
+
+  \item Ebden M (2008) Gaussian process for regression and classification: a quick introduction. arXiv: 1505.02965, submitted May 2015
+
+  \item Fang KT, Li R, Sudjianto A (2005) Design and modeling for computer experiments. Chapman and Hall/CRC Press, Boca Raton
+
+  \item Gusarov AV, Yadoirtsev I, Bertrand P, Smurov I (2009) Model of radiation and heat transfer in laser-powder interaction zone at selective laser melting. J Heat Transf 131:072,101
+
+  \item Hall MA (2000) Correlation-based feature selection for discrete and numeric class machine learning. In: Proceedings of 17th international conference on machine learning. Morgan Kaufmann, San Francisco, pp 359-366
+
+  \item Hodge NE, Ferencz RM, Solberg JM (2014) Implementation of a thermomechanical model for the simulation of selective laser melting. Comput Mech 54:33-51
+
+  \item Inselberg A (2009) Parallel coordinates: visual multidimensional geometry and its applications. Springer, New York
+
+  \item Kamath C (2009) Scientific data mining: a practical perspective. Society for Industrial and Applied Mathematics (SIAM), Philadelphia
+
+  \item Kamath C, Cantú-Paz E (2001) Creating ensembles of decision trees through sampling. In: Proceedings of the 33rd symposium on the interface: computing science and statistics
+
+  \item Kamath C, El-dasher B, Gallegos GF, King WE, Sisto A (2014) Density of additively-manufactured, 316L SS parts using laser powder-bed fusion at powers up to $400 \mathrm{~W}$. Int J Adv Manuf Technol 74:65-78
+
+  \item Kempen K, Thijs L, Yasa E, Badrossamay M, Verheecke W, Kruth JP (2011) Process optimization and microstructural analysis for selective laser melting of AlSi10Mg. In: Bourell D (ed) Proceedings of solid freeform fabrication symposium, vol 22. University of Texas at Austin, Austin, pp 484-495
+
+  \item Khairallah SA, Anderson A (2014) Mesoscopic simulation model of selective laser melting of stainless steel powder. J Mater Process Technol 214:2627-2636
+
+  \item King WE, Barth HD, Castillo VM, Gallegos GF, Gibbs JW, Hahn DE, Kamath C, Rubenchik AM (2014) Observation of keyhole-mode laser melting in laser powder-bed fusion additive manufacturing. J Mater Process Technol 214:2915-2925
+
+  \item Körner C, Attar E, Heinl P (2011) Mesoscopic simulation of selective beam melting processes. J Mater Process Technol 211:978987
+
+  \item Kruth J, Badrossamay M, Yasa E, Deckers J, Thijs L, Van Humbeeck J (2010) Part and material properties in selective laser melting of metals. In: Proceedings of 16th international symposium on electromachining (ISEM XVI), Shanghai
+
+  \item Laohaprapanon A, Jeamwatthanachai P, Wongcumchang M, Chantarapanich N, Chantaweroad S, Sitthiseripratip K, Wisutmethangoon S (2012) Optimal scanning condition of selective laser melting processing with stainless steel 3161 powder. Material and Manufacturing Technology Ii, Pts 1 and 2. Trans Tech Publications Ltd, Stafa-Zurich, pp 816820
+
+  \item Li Y, Gu D (2014) Parametric analysis of thermal behavior during selective laser melting additive manufacturing of aluminum alloy powder. Mater Des 63:856-867
+
+  \item Mitchell DP (1991) Spectrally optimal sampling for distribution ray tracing. Comput Graph 25(4):157-164
+
+  \item National Institute of Standards and Technology (2013) Measurement Science Roadmap for Metal-Based Additive Manufacturing. Tech. rep. National Institute of Standards and Technology
+
+  \item Oehlert GW, Freeman WH (2000) A first course in design and analysis of experiments. Available from \href{http://users.stat.umn.edu/}{http://users.stat.umn.edu/} gary/Book.html
+
+  \item Rasmussen CE, Williams CKI (2006) Gaussian processes for machine learning. MIT Press, Cambridge
+
+  \item Rokach L (2010) Pattern classification using ensemble methods. World Scientific Publishing, Singapore
+
+  \item Rokach L, Maimon O (2014) Data mining with decision trees: theory and applications. World Scientific Publishing, Singapore
+
+  \item Spierings A, Levy G (2009) Comparison of density of stainless steel 316L parts produced with selective laser melting using different powder grades. In: Bourell D (ed) 20th annual international solid freeform fabrication symposium, an additive manufacturing conference. University of Texas at Austin, Austin, pp 342-353
+
+  \item Verhaeghe F, Craeghs T, Heulens J, Pandalaers L (2009) A pragmatic model for selective laser melting with evaporation. Acta Mater 57:6006-6012
+
+  \item Yadroitsev I (2009) Selective laser melting: direct manufacturing of 3D-objects by selective laser melting of metal powders. LAP Lambert Academic Publishing
+
+  \item Yadroitsev I, Gusarov A, Yadroitsava I, Smurov I (2010) Single track formation in selective laser melting of metal powders. $\mathrm{J}$ Mater Process Technol 210:1624-1631
+
+  \item Yadroitsev I, Smurov I (2010) Selective laser melting technology: from the single laser melted track stability to 3D parts of complex shape. Phys Procedia 5:551-560
+
+  \item Yasa E (2011) Manufacturing by combining selective laser melting and selective laser erosion / laser re-melting. Ph.D. thesis, Faculty of Engineering, Department of Mechanical Engineering. Katholieke Universiteit Leuven, Heverlee, Leuven. Available from Katholieke Universiteit Leuven
+
+\end{enumerate}
+
+
+\end{document}

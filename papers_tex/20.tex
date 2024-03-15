@@ -1,0 +1,766 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{multirow}
+
+\title{Journal Pre-proof }
+
+
+\author{Louca R. Goossens*, Brecht Van Hooreweder\\
+KU Leuven, Mechanical Engineering Department, Member of Flanders Make\\
+Celestijnenlaan 300 - 3001 Leuven - Belgium}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+A virtual sensing approach for monitoring meltpool dimensions using high speed coaxial imaging during laser powder bed fusion of metals
+
+Louca R. Goossens, Brecht Van Hooreweder
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3ea5497605dea1905837g-01}
+\end{center}
+
+PII:
+
+S2214-8604(21)00088-9
+
+DOI:
+
+\href{https://doi.org/10.1016/j.addma.2021.101923}{https://doi.org/10.1016/j.addma.2021.101923}
+
+Reference: ADDMA101923
+
+To appear in: Additive Manufacturing
+
+Received date: 1 October 2020
+
+Revised date: 22 January 2021
+
+Accepted date: 16 February 2021
+
+Please cite this article as: Louca R. Goossens and Brecht Van Hooreweder, A virtual sensing approach for monitoring melt-pool dimensions using high speed coaxial imaging during laser powder bed fusion of metals, Additive Manufacturing, (2020) doi:\href{https://doi.org/10.1016/j.addma.2021.101923}{https://doi.org/10.1016/j.addma.2021.101923}
+
+This is a PDF file of an article that has undergone enhancements after acceptance, such as the addition of a cover page and metadata, and formatting for readability, but it is not yet the definitive version of record. This version will undergo additional copyediting, typesetting and review before it is published in its final form, but we are providing this version to give early visibility of the article. Please note that, during the production process, errors may be discovered which could affect the content, and all legal disclaimers that apply to the journal pertain.
+
+(C) 2020 Published by Elsevier.
+
+\section*{A virtual sensing approach for monitoring melt-pool dimensions using high speed coaxial imaging during laser powder bed fusion of metals }
+
+
+\begin{abstract}
+Metal parts produced by Laser Powder Bed Fusion (L-PBF) are frequently used for demanding applications. To meet stringent safety and certification requirements, a better understanding of melt-pool behavior and stability during processing is desired. This work presents a novel, fast and economically feasible virtual sensing approach for accurate estimation of melt-pool depth and width during L-PBF of metals. In a first step, the melt-pool width is determined by GPU-based processing of images from a high-speed coaxial camera monitoring system. In a second step, a physics-based analytical model is used to calculate the melt-pool depth-to-width ratio from the processing conditions and material properties. In a third and last step, the results from the first two steps are combined to estimate the melt-pool depth. Experimental validation of these predicted melt-pool dimensions is performed on 316L SS single layer strips that are consecutively produced, cross-sectioned, polished and etched to reveal the actual melt-pool boundaries. The results
+\end{abstract}
+
+\footnotetext{${ }^{*}$ Corresponding author
+
+Email address: Louca.Goossens@kuleuven. be (Louca R. Goossens)
+}
+indicate an average relative error on the predicted melt-pool depth of $9.9 \%$ and $2.8 \%$ for the full L-PBF parameter range and for the optimal parameter range respectively. This gives confidence in the predictive capabilities of a virtual sensing approach using coaxial camera images for the assessment of the melt-pool depth and process stability.
+
+Keywords: , L-PBF, monitoring, melt-pool, image processing, metals
+
+\section*{1. Introduction}
+Laser Powder Bed Fusion (L-PBF), also referred to as Selective Laser Melting (SLM), is an Additive Manufacturing technique (AM). As a production process it offers distinct advantages over conventional manufacturing techniques. In particular it allows for the production of very complex geometries directly from a CAD model. Applications are typically found in highly demanding industries such as aerospace and the medical industry. One of the main challenges all AM technologies face is the issue of quality assurance and certification. Due to the nature of the layer-based process, defects such as porosity can manifest themselves throughout the entire volume of the produced component. The occurrence of such defects can lead
+
+to unwanted variations in the mechanical properties and as such affect final product performance so far as to reducing it to scrap [1]. Typically, timeand cost-ineffective post production quality control techniques such as X-ray computed tomography are necessary to guarantee that the final component meets the required specification.
+
+In this work a virtual sensing approach is presented and validated for 316L Stainless Steel (SS). Virtual sensing, at its core, is the combination of sensor\\
+and model data in order to achieve feasible and/or economical alternatives to costly or impossible to measure physical quantities [2]. In this two-pronged strategy, melt-pool modeling, and coaxial camera monitoring are combined in order to estimate, in situ, the melt-pool depth and width during L-PBF of metals.
+
+Extracting melt-pool widths from camera images has shown to be a promising method for achieving confidence in L-PBF part quality. Lane et al. have presented several methods which can be used to calibrate and characterize the spatial resolution of a coaxial camera system for determining the melt-pool temperature, cooling rates and dimensions $[3,4]$. While, Zheng et al. showed that using an infrared camera with a limited frame rate, the melt-pool width can be determined from an infrared image for Ti$6 \mathrm{~V}-4 \mathrm{Al}$ [5]. However, a significant calibration with microscopy results was required and only a limited processing range was examined. Other authors applied machine learning techniques on coaxial camera images, with the aim of detecting anomalies in the melt-pool shape. Kwon et al. showed that that the quantification of melt-pool images using deep neural networks could be utilized to determine whether the process is in normal or abnormal state [6]. Also, Yuan et al. demonstrated that using a two-step machine learning approach the track width, standard deviation and track continuity could be predicted without the need for ex situ measurements [7]. Directly quantifying the melt-pool depth in situ proves to be more challenging. Indeed, one of the most prevalent quoted downsides of coaxial camera monitoring is a lack of the melt-pool depth information [8, 1]. For in situ melt-pool depth\\
+measurements, transmission X-ray imaging is the method of choice for many authors $[9,10,11,12,13,14]$. While it provides high quality temporal and spatial information, the technique is associated with high costs and stringent safety measures, making it economically unattractive in a manufacturing environment and limiting the applicability to specialized laboratories. An alternative to measure the depth directly is proposed by Fleming and Allen et al. They show that with the combined use of inline coherent imaging and direct laser absorptance measurements, conduction and keyhole modes can be clearly distinguished on the basis of their time-resolved measurements $[15,16]$. As such, in situ measurements of the melt-pool geometry still prove difficult in a production environment.
+
+The second part of the virtual sensing methodology is the modeling component. The modeling of $\mathrm{L}-\mathrm{PBF}$ is a well-researched topic, where the aim is to achieve a relationship between the inputs and outputs of the system. In this case, the processing conditions, machine parameters, and powder/material properties can be considered as the input. The resulting solidified melt-pool geometry (width, depth) can either be directly interpreted as the output or indirectly linked to final part density. In general, models can be datadriven (DD) or physics based. In data-driven models, inputs and outputs are linked through a series of observations or experiments typically yielding a set of algebraic expressions. Previously, authors have reported a successful application of these techniques, typically employing a Neural Network (NN) or a machine learning approach $[7,6,17]$. While DD models have shown great promise under specific operating conditions, they are often unable to\\
+uncover the underlying physical principles. Furthermore, with a plethora of different machine builders, powder producers, varying environmental conditions and part geometries, there is a substantial risk of construing misleading or erroneous relationships due to the inherent properties of the materials, machines and additionally the circumstantial conditions of the experiments. This makes DD models vulnerable to changing conditions. It also limits their scaling capability, relying heavily on large and reliable datasets for achieving acceptable performance in previously "untrained" conditions. Models based on physics, on the other hand, are expressed through a set of equations, be it differential or partial differential equations. These models attempt to incorporate the relevant physical and continuity equations that describe the phenomena under investigation. One of the advantages of physics-based models is the inherent reliability they bring over a large range of conditions without the need for new data or costly experiments when changes are made to the process or environmental conditions, e.g. a change of L-PBF machine or powder producer. Contrary to DD models, physics-based models don't yield immediate algebraic expressions relating the input and output. Depending on the desired outcome, the equations can either be numerically solved using Finite-Element or -Volume (FE/FV) methods or the models can be strategically simplified and solved analytically. The FE/FV approach has already shown to yield high-fidelity results corresponding well with experimental data $[18,19,20]$. In a similar fashion, analytical models have been found to unveil underlying trends with relation to the melt-pool dimensions and processing conditions [21, 22, 23, 24, 25]. For virtual sensing, any kind of model capable of linking processing conditions and melt-pool dimensions\\
+would suffice. Taking into account computational efficiency and generality of the model, an analytical model, as introduced by Fabbro [24] is used in this study.
+
+In conclusion, this paper presents and validates a methodology for estimating melt-pool width and depth during L-PBF of metals. The first section describes the monitoring setup and the model employed. After which, in the second section, the model performance is validated using metallographic cross sections. The third section describes the comparison of the width measurements extracted from the camera images, and the metallographic widths. Finally, in the last section, the model data and camera images are combined and the predicted melt-pool depth is compared with the depth as obtained by metallographic analysis.
+
+\section*{2. Materials and methods}
+\subsection*{2.1. Materials, thermophysical properties and process parameters}
+In this work, an in-house developed L-PBF machine is used. A detailed description of the specifications and setup are given in section 2.2. The powder material used, is gas atomized 316L SS powder with a size distribution between $10-45 \mu \mathrm{m}$. This material is chosen for validating the predicted meltpool depths in this work, as melt-pool boundaries of L-PBF 316L SS can be easily visualized after cross-sectioning, polishing and chemical etching.
+
+Single layer strips $(10 \times 2[\mathrm{~mm}])$ are scanned on top of a larger 316L SS
+
+L-PBF substrate $(25 \times 15 \times 1.5[\mathrm{~mm}])$. These are all simultaneously pro-\\
+duced in a single production run, with no delay between the production of the substrate and the strips, as to mimic realistic processing conditions. Each of the 6 different substrates produced, contains 8 such strips. This makes a total of 48 distinct strips. For each strip, different combinations of laser power and scan speed are applied. The parameters range from 100 to $600 \mathrm{~W}$ in increments of $100 \mathrm{~W}$ for the applied laser power and 400 to $1100 \mathrm{~mm} / \mathrm{s}$ with increments of $100 \mathrm{~mm} / \mathrm{s}$ for the scan speed. The layer thickness is set at $30 \mu \mathrm{m}$ and a hatch spacing of $105 \mu \mathrm{m}$ is applied. The vectors are scanned in the long direction $(10 \mathrm{~mm}$ ) with a zig-zag strategy. Labels are applied to each substrate and below each single layer strip in order to differentiate them later on. The sample geometry is shown in Figure 1. To evaluate the melt-pool dimensions post-production, the samples are cut using wire EDM near the center of the strip's long axis. The sample cross sections are subsequently polished and electrochemical etching is applied for 30 seconds using an aqueous solution of $10 \%$ oxalic acid at 7 V. Finally, a Keyence VHX$6000^{\circledR}$ optical microscope is used to measure the melt-pool depth and width dimensions. For each strip, 7 individual melt-pools are measured in order to evaluate the process stability.
+
+For the predictive modeling component, the relevant thermophysical properties of bulk 316L SS material are taken from [26] with exception of the optical absorption, which is taken from [27]. The values are taken for solid material near the melting temperature. A summary of these properties is shown in Table 1.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3ea5497605dea1905837g-09}
+\end{center}
+
+Figure 1: A rendering of the produced sample geometry, for clarity, the height of the single layer strips are not to scale.
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\multicolumn{1}{|c|}{Property} & Value & Units & Symbol \\
+\hline
+Density & 7269 & $\mathrm{~kg} / \mathrm{m}^{3}$ & $\rho$ \\
+\hline
+Thermal Conductivity & 31.1 & $W /(\mathrm{m} * \mathrm{~K})$ & $k$ \\
+\hline
+Heat Capacity & 710 & $\mathrm{~J} /(\mathrm{kg} * \mathrm{~K})$ & $\mathrm{C}$ \\
+\hline
+Liquidus Temperature & 1690 & $K$ & $T m$ \\
+\hline
+Evaporation Temperature & 3090 & $K$ & $T b$ \\
+\hline
+Optical Absorption & 0.34 & - & $A$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 1: Summary of the relevant thermophysical properties of bulk 316L SS taken from $[26,27]$.
+
+\subsection*{2.2. Experimental setup}
+\subsection*{2.2.1. Optical train}
+For this research an in-house developed L-PBF machine is used. The core of the optical train is a $1 \mathrm{~kW}$ fiber laser with a wavelength of $1080 \mathrm{~nm}$. The system's focal length is $340 \mathrm{~mm}$ and has a measured $1 / e^{2}$ spot size of 37.5 $\mu \mathrm{m}$. The general layout of the monitoring setup is similar to those previously published by $[28,29,30]$ be it with newer and upgraded components. For clarity, a brief description of the constituents and working principle is given here.
+
+The optical path consists out of a forward propagation part and a backwards propagation part as schematically shown in Figure 2. The optical pathways are separated by wavelength using a thin-film interference filter with a 950 $\mathrm{nm}$ cut-on wavelength (b). In forward propagation, the laser beam (a) is guided and focused onto the powder-bed (e). Starting from the laser source, the beam passes through the thin-film filter (b) after which it is positioned and focused by a galvanometer scanner (c) in conjunction with an f-theta lens (d). In operation, a melt-pool is created (e) and in accordance with Planck's law, emits what is referred to as process light [31]. The emitted process light is partially recaptured by the f-theta lens and travels back up to the thin-film interference filter (b). Here the process light below $950 \mathrm{~nm}$ is reflected and thus separated from the laser light. The remainder of the process light is then directed towards the backward propagation part of the optical train. The main components of the backward propagation part are a high speed CMOS camera [32] (h) and a large area silicon photodiode sensor (g). The process light is evenly distributed among the two using a 50/50 beam splitter
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3ea5497605dea1905837g-11}
+\end{center}
+
+Figure 2: Schematic layout of the coaxial monitoring system in the L-PBF setup.
+
+(f). Additionally, both sensors are band pass filtered in a range of 800 to 950 $\mathrm{nm}$. This prevents any stray ambient and laser light from interfering with the measurements.
+
+\subsection*{2.2.2. Data acquisition}
+Due to the highly localized energy input and the high processing speeds involved, the L-PBF process is characterized by high temporal and spatial temperature gradients. This results in the highly dynamic melt-pool behavior typically associated with L-PBF. Several authors have measured and reported the relevant time scales for melt-pool flow behavior using high speed x-ray imaging and/or multi-physics simulations $[12,13,11,10,18,14]$. With the exception of the keyhole collapsing when the laser power source is cut off [13], the relevant time scales are shown to be in the order of tens to hundreds of $\mu \mathrm{s}$. This implies that the acquisition rate should be in the same range,\\
+at least, if the melt-pool dynamics are desired to be captured. A second requirement is having the potential to capture the entire build process. This is rooted in the ascertainment that for optimal processing parameters, densities typically exceed $99.9 \%$. This would result in a low probability of defect detection when only short snapshots are considered. To fulfill both of these requirements a custom data acquisition system was developed, capable of sustaining continuous processing and recording of monitoring data. This system is built up using a custom FPGA based frame grabber/processor linked to a fiber coupled Network-Attached Storage (NAS). The NAS is equipped with a RAID 0 array of four 1 TB Solid State Disks (SSD), resulting in a sustainable data rate up to $1 \mathrm{~GB} / \mathrm{s}$ and a total capacity of $4 \mathrm{~TB}$. The camera interface used is the "Full" configuration Camera-Link ${ }^{\circledR}$ interface, capable of data rates of up to $850 \mathrm{MB} / \mathrm{s}$ [33]. Balancing the availability of light, resolution and frame rate, the acquisition speed for the camera is set at 50 $\mu$ s or expressed alternatively, 20.000 frames per second (fps).
+
+\subsection*{2.3. Image processing}
+The images captured by the coaxial camera are 8-bit gray-scale images, measuring 120 by 120 pixels in size. The calibrated pixel size is $11.8 \mu \mathrm{m}$, resulting in a field of view of 1416 by $1416 \mu \mathrm{m}$. An example image showing a representative melt-pool is presented in Figure 3. The melt-pool is shown to be slightly off-center in the $\mathrm{x}$-direction, this is due to the discrete $\mathrm{x}$-offsetting capabilities of the camera, for the region of interest selection (modulo 80) [32]. To extract the melt-pool width, a series of image processing steps are applied. The image processing is done using MATLAB ${ }^{\circledR}$ [34]. Due to the large amount of frames that need to be processed, the individual processing
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3ea5497605dea1905837g-13}
+\end{center}
+
+Figure 3: A representative raw image taken at $20.000 \mathrm{fps}$ using a coaxial camera in the KU Leuven L-PBF setup and showing a melt-pool traveling upwards.
+
+steps were carefully selected and a balance was struck between the computational efficiency and the measurement accuracy. As Graphical Processing Units (GPUs) are specifically designed to be efficient in the processing of images, individual processing steps capable of leveraging the CUDA ${ }^{\circledR}$ GPU library [35] are preferred. This way, also simultaneous parallel processing of different frames is possible, enabling the entire processing chain to be scalable and capable of running tasks in parallel. Combined with the high computational efficiency, this will ensure that the algorithms and processing steps are transferable to an on-line system where frames can be processed on-line, extending the capabilities from monitoring and off-line analysis to on-line monitoring and control. The processing steps for determining the melt-pool depth are discussed further in section 2.4.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3ea5497605dea1905837g-14}
+\end{center}
+
+Figure 4: Image processing workflow; a) Original image, b) Sobel edge detection, c) Addition of the center line, d) Boolean "and" operation, e) Overlay of original image and melt-pool outline.
+
+As a frame can contain more than one object due to the occurrence of spatter or due to break up of the melt-pool tail, the first step in the image processing is to filter out the melt-pool outline. This is done using a combination of an edge detection using the Sobel operator [36], and the relative location of the laser in the frame. The Sobel operator consists out of two kernels to be convoluted with the original image. The operation results in the approximate derivative for each pixel in the horizontal and vertical direction. By combining both directions, the total derivative of the original image is acquired. Based on this derivative or gradient image, edges in the original image are identified. Figure 4.b shows the result of this operation. There are some distinct advantages to using edge detection compared to fixed value thresholding. First, no calibration is required for different materials or alloys since the boundary is defined by the gradient and not the absolute grey value. Second, erroneous extraction due to variance in the intensity is reduced to a minimum. Such variances could be the results of melt-pool plume or spatter ejection. After the edge detection step, the resulting image is binary, with only the melt-pool outline remaining. As the camera is synchronized with the scanner controls, the direction of travel can be determined for each frame. With the knowledge of the beam center and the direction of travel available, a line with single pixel width is construed across the frame. This line is referred to as the ruler-line and is perpendicular to the direction of travel and passes through the laser beam center. As the analytical solution for the temperature field of a moving Gaussian beam shows, perpendicular to the direction of travel and passing through the laser beam center is where the maximum of the melt-pool width occurs [37]. The melt-pool width can\\
+thus be extracted by calculating the distance between the two intersection points of the ruler-line and the melt-pool outline. The intersecting points are determined using a Boolean "AND" operation. An extra operation is still required due to the fact that both the outline and the ruler-line are of single pixel width, and single pixel width elements can intersect without the need for overlapping pixels as shown in Figure 5.a. The line is therefore diluted using a square structuring element of two by two pixels as demonstrated in Figure 5.b. This guarantees the existence of, at least, one intersection point. Figure 4.e shows a composite image where the melt-pool outline and accompanying width line are superimposed on the original image. As seen, the melt-pool outline and width measurement correspond well with the original melt-pool image. The time complexity of the proposed workflow is dominated by that of the edge detection, which is $\mathrm{O}(\mathrm{n} \log (\mathrm{n}))$ with $\mathrm{n}$ being the total number of elements. The remaining steps are $\mathrm{O}(1)$ assuming parallel execution of the Boolean "AND" operation.
+
+Expanding the presented work-flow to also measure the melt-pool length is trivial. Indeed, a rotation of 90 degrees on the ruler line is sufficient. However, determining and validating the melt-pool length is challenging for a number of reasons. First of all, the melt-pool length in process, is a dynamic condition of which no direct measurable trace remains in the post-process condition. This encumbers the validation of online melt-pool length measurements. Secondly, the work-flow presented here utilizes a Sobel operator for edge detection. Figure 6 shows an illustrative raw melt-pool image (a), and the resulting convolution of that image and the horizontal Sobel oper-\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_3ea5497605dea1905837g-17}
+
+Figure 5: a) Two single pixel elements (melt outline and the ruler-line) without a pixel in common, even though intersection is clearly present b) Application of the dilution operator on the ruler-line ensures the existence of pixel overlap for intersecting elements.
+
+ator (b). The convoluted image shows two different regions, with the first being the melt-pool depression, and the second, downstream of the first, is the melt-pool tail. It is clear that the melt-pool depression yields a strong edge well suited for a reliable dimensional measurement of the melt-pool width. However, along the scanning axis, the extent of the depression does not truthfully represent the melt-pool length. Numerous transmission X-ray imaging studies $[9,10,11,12,13,14]$ and works employing $\mathrm{FE} / \mathrm{FV}$ simulations $[18,19,20]$ indeed confirm that molten material remains present and eventually consolidates in the tail section of the melt-pool. As is clear from Figure $6 \mathrm{~b})$, the coaxial camera is able to register the melt-pool tail. However, the edge it provides is very weak. This directly affects the accuracy and robustness of the measurement method. For the aforementioned reasons, in this work, only the melt-pool width is extracted from the camera images.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_3ea5497605dea1905837g-18}
+
+Figure 6: a) A representative raw melt-pool image, b) The convolution of the raw image and the horizontal Sobel operator, showing a strong edge for the melt-pool depression, and weak edges for the melt-pool tail.
+
+\subsection*{2.4. Melt-pool modeling}
+The analytic scaling law model used to predict the melt-pool depth-towidth ratios $(e / d)$ is taken from Fabbro $[25,24]$. It is construed using several simplifying strategic hypotheses, which can be summarized as follows:
+
+\begin{enumerate}
+  \item The power absorbed by the melt-pool $(P \times A)$ is equal to the product of the laser beam power $P$, and the material absorption coefficient $A$, taken at the laser's wavelength.
+
+  \item The melt-pool transverses the substrate at a steady state scan speed $V$ with an initial substrate temperature of $T_{0}$.
+
+  \item The inner boundary of the melt-pool geometry, or keyhole is considered to be a vertical cylinder with a diameter $d$, equal to the laser spot size and with a length of $e$, representative of the melt-pool depth.
+
+  \item The inner wall temperature of the melt-pool is constant and remains at $T_{v}$ which is the material boiling temperature.
+
+  \item The melt-pool behavior is characterized by some additional thermophysical properties. Being the heat capacity $C[J /(k g * K)]$, the density $\rho\left[\mathrm{kg} / \mathrm{m}^{3}\right]$ and the thermal conductivity $k[W /(m * K)]$.
+
+\end{enumerate}
+
+For these hypotheses the Vashy-Buckingham $\pi$ theorem is applied and a solution for the thermal model is found. This yield the expression for the depth-to-width ratio $R$ found in equation 1. For a full derivation of this solution, the reader is referred to preceding publications by Fabbro et al. $[24,25]$.
+
+From condition \# 3 and \# 4 it's clear that the employed model assumes the process to be governed by keyhole mode melting. Where the recoil pressure generates a cylindrical void about the size of the laser beam diameter. While the inner wall temperature boundary conditions is set at boiling temperature, necessary to sustain the recoil pressure and subsequent keyhole. The model thus attempts to describe the resulting solidified melt-pool shapes through modeling of the generated keyhole as a result of the recoil pressure. It should be noted that the melt-pool width in LPBF is often much larger than the beam diameter and exhibits a parabole-like cross section as opposed to the proposed cylindrical shape. Nevertheless, Fabbro et al. have shown that a good correspondence with experimental results for both laser welding and LPBF are achieved $[24,25]$.
+
+
+\begin{equation*}
+R=\frac{e}{d}=\frac{R_{0}}{1+\frac{V}{V_{0}}} \tag{1}
+\end{equation*}
+
+
+with:
+
+$$
+R_{0}=\frac{A \times P}{n \times d \times k \times\left(T_{v}-T_{0}\right)}, V_{0}=\frac{2 \times n \times k}{m \times d \times \rho \times C}
+$$
+
+where
+
+$A$ is the material absorption coefficient at the laser wavelength
+
+$P$ is the laser power $[W]$
+
+$k$ is the thermal conductivity $[W /(m * K)]$
+
+$T_{v}$ is the evaporation temperature $[K]$
+
+$T_{0}$ is the substrate temperature $[K]$
+
+$d$ is the beam diameter $[m]$
+
+$\rho$ is the material density $\left[\mathrm{kg} / \mathrm{m}^{3}\right]$
+
+$C$ is the material heat capacity $[J /(k g * K)]$
+
+The parameters $m$ and $n$ in equation 1 are a function of the Péclet range for the given processing conditions. They are derived from a 2D FE-analysis, as no analytical solution for the power conducted through the cylindrical melt-pool surface exists. The numerical solution is approximated by a linear function, where the factors $m$ and $n$ are a piecewise approximate function dependent on the Péclet number [24], with the Péclet number being expressed as :
+
+
+\begin{equation*}
+P e=\frac{V \times \rho \times C \times d}{2 \times k} \tag{2}
+\end{equation*}
+
+
+For the given conditions and parameters in section 2.1, the Péclet number ranges between $1.2 \leq P e \leq 3.4$. In this range, $m$ and $n$ are set to $m=5$ and $n=3[24]$. Finally, to estimate the substrate temperature $T_{0}$, the maximum of the recorded baseplate temperatures is selected as a reference. The temperature was measured in process using a type $\mathrm{K}$ thermocouple mounted to the bottom of the baseplate. A temperature of $T_{0} \approx 473 \mathrm{~K}$ was reached near the end.
+
+Overall, errors in the input parameters propagate linearly, except for the beam diameter $(d)$, which exhibits a quadratic behavior, making it the most critical and sensitive parameter in all of the equation.
+
+\section*{3. Results and discussion}
+\subsection*{3.1. Metallographic analysis of the melt-pool dimensions}
+Figure 7 displays a number of illustrative vertical cross sections of the etched 316L SS parts produced by L-PBF. The metallographic images in Figure 7 a-b-c shown here, were taken at the same magnification. Looking at these cross sections, a large span of melt-pool dimensions is observed, with Figure 7 a. showing rather shallow melt-pools in conduction mode melting $(R=0.59)$, Figure 7 b. showing some melt-pools near the optimal processing parameters $(R=2.54)$, and finally, Figure $7 \mathrm{c}$. showing some very
+
+high aspect ratio melt-pools which are deep into the keyhole mode melting regime $(R=4.43)$.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_3ea5497605dea1905837g-22}
+
+Figure 7: Illustrative vertical cross sections showing melt-pool dimensions of etched 316L SS L-PBF parts for a range of processing conditions including a) $100 \mathrm{~W}-800 \mathrm{~mm} / \mathrm{s}$, b) $300 \mathrm{~W}-800 \mathrm{~mm} / \mathrm{s}$, c) $600 \mathrm{~W}-800 \mathrm{~mm} / \mathrm{s}$, d) Definition of metallographic melt-pool dimensions.
+
+Figure 7 d. shows the definition of the melt-pool dimensions, indicating that the width $d$ and depth $e$ are measured at the original substrate level. The width is measured between the melt-pool boundaries along a horizontal line, while the depth is defined as the distance between the top surface of the original substrate and the bottom of the melt-pool boundary. The aspect ratios $(e / d)$ are calculated from the obtained mean values for $e$ and $d$. Table A. 1 shows the measured melt-pool dimensions and aspect ratios for the given range of L-PBF processing parameters. The melt-pool depths for the processing parameters of $600 \mathrm{~W}, 400-500 \mathrm{~mm} / \mathrm{s}$ are linearly extrapolated as their depth exceeded the substrate thickness. The measured melt-pool $e / d$ ratios range from 0.47 up to 5.65. All samples show the expected morphological/dimensional evolution of the melt-pool, except for the parameters sets of $600 \mathrm{~W}$ and 1000-1100 mm/s. Here a sudden drop in the $e / d$ ratio is observed (4.68 to 1.68) which cannot be explained by the change in energy density. Figure 8 shows the cross sections of interest, revealing unstable, broad and shallow melt-pools. A possible explanation here is the onset of hydrodynamic instabilities as a result of the melt-pool elongating under higher scan speeds and laser power. This results in high length to width ratios $(\geq \pi)$, which can in turn cause Plateau - Rayleigh instabilities. This effect is often referred to as "humping" in laser welding and sets an upper boundary on the maximum processing speed at elevated laser power levels [38, 39].
+
+\subsection*{3.2. Model validation}
+To assess the model's predictive qualities, the measured $e / d$ ratios are compared to the predicted $e / d$ ratios. Figure 9, shows a 3D mapping of the results with on the $\mathrm{x}$ - and $\mathrm{y}$-axis the scan speed and laser power, and with\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_3ea5497605dea1905837g-24}
+
+Figure 8: Vertical cross-sections of etched 316L SS L-PBF parts showing unstable shallow melt-pools for a) $600 \mathrm{~W}-1000 \mathrm{~mm} / \mathrm{s}$ and b) $600 \mathrm{~W}-1100 \mathrm{~mm} / \mathrm{s}$, possibly due to hydrodynamic instability sometimes referred to as "humping" in laser welding.
+
+the z-axis denoting the melt-pool depth-to-width ratio $(e / d)$. For clarity, the measured ratios are linearly interpolated between the vertices of the green plane. The gray plane indicates the models' predicted ratios. As seen qualitatively, a good fit is observed between the measured and predicted ratios. To quantify the model performance, the relative errors are calculated as follows: err $=\left(R_{\text {meas }}-R_{\text {predict }}\right) / R_{\text {meas }}$. This definition of relative error is maintained throughout the remainder of the text.
+
+The average relative error over the whole processing range is $-14.3 \%$, with a standard deviation of $40 \%$. The largest residual is $-208 \%$ for $600 \mathrm{~W}$, $1100 \mathrm{~mm} / \mathrm{s}$ for which the predicted ratio is 3.32 and the measured is 1.08 . This processing range includes two zones where the difference between the predicted and measured melt-pool dimensions is relatively large :
+
+\begin{itemize}
+  \item Zone 1 , is the processing range corresponding to $600 \mathrm{~W}$ and $400-500$ $\mathrm{mms} / \mathrm{s}$. For this range, the metallographic depths are extrapolated depths as mentioned in Table A. 1 due to them exceeding the sample
+\end{itemize}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3ea5497605dea1905837g-25(1)}
+\end{center}
+
+b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3ea5497605dea1905837g-25}
+\end{center}
+
+Figure 9: Comparisons of the calculated and measured aspect ratio $e / d$, in function of the laser power $P$ and scan speed $V$. Expressed in a) as a heat map of the relative error, and in b) as a three-dimensional comparison showing the "model ratios" and "Metallographic ratios".\\
+thickness. As such, they do not represent the actual melt-pool characteristics and are considered unreliable measurement data.
+
+\begin{itemize}
+  \item Zone 2, is the processing range corresponding to $600 \mathrm{~W}$ and 1000-1100 $\mathrm{mm} / \mathrm{s}$ which is related to the observed instabilities as shown in Figure 8. The scaling law model employed doesn't take into account the physics involved in the dynamic "humping" process, hence the model is unable to predict the occurrence of such instabilities and is indeed expected to show poor predictive capacities.
+\end{itemize}
+
+With the exclusion of the results from zone 1 and 2, the relative error amounts to $-4.6 \%$, with a standard deviation of $18.9 \%$. The highest residual is $-59.11 \%$ for $200 \mathrm{~W}, 1100 \mathrm{~mm} / \mathrm{s}$ for which the predicted ratio is 1.11 and the measured ratio is 0.696 . This large relative error is also to be expected. The observed geometry for these conditions is similar to the one shown in Figure 7 a., where a conduction mode melting regime together with its characteristic shape is presented. The conduction mode melt-pool shape differs strongly from the proposed cylindrical keyhole geometry, voiding simplifying hypothesis \# 3 in section 2.4 .
+
+In general, the predicted depth-to-width ratios are biased slightly towards overestimation. Examining the standard deviation on the relative error and comparing it to the standard deviations of the metallographic measurements, similar magnitudes are observed. With the average of the relative standard deviations for the measured depths and widths being $12.16 \%$ and $9.69 \%$, respectively. This illustrates the limitation of the steady state conditions assumed by the model employed here, which cannot completely capture the real complex and dynamic relation between processing parameters $P$ and $V$\\
+and the resulting melt-pool characteristics $e$ and $d$. This can, in part, also explain the observed standard deviation of the relative model error. Furthermore, the steady state assumption limits generalization of the model in transient situations, such as those occurring at the start and stop of a vector of for geometries that accumulate heat. For the start-stop behavior, the dynamics of the hardware components and the opening and closing behavior of the melt-pool play a vital role in the evolution of the melt-pool dimensions. While heat accumulating features such as overhangs, or insufficient support material can significantly increase the temperature above the expected substrate temperature. No such mechanisms are included in the steady state formulation and as a result, the model performance can be expected to deviate largely from the results presented here.
+
+\subsection*{3.3. Camera measurements}
+For each of the processing conditions, the melt-pool widths are extracted from the camera images using the method described in section 2.3. The number of samples per parameter set is only dependent on the scan speed as the acquisition rate is fixed at 20.000 frames per second. The number of images
+
+per condition ranges between 9167 and 3472 for $400 \mathrm{~mm} / \mathrm{s}$ and $1100 \mathrm{~mm} / \mathrm{s}$ respectively. The average values and standard deviations for the melt-pool widths extracted from the camera images are reported in Table A.2.
+
+Figure 10 shows the metallographic melt-pool width compared to the camera melt-pool width for the examined processing range. The average relative error is $-2.8 \%$ with a standard deviation of $18.5 \%$. As seen, the results correspond well, with a slight tendency for underestimation at high energy densities and overestimation at lower energy densities. This effect is par-\\
+tially a result of the change in the image gradient of the melt-pool, as the melt-pool temperature changes with the processing conditions, so does the emitted intensity, changing the overall contrast. This is due to the fixed linear dynamic range of the camera sensor, which influences the perceived object size in extreme dark-light contrasts [32]. Additionally, Lane et al. showed that changes is the melt-pool cooling rates, due to changes in the processing parameters, are observable in melt-pool camera images [40]. As the cooling rate and overall contrast determine the observed gradient in the camera images, the extracted width can deviate, as the algorithm relies on the approximate derivatives of the image for edge detection. As such, the underestimation for large melt-pools and overestimation for small melt-pool can be explained partly. Furthermore, considering the limited camera resolution of $11.8 \mu \mathrm{m}$ and the melt-pool width ranging between $\approx 70 \mu \mathrm{m} \leq d \leq 220 \mu \mathrm{m}$, a measurement error of only a single pixel can result in a large relative error, i.e. $\approx 16.8 \% \leq$ err $\leq 5.4 \%$. Despite this high sensitivity, the highest relative error is $-54 \%$ for $400 \mathrm{~W}, 1100 \mathrm{~mm} / \mathrm{s}$ with a metallographic width of $114.29 \mu \mathrm{m}$ and camera width of $176.05 \mu \mathrm{m}$. This implies an error of about 6 pixels in total (5.23 exact), or 3 pixels on either edge of the melt-pool. Hence it is to be expected that the measurement accuracy can still be improved by adopting techniques/technologies that improves the dynamic range such as high-dynamic-range imaging, automatic shutter speed adjustments or by further increasing the pixel resolution [41].
+
+Additionally, a comparison is made between the Relative Standard Deviations (RSD) of the metallographic widths and the camera widths. The 2-D correlation coefficient was found to be 0.8. As seen in Figure 11, the gen-\\
+a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3ea5497605dea1905837g-29(1)}
+\end{center}
+
+b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3ea5497605dea1905837g-29}
+\end{center}
+
+Figure 10: Comparisons of the calculated and measured camera widths, in function of the laser power $P$ and scan speed $V$. Expressed in a) as a heat map of the relative error, and in b) as a three-dimensional comparison showing the "camera width" and "Metallographic width".\\
+eral trends of the camera width standard deviations correspond well to those of the metallographic measurements. However, the camera measurements exhibit an offset towards higher standard deviations. This contradicts the expectation that for the camera measurements the standard deviation is expected to be smaller, as the sample size is comparatively larger than that of the metallographic measurements. However, the larger standard deviations can be explained by examining the specific measurement conditions. Firstly, the measurement resolution of the camera measurements is about an order of magnitude lower than the metallographic measurements. The resulting discretization errors, by default, increase the observed standard deviation for the camera measurements. Additionally, the camera measurements also include the transient effects of the formation and closure of the melt-pool. These dynamic effects span about ten frames for a total vector length of 200 frames $(1000 \mathrm{~mm} / \mathrm{s}, 10 \mathrm{~mm}, 20.000 \mathrm{fps})$. While they have a limited effect on the mean, they are expected to have a more outspoken effect on the standard deviation. In contrast, the metallographic cross sections are taken near the center of the long axis, at steady state input conditions. Thirdly, part of melt-pool image can be distorted by the harsh environmental conditions, such as the presence of the melt-pool plume, spatter ejections and powder particles. All of the aforementioned arguments contribute to the higher relative standard deviation of the camera measurements. Still, despite the offset, the good correspondence of the standard deviations implies that variations in the melt-pool width are also detected as variations in the camera images. As such, the camera images can prove to be a valuable tool in assessing the process stability.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3ea5497605dea1905837g-31}
+\end{center}
+
+Figure 11: 3D comparison of the Relative Standard Deviations (RSD) on the camera and metallographic melt-pool widths in function of the laser power $P$ and scan speed $V$.
+
+\subsection*{3.4. Virtual sensing results}
+Finally, the modeling results and the camera measurements are combined. To assess the melt-pool depth for a given processing condition, the camera width $\left(d_{\text {camera }}\right)$ is extracted from the image and the melt-pool ratio $(R)$ is taken from the model. The estimated melt-pool depth is expressed as follows:
+
+$$
+e_{\text {est }}=R \times d_{\text {camera }}
+$$
+
+The comparison between the metallographic depth and the estimated depth is given in Figure 12. With exception of the processing conditions in the "humping" regime, the estimated depths are close to the measured depths. The average relative error equals $9.9 \%$ with a standard deviation of $30.8 \%$. The high standard deviation is the result of the underperformance of both the model and the camera at the extremities of the processing range ex-\\
+amined. The largest residual amounts to $121.6 \%$ for 200 W, 1100 mm/s. For these conditions, both the model and the camera overestimate the melt-pool dimensions. Indeed the processing range examined is very large and deviates largely from what is considered to being an optimal processing range. If a second assessment is made using a smaller subsection of the processing parameters, in the vicinity of the optimal conditions $(250 \mathrm{~W}, 600 \mathrm{~mm} / \mathrm{s})$ i.e. ranging from $200-400 \mathrm{~W}$ and $500-700 \mathrm{~mm} / \mathrm{s}$, an average error of $2.8 \%$ and standard deviation of $8.18 \%$ is recorded. This demonstrates a significant improvement of the overall fit compared to the full range of processing parameters. For the reduced range the highest residual is only $11.5 \%$ for 300 W, $600 \mathrm{~mm} / \mathrm{s}$. In absolute values, this translates to an error of $\approx 50 \mu \mathrm{m}$ for a total depth of $\approx 450 \mu \mathrm{m}+/-11 \mu \mathrm{m}$.
+
+These results demonstrate the effectiveness and value of the virtual sensing approach presented in this work. With the exception of the camera pixel size, no calibrations were necessary or performed. The model is fed with typical data sheet material and machine properties, and the melt-pool widths are extracted using a series of straightforward, commonplace and scalable image processing steps. Nevertheless, the measured melt-pool width and predicted depth correspond well with metallographic measurements over a very wide range of processing parameters.
+
+The ability to determine the melt-pool dimensions without the need for destructive testing is of great use, for instance, for fast determination of a suitable processing parameter window. For the experiments performed in this work, the time required to process all the data and to generate the pro-
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3ea5497605dea1905837g-33(1)}
+\end{center}
+
+b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3ea5497605dea1905837g-33}
+\end{center}
+
+Figure 12: Comparisons of the predicted and and metallographic melt-pool depth in function of the laser power $P$ and scan speed $V$. Expressed in a) as a heat map of the relative error, and in b) as a three-dimensional comparison showing the "Predicted depth" and "Metallographic depth".\\
+cess maps for the melt-pool width and depth was less than five minutes on a desktop computer equipped with a NVIDEA QUADRO M4000 ${ }^{\circledR}$. Of these five minutes about two were spent on the image processing, which amounts to an average of about $5 \mathrm{~ms}$ per frame. These processing times are negligible compared to the time consuming experimental approach for generating processing maps using traditional parameter optimization techniques. Those traditional techniques usually involve the manufacturing of many samples with different processing parameters, after which those samples are removed from the baseplate, cross-sectioned, polished, and etched for microstructural analysis.
+
+Additionally, the observed 2D correlation (0.8) between the standard deviation of the camera and the metallographic measurements is promising for the application of this virtual sensing approach in the field of on-line monitoring and control. Indeed, the correlation suggests that instabilities in the melting behavior are also observed by the camera, suggesting that the melt-pool dimensions can be accurately assessed frame by frame. This in combination with the fact that the camera runs at a high frame rate and is synchronized with the scanner positions, resulting in highly resolved measurements ( $50 \mu \mathrm{m}$ at $1000 \mathrm{~mm} / \mathrm{s}$ ), could reveal the occurrence of defects due to the variation of the melt-pool dimensions in a highly localized manner.
+
+Regarding the expandability of the methodology to other materials and L-PBF machines, several authors have demonstrated the generality of scaling law models over different materials and different AM setups. For the\\
+model used in this work, Fabbro et al. showed good correspondence with experimental results for different materials and processes such as St 35 steel, INC 625, Ti-6Al-4V and $\mathrm{Cu}[24,25]$. Similarly Rubenchick et al. have shown that with a scaling law model pertaining to conduction mode melting, a good model fit can be achieved with experimental data from different machines and materials [23]. Additionally, other authors have reported that using normalized enthalpy formulations, experimental data can be collapsed into a single curve for different processing conditions, materials and machines [21, 22, 42]. This strengthens the belief that these types of models describe a universal relationship for linking L-PBF process conditions with melt-pool size and shape.
+
+Overall, the final accuracy of the virtual sensing methodology is contingent on the individual accuracy of the modeling component and the camera width measurements. Both these components propagate their errors linearly, with the beam diameter being the only input parameter showing nonlinear behavior. Hence, further improvement to either of these components will benefit the overall performance. For the camera measurements, it is shown that the limited resolution and varying illumination conditions are restricting factors. For the modeling component, omitting fluid behavior physics such as Plateau-Rayleigh instabilities, Marangoni convection and viscosity [43], but also the lack of ray propagation effects, can cause the approximation errors observed. Moreover, in a production setting, the range of processing parameters will be much smaller, and both the model and camera are shown to have better performance near the optimal parameter set. Nevertheless,\\
+as modeling and simulation of L-PBF advance and camera sensor technology improves, so will the accuracy of the virtual sensing methodology as demonstrated here.
+
+\section*{4. Conclusions}
+Meeting the stringent quality and repeatability standards typical for high end industries is a challenging task for L-PBF produced parts. In this sense, the ability to assess the melt-pool dimensions (width and depth) is of great interest. As components produced by L-PBF are essentially the combination of many individually stacked weld lines, the overlap and penetration depth determine to great extent the final part density and quality $[44,43,1]$. In this work, the results for determining the melt-pool width and depth using a virtual sensing approach are presented, for which the relative errors and standard deviations are summarized in Table 2. It is shown that for L-PBF 316L SS, melt-pool widths can be extracted over large range of processing parameters (100-600 W and 400-1100 mm/s), using a coaxial camera setup at high frame rates. The extracted widths show good correlation with metallographic cross sections with an average relative error of $-2.8 \%$. Additionally, the depth is predicted with high accuracy by combining the analytic scaling law model from Fabbro et al. [24, 25] for melt-pool ratios and the extracted melt-pool widths from the coaxial camera. For the full parameter range the average relative error on the predicted depth is $9.9 \%$. If a smaller processing range, closer to the optimal processing parameters, is examined, then the relative error on the predicted depth decreases to $2.8 \%$. This gives confidence in the predictive capabilities of a virtual sensing approach using coaxial
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\begin{tabular}{c}
+Metallographic \\
+validation of : \\
+\end{tabular} & \begin{tabular}{c}
+Investigated \\
+parameter \\
+\end{tabular} & \begin{tabular}{c}
+Average error \& standard deviation \\
+full range \\
+\end{tabular} & \begin{tabular}{c}
+Average error \& standard deviation \\
+reduced range \\
+\end{tabular} \\
+\hline
+\multirow{2}{*}{Analytical model} & \begin{tabular}{c}
+depth /width \\
+$(\mathrm{R}=\mathrm{e} / \mathrm{d})$ \\
+\end{tabular} & err : $-14.3 \%$ & err : $-4.6 \%$ \\
+\hline
+\multirow{2}{*}{} & width & std : $40 \%$ & std : $18.9 \%$ \\
+\hline
+\multirow{2}{*}{Virtual sensing} & (d) & std : $18.5 \%$ & $/$ \\
+ & (e) & err : $9.9 \%$ & err : $2.8 \%$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 2: Summary of the metallographic validations for the model ratios, camera widths and virtual sensed depths.
+
+camera images for the assessment of the melt-pool depth. Furthermore, the data revealed a remarkable correlation between the standard deviation on the metallographic measurements and the camera measurements, implying that instabilities in the melt-pool dimensions are observable through examination of the camera images. Further research is required to evaluate if the virtual sensing approach can also be applied in a frame by frame, monitoring and control setting. Finally, the virtual sensing methodology presented here can also be applied to other AM and more general materials processing techniques, such as electron beam and directed energy deposition additive manufacturing, but also laser and electron beam welding/cutting.
+
+\section*{Acknowledgments}
+This research was funded by KU Leuven internal funds and by the agency Flanders Innovation \& Entrepreneurship (VLAIO) through the Flanders Make project MONICON (HBC.2016.0459). The authors would like to gratefully acknowledge Yannis Kinds and Sam Buls for their knowledge, support and help on the experimental setup, Seren Senol for her assistance in the metallographic sample preparation, Viktor Coen for his contributions in analytical melt-pool modeling, and finally, Jean-Pierre Kruth for the fruitful and valuable discussions on the topic of L-PBF process monitoring.
+
+Appendix A. Metallographic and camera extracted melt-pool dimensions
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3ea5497605dea1905837g-40}
+\end{center}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\begin{tabular}{l}
+Laser Power $[\mathrm{W}] \backslash$ \\
+Scan speed $[\mathrm{mm} / \mathrm{s}]$ \\
+\end{tabular} & 100 & 200 & 300 & 400 & 00 & 600 \\
+\hline
+400 & \[
+\begin{aligned} & 138.56 \\ &+- \\ &\end{aligned}
+\] & \begin{tabular}{r}
+140.48 \\
+$+/-21.645$ \\
+\end{tabular} & \begin{tabular}{c}
+177.03 \\
+$+/-21.326$ \\
+\end{tabular} & \begin{tabular}{r}
+141.07 \\
+$+/-31.622$ \\
+\end{tabular} & \begin{tabular}{r}
+172.89 \\
+$+/-19.375$ \\
+\end{tabular} & \begin{tabular}{r}
+138.5 \\
+$+/-36.656$ \\
+\end{tabular} \\
+\hline
+500 & \begin{tabular}{r}
+125.05 \\
+$+/-19.5$ \\
+\end{tabular} & \begin{tabular}{c}
+136.31 \\
+$+/-20.989$ \\
+\end{tabular} & \begin{tabular}{r}
+159.94 \\
+$+/-20.936$ \\
+\end{tabular} & \begin{tabular}{r}
+143.03 \\
+$+/-46.268$ \\
+\end{tabular} & \begin{tabular}{r}
+158.41 \\
+$+/-26.128$ \\
+\end{tabular} & \begin{tabular}{c}
+127.33 \\
+$+/-44.004$ \\
+\end{tabular} \\
+\hline
+600 & \[
+\begin{aligned} & 112.53 \\ + & --18.528\end{aligned}
+\] & \begin{tabular}{c}
+135.15 \\
+$+/-19.763$ \\
+\end{tabular} & \begin{tabular}{r}
+145.32 \\
+$+/-19.48$ \\
+\end{tabular} & \begin{tabular}{c}
+137.74 \\
+$+/-34.003$ \\
+\end{tabular} & \begin{tabular}{c}
+144.96 \\
+$+/-26.952$ \\
+\end{tabular} & \begin{tabular}{r}
+128.01 \\
+$+/-39.197$ \\
+\end{tabular} \\
+\hline
+700 & \begin{tabular}{r}
+99.673 \\
+$+/-18.698$ \\
+\end{tabular} & \begin{tabular}{c}
+141.24 \\
+$+/-19.493$ \\
+\end{tabular} & \begin{tabular}{r}
+136.95 \\
+$+/-19.61$ \\
+\end{tabular} & \begin{tabular}{c}
+145.86 \\
+$+/-30.048$ \\
+\end{tabular} & \begin{tabular}{c}
+138.2 \\
+$+/-25.709$ \\
+\end{tabular} & \begin{tabular}{r}
+142.13 \\
+$+/-37.199$ \\
+\end{tabular} \\
+\hline
+800 & \[
+\begin{aligned} & 90.581 \\ &+- \\ &\end{aligned}
+\] & \begin{tabular}{r}
+152.04 \\
+$+/-20.332$ \\
+\end{tabular} & \begin{tabular}{r}
+132.41 \\
+$+/-22.427$ \\
+\end{tabular} & \begin{tabular}{r}
+156.86 \\
+$+/-29.798$ \\
+\end{tabular} & \begin{tabular}{c}
+136.32 \\
+$+/-31.164$ \\
+\end{tabular} & \begin{tabular}{r}
+155.69 \\
+$+/-37.599$ \\
+\end{tabular} \\
+\hline
+900 & \begin{tabular}{r}
+84.738 \\
+$+/-19.428$ \\
+\end{tabular} & \begin{tabular}{r}
+160.57 \\
+$+/-19.763$ \\
+\end{tabular} & \begin{tabular}{r}
+131.29 \\
+$+/-27.027$ \\
+\end{tabular} & \begin{tabular}{c}
+162.5 \\
+$+/-22.237$ \\
+\end{tabular} & \begin{tabular}{r}
+136.28 \\
+$+/-35.573$ \\
+\end{tabular} & \begin{tabular}{r}
+165.08 \\
+$+/-40.146$ \\
+\end{tabular} \\
+\hline
+1000 & \begin{tabular}{r}
+79.306 \\
+$+\quad-20.231$ \\
+\end{tabular} & \begin{tabular}{r}
+162.26 \\
+$+/-22.118$ \\
+\end{tabular} & \begin{tabular}{r}
+127.85 \\
+$+/-29.934$ \\
+\end{tabular} & \begin{tabular}{r}
+169.34 \\
+$+/-24.643$ \\
+\end{tabular} & \begin{tabular}{r}
+137.16 \\
+$+/-44.62$ \\
+\end{tabular} & \[
+\begin{aligned} & 195.53 \\ + & -81.597\end{aligned}
+\] \\
+\hline
+11 & \begin{tabular}{r}
+73.111 \\
+$+/-21.874$ \\
+\end{tabular} & \begin{tabular}{r}
+168.34 \\
+$+/-24.261$ \\
+\end{tabular} & \begin{tabular}{r}
+123.63 \\
+$+/-33.178$ \\
+\end{tabular} & \begin{tabular}{c}
+176.06 \\
+$+/-34.127$ \\
+\end{tabular} & \begin{tabular}{r}
+140.97 \\
+$+/-59.318$ \\
+\end{tabular} & \includegraphics[max width=\textwidth]{2024_03_10_3ea5497605dea1905837g-41}
+ \\
+\hline
+\end{tabular}
+\end{center}
+
+Table A.2: Average measured camera melt-pool widths and standard deviations expressed in micrometers.
+
+\section*{References}
+[1] S. K. Everton, M. Hirsch, P. I. Stavroulakis, R. K. Leach, A. T. Clare, Review of in-situ process monitoring and in-situ metrology for metal additive manufacturing, Materials and Design 95 (2016) 431-445. doi:10.1016/j.matdes.2016.01.099.
+
+URL \href{http://dx.doi.org/10.1016/j.matdes}{http://dx.doi.org/10.1016/j.matdes} .2016.01.099
+
+[2] L. Liu, S. M. Kuo, M. Zhou, Virtual sensing techniques and their applications, in: 2009 International Conference on Networking, Sensing and Control, IEEE, 2009, pp. 31-36. doi:10.1109/ICNSC.2009.4919241.
+
+URL \href{http://ieeexplore.ieee.org/document/4919241/}{http://ieeexplore.ieee.org/document/4919241/}
+
+[3] B. Lane, S. Moylan, E. P. Whitenton, L. Ma, Thermographic measurements of the commercial laser powder bed fusion process at NIST, Rapid Prototyping Journal 22 (5) (2016) 778-787. doi:10.1108/RPJ-11-20150161.
+
+[4] B. Lane, S. Grantham, H. Yeung, C. Zarobila, J. Fox, Performance characterization of process monitoring sensors on the NIST additive manufacturing metrology testbed, Solid Freeform Fabrication 2017: Proceedings of the 28th Annual International Solid Freeform Fabrication Symposium - An Additive Manufacturing Conference, SFF 2017 (2017) 1279-1288.
+
+[5] L. Zheng, Q. Zhang, H. Cao, W. Wu, H. Ma, X. Ding, J. Yang, X. Duan, S. Fan, Melt pool boundary extraction and its width prediction from infrared images in selective laser melting, Materials and Design 183 (Au-\\
+gust) (2019) 108110. doi:10.1016/j.matdes.2019.108110.
+
+URL \href{https://doi.org/10.1016/j.matdes}{https://doi.org/10.1016/j.matdes} .2019.108110
+
+[6] O. Kwon, H. G. Kim, M. J. Ham, W. Kim, G. H. Kim, J. H. Cho, N. I. Kim, K. Kim, A deep neural network for classification of melt-pool images in metal additive manufacturing, Journal of Intelligent Manufacturing 31 (2) (2020) 375-386. doi:10.1007/s10845-018-1451-6.
+
+[7] B. Yuan, G. M. Guss, A. C. Wilson, S. P. Hau-Riege, P. J. DePond, S. McMains, M. J. Matthews, B. Giera, Machine-Learning-Based Monitoring of Laser Powder Bed Fusion, Advanced Materials Technologies 3 (12) (2018) 1-6. doi:10.1002/admt. 201800136.
+
+[8] G. Tapia, A. Elwany, A Review on Process Monitoring and Control in Metal-Based Additive Manufacturing, Journal of Manufacturing Science and Engineering, Transactions of the ASME 136 (6) (2014) 1-10. doi:10.1115/1.4028540.
+
+[9] A. A. Martin, N. P. Calta, J. A. Hammons, S. A. Khairallah, M. H. Nielsen, R. M. Shuttlesworth, N. Sinclair, M. J. Matthews, J. R. Jeffries, T. M. Willey, J. R. Lee, Ultrafast dynamics of laser-metal interactions in additive manufacturing alloys captured by in situ X-ray imaging, Materials Today Advances 1 (2019) 100002. doi:10.1016/j.mtadv.2019.01.001. URL \href{https://doi.org/10.1016/j.mtadv}{https://doi.org/10.1016/j.mtadv}. 2019.01.001
+
+[10] R. Cunningham, C. Zhao, N. Parab, C. Kantzos, J. Pauza, K. Fezzaa, T. Sun, A. D. Rollett, Keyhole threshold and morphology in laser melt-\\
+ing revealed by ultrahigh-speed x-ray imaging, Science 363 (6429) (2019) 849-852. doi:10.1126/science.aav4687.
+
+[11] Q. Guo, C. Zhao, M. Qu, L. Xiong, S. M. H. Hojjatzadeh, L. I. Escano, N. D. Parab, K. Fezzaa, T. Sun, L. Chen, In-situ fullfield mapping of melt flow dynamics in laser metal additive manufacturing, Additive Manufacturing 31 (October 2019) (2020) 100939. doi:10.1016/j.addma.2019.100939.
+
+URL \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j} .addma. 2019.100939
+
+[12] C. Zhao, K. Fezzaa, R. W. Cunningham, H. Wen, F. De Carlo, L. Chen, A. D. Rollett, T. Sun, Real-time monitoring of laser powder bed fusion process using high-speed X-ray imaging and diffraction, Scientific Reports 7 (1) (2017) 1-11. doi:10.1038/s41598-017-03761-2.
+
+[13] A. A. Martin, N. P. Calta, S. A. Khairallah, J. Wang, P. J. Depond, A. Y. Fong, V. Thampy, G. M. Guss, A. M. Kiss, K. H. Stone, C. J. Tassone, J. Nelson Weker, M. F. Toney, T. van Buuren, M. J. Matthews, Dynamics of pore formation during laser powder bed fusion additive manufacturing, Nature Communications 10 (1) (2019) 1-10. doi:10.1038/s41467019-10009-2.
+
+URL \href{http://dx.doi.org/10.1038/s41467-019-10009-2}{http://dx.doi.org/10.1038/s41467-019-10009-2}
+
+[14] Y. Chen, S. J. Clark, C. L. A. Leung, L. Sinclair, S. Marussi, M. P. Olbinado, E. Boller, A. Rack, I. Todd, P. D. Lee, In-situ Synchrotron imaging of keyhole mode multi-layer laser powder bed fusion additive manufacturing, Applied Materials Today 20 (2020) 100650.\\
+doi:10.1016/j.apmt.2020.100650.
+
+URL \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j} .apmt . 2020. 100650
+
+[15] T. G. Fleming, S. G. Nestor, T. R. Allen, M. A. Boukhaled, N. J. Smith, J. M. Fraser, Tracking and controlling the morphology evolution of 3D powder-bed fusion in situ using inline coherent imaging, Additive Manufacturing 32 (October 2019) (2020) 100978. doi:10.1016/j.addma.2019.100978.
+
+URL \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j} .addma. 2019.100978
+
+[16] T. Allen, W. Huang, J. Tanner, W. Tan, J. Fraser, B. Simonds, Energy-Coupling Mechanisms Revealed through Simultaneous Keyhole Depth and Absorptance Measurements during LaserMetal Processing, Physical Review Applied 13 (6) (2020) 1. doi:10.1103/PhysRevApplied.13.064070.
+
+URL \href{https://doi.org/10.1103/PhysRevApplied.13.064070}{https://doi.org/10.1103/PhysRevApplied.13.064070}
+
+[17] X. Qi, G. Chen, Y. Li, X. Cheng, C. Li, Applying Neural-Network-Based Machine Learning to Additive Manufacturing: Current Applications, Challenges, and Future Perspectives, Engineering 5 (4) (2019) 721-729. doi:10.1016/j.eng.2019.04.012.
+
+URL \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j} .eng.2019.04.012
+
+[18] M. Bayat, A. Thanki, S. Mohanty, A. Witvrouw, S. Yang, J. Thorborg, N. S. Tiedje, J. H. Hattel, Keyhole-induced porosities in Laser-based Powder Bed Fusion (L-PBF) of Ti6Al4V: High-fidelity modelling and experimental validation, Additive Manufacturing 30 (August) (2019)
+
+\begin{enumerate}
+  \setcounter{enumi}{100834}
+  \item doi:10.1016/j.addma.2019.100835.
+\end{enumerate}
+
+URL \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j} .addma. 2019.100835
+
+[19] S. A. Khairallah, A. A. Martin, J. R. I. Lee, G. Guss, N. P. Calta, J. A. Hammons, M. H. Nielsen, K. Chaput, E. Schwalbach, M. N. Shah, M. G. Chapman, T. M. Willey, A. M. Rubenchik, A. T. Anderson, Y. M. Wang, M. J. Matthews, W. E. King, Controlling interdependent meso-nanosecond dynamics and defect generation in metal 3D printing, Science 368 (6491) (2020) 660-665. doi:10.1126/science.aay7830.
+
+URL \href{https://www.sciencemag.org/lookup/doi/10.1126/science}{https://www.sciencemag.org/lookup/doi/10.1126/science} . aay7830
+
+[20] L. Cao, Mesoscopic-scale simulation of pore evolution during laser powder bed fusion process, Computational Materials Science 179 (November 2019) (2020) 109686. doi:10.1016/j.commatsci.2020.109686.
+
+URL \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j} . commatsci . 2020. 109686
+
+[21] D. B. Hann, J. Iammi, J. Folkes, A simple methodology for predicting laser-weld properties from material and laser parameters, Journal of Physics D: Applied Physics 44 (44) (2011). doi:10.1088/0022$3727 / 44 / 44 / 445401$.
+
+[22] W. E. King, H. D. Barth, V. M. Castillo, G. F. Gallegos, J. W. Gibbs, D. E. Hahn, C. Kamath, A. M. Rubenchik, Observation of keyholemode laser melting in laser powder-bed fusion additive manufacturing, Journal of Materials Processing Technology 214 (12) (2014) 2915-2925. doi:10.1016/j.jmatprotec.2014.06.005.
+
+URL \href{http://dx.doi.org/10.1016/j}{http://dx.doi.org/10.1016/j} .jmatprotec.2014.06.005
+
+[23] A. M. Rubenchik, W. E. King, S. S. Wu, Scaling laws for the additive manufacturing, Journal of Materials Processing Technology 257 (October 2017) (2018) 234-243. doi:10.1016/j.jmatprotec.2018.02.034.
+
+URL \href{https://doi.org/10.1016/j.jmatprotec.2018.02.034}{https://doi.org/10.1016/j.jmatprotec.2018.02.034}
+
+[24] R. Fabbro, M. Dal, P. Peyre, F. Coste, M. Schneider, V. Gunenthiram, Analysis and possible estimation of keyhole depths evolution, using laser operating parameters and material properties, Journal of Laser Applications 30 (3) (2018) 032410. doi:10.2351/1.5040624.
+
+URL \href{https://doi.org/10.2351/1.5040624}{https://doi.org/10.2351/1.5040624}
+
+[25] R. Fabbro, Scaling laws for the laser welding process in keyhole mode, Journal of Materials Processing Technology 264 (2019) 346-351. doi:10.1016/j.jmatprotec.2018.09.027.
+
+URL \href{https://doi.org/10.1016/j.jmatprotec.2018.09.027}{https://doi.org/10.1016/j.jmatprotec.2018.09.027}
+
+[26] K. C. Mills, Fe - 316 Stainless Steel, Recommended Values of Thermophysical Properties for Selected Commercial Alloys (2002) 135142doi:10.1533/9781845690144.135.
+
+[27] J. Trapp, A. M. Rubenchik, G. Guss, M. J. Matthews, In situ absorptivity measurements of metallic powders during laser powder-bed fusion additive manufacturing, Applied Materials Today 9 (2017) 341-349. doi:10.1016/j.apmt.2017.08.006.
+
+URL \href{http://dx.doi.org/10.1016/j}{http://dx.doi.org/10.1016/j} .apmt.2017.08.006
+
+[28] P. Mercelis, J. P. Kruth, J. Van Vaerenbergh, Feedback control of selec-\\
+tive laser melting, Proceedings of the 15th International Symposium on Electromachining, ISEM 2007 (2007) 421-426.
+
+[29] T. Craeghs, S. Clijsters, E. Yasa, F. Bechmann, S. Berumen, J. P. Kruth, Determination of geometrical factors in Layerwise Laser Melting using optical process monitoring, Optics and Lasers in Engineering 49 (12) (2011) 1440-1446. doi:10.1016/j.optlaseng.2011.06.016.
+
+URL \href{http://dx.doi.org/10.1016/j.optlaseng.2011.06.016}{http://dx.doi.org/10.1016/j.optlaseng.2011.06.016}
+
+[30] T. Craeghs, S. Clijsters, J. P. Kruth, F. Bechmann, M. C. Ebert, Detection of Process Failures in Layerwise Laser Melting with Optical Process Monitoring, Physics Procedia 39 (2012) 753-759. doi:10.1016/j.phpro.2012.10.097.
+
+URL \href{http://dx.doi.org/10.1016/j.phpro.2012.10.097}{http://dx.doi.org/10.1016/j.phpro.2012.10.097}
+
+[31] E. Kannatey-Asibu, Principles of Laser Materials Processing, John Wiley \& Sons, Inc., Hoboken, NJ, USA, 2009. doi:10.1002/9780470459300. URL \href{http://doi.wiley}{http://doi.wiley} .com/10 . 1002/9780470459300
+
+[32] Mikrotron Gmbh, High-Speed CMOS CameraEoSens@) 3CL Datasheet (2016).
+
+[33] Automated Imaging Association, Specifications of the Camera-link Interface Standard for Digital Cameras and Frame Grabbers, Tech. Rep. October, Automated Imaging Association (2000).
+
+URL \href{http://www}{http://www} . imagelabs . com/wp-content/uploads/2010/10/CameraLink5 . pdf
+
+[34] The MathWorks Inc., Matlab R2019b [computer program], Natick, Massachusetts, United States., 2019.
+
+[35] NVIDIA, Cuda C Programming Guide, Programming Guides (September) (2015) 1-261.
+
+[36] N. Kanopoulos, N. Vasanthavada, R. L. Baker, Design of an Image Edge Detection Filter Using the Sobel Operator, IEEE Journal of Solid-State Circuits 23 (2) (1988) 358-367. doi:10.1109/4.996.
+
+[37] T. W. Eagar, N. S. Tsai, Temperature Fields Produced By Travelling Distributed Heat Sources., Welding journal 62 (12) (1983) 346-355.
+
+[38] V. Gunenthiram, P. Peyre, M. Schneider, M. Dal, F. Coste, I. Koutiri, R. Fabbro, Experimental analysis of spatter generation and meltpool behavior during the powder bed laser beam melting process, Journal of Materials Processing Technology 251 (2018) 376-386. doi:10.1016/j.jmatprotec.2017.08.012.
+
+URL \href{http://dx.doi.org/10.1016/j}{http://dx.doi.org/10.1016/j} . jmatprotec.2017.08.012
+
+[39] M. Cai, C. Wu, X. Gao, Research on Humping Tendency in High Speed Laser Welding of SUS304 Austenitic Stainless Steel, in: Proceedings of the 2017 International Conference on Material Science, Energy and Environmental Engineering (MSEEE 2017), Vol. 125, Atlantis Press, Paris, France, 2017, pp. 402-409. doi:10.2991/mseee-17.2017.69.
+
+URL \href{http://www}{http://www} . atlantis-press . com/php/paper-details . php?id=25882236
+
+[40] B. Lane, J. Heigel, R. Ricker, I. Zhirnov, V. Khromschenko, J. Weaver, T. Phan, M. Stoudt, S. Mekhontsev, L. Levine, Measurements of Melt Pool Geometry and Cooling Rates of Individual Laser Traces on IN625 Bare Plates, Integrating Materials and Manufacturing Innovation 9 (1)
+
+(2020) 16-30. doi:10.1007/s40192-020-00169-1.
+
+URL \href{https://doi.org/10.1007/s40192-020-00169-1}{https://doi.org/10.1007/s40192-020-00169-1}
+
+[41] B. Hoefflinger, High-dynamic-range (HDR) vision: microelectronics, image processing, computer graphics, Vol. 26, Springer, Berlin, 2007.
+
+[42] J. Metelkova, Y. Kinds, K. Kempen, C. de Formanoir, A. Witvrouw, B. Van Hooreweder, On the influence of laser defocusing in Selective Laser Melting of 316L, Additive Manufacturing 23 (August) (2018) 161169. doi:10.1016/j.addma.2018.08.006.
+
+URL \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j} .addma.2018.08.006
+
+[43] J. P. Kruth, G. Levy, F. Klocke, T. H. Childs, Consolidation phenomena in laser and powder-bed based layered manufacturing, CIRP Annals - Manufacturing Technology 56 (2) (2007) 730-759. doi:10.1016/j.cirp.2007.10.004.
+
+[44] J. P. Kruth, M. Badrossamay, E. Yasa, J. Deckers, L. Thijs, J. Van Humbeeck, Part and material properties in selective laser melting of metals, 16th International Symposium on Electromachining, ISEM 2010 (2010) 3-14.
+
+\texttt{https://cdn.mathpix.com/cropped/2024_03_10_3ea5497605dea1905837g-51.jpg?height=4429&width=6951&top_left_y=760&top_left_x=16}
+
+d: melt-pool width\\
+Metallographic Validation\\
+\texttt{https://cdn.mathpix.com/cropped/2024_03_10_3ea5497605dea1905837g-51.jpg?height=9132&width=12804&top_left_y=4656&top_left_x=3248}
+
+\section*{VIRTUAL SENSING}
+\texttt{https://cdn.mathpix.com/cropped/2024_03_10_3ea5497605dea1905837g-51.jpg?height=4562&width=7071&top_left_y=14725&top_left_x=9267}
+
+e*: melt-pool depth\\
+\texttt{https://cdn.mathpix.com/cropped/2024_03_10_3ea5497605dea1905837g-51.jpg?height=16992&width=9826&top_left_y=790&top_left_x=15519}
+
+\section*{AUTHORS STATEMENT}
+Louca Goossens: Conceptualization, investigation, formal analysis, visualization, validation, supervision, writing - original draft. Brecht Van Hooreweder: Supervision, funding acquisition, resources, project management, writing - review and editing
+
+\section*{Declaration of interests}
+$\boxtimes$ The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+$\square$ The authors declare the following financial interests/personal relationships which may be considered as potential competing interests:
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3ea5497605dea1905837g-53}
+\end{center}
+
+\section*{HIGHLIGHTS}
+\begin{itemize}
+  \item Melt-pool stability and dimensions are linked to in-situ coaxial camera monitoring images
+  \item Coaxial melt-pool monitoring yields accurate estimates of melt-pool width
+  \item Analytical models are suitable for fast calculation of melt-pool depth/with ratios
+  \item Virtual sensing is promising for fast and accurate melt-pool depth estimation
+\end{itemize}
+
+
+\end{document}

@@ -1,0 +1,496 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{bbold}
+\usepackage{multirow}
+
+\title{Assessing printability maps in additive manufacturing of metal alloys }
+
+
+\author{Luke Johnson ${ }^{\text {a, }}{ }^{*}$, Mohamad Mahmoudi ${ }^{b}$, Bing Zhang ${ }^{b}$, Raiyan Seede a, Xueqin Huang a,\\
+Janine T. Maier ${ }^{c}$, Hans J. Maier ${ }^{\text {d }}$, Ibrahim Karaman ${ }^{\text {a }}$, Alaa Elwany ${ }^{\text {b }}$,\\
+Raymundo Arróyave ${ }^{\mathrm{a}, \mathrm{b}}$\\
+a Department of Materials Science and Engineering, Texas A\&M University, College Station, TX, USA\\
+${ }^{\mathrm{b}}$ Department of Industrial and Systems Engineering, Texas A\&M University, College Station, TX, USA\\
+' Institute of Product and Process Innovation, Leuphana University of Lüneburg, Lüneburg, Germany\\
+${ }^{\mathrm{d}}$ Institut für Werkstoffkunde (Materials Science), Leibniz Universität Hannover, Garbsen, Germany}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Full length article
+
+
+
+\section*{A R T I C L E I N F O}
+\section*{Article history:}
+Received 15 January 2019
+
+Received in revised form
+
+1 July 2019
+
+Accepted 2 July 2019
+
+Available online 5 July 2019
+
+\section*{Keywords:}
+Printability
+
+Additive manufacturing
+
+High entropy alloys
+
+$\mathrm{NiNb}$
+
+Selective laser melting
+
+\begin{abstract}
+A B S T R A C $T$ We propose a methodology for predicting the printability of an alloy, subject to laser powder bed fusion additive manufacturing. Regions in the process space associated with keyhole formation, balling, and lack of fusion are assumed to be strong functions of the geometry of the melt pool, which in turn is calculated for various combinations of laser power and scan speed via a Finite Element thermal model that incorporates a novel vaporization-based transition from surface to volumetric heating upon keyhole formation. Process maps established from the Finite Element simulations agree with experiments for a $\mathrm{Ni}-5 \mathrm{wt} . \% \mathrm{Nb}$ alloy and an equiatomic CoCrFeMnNi High Entropy Alloy and suggest a strong effect of chemistry on alloy printability. The printability maps resulting from the use of the simpler Eagar-Tsai model, on the other hand, are found to be in disagreement with experiments due to the oversimplification of this approach. Uncertainties in the printability maps were quantified via Monte Carlo sampling of a multivariate Gaussian Processes surrogate model trained on simulation outputs. The printability maps generated with the proposed method can be used in the selection-and potentially the design-of alloys best suited for Additive Manufacturing.
+\end{abstract}
+
+[. 2019 Published by Elsevier Ltd on behalf of Acta Materialia Inc.
+
+\section*{1. Introduction}
+Despite known unique capabilities of metal-based Additive Manufacturing (AM) and the advances it has undergone over the past two decades, significant gaps are yet to be bridged in order to bring it to full maturity. A major roadblock is the high degree of variability in metal AM-fabricated parts, which poses serious challenges related to the qualification and certification $(\mathrm{Q} \& \mathrm{C})$ of critical AM components [1]. Challenges to $\mathrm{Q} \& \mathrm{C}$ efforts are only compounded by the fact that metal AM has focused only on a handful of major alloy classes, with the bulk of the focus on titanium [2-4] (mostly Ti-6Al-4V), nickel [5-7] (IN625, IN718), stainless steels $[8,9]$ and other alloying systems that were not initially designed to be manufactured using AM technologies such as shape memory alloys [10-13].
+\footnotetext{\begin{itemize}
+  \item Corresponding author. Texas A\&M University, Department of Materials Science and Engineering, 3003 TAMU, College Station, TX, 77843-3003, USA.
+\end{itemize}
+
+E-mail address: \href{mailto:lukejohnson@tamu.edu}{lukejohnson@tamu.edu} (L. Johnson).
+}
+
+High variability in the quality and performance of metal AM parts can be attributed to the use of different processing schemes, energy source, raw materials, etc. Even when considering a single AM technology-such as laser powder bed fusion (L-PBF)-variability from the use of different machines, intrinsic variability in processing conditions, variance in local thermal histories, part geometry, and form of feedstock can have a significant impact [14,15]. The early stages of research on metal AM focused on identifying machine-specific process conditions capable of yielding AM parts from conventional alloy feedstock with properties comparable to their as-cast or wrought counterparts [16-19]. More recently, and motivated by the challenges associated with variability, the underlying paradigm for metal AM is shifting towards one that emphasizes control: it is no longer necessary to merely match the properties of conventional alloys, but rather to satisfy properties that enable $\mathrm{Q} \& \mathrm{C}$ of critical AM components for a specific application. As such, the processing routes (AM parameters, pre-or postprocessing) selected must ensure that part performance is met on a repeatable basis.
+
+In order to gain a better grasp of the ultimate causes for\\
+variability in AM, research efforts have been spent on developing strategies for improved process monitoring and control [20]. In-situ monitoring approaches have already achieved a considerable degree of sophistication [21] and these approaches have moved beyond real-time measurement of melt pool dynamics [22] to monitoring the transfer of energy to the material [23]. In-situ monitoring has also begun to be used as a way to assess the quality of AM builds [24,25]. Considerable challenges persist in this approach as some aspects of the thermal history associated with the solidification process (such as cooling rates, thermal gradients, etc.) are still exceedingly difficult to measure, although progress has been made in AM processes at moderate solidification rates [26].
+
+A closed-loop control system capable of adjusting process conditions upon detection the onset of defect formation in real time remains highly challenging. However, some efforts have attempted to use lower resolution, lower temperature imaging techniques $[20,21,27]$ as a strategy to monitor the AM process. These techniques are useful in controlling longer range physical phenomena like residual stress, but the time and length scales of the thermal gradients they capture are too slow and large to provide adequate data for controlling extremely fast phenomena like melt pool instabilities. In addition to visual imaging, acoustic signal analysis has shown some potential for detecting keyhole and crack formation $[21,28]$. Further development of monitoring technologies will eventually lead to a better control of the AM process, particularly in light of the considerable sensitivity of most metal AM feedstock to variations in AM process conditions.
+
+An admittedly less developed, but arguably more promising path forward from the materials perspective is to design alloys that are less sensitive to variations in AM processing conditions in the first place. Looking at the problem from this materials-centric viewpoint inevitably leads to the consideration of materialsinherent "printability" and the subsequent question of how to define such a metric.
+
+In this paper, we propose a printability metric defined as the (hyper)volume in process parameter space for a laser powder bed fusion (L-PBF) metal AM process. Specifically we attempt to identify regions in the laser power vs scan speed space associated with builds that are free of major defects, limiting our analysis to single tracks. We proceed to define this feasibility region in terms of the geometry of the melt pool in a way that is alloy agnostic by first carrying out predictions of melt pool dimensions using finite element methods within the COMSOL Multiphysics ${ }^{\circledR}$ heat transfer module. The thermal model includes phase-dependent thermophysical properties which are used to approximate heat and mass transport phenomena such as melting, solidification, vaporization, and keyhole formation. By combining best estimates of thermophysical properties with the high-fidelity thermal models we predict the printability map of two alloys: a Ni-5wt.\%Nb (NiNb) alloy as a binary proxy for IN718 as well as a prototypical equiatomic CoCrFeMnNi high entroy alloy (HEA). The predicted printability maps are compared to an exhaustive exploration of the process space via experiments. The impact of using simplified thermal models as well as the effect of uncertainty in the thermo-physical properties are also examined.
+
+\section*{2. On the printability of metal alloys}
+The notion that different alloy chemistries are more/less suitable to processing via AM should not be surprising as historically this has been the case with other processing technologies/materials combinations. The influence of alloy composition on the quality of AM parts was illustrated early on by Childs et al. [29], who investigated the effect of process parameters on the build quality of stainless and tool steels printed with L-PBF techniques. Their results suggest that even small changes in the composition of the printed material can result in significant changes to the region in the process parameter space corresponding to successful prints. In agreement with this early work, Tomus et al. [30] recently investigated the suceptibility of Hastelloy alloys to hot-cracking and found that minor modifications to the $\mathrm{C}$ and Si content of the alloy reduced the tendency for hot-cracking. Harrison et al. [31] followed a different approach and modified a baseline Hastelloy formulation to increase solid solution strengthening and thus provide higher resistance to cracking. Martin et al. [32] successfully printed otherwise unprintable aluminum alloys by doping the powder feedstock with tailored inoculants to control the solidification.
+
+In a simplified manner, one could consider two different types of factors that control the degree to which a given alloy can be printed: intrinsic features of the alloy itself, such as solidification range, presence of competing secondary solid phases, etc. can affect the microstructural morphology or texture of the printed material, while extrinsic factors such as process conditions affect the overall consistency of the fabricated part. AM research has primarily focused on finding useful combinations of these extrinsic factors such as laser power and speed [33], or linear energy density which is the ratio of these two parameters [10]. Both intrinsic/extrinsic factors are affected not only by the local processing conditions but by the alloy's thermodynamic and thermo-physical characteristics. Feasible regions in the alloy-process space can be identified in terms of their printability, which could be considered to be a global indicator for the resistance of an alloy-process combination to the formation of microscopic/macroscopic defects that compromise the integrity of the print. Questions remain as to how to properly quantify the printability of an alloy-process combination although there are some recent efforts in this direction.
+
+Mukerjee et al. [34], for example, identified different dimensionless parameters that were used to estimate the susceptibility of an alloy-process combination to thermally-induced part distortion, composition heterogeneity due to differential evaporation, as well as incomplete inter-layer fusion and the resulting porosity due to incomplete penetration of the melt pool into the previous layers. These printability indicators were constructed from a combination of materials properties (such as melting, boiling points, thermal diffusivities, heat capacities, etc.), process conditions (such as linear energy density) as well as characteristics of the melt pool (width, depth, volume, area) and thus provide a way to evaluate the impact of process conditions on specific alloy formulations.
+
+Using their printability criteria, Mukherjee et al. [34] investigated some of the most common metal alloys used in AM (IN718, SS316, Ti64) and found some correlation between their printability indicators and the presence of different kinds of issues such as thermal distortion, porosity or lack of composition control (due to differential evaporation) for three different processing conditions. This approach is useful for evaluating printability on a point-bypoint basis, but it does not characterize the holistic printability of the alloy across all combinations of laser powers and scan speeds. As such it cannot take issues such as process variability into account. In a related (earlier) work, Juechter et al. [35] investigated the processing space for Selective Electron Beam Melting (SEBM) with the goal of identifying combinations of scanning speed and linear energy density that resulted in minimal porosity and reduced composition changes due to differential evaporation. Through a combination of in-situ thermal monitoring and post-fabrication characterization, Scime and Beuth [25] have recently developed a method for mapping melt pool defects to laser powers and scan speeds, and related the incidence of such defects to major characteristics of the melt pool geometry.
+
+The quality of the solidified structure during AM ultimately\\
+depends on the characteristics of the melt pool and it is thus reasonable to expect that criteria based on melt pool geometry can be used to establish thresholds for the onset of melt-pool related defects such as lack-of-fusion, balling, and keyhole formation [34,36], which are some of the most dominant defect modes in LPBF [37]. Lack-of-fusion occurs when the incident energy is insufficient to melt the substrate to a significant depth, which can result in large and/or very sharp voids within the as-built part. Balling is a periodic oscillation in the size and shape of a solidified track caused by capillary-driven instabilities of the melt pool and this oscillation leads to surface variations that can affect powder spreading during processing of the subsequent layer and that can lead to void formation. Keyholing is the formation of a depression in the surface of the melt pool due to recoil pressure from intense vaporization directly under the laser. The criteria for the onset of balling can be constructed from criteria used in welding and laser processing [38]. The lack-of-fusion threshold can be determined by comparing the melt pool depth and the powder layer thickness [34], while the onset of keyhole formation can be accounted for by considering the aspect ratio of the melt pool-further discussion of the criteria is described in 3.3.
+
+Process parameter combinations that lie beyond established threshold values for the above criteria are eliminated from the feasible process space and the remaining region is regarded as the printable region or printability map. The size and shape of this remaining region/volume can be used as a criteria for the design of an alloy suitable for AM. In this context, a large predicted successful build region is an indication that some alloy of interest is insensitive to variations in process parameters. This approach can potentially be quite significant as it implies the possibility of establishing a given alloy's printability map both before the onset of an experimental campaign and during each costly synthesis and characterization iteration.
+
+Beyond size-based design metrics of the printable region, selecting process conditions at points furthest from the boundaries of this printable area (i.e. robust design) provides maximum protection from inherent variability in machine processing conditions [39-42]. Instead of eliminating or reducing variability, the design parameters of interest are guided to a region where the variability has less of an impact on the successful outcome of the build. Variability in machine parameters such as laser power and scan speed can be directly incorporated via constant-valued offsets to the boundaries based on the predicted or measured uncertainties. Incorporation of uncertainty in thermo-physical properties is accomplished through the use of surrogate model-based uncertainty quantification $[15,43]$.
+
+In this work, we explore the use of melt pool geometry-based criteria constructed by combining high-fidelity thermal models with best-estimates for the values of thermo-physical properties of two different alloy systems. A Ni-5wt.\%Nb binary alloy is selected as it can be considered to be a proxy for IN718, particularly with regards to the segregation of $\mathrm{Nb}$ into interdendritic regions. Due to the small amounts of $\mathrm{Nb}$ it is to be expected that the thermophysical properties of this alloy are relatively close to those of $\mathrm{Ni}$ and thus it is expected that the uncertainty in the values of these properties would be small. On the other hand, the CoCrFeMnNi high entropy alloy was chosen since it is very likely that HEAs, due to their phase stability characteristics-i.e. reduced competition of secondary solid phases upon solidification and significantly reduced diffusion kinetics-could become a very important feedstock for metal AM.
+
+\section*{3. Methodology}
+The general workflow for predicting printability (Fig. 1) starts with thermal model-based calculations of temperature profiles and subsequent melt pool dimensions for laser powers and speeds that span the process space. Gaussian Process response surfaces are then constructed for each of the three major melt pool dimensions and subsequently used to calculate ratios $L / W, W / D, D / t$ throughout the entire design space $-L, W$ and $D$ correspond to the length, width and depth of the melt pool while $t$ corresponds to the powder bed layer thickness. Regions of process space with $D / t<1.5, L / W>2.3$ and $W / D<1.5$ are labeled as regions susceptible to lack of fusion, balling, or keyhole formation, respectively. These threshold values are based on geometrical considerations and empirically determined values from literature $[17,36,44]$. Any area of the process space that is not labeled with a specific defect is considered to be a feasible combination of print parameters. Details of each step in this workflow are presented in subsequent sections.
+
+\subsection*{3.1. Thermal model}
+There is a plethora of approaches to modeling laser interactions with matter, from high-fidelity powder-scale methods [45-47] requiring thousands of simulation hours on a super-computing cluster to semi-analytical based models [48] that take minutes to run on a laptop. Finite element based methods are somewhere in between these two extremes with varying degrees of computational efficiency and fidelity based on the physical assumptions of the particular model. Selecting which approach to use depends on the physical phenomena being studied, required accuracy, access to computational resources, and the desired frequency of feedback/ iteration between computational and experimental methods.
+
+The method for assessing printability presented in this study
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_03a3ec6f9e764fa92ed6g-03}
+\end{center}
+
+Fig. 1. A general workflow for the printability framework described in this paper. Processing parameters and phase-dependent material properties such as specific heat $\left(C_{p}\right)$, density $(\rho)$, and thermal conductivity $(k)$ are provided to the thermal model. Melt pool dimensions calculated from the thermal model $(L, W, D)$ and user prescribed powder layer thickness $(t)$ are then used in the determination of defect formation using the ratios seen in the orange, purple, and green arrows. Any process parameters that do not belong to a defect are considered to be in a region of good quality.\\
+requires $O(10)$ simulations that are accurate throughout process space while maintaining relatively low computational cost such that the method could feasibly be introduced into an iterative optimization/design scheme. An Eagar-Tsai model [48] can be used to rapidly conduct many simulations throughout the entire process space, but its many simplifications-including the neglect of phase transformation effects as well as the use of temperatureindependent properties [48]-limit the predictive accuracy to narrow ranges of the process parameter space, although there are certainly improvements over this effective but simplified model that can account for some of its deficiencies [49]. A powder-scale model including fluid flow would be the most physically accurate, but the computational time per simulation renders the approach unable to sample the entire process space in a reasonable time. With this in mind, a conduction based finite-element thermal model was developed with the Comsol Multiphysics ${ }^{\mathbb{R}}$ heat transfer module.
+
+The general form of the heat transfer equation below describes the transient evolution of temperature $(T)$ within a material domain as it is subject to some thermal $\operatorname{load}(\mathrm{s})(Q)$.
+
+$\rho C_{p} \frac{\partial T}{\partial t}+\nabla(-k \nabla T)=Q$
+
+The rate of temperature evolution within the domain is governed by the thermo-physical properties of the material, namely density $(\rho)$, specific heat $\left(C_{p}\right)$, and conductivity $(k)$. In this model, we modify and expand the model to account for additional physical phenomena such as energy contributions from phase transformations and temperature/phase-dependent thermo-physical properties. A coordinate transformation is also applied to the transient term:
+
+$\frac{\partial T}{\partial t}=\frac{\partial T}{\partial x} \frac{\partial x}{\partial t}+\frac{\partial T}{\partial y} \frac{\partial y}{\partial t}+\frac{\partial T}{\partial z} \frac{\partial z}{\partial t}=\nabla T \vec{v}$
+
+This transformation shifts the reference frame from a Lagrangian reference frame fixed on the material substrate to an Eulerian reference frame fixed to the laser heat source moving at a constant scan speed $\vec{v}$. The elimination of the transient term in the heat transfer equation comes at the expense of introducing nonlinearity in the form of an advective term:
+
+$\rho C_{p} \nabla T \vec{v}+\nabla(-k \nabla T)=Q$\\
+Equation (3) represents the steady-state form of the equation which can be solved an order of magnitude faster, even with a very fine $2 \mu \mathrm{m}$ mesh in and around the melt pool. This fine mesh significantly reduces mesh size effects and convergence issues associated with the nonlinear nature of problem. A schematic of the Finite Element domain and a representative melt pool can be seen in Fig. 2. Boundary effect testing showed that a domain size of $6 \mathrm{~mm} \times 1.5 \mathrm{~mm} \times 1.5 \mathrm{~mm}$ was sufficient for all laser power and scan speed combinations.
+
+Boundary conditions for this model consist of mirror plane symmetry on boundary 3 and Dirichlet conditions on boundaries 1 , 2,4 , and 5 with a fixed temperature of $T_{0}=298 \mathrm{~K}$. The surface (boundary 6) contains all of the heat transfer phenomena that contribute to the source term $(Q)$ in Equation (3).
+
+$Q=q_{\text {rad }}+q_{c o n v}+q_{v a p}+q_{\text {beam }}$
+
+$q_{\text {rad }}=\varepsilon \sigma_{B}\left(T_{a m b}^{4}-T^{4}\right)$
+
+$q_{c o n v}=h\left(T_{a m b}-T\right)$
+
+$q_{v a p}=L_{v} \sum_{i=1}^{n} X_{i} 44.331 p_{i}(T) \sqrt{\frac{M W_{i}}{T}}$
+
+$q_{\text {beam }}=a(T) P\left[\frac{1}{2 \pi \sigma^{2}} \exp \left(-\frac{\left(r-r_{0}\right)^{2}}{2 \sigma^{2}}\right)\right]$
+
+Equations (5)-(8) describe surface radiation, natural surface convection, vaporization, and deposited beam power, respectively. The radiation and convection terms are of the form typically implemented in finite element modeling of L-PBF. The evaporative energy loss $q_{v a p}$ and beam deposition $q_{\text {beam }}$ include modifications that account for mass transport and energy transport within the vapor phase, respectively. Equation (7) is a Bolten-Block/Eagar model [50] that has been slightly modified to include temperature dependent partial pressure relationships calculated using equations described in Ref. [51]. Equation (8) includes a phasedependent absorptivity term that allows for the incorporation of keyhole formation without the need to consider more computationally expensive fluid dynamics. Details of the parameters contained within these equations are included in the next section.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_03a3ec6f9e764fa92ed6g-04}
+\end{center}
+
+Fig. 2. Schematic showing the Finite Element model's a) domain size, meshing technique, boundary conditions and b) isotherms from a representative melt pool simulation with the laser traveling in the positive $\mathrm{x}$-direction.
+
+\subsection*{3.2. Model parameters}
+The parameters in Equations (3)-(8) can be generally categorized into temperature/phase-dependent and non-temperature/ phase-dependent properties. Physical parameters considered to be constant within each simulation are: Stefan-Boltzmann constant $\left(\sigma_{B}\right)$, ambient temperature $\left(T_{a m b}=298 \mathrm{~K}\right)$, molecular weights of each element $\left(M W_{i}\right)$, and emissivity $(\varepsilon=0.7)$. We note that the value for emissivity is based on an average of many alloys and is not a parameter of interest since the radiative contribution to the energy balance at the surface is orders of magnitude smaller than that of vaporization. Laser process parameters such as laser power $(P)$, scan speed $(\vec{v})$, standard deviation $(\sigma)$, and centerpoint $\left(r_{0}\right)$ are also considered to be constant during each simulation. $\sigma$ is calculated as $1 / 4$ of the beam diameter as is common throughout the literature. The set of temperature-dependent properties consists of: density $(\rho)$, specific heat $\left(C_{p}\right)$, thermal conductivity $(k)$, absorptivity $(a)$ and partial pressure of each element $\left(p_{i}\right)$. Phase-dependent values for all of these properties can be found in Table 1. The natural convection coefficient $(h)$ in Equation (6) is calculated within Comsol through a Nusselt number correlation based on the shape and orientation of the specified surface. These effective convection coefficients are stored in a lookup table within COMSOL for a number of common geometries and orientations. In this case, the geometry is a flat plate and the orientation is horizontal with the heat flux being normal to the surface and flow is assumed to be laminar. The convective contribution to heat flux in the melt pool is at least 3 orders of magnitude less than that of radiation and vaporization, but their contributions quickly equalize outside of the melt pool. Convection was included in the interest of completeness, but has a relatively small influence on the melt pool predictions.
+
+\subsection*{3.2.1. Phase transitions}
+Smooth transitions between the phase-dependent thermophysical property values $\left(\rho, C_{p}, k, \alpha\right)$ in Table 1 are realized by averaging the properties of each phase based on their respective fractions during the transformation. Latent heats of fusion and vaporization ( $L_{m}$ and $L_{v}$, respectively) are included in the model through addition of an equivalent heat capacity during their respective transformations. Details of this effective property approach were explained in a previous publication [52].
+
+\subsection*{3.2.2. Property calculations}
+Due to a lack of experimental thermo-physical property data, values for the Ni-5wt.\%Nb alloy in Table 1 were calculated using a weighted average of $\mathrm{Ni}$ and $\mathrm{Nb}$ elemental properties found in Ref. [53]. A weighted average is sufficiently accurate in this case due to the dilute nature of this single-phase solid-solution alloy. The values of the thermo-physical properties of the HEA are taken directly from the literature sources cited in Table 1. For both alloys, vapor phase conductivity and absorptivity values are selected to approximate the transmission and subsequent reflection of the laser within the vapor void present during keyhole-mode melt pools.
+
+We note that in the case of HEA we also employed rules of mixtures to estimate the thermo-physical properties. While in the case of dilute alloys this approximation is well grounded, we acknowledge that in the case of concentrated alloys the rule of mixtures assumption may not be warranted, particularly in the case of thermal conductivity, which tends to be suppressed due to increased phonon scattering. The impact of uncertainty in these properties is considered below but a better approach would be to construct predictive models, perhaps through machine learning methods, of composition-dependent properties. Ongoing work by the present authors seeks to address this issue.
+
+\subsection*{3.2.3. Variable absorptivity}
+Absorptivity values for all phases are chosen based on a recent study from Lawrence Livermore National Lab that shows experimental evidence for low effective absorptivity of the solid/liquid phases and high effective absorptivity upon vaporization and keyhole formation [23]. Conductivity of the vapor phase in the vertical z-direction was increased by an order of magnitude to approximate the transmission of electromagnetic laser energy through the vapor phase. The combined increases in absorptivity and conductivity lead to a more realistic representation of lasermatter interaction at the point of incidence over a wide range of laser powers and scan speeds. Laser penetration of the vapor phase allows the system to transition seamlessly between surface and volumetric heating conditions without any changes to the laser source term which eliminates the need to select between the two approaches a priori. Low energy densities do not form a significant amount of vapor, so the laser does not penetrate the substrate and the simulation converges to a conduction-mode melt pool. Conversely, process parameters with high energy density lead to simulations with a stable region of vapor and the laser energy is transferred deeper into the substrate via the enhanced vapor conductivity.
+
+Table 1
+
+Phase-dependent thermo-physical properties used in the thermal modeling of the Ni-5wt.\%Nb and the CoCrFeMnNi HEA studied in this work. For the Ni-5wt.\%Nb alloy, property values for each phase are calculated using a weighted average of the pure elemental properties of each constituent. HEA properties directly taken from literature as cited.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\multirow[t]{2}{*}{Phase (i)} & \multicolumn{2}{|l|}{Solid $(S)$} & \multicolumn{2}{|l|}{Liquid $(L)$} &  & Vapor (V) \\
+\hline
+ & $\mathrm{NiNb}$ & HEA & $\mathrm{NiNb}$ & HEA & $\mathrm{NiNb}$ & HEA \\
+\hline
+$\rho_{i}\left[\mathrm{~kg} / \mathrm{m}^{3}\right]$ & $8900[\mathrm{M}]$ & $7700[54]$ & $8450[53]$ & $7400[53]$ & $\rho(T)[50]$ & $\rho(T)[50]$ \\
+\hline
+$C_{p}^{i}[\mathrm{~J} / \mathrm{kgK}]$ & $550[53]$ & $600[53]$ & $650[53]$ & $650[55]$ & $C_{p}(T)[55]$ & $C_{p}(T)[55]$ \\
+\hline
+$\alpha_{i}$ [unitless] & $0.3[23]$ & $0.3[23]$ & $0.3[23]$ & $0.3[23]$ & $0.6[23]$ & $0.6[23]$ \\
+\hline
+$k_{i}[\mathrm{~W} / \mathrm{mK}]$ & $85[53]$ & $20[53]$ & $120[53]$ & $40[53]$ & $5[55]$ & $5[55]$ \\
+\hline
+$k_{i z}[\mathrm{~W} / \mathrm{mK}]$ &  &  &  &  & $1000[\mathrm{~A}]$ & $1000[\mathrm{~A}]$ \\
+\hline
+\multirow[t]{2}{*}{Transform. $(t)$} &  & \multicolumn{2}{|l|}{Solid $\leftrightarrow$ Liquid $(m)$} &  & \multicolumn{2}{|l|}{Liquid $\leftrightarrow$ Vapor $(v)$} \\
+\hline
+ &  & $\mathrm{NiNb}$ & HEA &  & $\mathrm{NiNb}$ & HEA \\
+\hline
+$T_{t}[\mathrm{~K}]$ &  & $1703[\mathrm{M}]$ & $1644[54]$ &  & 3209 [55] & 3086 [54] \\
+\hline
+$\Delta T_{t}[\mathrm{~K}]$ &  & $50[53]$ & 100 [53] &  & $200[\mathrm{~A}]$ & $500[\mathrm{~A}]$ \\
+\hline
+$L_{t}[\mathrm{~kJ} / \mathrm{kg}]$ &  & 290 [55] & $232[55]$ &  & 7100 [55] & 4961 [54] \\
+\hline
+\end{tabular}
+\end{center}
+
+[M] value taken from powder supplier Material Safety Datasheet.
+
+[A] Artificially enhanced as described in Section 3.2.3.
+
+This vapor/keyhole based laser absorption model is in direct contrast with current absorption methods common in AM literature that focus primarily on powder layer effects. Volumetric heat sources are typically used to represent the penetration and absorption of laser energy within the thin layer of powder above the substrate. While this laser-powder interaction is valid prior to melt pool formation, it fails to represent the primary incidence of the laser upon molten metal once the melt pool has formed during normal operations $[23,56]$. As such, the powder layer and the effective material properties associated with it are not directly modeled.
+
+\subsection*{3.3. Printability predictions}
+Results of the fully developed thermal model must be extended, analyzed and post-processed in order to predict various defect prone regions of the process parameter space. Any portion of the process space that is not part of a defect prone region is defined as printable. This section describes the steps necessary to predict those regions and the uncertainty bounds on their boundaries.
+
+\subsection*{3.3.1. Response surface modeling}
+The Matlab®based OODace Toolbox [57] was used to calibrate three Gaussian Process (GP) models to melt pool length, width, and depth predictions from a grid of 30 thermal model simulations that spanned the full ranges of laser power and speed available on a 3D Systems®ProX DMP 200 L-PBF system. The resulting GP response surfaces can be used as computationally inexpensive surrogates [43] for calculating critical ratios $(L / W, W / D, D / t)$ of melt pool dimensions and powder layer thickness. Since GP predictions are inexpensive, these calculations can be performed on a much finer grid of laser powers and scan speeds which results in more refined definitions of the boundaries between each print region in the process space.
+
+\subsection*{3.3.2. Printabllity criteria}
+Regions of the process space are defined through comparisons of critical ratio response surface values to the threshold criteria $(L / W<2.3, W / D<1.5, D / t>1.5)$, which are derived from empirical observations, physical principles, and pure geometrical considerations. The threshold value $L / W<2.3$ is related to melt pool "balling" or "humping"; a phenomenon that is widely considered to be the result of Plateau-Rayleigh instabilities in the molten metal $[17,44]$. Although there is no agreed upon value for the $L / W$ ratio threshold in the literature, values typically range between $2<L / W<\pi[17,44]$. The criteria associated with keyholing can be derived from the assumption of a semi-circular melt pool in the vertical cross section perpendicular to the direction of laser motion. A keyhole criteria of $W / D>2$ would be a reasonable approximation for a half-circle melt pool in conduction mode laser processing with isotropic material parameters and heat flow. In practice, the presence of other heat transfer modes such as radiation, convection, and vaporization dissipate heat at the surface which results in a decrease in depth of conduction mode cross sections. As such, a keyhole threshold of $W / D>1.5$ is a better predictor. In comparison, the lack of fusion criteria $(D / t>1.5)$ is quite simple. If the depth of the melt pool $D$ does not exceed the prescribed powder layer thickness $t$, the melt pool will not fully fuse to the substrate. We note that recently, Letenneur and collaborators [58] carried out an investigation of criteria based on melt-pool dimensions and the onset of defects-specifically lack of fusion and balling-for a number of alloys and, by combining models and experiments found criteria that are in agreement with those put forward here, although their assumed onset of balling was less conservative than our proposed threshold. Similarly, work by Scime and Beuth [25] put forward similar criteria for the onset of defects arising from the geometric characteristics of the melt pool.
+
+These criteria are meant to be approximate guidelines for the comparison of alloy printability and optimization of their compositions/processing. As such, the threshold values are subject to change according the risk tolerance of the process designer. In addition to changing the threshold values, some assessment of potential risks can be incorporated through the propagation of uncertainty in the parameters of the thermal model.
+
+\subsection*{3.3.3. Uncertainty propagation}
+The effect of material property uncertainty on the location of successful print region boundaries is calculated via surrogate model based uncertainty propagation [43]. A Gaussian Processbased surrogate model is calibrated to the melt pool dimension results from a set of 300 Latin-Hypercube samples over the 6 critical material parameters $\left(K_{S}, K_{L}, K_{V}, K_{V} z, \alpha_{S / l}, \alpha_{V}\right)$. Conductivities and absorptivities were chosen as the parameters of interest due to their significant influence on the results and the relatively high degree of uncertainty in their values. Of the three primary thermophysical properties $\left(C_{p}, \rho, k\right)$, conductivity values are much more difficult to measure/calculate [59], especially in the liquid and vapor phases due to the high temperatures and the confounding effects of natural convection during the measurement process [60]. Additionally, the liquid conductivity is often artificially elevated in AM thermal modeling to approximate the effect of convection.
+
+Once the surrogate model has been calibrated to the thermal model, all material parameters are fixed except one, which is subjected to 10,000 Monte Carlo sampling steps. Input distributions for each parameter were defined as normal distributions centered within the user-defined upper and lower bounds assigned to the LHS search space. Parameters for these input distributions can be seen in Table 2. Although the user-defined nature of these distributions introduces some bias, this could be eliminated on future studies through techniques such as Bayesian calibration. 95\% confidence intervals of the resultant distributions for melt pool dimensions and their ratios are then used to find confidence intervals for the print-region boundaries.
+
+\subsection*{3.4. Experimental}
+The materials used to manufacture L-PBF specimens were gas atomized equiatomic CoCrFeMnNi powder and $\mathrm{Ni}-5 \mathrm{wt}$.\%Nb powder provided by Nanoval GmbH \& Co. KG. Single tracks were printed using a 3D Systems ProX DMP 200 Laser Type (fiber laser with a Gausian profile, $\lambda=1070 \mathrm{~nm}$, and beam size $=100 \mu \mathrm{m}$ ). CoCrFeMnNi single tracks were printed on an arc melted $\mathrm{CoCr}-$ FeMnNi base plate. The tracks were $15 \mathrm{~mm}$ in length with $1.5 \mathrm{~mm}$ spacing between each track. The Ni-5wt.\%Nb alloy was subject to two separate experiments with the only difference being the substrate material. The first experiment (Exp1 in Figs. 3 and 6), consisted of printing the Ni-5wt.\%Nb alloy on a pure nickel substrate.
+
+Table 2
+
+Mean $\mu$ and standard deviation $\sigma$ values for the input parameter distributions used in the Monte Carlo based uncertainty propagation described in Section 3.3.3
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Parameter & $\mu$ & $\sigma$ \\
+\hline
+$K_{S}[W / m K]$ & 80 & 8 \\
+$K_{L}[W / m K]$ & 150 & 20 \\
+$K_{V}[W / m K]$ & 12 & 3 \\
+$K_{L z}[W / m K]$ & 1.0 & 0.25 \\
+$K_{V z}[W / m K]$ & 1500 & 175 \\
+$a_{s / l}$ & 0.32 & 0.035 \\
+$a_{V}$ & 0.7 & 0.04 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_03a3ec6f9e764fa92ed6g-07}
+\end{center}
+
+Fig. 3. Printability maps that predict melt pool morphology regions for a Ni-5wt.\%Nb alloy. Predicted regions are as follows: good quality (blue,G), keyholing (green,KEY), balling (purple, BALL), and Lack of Fusion (orange,LOF). Experimentally observed morphologies throughout the process parameters space are indicated by markers of different shapes following the same color scheme as the predicted regions. Hollow and filled markers indicate if the data is from Exp1 or Exp2, respectively. Four representative melt pool cross sections from each region can be seen on the right. Eagar-Tsai predictions are essentially uninformative in this case due to constant material properties and the neglect of phase transformation effects.
+
+The second experiment (Exp2 in Figs. 3 and 6) was printed on a base plate of $\mathrm{Ni}-5 \mathrm{wt} . \% \mathrm{Nb}$ that was itself printed and subsequently homogenized $1100{ }^{\circ} \mathrm{C}$ for $1 \mathrm{~h}$, then air cooled) in order to erase its AM microstructure so that the single track melt pools would be easier to see. These tracks were $10 \mathrm{~mm}$ in length with $1 \mathrm{~mm}$ spacing between tracks.
+
+Cross sections of the single tracks were wire cut using wire electrical discharge machining (EDM). The specimens were polished down to $0.25 \mu \mathrm{m}$, then vibratory polished in colloidal silica. A mixture of $10 \mathrm{~mL} \mathrm{H} 2 \mathrm{O}, 1 \mathrm{~mL} \mathrm{HNO} 3,5 \mathrm{~mL} \mathrm{HCl}$, and $1 \mathrm{~g} \mathrm{FeCl} 3$ was used to etch HEA single tracks for metallographic investigation. Kalling's Solution No. 2 (5 g CuCl2, $100 \mathrm{~mL} \mathrm{HCl}$, and $100 \mathrm{~mL}$ ethanol) was used to etch the Ni-5wt.\%Nb single tracks. Optical Microscopy was carried out using a Keyence VH-X digital microscope equipped with a VH-Z100 wide range zoom lens. Width and depth measurements were conducted using the VH-X microscope software. Three cross sections were cut and measured from each track. The displayed width and depth values are averaged from these three measurements.
+
+\section*{4. Results and discussion}
+In additive manufacturing, as with other manufacturing techniques, it is of utmost importance to develop an understanding of the feasible conditions for processing the material. This section presents and discusses printability predictions from the above methodology for $\mathrm{Ni}-5 \mathrm{wt}$.\%Nb and CoCrFeMnNi HEA, and compares the resultant maps against systematic experimental investigation of the process parameter space for those alloys carried out as part of this work. It is important to emphasize that the experimental investigation of the process parameter space was not used in any way to fit the material properties or model parameters used in the computational methodology or the subsequent construction of the predicted printability maps.
+
+Maps labeled Finite Element in the figures presented below are constructed through the application of the printability criteria to melt pool dimension predictions from the Finite Element model developed herein. The same criteria were applied to Eagar-Tsai melt pool dimension predictions for comparison. Cross sectional images of representative melt pool morphologies from each process parameter region, identified by the criteria above, are also shown in these figures beside each set of maps. The observed morphologies of every experimental track are indicated by markers of different color and shape.
+
+After a comparison of the predictions and experiments for each alloy, boundary uncertainty plots, determined according to the methodology discussed in 3.3.3, for key parameters of the Finite Element model are analyzed. Comparisons of the boundary widths in each plot indicate the relative importance of each thermophysical parameter and identify potential sources of improvement in the Finite Element model and its assumptions.
+
+\subsection*{4.1. Printability maps for $\mathrm{Ni}-5 \mathrm{wt}$ \% Nb alloy}
+Fig. 3 shows the predicted printability map for the Ni-5wt.\%Nb alloy in comparison with experiments. The top printability map was determined using FE-based predictions of the geometric characteristics of the melt pool under different processing conditions. Different regions are labeled after the dominant type of defect (or their absence) to be expected based on the criteria described above. At low powers and (generally) at high velocities it is evident that the dominant defect is lack-of-fusion (light brown/ orange). At relatively low scan speeds and high power the predicted dominant defect is keyholing (green). On the other hand, in the high scan speed-high power region of the process space the dominant defect is balling (magenta) due to capillary-based instabilities of the melt pool. The so-called printable region (blue) in power-scan speed space thus results from the subtraction of these three defect-prone regions from the power-scan speed space.
+
+As is evident from the figure, there is overall an acceptable level of agreement between the predicted and the actual measured printability maps for the Ni-5wt.\%Nb alloy investigated in this work, with the majority of the experimental points falling within the correct predicted region. However, there are a few exceptions near the keyhole and balling boundaries. There is a clear delineation between the experimentally observed keyhole and good quality melt pool results, but the slope of the predicted border is too horizontal. Two experimentally observed balling conditions are also mis-classified as printable by the Finite Element model. These misclassifications near the keyhole and balling borders are likely due to the lack of free-surface fluid-flow modeling which can more accurately predict laser penetration, viscosity, and surface tension effects that are important during keyholing and balling phenomena.
+
+Beyond comparisons between models and overall experimental results for the $\mathrm{Ni}-5 \mathrm{wt} . \% \mathrm{Nb}$ printability map, we note that there are also minor disagreements between the two sets of experimental observations near the keyhole and balling boundaries in the $\mathrm{Ni}$ $5 \mathrm{wt}$.\%Nb map. The most obvious discrepancy is an observation of a good single track in the Exp1 dataset (hollow markers, Fig. 3) at a higher laser power and similar scan speed $(P=200 \mathrm{~W}, \mathrm{v}=1275$ $\mathrm{mm} / \mathrm{s}$ ) than two single tracks with balling morphologies $(\mathrm{P}=178 \mathrm{~W}, \mathrm{v}=1154 \mathrm{~mm} / \mathrm{s}$ and $\mathrm{P}=178 \mathrm{~W}, \mathrm{v}=1515 \mathrm{~mm} / \mathrm{s})$ in the Exp2 dataset (solid markers, Fig. 3). This shift in the onset of balling\\
+to lower laser powers and scan speeds in Exp2 can be attributed to the slight differences in the experimental conditions due to the differences in powder handling and substrate material. Exp1 single tracks were deposited on a pure Ni substrate whereas Exp2 tracks were deposited on a Ni-5wt.\%Nb substrate.
+
+In contrast to the Finite Element thermal model, the Eagar-Tsai model possesses almost no predictive capability with these printability criteria. It drastically overestimates the size of the lack-offusion region and fails to identify the keyhole and balling regions entirely. The uninformative nature of this Eagar-Tsai-based printability map is due to two key simplifying assumptions with the model itself: i) constant thermo-physical properties and ii)surfaceonly energy deposition for all processing conditions. These assumptions render the model unable to capture phase change phenomena and the transition to laser penetration during keyholing, respetively. The result is an inability to predict the drastic changes in melt pool aspect ratios that are so critical to melt pool stability and the printability criteria used herein. This also makes it difficult to calibrate the Eagar-Tsai model to both depth and width over the entire parameter space; an issue which can be seen in the predicted-actual plots in Fig. 4.
+
+Further examination of the performance of the Eagar-Tsai (ET) and Finite Element thermal models relative to experiments can be observed in Fig. 4, which shows that the ET model over-predicts the melt pool width and under-predicts the melt pool depth for this set of material parameters. Since the model assumes constant thermophysical properties $\left(\rho, C_{p}, k\right)$, changes to any one of them will uniformly affect the melt pool dimensions and calibrating for the width will ultimately shift the depth predictions further astray. Changing multiple thermo-physical properties at once offers more flexibility, but the effect is still limited. In contrast, the Finite Element model has phase-dependent thermo-physical properties and includes additional heat transfer considerations like the transition from surface to volumetric heating, described in the\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_03a3ec6f9e764fa92ed6g-08}
+
+Fig. 4. Diagnostic plots showing the predictive accuracy of the Finite Element and Eagar-Tsai models for both melt pool width and depth for the Ni-5wt.\%Nb alloy. The Finite Element model has much better agreement with the depth as would be expected with the improved laser source term. The Eagar-Tsai model over-predicts width and under-predicts depth. methodology section. This allows for more accurate predictions over a wider range of the process parameter space and results in better width predictions and very good agreement with depth measurements, also seen in Fig. 4.
+
+While the results presented so far suggest a very good agreement between the predicted printability regions and the independent experimentally determined melt pool geometry maps, further verification of the proposed framework can be provided by comparing these results with those of Scime and Beuth [25]. The motivation for Scime and Beuth was to develop a framework for the identification of melt pool signatures indicative of flaw formation in L-PBF processed Inconel 718. They used in-situ thermal monitoring combined with post-fabrication characterization to establish relationships (via machine learning) between process conditions and melt pool characteristics. Remarkably, they settled on exactly the same characteristics (balling, lack-of-fusion, keyhole formation) as the ones used in the present work-and arrived at independently-to construct the predicted printability maps. By comparing Figs. 3 and 5, it is seen that the agreement between the predicted Ni-5wt.\%Nb printability map and the printability map determined by Scime and Beuth [25] is extremely good, showing the same topology and even presenting a reasonable quantitative agreement with regards to the actual position of the feasible, keyholing, lackof-fusion and balling regions. This agreement with experimental results from a different research group and L-PBF system (EOS M290) highlights the generalizability of the computational methodology herein. Ideally, an experimental methodology like the one described in Ref. [25] could be combined with the computational methods of this framework to create a single synergistic workflow for iterative optimization of printability. Experimental process characterization for an existing alloy would inform this computational framework which would then be used to search for promising alloy modifications to test in the next iteration of the design process.
+
+\subsection*{4.1.1. Boundary uncertainties for $\mathrm{Ni}-5 \mathrm{wt}$ \% $\mathrm{Nb}$ map}
+The additional physics included in the Finite Element model comes at the price of increased number of parameters. In order to establish which of these parameters have the most effect on the predicted printability maps, we propagate uncertainty from key thermo-physical properties to the print region boundaries of the\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_03a3ec6f9e764fa92ed6g-08(1)}
+
+ADDED BY CURRENT AUTHORS
+
+Printable Region
+
+Fig. 5. Experimentally determined melt pool morphology map for an Inconel718 alloy (reproduced with permission from Ref. [25] (with alterations)). The reader is encouraged to read the cited work for in-depth explanations of the notation in this figure Similar to the current study, various markers indicate experimentally observed melt pool morphologies as desireable, keyholing, undermelting (i.e. lack-of-fusion), and balling. In an effort to aid reader interpretation, the blue region was placed on top of the original point-wise map by manually tracing the region surrounding the "successful" print labels. The topology of the different melt pool morphology regions in the map agree very well with the predicted printability regions for $\mathrm{Ni}-5 \mathrm{wt} . \% \mathrm{Nb}$ in the current work shown in Fig. 3. The agreement is particularly interesting due to the fact that these observations are from an EOS M290 printer, meaning that the printabilty predictions are system-agnostic.\\
+printability map itself, shown as the shaded regions surrounding each boundary in Fig. 6.
+
+The parameters are arranged in order of their influence on the boundaries with liquid conductivity $K_{L}$ being the most influential and $K_{V}$ being the least influential. Some interesting observations can be made when comparing the relative boundary thicknesses within each map. For example, $K_{S}$ has a relatively strong influence on the balling boundary as compared to the keyhole and lack-offusion boundaries. This can be interpreted as $K_{S}$ having a stronger influence on length, rather than width or depth of the melt pool. Conversely, $\alpha_{s / l}$ preferentially influences the keyhole and lack-offusion boundaries, meaning that it does not affect melt pool length as much. The primary influence of $\alpha_{v}$ is on the keyhole boundary which is consistent with its implementation as a method for approximating increased laser absorptivity during keyhole formation.
+
+When comparing boundary uncertainties among different parameters, $K_{L}$ is quite clearly the most influential for all boundaries. Unfortunately, $K_{L}$ is the least understood conductivity value and varies significantly between different Finite Element models found in the literature. This issue stems from a general lack of experimental conductivity measurements of liquid metal alloys, as well as the artificial increase of the parameter in Finite Element models as a proxy for convective heat transfer within the melt pool. The small influence of vapor conductivity values $K_{V}$ and $K_{V z}$ are the result of the relatively narrow ranges of input values provided for the uncertainty propagation.
+
+In addition to uncertainties propagated from the model inputs, there are also uncertainties associated with the threshold criteria values themselves. In order to understand the effect of these uncertainties on the overall morphology of the printability predictions, maps were calculated at threshold values $\pm 15 \%$, resulting in the 6 plots seen in Fig. 7.
+
+\subsection*{4.2. Printability maps for CoCrFeMnNi high entropy alloy}
+The same process used to predict the printability map for the Ni$5 \mathrm{wt} . \% \mathrm{Nb}$ alloy was applied to an equiatomic $\mathrm{CoCrFeMnNi}$ high entropy alloy system. The resulting printability maps can be seen in Fig. 8. These maps have the same general topology as the Ni-5wt.\% $\mathrm{Nb}$ maps above, but the spacing and relative size of the regions is completely different and further highlights the strong coupling between alloy and process parameter space when determining suitable protocols for AM.
+
+In contrast to the Ni-5wt.\%Nb alloy, the investigation of HEA was not as comprehensive and its printability was only investigated in a rather narrow region of the processing space. While there are not as many single track observations to indicate exactly where each print region is located experimentally, there is an obvious overprediction of the balling region in the Finite Element map. Taking a lesson from the uncertainty analysis performed in the $\mathrm{Ni}-5 \mathrm{wt} . \% \mathrm{Nb}$ system, this can be attributed to uncertainty in the liquid conductivity of this system. Nevertheless, predictions of the keyhole and lack-of-fusion boundaries agree very well with experimentally determined morphologies, shown as markers of different colors and shapes in Fig. 8.
+
+Again, the Finite Element model outperforms the predictive capability of the Eagar-Tsai model for the same reasons discussed in the Ni-5wt.\%Nb case. In the Eagar-Tsai model, oversimplification of assumptions regarding the material properties and the physics\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_03a3ec6f9e764fa92ed6g-09}
+
+\begin{center}
+\begin{tabular}{|cccc|}
+\hline
+LOF & KEY & BALL & $\square \mathrm{G}$ \\
+$\square$ Exp1 & $\Delta$ Exp1 & O Exp1 & $\star$ Exp1 \\
+$\square$ Exp2 & $\Delta$ Exp2 & $\bullet$ Exp2 & $\star$ Exp2 \\
+\end{tabular}
+\end{center}
+
+Fig. 6. Uncertainty bounds calculated from a Monte Carlo based uncertainty propagation. Predicted regions are as follows: good quality (blue,G), keyholing (green,KEY), balling (purple, BALL), and Lack of Fusion (orange,LOF). Experimentally observed morphologies throughout the process parameters space are indicated by markers of different shapes that following the same color scheme as the predicted regions. Hollow and filled markers indicate if the data is from Exp1 or Exp2, respectively. The 6 plots correspond to the 6 key thermo-physical properties listed in the lower right corners. Liquid conductivity $K_{L}$ has the largest impact on all boundaries while the two absorptivity parameters $\left(\alpha_{S / L}\right.$ and $\left.\alpha_{V}\right)$ have the largest impact on the keyhole boundary which agrees with their intended purpose. Solid conductivity $K_{S}$ affects balling the most and the two vapor conductivities ( $K_{V}$ and $K_{V z}$ ) have little to no impact. (For interpretation of the references to color in this figure legend, the reader is referred to the Web version of this article.)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_03a3ec6f9e764fa92ed6g-10(1)}
+\end{center}
+
+Fig. 7. Predicted printability maps calculated at $\pm 15 \%$ of the threshold criteria values used in this work while holding the other criteria constant for $\mathrm{Ni}-\mathrm{Nb}$ alloy investigated in this work. Each row of the plot corresponds to a different threshold criteria.
+
+involved leads to melt pool dimensions that cannot be accurately calibrated over the entire process space. This is further corroborated by the predicted-actual comparison of the two models shown in Fig. 9. The melt pool width is significantly over-predicted, while the melt pool depth is under-predicted by the Eagar-Tsai model. The width comparison also shows the ability of the Finite Element model to capture the experimentally determined limit of melt pool width at $80-90 \mu \mathrm{m}$. This is attributed to the Finite Element model's ability to transition from surface to volumetric heating via inclusion of the vapor phase transformation and subsequent penetration of the laser deeper into the substrate.
+
+\subsection*{4.3. Comparison of printability}
+In addition to internal comparisons within each map, a direct comparison of printability between two materials in this study can also provide valuable insight. From both predictions and experiments, it is evident that $\mathrm{Ni}-5 \mathrm{wt}$.\% $\mathrm{Nb}$ has a larger printable region, under L-PBF conditions, than the CoCrFeMnNi HEA. The shape and orientation of the printable region can also tell us about the sensitivity of the material to variations in either laser power or scan speed. The more equiaxed printable region in the Ni-5wt.\%Nb case indicates an equal sensitivity to both processing parameters whereas the elongated print region in the HEA case indicates a higher sensitivity to laser power than scan speed. With this in mind we can readily conclude that the Ni-5wt.\%Nb alloy is the more printable alloy in this case, based on the available evidence and computational framework.
+
+\section*{5. Summary and conclusions}
+The Finite Element model and melt pool dimension based methodology presented here leads to L-PBF printability maps that\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_03a3ec6f9e764fa92ed6g-10}
+
+Fig. 8. Printability maps that predict melt pool morphology regions for a $\mathrm{CoCrFeMnNi}$ high entropy alloy. Predicted regions are as follows: good quality (blue,G), keyholing (green,KEY), balling (purple, BALL), and Lack of Fusion (orange,LOF). Experimentally observed morphologies throughout the process parameters space are indicated by markers of different shapes that following the same color scheme as the predicted regions. There is generally good agreement between computations and experiments here, but the size of the balling region seems to be over predicted. Four representative melt pool cross sections from each region can be seen on the right. Eagar-Tsai predictions are essentially uninformative in this case due to constant material properties and no phase transformation considerations. (For interpretation of the references to color in this figure legend, the reader is referred to the Web version of this article.)
+
+agree well with experiments. The consistency and accuracy of the framework applied to two drastically different alloy systems with only minor modifications is a strong indication that the approach is applicable for a wide range of materials. This is significant as this suggests that it is possible to use the proposed computational methodology for a priori evaluation of the suitability of an arbitrary alloy as an AM feedstock via identification of successful processing parameters, thus providing a plausible route for the design of alloys with reduced sensitivity to machine variability during the AM process. Further validation of the proposed methodology, however, will be necessary before predicted alloy printability can be used in a design framework.
+
+The predictive capability of this printability framework can be increased through more accurate predictions of uncertainty. If experimental melt pool measurements exist for a particular alloy $a$ priori, the uncertainty surrounding these boundaries can be more accurately defined by performing a Bayesian calibration of the thermo-physical parameters of the model [43]. This would result in input value distributions that are specifically defined for the particular problem at hand. This option is not necessarily viable when considering computational alloy design since the alloy being optimized has, by definition, never been experimentally tested. However better definitions of the uncertainty prior to optimization increase the chances of success.
+
+In addition to better understanding of the uncertainty, accuracy of the printable region boundaries may be increased with the inclusion of additional physics such as free surface fluid flow modeling. However, this increase in model complexity will result in an increase in computational expense that may preclude its use in\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_03a3ec6f9e764fa92ed6g-11}
+
+Fig. 9. Diagnostic plots showing the predictive accuracy of the Finite Element and Eagar-Tsai models for both melt pool width and depth for the CoCrFeMnNi high entropy alloy. The Finite Element model has much better agreement with the depth as would be expected with the improved laser source term. The Eagar-Tsai model over predicts width and under predicts depth.
+
+an iterative optimization scheme. With this in mind, the Finite Element based thermal model presented in this work represents a good middle ground between the fast but less accurate Eagar-Tsai approach and the slow but more accurate models that incorporate fluid dynamics.
+
+The direct connection between the composition and resultant printability of an alloy can be incorporated into an iterative optimization scheme by utilizing quantitative measurements of the size and shape of the blue printable regions in Figs. 3 and 8 as design metrics. For example, one could increase the robustness of an existing alloy to variations in processing parameters and environmental conditions by using such an optimization scheme to determine adjustments in alloy composition that would maximize the size of the printable region. Development of a more accurate method to link composition and phase-dependent thermo-physical properties (i.e. more complicated than the rule-of-mixture model used in the Ni-5wt.\%Nb case above) will need to be considered if the optimization extends beyond regions where a dilute solution approximations can be used.
+
+We would like to note that defining the printable region is just the first step in optimizing the performance of AM processed parts. Once the printable region is defined, selection of a particular set of process parameters within that region can be determined through optimization of other important material phenomena such as solidification front morphology, secondary phase evolution, and evaporative control of alloy composition. Furthermore, quantifying the uncertainty in boundary locations as shown in Fig. 6 is important when optimizing within the printable region itself and could provide further input as to the most effective uncertainty quantification exercise to carry out based on the effect of a specific quantity of interest on the variance in the printability map of a given alloy.
+
+\section*{Acknowledgements}
+The authors would like to acknowledge the support of the Army Research Office under Contract No. W911NF-18-1-0278. Portions of this work were also (partially supported by NASA through Grant No. NNX15AD71G. LJ would also like to acknowledge the NSF-NRT fellowship support through the National Science Foundation grant No. NSF-DGE-1545403, NRT-DESE: Data-Enabled Discovery and Design of Energy Materials (DEM). Finite Element Model simulations were carried out in the Texas A\&M Supercomputing Facility.
+
+\section*{References}
+[1] M. Seifi, A. Salem, J. Beuth, O. Harrysson, J.J. Lewandowski, Overview of materials qualification needs for metal additive manufacturing, J. Occup. Med. 68 (3) (2016) 747-764.
+
+[2] B. Dutta, F.H.S. Froes, The Additive Manufacturing (AM) of titanium alloys, Met. Powder Rep. 72 (2) (2017) 96-106.
+
+[3] B. Baufeld, O. Van der Biest, R. Gault, Additive manufacturing of Ti-6Al-4V components by shaped metal deposition: microstructure and mechanical properties, Mater. Des. 31 (2010) S106-S111.
+
+[4] Y. Zhu, J. Li, X. Tian, H. Wang, D. Liu, Microstructure and mechanical properties of hybrid fabricated Ti-6.5 Al-3.5 Mo-1.5 $\mathrm{Zr}-0.3 \mathrm{Si}$ titanium alloy by laser additive manufacturing, Mater. Sci. Eng. A 607 (2014) 427-434.
+
+[5] G. Dinda, A. Dasgupta, J. Mazumder, Laser aided direct metal deposition of inconel 625 superalloy: microstructural evolution and thermal stability, Mater. Sci. Eng. A 509 (1-2) (2009) 98-104.
+
+[6] G. Bi, C.-N. Sun, H.-c. Chen, F.L. Ng, C.C.K. Ma, Microstructure and tensile properties of superalloy IN100 fabricated by micro-laser aided additive manufacturing, Mater. Des. 60 (2014) 401-408.
+
+[7] W.J. Sames, K.A. Unocic, R.R. Dehoff, T. Lolla, S.S. Babu, Thermal effects on microstructural heterogeneity of Inconel 718 materials fabricated by electron beam melting, J. Mater. Res. 29 (17) (2014) 1920-1930.
+
+[8] K. Guan, Z. Wang, M. Gao, X. Li, X. Zeng, Effects of processing parameters on tensile properties of selective laser melted 304 stainless steel, Mater. Des. 50 (2013) 581-586.
+
+[9] I. Tolosa, F. Garciandía, F. Zubiri, F. Zapirain, A. Esnaola, Study of mechanical properties of aisi 316 stainless steel processed by "selective laser melting", following different manufacturing strategies, Int. J. Adv. Manuf. Technol. 51 (5-8) (2010) 639-647.
+
+[10] M. Mahmoudi, G. Tapia, B. Franco, J. Ma, R. Arroyave, I. Karaman, A. Elwany, On the printability and transformation behavior of nickel-titanium shape memory alloys fabricated using laser powder-bed fusion additive manufacturing, J. Manuf. Process. 35 (2018) 672-680.
+
+[11] J. Sam, B. Franco, J. Ma, I. Karaman, A. Elwany, J.H. Mabe, Tensile actuation response of additively manufactured nickel-titanium shape memory alloys, Scripta Mater. 146 (2018) 164-168.
+
+[12] B.E. Franco, J. Ma, B. Loveall, G.A. Tapia, K. Karayagiz, J. Liu, A. Elwany, R. Arroyave, I. Karaman, A sensory material approach for reducing variability in additively manufactured metal parts, Sci. Rep. 7 (1) (2017) 3604.
+
+[13] J. Ma, B. Franco, G. Tapia, K. Karayagiz, L. Johnson, J. Liu, R. Arroyave, I. Karaman, A. Elwany, Spatial control of functional response in 4d-printed active metallic structures, Sci. Rep. 7 (2017) 46707.
+
+[14] J.J. Lewandowski, M. Seifi, Metal additive manufacturing: a review of mechanical properties, Annu. Rev. Mater. Res. 46 (1) (2016) 151-186.
+
+[15] G. Tapia, W. King, L. Johnson, R. Arróyave, I. Karaman, A. Elwany, Uncertainty propagation analysis of computational models in laser powder bed fusion additive manufacturing using polynomial chaos expansions, J. Manuf. Sci. Eng. 140 (12) (2018), 121006-121006-12.
+
+[16] C. Kamath, B. El-dasher, G.F. Gallegos, W.E. King, A. Sisto, Density of additively-manufactured, $316 \mathrm{l}$ SS parts using laser powder-bed fusion at powers up to 400 W, Int. J. Adv. Manuf. Technol. 74 (1-4) (2014) 65-78.
+
+[17] I. Yadroitsev, A. Gusarov, I. Yadroitsava, I. Smurov, Single track formation in selective laser melting of metal powders, J. Mater. Process. Technol. 210 (12) (2010) 1624-1631.
+
+[18] I. Yadroitsev, P. Krakhmalev, I. Yadroitsava, Hierarchical design principles of selective laser melting for high quality metallic objects, Add. Manuf. 7 (2015) 45-56.
+
+[19] I. Yadroitsev, I. Yadroitsava, P. Bertrand, I. Smurov, Factor analysis of selective laser melting process parameters and geometrical characteristics of synthesized single tracks, Rapid Prototyp. J. 18 (3) (2012) 201-208.
+
+[20] G. Tapia, A. Elwany, A review on process monitoring and control in metalbased additive manufacturing, J. Manuf. Sci. Eng. 136 (6) (2014) 060801.
+
+[21] S.K. Everton, M. Hirsch, P. Stravroulakis, R.K. Leach, A.T. Clare, Review of insitu process monitoring and in-situ metrology for metal additive manufacturing, Mater. Des. 95 (2016) 431-445.
+
+[22] P. Lott, H. Schleifenbaum, W. Meiners, K. Wissenbach, C. Hinke, J. Bültmann, Design of an optical system for the in situ process monitoring of selective laser melting (slm), Physics Procedia 12 (2011) 683-690.
+
+[23] J. Trapp, A.M. Rubenchik, G. Guss, M.J. Matthews, In situ absorptivity measurements of metallic powders during laser powder-bed fusion additive\\
+manufacturing, Appl. Mater. Today 9 (2017) 341-349.
+
+[24] M. Cola, S. Betts, In-Situ Process Mapping Using Thermal Quality Signatures during Additive Manufacturing with Titanium Alloy Ti-6Al-4V, Case Study for Sigma Labs, 2018, p. 29.
+
+[25] L. Scime, J. Beuth, Using machine learning to identify in-situ melt pool signatures indicative of flaw formation in a laser powder bed fusion additive manufacturing process, Add. Manuf. 25 (2019) 151-165.
+
+[26] M.H. Farshidianfar, A. Khajepour, A.P. Gerlich, Effect of real-time cooling rate on microstructure in laser additive manufacturing, J. Mater. Process. Technol. 231 (2016) 468-478.
+
+[27] J. Raplee, A. Plotkowski, M.M. Kirka, R. Dinwiddie, A. Okello, R.R. Dehoff, S.S. Babu, Thermographic microstructure monitoring in electron beam additive manufacturing, Sci. Rep. 7 (2017) 43554.
+
+[28] W. Huang, R. Kovacevic, Feasibility study of using acoustic signals for online monitoring of the depth of weld in the laser welding of high-strength steels, Proc. IME B J. Eng. Manufact. 223 (4) (2009) 343-361.
+
+[29] T.H.C. Childs, C. Hauser, M. Badrossamay, Selective laser sintering (melting) of stainless and tool steel powders: experiments and modelling, Proc. IME B J. Eng. Manufact. 219 (4) (2005) 339-357.
+
+[30] D. Tomus, P.A. Rometsch, M. Heilmaier, X. Wu, Effect of minor alloying elements on crack-formation characteristics of Hastelloy-X manufactured by selective laser melting, Additive Manufacturing 16 (2017) 65-72.
+
+[31] N.J. Harrison, I. Todd, K. Mumtaz, Reduction of micro-cracking in nickel superalloys processed by Selective Laser Melting: a fundamental alloy design approach, Acta Mater. 94 (2015) 59-68.
+
+[32] J.H. Martin, B.D. Yahata, J.M. Hundley, J.A. Mayer, T.A. Schaedler, T.M. Pollock, 3D printing of high-strength aluminium alloys, Nature 549 (7672) (2017) 365-369.
+
+[33] J. Gockel, J. Beuth, Understanding Ti-6al-4v Microstructure Control in Additive Manufacturing via Process Maps, Solid Freeform Fabrication Proceedings, Austin, TX, 2013, pp. 12-14. Aug.
+
+[34] T. Mukherjee, J.S. Zuback, A. De, T. DebRoy, Printability of alloys for additive manufacturing, Sci. Rep. 6 (2016) 19717.
+
+[35] V. Juechter, T. Scharowsky, R.F. Singer, C. Körner, Processing window and evaporation phenomena for Ti-6Al-4V produced by selective electron beam melting, Acta Mater. 76 (2014) 252-258.
+
+[36] T.H.C. Childs, C. Hauser, M. Badrossamay, Mapping and modelling single scan track formation in direct metal selective laser melting, CIRP Annals 53 (1) (2004) 191-194
+
+[37] T. DebRoy, H. Wei, J. Zuback, T. Mukherjee, J. Elmer, J. Milewski, A. Beese, A. Wilson-Heid, A. De, W. Zhang, Additive manufacturing of metallic components-process, structure and properties, Prog. Mater. Sci. 92 (2018) $112-224$.
+
+[38] J.C. Ion, H.R. Shercliff, M.F. Ashby, Diagrams for laser materials processing, Acta Metall. Mater. 40 (7) (1992) 1539-1551.
+
+[39] G. Taguchi, A.J. Rafanelli, Taguchi on robust technology development: bringing quality engineering upstream, J. Electron. Packag. 116 (2) (1994), 161-161.
+
+[40] H.-J. Choi, A Robust Design Method for Model and Propagated Uncertainty, PhD Thesis, Georgia Institute of Technology, 2005.
+
+[41] W. Chen, M.M. Wiecek, J. Zhang, Quality utility-A compromise programming approach to robust design, J. Mech. Des. 121 (2) (1999) 179-187.
+
+[42] E. Sandgren, T.M. Cameron, Robust design optimization of structures through consideration of variation, Comput. Struct. 80 (20-21) (2002) 1605-1613.
+
+[43] M. Mahmoudi, G. Tapia, K. Karayagiz, B. Franco, J. Ma, R. Arróyave, I. Karaman, A. Elwany, Multivariate calibration and experimental validation of a 3d finite element thermal model for laser powder bed fusion metal additive manufacturing, Integrating Mater. Manuf. Innov. 7 (3) (2018) 116-135.
+
+[44] S. Chandrasekhar, Hydrodynamic and Hydromagnetic Stability, Courier Corporation, 2013.
+
+[45] C. Körner, E. Attar, P. Heinl, Mesoscopic simulation of selective beam melting processes, J. Mater. Process. Technol. 211 (6) (2011) 978-987.
+
+[46] C.R. Noble, A.T. Anderson, N.R. Barton, J.A. Bramwell, A. Capps, M.H. Chang, J.J. Chou, D.M. Dawson, E.R. Diana, T.A. Dunn, Ale3d: an Arbitrary LagrangianEulerian Multi-Physics Code, Tech. Rep., Lawrence Livermore National Lab. (LLNL), Livermore, CA (United States), 2017.
+
+[47] J.C. Steuben, A.P. Iliopoulos, J.G. Michopoulos, Discrete element modeling of particle-based additive manufacturing processes, Comput. Methods Appl. Mech. Eng. 305 (2016) 537-561.
+
+[48] T. Eagar, N.-S. Tsai, Temperature fields produced by traveling distributed heat sources, Weld. J. 62 (12) (1983) 346-355.
+
+[49] N. Nguyen, A. Ohta, K. Matsuoka, N. Suzuki, Y. Maeda, Analytical Solutions for Transient Temperature of Semi-infinite Body Subjected to 3-d Moving Heat Sources vol. 78, WELDING JOURNAL-NEW YORK, 1999, p. 265.
+
+[50] A. Block-Bolten, T.W. Eagar, Metal vaporization from weld pools, Metallurgical Transactions B 15 (3) (1984) 461-469.
+
+[51] C.B. Alcock, V.P. Itkin, M.K. Horrigan, Vapour pressure equations for the metallic elements: 298-2500k, Canadian Metallurgical Quarterly 23 (3) (1984) 309-313.
+
+[52] K. Karayagiz, A. Elwany, G. Tapia, B. Franco, L. Johnson, J. Ma, I. Karaman, R. Arróyave, Numerical and experimental analysis of heat distribution in the laser powder bed fusion of Ti-6Al-4V, IISE Transactions 0 (0) (2018) 1-17.
+
+[53] C.J. Smithells, W.F. Gale, T.C. Totemeier, Smithells Metals Reference Book, eighth ed., Elsevier Butterworth-Heinemann, Amsterdam ; Boston, 2004
+
+[54] M. Laurent Brocq, A. Akhatova, L. Perrière, S. Chebini, X. Sauvage, E. Leroy Y. Champion, Insights into the phase diagram of the CrMnFeCoNi high entropy alloy, Acta Mater. 88 (2015) 355-365.
+
+[55] M.W. Chase, NIST JANAF themochemical tables, in: Tech. Rep., fourth ed, National Institute of Standards and Technology, 1998.
+
+[56] S. Roy, M. Juha, M.S. Shephard, A.M. Maniatty, Heat transfer model and finite element formulation for simulation of selective laser melting, Comput. Mech. 62 (3) (2018) 273-284.
+
+[57] I. Couckuyt, T. Dhaene, P. Demeester, ooDACE toolbox: a flexible objectoriented Kriging implementation, J. Mach. Learn. Res. 15 (1) (2014) 3183-3186
+
+[58] M. Letenneur, A. Kreitcberg, V. Brailovski, Optimization of laser powder bed fusion processing using a combination of melt pool modeling and design of experiment approaches: density control, Journal of Manufacturing and Materials Processing 3 (1) (2019) 21.
+
+[59] I. Toda-Caraballo, E.I. Galindo-Nava, P.E.J. Rivera-Díaz-del Castillo, Unravelling the materials genome: symmetry relationships in alloy properties, J. Alloy. Comp. 566 (2013) 217-228.
+
+[60] T. Iida, R.I. Guthrie, The Thermophysical Properties of Metallic Liquids: Fundamentals, vol. 1, Oxford University Press, USA, 2015.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

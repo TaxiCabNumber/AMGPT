@@ -1,0 +1,226 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{multirow}
+
+\title{Energy Density Comparison via Highspeed, In-situ Imaging of Directed Energy Deposition }
+
+
+\author{Samantha Webster ${ }^{\mathrm{a}}$, Kornel Ehmann ${ }^{\mathrm{a}}$, Jian $\mathrm{Cao}^{\mathrm{a}, *}$\\
+${ }^{a}$ Northwestern University, 2145 Sheridan Rd., Evanston, IL 60208, US}
+\date{}
+
+
+\begin{document}
+\maketitle
+
+
+\begin{itemize}
+  \item Corresponding author. Tel.: +1-847-467-1032; E-mail address: \href{mailto:jcao@u.northwestern.edu}{jcao@u.northwestern.edu}
+\end{itemize}
+
+\begin{abstract}
+Metal additive manufacturing has become an increasingly popular technology and receives interest from multiple business sectors that require optimally lightweight components and mass customization (aerospace, automotive, and medical device). Directed energy deposition (DED) is one of the main laser-based additive manufacturing processes, but a fundamental understanding of the process is lacking partly because it has not been the focus of highspeed, in-situ x-ray imaging studies like laser powder bed fusion has. A novel in-situ DED system is presented here, and an experimental study is performed to show that the small-scale system recovers processing parameter trends of a full-scale build. Observed meltpool lengths range from about $200 \mu \mathrm{m}$ to $900 \mu \mathrm{m}$, while meltpool depths range from about $50 \mu \mathrm{m}$ to $500 \mu \mathrm{m}$ and can support high-fidelity modelling. Additionally, an investigation on the relationship between meltpool dimensions and global energy density $G E D^{\prime}$ is performed. It was found that $G E D^{\prime}$ is not a good predictor of meltpool dimensions due to the discrepancy in linear and exponential trends in laser powder and powder mass flowrate. Further studies and analysis using the presented novel DED system are needed to develop an appropriate energy density term to predict of meltpool dimension and clad height.
+\end{abstract}
+
+(C) 2020 The Authors. Published by Elsevier B.V.
+
+This is an open access article under the CC BY-NC-ND license (\href{http://creativecommons.org/licenses/by-nc-nd/4.0/}{http://creativecommons.org/licenses/by-nc-nd/4.0/})
+
+Peer-review under responsibility of the Scientific Committee of the NAMRI/SME.
+
+Keywords: directed energy deposition; in-situ x-ray imaging; energy density
+
+\section*{1. Introduction}
+Laser-based metal additive manufacturing (AM) has become an increasingly popular technology due to its geometric and material flexibility. The two main processes in this group of manufacturing techniques are laser powder bed fusion (LPBF) and powder blown or directed energy deposition (DED) [1]. In DED, a high-powered laser is used to melt metal powder particles that are blown onto a substrate through a gas-assisted nozzle. The nozzle and laser move in tandem, where a meltpool is created underneath the laser and a layer of solidified metal forms behind the meltpool. A full part is built by depositing multiple layers on top of one another, where new powder is deposited, and the previous layer is partially re-melted.\\
+While LPBF and DED both have their advantages, DED offers large build capacity $(2 \mathrm{~m} \times 1.5 \mathrm{~m} \times 0.75 \mathrm{~m})$ and deposition speed $\left(\sim 70 \mathrm{~cm}^{3} / \mathrm{hr}\right)$ compared to LPBF $(0.5 \mathrm{~m} \mathrm{x}$ $0.28 \mathrm{~m} \times 0.325 \mathrm{~m}, 5-20 \mathrm{~cm}^{3} /$ hour) [2]; moreover, the nature of co-axial laser and powder nozzle geometry lends itself to 5 -axis manufacturing capabilities.
+
+Due to the stochastic and rapid addition of powders, the DED process will show different behavior than what has previously been studied with highspeed in-situ x-ray imaging in LPBF. It is necessary to understand the behavioral differences for a DED process (i.e., defect formation, meltpool behavior, and laser-powder interactions) in order to make improvements in part quality and high-fidelity prediction models $[3,4]$. Some important mechanisms in DED, such as powder incorporation, have\\
+started to be studied, but current observations of DED phenomena have only been made with regular highspeed cameras and non-commercial powder delivery methods [5, 6]. To further advance the understanding of powder incorporation mechanisms in DED, it is necessary to conduct highspeed, in-situ $\mathrm{x}$-ray imaging of the DED process. This technique provides the correct spatial and temporal resolutions to observe powders moving at high speeds as they impact the meltpool; however, a commercial DED system cannot be used due to the size limitations of both the system and processing window within a synchrotron $x$-ray hutch (on the order of millimeters) where the experiments are conducted. Therefore, an in-situ DED system that reflects commercial trends must be established.
+
+In addition to the above, materials design for DED is also limited by the complex processing-structure relationships stemming from fast solidification rates and temperature-dependent thermophysical properties. This has made it difficult to generate successful material systems as well as processing parameter maps [1]. Currently, DED processing parameter maps consider energy density $E=$ $P / v D$, where $P$ is laser power, $v$ is scan speed, and $D$ is laser beam diameter, to define 'good' build conditions [7, 9]; often times, $E$ is specifically used to predict relative porosity $[8,9] . E$ has also been used to predict clad height (layer thickness) in conjunction with powder density $F=$ $G / v D$, where $\mathrm{G}$ is mass powder flowrate [Shim, Saboori]; however, clad height was defined as a function of $E$ and $F$ rather than one predictive parameter. In this study, a global energy density term is investigated $G E D^{\prime}=P / G v D^{2}$, which uses both laser power and powder flowrate and has units of $\frac{J}{\left(\frac{k g}{s}\right) m^{3}}$. This term represents the energy added per unit of mass added.
+
+In all, a system that reflects commercial DED machine behavior needs to be established in order to advance fundamental knowledge in DED and provide a method to develop processing windows for AM. Here we present the design of a novel DED system that can be utilized in highspeed, in situ $\mathrm{x}$-ray imaging. The system is then used to analyze the effects of powder flowrate and laser power on meltpool length and depth to verify large-scale DED process parameter trends and compare different build conditions seen under the same global energy density ratio. While many materials could be used with this system, Ti$6 \mathrm{Al}-4 \mathrm{~V}$ is used in this study because of its popularity in lightweight applications.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_266b643b13969e41f7d1g-2(1)}
+\end{center}
+
+D Laser beam diameter $(\mathrm{mm})$
+
+P $\quad$ Laser Power (W)
+
+\section*{2. Methods and Materials}
+\subsection*{2.1. In-situ Experimental Setup}
+Phase-contrast imaging at the Advanced Photon Source (APS) in Argonne National Laboratory was used to observe in-situ phenomena using a novel DED system. The experimental principle is shown in schematic form in Fig. 1. Layers of Ti-6Al-4V powder are blown from a commerciallike DED nozzle and deposited on the top face of a small rectangular Ti-6Al-4V substrate. A typical sequence of events for a single experiment is as follows: powder hopper is turned on, $\mathrm{x}$-ray shutter opens, laser and deposition set-up are triggered, single powder layer is melted onto the substrate, $x$-ray beam image is converted to visual image through scintillator and captured by the highspeed camera. The experiment is imaged in-situ from the front face of the substrate using the x-ray beam, shown in Fig. 1. A single experiment takes $31 \mathrm{~ms}$ to complete and varies with scan speed. All images in this study were taken at $30,000 \mathrm{fps}$ with an exposure time of $12 \mu \mathrm{s}$. The field of view using the $\mathrm{x}$-ray imaging beam is $2 \mathrm{~mm}$ by $2 \mathrm{~mm}$.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_266b643b13969e41f7d1g-2}
+
+Fig. 1 Orientation of Ti-6Al-4V sample with deposition direction and $\mathrm{x}$-ray imaging beam. The sample is imaged from the front-facing plane of the substrate $(30 \mathrm{~mm} \times 10 \mathrm{~mm})$ and the direction of deposition is from left to right across the top-facing plane of the substrate ( $30 \mathrm{~mm} \times 406 \mu \mathrm{m}$ ).
+
+The small-scale DED system was designed to fit within the size limitations of an X-ray hutch in order to perform the in-situ experiments. The X-ray hutch setup consisted of the following: deposition set-up, $500 \mathrm{~W}$ Ytterbium fiber laser $(1,070 \mathrm{~nm})$, multi-material commercial GTV powder hopper, scintillator, and highspeed camera. The fiber laser is used for primary processing of the samples, and the $\mathrm{x}$-ray beam is used for phase-contrast imaging. The commercial GTV powder hopper can hold up to two types of material and can achieve mass flowrates from $99 \mathrm{mg} / \mathrm{s}$ to $745 \mathrm{mg} / \mathrm{s}$ (volumetric flowrates $79.2 \mathrm{~cm}^{3} / \mathrm{hr}$ to $604 \mathrm{~cm}^{3} / \mathrm{hr}$ ), similar to that of a commercial DED system. The deposition setup is housed in an environmental chamber filled with argon and maintained at an oxygen level of $<1.0 \%$ using an LC technology oxygen analyzer and controller. The oxygen content of the environmental chamber is higher in this study than in typical commercial systems because the goal was to only prevent spontaneous combustion and minimize oxidation, which sacrifices some resulting material quality. A linear stage moves from left to right during deposition and contains the mounted laser optics, in-house commercial powder nozzle, sample alignment camera, and powder alignment stage.
+
+The mounted laser optics are contained in a $50 \mathrm{~mm}$ optics cube and consists of a dichroic mirror and $100 \mathrm{~mm}$ planoconvex focusing lens. The dichroic mirror reflects the main processing beam $(1,070 \mathrm{~nm})$ but transmits the red laser guide light $(600-700 \mathrm{~nm})$ for alignment purposes. The focusing lens is used to focus the main processing beam into an appropriate spot size for the substrate, which is 235 $\mu \mathrm{m}$ in this study.
+
+There are three alignments that must be maintained in the deposition set-up to ensure repeatability: 1) The middle of the powder nozzle must be in line with the middle of the substrate, 2) the laser must be in the center of the substrate, and 3) the powder distribution focal point must be incident with the laser on the substrate. The following describes how each alignment is maintained: 1) A manual three-axis stage is used to align the powder nozzle with the middle of the substrate, 2) the alignment CCD camera above the optics cube is used to see the red laser guide light on top of the substrate, 3) the powder nozzle angle stage holds the powder nozzle at a distance of $5 \mathrm{~mm}$ away from the substrate at a 46 angle, putting the powder focal point incident with the laser.
+
+The in-house commercial powder nozzle was designed to have a $1.5 \mathrm{~mm}$ spread at the deposition surface; the nozzle uses a converging-diverging design with a $1 \mathrm{~mm}$ exit. The powder spread was minimized in order to accommodate deposition on a substrate with a thickness of $406 \mu \mathrm{m}$. The powder stream has minimal divergence once it exits the nozzle, ensuring a reliable powder focus even if the distance between the nozzle and substrate changes by $\pm 1 \mathrm{~mm}$; the nozzle design is also modular and can be changed to observe effects of different powder distributions in future studies.
+
+\subsection*{2.2. Substrate and Powder Materials}
+The substrate and powder materials in this study are grade 5 titanium alloy Ti-6Al-4V. Rectangular substrates 30 $\mathrm{mm}$ by $10 \mathrm{~mm}$ were machined from a $406 \mu \mathrm{m}$ thick, 12" $\mathrm{x}$ 12" sheet using wire EDM. The powders are AP\&C Spherical APA Ti-6Al-4V, $45 \mu \mathrm{m}-106 \mu \mathrm{m}$ in diameter with a Gaussian size distribution. Industrial grade argon is used for shield gas in the powder nozzle and purge gas in the environmental chamber.
+
+\subsection*{2.3. Laser Beam Diameter Measurement}
+The laser beam diameter for this study was $235 \mu \mathrm{m}$, which was measured from the keyhole width. FIJI was used for image processing and keyhole width measurements, where the width measurement was taken at the top of the keyhole/substrate and an average was calculated using two experimental runs on a blank substrate with no powder.
+
+\subsection*{2.4. Experimental Procedures}
+In this study, the effect of powder flowrate and laser power on meltpool length and depth are analyzed in order to verify whether process parameter trends reflect the same trends in large-scale DED. This comparison is done by keeping scan speed constant at $100 \mathrm{~mm} / \mathrm{s}$ while varying laser power from $208 \mathrm{~W}-506 \mathrm{~W}$ and powder mass flowrate from $196 \mathrm{mg} / \mathrm{s}-400 \mathrm{mg} / \mathrm{s}$ at specified levels, shown in Table 1. These ranges were chosen because they produced a significant single clad with no delamination. Three repetitions are performed at each process parameter level.
+
+Table 1. Design of experiments based on $G E D^{\prime}$.
+
+\begin{center}
+\begin{tabular}{ccc}
+\hline
+$G E D^{\prime}\left(\frac{\mathrm{J}}{\frac{\mathrm{kg} \cdot \mathrm{mm}}{\mathrm{s}} \mathrm{m}}\right)$ & Laser Power (W) & \begin{tabular}{c}
+Powder Flowrate \\
+$(\mathrm{mg} / \mathrm{s})$ \\
+\end{tabular} \\
+\hline
+\multirow{2}{*}{0.09} & 208 & 400 \\
+\cline { 2 - 3 }
+ & 231 & 435 \\
+\cline { 2 - 3 }
+0.11 & 225 & 400 \\
+\hline
+\multirow{2}{*}{0.13} & 231 & 410 \\
+\hline
+\multirow{2}{*}{} & 254 & 400 \\
+\hline
+\multirow{2}{*}{0.18} & 231 & 370 \\
+\hline
+\multirow{2}{*}{} & 294 & 300 \\
+\hline
+ & 231 & 400 \\
+\hline
+ & 345 & 279 \\
+\hline
+ & 231 & 400 \\
+\hline
+\end{tabular}
+\end{center}
+
+Global energy density $G E D^{\prime}$ is used in this study to guide the choice of input process parameters at each level. It is defined as:\\
+$G E D^{\prime}=\frac{P}{G \cdot v \cdot d_{\text {beam }}^{2}}=\left[\frac{\mathrm{J}}{\frac{\mathrm{kg}}{\mathrm{s}} \cdot \mathrm{mm^{3 }}}\right]$
+
+where $P$ is laser power, $G$ is powder mass flowrate, $v$ is scan speed, and $d_{\text {beam }}$ is the diameter of the laser beam. This gives units of energy per scanned volume per mass input. While specific energy density $E$ has been used to qualitatively predict porosity in DED and has been used to generate process parameter maps for different materials [9, $10]$, it does not take into account powder density which is a critical parameter of DED. $G E D^{\prime}$ is used in this study to encompass all dominant processing parameters of DED, rather than multiple terms such as $E$ and $F$. GED has already been used to qualitatively predict porosity [11]; however, it is noted here that based on this definition, different combinations of laser power, scan speed, and powder mass flowrate can define the same energy densities. Laser power and powder mass flowrate levels were chosen in order to create 7 pairs of unique $G E D^{\prime}$ values for comparison of build conditions (i.e., clad height and meltpool size) within the specified ranges above in order to evaluate the $G E D^{\prime}$ metric in addition to recovering processing trends seen in commercial systems.
+
+\section*{3. Results and Discussion}
+\subsection*{3.1. Recovered Meltpool Length and Depth Trends}
+The meltpool length and depth were measured from the difference between two timeframes, shown in Fig. 6. This image processing technique uses two raw images at subsequent time steps, for example, images at $t_{0}$ and $t_{1}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_266b643b13969e41f7d1g-4(2)}
+\end{center}
+
+Fig. 6 (a) Subtracted image of frames $0.033 \mathrm{~ms}$ apart in the first layer of deposition. The meltpool is outlined by a white dashed line and the vapor depression is outlined by an orange dashed line. The measured meltpool depth and length are indicated.
+
+The image taken at $t_{0}$ is subtracted from $t_{1}$, where the resulting image is the difference in intensities at each pixel between the two timesteps. The intensity difference can be very small, so the resulting difference image is normalized based on its maximum intensity to enhance contrast. After this normalization, the differential image shows what has moved between the two frames $t_{0}$ and $t_{1}$. The full imaging process technique is shown mathematically as:
+
+$I_{t_{1}}-I_{t_{0}}=I_{\text {diff }} \rightarrow \frac{I_{\text {diff }}}{\max \left(I_{\text {diff }}\right)}=I_{\text {norm }}$
+
+Where $I_{t_{1}}$ is the intensity of the image at $t_{1}, I_{t_{0}}$ is the intensity of the image at $t_{0}, I_{\text {diff }}$ is the resulting intensity after subtraction, and $I_{\text {norm }}$ is the normalized subtracted image. This opeartion is performed for each timestep in the experimental sequence; for example, the next subtraction would use $t_{1}$ and $t_{2}$. This can be generalized as:
+
+
+\begin{equation*}
+I_{t_{n}}-I_{t_{n-1}}=I_{n}^{\text {diff }} \rightarrow \frac{I_{n}^{\text {diff }}}{\max \left(I_{n}^{\text {diff }}\right)}=I_{n}^{\text {norm }} \tag{3}
+\end{equation*}
+
+
+Where $n$ ranges from 1 to the total number of timesteps or frames captured in the experiment.
+
+The meltpool lengths and depths for all first layer depositions are presented in Fig. 7 with respect to mass flowrate and laser power.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_266b643b13969e41f7d1g-4}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_266b643b13969e41f7d1g-4(1)}
+\end{center}
+
+(b)
+
+Fig. 7 (a) Length and depth of meltpool as a function mass flowrate. (b) Length and depth of meltpool as a function of laser power. Blue triangles indicate depth measurements and yellow squares indicate length measurements.
+
+Observed meltpool lengths range from about $200 \mu \mathrm{m}$ to $900 \mu \mathrm{m}$, while meltpool depths range from about $50 \mu \mathrm{m}$ to $500 \mu \mathrm{m}$. Figure 7 shows that in this study, meltpool length and depth increase linearly with increasing laser power, i.e.:
+
+$d_{\text {meltpool }} \sim P$
+
+And decrease exponentially with increasing powder flowrate:
+
+$d_{\text {meltpool }} \sim \exp (-\dot{m})$
+
+Lower R-squared values for changing powder flowrate are due to the limited range of mass flowrates; it does not include the cases of meltpool with 'no powder' and 'saturated with powder' that fully describe the exponential decay. In full-scale DED builds, meltpool size also increases linearly with increasing laser power and exponentially decreases with increasing powder mass flowrate [12]. The recovered trends show that the current miniature setup is similar to a full-scale system and can be used to explore processing ranges of different material systems or meltpool behavior.
+
+\subsection*{3.2. Global Energy Density Evaluation}
+Meltpool length and depth measurements as a function of $G E D^{\prime}$ are shown in Fig. 8. At low energy densities, a change in mass flowrate versus a change in laser power does not make a large difference in meltpool dimensions; however, as energy density increases there is a disparity between meltpool dimensions and $G E D^{\prime}$. This is due to the discrepancy between the linearly increasing and exponentially decreasing relationship of laser power and powder mass flowrate, respectively, discussed above in Section 3.1. This indicates that global energy density $G E D^{\prime}$ is not a good predictor of meltpool size, as there are clearly two different trends based on input process parameters. This can be extended to the prediction of clad height/layer thickness as well, as the dilution ratio would be directly related to meltpool dimensions and clad height. Further studies and analysis of in-situ data is necessary in order to determine a more appropriate energy density term to predict clad height and meltpool size.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_266b643b13969e41f7d1g-5(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_266b643b13969e41f7d1g-5}
+\end{center}
+
+(b)
+
+Fig. 8 (a) Length of meltpool as a function of global energy density. (b) Depth of meltpool as a function of global energy density. Grey triangles indicate changing laser power and orange squares indicate changing powder flowrate. Low R-squared values for changing powder flowrate are due to the exponential decay of powder mass flowrate not being fully captured in the studied mass flowrate ranges.
+
+\section*{4. Conclusion}
+The in-situ DED system designed in this study is aimed at the development of fundamental knowledge of DED manufacturing processes. Highspeed phenomena such as powder-meltpool interactions can be observed and correlated with input processing parameters. The experimental study performed showed that trends seen in full-scale builds were recovered, and meltpool lengths and depths were reported to support high-fidelity modeling of DED. It was found that global energy density is not a good indicator of meltpool size or clad height due to process parameter trends, which is important to consider in fullscale DED builds. Further studies will investigate a more appropriate measure of energy density to predict resulting build conditions (i.e., meltpool size and clad height).
+
+\section*{Acknowledgements}
+The authors would like to acknowledge Tao Sun, Niranjan Parab, and Sarah Wolff for all their support at APS, as well as Yi Shi, Nicolas Martinez, Marisa Bisram, and Shuheng Liao for experiment execution. This research used resources of the Advanced Photon Source, a U.S. Department of Energy (DOE) Office of Science User Facility operated for the DOE Office of Science by Argonne National Laboratory under Contract No. DE$\mathrm{AC02-06CH11357}$. This material is based upon work supported by the National Science Foundation Graduate Research Fellowship under Grant No. DGE-1842165. This research was also funded by NIMSI and CHiMaD.
+
+\section*{References}
+[1] Debroy, T., Wei, H. L., Zuback, J. S., Mukherjee, T., Elmer, J. W., Milewski, J. O., ... Zhang, W., Progress in Materials Science Additive\\
+manufacturing of metallic components - Process , structure and properties. Progress in Materials Science, 92 (2018) 112-224.
+
+[2] Roland Berger Strategy Consultants, Additive manufacturing A game changer for the manufacturing industry?, (2013) November
+
+[3] Yan, W., Lin, S., Kafka, O. L., Yu, C., Liu, Z., Lian, Y., ... Liu, W. K., Modeling process-structure-property relationships for additive manufacturing, Frontiers of Mechanical Engineering, 13(4) (2018) 482-492.
+
+[4] Tian, H., Chen, X., Yan, Z., Zhi, X., Yang, Q., \& Yuan, Z., Finiteelement simulation of melt pool geometry and dilution ratio during laser cladding, Applied Physics A, 125(7) (2019) 485.
+
+[5] Haley, J. C., Schoenung, J. M., \& Lavernia, E. J., Observations of particle-melt pool impact events in directed energy deposition. Additive Manufacturing, (2018).
+
+[6] Wolff, S., Wu, H., Parab, N. D., Zhao, C., Ehmann, K., Sun, T., \& Cao, J., In-situ high-speed X-ray imaging of piezo-driven directed energy deposition additive manufacturing, Scientific Reports, (2019).
+
+[7] Yusuf, S. M., \& Gao, N. (2017). Influence of energy density on metallurgy and properties in metal additive manufacturing. Materials Science and Technology (United Kingdom), 33(11), 1269-1289. \href{https://doi.org/10.1080/02670836.2017.1289444}{https://doi.org/10.1080/02670836.2017.1289444}
+
+[8] Shim, D. S., Baek, G. Y., Seo, J. S., Shin, G. Y., Kim, K. P., \& Lee, K. Y., Effect of layer thickness setting on deposition characteristics in direct energy deposition (DED) process, Optics and Laser Technology, 86 (2016) 69-78,
+
+[9] Cao, L., Chen, S., Wei, M., Guo, Q., Liang, J., Liu, C., \& Wang, M., Effect of laser energy density on defects behavior of direct laser depositing 24CrNiMo alloy steel, Optics and Laser Technology, 111 (2019) 541-553.
+
+[10] Saboori, A., Tusacciu, S., Busatto, M., Lai, M., Biamino, S., Fino, P., \& Lombardi, M., Production of single tracks of Ti-6Al-4V by directed energy deposition to determine the layer thickness for multilayer deposition. Journal of Visualized Experiments, 133 (2018) 1-10.
+
+[11] Webster, S., Wolff, S., Bennett, J., Sun, T., Cao, J., \& Ehmann, K., Porosity Formation and Meltpool Geometry Analysis Using Highspeed, in situ Imaging of Directed Energy Deposition . Microscopy and Microanalysis, 25(S2) (2019) 2556-2557.
+
+[12] Bax, B., Rajput, R., Kellet, R., \& Reisacher, M. (2018). Systematic evaluation of process parameter maps for laser cladding and directed energy deposition. Additive Manufacturing, 21(April), 487-494. \href{https://doi.org/10.1016/j.addma.2018.04.002}{https://doi.org/10.1016/j.addma.2018.04.002}
+
+
+\end{document}

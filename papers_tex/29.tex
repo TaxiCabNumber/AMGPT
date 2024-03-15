@@ -1,0 +1,699 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Observing molten pool surface oscillations during keyhole processing in laser powder bed fusion as a novel method to estimate the penetration depth }
+
+
+\author{Leonardo Caprio*, Ali Gökhan Demir, Barbara Previtali\\
+Department of Mechanical Engineering, Politecnico di Milano, Via La Masa 1, 20156 Milan, Italy}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\DeclareUnicodeCharacter{0131}{$\imath$}
+
+\begin{document}
+\maketitle
+
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+Laser powder bed fusion
+
+Monitoring
+
+Penetration depth
+
+Oscillation
+
+High speed imaging
+
+\begin{abstract}
+A B S T R A C T Various in-situ monitoring techniques have been developed for the detection of process drifts in the Laser Powder Bed Fusion (LPBF) process. Currently, optical emission monitoring can retrieve information regarding molten pool characteristics, such as temperature, width, length and area which provide substantial process signatures. Nonetheless, a fundamental indicator for the retrieval of a complete set of spatially distributed information is missing: the molten pool depth. Within the present investigation, a system for the estimation of the penetration depth based on the detection of molten pool surface oscillations is reported. Initially, the fundamentals of the monitoring technique are presented. The principle relies upon the observation of molten pool surface ripples through the measurement of probe light reflections in the melt area. Proof of concept testing of the sensing principle was conducted through an experimental investigation on a prototypal platform. A monitoring system (consisting of a high-speed camera and a secondary illumination light) was employed to view the process while realising both bead-on-plate material remelting and single track powder bed fusion depositions of AISI316L at different levels of laser emission power. Oscillation frequencies were extracted from the high-speed imaging acquisitions after image processing and signal analysis. The surface wave oscillations were measured to be in the range of $3.5-5.5 \mathrm{kHz}$ in keyhole conditions. Metallographic cross-sections allowed to observe the effective molten pool penetration depth and cross-sectional area and were correlated to oscillation frequencies. Higher values of oscillation indicated shallower penetration and consequently a smaller mass of molten material.
+\end{abstract}
+
+\section*{1. Introduction}
+The layer-wise building principle of the Laser Powder Bed Fusion (LPBF) process enables both part qualification and defect correction through the implementation of sensing solutions. This feature has great appeal for the manufacturing sector since it lays the foundations for the digitalisation of the production chain and eventually strive for workpiece qualification [1]. The scientific community has shown how different in-situ monitoring techniques may be implemented in order to extract quality indicators which enable the identification of process drifts during the LPBF process [1-3]. Different sensors may be adopted according to the purpose of the monitoring solution being developed, the design of which is highly dependent on the nature of the phenomenon under observation, its spatial extent and dynamics [4]. For instance, pyrometers may be employed to retrieve molten pool temperature at acquisition rates greater than $50 \mathrm{kHz}$ although they cannot provide spatially distributed information [5-7]. On the other hand, high speed cameras may be employed either in coaxial or lateral configuration to record spatially distributed process emission at different wavelengths [8-11]. Other solutions which are intended for phenomenological observation of the molten metal, expose the real geometry of the molten pool by employing a secondary illumination light which dominates the process emission [12-14]. Although geometrical parameters are commonly employed as process stability indicators, a complete three-dimensional detection is limited by surface observations of the laser-material interaction. Indeed, some of the most critical defects such as porosity formation due to keyhole generation or lack of fusion are directly correlated to the melt pool depth. Hence, the quantification through direct or indirect measurement methods of indicators such as molten pool penetration depth or cross-sectional area is amongst the open challenges for the scientific community.
+
+In literature, various monitoring methods of the LPBF process exploit surface geometrical indicators as process drift detectors. The research group from KU Leuven established control strategies based on the geometrical properties (namely width, length and area) of the molten pool and correlating them to data sampled from a photodiode $[10,15]$. Hooper measured molten pool surface temperature and shape through a coaxial monitoring system with two high speed cameras
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail addresses: \href{mailto:leonardo.caprio@polimi.it}{leonardo.caprio@polimi.it} (L. Caprio), \href{mailto:aligokhan.demir@polimi.it}{aligokhan.demir@polimi.it} (A.G. Demir), \href{mailto:barbara.previtali@polimi.it}{barbara.previtali@polimi.it} (B. Previtali).
+}
+
+\begin{center}
+\begin{tabular}{ll}
+List of symbols &  \\
+$A_{c s}$ & Molten pool cross-sectional area $\left(\mu \mathrm{m}^{2}\right)$ \\
+$d_{O}$ & Laser beam waist diameter $(\mu \mathrm{m})$ \\
+$f_{a c q}$ & Acquisition frequency $(\mathrm{Hz})$ \\
+$f_{o s c}$ & Measured oscillation frequency $(\mathrm{Hz})$ \\
+$f_{p h e n o m e n}$ & Frequency of a physical phenomenon $(\mathrm{Hz})$ \\
+$h$ & Molten pool penetration depth $(\mu \mathrm{m})$ \\
+$I_{i}$ & Intensity of the i-th pixel bit \\
+$I_{s u m}$ & Sum of pixel intensity values bit \\
+$l_{F O V}$ & Field of view length (mm) \\
+$l_{m p}$ & Molten pool length (mm) \\
+$M^{2}$ & Beam quality factor non-dimensional \\
+$n$ & Replicatesnon-dimensional \\
+$N_{m p}$ & Number of pixels of the molten pool non-dimensional \\
+$n_{p i x, x}$ & Number of pixels in x-direction non-dimensional \\
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{ll}
+$n_{p i x, y}$ & Number of pixel in y-direction non-dimensional \\
+$P$ & Laser emission power $(\mathrm{W})$ \\
+$S R$ & Spatial resolution $(\mu \mathrm{m} / \mathrm{pixel})$ \\
+$T_{a c q}$ & Acquisition times \\
+$T B W$ & Time-to-bandwidth parameter non-dimensional \\
+$v$ & Laser scan speed $(\mathrm{mm} / \mathrm{s})$ \\
+$w_{F O V}$ & Field of view width (mm) \\
+$w_{m p}$ & Molten pool width $(\mu \mathrm{m})$ \\
+$\alpha$ & View angle deg \\
+$\beta$ & Illumination angle deg \\
+$\lambda$ & Laser emission wavelength (nm) \\
+$\Delta f_{\text {min,peaks }}$ & Minimum distance between successive oscillation peaks \\
+$\Delta f_{\text {res,MT }}$ & (Hz) \\
+$\Delta f_{\text {res,PD }}$ & Frequency resolution for multi-taper PSD estimate (Hz) \\
+\end{tabular}
+\end{center}
+
+observing the process at two specific wavelengths [8]. This technique allowed the estimation of temperature gradients, cooling rates and molten pool geometry during the scanning of overhanging geometries. Thombansen and Abels devised an in-situ monitoring system to determine geometrical parameters of the molten pool and correlate them to pyrometer measurements [6]. Demir et al. used the molten pool area to predict overheating regions during a LPBF build and employed different laser emission modes to reduce the insurgence of such defects [16]. Moreover, useful metrics related to the molten pool geometry have been extracted through off-axis high speed thermal imaging by Criales et al. [17].
+
+Industrial systems are moving towards the adoption of in-situ monitoring strategies although the implemented approaches are often non-disclosed and mostly consist of integrated sensors such as photodiodes. Renishaw employs two photodiodes in the NIR wavelength range (one from 700- $1040 \mathrm{~nm}$ and the other 1090-1700 nm) to track the process emission data [18]. The information may be reviewed during and at the end of the build in order to identify defective components being realised. Analogously, SLM Solutions employs a coaxial monitoring system (namely Melt Pool Monitoring) with two photodiodes to record the process emission [19,20]. EOS also developed a melt pool monitoring tool based upon the use of both a coaxial and an off-axis photodiode [21]. Trumpf also provides a molten pool monitoring system although does not declare the type of sensor employed [22]. Most recently, a novel machine manufacturer, Velo3D, has introduced a closed-loop melt pool control system which allows for the deposition of almost support-less components even for elevated overhang angle inclinations [23]. Concept Laser, on the other hand, codeveloped with KU Leuven a spatially resolved in-situ monitoring system, according to the architecture previously presented [24].
+
+The in-situ measurement of the melt pool depth has attracted attention in the last few years. Several authors have observed melt pool dynamics in LPBF by means of high speed X-ray imaging [25-31]. The technique was originally developed by Katayama et al. and Matsunawa to study keyhole dynamics during the laser welding process and further developed by researchers of the Institut für Strahlwerkzeuge, Stuttgart [32-37]. Although for phenomenological studies these works have provided extensive data, their wider industrial use as inline monitoring tools is unlikely. The use of transmitted electromagnetic waves through the large powder bed in an industrial system still requires fundamental scaling up and safety issues to be considered. An indirect approach for detecting the melt pool depth can be developed by analysing the light emitted from the melt pool [38-43]. Alternatively, surface wave oscillation detection by means of probe light reflections can be employed as an indirect penetration depth measurement method and has been conducted in both Gas Tungsten Arc welding processes and laser based processes [44-49]. Molten pool fluctuations have also been studied by means of acoustic emission although this approach suffers from noise in industrial environments due to the low pressure of the generated sound waves [50-52]. The correlation between surface ripples and undersurface molten pool geometry was extensively studied in literature for the GTA welding technology through arc voltage monitoring [53-63]. On the other hand, a correlation between molten pool surface oscillations and penetration depth has not yet been investigated for the Laser Powder Bed Fusion technology.
+
+Overall, the greater part of monitoring systems implemented in the LPBF process relies on the detection of electromagnetic emission of the molten pool. Although, useful indicators such as width, length, area and temperature are available as signatures for process stability, the molten pool depth is a parameter which cannot be directly detected with in-situ process monitoring tools adaptable to industrial systems. The aim of the present investigation is thus to present a monitoring approach for the indirect measurement of the penetration depth. The principle upon which the monitoring system is developed is based on the detection of surface oscillations via reflections of a secondary illumination light. The current work firstly presents the penetration depth estimation approach adopted and defines the design criteria for the monitoring solution that will be developed. Successively the experimental setup employed to validate the monitoring technique is detailed in the materials and methods section. Within the same section, the image and signal processing methodologies are presented, as well as the experimental campaign. Results report the molten pool oscillation frequency in different experimental conditions and the metallographic cross-sections of the samples. Finally, the surface oscillations are correlated to the undersurface geometrical parameters of the molten pool (penetration depth and cross-sectional area) alongside with a discussion of the results.
+
+\section*{2. Penetration depth estimation approach}
+In the subsequent section, the novel penetration depth estimation approach is presented alongside with the design criteria for the realisation of the in-situ monitoring technique.
+
+\subsection*{2.1. Physical principle}
+Based upon the various monitoring approaches presented in the literature review, a novel sensing principle for the estimation of the molten pool penetration depth in the LPBF process was investigated. Different researches conducted on the GTA welding technology highlighted the link between molten pool surface oscillations and its geometrical parameters $[38,55,57,60]$. It is commonly accepted that the molten pool dynamics for laser based processes are dominated by three contributions: thermo-capillary forces, recoil pressure and surface tension (also referred to as capillary forces) $[28,64]$. The thermo-capillary\\
+forces are generated by the elevated temperature gradients present in the melt pool which cause Marangoni convection [28,65]. The recoil pressure generated by localised evaporation of the base material due to the high intensity laser beam which causes plasma formation and eventually keyhole formation [66,67]. Recoil force and thermo-capillary convection are countered by surface tension components of the molten liquid (i.e. capillary forces). The combined action of these components on the liquid metal are shown to induce oscillatory motion which may thus be compared to that of GTA welding [28,53].
+
+Variations in the processing parameters will affect both the forces and thermal phenomena acting on the molten pool as well as the boundary conditions thus inducing variations in the surface oscillations. The role of such forces on the molten pool surface deformations and track geometry has been confirmed by computational thermo-fluid dynamic simulations conducted by Khairallah and Anderson [68] With elevated energy intensities, recoil pressure forces play a major role in dominating the fluid flow whilst surface tension forces become predominant at lower energy levels, eventually inducing Plateau-Rayleigh instabilities in the molten metal $[68,69]$. If it is possible to correlate the surface oscillations to the geometrical parameters of the molten pool then the challenge regards the development of a technique suitable for the online measurement of the waves and the data processing associated to this technique. As previously shown by Semak et al., the use of a probing light is an optimal solution for the detection of waves on the molten pool surface [46]. Accordingly, previous high speed imaging observations by the authors using a secondary illumination source showed that bright reflections could be identified on the molten pool area [70]. Similarly, Kovacevic and Zhang [71,72] employed a secondary laser light to depict deformations of the molten pool surface. Surface oscillation monitoring tools have been principally applied to laser and torch welding but may be considered valid for LPBF due to the analogies in terms of heat source and base material. In literature, an approach often employed is to study both the LPBF and material remelting processes. For instance, Cunningham et al. compared single track depositions with bead-on-plate material remelting and reported differences in the molten pool penetration depth in the remelting conditions with respect to LPBF, whilst in the latter the keyhole appeared to possess a more turbulent behaviour [73]. Nonetheless, a specific analysis of the surface oscillations to quantitatively determine differences (if present) was not conducted. Moreover, Gunenthiram et al. identified surface ripples during LPBF which allows to consider light probing methods as applicable for surface oscillation detection [74].
+
+A representative frame of a high speed imaging acquisition is shown in Fig. 1(a), whilst Fig. 1(b) reports its schematic representation. The deposited material is clearly visible due to the denudation area of the powder bed and its clear contours. The molten pool is evidenced by its dark appearance and due to its dynamic nature. The laser material interaction area appears in light grey colour. On the other hand, it is possible to clearly distinguish bright reflections of the illumination light which appear in white due to their high intensity.
+
+Accordingly, the bright reflections can be assumed to be representative of the oscillatory peaks of the liquid metal as shown schematically in Fig. 2. The incoming illumination light is locally reflected at a given incident angle and can thus be captured by a camera or integrated sensor.
+
+\subsection*{2.2. Design criteria for the melt pool surface oscillations monitoring system}
+As previously indicated, the measurement of the molten pool surface observations may be conducted with a high speed imaging setup. This monitoring system is required for the proof of concept demonstration of the sensing approach due to its capability to view the molten pool with sufficiently elevated temporal and spatial resolutions (requirements dictated by the oscillatory phenomenon). High speed imaging setups are generally used in off axis configuration and will be consequently implemented in the present work for the proof of concept of the novel penetration depth estimation approach. For a correct estimation of the molten pool oscillations it is important to define the design cues of the high speed imaging setup.
+
+In order to determine the molten pool oscillations through spectral analysis it is required to maintain both the frequency resolution and the acquisition frequency as high as possible. This respectively allows to minimise errors related to the redistribution of the signal energy and aliasing. On the other hand, it is mandatory to maintain a high spatial resolution in order to detect the molten pool features [4]. To maximise the acquisition frequency of a high speed camera the number of active pixels of the sensor must be minimised due to data transfer rate limits. The geometry of the single track deposition can aid in reducing the number of active pixels (for instance by restricting the width and length according to the geometry that is going to be observed). The most important aspect is that the acquisition frequency $\left(f_{a c q}\right.$ ) of the high speed imaging camera should be at least twice the frequency of the phenomenon $\left(f_{\text {phenomenon }}\right)$ in order to avoid aliasing of the phenomenon:
+
+$f_{\text {acq }} \geq 2 \cdot f_{\text {phenomenon }}$
+
+The leakage effect may also cause errors in the identification of the oscillation frequency especially when neighbouring peaks are within the narrow bandwidth of the Power Spectral Density (PSD) estimate. Therefore, the frequency resolution $\Delta f_{\text {res }}$ must be selected below an $a$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_16e3c822ddb3ea6f3e89g-03}
+
+Fig. 1. (a) Frame from high speed imaging acquisition of a single track LPBF deposition (molten pool outline shown in green), (b) schematic representation indicating different elements.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_16e3c822ddb3ea6f3e89g-04(1)}
+\end{center}
+
+Fig. 2. Schematic representation of a transversal view of the molten pool during the LPBF process.
+
+priori estimated value of the minimum distance between two successive oscillation peaks $\Delta f_{\text {min,peaks }}$ (in the case where more than one pole is expected in the transfer function of the oscillating system). Hence, the following equation defines this constraint:
+
+$\Delta f_{\text {res }} \leq \Delta f_{\text {min,peaks }}$
+
+Another aspect to take into account is that an off-axial setup, often employed for high speed imaging, observes the process from a fixed point of view (contrarily to coaxial monitoring setups which view the process from a Lagrangian perspective) and hence introduces a limitation in terms of the acquisition time $\left(T_{a c q}\right)$. This generates a constraint in the frequency resolution of the periodogram estimate $\left(\Delta f_{\text {res,PD }}\right)$ of the Power Spectral Density, according to the following relationship [75]:
+
+$\Delta f_{\text {res }, P D}=\frac{1}{T_{a c q}}$
+
+The frequency resolution of the PSD estimate is also affected by the window functions employed to reduce the leakage error. This aspect will be further discussed in section 3.3.3 Signal processing. For a preliminary evaluation of the performance of the oscillation frequency detection system, the frequency resolution of the periodogram estimate may be employed for a base line evaluation. The acquisition time may be determined as a function of the process parameters and the field of view of the off-axis configuration. The schematic representation of the first and final frames of the acquired video for a single track LPBF deposition is shown in Fig. 3. The first useful frame may be considered when the molten pool is fully contained within the field of view whilst the final frame corresponds to when the front of the molten pool reaches the end of the field of view.
+
+Hence, the distance travelled by the molten pool may be considered as the difference between the length of the field of view $l_{F O V}$ and the length of the molten pool $l_{m p}$. The latter is changing instant by instant and will be affected by process parameters such as laser emission power $(P)$ and scan speed $(v)$ but an expected maximum value may be determined. The acquisition time may therefore be formulated as: $T_{a c q}=\frac{l_{F O V}-l_{m p}}{v}$
+
+It is thus possible to define the periodogram resolution in the frequency domain as:
+
+$\Delta f_{\text {res }, P D}=\frac{v}{l_{F O V}-l_{m p}}$
+
+The field of view length can also expressed in terms of the active pixels in the horizontal direction $n_{p i x, x}$ and of the spatial resolution of the imaging setup $S R$ with the following equation:
+
+$l_{F O V}=n_{p i x, x} \cdot S R$
+
+Therefore, it is possible to express the obtainable resolution in the frequency domain as:
+
+$\Delta f_{r e s, P D}=\frac{v}{n_{p i x, x} \cdot S R-l_{m p}}$
+
+With regards to the field of view dimension in the vertical direction $w_{F O V}$ (i.e. perpendicularly to the scanning direction) the minimum size should be greater than the molten pool width $w_{m p}$ :
+
+$w_{\text {FOV }} \geq w_{m p}$
+
+This relationship may be expressed in terms of the number of active pixels in the vertical direction $n_{p i x, y}$ and of the spatial resolution of the imaging setup $S R$ :
+
+$n_{p i x, y} \cdot S R \geq w_{m p}$
+
+Taking into account all of the constraints previously mentioned and the aims of the present investigation, it is possible to summarize them in Table 1.
+
+\section*{3. Materials and methods}
+\subsection*{3.1. Laser powder bed fusion system}
+A flexible prototype system for LPBF namely Powderful, was used throughout this work. The mechanical system consisted of a custom-
+
+(b) Final frame
+
+(a) First frame\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_16e3c822ddb3ea6f3e89g-04}
+
+Fig. 3. Schematic representation of (a) first and (b) final frame of a video acquisition indicating molten pool geometrical characteristics and field of view parameters.
+
+Table 1
+
+Molten pool observation system parameters.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Parameter & Lower limit & Upper limit & Formula \\
+\hline
+Field of view width, $w_{F O V}$ & $>w_{m p}$ & - & - \\
+\hline
+Field of view length, $l_{F O V}$ & $-\quad \operatorname{lin}^{2}$ & Process limited & $l_{F O V}=n_{p i x, x} \cdot S R$ \\
+\hline
+Spatial resolution, $S R$ & Optically limited & Resolution limited & \includegraphics[max width=\textwidth]{2024_03_10_16e3c822ddb3ea6f3e89g-05}
+ \\
+\hline
+Acquisition frequency, $f_{a c q}$ & $>2 \cdot f_{\text {phenomenon }}$ & Data transfer rate limited & - \\
+\hline
+Frequency resolution, $\Delta f_{\text {res }}$ & As small as possible & $\Delta f_{\text {res }} \leq \Delta f_{\text {min,peaks }}$, Process limited & $\Delta f_{r e s}=\frac{v}{n_{p i x, x} \cdot S R}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+made powder bed able to process small quantities of powder $(<500 \mathrm{~g})$. Detailed description of the mechanical system may be found in previous publications [70,76]. The laser source for the powder bed fusion process was a single mode fiber laser with $1000 \mathrm{~W}$ maximum emission power (nLIGHT alta, Vancouver, WA, USA). The laser light is emitted from the source at an emission wavelength $\lambda=1080 \mathrm{~nm}$ with a beam quality factor $M^{2}=1.19$. The diverging laser beam was collimated with a $75 \mathrm{~mm}$ lens, which was manipulated and focused by a scanner head (Smart Move GmbH, Garching bei München, Germany). The collimated beam was focused onto the working plane with a $420 \mathrm{~mm}$ F-theta lens. With the current optical setup, the beam waist diameter at the focal plane $\left(d_{o}\right)$ was calculated as $78 \mu \mathrm{m}$. The control of the mechanical system and monitoring of the machine state were carried out in LabVIEW environment (National Instruments, Austin, TX) and the trajectories of the laser beam were designed with ScanMaster Designer software (Cambridge Technologies, Bedford, MA, USA).
+
+\subsection*{3.2. Materials}
+In the present investigation AISI316L stainless steel was employed as substrate material (12 $\mathrm{mm}$ thickness) both for the bead-on-plate and LPBF experiments. For the single track Laser Powder Bed Fusion depositions, the powder was provided by Cogne Acciai (Brescia, Italy) with granulometry comprised between 15 and $45 \mu \mathrm{m}$. Chemical composition of the powder is reported in Table 2.
+
+\subsection*{3.3. Measurement of the melt pool oscillations}
+\subsection*{3.3.1. High speed imaging equipment}
+The imaging setup consisted in a high speed camera with a CMOS sensor (Fastcam Mini AX200, Photron, Tokyo, Japan) and a secondary illumination laser Cavilux HF (Cavitar, Tampere, Finland) as presented in a previous work [70]. The secondary illumination light was a pulsed laser source emitting at $640 \mathrm{~nm}$, where the pulsation frequency was regulated according to the acquisition rate of the high-speed camera. Exposure time of the CMOS sensor corresponded to $666 \mathrm{~ns}$ and was regulated to include the whole pulse duration of the illumination light (600 ns), according to monitoring design cues defined in a previous publication [4]. The complete experimental setup and monitoring system are shown in Fig. 4.
+
+\subsection*{3.3.2. Image processing}
+The overall methodological approach developed may be summarized in the block diagram reported in Fig. 5.
+
+The Laser Powder Bed Fusion process is observed through high speed imaging and the use of an external illumination source. The acquired frames are processed through the algorithm presented in section 6 Appendix whilst the various image processing steps are shown in Fig. 6.
+
+The oscillation indicator is thus extracted (sum of intensity of melt pool pixels $I_{\text {sum }}$ ) for every time instant and is defined as follows:
+
+$I_{\text {sum }}=\sum_{i=1}^{N_{m p}} I_{i}$
+
+Where $I_{i}$ is the intensity of the i-th pixel contained within the melt pool area and $N_{m p}$ the total number of pixels of the melt pool so that $I_{\text {sum }}$ is representative of the surface reflections of the molten pool. Subsequently, the time dependent signal is used to estimate the Power Spectral Density using Thomson's multi-taper method and hence allows to extract an indicator which is representative of the molten pool oscillation frequency.
+
+Fig. 7 shows acquired frames at different time instants ((a), (b) and (c)) and overlayed on the original frame, the corresponding melt pool determined with the molten pool identification algorithm ((d), (e) and (f)). It is possible to view the whole video and corresponding algorithm calculations in the supplementary video n. 1 provided.
+
+The melt pool identification algorithm is useful in extracting the geometrical parameters related to the molten pool in terms of average value. Nonetheless, it still presents errors which might compromise its performance in evaluating front and side oscillations. For instance, errors are induced when an ejected particle is near the molten pool since the dilation step of the image processing code causes it to be considered as part of the molten pool. Moreover, the spatial resolution of the imaging setup is another limitation in detecting clearly front and side oscillations of limited entity. Still, for the aim of the present work, whereby the oscillation indicator is composed of the global intensity sum of the molten pool, an error of reduced entity is induced by the limitations of the molten pool identification algorithm. Due to the size and intensity of spatter, when ejections are located within the identified molten pool, they may introduce a disturbance in the measurement of $I_{\text {sum. }}$. Still, the influence of the latter on the Power Spectral Density estimate may be considered as limited since they only introduce brief time-localised disturbances.
+
+\subsection*{3.3.3. Signal processing}
+In order to identify the oscillation frequency, once the indicator of interest was extracted through the image processing code, signal processing in the frequency domain must be conducted. Under the hypothesis that the LPBF process at single track level can be considered as a stationary process, the identification of the oscillation modes can be conducted by estimating the Power Spectral Density (PSD). Accordingly, it is possible to estimate the PSD employing either parametric or non-parametric estimates [77]. Although, parametric estimates of the Power Spectral Density tend to be better performing when short duration records are acquired, they also imply the a priori choice of a model order and number of poles of the transfer function [78]. Hence, for an initial investigation of the oscillation modes of the molten pool the use of non-parametric estimates may be considered as an appropriate choice.
+
+The periodogram estimate of the PSD, may be computed by using the Discrete Fourier Transform of the original time-dependent information representative of the oscillations $I_{\text {sum }}$, according to the
+
+Table 2
+
+Chemical composition of AISI316L stainless steel powder as declared by the producer.
+
+\begin{center}
+\begin{tabular}{llllllllllll}
+\hline
+Element & $\mathrm{C}$ & $\mathrm{Si}$ & $\mathrm{Mn}$ & $\mathrm{P}$ & $\mathrm{S}$ & $\mathrm{Cr}$ & $\mathrm{Mo}$ & $\mathrm{Ni}$ & $\mathrm{Co}$ & $\mathrm{Ti}$ & $\mathrm{Fe}$ \\
+\hline
+wt (\%) & 0.020 & 0.52 & 1.50 & 0.010 & 0.007 & 17.3 & 2.46 & 11.4 & - & - & Bal. \\
+\hline
+\end{tabular}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_16e3c822ddb3ea6f3e89g-06(1)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_16e3c822ddb3ea6f3e89g-06}
+\end{center}
+
+Fig. 4. Experimental setup (a) schematic representation and (b) effective realisation.
+
+formulation reported in Carter and Nuttall [75]. However, the periodogram is a non-consistent estimate of the PSD. Therefore, by separating the original record in a set of sub-records and averaging the respective periodogram estimates allows to obtain a consistent estimate of the PSD (Bartlett's method) [75]. The cost of this operation is in terms of the frequency resolution (which thus depends on the length of the sub-record). A better performing solution is Welch's method whereby an overlapping travelling window is employed for the division of the record prior to the averaging step [75]. Nonetheless, also this approach penalises the frequency resolution of the estimate. Alternatively, Thomson's multi-taper method (whereby the signal is filtered through a set of orthogonally independent windows and averaging the result) may be employed to reduce the loss in frequency resolution whilst minimising the error of the estimate [79]. It has been shown that this method has advantages over single-taper estimates of the PSD [80]. In the case of Thomson's multi-taper method, the time-to-bandwidth parameter regulates the temporal and frequency resolution of the estimate and is defined as [81]:
+
+$T B W=\frac{T_{a c q} \cdot \Delta f_{r e s, M T}}{2}$
+
+where $T_{a c q}$ corresponds to the acquisition time and $\Delta f_{r e s, M T}$ to the frequency resolution obtainable with Thomson's multi-taper method. However, as the TBW parameter is increased, the confidence interval of the estimate is reduced at the expense of a loss in the frequency resolution which can cause smoothing of the spectral estimate and loss of information. On the other hand, a too low TBW parameter can generate poor estimates of the PSD due to the excessively large confidence interval. In accordance with the design cues detailed in section 2.2, the time-to-bandwidth parameter must be selected appropriately.
+
+Fig. 8 reports the result of the PSD estimates obtained with different methods. The periodogram estimate presents excessive noise and can induce errors in the oscillation frequency identification. Both Thomson's multi-taper method and Welch's method allow for a correct estimate of the main oscillation frequency but Welch's method tends to smooth excessively neighbouring secondary peaks (view detail in Fig. 8(b) where P2 is not present in the estimate computed with Welch's method). Thomson's multi-taper method allows for a better identification of the different features of the PSD.
+
+\subsection*{3.3.4. Implementation}
+The choices regarding the monitoring system parameters, based upon the design cues indicated previously in section 2.2, were made taking reference from the literature and verified by means of preliminary experiments to ensure that the molten pool geometry was contained within the field of view of the imaging equipment. In terms of molten pool length, for AISI316L Bruna Rosso et al. reported a maximum value of $l_{m p}=1.4 \mathrm{~mm}$, Scipioni Bertoli et al. values in excess of $1.5 \mathrm{~mm}$ whilst Heigel and Lane measured values slightly below $1 \mathrm{~mm}$ for the LPBF of IN625 [9,13,82]. For the estimation of the obtainable frequency resolution, we will be employing a reference value of $l_{m p}=$ $1.5 \mathrm{~mm}$ as previously done for the design of a coaxial monitoring system for LPBF [4]. With regards to the molten pool width, Brunarosso et al. measured values in excess of $250 \mu \mathrm{m}$ while Cheng et al. values in the order of $400 \mu \mathrm{m}$ [82,83]. This parameter may be also determined after the single track deposition process. Yadroitsev et al. measured values of $140 \mu \mathrm{m}$ for the single track deposition of AISI316L and 130 $\mu \mathrm{m}$ for AISI904L $[84,85]$. The authors of the current work, with parameters similar to those planned for the current experimental campaign $(P=250 \mathrm{~W}, v=50 \mathrm{~mm} / \mathrm{s})$, measured track width values in the order of $400-500 \mu \mathrm{m}$ for the single track deposition of AISI316L [70]. Hence, a field of view width greater than $500 \mu \mathrm{m}$ is required.
+
+Spatial resolution $S R$ should be at least one order of magnitude smaller than the minimum characteristic feature of the process under
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_16e3c822ddb3ea6f3e89g-06(2)}
+\end{center}
+
+Fig. 5. Block diagram of the methodological approach developed.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_16e3c822ddb3ea6f3e89g-07(2)}
+\end{center}
+
+Fig. 6. Different steps of the image processing algorithm developed: (a) raw image (b) background removal (c) frame after frequency filtering with Butterworth high pass filter (d) frame after hard thresholding (e) after median filtering (f) after dilation (g) area threshold removal (h) image erosion (i) median filtered image $\times$ eroded image (j) boundary reconstruction (k) molten pool shape (l) extracted molten pool.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_16e3c822ddb3ea6f3e89g-07}
+\end{center}
+
+Fig. 7. Supplementary video n. 1 showing acquired frame and molten pool identification algorithm result respectively (a) and (d) at an initial phase, (b) and (e) in a central position and (c) and (f) towards the end of the acquisition. Process parameters are $P=300 \mathrm{~W}, v_{\text {scan }}=100 \mathrm{~mm} / \mathrm{s}$.
+
+observation [4]. For the present investigation, a value of $S R=4 \mu \mathrm{m} /$ pixel was chosen in order to verify this condition and enhance the performance of the image processing algorithm. Having defined the imaging requirements of the phenomenon under observation, the choice of the field of view becomes a compromise between the acquisition frequency and the obtainable frequency resolution constrained by the available data rate of the high-speed camera.
+
+GTA welding oscillation values are typically in the order of some hundred hertz as shown by Xiao and Den Ouden [59,60], Andersen [38] and Renwick and Richardson [53]. However, literature from the laser welding has reported oscillations both in the order of hundreds and $\mathrm{kHz}$ levels: $2-3 \mathrm{kHz}$ according to Matsunawa et al. for A5083 [32], $500 \mathrm{~Hz}$ to $2.5 \mathrm{kHz}$ for Semak et al., $100-600 \mathrm{~Hz}$ for Geiger et al. for steel [43], $10 \mathrm{kHz}$ according to Kouraytem et al. for AISI304 [28]. Specifically, oscillations for the Laser Powder Bed Fusion process have been reported by Richter et al. to be comprised between 4 and $8 \mathrm{kHz}$ for a CoCr alloy [29]. With the high-speed camera in use for the present experimentation, selecting a number of pixels which ensures that the molten pool width is contained within the field of view and maximising the number of pixels in the $x$-direction (i.e. longest FOV possible) to obtain the highest frequency resolution, the acquisition frequency will correspond to $25 \mathrm{kHz}$. This condition will avoid the aliasing phenomenon according to oscillation values reported in literature whilst allowing for enough resolution to identify the oscillation frequency. Moreover, the baseline frequency resolution (i.e. periodogram estimate of the PSD) of the oscillation detection method will correspond to $\Delta f_{\text {res }, P D}=38.5 \mathrm{~Hz}$. In order to decrease the leakage effect and provide a consistent estimate of the Power Spectral Density (as discussed in the previous section) to enable oscillation frequency identification, Thomson's multitaper method was employed with a time-to-bandwidth parameter $T B W=6.5$. Since, $T_{a c q}$ is constrained by the field of view and spatial resolution, according to Eq. 11 this will yield a frequency resolution of $\Delta f_{r e s, M T}=501 \mathrm{~Hz}$. Although, this parameter appears to introduce a significant bias in spectral estimation, it must be recalled that\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_16e3c822ddb3ea6f3e89g-07(1)}
+
+Fig. 8. Alternative methods to remove noise from power spectral density estimate. (a) Periodogram tapered with Hanning's window in blue, Welch's method estimate in orange and Thomson's multi-taper method in yellow estimate. In (b) a magnified view of (a) with indication of principal oscillation peak P1 and secondary oscillation peak P2.\\
+it mostly indicates the capability of the spectral estimate to distinguish neighbouring oscillation peaks. Literature shows that often single oscillation peaks related to specific oscillation modes are detected (according to Xiao and Den Ouden [59]) and in the case of laser based processing, if more than one mode is determined, the oscillation frequencies are distanced by several hundreds of hertz, even $\mathrm{kHz}$ [41]. The overall choice of parameters for the molten pool oscillation monitoring system for the present investigation are reported in Table 3.
+
+\subsection*{3.4. Experimental plan}
+To investigate if the novel monitoring system devised can effectively detect variations in penetration depth and molten pool geometry, an experimental campaign for both bead-on-plate material remelting and LPBF single track processes was conducted. Both processes were considered for this initial investigation since baseline evaluation of the monitoring method may be conducted on the material remelting experiments and successively extended to the Laser Powder Bed Fusion technology. The laser scan tracks were $20 \mathrm{~mm}$ long and the process was observed in the central part of the single tracks (for a length corresponding to the horizontal field of view dimension). In order to induce variations in the molten pool geometry the experiments were conducted at three levels of laser emission power (ranging from 200 to $300 \mathrm{~W}$ ). The substrate material was AISI316L for both processes whilst powder with a layer thickness of $50 \mu \mathrm{m}$ was spread via the mechanical layering system for the LPBF tests. Focal position was kept fixed on the working plane and scan speed of the beam was maintained at $100 \mathrm{~mm} / \mathrm{s}$. Local shielding of the melt area was achieved by means of a nozzle which delivered Argon gas. The processing conditions employed were shown to produce thin wall geometries in preliminary experiments conducted by the authors and are similar to those employed during previous single track investigations [86]. Moreover, a fan was employed to protect the laser systems from spatter ejections. Every experimental condition was replicated two times. Details of the fixed and variable factors of the experimental campaign are reported in Table 4.
+
+For each single track, high-speed video images were acquired while four cross-sections were prepared for metallographic analysis and measurement of the resolidified material. The surface of the specimens was prepared through polishing and chemical etching. The chemical composition of the acid solution was $1 \mathrm{~mL}$ of nitric acid $65 \%$ concentration, $1 \mathrm{~mL}$ of chloridic acid $37 \%$ concentration and $1 \mathrm{~mL}$ of water. The AISI316L single tracks were exposed $1 \mathrm{~min}$ in the acid solution.
+
+The chemical etching procedure disclosed the geometry of the molten pool that was successively acquired through optical microscopy (Ergolux 200, Leitz, Stuttgart, Germany). Different geometrical indicators could be retrieved through the metallographic cross-sections but for the aim of the present work results related to molten pool crosssectional area $\left(A_{c s}\right)$, and penetration depth $(h)$ will be presented. A representative cross-section of a single track LPBF deposition is shown in Fig. 9, indicating the geometrical features measured.
+
+\section*{4. Results}
+\subsection*{4.1. Oscillation frequencies}
+Supplementary video n.2, reports the high-speed imaging acquisition of one replicate for every experimental condition (a representative frame is shown in Fig. 10). It is clearly possible to view how molten pool area, width and length all increase with higher levels of emission power. Even though the bright reflections representative of the molten pool oscillations can be identified throughout all the experimental conditions observed (with a motion from laser-material interaction position towards molten pool tail), it is difficult to make qualitative observations regarding the oscillation frequencies. . Spatter ejections from the laser material interaction area during the material remelting experiments can be viewed in supplementary video n.2. Observing the video acquisitions, it was possible to denote that spatter formation occurred rarely and inconsistently above the molten pool area identified by the image processing algorithm, thus confirming the hypothesis of non-periodic disturbances in the measurement chain. On the other hand, spatter identification for the single track LPBF depositions was challenging since their presence was disguised by the motion of powder particles near the laser-material interaction position. Still, their influence is expected to be analogous to that observed in the material remelting experiments. Further insight into the spatter ejection frequency might be disclosed by observing the process without the secondary illumination light or at different wavelengths (as done by Criales et al. [17]) but was beyond the scope of the present investigation.
+
+The analysis of the $I_{\text {sum }}$ indicator in the spectral domain with the methodology previously introduced is useful to disclose the oscillation frequency of the molten pool. Power spectral density estimates are shown in Fig. 11 for all experimental conditions tested in the current work. $f_{\text {osc }}$ can be identified by the maximum value of the PSD estimates which indicates the frequency where the highest signal energy may be found.
+
+In the high speed imaging acquisitions (shown in Fig. 10 and in supplementary video n.2), it is possible to view that the pixels corresponding to the bright reflections are saturated whilst pixels in correspondence of the troughs of the waves correspond to a zero reading. This is a limitation correlated to the dynamic range of the imaging setup and effectively causes a hard clipping of the signal. Hence, in the PSD estimates reported in Fig. 11, this effect can modify the amplitude of the oscillation peak and introduce disturbances by adding frequency components in the neighbouring bins. Still, concerns regarding the amplitude are not of interest for the aims of the present work whilst the disturbance does not hinder the identification of the oscillation peaks so the dynamic range employed may be deemed satisfactory.
+
+The oscillation frequencies detected during the present study are in the $\mathrm{kHz}$ range and tend to decrease with increasing levels of emission power. The decreasing trend can be considered to be correlated both to the increasing mass of molten metal and variations in the amount of penetration depth. Both parameters affect the oscillation frequency in such sense according to the analytical models proposed by Sorensen and Eagar [57], Xiao and Den Ouden [59] and Yoo and Richardson [87]. In the majority of cases, the spectral estimates show a single oscillation peak in the range of $3.5-5.5 \mathrm{kHz}$. However, secondary oscillation peaks (of lower predominance) may be identified. This may be symptomatic of the presence of the superposition of oscillation modes. It may be argued that the choice of the time-to-bandwidth parameter may affect the presence of secondary oscillation peaks due to the reduction of the frequency resolution as it is increased. Nonetheless, a preliminary sensitivity analysis (not reported integrally for brevity) on the effect of the TBW parameter on the PSD estimate highlighted that for the current experimentation a variation of its value from 4 to 10 (corresponding to $\Delta f_{\text {res }, M T}=300-800 \mathrm{~Hz}$ ) did not significantly affect
+
+Table 3
+
+Selected parameters of molten pool oscillation measurement system.
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Parameter & Value \\
+\hline
+Configuration & Off-axis \\
+View angle, $\alpha$ & $30^{\circ}$ \\
+Illumination angle, $\beta$ & $10^{\circ}$ \\
+Melt pool length, $l_{m p}$ & $1.5 \mathrm{~mm}$ \\
+Melt pool width, $w_{m p}$ & $500 \mu \mathrm{m}$ \\
+Acquisition rate, $f_{a c q}$ & $25000 \mathrm{~Hz}$ \\
+Spatial resolution, $S R$ & $4 \mu \mathrm{m} / \mathrm{pixel}$ \\
+Field of view, FOV & $1024 \mathrm{pixels} \mathrm{x} 240$ pixels \\
+ & $4.096 \mathrm{~mm} x 0.96 \mathrm{~mm}$ \\
+Periodogram frequency resolution, $\Delta f_{\text {res,PD }}$ & $38.5 \mathrm{~Hz}$ \\
+Time-to-bandwidth, TBW & 6.5 \\
+Multi- taper frequency resolution, $\Delta f_{\text {res, } M T}$ & $501 \mathrm{~Hz}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 4
+
+Fixed and variable factors of experimental campaign.
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Fixed factors &  \\
+\hline
+Process gas & Argon \\
+Material & AISI316L \\
+Scan speed, $v(\mathrm{~mm} / \mathrm{s})$ & 100 \\
+Beam waist diameter, $d_{o}(\mu \mathrm{m})$ & 78 \\
+Replicates, $n$ & 2 \\
+Variable factors &  \\
+Process & Material remelting, LPBF \\
+Power, $P(\mathrm{~W})$ & $200 ; 250 ; 300$ \\
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_16e3c822ddb3ea6f3e89g-09(6)}
+\end{center}
+
+Fig. 9. Geometrical parameters measured from metallographic cross-sections.
+
+the main oscillation frequency estimate. Accordingly, the surface wave oscillations detected during the present work may be compared with results reported in literature as shown in Fig. 12.
+
+\subsection*{4.2. Single track dimensions}
+In Fig. 12, it is possible to view how the results obtained in the present investigation are comparable to the ones measured through high-speed X-ray transmission imaging by Richter et al. during the LPBF of a $\mathrm{CoCr}$ alloy [29]. On the other hand, oscillation values are well above the frequencies reported for the GTAW process as could be expected since the size of the weld pool of arc based processes is greater even by an order of magnitude in comparison to laser based processing.
+
+From each metallographic cross-section it was possible to measure $A_{c s}$ (which may be taken as representative) and the penetration depth $h$ with respect to the oscillation frequency, (representative conditions are shown in Fig. 13). Within all the combinations tested, the bead geometry indicates the presence of a keyhole and porosity caused by gas entrapment. Although, keyhole formation as a condition should be avoided in Laser Powder Bed Fusion, this result does not affect the outcome of the present experimentation whose aim is to verify the correlation between melt pool surface oscillations and under surface parameters.
+
+As could be expected and may be viewed qualitatively in Fig. 13, tracks with higher penetration depths correspond to conditions where higher emission power was employed. In these conditions, the oscillation frequency detected by the monitoring system is lower and can be explained by the greater mass of molten material due to the higher energetic input. For this reason, also the cross-sectional area may correlate well to the oscillation frequencies detected.
+
+Fig. 14 shows the values of the output variables of the present experimentation as a function of the laser emission power. At constant process parameters the material remelting experiments show slightly higher penetration depth with respect to the powder bed fusion depositions whereas with regards to the melt pool length no significant difference could be established. Measurements regarding the penetration depth are in accordance with the results reported by Cunningham et al. [73]. As the laser emission power increases the molten pool length concurrently increases (as previously observed by Heigel and Lane during the LPBF of IN625 [11]). As shown by the trends of Fig. 14, for both the LPBF and material remelting experiments, a decrease in oscillation frequency (Fig. 14(d)) corresponds to an increase in molten mass (represented by the cross-sectional area $A_{c s}$ Fig. 14(b) and molten pool length Fig. 14(c)). This concurrently also corresponds to an increase of penetration depth (Fig. 14(a) and (d)) indicating a link between these parameters.
+
+From the graphs of Fig. 14, it appears that with analogous process parameters the molten pool of the LPBF process might have higher oscillation frequencies with respect to material remelting (especially at higher levels of emission power). However, no statistical difference between the two processes could be asserted. In order to disclose better
+
+\section*{Time elapsed: 15.92 ms - Frame 398/694}
+(a) Material remelting, $P=200 \mathrm{~W}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_16e3c822ddb3ea6f3e89g-09(2)}
+\end{center}
+
+(b) Material remelting, $P=\mathbf{2 5 0} \mathrm{W}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_16e3c822ddb3ea6f3e89g-09(4)}
+\end{center}
+
+(c) Material remelting, $P=300 \mathrm{~W}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_16e3c822ddb3ea6f3e89g-09(1)}
+\end{center}
+
+(d) LPBF, $P=200 \mathrm{~W}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_16e3c822ddb3ea6f3e89g-09}
+\end{center}
+
+(e) LPBF, $P=250 \mathrm{~W}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_16e3c822ddb3ea6f3e89g-09(3)}
+\end{center}
+
+(f) LPBF, $P=300 \mathrm{~W}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_16e3c822ddb3ea6f3e89g-09(5)}
+\end{center}
+
+Fig. 10. Frame of supplementary video n. 2 showing high-speed imaging acquisitions in different processing conditions and power levels. Molten pool contour identified by image processing algorithm in green. (a) Material remelting $P=200 \mathrm{~W}$, (b) Material remelting $P=250 \mathrm{~W}$, (c) Material remelting $P=300 \mathrm{~W}$, (d) LPBF $P=200 \mathrm{~W}$, (e) LPBF $P=250 \mathrm{~W}$, (f) LPBF $P=300 \mathrm{~W}$.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_16e3c822ddb3ea6f3e89g-10(1)}
+
+Fig. 11. PSD estimate of $I_{\text {sum }}$ for material remelting (a)-(c) and LPBF (d)-(f) experiments. First replicate in blue, second replicate in orange. Peak values indicating oscillation frequency are shown by circular marker.
+
+Ref. Authors
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_16e3c822ddb3ea6f3e89g-10}
+\end{center}
+
+Fig. 12. Range of oscillation frequencies detected in literature and according to the present study. Categorisation according to the process (blue for GTAW, orange for laser welding and red for LPBF).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_16e3c822ddb3ea6f3e89g-11}
+\end{center}
+
+Fig. 13. Representative metallographic cross-sections of AISI316L bead-on-plate material remelting and LPBF depositions.
+
+the difference between the LPBF and material remelting processes a more extensive experimental campaign with in conduction mode deposition conditions should be investigated. An apparently greater variability in the oscillation frequency may be denoted at $\mathrm{P}=200 \mathrm{~W}$ (particularly for the LPBF track depositions). Still, this is consistent with the frequency resolution of the parametric PSD estimation method employed, implying that this might rather be an artefact.
+
+\subsection*{4.3. Oscillation frequency - melt pool depth correlation}
+In Fig. 15(a) it is possible to view graphically the correlation between molten pool penetration depth and oscillation frequency while in Fig. 15(b) the relationship between cross-sectional area and $f_{o s c}$ is reported. These correlations can be related through statistical regression equations. Interestingly enough, it is possible to view how the relationship between oscillation frequency and molten pool cross-sectional area is well-fitted $\left(R_{a d j}^{2}=86.9 \%\right)$ by a model with a predictor $1 / f_{\text {osc }}^{2}$. This supports the hypothesis that $A_{c s}$ may be considered representative of the molten mass since this kind of relationship is typical of undamped mechanical systems. A statistical correlation between molten pool oscillation frequency and penetration depth may also be asserted (with a $1 / f_{\text {osc }}$ predictor).
+
+Further investigations are required in order to accurately identify the model which may coherently predict the process condition according to the observed phenomenon. Still, the results from the present investigation show that the oscillation frequency of surface waves may be employed as an indirect indicator of the penetration depth and other undisclosed parameters (such as molten pool mass). Process modelling, which will be conducted in future works, will allow to explore in greater detail the correlation between molten pool geometrical\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_16e3c822ddb3ea6f3e89g-11(1)}
+
+Fig. 14. Main effects trend and results as a function of emission power $P$ for (a) penetration depth $h$, (b) cross-sectional area $A_{c s}$, (c) melt pool length $l_{m p}$ and (d) oscillation frequency $f_{\text {osc }}$. Main effects lines have been added to enhance trend readability.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_16e3c822ddb3ea6f3e89g-12}
+
+Fig. 15. (a) Penetration depth $h$ against oscillation frequency $f_{\text {osc }}$ and (b) cross-sectional area $A_{c s}$ against oscillation frequency. Results in green for material remelting experiments, in blue for LPBF. Regression equation with confidence and prediction intervals indicated in both graphs.
+
+indicators and oscillation frequency.
+
+Overall, the results from this investigation are promising for the development of an in-situ monitoring tool which may enable the penetration depth estimation. Nonetheless, a series of aspects are to be taken into account. Firstly, the campaign currently developed was conducted from an off-axis configuration. Validation of the system by integrating the imaging system through a coaxial configuration is required. Although, it is possible to envision a solution of the kind, this would also imply the difficulties connected to the use of a coaxial illumination source [14]. Moreover, limitations in terms of data transfer rates for industrial applications would also require the use of integrated sensors filtered at the wavelength of illumination source (with the associated challenges connected to the absence of spatial information). Alternatively, a reduced ROI on a camera might ensure industrially applicable data transfer rates whilst complying with limits related to aliasing. At conventional LPBF processing conditions the molten pool will exhibit penetration depths slightly higher than the powder bed thickness. Hence, if the statistical relations of Fig. 15 hold, oscillation values around $8-10 \mathrm{kHz}$ may be expected which are within the capabilities of these sensors.
+
+Moreover, the current study reports results only for single track depositions. Validation for multitrack and multi-layer depositions are foreseen in future investigations. Further challenges for the proposed monitoring solution are derived by the compromises connected to the time-frequency analysis. In order to ensure a detailed oscillation frequency identification, a high resolution frequency and thus acquisition time are required. The present research configures as a preliminary investigation to demonstrate the possibility of correlating surface oscillations to the penetration depth also in the presence of powder. However, the scan speed employed is of an order of magnitude lower in comparison to values employed by industrial systems, thus implying that higher acquisition times would be needed to maintain a sufficient frequency resolution. If the observation time of the phenomenon is increased however, the distance travelled by the molten pool during this temporal framework would also increase hence resulting in a penalisation in the frequency with which the average molten pool depth estimate is obtained. Future works will concentrate on the best compromise to assess longer acquisitions in more conventional process regimes. The use of parametric Power Spectral Density estimates may allow for the use of shorter acquisition times and enhance obtainable frequency resolution but further studies are required to disclose these aspects.
+
+The oscillatory motion is expected to be preserved even in typical processing regimes of the LPBF process where keyhole formation is undesired. Contributions to molten pool dynamics due to thermo-capillary forces, surface tension and recoil pressure are present also in conventional processing conditions. Without the keyhole, the molten pool will witness lower thermal gradients and recoil pressure fluctuations thus lower amplitude oscillations may be expected at higher frequency (due to the smaller mass of molten material). Further investigations are underway to study these aspects in greater detail.
+
+\section*{5. Conclusions}
+In the present investigation a methodology for the estimation of the molten pool penetration depth in the Laser Powder Bed Fusion process has been presented. The monitoring system devised relies upon the measurement of molten pool surface oscillations through reflections of a secondary probe light captured by means of a high-speed camera. An image processing algorithm and signal analysis procedure have been developed in order to extract an indicator representative of the oscillation frequency of melt pool surface waves.
+
+Molten pool surface oscillations ranging from $3.5 \mathrm{kHz}$ to $5.5 \mathrm{kHz}$ were measured. At higher levels of emission power, the oscillation frequency of the molten pool decreases and may be directly correlated to an increase in molten pool mass and penetration depth. At constant process parameters, oscillation frequency did not show statistical difference between bead-on-plate and LPBF experiments. Both processes showed analogous trends with shallower melt pools at increasing values of the oscillation frequency.
+
+Proof of concept testing of the devised methodology was conducted with both bead-on-plate material remelting and LPBF single track experiments. The monitoring equipment was designed and implemented in order to have sufficient spatial and temporal resolution as well as to obtain sufficient resolution in the frequency domain for the signal analysis procedure. Future work will look at investigating a wider range of experimental conditions and modelling of the process.
+
+\section*{CRediT authorship contribution statement}
+Leonardo Caprio: Methodology, Conceptualization, Software, Formal analysis, Investigation, Data curation, Writing - original draft, Writing - review \& editing, Visualization. Ali Gökhan Demir: Methodology, Conceptualization, Resources, Formal analysis, Writing original draft, Writing - review \& editing, Supervision. Barbara Previtali: Conceptualization, Supervision, Funding acquisition.
+
+\section*{Declaration of Competing Interest}
+None.
+
+\section*{Acknowledgements}
+The Italian Ministry of Education, University and Research is acknowledged for the support provided through the Project "Department of Excellence LIS4.0 - Lightweight and Smart Structures for Industry 4.0". Dr. Simone Donadello is thanked for the inspiring conversations\\
+regarding the topic. Optoprim Srl and nLight Inc are acknowledged for providing the laser and optical chain. This work was supported by European Union, Repubblica Italiana, Regione Lombardia and FESR for the project MADE4LO under the call "POR FESR 2014-2020 ASSE I AZIONE I.1.B.1.3". The authors are grateful to Adige S.p.A. of the BLM Group for providing the high speed imaging equipment. The project presented in this paper has been funded with the contribution of the Autonomous Province of Trento, Italy, through the Regional Law 6/98 (Project LT 4.0).
+
+\section*{Appendix A}
+Within the following section the image processing code developed is presented. The high-speed imaging acquisitions must be post processed in order to extract geometrical and spatially distributed intensity information related to the molten pool. The frames acquired by means of the high-speed imaging setup can be analysed by means of self-developed code in Matlab environment. The aim of the code was to delineate the contours of the molten pool and extract indicators of interest to evaluate molten pool surface oscillations. The distortion introduced by the off-axis imaging set up was considered to introduce a negligible error due to the preliminary nature of the present investigation although it must be considered that a bias is introduced in the measurement of geometrical parameters of the molten pool such as width and area. Hence, the real image was not restored within the processing code developed. When operating on process emission images, it is possible to define the contours which are representative of the molten pool geometry, since it is sufficient to determine the value of a hard thresholding coefficient [4]. On the other hand, when observing directly the molten pool geometry through the use of a secondary illumination source, image processing is more complicated due to the presence of composite elements and grayscale values present in the image. Generally, the molten pool area may be identified by the localised values of black which are symptomatic of higher absorption of the illumination source [88]. Still, when the molten pool has a higher aspect ratio, this approach tends to be fallacious. Hence, a new algorithm for automatic identification of the molten pool was devised. The various image processing steps are shown successively in Fig. 6 and consist in:
+
+i) Background removal through the logarithmic difference of two successive frames. In this way the parts in motion of the image (i.e. the molten pool travelling over a fixed background due to the offaxis monitoring setup) are put in evidence. The obtained image will still present randomly distributed noise and other moving objects (for instance molten pool ejections or powder particles moving).
+
+ii) Frequency filtering for melt pool area identification. A Butterworth high pass filter, generally employed for image sharpening applications, allows to enhance the edges of objects within an image. The frame was hence filtered in the frequency domain with a Butterworth high pass filter of order $=1$ and cut off radius $=15$. Result of this step may be viewed in Fig. 6(c).
+
+iii) Hard thresholding for melt pool contouring (result shown in Fig. 6(d)). This step was conducted as a consequence of the previous high pass filtering in the frequency domain, in order to identify the contours of the molten pool. A lower threshold above 1 and a higher threshold set on an arbitrary value was employed to define the molten pool contour and obtain a binarized image. After this step, in Fig. 6(d), it is possible to denote the presence of saltand-pepper noise and an ejected particle which must be removed prior to reconstructing the final molten pool boundaries.
+
+iv) Median filtering for noise removal with a structuring element of size 5 pixel $x 5$ pixel. The frame after median filtering is shown in Fig. 6(e).
+
+v) Removal of molten pool ejections through successive dilation, area thresholding and erosion. The pixels with value 1 of the binarised image were dilated through the use of a rounded structuring element of radius 10 pixel (as shown in Fig. 6(f)). The dilation step was done in order to interconnect neighbouring objects and fill voids within the identified molten pool. Then the objects within the image are filtered depending on their area. If the area of a specific object was 10 times smaller than the area of the structuring element it was discarded (post-processed frame shown in Fig. 6(g)). Successively the image is eroded by means of the same structuring element (shown in Fig. 6(h)). Finally, the eroded image is multiplied by the image prior to the image dilation so to preserve the original features of the frame after the frequency filtering step but removing the ejections (Fig. 6(i)).
+
+vi) Melt pool boundary reconstruction. The positive values of the binarised image are transformed into $\mathrm{x}$ and $\mathrm{y}$ coordinates in order to employ the Boundary function available in Matlab programming environment (with a shrink factor of 0.1 ). This allows to interpolate the outer boundary of the cluster of points in Cartesian coordinates and thus generate a binarised image representative of the molten pool (as shown in Fig. 6(j) and (k)).
+
+vii) Melt pool indicator extraction. Finally, using the regionprops function it is possible to extract the geometrical parameters of the molten pool (such as length, width, area etc.).
+
+In the case of the bead-on-plate material remelting experiments the frequency filtering step is not necessary since the acquired images are not disturbed by the presence of the powder bed (i.e. the static background removal is more effective).
+
+\section*{Appendix B. Supplementary data}
+Supplementary material related to this article can be found, in the online version, at doi:\href{https://doi.org/10.1016/j.addma.2020.101470}{https://doi.org/10.1016/j.addma.2020.101470}.
+
+\section*{References}
+[1] M. Grasso, B.M. Colosimo, Process defects and in situ monitoring methods in metal powder bed fusion: a review, Meas. Sci. Technol. 28 (2017) 044005, , \href{https://doi}{https://doi}. org/10.1088/1361-6501/aa5c4f.
+
+[2] S.K. Everton, M. Hirsch, P. Stravroulakis, R.K. Leach, A.T. Clare, P.I. Stavroulakis, et al., Review of in-situ process monitoring and in-situ metrology for metal additive manufacturing, Mater. Des. 95 (2016) 431-445, \href{https://doi.org/10.1016/j.matdes}{https://doi.org/10.1016/j.matdes}. 2016.01.099.
+
+[3] T.G. Spears, S.A. Gold, In-process sensing in selective laser melting (SLM) additive manufacturing, Integr. Mater. Manuf. Innov. (2016), \href{https://doi.org/10.1186/}{https://doi.org/10.1186/} s40192-016-0045-4.
+
+[4] L. Mazzoleni, A.G. Demir, L. Caprio, M. Pacher, B. Previtali, Real-time observation of melt pool in selective laser melting: spatial, temporal and wavelength resolution criteria, IEEE Trans. Instrum. Meas. (2019).
+
+[5] T. Furumoto, T. Ueda, M. Rizal, A. Hosokawa, Investigation of laser consolidation process for metal powder by two-color pyrometer and high-speed video camera, CIRP Ann. Manuf. Technol. 62 (2013) 223-226, \href{https://doi.org/10.1016/j.cirp}{https://doi.org/10.1016/j.cirp}. 2013.03.032.
+
+[6] U. Thombansen, P. Abels, Observation of Melting Conditions in Selective Laser Melting of Metals (SLM) 9741 (2016), \href{https://doi.org/10.1117/12.2213952}{https://doi.org/10.1117/12.2213952} 97410 S.
+
+[7] M. Pavlov, M. Doubenskaia, I. Smurov, Pyrometric Analysis of Thermal Processes in SLM Technology 5 (2010), pp. 523-531, \href{https://doi.org/10.1016/j.phpro.2010.08}{https://doi.org/10.1016/j.phpro.2010.08}. 080.
+
+[8] P.A. Hooper, Melt pool temperature and cooling rates in laser powder bed fusion, Addit. Manuf. (2018), \href{https://doi.org/10.1016/j.plantsci.2013.09.009}{https://doi.org/10.1016/j.plantsci.2013.09.009}.
+
+[9] J.C. Heigel, B.M. Lane, Measurement of the melt pool length during single scan tracks in a commercial laser powder bed fusion process, Addit. Manuf. Mater. 2 (2017) V002T01A045, , \href{https://doi.org/10.1115/MSEC2017-2942}{https://doi.org/10.1115/MSEC2017-2942}.
+
+[10] T. Craeghs, S. Clijsters, E. Yasa, F. Bechmann, S. Berumen, J. Kruth, Determination of geometrical factors in Layerwise Laser Melting using optical process monitoring, Opt. Lasers Eng. 49 (2011) 1440-1446, \href{https://doi.org/10.1016/j.optlaseng.2011}{https://doi.org/10.1016/j.optlaseng.2011}. 06.016 .
+
+[11] J.C. Heigel, B.M. Lane, Measurement of the melt pool length during single scan tracks in a commercial laser powder bed fusion process, J. Manuf. Sci. Eng. Trans. ASME 140 (2018) 1-7, \href{https://doi.org/10.1115/1.4037571}{https://doi.org/10.1115/1.4037571}.
+
+[12] P. Bidare, R.R.J. Maier, R.J. Beck, J.D. Shephard, A.J. Moore, An open-architecture metal powder bed fusion system for in-situ process measurements, Addit. Manuf. 16 (2017) 177-185, \href{https://doi.org/10.1016/j.addma.2017.06.007}{https://doi.org/10.1016/j.addma.2017.06.007}.
+
+[13] U. Scipioni Bertoli, G. Guss, S. Wu, M.J. Matthews, J.M. Schoenung, In-situ characterization of laser-powder interaction and cooling rates through high-speed imaging of powder bed fusion additive manufacturing, Mater. Des. 135 (2017)
+
+385-396, \href{https://doi.org/10.1016/j.matdes.2017.09.044}{https://doi.org/10.1016/j.matdes.2017.09.044}.
+
+[14] L. Mazzoleni, L. Caprio, M. Pacher, A.G. Demir, B. Previtali, External illumination strategies for melt pool geometry monitoring in SLM, JOM (2018), \href{https://doi.org/}{https://doi.org/} 10.1007/s11837-018-3209-1.
+
+[15] J.-P. Kruth, J. Duflou, P. Mercelis, J. Van Vaerenbergh, T. Craeghs, J. De Keuster, On-line monitoring and process control in selective laser melting and laser cutting, Proc 5th Lane Conf. Laser Assist. Net Shape Eng. 1 (2007) 23-37.
+
+[16] A.G. Demir, L. Mazzoleni, L. Caprio, M. Pacher, B. Previtali, Complementary use of pulsed and continuous wave emission modes to stabilize melt pool geometry in laser powder bed fusion, Opt. Laser Technol. (2019) 113, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. optlastec.2018.12.005.
+
+[17] L.E. Criales, Y.M. Arısoy, B. Lane, S. Moylan, A. Donmez, T. Özel, Laser powder bed fusion of nickel alloy 625: experimental investigations of effects of process parameters on melt pool size and shape with spatter analysis, Int. J. Mach. Tools. Manuf. 121 (2017) 22-36, \href{https://doi.org/10.1016/j.ijmachtools.2017.03.004}{https://doi.org/10.1016/j.ijmachtools.2017.03.004}.
+
+[18] Renishaw - InfiniAM Spectral n.d. \href{https://www.renishaw.com/en/infiniamspectral-42310}{https://www.renishaw.com/en/infiniamspectral-42310} (accessed January 20, 2020).
+
+[19] SLM Solutions - Melt Pool Monitoring n.d. \href{https://www.slm-solutions.com/en/}{https://www.slm-solutions.com/en/} products/software/additivequality/ (accessed January 20, 2020).
+
+[20] D. Alberts, D. Schwarze, G. Witt, High speed melt pool \& laser power monitoring for selective laser melting, Proc Lane 2016 (2016).
+
+[21] EOS - EOState Melt pool n.d. \href{https://www.eos.info/press/eostate-meltpool}{https://www.eos.info/press/eostate-meltpool} automated-real-time-monitoring-for-direct-metal-laser-sintering (accessed January 20, 2020).
+
+[22] Trumpf - melt pool monitoring n.d. \href{https://www.trumpf.com/en_CA/products/}{https://www.trumpf.com/en\_CA/products/} services/services-machines-systems-and-lasers/monitoring-analysis/monitoringtruprint/.
+
+[23] Velo3D - Assure n.d. \href{https://www.velo3d.com/products-technology/assuresystem/}{https://www.velo3d.com/products-technology/assuresystem/} (accessed January 20, 2020).
+
+[24] S. Berumen, F. Bechmann, S. Lindner, J.P. Kruth, T. Craeghs, Quality control of laser- and powder bed-based Additive Manufacturing (AM) technologies, Phys. Procedia 5 (2010) 617-622, \href{https://doi.org/10.1016/j.phpro.2010.08.089}{https://doi.org/10.1016/j.phpro.2010.08.089}.
+
+[25] C.L.A. Leung, S. Marussi, R.C. Atwood, M. Towrie, P.J. Withers, P.D. Lee, In situ Xray imaging of defect and molten pool dynamics in laser additive manufacturing, Nat. Commun. 9 (2018) 1-9, \href{https://doi.org/10.1038/s41467-018-03734-7}{https://doi.org/10.1038/s41467-018-03734-7}.
+
+[26] C.L.A. Leung, S. Marussi, M. Towrie, R.C. Atwood, P.J. Withers, P.D. Lee, The effect of powder oxidation on defect formation in laser additive manufacturing, Acta Mater. 166 (2019) 294-305, \href{https://doi.org/10.1016/j.actamat.2018.12.027}{https://doi.org/10.1016/j.actamat.2018.12.027}.
+
+[27] C.L.A. Leung, S. Marussi, M. Towrie, J. del Val Garcia, R.C. Atwood, A.J. Bodey, et al., Laser-matter interactions in additive manufacturing of SS316L and 13-93 bioactive glass revealed by in situ X-ray imaging, Addit. Manuf. 24 (2018) 647-657, \href{https://doi.org/10.1016/j.addma.2018.08.025}{https://doi.org/10.1016/j.addma.2018.08.025}.
+
+[28] N. Kouraytem, X. Li, R. Cunningham, C. Zhao, N. Parab, T. Sun, et al., Effect of laser-matter interaction on molten pool flow and keyhole dynamics, Phys. Rev. Appl. 11 (2019) 064054, , \href{https://doi.org/10.1103/PhysRevApplied.11.064054}{https://doi.org/10.1103/PhysRevApplied.11.064054}.
+
+[29] B. Richter, N. Blanke, C. Werner, N.D. Parab, T. Sun, F. Vollertsen, et al., High-speed $\mathrm{X}$-ray investigation of melt dynamics during continuous-wave laser remelting of selective laser melted Co-Cr alloy, CIRP Ann. Manuf. Technol. (2019), \href{https://doi}{https://doi}. org/10.1016/j.cirp.2019.04.110.
+
+[30] N.D. Parab, C. Zhao, R. Cunningham, L.I. Escano, K. Fezzaa, W. Everhart, et al., Ultrafast X-ray imaging of laser-metal additive manufacturing processes, J. Synchrotron Radiat. 25 (2018) 1-11, \href{https://doi.org/10.1107/}{https://doi.org/10.1107/} S1600577518009554.
+
+[31] N.P. Calta, J. Wang, A.M. Kiss, A.A. Martin, P.J. Depond, G.M. Guss, et al., An instrument for in situ time-resolved X-ray imaging and diffraction of laser powder bed fusion additive manufacturing processes, Rev. Sci. Instrum. 89 (2018), https:// \href{http://doi.org/10.1063/1.5017236}{doi.org/10.1063/1.5017236}.
+
+[32] A. Matsunawa, J.-D. Kim, N. Seto, M. Mizutani, S. Katayama, Dynamics of keyhole and molten pool in laser welding, J. Laser Appl. 10 (1998) 247-254, \href{https://doi}{https://doi}. org/10.2351/1.521858.
+
+[33] S. Katayama, N. Seto, M. Mizutani, A. Matsunawa, Formation mechanism of porosity in high power YAG laser welding, Proc. ICALEO 16 (2000) C16-25, https:// \href{http://doi.org/10.2351/1.5059433}{doi.org/10.2351/1.5059433}.
+
+[34] A. Matsunawa, Problems and solutions in deep penetration laser welding, Sci. Technol. Weld. Join. 6 (2001) 351-354, \href{https://doi.org/10.1179/stw.2001.6.6}{https://doi.org/10.1179/stw.2001.6.6}. 351.
+
+[35] F. Abt, M. Boley, R. Weber, T. Graf, G. Popko, S. Nau, Novel X-ray system for in-situ diagnostics of laser based processes - First experimental results, Phys. Procedia 12 (2011) 761-770, \href{https://doi.org/10.1016/j.phpro.2011.03.095}{https://doi.org/10.1016/j.phpro.2011.03.095}.
+
+[36] A. Heider, J. Sollinger, F. Abt, M. Boley, R. Weber, T. Graf, High-speed X-ray analysis of spatter formation in laser welding of copper, Phys. Procedia 41 (2013) 112-118, \href{https://doi.org/10.1016/j.phpro.2013.03.058}{https://doi.org/10.1016/j.phpro.2013.03.058}.
+
+[37] M. Boley, F. Abt, R. Weber, T. Graf, X-ray and optical videography for 3D measurement of capillary and melt pool geometry in laser welding, Phys. Procedia 41 (2013) 488-495, \href{https://doi.org/10.1016/j.phpro.2013.03.105}{https://doi.org/10.1016/j.phpro.2013.03.105}.
+
+[38] K. Andersen, G.E. Cook, R.J. Barnett, A.M. Strauss, Synchronous weld pool oscillation for monitoring and control, IEEE Trans. Ind. Appl. 33 (1997) 464-471, \href{https://doi.org/10.1109/28.568011}{https://doi.org/10.1109/28.568011}.
+
+[39] A. Gasser, G. Herziger, B. Holtgen, E.W. Kreutz, H.G. Treusch, Capillary waves and energy coupling in laser materials processing. High power lasers sources, lasermaterial interact, High Excit. Fast Dyn 801 (1987) 170-177.
+
+[40] H. Heyn, I. Decker, D. Martinen, H. Wohlfahrt, Application of room-temperature infrared photo - detectors in high - speed laser beam diagnostics of industrial CO2 lasers, Beam Control. Diagnostics, Stand. Propag 2375 (1995) 142-153.
+
+[41] T. Klein, M. Vicanek, G. Simon, Oscillations of the keyhole in penetration laser beam welding, J. Phys. D Appl. Phys. 27 (1994) 322-332, \href{https://doi.org/10.1088/}{https://doi.org/10.1088/}\\
+0022-3727/29/2/008
+
+[42] A. Otto, G. Deinzer, M. Geiger, Control of transient processes during CO2-laser beam welding, Laser Mater. Process. Ind. Microelectron. Appl 2207 (1994) 282-288.
+
+[43] M. Geiger, ÆC. Ka, High-power laser welding of contaminated steel sheets, Prod. Eng. 2 (2008) 235-240, \href{https://doi.org/10.1007/s11740-008-0109-1}{https://doi.org/10.1007/s11740-008-0109-1}.
+
+[44] K. Masubuchi, D.E. Hardt, H.M. Poynter, J. Converti, M. Zaksenhouse, Improvement of fusion welding through modelling, measurement and real-time control, Weld. Technol. Energy Appl. Oak Ridge Natl. Lab Oak Ridge, TN, USA (1982) 281-299.
+
+[45] M. Zacksenhouse, D.E. Hardt, Weld pool impedance identification for size measurement and control, J. Dyn. Syst. Meas. Control 105 (1983) 179, \href{https://doi.org/}{https://doi.org/} 10.1115/1.3140652.
+
+[46] V. Semak, J.A. Hopkins, M.H. Mccay, A technique for melt pool oscillation monitoring during laser spot welding, Int. Congr. Appl. Lasers Electro-Optics 1997 (1997) C11-C20, \href{https://doi.org/10.2351/1.5059645}{https://doi.org/10.2351/1.5059645}.
+
+[47] V.V. Semak, Ja Hopkins, M.H. McCay, T.D. McCay, Melt pool dynamics during laser welding, J. Phys. D Appl. Phys. 28 (1995) 2443-2450, \href{https://doi.org/10.1088/}{https://doi.org/10.1088/} 0022-3727/28/12/008.
+
+[48] J.K. Huang, M.H. Yang, J.S. Chen, F.Q. Yang, Y.M. Zhang, D. Fan, The oscillation of stationary weld pool surface in the GTA welding, J. Mater. Process. Technol. 256 (2018) 57-68, \href{https://doi.org/10.1016/j.jmatprotec.2018.01.018}{https://doi.org/10.1016/j.jmatprotec.2018.01.018}.
+
+[49] K. Zhang, Y.M. Zhang, J.S. Chen, J.S. Wu, Observation and analysis of three-dimensional weld pool oscillation dynamic behaviors, Weld. J. (2017).
+
+[50] Y. Mao, G. Kinsman, W.W. Duley, Real-time fast fourier transform analysis of acoustic emission during CO 2 laser welding of materials, J. Laser Appl. 5 (1993) 17-22, \href{https://doi.org/10.2351/1.4745326}{https://doi.org/10.2351/1.4745326}.
+
+[51] W.W. Duley, Y.L. Mao, The effect of surface condition on acoustic emission during welding of aluminium with CO2 laser radiation, J. Phys. D Appl. Phys. 27 (1994) 1379-1383, \href{https://doi.org/10.1088/0022-3727/27/7/007}{https://doi.org/10.1088/0022-3727/27/7/007}.
+
+[52] E.T. Smith, E. Kannatey-Asibu, Visualization and acoustic monitoring of laser weld pool oscillatory behavior, Int. Congr. Appl. Lasers Electro-Optics 19991 (1999) D1-10, \href{https://doi.org/10.2351/1.5059222}{https://doi.org/10.2351/1.5059222}.
+
+[53] R.J. Renwick, R.W. Richardson, Experimental investigation of GTA weld pool oscillations, Weld. J. (1983) 29-35.
+
+[54] H. Maruo, Y. Hirata, Bead formation in pulsed TIG welding, Q. J. JAPAN Weld. Soc. 3 (1985) 253-260, \href{https://doi.org/10.2207/qjjws.3.253}{https://doi.org/10.2207/qjjws.3.253}.
+
+[55] H. Maruo, Y. Hirata, Natural frequency and oscillation modes of weld pools. 1st report: weld pool oscillation in full penetration welding of thin plate, Weld. Int. 7 (1993) 614-619, \href{https://doi.org/10.1080/09507119309548457}{https://doi.org/10.1080/09507119309548457}.
+
+[56] C.D. Sorensen, T.W. Eagar, Digital signal processing As a diagnostic tool for gas tungsten arc welding, Adv. Weld. Sci. Technol. (1986) 467-472.
+
+[57] C.D. Sorensen, T.W. Eagar, Modeling of oscillations in partially penetrated weld pools, J. Dyn. Syst. Meas. Control 112 (1990) 469-474.
+
+[58] W. Lin, D. Dexiang, C. Dinghua, Detection and analysis of weld penetration in stationary TIG arc welding - a preliminary study, Weld. Int. 1 (1987) 475-479, \href{https://doi.org/10.1080/09507118709449349}{https://doi.org/10.1080/09507118709449349}.
+
+[59] Y.H. Xiao, G. den Ouden, A study of GTA weld pool oscillation, Weld. J. (1990) 289. s to 293-s.
+
+[60] Y.H. Xiao, G. Den Ouden, Weld pool oscillation during GTA welding of mild steel, Weld, J. 72 (1993) 428-s.
+
+[61] A.J.R. Aendenroomer, G. Den Ouden, Weld pool oscillation as a tool for penetration sensing during pulsed GTA welding, Weld. J. 77 (1998) 181-s.
+
+[62] Y. Suga, T. Tokiwa, et al., Penetration control by detecting oscillation of weld pool in automatic TIG arc welding, Sixth Int. Offshore Polar Eng. Conf. (1996).
+
+[63] Y. Suga, K. Yasuda, K. Hayakawa, Y. Ichiyama, K. Ogawa, et al., Automatic control of penetration by monitoring oscillation of the molten pool in TIG welding of thin steel plates, Tenth Int. Offshore Polar Eng. Conf. (2000).
+
+[64] R. Fabbro, Melt pool and keyhole behaviour analysis for deep penetration laser welding, J. Phys. D Appl. Phys. 43 (2010), \href{https://doi.org/10.1088/0022-3727/}{https://doi.org/10.1088/0022-3727/} $43 / 44 / 445501$
+
+[65] N. Postacioglu, P. Kapadia, J. Dowden, Capillary waves on the weld pool in penetration welding with a laser, J. Phys. D Appl. Phys. 22 (1989) 1050-1061, https:// \href{http://doi.org/10.1088/0022-3727/22/8/007}{doi.org/10.1088/0022-3727/22/8/007}.
+
+[66] V.V. Semak, J.A. Hopkins, M.H. Mccay, T.D. Mccay, A concept for a hydrodynamic model of keyhole formation and support during laser welding, Int. Congr. Appl. Lasers Electro-Optics 1994 (1994) 641-650, \href{https://doi.org/10.2351/1.5058848}{https://doi.org/10.2351/1.5058848}.
+
+[67] C. Zhao, K. Fezzaa, R.W. Cunningham, H. Wen, F. De Carlo, L. Chen, et al., Realtime monitoring of laser powder bed fusion process using high-speed X-ray imaging and diffraction, Sci. Rep. 7 (2017) 1-11, \href{https://doi.org/10.1038/s41598-01703761-2}{https://doi.org/10.1038/s41598-01703761-2}.
+
+[68] S.A. Khairallah, A. Anderson, Mesoscopic simulation model of selective laser melting of stainless steel powder, J. Mater. Process. Technol. 214 (2014) 2627-2636, \href{https://doi.org/10.1016/j.jmatprotec.2014.06.001}{https://doi.org/10.1016/j.jmatprotec.2014.06.001}.
+
+[69] S.A. Khairallah, A.T. Anderson, A. Rubenchik, W.E. King, Laser powder-bed fusion additive manufacturing: physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones, Acta Mater. 108 (2016) 36-45, \href{https://doi}{https://doi}. org/10.1016/j.actamat.2016.02.014.
+
+[70] L. Caprio, A.G. Demir, B. Previtali, Comparative study between CW and PW emissions in selective laser melting, J. Laser Appl. 30 (2018) 32305, \href{https://doi.org/10}{https://doi.org/10}. 2351/1.5040631.
+
+[71] R. Kovacevic, Y.M. Zhang, Sensing free surface of arc weld pool using specular reflection: principle and analysis, Proc. Inst. Mech. Eng. Part B J. Eng. Manuf. 210 (1996) 553-564, \href{https://doi.org/10.1243/PIME_PROC_1996_210_154_02}{https://doi.org/10.1243/PIME\_PROC\_1996\_210\_154\_02}.
+
+[72] R. Kovacevic, Y.M. Zhang, Real-time image processing for monitoring of free weld pool surface, J. Manuf. Sci. Eng. Trans. ASME 119 (1997) 161-169, \href{https://doi.org/}{https://doi.org/} 10.1115/1.2831091.
+
+[73] R. Cunningham, C. Zhao, N. Parab, C. Kantzos, J. Pauza, K. Fezzaa, et al., Keyhole threshold and morphology in laser melting revealed by ultrahigh-speed $\mathrm{x}$-ray imaging, Science (80-) 363 (2019) 849-852, \href{https://doi.org/10.1126/science}{https://doi.org/10.1126/science}. aav4687.
+
+[74] V. Gunenthiram, P. Peyre, M. Schneider, M. Dal, F. Coste, R. Fabbro, Analysis of laser-melt pool-powder bed interaction during the selective laser melting of a stainless steel, J. Laser Appl. 29 (2017) 022303, , \href{https://doi.org/10.2351/1}{https://doi.org/10.2351/1}. 4983259.
+
+[75] G.C. Carter, A.H. Nuttall, A brief summary of a generalized framework for power spectral estimation, Signal Processing 2 (1980) 387-390, \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} 0165-1684(80)90080-8.
+
+[76] L. Caprio, A.G. Demir, B. Previtali, B.M. Colosimo, Determining the feasible conditions for processing lunar regolith simulant via laser powder bed fusion, Addit. Manuf. (2019) 101029, , \href{https://doi.org/10.1016/j.addma.2019.101029}{https://doi.org/10.1016/j.addma.2019.101029}.
+
+[77] H. Li, Spectral Analysis of Signals vol. 24, (2008), \href{https://doi.org/10.1109/msp}{https://doi.org/10.1109/msp}. 2007.273066
+
+[78] F.S. Schlindwein, D.H. Evans, Autoregressive spectral analysis as an alternative to fast Fourier transform analysis of Doppler ultrasound signals, Diagnostic Vasc Ultrasound 8 (1992) 74-84.
+
+[79] D.J. Thomson, Spectrum estimation and harmonic analysis, Proc IEEE 70 (1982) 1055-1096, \href{https://doi.org/10.1109/PROC.1982.12433}{https://doi.org/10.1109/PROC.1982.12433}.
+
+[80] C.L. Haley, M. Anitescu, Optimal bandwidth for multitaper spectrum estimation, IEEE Signal Process. Lett. 24 (2017) 1696-1700, \href{https://doi.org/10.1109/LSP}{https://doi.org/10.1109/LSP}. 2017.2719943.\\
+[81] M.J. Prerau, R.E. Brown, M.T. Bianchi, J.M. Ellenbogen, P.L. Purdon, Sleep neurophysiological dynamics through the lens of multitaper spectral analysis, Physiology 32 (2017) 60-92, \href{https://doi.org/10.1152/physiol.00062.2015}{https://doi.org/10.1152/physiol.00062.2015}.
+
+[82] C. Bruna-rosso, A.G. Demir, B. Previtali, Selective laser melting finite element modeling : validation with high-speed imaging and lack of fusion defects prediction, Mater. Des. 156 (2018) 143-153, \href{https://doi.org/10.1016/j.matdes.2018.06.037}{https://doi.org/10.1016/j.matdes.2018.06.037}.
+
+[83] B. Cheng, J. Lydon, K. Cooper, V. Cole, P. Northrop, K. Chou, Infrared thermal imaging for melt pool analysis in SLM: a feasibility investigation, Virtual Phys. Prototyp. 13 (2018) 8-13, \href{https://doi.org/10.1080/17452759.2017.1392685}{https://doi.org/10.1080/17452759.2017.1392685}.
+
+[84] I. Yadroitsev, P. Bertrand, I. Smurov, Parametric analysis of the selective laser melting process, Appl. Surf. Sci. 253 (2007) 8064-8069, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. apsusc.2007.02.088.
+
+[85] I. Yadroitsev, A. Gusarov, I. Yadroitsava, I. Smurov, Single track formation in selective laser melting of metal powders, J. Mater. Process. Technol. 210 (2010) 1624-1631, \href{https://doi.org/10.1016/j.jmatprotec.2010.05.010}{https://doi.org/10.1016/j.jmatprotec.2010.05.010}.
+
+[86] L. Caprio, A.G. Demir, B. Previtali, Influence of pulsed and continuous wave emission on melting efficiency in selective laser melting, J. Mater. Process. Technol. 266 (2019), \href{https://doi.org/10.1016/j.jmatprotec.2018.11.019}{https://doi.org/10.1016/j.jmatprotec.2018.11.019}.
+
+[87] C.D. Yoo, R.W. Richardson, Modeling of weld pool oscillation using energy method, Q. J. Japan Weld. Soc. 12 (1994) 30-38.
+
+[88] M. Pacher, L. Mazzoleni, L. Caprio, A.G. Demir, B. Previtali, Estimation of melt pool size by complementary use of external illumination and process emission in coaxial monitoring of selective laser melting, Journal of Laser Applications 31 (2) (2019) 022305, \href{https://doi.org/10.2351/1.5096117}{https://doi.org/10.2351/1.5096117}.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

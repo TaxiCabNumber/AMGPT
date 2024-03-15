@@ -1,0 +1,993 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{multirow}
+
+\title{Heterogeneous sensing and scientific machine learning for quality assurance in laser powder bed fusion - A single-track study }
+
+
+\author{See Table C1.}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Research Paper
+
+
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+Laser powder bed fusion
+
+In-Situ quality monitoring
+
+Process-mapping
+
+Scientific machine learning
+
+Sensor fusion
+
+\begin{abstract}
+A B S T R A C T Laser Powder Bed Fusion (LPBF) is the predominant metal additive manufacturing technique that benefits from a significant body of academic study and industrial investment given its ability to create complex geometry parts. Despite LPBF's widespread use, there still exists a need for process monitoring to ensure reliable part production and reduce post-build quality assessments. Towards this end, we develop and evaluate machine learning-based predictive models using height map-derived quality metrics for single tracks and the accompanying pyrometer and high-speed video camera data collected under a wide range of laser power and laser velocity settings. We extract physically intuitive low-level features representative of the meltpool dynamics from these sensing modalities and explore how these vary with the linear energy density. We find our Sequential Decision Analysis Neural Network (SeDANN) model - a scientific machine learning model that incorporates physical process insights - outperforms other purely data-driven black box models in both accuracy and speed. The general approach to data curation and adaptable nature of SeDANN's scientifically informed architecture should benefit LPBF systems with an evolving suite of sensing modalities and post-build quality measurements.
+\end{abstract}
+
+\section*{1. Introduction}
+Despite the demonstrated potential of additive manufacturing (AM) to transcend the design and processing barriers of traditional manufacturing, the use of additively manufactured parts in missioncritical components is currently limited due to the tendency of the process to create flaws, owing to complex multi-scale physics governing the process [1]. Therefore, to ensure the functional integrity of additively manufactured parts, a critical need is to continually monitor the process using sensors built into the machine, and subsequently detect flaws through real-time analysis of the streaming in-process sensor signatures before these flaws are sealed in by later layers [2-5]. Accordingly, a reliable approach for sensor-based in-situ detection of flaws is vital towards establishing a smart additive manufacturing paradigm for the quality assurance of additively manufactured parts in which the functional properties of the part are assessed during the process, thus limiting expensive offline characterization of parts using X-ray computed tomography and post-process materials characterization $[6,7]$.\\
+The goal of this work is to detect flaw formation in a specific type of AM process called laser powder bed fusion (LPBF) through data acquired from heterogenous in-process sensors in a manner that leverages physical insights from the process. In LPBF, metal in the form of powder is spread over a bed, and the material is selectively fused layer-by-layer through the energy supplied by a laser. The laser scans a (typically) rectilinear path through the rapid movement of a pair of galvanometric mirrors, and the resulting interaction between the laser and the powder material creates a pool of molten material, called the meltpool. The material solidifies in the wake of the meltpool along the path scanned by the laser. This locus of solidified material along the laser path is called single-track or hatch. A layer of the part consists of several overlapping single tracks. Once a layer is fused, the powder bed moves down by 50-100 $\mu \mathrm{m}$ (layer height), a new powder layer is raked on top, and the process continues until the part is completely built.
+
+Fig. 1 shows quality differences via optical microscopy images of two stainless steel single tracks deposited at different laser power and laser velocity settings. Fig. 1(a) shows a single-track with uniform edges, no discontinuities, and no satellite artifacts. These single-track
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail address: \href{mailto:giera1@1lnl.gov}{giera1@1lnl.gov} (B. Giera).
+}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cc3981078ca442cb949eg-02}
+\end{center}
+
+Fig. 1. Optical microscopy images of single tracks deposited at different laser power and laser velocity. (a) a single-track with uniform edges and no discernable faults - characteristics that are desirable while building LPBF AM parts. (b) a single-track with inconsistent width, discontinuities, and surface damage.
+
+characteristics are desirable while building LPBF additively manufactured parts. In contrast, Fig. 1(b) shows a single-track with inconsistent consolidation - the width of the single-track is not only less (compared to the single-track in Fig. 1(a)), but also shows prominent discontinuity and damage.
+
+We note that, the LPBF process falls under the general class of AM processes called powder bed fusion (PBF). In PBF various types of energy sources can be used to fuse the powder material. Apart from using a laser, energy sources include an electron beam (EPBF, with both thermionic and plasma beam), and infrared heating [8]. To increase processing speeds, LPBF systems with multiple lasers have been recently introduced by manufacturers [9]. Rapid whole-layer scans are possible by shaping an infrared beam with an array of optically addressable light valves akin to a photomask [10].
+
+The fast and accurate in-situ identification of LPBF flaws, such as those demarcated in Fig. 1(b), from in-process sensor data is predicated on fusing heterogeneous sensor data $[2,11]$. Here we predict the integrity (build quality) of a single-track using a pyrometer and a high-speed optical video camera located coaxially to the laser path to capture meltpool-level phenomena. The rationale for emphasizing flaw detection at the single-track-level is that, since the single tracks form the basic building block of LPBF parts, identifying and correcting flaws at the single-track level is the key to prevent anomalies from being sealed in by subsequent layers, and cascading to the larger part-level.\\
+At present, process monitoring in additive manufacturing is largely based on analysis of in-process sensor data with machine learning for detecting the occurrence of specific types of flaws. For instance, machine learning is used - in unsupervised [12-14], semi-supervised [15,16] and supervised [17-20] modes - to recognize patterns from in-situ sensors, such as meltpool shape and size. Subsequently, these patterns are correlated with a defect, such as porosity.
+
+The prediction of the model is verified through on offline characterization of the part quality, typically with X-ray computed tomography [21-26]. Machine learning in the context of flaw detection in LPBF can be stratified into three-levels, focused on meltpool-, powder bed-, and part-level sensing [27-30]. For instance, in previous works optical and thermal cameras, and spectrometers have been instrumented in both offaxis (staring) and coaxial to the laser arrangements to obtain meltpool images and spectral emissions in the meltpool plume region [31,32]. The shape and spatter signatures subsequently derived from these sensors are analyzed and used to detect meltpool-level defects, e.g., lack-offusion porosity with machine learning techniques.
+
+In what follows, we evaluate several data-driven models for singletrack quality prediction and find the scientific machine learning concept, which leverages physical process insights, performs better in terms of both prediction fidelity and computational efficiency than purely data-driven (black-box) models [4]. Furthermore, given the physically motivated model development process, this approach can
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cc3981078ca442cb949eg-02(1)}
+\end{center}
+
+Fig. 2. Schematic of the experimental setup with the two in-situ sensors used in this work: pyrometer and high-speed video camera.
+
+Table 1
+
+Number of single tracks deposited at each of the 121 laser power and laser velocity combinations, summing to a total of 1009 single tracks.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+ & \multicolumn{12}{|c|}{Laser Power P [W]} \\
+\hline
+ &  & 50 & 82.5 & 115 & 147.5 & 180 & 212.5 & 245 & 277.5 & 310 & 342.5 & 375 \\
+\hline
+\multirow[t]{11}{*}{Laser Velocity V $\left[\mathrm{mm} \cdot \mathrm{s}^{-1}\right]$} & 100 & 10 & 7 & 8 & 7 & 9 & 9 & 7 & 10 & 7 & 6 & 10 \\
+\hline
+ & 130 & 10 & 10 & 9 & 10 & 7 & 9 & 9 & 7 & 8 & 7 & 9 \\
+\hline
+ & 160 & 8 & 5 & 7 & 8 & 9 & 8 & 9 & 8 & 8 & 9 & 10 \\
+\hline
+ & 190 & 9 & 7 & 9 & 8 & 7 & 8 & 8 & 10 & 8 & 8 & 10 \\
+\hline
+ & 220 & 6 & 8 & 7 & 8 & 10 & 8 & 10 & 8 & 10 & 8 & 10 \\
+\hline
+ & 250 & 10 & 9 & 6 & 9 & 7 & 9 & 7 & 10 & 9 & 7 & 9 \\
+\hline
+ & 280 & 9 & 8 & 9 & 8 & 10 & 9 & 8 & 6 & 8 & 8 & 7 \\
+\hline
+ & 310 & 8 & 7 & 9 & 8 & 8 & 9 & 8 & 8 & 8 & 7 & 7 \\
+\hline
+ & 340 & 9 & 9 & 7 & 7 & 9 & 9 & 10 & 9 & 10 & 9 & 8 \\
+\hline
+ & 370 & 8 & 8 & 8 & 8 & 8 & 9 & 8 & 6 & 8 & 8 & 10 \\
+\hline
+ & 400 & 9 & 8 & 10 & 8 & 6 & 8 & 9 & 10 & 9 & 10 & 9 \\
+\hline
+\end{tabular}
+\end{center}
+
+extend beyond our specific LPBF embodiment to other AM process, such as directed energy deposition and electron beam powder bed fusion.
+
+\section*{2. Methods}
+Here we describe methodological details of data collection, labeling of single-track quality, feature extraction from sensor data and machine learning model development. While we execute these steps on our LPBF hardware, our approach is not limited to the sensing modalities we collect (e.g. high-speed video and pyrometry data) and our strategies can be implemented on other metal AM systems [5]. Similarly, the labeling methodology and model development and validation approaches described in this work are generalizable. We label the quality of a singletrack in terms of three quantitative metrics, namely the mean and standard deviation of the width (across its length) and percent continuity.
+
+\subsection*{2.1. Experimental setup and in-process sensing}
+We use an open architecture LPBF system for this study, shown in Fig. 2, and described in numerous previously published works [18, 33-39]. The laser source is an Ytterbium fiber continuous wave laser with single-mode propagation, $1070 \mathrm{~nm}$ wavelength, $20 \mu$ s rise time, and spot size adjusted to $206 \mu \mathrm{m}$ (1/e $e^{2}$ width). We perform in-situ monitoring of single-track quality via two sensors in the laser path (co-axial), namely a high-speed video camera and a pyrometer.
+
+The high-speed video camera (10-bit Mikroton EOsens MC1362) acquires optical images of the meltpool at a rate of 1000 frames per second $(1 \mathrm{kHz})$ to capture the fast-changing shape and intensity of the meltpool. Appropriate calibration of the camera ensured that there were no saturated meltpool images in the data set. A $60 \mathrm{~W}$, continuous wave, $808 \mathrm{~nm}$ diode laser illuminates the high-speed video camera.
+
+The camera saves $256 \times 256$ pixels $^{2}$ video frames with $14 \mu \mathrm{m} /$ pixel resolution. Additionally, due to the varying laser velocity settings and constant single-track length of $5 \mathrm{~mm}$, the number of images acquired for a single-track varies from 12 to 50 , e.g. videos collected at the fastest laser velocity of $400 \mathrm{~mm} \mathrm{~s}^{-1}$ have 12 frames and the slowest laser velocity of $100 \mathrm{~mm} \mathrm{~s}^{-1}$ have 50 frames.
+
+The infrared pyrometer operates at a wavelength range of $1600-1800 \mathrm{~nm}$ with a sampling rate of $100 \mathrm{kHz}$. The pyrometer captures signatures of the energy that is radiated during single-track deposition at the laser-material interaction zone (meltpool) in the form of a temporal trace. While the pyrometer is not calibrated to the meltpool emissivity (and hence not converted to a temperature scale), it does provide an independent pathway to monitor the energy density $\left(E_{L}\right)$ at the meltpool for fusion. This is important because while the laser power and laser velocity may remain constant, the energy density may change due to change in laser focus height of the LPBF system [40,41].
+
+\subsection*{2.2. Design of experiments}
+A carbon fiber brush spreads stainless steel $316 \mathrm{~L}$ powder with particle size ranging from $15 \mu \mathrm{m}$ to $45 \mu \mathrm{m}$, forming a $\sim 50 \mu \mathrm{m}$ layer on a $180 \mathrm{~mm}$ stainless steel $316 \mathrm{~L}$ build plate. The experimental schema entails a full-factor design of experiments of 11 laser power $(\mathrm{P},[\mathrm{W}])$ and 11 laser velocity $\left(\mathrm{V},\left[\mathrm{mm} \cdot \mathrm{s}^{-1}\right]\right.$ ) settings [18]. Table 1 reports the 121 distinct ( $\mathrm{P}, \mathrm{V}$ ) combinations of laser power ranging 50-375 W in increments of $32.5 \mathrm{~W}$ and laser velocity ranging from 100 to $400 \mathrm{~mm} \mathrm{~s}^{-1}$ in increments of $30 \mathrm{~mm} \mathrm{~s}^{-1}$, along with the number of replicates. The numbers reported in Table 1 are the number of single tracks produced under each combination of $\mathrm{P}$ and $\mathrm{V}$.
+
+We chose these two laser parameters because when taken together they result in a linear energy density applied to melt powder material, $\mathrm{E}_{\mathrm{L}}$ $=\mathrm{P} \cdot \mathrm{V}^{-1}\left[\mathrm{~J} \cdot \mathrm{mm}^{-1}\right]$. The energy density values studied in this work range from $E_{\mathrm{L}}=0.25-3.75 \mathrm{~J} \mathrm{~mm}^{-1}$. While previous works have studied the effect of process parameters on single tracks, the studies were conducted over a narrower parameter range followed by qualitative observations $[42,43]$.
+
+In commercial LPBF systems, the laser velocity can often exceed $1000 \mathrm{~mm} \mathrm{~s}^{-1}$ [32]. Although, the open architecture system used in this work can sustain such large laser velocity ranges, we have restricted the maximum laser velocity to $400 \mathrm{~mm} \mathrm{~s}^{-1}$ due to the following two reasons.
+
+First, apart from the power and velocity of the laser, its spot size also effects the input energy density. The spot size of the laser used in a commercial system is typically in the range of $50-100 \mu \mathrm{m}$. The spot size of the laser used in this work is much larger at $206 \mu \mathrm{m}$. Due to the bigger spot size, the laser energy is spread over a larger area, therefore, using higher laser velocity values would reduce the input energy density in our system. Furthermore, our offline studies with the open architecture system inform us that setting the laser velocity beyond the selected range would lead to highly discontinuous single tracks because of the extremely low energy density.
+
+Second, there are sensing-related constraints under high laser velocity conditions. The number of images acquired by the high-speed video camera is inversely proportional to the laser velocity. For example, at 1000 frames per second ( $1 \mathrm{kHz}$ frame rate) of the high-speed video camera used in this work, 12 meltpool images are acquired for the single tracks deposited at $400 \mathrm{~mm} \mathrm{~s}^{-1}$. Hence, the high-speed video camera would be able to acquire two to three meltpool images at the most when single tracks are deposited at $1000 \mathrm{~mm} \mathrm{~s}^{-1}$ leading to severe data deficiency.
+
+\subsection*{2.3. Extracting quality metrics from height maps}
+Deposited single tracks were scanned with Keyence VR3000 noncontact optical profilometer to characterize their morphology. This rapid measurement produces a height map with a resolution of $29.5 \mu \mathrm{m}$ per pixel (in the X-Y plane) that we analyze to extract the following
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cc3981078ca442cb949eg-04(1)}
+\end{center}
+
+Height from
+
+powder bed $(\mathrm{mm}$ )
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cc3981078ca442cb949eg-04}
+\end{center}
+
+Fig. 3. Representative height maps of single tracks deposited at different printing conditions. (a) Single-track deposited at $P=342.5 \mathrm{~W}$ and $\mathrm{V}=130 \mathrm{~mm} / \mathrm{s}$ shows the indices $\left(F_{i}\right.$ and $L_{i}$ ) used to extract single-track quality features, such as mean and standard deviation of the width (b) Single-track deposited at $\mathrm{P}=115 \mathrm{~W}$ and $\mathrm{V}=370 \mathrm{~mm} / \mathrm{s}$ highlights the length of discontinuity in the single-track (blue dotted line). Color bar depicts the height of single tracks from the powder bed. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.) quality metrics: the mean of the width of the single-track $\left(\mu_{w}\right)$, the standard deviation of the width of the single-track over its length $\left(\sigma_{w}\right)$, and percent continuity (к) that ranges from $100 \%$ for fully continuous single tracks to $0 \%$ for unformed single tracks. Thus, the combination of these three metrics derived from the height map images encompass important quality-related aspects of the single tracks. Our aim is to predict these quality metrics as a function of process signatures derived from in-situ sensor data.
+
+We acknowledge that including other materials characterizationrelated metrics, such as inclusion population, compositional variation, grain size, texture, precipitation and dislocation density will provide a fundamental insight into the microstructural evolution of single tracks $[42,43]$. This insight is indeed critical for understanding the causal thermal and fluid-flow phenomena that govern part quality in LPBF [1]. However, the focus of this work is on using in-process sensor data to detect flaw formation related to the macro-scale consolidation characteristics of single tracks in terms of their geometric integrity, such as width and continuity. In the same vein, we recognize other rigorous destructive and non-destructive measurement techniques, such as X-ray computed tomography, offer subsurface insights into LPBF process quality [44-46].
+
+Fig. 3 demonstrates our approach to obtain the pixel-level quality metrics of single tracks from the height map image. Fig. 3(a) shows how we obtain pixel-level widths by computing the difference in the index values of the first and last non-zero pixels: $F_{i}$ and $L_{i}$, respectively at height map coordinate $i$. We then convert the pixel-level width to micrometers from the $29.5 \mu \mathrm{m} /$ pixel height map resolution using Eq. (1).
+
+$\alpha_{w}^{i}=\left(L_{i}-F_{i}\right) \times 29.5 \quad \mu \mathrm{m}$
+
+where, $i$ ranges from 1 to $N$, with $N$ as the number $\left(F_{i}, L_{i}\right)$ pairs along each single-track. During this pixel-level evaluation, we exclude any potential height map artifacts (shown in Fig. 3(a)) from our measurements. From the set of $\alpha_{w}^{i}$ corresponding to each single-track, we compute the mean width
+
+$\mu_{w}=\frac{1}{N} \sum_{i=1}^{N} \alpha_{w}^{i}$
+
+and standard deviation
+
+$\sigma_{w}=\sqrt{\frac{\sum_{i=1}^{N}\left(\alpha_{w}^{i}-\mu_{w}\right)^{2}}{N}}$
+
+Percent continuity is computed via,
+
+$\kappa=\frac{N-\operatorname{count}\left(\alpha_{w}^{i}=0\right)}{N}$
+
+where count $\left(\alpha_{w}^{i}=0\right)$ is the number of pixels (zero and non-zero) belonging to all discontinuities, as depicted by the blue dotted-line in Fig. 3(b).
+
+We clarify that a discontinuity in this context is intended to convey separation of a single-track into discrete droplets, which results from a phenomenon called balling or droplet formation [1]. The single-track fails to fuse due to excessive laser velocity in relation to the laser power (explained in Section 3.1). The severity of the discontinuity is captured in Eq. (4), which quantifies the extent of continuity of a singletrack. A value of $\kappa=100 \%$ means there are no discontinuities in the single track, and $\kappa \rightarrow 0 \%$ for highly discontinuous single track; $\kappa=0 \%$ indicates a complete absence of a single-track (no single-track is printed). In Section 3.1 we link the variation in these quality metrics to four distinctive processing regimes of the LPBF process.
+
+\subsection*{2.4. Extracting features from sensor data}
+We leverage readily interpretable statistics-based features from pyrometer and high-speed video camera data of the meltpool as opposed to more complex signal processing techniques. An intuitive and simple feature set facilitates the ease of monitoring the meltpool dynamics with varying process parameters. This in turn promotes a deeper understanding of the complex process physics involved in LPBF AM. Consequently, this feature set helps integrate knowledge of the process physics into our machine learning-based model, consistent with the scientific machine learning paradigm.
+
+We acknowledge that indeed complex signal processing techniques, such as wavelet-based signal decomposition and deep learning convolutional neural networks, are capable of extracting multifaceted process dynamics that are not readily apparent to the human intuition $[47,48]$. In this work, we endeavor to integrate the pattern recognition and correlation ability of machine learning while retaining interpretability of the underlying physical phenomena through accessible input feature sets.
+
+\subsection*{2.4.1. Pyrometry signatures}
+The pyrometer measures meltpool radiance that is proportional to the temperature. Accordingly, we posit that the temporal characteristics of the pyrometer signature offers an indirect measurement of the energy expended for melting the single-track. Taking this a step further, the pyrometer signature can be used to characterize the meltpool into different processing regimes. Using the 1D time series pyrometer signal for each single-track, we derive process signatures from the moments of its probability distribution, i.e. mean $\left(\mu_{p}\right)$, standard deviation $\left(\sigma_{p}\right)$, skewness $\left(\mu_{3, p}\right)$ and kurtosis $\left(\mu_{4, p}\right)$. We note that no a priori probability distribution has been assumed nor has any distribution been fitted to the data; we merely extract the statistical descriptors of the empirical sensor data. In our results (Section 3.2), we evaluate the change in statistical features of the pyrometer readings with respect to the four process LPBF regimes identified, viz. balling, lack-of-fusion, conduction, keyholing.
+
+\subsection*{2.4.2. High-speed video signatures}
+We hypothesize that the meltpool area and intensity correlate with the width of the single-track since these relate to the temperature of the meltpool and ultimately the processing regime. Similarly, the shape of\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_cc3981078ca442cb949eg-05(2)}
+
+Fig. 4. Co-axial high-speed video camera frames captured while depositing a single-track ( $\mathrm{P}=245 \mathrm{~W}, \mathrm{~V}=100 \mathrm{~mm} / \mathrm{s}$ ). (a) We fit an ellipse using adjustable parameters for the major and minor axis, respectively. (b) We use the set of center-to-edge distance ( $\mathrm{d}_{\mathrm{y}}$ ) to define the circularity of a meltpool.
+
+the meltpool is linked to stability. This is supported by experiments and simulations that show that the length-to-width ratio of the meltpool is indicative of meltpool instability [49-51]. Typically, when the length of the meltpool is exceedingly large, it tends to segregate into discrete droplets - a phenomenon characterized by the balling regime. Hence, variation in the shape of the meltpool is intuitively correlated with the consistency of the single-track edge, which is given by the standard deviation of single-track width $\left(\sigma_{w}\right)[38,52-54]$.
+
+Using the high-speed video of the meltpool, we extract the meltpool area $\left(A^{i}\right)$, meltpool intensity $\left(I^{i}\right)$, and circularity (shape) of the meltpool as a function of the mean $\left(\mu_{c}^{i}\right)$ and standard deviation $\left(\sigma_{c}^{i}\right)$ of its diameter.\\
+However, as discussed through a representative example in Appendix B, we first eliminate spatter and other artifacts surrounding the meltpool in the high-speed video camera frames. Subsequently, we implement kmeans image segmentation followed by adaptive thresholding-based binarization and edge detection for demarcating the meltpool from the background. These steps were implemented by executing scripts available in the image processing libraries in MATLAB 2019a.
+
+After performing these steps, we extract the four aforementioned features exclusively from the meltpool, as shown in Fig. 4. From every frame $j$, we determine the meltpool area\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_cc3981078ca442cb949eg-05}
+
+Output predicted laser parameters
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cc3981078ca442cb949eg-05(1)}
+\end{center}
+
+Output predicted mean and standard deviation of width\\
+Output predicted percent continuity\\
+Fig. 5. A schematic of the sequential decision analysis neural network (SeDANN). The sensor data and height map shown above belong to a singletrack deposited at linear energy density $\left(E_{L}\right)$ of 0.33 , i.e. balling regime. The statistical probability distribution features extracted from the pyrometer are used in the first echelon artificial neural network (ANN) to predict the laser process parameters ( $\mathrm{P}$ and $\mathrm{V}$ ) followed by meltpool features derived from the high-speed video camera to predict the mean width and standard deviation and single-track continuity at higher echelons.\\
+$A^{i}=\pi L_{\text {major }}^{j} L_{\text {minor }}^{j}$
+
+from an elliptical fit (using MATLAB 2019a) to the meltpool circumference with adjustable parameters for the major $\left(L_{\text {major }}^{j}\right)$ and minor axes $\left(L_{\text {minor }}^{j}\right)$ as shown in Fig. 4(a). The fitting parameters are adjusted once and remain fixed throughout the analysis process. Moreover, since the analysis is done for a single-track of fused material, the laser direction does not change, and therefore the orientation of the meltpool does not vary (i.e., fitting parameters are not influenced by the position of the laser).
+
+Fig. 4(b) demonstrates the manner in which we use the center point of the fitted ellipse to determine the meltpool circularity. We compute the Euclidean distance between the center of the meltpool, $d_{y}$, for the total number of pixels that comprise the meltpool's edge, $N_{e}$. For each high-speed video frame $j$, we use the set of $d_{y}$ to calculate the mean $\left(\mu_{c}^{j}\right)$ and standard deviation $\left(\sigma_{c}^{j}\right)$ values that account for the size and shape of the meltpool, respectively per Eq. (6). Smaller $\sigma_{c}^{i}$ correspond to meltpool shapes that are more circular.
+
+$\mu_{c}^{j}=\frac{1}{N_{e}} \sum_{y=1}^{N_{e}} d_{y}$
+
+$\sigma_{c}^{j}=\sqrt{\frac{\sum_{y=1}^{N_{e}}\left(d_{y}-\mu_{c}^{i}\right)^{2}}{N_{e}}}$
+
+Meltpool intensity is calculated by summing the non-zero-pixel values belonging to the meltpool as shown in Eq. (7).
+
+$I^{j}=\sum_{(x=1)}^{M} I_{x}$,
+
+where, $I_{x}$ is the intensity of a pixel in the meltpool and $M$ is the number of pixels in the meltpool.
+
+We use these sensor data features along with the single-track quality metrics as labels to evaluate the performance of various machine learning models (Section 3.3). The single tracks are split in the 80/20 manner, i.e. $80 \%$ of the single tracks are used for training a given machine learning model and $20 \%$ of the single tracks are used to test it. We discuss the architectural details of some of the models in Appendix A. The next section talks about development of the proposed SeDANN machine learning model.
+
+\subsection*{2.5. Sequential decision analysis neural network (SeDANN)}
+\subsection*{2.5.1. Model architecture}
+The machine learning model that is hallmark of this work is our sequential decision analysis neural network (SeDANN), which is motivated by the idea of scientific machine learning and grey-box modeling, wherein we incorporate the knowledge of the complex process physics in a machine learning framework. Here we leverage the versatility and adaptability of shallow artificial neural networks (ANNs) and arrange their inputs/outputs in a sequential manner as depicted in Fig. 5. SeDANN is comprised of three echelons in which each echelon predicts a certain process regime or quality metric and passes it to subsequent echelons to boost their predictive accuracy.
+
+This model architecture of the SeDANN relies on a statistical factor analysis (see Section 3.1 for detailed ANOVA table), which shows that single-track width is predicted with a higher degree of accuracy as a function of only the process parameters laser power and laser velocity, unlike percent continuity. The pyrometer is linked to the deposition energy $\mathrm{E}_{\mathrm{L}}$, and therefore captures the process regime, thus is placed in the first echelon. The meltpool features encapsulate the shape and intensity of the meltpool, and hence are intuitively linked to the morphology of the single-track width. In essence, this statistically informed approach to machine learning model design ensures sensors are used efficiently for single-track quality classification, i.e. quality metric(s) are identified using the appropriate sensor(s).
+
+In Fig. 5, the first echelon ANN in the SeDANN is trained to predict the deposition laser power and laser velocity of a single-track segment as a function of the first four statistical moments of the pyrometer signal, i. e. mean $\left(\mu_{p}\right)$, standard deviation $\left(\sigma_{p}\right)$, skewness $\left(\mu_{3, p}\right)$ and kurtosis $\left(\mu_{4, p}\right)$ of the pyrometer signature. In the second echelon, the $\mathrm{P}$ and $\mathrm{V}$ values for a single-track segment, predicted from the first echelon, are used alongside meltpool image features extracted from the high-speed video camera images as inputs to a shallow ANN trained to predict the width of the single-track segment $\left(\mu_{w}\right)$. Additionally, in the second echelon, the standard deviation of the single-track width $\left(\sigma_{w}\right)$ is derived by estimating the mean width over three segments of the single-track. The third echelon predicts percentage continuity ( $\kappa$ ), as a function of meltpool features, and mean and standard deviation of single-track width predicted in the second echelon.
+
+\subsection*{2.5.2. Training and testing}
+We train and test the SeDANN (and other machine learning models) using 914 single tracks out of the total 1009 single tracks; sensor data from 95 single tracks were omitted due to inconsistencies in data acquisition. All the machine learning models studied in this work were implemented using scripts from the MATLAB 2019a machine learning library. The models were executed on a desktop computer with 16 GB RAM and threaded through a single core processor (Intel Core i7-7700HQ CPU @ $2.80 \mathrm{GHz}$ ). The training and validation dataset comprised of 657 and 73 tracks, respectively for a total of 730 single tracks, viz. $\sim 80 \%$ of the entire dataset.
+
+The remaining 184 single tracks (20\%) are reserved exclusively for testing the trained and validated models. The training data does not change and remains static for the entire study, and network performance results are reported on the separate testing data. The testing data set and input features is therefore uniform and identical for all models bar the convolutional neural network tested in this work.
+
+The training processes proceeds as follows. Each $5 \mathrm{~mm}$ track is divided into three segments of the length of $\approx 1.7 \mathrm{~mm}$. To ensure synchronization, the sensor data is also divided into three segments to correspond to the three sections. The division of every single-track into three segments results in a total of 2190 segmented single tracks for training. Ten-fold cross-validation was performed for training the shallow ANNs, i.e. the data was randomly divided into 10 equal parts, out of which 1/10th of it was used for validation and the rest for training. This strategy of randomized training-and-validation is repeated 10 times to obtain an unbiased estimate of the network efficiency over the entire dataset. The evaluation of SeDANN along with other machine learning algorithms is given in Section 3.3. The advantage of the sequential process monitoring approach embodied by the SeDANN are three-fold:
+
+\begin{enumerate}
+  \item Encapsulates the physical insight from the process to make predictions. Compared to deep learning techniques which use multiresolution filters at the expense of interpretability, the SeDANN approach uses rudimentary statistical features derived based on the physical reasoning of the process regimes, which in turn facilitates interpretability.
+
+  \item Can accommodate heterogenous data sources, such as 1D time series from a pyrometer, and 2D streaming images from the high-speed video camera in a physically intuitive manner taking advantage of the capabilities of each type of sensor.
+
+  \item Chaining shallow ANNs to make sequential decisions with a sparse set of features in each input layer is more computationally efficient and resistant to overfitting than using one large network with several features in the input layer.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_cc3981078ca442cb949eg-07}
+
+\end{enumerate}
+
+Fig. 6. Micrographs of cross-sectioned single tracks reveals subsurface information useful for demarcating the process regime. This data is adapted from the following reference [5].
+
+\section*{3. Results and discussions}
+This section establishes the vital link between process parameters, insitu sensor signatures and build quality. In Section 3.1, we quantify the variation in single tracks' quality metrics (mean and standard deviation of single-track widths, and percent continuity) as a function of the four $\mathrm{E}_{\mathrm{L}}$ regimes commonly used to characterize LPBF, viz. balling, lack-offusion, conduction, and keyholing. In Section 3.2, we demonstrate the transitional behavior of the high-speed video camera data and pyrometer signals with respect to these $\mathrm{E}_{\mathrm{L}}$ regimes. We evaluate the SeDANN and compare it against several other machine learning models for accuracy and computational efficiency in Section 3.3.
+
+\subsection*{3.1. Effect of process parameters on single-track quality}
+\subsection*{3.1.1. Destructive characterization}
+In this section we show that the range of energy density values, $E_{L}$ $=0.25-3.75 \mathrm{~J} \mathrm{~mm}^{-1}$, encompassed by our dataset spans four key regimes for single-track formation: balling, lack-of-fusion, conduction, and keyholing. We cross-sectioned and conducted an offline metallographic analysis of a few single tracks created in each $\mathrm{E}_{\mathrm{L}}$ regime. Fig. 6 is adapted from previous work and shows the cross-sectioned single tracks produced at a decreased beam width of $100 \mu \mathrm{m}$ [5].
+
+The cross-sectioning and metallographic analysis has three critical functions:
+
+(1) The cross-sectional images provide deeper understanding and physical rationale for demarcating the four proposed energy density regimes, viz. keyhole, conduction, lack-of-fusion, and balling. In the absence of the cross-sectional data, these process regime demarcations would lack a clear physical justification.
+
+(2) The cross-sectional images show that single tracks deposited under the four energy density regimes have distinctive weld bead characteristics which is indicative of their morphological quality.
+
+(3) Cross-sectional images corroborate the veracity of the optical height map-derived energy density regimes. In other words, the cross-sectional images provide valuable cross-validation of the optical height map measurements used in this work.
+
+Fig. 6(a) shows the cross-section of a single-track deposited in the keyholing regime under the following conditions: $(\mathrm{P}, \mathrm{V})=(375 \mathrm{~W}, \mathrm{~V}$ $=130 \mathrm{~mm} \mathrm{~s}^{-1}$ ) with $\mathrm{E}_{\mathrm{L}}=2.88 \mathrm{~J} \mathrm{~mm}^{-1}$. The cross-section shows high depth of penetration (reinforcement depth) and height above the substrate (reinforcement height) relative to the width, which is attributable to high $\mathrm{E}_{\mathrm{L}}$. The single-track has pores trapped deep inside the cavity made by the meltpool characteristic of keyhole formation. King et al. made similar single-track cross-section observations when depositing under the keyholing regime of process parameters [49].
+
+Fig. 6(c), (d), and (g) shows the cross-section of single tracks that exhibit the lack-of-fusion phenomenon. Compared to Fig. 6(a), these single tracks are characterized by lower depth of penetration relative to their width, smaller reinforcement height, and have insufficiently fused material. Single tracks in Fig. 6(e), (h), (i) and (j) depict the balling effect due to low laser power relative its velocity, i.e., low energy density $\left(\mathrm{E}_{\mathrm{L}}<\right.$ $0.5 \mathrm{~J} \mathrm{~mm}^{-1}$ ). The balling effect observed in these single tracks results in high reinforcement height of the single-track relative to its depth of penetration and width. Indeed, in Fig. 6(h) the single-track depicts negligible penetration into the substrate, characteristic of discontinuity.
+
+Lastly, Fig. 6(b) and (f) show the cross-section of a single-track deposited in the conduction regime deposited in the conduction zone, i.e. $1<\mathrm{E}_{L}<2$. The reinforcement height and depth of penetration are almost equal in these weld beads, and the bead width is approximately equal to the laser beam width. These cross-sectional micrographs of single tracks help to categorize them according to the four process parameter regimes. They inform of the presence of keyhole porosity and the degree to which a single-track is fused to the preceding layer (substrate in this case).
+
+We exclusively use the height map data, as detailed in the next section, as it provides us with information regarding the overall thickness of a single-track and its edge uniformity. Furthermore, the height maps tell us about the presence of discontinuities in a single-track. These vital morphological traits of a single-track are not conveyed by the crosssectional micrographs. Additionally, the cross-sectional evaluation of numerous single tracks is expensive, laborious, and time-consuming. This makes it far more difficult to amass large labeled datasets required for machine learning when compared to surface-based height maps. Nevertheless, we can employ the physical insights gained from these detailed measurements (prior published work [5]) for analyzing sensing data and designing suitable machine learning architectures.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cc3981078ca442cb949eg-08}
+\end{center}
+
+Fig. 7. Examples of height maps for single tracks deposited at various laser power and laser velocity settings colored-coded according to four distinct processing linear energy density $\left(\mathrm{E}_{\mathrm{L}}\right)$ regimes: balling, lack-of-fusion, conduction, and keyholing. Single tracks formed in the balling regime (blue) are highly discontinuous and relatively thinner. Single tracks within the lack-of-fusion regime (pink) exhibit uneven (high standard deviation) widths with a low mean width and few discontinuities. The ideal conduction regime (green) produces uniform single tracks with mean width within $\pm 20 \%$ of the laser spot size and no discernable discontinuity. In the keyholing regime (red), single tracks exhibit continuous widths that are over $20 \%$ larger than the laser spot size and relatively high standard deviation and may also contain porosity that cannot be verified with surface measurements alone. The color bar shown represents the height of single tracks from the powder bed. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)
+
+\subsection*{3.1.2. Demarcation of process regimes from height maps}
+Fig. 7 shows top view examples of single-track height maps arranged according to laser power ( $\mathrm{P}$ ) and laser velocity (V) set points and grouped by the linear energy density $\left(\mathrm{E}_{\mathrm{L}}\right.$ ) regimes. The single-track morphology varies distinctly with $\mathrm{E}_{\mathrm{L}}$. Single tracks in the balling (metal droplet formation) regime have low widths and variable continuity. Under the low $\mathrm{P}$, high $\mathrm{V}\left(\mathrm{E}_{\mathrm{L}}<0.5 \mathrm{~J} \mathrm{~mm}^{-1}\right)$ these single tracks exhibit prominent discontinuities because the meltpool segregates into separate droplets, prohibiting long segments of continuous single tracks. We measure typical values for the percent continuity to range from $\sim 8 \%$ to $\sim 100 \%$. These observations are consistent with other works that characterize the consistency of single tracks at low energy densities with experiments and simulation $[34,50,54,55]$.
+
+A second LPBF phenomena termed lack-of-fusion falls within $0.5<\mathrm{E}_{\mathrm{L}}<1 \mathrm{~J} \cdot \mathrm{mm}^{-1}$. Although these single tracks appear to be continuous, their edges are not uniform, i.e. the standard deviation of the width is high (measured typically in the range of $20-40 \mu \mathrm{m}$ ). The single tracks poorly fuse to the substrate (or prior layers in multilayer fabrication) because the energy supplied by the laser is insufficient leading to formation of lack-of-fusion porosity [56,57]. Single tracks deposited at the upper threshold of this regime $\left(\mathrm{E}_{\mathrm{L}} \rightarrow 1 \mathrm{~J} \cdot \mathrm{mm}^{-1}\right.$ at the magenta-green boundary in Fig. 7) exhibit high single-track continuity and low standard deviation of width, as opposed to those deposited at lower $\mathrm{E}_{\mathrm{L}}$.
+
+Conduction mode of single tracks is observed in a third regime ranging from 1 to $2 \mathrm{~J} \cdot \mathrm{mm}^{-1}$. In the conduction regime, continuous single tracks fully fuse to the substrate and exhibit single-track mean width ranging from $160 \mu \mathrm{m}$ to $240 \mu \mathrm{m}$. Fig. 7 shows that single tracks in the conduction regime are characterized by high percent continuity and low standard deviation of width (or high edge uniformity). Given these single-track quality attributes, this operating regime produces fewer defects in overall part build quality. However, the quality of single tracks may decline at higher energy densities $\left(\mathrm{E}_{\mathrm{L}} \rightarrow 2 \mathrm{~J} \mathrm{~mm}^{-1}\right.$ at greenred boundary in Fig. 7).
+
+The keyholing regime characterizes single tracks formed at the highest energy of the regimes, i.e. $\mathrm{E}_{\mathrm{L}}>2 \mathrm{~J} \cdot \mathrm{mm}^{-1}$. In the keyholing regime, the combination of high laser power and the low laser velocity results in large energy deposition. This high energy density causes the laser to penetrate deeper into the layers (substrate in the case of a singletrack), hence, the depth of the meltpool is substantially longer compared to its width [58]. The collapse of the material in the deep cavity made by the laser, followed by rapid solidification of the meltpool often leaves behind pores, which is called keyhole porosity [49,54] . These pores are detrimental to the mechanical properties of finished LPBF AM parts as they are initiation sites for crack formation [59].
+
+\subsection*{3.1.3. Statistical analysis quantifying effect of process parameters}
+We analyze the height maps of single tracks at every $(\mathrm{P}, \mathrm{V})$ combination to measure three quality metrics of the single-track, namely, mean $\left(\mu_{w},[\mu \mathrm{m}]\right)$, standard deviation $\left(\sigma_{w},[\mu \mathrm{m}]\right)$ of single-track width and percent continuity ( $\kappa$ ) (representative values provided in Appendix C). We perform statistical analysis (ANOVA) to relate P and V to these quality metrics as reported in Table 2 .
+
+A key result is that $\mathrm{P}$ and $\mathrm{V}$ and their interaction term $\mathrm{P} \cdot \mathrm{V}$ have a
+
+\section*{Table 2}
+Results of analysis of variance (ANOVA) performed on the mean of single-track width, the standard deviation of single-track width, and the percent continuity of 914 single tracks. Highlighted values depict the most significant variables (p-value $<10 \%$ ).
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\begin{tabular}{l}
+Percentage of the total \\
+sum of squares variation \\
+\end{tabular} & \begin{tabular}{c}
+Mean of single- \\
+track width $\left(\boldsymbol{\mu}_{\boldsymbol{w}}\right)$ \\
+\end{tabular} & \begin{tabular}{c}
+Standard deviation of \\
+single-track width $\left(\boldsymbol{\sigma}_{\boldsymbol{w}}\right)$ \\
+\end{tabular} & \begin{tabular}{c}
+Percent continuity of \\
+single-track $(\boldsymbol{\kappa})$ \\
+\end{tabular} \\
+\hline
+Laser power $(\mathrm{P})$ & $59.86 \%$ & $19.97 \%$ & $61.62 \%$ \\
+\hline
+Laser velocity $(\mathrm{V})$ & $26.01 \%$ & $22.34 \%$ & $2.77 \%$ \\
+\hline
+Interaction $(\mathrm{P} \times \mathrm{V})$ & $3.01 \%$ & $9.05 \%$ & $4.05 \%$ \\
+\hline
+Regression $R^{2}$ & 0.8853 & 0.5420 & 0.6444 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cc3981078ca442cb949eg-09}
+\end{center}
+
+Fig. 8. Contour (left) and scatter (right) plots of the effect of laser parameters on single-track width (a), standard deviation of width (b), and percent continuity (c) with demarcated boundaries of the four LPBF regimes.
+
+statistically significant influence (p-value $<1 \%$ ) on the three singletrack quality metrics. This is an intuitive result that we expect for LPBF. In Table 2 , the $R^{2}$ value - which typically ranges from 0 to 1 represents the prediction fidelity for each of the output variables as a function of $\mathrm{P}$ and $\mathrm{V}$, and their statistical interaction $\mathrm{P} \times \mathrm{V}$. The percentage contribution of $\mathrm{P}$ and $\mathrm{V}$ is estimated as a ratio of the sum of squares of the factor (signal) to the total sum of squares (noise). Thus, the $\mathrm{R}^{2}$ is akin to the signal-to-noise ratio and represents the uncertainty in explaining the behavior of given single-track quality metric using the two process parameters and their interaction. A relatively low $\mathrm{R}^{2}$ signifies the inability of the process parameters and their interaction to explain the variation in the given quality metric. Although the process parameters $\mathrm{P}$ and $\mathrm{V}$ are statistically significant determinants of the single-track quality, the low $\mathrm{R}^{2}(<65 \%)$ for the standard deviation and percent continuity reinforce that process parameters are not sufficient to monitor single-track quality.
+
+Fig. 8 maps these quality metrics using complementary plots in $(\mathrm{P}, \mathrm{V})$ contours (column 1) and along linear energy density ( $E_{L}$ ) (column 2). All plots highlight each of the four regimes with regions and markers, per the legends. Fig. 8 reiterates the ANOVA analysis in Table 2 in that considering only the process parameters $(\mathrm{P}, \mathrm{V})$ will yield insufficient predictions of the single-track quality metrics $\mu_{w}, \sigma_{w}$, and $\kappa$. Thus, this motivates the need to derive process signatures from in-situ sensors to understand and encapsulate the complex process phenomena in LPBF AM (Section 3.2).
+
+Consistent with our analysis so far, we group our findings according to the four LPBF regimes to highlight the dependency of the single-track quality metrices on $\mathrm{E}_{\mathrm{L}}$. The contour plots map each quality metric onto the $(\mathrm{P}, \mathrm{V})$ plane with regimes denoted by shaded regions. The corresponding scatter plots show these single-track quality metrics as a function of $E_{L}$. Collectively, these plots map out the relationship between the process parameters and build quality in LPBF AM. We discuss the pairs of plots in each row in to give a quantitative overview of each metric within our labeled dataset.
+
+The mean width of the single tracks is most significantly influenced by the laser power with approximately $60 \%$ of the variation in the mean of single-track width attributable to a change in laser power. This result is consistent with the work by Yadroistev et al., wherein the authors study the effect of various process parameters on geometric characteristics of stainless steel SAE 904 L single tracks [60].
+
+The $\mathrm{R}^{2}$ value indicates that $\sim 88 \%$ of the variation in mean of singletrack width is explained by the process parameters alone. Conversely,\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_cc3981078ca442cb949eg-10(2)}
+
+\includegraphics[max width=\textwidth, center]{2024_03_10_cc3981078ca442cb949eg-10}\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_cc3981078ca442cb949eg-10(1)}
+
+Fig. 9. Sensor data for single tracks representing the four regimes (all single tracks deposited at $\mathrm{V}=130 \mathrm{~mm} / \mathrm{s}$ : (a) Keyholing: $\mathrm{P}=375 \mathrm{~W}$; (b) Conduction: $\mathrm{P}=180 \mathrm{~W}$; (c) Lack-of-fusion: $\mathrm{P}=115 \mathrm{~W}$; (d) Balling: $\mathrm{P}=50 \mathrm{~W}$. The scanning direction is left to right in the plane of the page. Refer to Fig. 7 for color bar of singletrack height maps.
+
+ANOVA suggests that only $\sim 54 \%$ of the variation observed in the standard deviation of single-track width is explained by the process parameters and their interaction. In other words, the process parameters alone are insufficient to predict the standard deviation of the single tracks. In case of the percent continuity of single tracks, the ANOVA analysis indicates that laser power has a high influence on variability. Furthermore, the relatively low $R^{2}$ value suggests that process parameters and their interaction do not wholly explain the variability in percent continuity of single tracks.
+
+Fig. 8 (a1) and (a2) show the measured thickness using (P, V) contours and scatter plots, respectively. Single tracks characterized by the balling regime fall within $\sim 42-119 \mu \mathrm{m}$, with an average value of $75 \mu \mathrm{m}$. The widths of these single tracks are $\sim 40 \%$ of the nominal laser spot size of $206 \mu \mathrm{m}$. The significant deviation from the nominal beam diameter results in the balling phenomena which may lead to poor mechanical properties of the overall part. The mean width of single tracks in the lack-of-fusion regime is $138 \mu \mathrm{m}$ and all data falls within $93-181 \mu \mathrm{m}$. By contrast, single tracks in the conduction regime have an average mean width of $188 \mu \mathrm{m}$ and overall range of $130-255 \mu \mathrm{m}$ that lies within $\pm 20 \%$ of the nominal laser spot size. Since the width and nominal beam diameter are comparable in the conduction regime, this set of conduction process parameters (P, V) in Fig. 9(a1) produce desirable single tracks.
+
+In the keyholing regime, the mean width of single tracks is $210 \mu \mathrm{m}$ with bounds of $130-323 \mu \mathrm{m}$. Here, the single-track widths are $20-50 \%$ larger than the nominal beam diameter. Laohapropanon et al. have observed similar over melting of single-tracks made using stainless steel $316 \mathrm{~L}$ when deposited at similar conditions [61]. The increase in width is attributable to the higher energy density, which can also cause keyhole collapse porosity. As with pores resulting from lack-of-fusion, pores from keyhole-melting are detrimental to the functional quality of LPBF parts. The (P, V) process mapping in Fig. 8 (a1) reveals the ideal process parameter range. Fig. 8 (a2) confirms the mean of single-track width increases linearly with the $\mathrm{E}_{\mathrm{L}}$ with a clear distinction observed between the four regimes.
+
+Fig. 8 (b1 and b2) represent the effect of laser parameters on the standard deviation $\left(\sigma_{w}\right)$ of the single-track width. Unlike the mean, the standard deviation of single-track width does not exhibit a clear trend across the process parameters. This is shown in the Fig. 8 (b1) where non-uniform trends in data produce contours with data clusters and also non-distinct boundaries that poorly map onto the four regimes. Similarly, a prominent trend in the standard deviation of single-track width as a function of $\mathrm{E}_{\mathrm{L}}$ is not perceivable in the scatter plot in Fig. 8 (b2). Hence, to accurately predict the standard deviation in width of a singletrack, the process parameters must be supplemented with signatures derived from the in-process sensor data. For example, the high-speed video camera captures the variation in the meltpool shape and spatter which are indicative of the process stability. Also, the meltpool shape captured by the high-speed video camera can be intuitively related to the single tracks' morphological characteristics. Further, the pyrometer helps capture the energy density distribution over the entire length of the single-track, which is valuable in determining the process regime under which a single-track was deposited.
+
+The contour plot of percent continuity shown in Fig. 8 (c1) suggest that laser power has a substantial effect on the percent continuity of single tracks. Thus, for any given laser velocity setting, the entire range of $\kappa$ is similar across all power settings. Most of the single tracks deposited in this work are observed to be continuous, apart from the portion of discontinuous single tracks deposited at low laser power and high laser velocity in the balling regime. As such, Fig. 8 (c2) shows that the range of $\kappa$ is widest in balling regime, with most of the data exhibiting low percent continuity. We observed that about $59 \%$ of the single tracks in this regime had percent continuity less than $80 \%$. Hence, we can conclude that the presence of discontinuities decreases with the increasing energy density.
+
+This inference is reflected in the work done by Childs et al. on continuity of single tracks built under varying laser power and laser velocity [62]. They conclude that single tracks made of materials with narrow melting temperature range (e.g. stainless steel 314S and 316L) display high continuity when built at relatively low laser velocity and high laser power. This statistical analysis motivates our use of sensorderived signatures to better represent the intricacies of the process physics and consequently facilitate the estimation of hard-to-predict single-track qualities like standard deviation of width and percent continuity. Additionally, ANOVA results play a vital role in the design of the proposed SeDANN architecture.
+
+\subsection*{3.2. Correlation of single-track quality, process regimes, and sensor signatures}
+Having presented the single-track quality metrics measured via height maps, we now discuss sensor data, e.g. high-speed video camera and pyrometer readings, collected during fabrication. We systematically register the sensor data to these quality metrics, again using the same four processing regimes of LPBF to guide the discussion. This approach reveals the underlying physics and the efficacy of various process signatures to relate to $\mu_{w}, \sigma_{w}$, and $\kappa$. In this way, we incorporate these physical insights while constructing the SeDANN architecture that we compare against other purely data-driven black box machine learning methods.
+
+\subsection*{3.2.1. Correlating single-track quality with sensor data}
+Fig. 9 shows spatiotemporal high-speed video camera frames and spatial pyrometer readings for a characteristic single-track from each of the four regimes. It is observed that the mean amplitude of the pyrometer signal and meltpool size (extracted from high-speed video camera frames) are directly proportional to the linear energy density ( $\mathrm{E}_{\mathrm{L}}$ ).
+
+We subdivide the single-track height map images and corresponding heterogenous sensor data into three segments of equal length that indicate the start, middle, and end of melting. Since single-track are $5 \mathrm{~mm}$ long, each segment length is $\sim 1.7 \mathrm{~mm}$. For each segment, the first, second and last high-speed video camera frame is shown. This is done to maintain consistency in the number of high-speed video camera frames shown per height map image, since the number of video frames vary according to the laser velocity the single-track setting.
+
+We start by comparing single tracks in two regimes: keyholing ( $\mathrm{E}_{\mathrm{L}}$ $=2.8 \mathrm{~J} \cdot \mathrm{mm}^{-1}$ ) and conduction ( $\mathrm{E}_{\mathrm{L}}=1.3 \mathrm{~J} \cdot \mathrm{mm}^{-1}$ ) in Fig. 9(a) and (b), respectively. The conduction single-track has a smaller meltpool for every high-speed video camera frame, and correspondingly less prominent width along the entire single-track. Also, the amplitude of the pyrometer signals is generally higher at the higher energy density setting, which is confirmed in a subsequent histogram analysis of these pyrometer readings. Further, high-speed video camera frames in Fig. 9(a) display trailing intensity, i.e. behind the meltpool, in the keyholing regime that is consequent of high laser power $(\mathrm{P})$, low laser velocity $(\mathrm{V})$, and thus high $\mathrm{E}_{\mathrm{L}}$ at which the single-track is deposited. This phenomenon is less prominent in high-speed video camera frames for the other regimes.
+
+Comparing single tracks deposited in the lack-of-fusion (Fig. 9(c), $\mathrm{E}_{\mathrm{L}}$ $=0.88 \mathrm{~J} / \mathrm{mm}$ ) against the conduction regime reveals that there is a slight decrease in the meltpool size as shown in the high-speed camera video frames and amplitude of the pyrometer reading. High-speed video camera frames in the lack-of-fusion regime show more spatter formation that the conduction region. These differences in the sensor data are evident in the morphology of the two single tracks, i.e. the single-track deposited at lower lack-of-fusion $\mathrm{E}_{\mathrm{L}}$ is thinner that in the conduction regime, which is consistent with Fig. 9(a2).
+
+The trends in the pyrometer signal and illuminated meltpool in the high-speed camera continue in the balling (Fig. 9(d), $\mathrm{E}_{\mathrm{L}}=0.38$ ) regime. The lowest $\mathrm{E}_{\mathrm{L}}$ that corresponds to the balling single-track that produced the smallest meltpool size and correspondingly the lowest pyrometer signal amplitude. The high-speed video camera frames of the single-\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_cc3981078ca442cb949eg-12}
+
+Fig. 10. Histogram of pyrometer readings of single tracks deposited under the four process parameter regimes using the same example single tracks as in Fig. 9: all deposited at $\mathrm{V}=130 \mathrm{~mm} / \mathrm{s}$ with (a) Keyholing at $\mathrm{P}=375 \mathrm{~W}$; (b) Conduction at $\mathrm{P}=180 \mathrm{~W}$; (c) Lack-of-fusion at $\mathrm{P}=115 \mathrm{~W}$; (d) Balling at $\mathrm{P}=50 \mathrm{~W}$.
+
+track deposited under the balling regime display a drastic increase in the spatter formation, thus highlighting the instability of the LPBF process under those process parameters. Further, it is evident that the pyrometer signal drops to nearly zero amplitude at the locations where discontinuities appear in the height map. The low amplitude, and absence of a signal corresponding to discontinuities in the single-track skews the probability distribution of the pyrometer data to the right.
+
+The meltpool in the high-speed video camera frames in has an irregular shape, which is indicative of Plateau-Rayleigh instability and manifests substantial spatter compared to the rest of the regimes. Spatter formation and smaller meltpool size in the high-speed video camera data are also more noticeable with the largest number of discontinuities that appear in the balling regime. The contrast in meltpool characteristics, i. e. shape, size, intensity, is most apparent when comparing $\mathrm{E}_{\mathrm{L}}$ from the keyholing through balling regimes. Also, the pyrometer signals for the range of single-track morphologies suggests the variable thermal distribution expected for the $\mathrm{E}_{\mathrm{L}}$ regimes.
+
+These observations justify the utility in estimating the meltpool circularity (shape), area (size) and intensity features from the highspeed camera frames and that they should serve as meaningful indicators of single-track quality. Similarly, we hypothesize shape parameters of the pyrometer signal distribution are representative of the single-track's thermal distribution, and thus also should yield enhanced predictions of the single-track quality. We use these observations to develop the architecture of SeDANN, i.e. the input and output for each artificial neural network in the echelons leverages these insights from the sensor signatures, e.g. predicting ( $\mathrm{P}, \mathrm{V})$ settings from pyrometer signals, under different process parameter regimes. For these reasons, we explore these process signatures in greater detail in Fig. 10 and Fig. 11.
+
+\subsection*{3.2.2. Correlation of process regime with pyrometer data}
+Fig. 10 show histograms of pyrometer (frequency versus intensity) readings for representative single tracks from each of the four processing regimes. The pyrometer readings along the $\mathrm{x}$-axis indicate the radiance of the meltpool. It is evident that the distribution of the pyrometer signatures become increasingly positively (right) skewed and taller with decreasing energy density. In other words, the number of readings with low amplitude increase as $\mathrm{E}_{\mathrm{L}}$ decreases, highlighting the first four moments of the pyrometer signature can indicate the process regime. The amplitude decreases from the highest values in keyholing to the lowest values in the balling regime. These observations are in close agreement with recently published results in Ref [5].
+
+\subsection*{3.2.3. Correlation of process regime with high-speed video camera data}
+Fig. 11 displays a single representative high-speed video camera frame for each set of laser conditions $(P, V)$ and indicates the $E_{L}$ regime. For demonstration purposes, we center-cropped and foreground enhanced each frame. In the lowest energy balling regime, the spatter surrounding the meltpool is pronounced, and the meltpool shape is irregular and smaller than regimes with $\mathrm{E}_{\mathrm{L}}>0.5 \mathrm{~J} \cdot \mathrm{mm}^{-1}$. These highspeed camera frames are most noticeable at the lowest laser power setting $(\mathrm{P}=50 \mathrm{~W})$, irrespective of the laser velocity.
+
+At higher P, the meltpool shape irregularity decreases and size increases, but the spatter formation is always present. In the lack-of-fusion regime $\left(0.5 \leq \mathrm{E}_{\mathrm{L}}<1 \mathrm{Jmm}^{-1}\right)$, the meltpool shape becomes more regular, meltpool size increases, and the spatter formation reduces relative to frames collected in the balling regime. As the V increases in this regime, the meltpool develops a tail of trailing intensity. The undesirable meltpool characteristics observed in these regimes translates to insufficient fusion of single tracks that instigates the formation of irregular-shaped lack-of-fusion pores that are detrimental to the overall part quality.
+
+At the two higher $\mathrm{E}_{\mathrm{L}}$ regimes, the meltpool is highly circular and there is minimal-to-no spatter as opposed to frames collected under $E_{L}$ $<1 \mathrm{~J} \mathrm{~mm}^{-1}$. The meltpools exhibit tails of trailing intensity, but they are not as pronounced as in the case of lack-of-fusion regime. Across the top row (lowest $\mathrm{V}$, increasing $\mathrm{P}$ ), these trends hold as $\mathrm{E}_{\mathrm{L}}$ increases. In the keyholing regime, the intensity of the trailing tail and overall size of the meltpool increases. Overly large meltpools under these conditions
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cc3981078ca442cb949eg-13}
+\end{center}
+
+Fig. 11. Effect of processing parameters on the meltpool. In the balling region, meltpool shape is highly variable and the amount of spatter increases with the laser velocity. The radius of the meltpool is approximately $113.63 \mu \mathrm{m}$. Similar behavior arises in the lack-offusion regime, but the meltpool size is larger than in balling, i.e. average meltpool radius is $127.25 \mu \mathrm{m}$. At $\mathrm{E}_{\mathrm{L}}$ $>1 \mathrm{~J} / \mathrm{mm}$, in the conduction zone the meltpool characteristics are less variable and exhibit minimal spatter. The radius of the meltpool in this regime is approximately $148.57 \mu \mathrm{m}$. In keyholing $\mathrm{E}_{\mathrm{L}}>2 \mathrm{~J} / \mathrm{mm}$, the meltpool is largest with the average radius being approximately $173.63 \mu \mathrm{m}$. produce thick single tracks and uneven edges and underlying keyhole collapse-related pores that cannot be observed with this sensing modality.
+
+The conclusions we draw from Fig. 8 - Fig. 11 are consistent in that the that the observable behavior of the meltpool changes with varying process parameters $(\mathrm{P}, \mathrm{V})$ as the sensor signatures change correspondingly. Therefore, it is crucial to extract information in the form of features from the sensor signatures to completely understand and capture the process physics.
+
+\subsection*{3.2.4. Correlation between sensor signatures and process regimes}
+Fig. 12 depicts the correlations between the different features extracted from sensors and their capacity to differentiate between the four process regimes. Fig. 12 (a1) shows a prominent correlation between the intensity $(I)$ and area (A) of the meltpool. Moreover, the data segregates into four clusters per the processing regimes. The area and intensity of the meltpool are the highest in the keyhole regime, albeit overlapping with the conduction region. The overlap is highest in the balling and lack-of-fusion regime. The correlation between the two feature representing the meltpool circularity $\left(\mu_{c}, \sigma_{c}\right)$ is shown in Fig. 12 (a2); whilst less prominent than the correlation between intensity and area of the meltpool, it shows pronounced clustering concerning the four process regimes.
+
+In contrast to the meltpool signatures, the relationships between the pyrometer signal features in Fig. 12 (b1) and (b2) is a complex trend, and a considerable overlap is evident between the four process regimes. Fig. 12 (b1) portrays the relationship between mean $\left(\mu_{p}\right)$ and standard deviation $\left(\sigma_{p}\right)$ of pyrometer readings of single tracks deposited under various process parameter regimes. The curve flattens in the conduction and keyholing regimes. Fig. 12 (b2) describes the correlation between the skewness $\left(\mu_{3, p}\right)$ and kurtosis $\left(\mu_{4, p}\right)$ of pyrometer readings belonging to single tracks deposited at varying process parameters.
+
+The pyrometer readings of single tracks deposited under the balling regime are positively skewed and leptokurtic. In the conduction regime, the pyrometer readings have a skewness of about zero and kurtosis approximately around 3 which points towards normal distribution of the pyrometer readings. Lastly, the pyrometer readings in the keyholing regime and partly the conduction regime are negatively skewed and platykurtic. The overlap between clusters and complex interaction between features induces the need for machine learning algorithms that capture the nonlinear relationship between the features to predict the single-track quality. These observations from Fig. 12 thus demonstrate the efficacy of the meltpool shape features and statistical moments of the meltpool and pyrometer sensor, respectively in capturing the change in the quality of the single tracks under varying process regimes.
+
+It is evident that the process parameter $\mathrm{E}_{\mathrm{L}}$ regime, as determined by $(\mathrm{P}, \mathrm{V})$, dictate the single-track morphology via to $\mu_{w}, \sigma_{w}$, and $\kappa$. Secondly, an ANOVA (Table 2) study of process parameters alone is insufficient to understand the change in single-track morphology. As a supplement, we propose the use of sensor signatures to understand and encapsulate the process intricacies inherent to LPBF AM. We establish that machine learning models are essential to coalesce the process parameters and sensor derived features to predict single-track morphology with good statistical fidelity. For this purpose, we propose the SeDANN machine\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_cc3981078ca442cb949eg-14}
+
+(b1) Mean of pyrometer reading $\left(\mu_{\mathrm{p}}\right)$
+
+O Balling $\times$ Lack-of-fusion
+
+\begin{itemize}
+  \item Conduction + Keyholing
+\end{itemize}
+
+Fig. 12. Correlations between features extracted from high-speed video camera frames and the pyrometer signals denoted by parameter regimes (legend). The four regimes can be demarcated based on these features, but some overlap and nonlinearity are evident necessitating the use of machine learning models.
+
+Table 3
+
+Performance matrix of the various machine learning approaches used in this work. The performance metric provided in each column header with error computed from the standard deviation of repeating the training and testing procedure 10 times $(n=10)$. Best performing approach is shown in bold. Except for SeDANN, the other approaches do not use the physical knowledge of the process regimes.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+Machine learning approach & \begin{tabular}{l}
+Energy density \\
+$\left[\boldsymbol{R}^{2} \pm \sigma_{R^{2}}\right]$ \\
+\end{tabular} & \begin{tabular}{l}
+Mean of single-track \\
+width $\left[R^{2} \pm \sigma_{R^{2}}\right]$ \\
+\end{tabular} & \begin{tabular}{l}
+Standard deviation of \\
+single-track width \\
+$\left[\boldsymbol{R}^{2} \pm \sigma_{R^{2}}\right]$ \\
+\end{tabular} & \begin{tabular}{l}
+Percentage \\
+Continuity $\left[R^{2} \pm \sigma_{R^{2}}\right]$ \\
+\end{tabular} & \begin{tabular}{l}
+Binary Continuity Classification \\
+(Continuous vs Discontinuous) \\
+$\left[F 1 \pm \sigma_{F 1}\right]$ \\
+\end{tabular} \\
+\hline
+SeDANN & $0.95 \pm 0.0006$ & $\mathbf{0 . 8 7} \pm \mathbf{0 . 0 2 3}$ & $\mathbf{0 . 8 1} \pm \mathbf{0 . 0 1 6}$ & $\mathbf{0 . 7 3} \pm \mathbf{0 . 1 1 0}$ & $0.82 \pm 0.026$ \\
+\hline
+\begin{tabular}{l}
+Convolutional Neural Network \\
+(CNN) \\
+\end{tabular} & $0.90 \pm 0.021$ & $0.82 \pm 0.033$ & $0.33 \pm 0.023$ & $0.4688 \pm 0.090$ & $0.71 \pm 0.103$ \\
+\hline
+\begin{tabular}{l}
+Long short-term memory (LSTM) \\
+Recurrent neural network \\
+(RNN) \\
+\end{tabular} & $0.96 \pm 0.022$ & $0.86 \pm 0.017$ & $0.74 \pm 0.083$ & $0.4048 \pm 0.035$ & $0.56 \pm 0.028$ \\
+\hline
+Support Vector Machine (SVM) & $0.94 \pm 0.009$ & $0.81 \pm 0.018$ & $0.48 \pm 0.081$ & $0.4652 \pm 0.050$ & $0.83 \pm 0.029$ \\
+\hline
+K-nearest Neighbor (KNN) & $0.93 \pm 0.013$ & $0.75 \pm 0.041$ & $0.16 \pm 0.360$ & $0.5406 \pm 0.208$ & $0.77 \pm 0.048$ \\
+\hline
+\begin{tabular}{l}
+Ensemble of regression trees \\
+(CART) \\
+\end{tabular} & $0.91 \pm 0.029$ & $0.77 \pm 0.009$ & $0.37 \pm 0.142$ & $0.66 \pm 0.088$ & $0.89 \pm 0.034$ \\
+\hline
+General Linear Model (GLM) & 0.9349 & 0.8242 & 0.3844 & 0.4967 & N/A \\
+\hline
+\end{tabular}
+\end{center}
+
+learning model (Section 2.5) to predict hitherto discussed single-track morphological characteristics.
+
+\subsection*{3.3. Evaluation of machine learning algorithms}
+Here we implement and evaluate a variety of data-driven modeling approaches in terms of performance accuracy - quantified in terms of regression $\mathrm{R}^{2}$ and F1-score metrics, and computation time (seconds) [22, 31, 32]. We compare the prediction fidelity of the SeDANN with six approaches, namely, Convolutional Neural Network (CNN), Recurrent Neural Network (RNN), Support Vector Machine (SVM), K-nearest Neighbor (KNN), Regression Trees (CART), and General Linear Model (GLM).\\
+The results, reported Table 3, are based on the $20 \%$ of the testing data consisting of 184 single tracks. We evaluate in terms of the $R^{2}$ for each of the three single-track quality-related metrics: mean $\left(\mu_{w}\right)$ and standard deviation $\left(\sigma_{w}\right)$ of single-track width and the percent continuity of the single-track ( $\kappa$ ). Additionally, we performed binary classification on single-track continuity, i.e. perfectly continuous $\kappa=100 \%$ versus discontinuous $\kappa<100 \%$, where discontinuous single tracks represent defective quality. Since most single tracks are discontinuous in our imbalanced dataset, we compare binary classification via the F1-score (or harmonic mean of precision and recall). Also reported are the standard deviation of the prediction $\mathrm{R}^{2}\left(\sigma_{R^{2}}\right)$ and F1-score $\left(\sigma_{F 1}\right)$ over 10 replications of the training and testing process.
+
+The CNN and long short-term memory (LSTM) RNN represent
+
+Table 4
+
+Time taken to predict/classify each quality metric of a single-track in milliseconds. Standard deviation of single-track width is omitted for all algorithms (except CNN) as it derived from the mean width of segments of a single-track.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+Machine learning approach & \begin{tabular}{l}
+Energy density of \\
+single-track [ms] \\
+\end{tabular} & \begin{tabular}{l}
+Mean of single-track \\
+width [ms] \\
+\end{tabular} & \begin{tabular}{l}
+Standard deviation of single- \\
+track width [ms] \\
+\end{tabular} & \begin{tabular}{l}
+Binary Continuity \\
+Classification [ms] \\
+\end{tabular} & \begin{tabular}{l}
+Percentage \\
+Continuity [ms] \\
+\end{tabular} \\
+\hline
+SeDANN & 0.02 & 0.04 &  & 0.12 & 0.06 \\
+\hline
+Convolutional Neural Network (CNN) & 12.2 & 186 & 8.4 & 7.8 & 6.2 \\
+\hline
+\begin{tabular}{l}
+Long short-term memory (LSTM) \\
+Recurrent neural network (RNN) \\
+\end{tabular} & 5.5 & 9.8 &  & 7.9 & 6.0 \\
+\hline
+Support vector machine (SVM) & 0.05 & 0.08 &  & 0.038 & 0.012 \\
+\hline
+K-nearest neighbor (KNN) & 0.01 & 0.41 &  & 0.021 & 0.019 \\
+\hline
+Ensemble of regression trees (CART) & 0.12 & 0.03 &  & 0.11 & 0.18 \\
+\hline
+\end{tabular}
+\end{center}
+
+backpropagation based neural network machine learning approaches. Unlike the CNN and LSTM methods, SVM are not backpropagationbased and use hand-crafted features that use supervised and unsupervised learning. The KNN, GLM and CART models represent white-box linear models with no active learning component, and operate with and without hierarchical prediction, respectively. Due to its simplicity, we take GLM as the baseline model. In Table 3, Apart from the CNN, the input feature vectors for all the machine learning algorithms are identical. In other words, we use the same features extracted from both the high-speed video camera and the pyrometer raw sensor data as input vectors for the SeDANN, as well as all machine learning models (except the CNN).
+
+In the context of the CNN, some of its embodiments, such as ResNet [63], VGGNet [64] and AlexNet [65], are relatively complex. We acknowledge that an optimized CNN model that leverages the computational efficacy of a graphical processing unit (GPU) may outperform the modeling approaches tested in this work. Indeed, testing our data with all the state-of-the-art CNN models would be out of the scope this work. Accordingly, we used only one type of CNN architecture, that was employed in our prior work in the context of process monitoring in LPBF $[27,30]$. We proceeded to optimize the hyperparameters of this CNN network through extensive offline studies using a manual grid search method. We present the optimized hyperparameters achieved from the manual grid search method in Appendix A. Our intent was to show that the SeDANN approach compared well with such a general CNN model used in our prior work in LPBF. Additionally, the CNN model tested in this work was compiled in MATLAB 2019a, and does not leverage GPU processing to maintain equitable comparison with all ML approaches.
+
+While the CNN uses multi-resolution filters to process the input data, the SeDANN has a rudimentary ANN architecture with only one hidden layer and uses features derived based on the physical reasoning of the process regimes. The simple architecture and tractable features used by the SeDANN preserves physical interpretability - a key rationale for the scientific machine learning aspect of this work. While a CNN or RNN can be coupled with a sequential decision-making schema of the SeDANN, the essential novelty of the work is a sequential decision-making approach to scientific machine learning in the context of LPBF additive manufacturing process.
+
+Also, the SeDANN approach can accommodate heterogeneous data sources, such as 1D time series from a pyrometer, and 2D streaming images from the high-speed video camera in a physically intuitive manner taking advantage of the capabilities of each type of sensor. Lastly, chaining shallow ANNs to make sequential decisions with a sparse set of features in a shallow neural network is computationally more efficient in comparison to using dense input data arrayed in multiple layers, such as image-based deep neural networks.
+
+The network architectures for SeDANN, CNN, and LSTM are described in Appendix A. In Table 3, nearly all these approaches perform well for prediction of the mean of single-width, i.e. $R^{2}>0.75$. The prediction fidelity of machine learning improves for continuity (classification and prediction) and standard deviation of single-track width in comparison to the linear regression analysis. Particularly, for prediction of standard deviation, majority of the machine learning approaches\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_cc3981078ca442cb949eg-15(1)}
+
+(b) Actual standard deviation of single-track width ( $\mu \mathrm{m}$ )
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cc3981078ca442cb949eg-15}
+\end{center}
+
+(c) Actual percent continuity of single-track width (\%)
+
+Fig. 13. Predicted values of single-track quality using fifty randomly selected data points from different machine learning techniques. (a) All machine learning techniques perform well while predicting the mean of single-track width, which is depicted by the close of fit of predicted values to the straight line. (b) The statistical fidelity of predicting standard deviation of single-track width is low in comparison to the mean for all techniques as seen in Table 3. SeDANN has a better performance as well as limited bias in comparison to the other two deep learning techniques. Similarly, (c) SeDANN shows better percent continuity prediction fidelity in comparison to the other techniques.
+
+(other than KNN) significantly outperform linear statistical analysis, with the SeDANN having the highest $\mathrm{R}^{2}$.
+
+We also used machine learning models for prediction of the energy density values ( $\mathrm{E}_{\mathrm{L}}=\mathrm{P} \cdot \mathrm{V}^{-1}\left[\mathrm{~J} \cdot \mathrm{mm}^{-1}\right]$ ). The rationale is to compare and verify the efficacy of the SeDANN with other machine learning approaches in the context of the energy density. As shown in Table 3, all\\
+the approaches tested in this work have similar prediction fidelity $\left(\mathrm{R}^{2}\right)$ in the context of the energy density. However, machine learning models, except the SeDANN, deteriorates when predicting the single-track quality metrics. This result has an important implication - being able to predict the energy density, i.e., process regime alone is not a robust indicator of predictive performance of a machine learning model.
+
+The conventional machine learning approaches represented by SVM, KNN, ensemble of regression trees, have $\mathrm{R}^{2}$ less than $50 \%$ in predicting the standard deviation of the single-track width. Models that use the backpropagation learning techniques with derived process signatures, viz. SeDANN and RNN perform significantly better in capturing the standard deviation of single-track width with $\mathrm{R}^{2}$ approaching $60 \%$ and higher. However, of all algorithms tested, the SeDANN has prediction accuracy exceeding $80 \%$ for all the quality metrics tested.
+
+Further, the prediction time for the various approaches is given in Table 4. Not only does the SeDANN outperform the CNN and LSTM models in predicting the single-track quality metrics, once trained, the prediction time is also a fraction of both the time taken by trained CNN and LSTM models. We reiterate that none of these data-driven models used GPU computing, and all, except the CNN, use identical input features. The relatively high prediction time observed in CNN and LSTM is undesirable as high latency in the in-situ monitoring of single tracks will cause a cascading delay for actuating a corrective control action within the right time frame during the LPBF AM process.
+
+In Fig. 13, we compare top three performing models (SeDANN, CNN, LSTM) graphically via predicted versus measured plots of $\mu_{w}, \sigma_{w}$, and $\kappa$. In these plots, the distribution of datapoints for a given model indicates strength of correlation between predicted and measured values. Thus, a high performing model, i.e. $\mathrm{R}^{2} \rightarrow 1$, yields distribution of datapoints that cluster along the equality line (along the diagonal). Thus, as indicated quantitatively in Table 3, width predictions for all three models are similarly impressive in Fig. 13 (a).
+
+The distribution of $\sigma_{w}$ predictions in Fig. 13 (b) shows SeDANN $\left(\mathrm{R}^{2} \sim\right.$ 0.81 ) outperforms the other two deep learning techniques. The CNN which does not use the signatures selected through rigorous correlation of sensor data and single-track quality, but directly uses the meltpool features, has poor prediction ability, approaching $R^{2} \sim 0.35$. Furthermore, Fig. 13 (c) demonstrates the superior performance of SeDANN $\left(R^{2}\right.$ $\sim 0.73$ ) in comparison to CNN and LSTM while predicting percent continuity of single tracks. Although the percent continuity predictions made by SeDANN do not have high accuracy, they have a good distribution around the regression line. On the contrary, both CNN and LSTM incorrectly predict high percent continuity for majority of single tracks.
+
+A purely data-driven black-box approach, such as CNN despite its ability to accommodate complex nonlinear patterns, does not outperform rudimentary linear modeling approaches (GLM) that use features chosen based on understanding of the process physics. SeDANN combines the efficiency of these process physics-based features and shallow ANNs to invoke a grey-box model that outperforms white and black-box models. The simplicity, flexibility, and intuitiveness of the SeDANN can prove to be useful in expanding the current in-situ monitoring system by incorporating data from more sensors to predict more LPBF AM process characteristics.
+
+\section*{4. Conclusion and future work}
+This work investigates the causal relationship encompassing process parameters, in-process sensor signatures, and part quality in laser powder bed fusion (LPBF). The key finding of this work is that in-process quality assurance improves significantly when machine learning models incorporate process signatures that are based on fundamental knowledge of the process regime, as opposed to purely data-driven machine learning algorithms, such as deep learning convolutional neural networks.
+
+We study the effect of varying common LPBF process parameters, i.e. laser power ( $\mathrm{P}$ ) and laser velocity $(\mathrm{V})$, on the quality of single tracks while collecting pyrometer and high-speed video data during fabrication. We generate quality labels of single-track morphology efficiently via analysis of height map measurements that extract the mean and standard deviation of their width and percent continuity. We then characterize these morphology labels in the four process parameter regimes based on linear energy density $\left(\mathrm{E}_{\mathrm{L}}=\mathrm{P} \cdot \mathrm{V}^{-1}\right)$ : keyholing, conduction, lack-of-fusion, and balling.
+
+Furthermore, we identify how process signatures from our sensing modalities map onto the four $\mathrm{E}_{\mathrm{L}}$ regimes. Collectively, these insights motivate the design of our scientific machine learning model that predicts single-track quality by fusing sensing modalities in a physically intuitive way. Our Sequential Decision Analysis Neural Network (SeDANN) model thus utilizes specific sensor data-derived feature sets in a physically intuitive and effective manner, leveraging sequences of shallow and computationally tractable neural networks to correlate process signature(s) with quality metric(s).
+
+We evaluate and compare the performance of SeDANN against several well-established machine learning approaches, such as convolutional neural network (CNN), long short-term memory (LSTM), recurrent neural network (RNN), among others. We find SeDANN outperforms purely data-driven (black-box) models. The SeDANN approach thus facilitates the inclusion of the knowledge of the process physics into machine learning, in keeping with the scientific machine learning paradigm. This makes the SeDANN highly interpretable, intuitive, computationally tractable, and less prone to overfitting compared to conventional black-box machine learning models. For instance, compared to the CNN tested in this work, for predicting the standard deviation of single tracks the incorporation of the physical knowledge of the process regimes improves the prediction fidelity $\left(\mathrm{R}^{2}\right)$ by as much as $40 \%$ within $1 / 10$ th of the computation time. However, the SeDANN approach remains to be extended for multi-layer builds, complex geometries, and additional functional quality metric than reported here. The extension of the SeDANN to multi-layer builds would necessitate synchronization of spatiotemporal information, such as the laser position with the sensor data.
+
+The current work can be taken forward by the AM community in numerous directions. To have a concise and effectual process parameter space, we focused our attention solely to the effect of variations in laser power and laser velocity (in terms of $\mathrm{E}_{\mathrm{L}}$ ) on the LPBF process. This can be expanded by adding more process parameters, such as hatch spacing, laser spot size, etc., and studying variations in resulting quantities like volumetric energy density and enthalpy. Next, given the flexible nature of SeDANN, different types of sensor data over multiple layers readily can be added to the model to improve the prediction fidelity. For example, an acoustic emission sensor can be employed to detect process deviations that may affect the single-track quality [47]. Further, the SeDANN can be modified to incorporate multiple sensors, monitor multiple process phenomenon, thereby creating an integrated in-situ monitoring system for LPBF and other AM processes, e.g. electron beam powder bed fusion, in a way that accommodates the evolving sensing capabilities and quality specifications common to AM.
+
+In a similar vein, addition of dimensionless quantities, such as bead statistics as a percentage of laser spot size will enable the transferability of the SeDANN model to other AM systems and sensing modalities. Furthermore, the current single-track characterization done by height map analysis, can be strengthened by performing additional diagnostics, such as X-ray computed tomography, to incorporate surface and subsurface information of the single tracks which may prove beneficial in improving process monitoring capabilities. Lastly, the height maps of single tracks can be used to perform bead height analysis along with single-track width and continuity.
+
+\section*{CRediT authorship contribution statement}
+Brian Giera: Supervision, Writing- reviewing \& editing, conceptualization. Gabriel Guss: Investigation, data curation. Jean Baptiste:
+
+Investigation, Data curation. Manyalibo Matthews: Resources, Project administration, Funding acquisition. Prahalada Rao: Supervision, Writing- reviewing \& editing, Conceptualization, Funding acquisition. Aniruddha Gaikwad: Methodology, Software, Formal analysis, Data curation, Writing- original draft.
+
+\section*{Declaration of Competing Interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Acknowledgements}
+This work was performed in part under the auspices of the U.S.\\
+Department of Energy by Lawrence Livermore National Laboratory under contract DE-AC52-07-NA27344, LLNL-JRNL-808643. One of the authors (PR) thanks the National Science Foundation (NSF) for funding his research through the following grants CMMI-1719388, CMMI1739696, CMMI-1752069, and OIA-1929172 at University of NebraskaLincoln. Specifically, the concept of using machine learning for quality assurnace in metal additive manufacturing is funded through CMMI1752069 (Program Officer: Dr. Kevin Chou). This grant also provided supplemental funding through the NSF and CMMI Data Science Activities (Program Officer: Dr. Martha Dodson) and NSF INTERN Program (Program Officer: Dr. Prakash Balan). The NSF INTERN Program provided funding for the first author (AG) to spend 6-months at Lawrence Livermore National Laboratory under the aegis of Dr. Brian Giera.
+
+\section*{Appendix A. Neural network architecture and optimization}
+Sequential decision analysis neural network (SeDANN)
+
+SeDANN leverages the knowledge of the process physics crucial to the single-track quality prediction. Three independent shallow artificial neural networks (ANN) are trained and tested for the SeDANN, per Fig. 5 in the main text. The ANN in the first echelon predicts the process parameter regime of a single-track segment using 1D signals of a pyrometer. These process parameter predictions are used for subsequent prediction of the width and percent continuity of a single-track. The second echelon's ANN predicts the segment width and is translated to mean and standard deviation of width of the entire single-track via echelon 1's predictions and meltpool characteristics extracted from the high-speed video camera frames. Lastly, in echelon 3, an ANN predicts the percent continuity, i.e. lack of discontinuity, via previously predicted parameters (echelon 1), meltpool characteristics, mean and standard deviation of the single-track width (echelon 2).
+
+The three shallow ANNs have a similar architecture. Each ANN has three layers, viz. an input, an output, and a hidden layer. As the input feature space has a low dimensionality with respect to the sample size, the hidden layer has 12 neurons to ensure computational efficiency and mitigate overfitting. Instead of the commonly used logistic function, a hyperbolic tangent activation function is used for these neurons since its gradient facilitates in faster approach towards global minima of the error function, viz., mean squared error.
+
+Regularization is used while training the ANNs to avoid overfitting of the approximated function to the training data. Regularization is performed by adding a penalty to the error function when the weights are too high. This penalty of high weights ensures the slopes of the ANN's approximated function are not too high and thus yields a good fit with the underlying function of the training data. Bayesian analysis is used to estimate the two regularization parameters that are applied to the error function and the weights of the neural network, as detailed elsewhere [66,67]. Additionally, the number of effective parameters, i.e. weights and biases that influence the function approximation, is calculated and the non-essential parameters are neglected. This reduces the model complexity, computational cost, and likelihood of overfitting.
+
+The hyperparameters of the ANNs were optimized to reduce the error function. The sparse nature of the ANN architecture, and correspondingly low computation time, motivated a naïve grid search approach for the hyperparameter space optimization. It was observed that the ANN predictive capability was hampered when the complexity of the architecture was increased, i.e. the number of hidden layers and number neurons were increased. Therefore, abiding to the Occam's razor problem-solving principle, a modest neural network architecture was adopted.
+
+\section*{Convolutional neural network (CNN)}
+A convolutional neural network (CNN) was used to predict the quality metrics of the entire single-track with the help of high-speed video camera frames (while excluding pyrometer data). Fig. A1 shows how high-speed video camera frames of single tracks were concatenated. Single tracks that were deposited at high laser velocity have a smaller number of high-speed video camera frames (Fig. A1 (b)) in comparison to single tracks deposited at low laser velocity (Fig. A1 (a)). Thus, to maintain uniformity in the data (concatenated frames) size, the standard practice of zero padding was implemented (Fig. A1 (b)).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cc3981078ca442cb949eg-17(1)}
+\end{center}
+
+(a) Laser power= $115 \mathrm{~W}$; Laser velocity $=100 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cc3981078ca442cb949eg-17}
+\end{center}
+
+Fig. A1. Representative high-speed video camera frames of two single tracks (frame number is shown in the upper left corner of each image). Concatenated highspeed video camera frames of a single-track deposited at laser power $=115 \mathrm{~W}$, (a) laser velocity $=100 \mathrm{~mm} / \mathrm{s}$ and (b) laser velocity $=400 \mathrm{~mm} / \mathrm{s}$. Concatenated highspeed video camera frames of single tracks deposited at high laser velocity are padded with zeros to maintain a uniform image size.
+
+A schematic representation of the CNN architecture is shown in Fig. A2. As seen in the figure, first layer is the input layer which takes the concatenated image of the high-speed video camera frames. The concatenated images were scaled down to $70 \%$ of their original size $(105 \times 6600$ pixels) to reduce the input data density. Consequently, the overall time required for hyperparameter optimization was significantly decreased.
+
+Apart from the input and output layers, the CNN architecture has four blocks as shown in Fig. A2. Each block has a convolutional layer with a $3 \times 3$ kernel size and varying number of feature maps (channels), viz. 8, 16, and 32. After each convolution layer, batch normalization was performed followed by introduction of non-linearity to the neural network with the rectified linear unit (ReLU) activation function. Subsequently, in Block 1 and Block 2, a $2 \times 2$ mean-pooling layer is used to reduce the dimensionality of the output obtained from the activation function. In the last block, a
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cc3981078ca442cb949eg-18}
+\end{center}
+
+Fig. A2. Schematic of the CNN architecture.
+
+dropout layer with a rate of 0.4 was used. The dropout layer randomly ignores a fraction of the nodes in the network to avoid overfitting of the model (CNN) to the training data. This is followed by a dense layer with 10 hidden units. The output layer is made up of single unit which uses the crossentropy cost function for classification and the mean-squared error cost function for prediction.
+
+An adaptive learning optimization technique was applied during training with the help of the Adam solver [68]. This yielded better classification/ prediction results on the test data set in comparison to the widely used stochastic gradient descent training method. A naïve grid search method was used for hyperparameter optimization. Table A1 shows the optimum hyperparameter values for this CNN architecture.
+
+\section*{Long short-term memory recurrent neural network (LSTM-RNN)}
+A long short-term memory (LSTM) neural network is a type of recurrent neural network (RNN), which was used to predict the quality metrics of single tracks. The mean and standard deviation of single-track width was derived from the widths of the three segments of the single tracks. In other words, width of each segment of a single-track was predicted, and the mean and standard deviation of these segment widths was calculated from the aggregate. A similar strategy was followed to predict the percent continuity of the single-tracks and to perform binary classification on single-track continuity. Features extracted from the pyrometer and high-speed video camera of single-track segments were concatenated and used in the LSTM-
+
+Table A1
+
+Optimum hyperparameter values of the CNN obtained from naïve grid search optimization.
+
+\begin{center}
+\begin{tabular}{lllll}
+\hline
+Batch-size & Initial learning rate & Input size & Dropout rate & Hidden units in dense layer \\
+\hline
+6 & 0.0001 & $[78,4804]$ & 0.4 & 10 \\
+\hline
+\end{tabular}
+\end{center}
+
+RNN for single-track quality metric prediction.
+
+The first layer of the LSTM-RNN is the sequence input layer that can take $n$ elements in a sequence. For this work, $n=3$ which is the feature set (pyrometer and high-speed video camera) of three segments of a single-track. This is followed by a unidirectional LSTM layer with 300 hidden units which outputs a sequence. The output of the LSTM layer is fed into a dense layer with 100 hidden units. A dropout layer performs the dropout operation at a rate of 0.4 on the output of the dense layer. Next, a dense layer with 3 hidden units (corresponding to the number of segments) was used followed by a regression or classification layer which depended on the single-track quality metric being predicted. (Fig. A3).
+
+As with the SeDANN and CNN, a naïve grid search technique was used for hyperparameter optimization. Table A2 shows the hyperparameter values that yielded the best regression and classification results.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cc3981078ca442cb949eg-19(3)}
+\end{center}
+
+Fig. A3. Schematic of the LSTM-RNN architecture.
+
+Table A2
+
+Optimum hyperparameter values of the LSTM-RNN obtained from naïve grid search optimization.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\begin{tabular}{l}
+Batch- \\
+size \\
+\end{tabular} & \begin{tabular}{l}
+Batch- \\
+size \\
+\end{tabular} & \begin{tabular}{l}
+Initial \\
+learning \\
+rate \\
+\end{tabular} & \begin{tabular}{l}
+Initial \\
+learning \\
+rate \\
+\end{tabular} & \begin{tabular}{l}
+Number of \\
+LSTM \\
+layers \\
+\end{tabular} & \begin{tabular}{l}
+Number of \\
+LSTM \\
+layers \\
+\end{tabular} & \begin{tabular}{l}
+Dropout \\
+rate \\
+\end{tabular} & \begin{tabular}{l}
+Dropout \\
+rate \\
+\end{tabular} & \begin{tabular}{l}
+Hidden \\
+units in first \\
+dense layer \\
+\end{tabular} & \begin{tabular}{l}
+Hidden \\
+units in first \\
+dense layer \\
+\end{tabular} & \begin{tabular}{l}
+Maximum \\
+number of \\
+training epochs \\
+\end{tabular} & \begin{tabular}{l}
+Maximum \\
+number of \\
+training epochs \\
+\end{tabular} \\
+\hline
+7 & 7 & 0.0001 & 0.0001 & 1 & 1 & 0.4 & 0.4 & 100 & 100 & 30 & 30 \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{Appendix B. Meltpool extraction from high-speed video camera frames }
+In Fig. B1 we show the methodology adopted to extract meltpool from high-speed video camera frames (henceforth called images). Fig. B1 (a) shows a representative high-speed video camera images of a single-track deposited at laser power $(\mathrm{P})=115 \mathrm{~W}$ and laser velocity $(\mathrm{V})=100 \mathrm{~mm} \cdot \mathrm{s}^{-1}$. Given the noisy nature of the high-speed video camera frames, the conventional thresholding technique to segment images prove ineffective. Therefore, we implemented the unsupervised learning-based k-means technique to segment the high-speed video camera images. To account for the meltpool, spatter, and illuminated background, we segment the image into 4 clusters as shown in Fig. B1 (b). An extensive visual analysis of the kmeans segmented images reveal that the said technique performs quite well in the segmentation task.
+
+Next, a binary mask of the meltpool is created as shown in Fig. B1 (c). This mask is used to extract the meltpool intensity (I) values from the original high-speed video camera image (Fig. B1 (a)) and to determine the meltpool area (A). Subsequently, the binarized meltpool image is used to determine the meltpool edge with the help of the Canny edge detector as shown in Fig. B1 (d) [69]. The distance from center of the meltpool to the edge pixels $\left(d_{y}\right)$, as shown in Figure $B(d)$, is used to compute the meltpool circularity $\left(\mu_{c}, \sigma_{c}\right)$.
+
+(a) Original image
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cc3981078ca442cb949eg-19(4)}
+\end{center}
+
+(b) K-means segmented image
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cc3981078ca442cb949eg-19(1)}
+\end{center}
+
+Image segmented in 4 clusters (c) Binary meltpool image\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_cc3981078ca442cb949eg-19}
+
+Meltpool circularity is determined by edge pixels
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cc3981078ca442cb949eg-19(2)}
+\end{center}
+
+$$
+\text { xels }
+$$
+
+Fig. B1. A representative example of meltpool extraction from high-speed video camera frames. The above shown high-speed video camera frames belongs to a single-track deposited at $115 \mathrm{~W}$ laser power and $100 \mathrm{~mm} / \mathrm{s}$ laser velocity. The image size before and after segmentation is 256 pixels $\times 256$ pixels.
+
+\section*{Appendix C. Single-track quality metrics under varying process parameters}
+Table C1
+
+Representative values of mean width ( $\mu_{\mathrm{w}}[\mu \mathrm{m}]$ ), standard deviation of the width ( $\sigma_{\mathrm{w}}[\mu \mathrm{m}]$ and) and percentage continuity ( $\kappa$ ) of single tracks, appear in the top, middle, and bottom positions, respectively, in each cell that indicate the laser power and velocity settings. The values have been color-coded according to the four process parameter regimes introduced in Section 1.
+
+Laser power (W)
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+ & 50 & 82.5 & 115 & 147.5 & 180 & 212.5 & 245 & 277.5 & 310 & 342.5 & 375 \\
+\hline
+\multirow{3}{*}{100} & $\mu_{w}=87.58$ & 158.01 & 150.51 & 152.85 & 176.78 & 190.63 & 253.03 & 257.05 & 289.39 & 320.39 & 323.51 \\
+\hline
+ & $\sigma_{w}=34.18$ & 50.45 & 30.62 & 42.04 & 38.62 & 50.27 & 62.44 & 53.54 & 63.25 & 49.59 & 56.11 \\
+\hline
+ & $K=62.07$ & 96.55 & 97.13 & 95.4 & 95.98 & 86.78 & 94.83 & 88.51 & 98.85 & 93.68 & 87.36 \\
+\hline
+\multirow{3}{*}{130} & 60.46 & 101.39 & 125.94 & 153.77 & 195.17 & 194.13 & 231.26 & 255.79 & 265.19 & 248.37 & 267.63 \\
+\hline
+ & 24.18 & 22.58 & 28.24 & 31.54 & 38.92 & 29.15 & 51.03 & 53.24 & 39.99 & 51.99 & 80.82 \\
+\hline
+ & 36.21 & 94.83 & 95.4 & 94.83 & 94.83 & 89.66 & 91.38 & 90.8 & 88.51 & 89.66 & 89.66 \\
+\hline
+\multirow{3}{*}{160} & 79.97 & 104.69 & 93.33 & 134.96 & 159.61 & 205.97 & 202.26 & 226.32 & 249.37 & 241.41 & 262.09 \\
+\hline
+ & 34.66 & 27.45 & 25.13 & 24.96 & 30.09 & 80.42 & 41.47 & 44.9 & 45.5 & 51.97 & 36.77 \\
+\hline
+ & 61.49 & 93.1 & 93.1 & 93.1 & 94.83 & 95.4 & 91.38 & 96.55 & 93.1 & 93.68 & 86.78 \\
+\hline
+\multirow{3}{*}{190} & 77.48 & 66.22 & 111.61 & 155.81 & 159.39 & 180.88 & 189.96 & 198.82 & 236.03 & 226.42 & 255.72 \\
+\hline
+ & 45.17 & 23.21 & 26.9 & 35.05 & 34.8 & 24.15 & 30.75 & 29.65 & 55.93 & 38.26 & 50.98 \\
+\hline
+ & 45.98 & 63.22 & 94.25 & 93.68 & 93.68 & 93.68 & 87.36 & 91.95 & 90.23 & 87.36 & 88.51 \\
+\hline
+\multirow{3}{*}{220} & 55.26 & 119.45 & 128.63 & 135.54 & 126.04 & 157.36 & 171.94 & 181.18 & 195.84 & 212.98 & 240.54 \\
+\hline
+ & 24.14 & 31.93 & 40.07 & 34.97 & 53.8 & 23.51 & 44.32 & 40.34 & 30.67 & 34.88 & 30.05 \\
+\hline
+ & 43.1 & 94.25 & 96.55 & 94.83 & 91.95 & 94.25 & 90.8 & 90.8 & 86.78 & 90.23 & 85.06 \\
+\hline
+\multirow{3}{*}{250} & 49.43 & 80.26 & 85.71 & 107.26 & 144.87 & 141.39 & 164.23 & 178.21 & 185.33 & 208.71 & 187.72 \\
+\hline
+ & 21.32 & 18.06 & 27.24 & 24.84 & 36.77 & 31.35 & 26.69 & 34.81 & 33.75 & 34.5 & 53.82 \\
+\hline
+ & 30.46 & 87.93 & 85.63 & 91.95 & 93.1 & 89.66 & 88.51 & 92.53 & 91.95 & 90.23 & 78.74 \\
+\hline
+\multirow{3}{*}{280} & 69.47 & 84.27 & 91.73 & 142.13 & 118.93 & 140.41 & 163.34 & 168.11 & 185.34 & 190.39 & 212.68 \\
+\hline
+ & 23.36 & 25.13 & 20.67 & 48.2 & 29.17 & 29.62 & 35.1 & 35.19 & 47.71 & 33.1 & 33.65 \\
+\hline
+ & 31.61 & 91.95 & 92.53 & 92.53 & 92.53 & 93.68 & 92.53 & 93.1 & 89.66 & 89.66 & 83.33 \\
+\hline
+\multirow{3}{*}{310} & 42.36 & 61.75 & 92.14 & 98.68 & 107.37 & 133.25 & 126.97 & 162.34 & 154.47 & 190.45 & 193.45 \\
+\hline
+ & 16.79 & 21.27 & 30.71 & 23.19 & 27.18 & 25.51 & 36.45 & 27.41 & 39.04 & 28 & 30.63 \\
+\hline
+ & 16.09 & 75.86 & 91.38 & 93.68 & 91.38 & 90.23 & 87.93 & 91.95 & 87.36 & 87.93 & 91.38 \\
+\hline
+\multirow{3}{*}{340} & 42.8 & 62.17 & 89.01 & 88.65 & 119.48 & 135.06 & 129.75 & 155.73 & 171.35 & 158.32 & 173.74 \\
+\hline
+ & 18.67 & 24.56 & 25.61 & 26.19 & 23.6 & 23.67 & 28.4 & 30.46 & 30.66 & 39.84 & 34.69 \\
+\hline
+ & 15.52 & 70.69 & 94.25 & 93.1 & 91.95 & 92.53 & 88.51 & 92.53 & 87.36 & 85.63 & 79.89 \\
+\hline
+\multirow{3}{*}{370} & 51.04 & 54.83 & 80.64 & 63.06 & 93.82 & 132.08 & 124.93 & 142.58 & 170.71 & 180.97 & 185.74 \\
+\hline
+ & 22.67 & 20.09 & 23.41 & 27.2 & 25.57 & 28.49 & 29.81 & 27.04 & 25.17 & 30.19 & 36.27 \\
+\hline
+ & 11.49 & 50.57 & 87.93 & 71.84 & 90.8 & 94.25 & 89.66 & 90.8 & 89.08 & 86.78 & 83.33 \\
+\hline
+\multirow{3}{*}{400} & 57.87 & 57.54 & 87.73 & 84.64 & 112.18 & 117.13 & 115.19 & 130.09 & 137.46 & 139.11 & 166 \\
+\hline
+ & 26.05 & 25.63 & 28.31 & 22.94 & 38.31 & 30.42 & 28.43 & 22.13 & 26.46 & 30.39 & 31.03 \\
+\hline
+ & 54.02 & 53.45 & 91.38 & 91.95 & 94.83 & 93.68 & 89.08 & 93.1 & 89.66 & 83.33 & 84.48 \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{References}
+[1] S.A. Khairallah, A.A. Martin, J.R.I. Lee, G. Guss, N.P. Calta, J.A. Hammons, M.H. Nielsen, K. Chaput, E. Schwalbach, M.N. Shah, M.G. Chapman, T.M. Willey, A.M. Rubenchik, A. T. Anderson, Y.M. Wang, M.J. Matthews, W.E. King, Controlling interdependent mesonanosecond dynamics and defect generation in metal 3D printing, Science 368 (6491) (2020) 660, \href{https://doi.org/10.1126/science.aay7830}{https://doi.org/10.1126/science.aay7830}.
+
+[2] M. Mani, B.M. Lane, M.A. Donmez, S.C. Feng, S.P. Moylan, A review on measurement science needs for real-time control of additive manufacturing metal powder bed fusion processes, Int. J. Prod. Res. 55 (5) (2017) 1400-1418, https:// \href{http://doi.org/10.1080/00207543.2016.1223378}{doi.org/10.1080/00207543.2016.1223378}.
+
+[3] M. Grasso, B. Colosimo, Process defects and in situ monitoring methods in metal powder bed fusion: a review, Meas. Sci. Technol. 28 (2017), 044005, \href{https://doi}{https://doi}. org/10.1088/1361-6501\%2FAA5C4F.
+
+[4] A. Gaikwad, R. Yavari, M. Montazeri, K. Cole, L. Bian, P. Rao, Toward the digital twin of additive manufacturing: Integrating thermal simulations, sensing, and analytics to detect process faults, IISE Trans. (2019) 1-14, \href{https://doi.org/}{https://doi.org/} 10.1080/24725854.2019.1701753.
+
+[5] J.-B. Forien, N.P. Calta, P.J. DePond, G.M. Guss, T.T. Roehling, M.J. Matthews, Detecting keyhole pore defects and monitoring process signatures during laser powder bed fusion: a correlation between in situ pyrometry and ex situ X-ray radiography, Addit. Manuf. 35 (2020), 101336, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. addma.2020.101336.
+
+[6] L.P. Swiler , B.G. van Bloemen Waanders , B.H. Jared , J.R. Koepke , S.R. Whetten , J.D. Madison, T. Ivanoff, O.D.H. Underwood , A. Cook , H.J. Brown-Shaklee, 2018,\\
+Data Analysis for the Born Qualified Grand LDRD Project, Sandia National Lab. (SNL-NM), Albuquerque, NM (United States).
+
+[7] M. Seifi, M. Gorelik, J. Waller, N. Hrabe, N. Shamsaei, S. Daniewicz, J. J. Lewandowski, Progress towards metal additive manufacturing standardization to support qualification and certification, Jom 69 (3) (2017) 439-455, \href{https://doi}{https://doi}. org/10.1007/s11837-017-2265-2.
+
+[8] D.G. Ahn, H.J. Lee, Investigation of novel metal additive manufacturing process using plasma electron beam based on powder bed fusion, CIRP Ann. 68 (1) (2019) 245-248, \href{https://doi.org/10.1016/j.cirp.2019.04.124}{https://doi.org/10.1016/j.cirp.2019.04.124}.
+
+[9] M. Masoomi, S.M. Thompson, N. Shamsaei, Quality part production via multi-laser additive manufacturing, Manuf. Lett. 13 (2017) 15-20, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. mfglet.2017.05.003.
+
+[10] M.J. Matthews, G. Guss, D.R. Drachenberg, J.A. Demuth, J.E. Heebner, E.B. Duoss, J.D. Kuntz, C.M. Spadaccini, Diode-based additive manufacturing of metals using an optically-addressable light valve, Opt. Express 25 (10) (2017) 11788-11800, \href{https://doi.org/10.1364/OE.25.011788}{https://doi.org/10.1364/OE.25.011788}.
+
+[11] Y. Huang, M.C. Leu, J. Mazumder, A. Donmez, Additive manufacturing: current state, future potential, gaps and needs, and recommendations, J. Manuf. Sci. Eng. 137 (1) (2015), \href{https://doi.org/10.1115/1.4028725}{https://doi.org/10.1115/1.4028725}.
+
+[12] M. Khanzadeh, S. Chowdhury, M.A. Tschopp, H.R. Doude, M. Marufuzzaman, L. Bian, In-situ monitoring of melt pool images for porosity prediction in directed energy deposition processes, IISE Trans. 51 (5) (2019) 437-455, \href{https://doi.org/}{https://doi.org/} 10.1080/24725854.2017.1417656.
+
+[13] M. Khanzadeh, P. Rao, R. Jafari-Marandi, B.K. Smith, M.A. Tschopp, L. Bian, Quantifying geometric accuracy with unsupervised machine learning: using self-\\
+organizing map on fused filament fabrication additive manufacturing parts, J. Manuf. Sci. Eng. 140 (3) (2018), \href{https://doi.org/10.1115/1.4038598}{https://doi.org/10.1115/1.4038598}. [14] L. Scime, J. Beuth, Anomaly detection and classification in a laser powder bed additive manufacturing process using a trained computer vision algorithm, Addit. Manuf. 19 (2018) 114-126, \href{https://doi.org/10.1016/j.addma.2017.11.009}{https://doi.org/10.1016/j.addma.2017.11.009}.
+
+[15] I.A. Okaro, S. Jayasinghe, C. Sutcliffe, K. Black, P. Paoletti, P.L. Green, Automatic fault detection for laser powder-bed fusion using semi-supervised machine learning, Addit. Manuf. 27 (2019) 42-53, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. addma.2019.01.006.
+
+[16] B. Yuan , B. Giera , G. Guss , I. Matthews , S. McMains , 2019, Semi-supervised convolutional neural networks for in-situ video monitoring of selective laser melting, in Proc. 2019 IEEE Winter Conference on Applications of Computer Vision (WACV), pp. 744-753. doi:\href{https://doi.org/10.1109/WACV.2019.00084}{https://doi.org/10.1109/WACV.2019.00084}.
+
+[17] F. Imani, R. Chen, E. Diewald, E. Reutzel, H. Yang, Deep learning of variant geometry in layerwise imaging profiles for additive manufacturing quality control, J. Manuf. Sci. Eng. 141 (11) (2019), \href{https://doi.org/10.1115/1.4044420}{https://doi.org/10.1115/1.4044420}.
+
+[18] B. Yuan, G.M. Guss, A.C. Wilson, S.P. Hau-Riege, P.J. DePond, S. McMains, M. J. Matthews, B. Giera, Machine-learning-based monitoring of laser powder bed fusion, Adv. Mater. Technol. 3 (12) (2018), 1800136, \href{https://doi.org/10.1002}{https://doi.org/10.1002} admt.201800136.
+
+[19] M. Mahmoudi, Process Monitoring and Uncertainty Quantification for Laser Powder Bed Fusion Additive Manufacturing 2019.
+
+[20] C. Gobert, E.W. Reutzel, J. Petrich, A.R. Nassar, S. Phoha, Application of supervised machine learning for defect detection during metallic powder bed fusion additive manufacturing using high resolution imaging, Addit. Manuf. 21 (2018) 517-528.
+
+[21] F. Imani, A. Gaikwad, M. Montazeri, P. Rao, H. Yang, E. Reutzel, Process mapping and in-process monitoring of porosity in laser powder bed fusion using layerwise optical imaging, J. Manuf. Sci. Eng. 140 (10) (2018) 101009-101014, \href{https://doi}{https://doi}. org $/ 10.1115 / 1.4040615$
+
+[22] M. Montazeri, P. Rao, Sensor-based build condition monitoring in laser powder bed fusion additive manufacturing process using a spectral graph theoretic approach, J. Manuf. Sci. Eng. 140 (9) (2018), 091002.
+
+[23] M. Montazeri, R. Yavari, P. Rao, P. Boulware, In-process monitoring of material cross-contamination defects in laser powder bed fusion, J. Manuf. Sci. Eng. 140 (11) (2018) 111001-111019, \href{https://doi.org/10.1115/1.4040543}{https://doi.org/10.1115/1.4040543}.
+
+[24] G. Repossini, V. Laguzza, M. Grasso, B.M. Colosimo, On the use of spatter signature for in-situ monitoring of laser powder bed fusion, Addit. Manuf. 16 (2017) 35-48, \href{https://doi.org/10.1016/j.addma.2017.05.004}{https://doi.org/10.1016/j.addma.2017.05.004}.
+
+[25] M. Grasso, V. Laguzza, Q. Semeraro, B.M. Colosimo, In-process monitoring of selective laser melting: spatial detection of defects via image data analysis J. Manuf. Sci. Eng. 139 (5) (2016) 051001-051016, \href{https://doi.org/10.1115/}{https://doi.org/10.1115/} 1.4034715 .
+
+[26] G. Tapia, A. Elwany, H. Sang, Prediction of porosity in metal-based additive manufacturing using spatial Gaussian process models, Addit. Manuf. 12 (2016) 282-290.
+
+[27] A. Gaikwad, F. Imani, H. Yang, E. Reutzel, P. Rao, In Situ monitoring of thin-wall build quality in laser powder bed fusion using deep learning, Smart Sustain. Munaf. Syst. 3 (2019) 98-121.
+
+[28] L. Scime, J. Beuth, A multi-scale convolutional neural network for autonomous anomaly detection and classification in a laser powder bed fusion additive manufacturing process, Addit. Manuf. 24 (2018) 273-286.
+
+[29] L. Scime, J. Beuth, Using machine learning to identify in-situ melt pool signatures indicative of flaw formation in a laser powder bed fusion additive manufacturing process, Addit. Manuf. 25 (2019) 151-165.
+
+[30] J. Williams, P. Dryburgh, A. Clare, P. Rao, A. Samal, Defect detection and monitoring in metal additive manufactured parts through deep learning of spatially resolved acoustic spectroscopy signals, Smart Sustain. Munaf. Syst. 2 (2018) 204-226.
+
+[31] M. Montazeri, A.R. Nassar, C.B. Stutzman, P. Rao, Heterogeneous sensor-based condition monitoring in directed energy deposition, Addit. Manuf. 30 (2019), 100916, \href{https://doi.org/10.1016/j.addma.2019.100916}{https://doi.org/10.1016/j.addma.2019.100916}.
+
+[32] M. Montazeri, A.R. Nassar, A.J. Dunbar, P. Rao, In-process monitoring of porosity in additive manufacturing using optical emission spectroscopy, IISE Trans. 52 (5) (2020) 500-515, \href{https://doi.org/10.1080/24725854.2019.1659525}{https://doi.org/10.1080/24725854.2019.1659525}.
+
+[33] Y.M. Wang, T. Voisin, J.T. McKeown, J. Ye, N.P. Calta, Z. Li, Z. Zeng, Y. Zhang, W. Chen, T.T. Roehling, Additively manufactured hierarchical stainless steels with high strength and ductility, Nat. Mater. 17 (1) (2018) 63-71.
+
+[34] U.S. Bertoli, A.J. Wolfer, M.J. Matthews, J.-P.R. Delplanque, J.M. Schoenung, On the limitations of volumetric energy density as a design parameter for selective laser melting, Mater. Des. 113 (2017) 331-340.
+
+[35] S. Ly, A.M. Rubenchik, S.A. Khairallah, G. Guss, M.J. Matthews, Metal vapor microjet controls material redistribution in laser powder bed fusion additive manufacturing, Sci. Rep. 7 (1) (2017) 1-12.
+
+[36] J. Trapp, A.M. Rubenchik, G. Guss, M.J. Matthews, In situ absorptivity measurements of metallic powders during laser powder-bed fusion additive manufacturing, Appl. Mater. Today 9 (2017) 341-349.
+
+[37] M.J. Matthews, G. Guss, S.A. Khairallah, A.M. Rubenchik, P.J. Depond, W.E. King Denudation of metal powder layers in laser powder bed fusion processes, Acta Mater. 114 (2016) 33-42.
+
+[38] T.T. Roehling, S.S. Wu, S.A. Khairallah, J.D. Roehling, S.S. Soezeri, M.F. Crumb, M. J. Matthews, Modulating laser intensity profile ellipticity for microstructural control during metal additive manufacturing, Acta Mater. 128 (2017) 197-206.
+
+[39] U.S. Bertoli, G. Guss, S. Wu, M.J. Matthews, J.M. Schoenung, In-situ characterization of laser-powder interaction and cooling rates through high-speed imaging of powder bed fusion additive manufacturing, Mater. Des. 135 (2017) 385-396.
+
+[40] G.E. Bean, D.B. Witkin, T.D. McLouth, D.N. Patel, R.J. Zaldivar, Effect of laser focus shift on surface quality and density of Inconel 718 parts produced via selective laser melting, Addit. Manuf. 22 (2018) 207-215.
+
+[41] T.D. McLouth, G.E. Bean, D.B. Witkin, S.D. Sitzman, P.M. Adams, D.N. Patel, W. Park, J.-M. Yang, R.J. Zaldivar, The effect of laser focus shift on microstructural variation of Inconel 718 produced by selective laser melting, Mater. Des. 149 (2018) 205-213.
+
+[42] Z. Fan, M. Lu, H. Huang, Selective laser melting of alumina: a single track study, Ceram. Int. 44 (8) (2018) 9484-9493.
+
+[43] I. Yadroitsev, P. Krakhmalev, I. Yadroitsava, S. Johansson, I. Smurov, Energy input effect on morphology and microstructure of selective laser melting single track from metallic powder, J. Mater. Process. Technol. 213 (4) (2013) 606-613.
+
+[44] M. Salarian, E. Toyserkani, The use of nano-computed tomography (nano-CT) in non-destructive testing of metallic parts made by laser powder-bed fusion additive manufacturing, Int. J. Adv. Manuf. Technol. 98 (9-12) (2018) 3147-3153.
+
+[45] T. Özel, A. Altay, A. Donmez, R. Leach, Surface topography investigations on nickel alloy 625 fabricated via laser powder bed fusion, Int. J. Adv. Manuf. Technol. 94 (9-12) (2018) 4451-4458.
+
+[46] R. Gainov, D. Faidel, W. Behr, G. Natour, F. Pauly, H. Willms, F. Vagizov, Investigation of LPBF A800H steel parts using Computed Tomography and Mössbauer spectroscopy, Addit. Manuf. 32 (2020), 101035.
+
+[47] S.A. Shevchik, C. Kenel, C. Leinenbach, K. Wasmer, Acoustic emission for in situ quality monitoring in additive manufacturing using spectral convolutional neural networks, Addit. Manuf. 21 (2018) 598-604.
+
+[48] Y. Jin, H. Liao, A. Pierson Harry, A multi-resolution framework for automated in plane alignment and error quantification in additive manufacturing, Rapid Prototyp. J. 26 (7) (2020) 1289-1303, \href{https://doi.org/10.1108/RPJ-07-2019-0183}{https://doi.org/10.1108/RPJ-07-2019-0183}.
+
+[49] W.E. King, H.D. Barth, V.M. Castillo, G.F. Gallegos, J.W. Gibbs, D.E. Hahn, C. Kamath, A.M. Rubenchik, Observation of keyhole-mode laser melting in laser powder-bed fusion additive manufacturing, J. Mater. Process. Technol. 214 (12) (2014) 2915-2925.
+
+[50] A. Gusarov, I. Yadroitsev, P. Bertrand, I. Smurov, Heat transfer modelling and stability analysis of selective laser melting, Appl. Surf. Sci. 254 (4) (2007) 975-979.
+
+[51] R. Fabbro, Melt pool and keyhole behaviour analysis for deep penetration laser welding, J. Phys. D Appl. Phys. 43 (44) (2010), 445501.
+
+[52] I. Yadroitsev, A. Gusarov, I. Yadroitsava, I. Smurov, Single track formation in selective laser melting of metal powders, J. Mater. Process. Technol. 210 (12) (2010) 1624-1631.
+
+[53] J.A. Kanko, A.P. Sibley, J.M. Fraser, In situ morphology-based defect detection of selective laser melting through inline coherent imaging, J. Mater. Process. Technol. 231 (2016) 488-500.
+
+[54] S.A. Khairallah, A.T. Anderson, A. Rubenchik, W.E. King, Laser powder-bed fusion additive manufacturing: physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones, Acta Mater. 108 (2016) 36-45.
+
+[55] M. Markl, C. Körner, Multiscale modeling of powder bed-based additive manufacturing, Annu. Rev. Mater. Res. 46 (2016) 93-123.
+
+[56] M. Tang, P.C. Pistorius, J.L. Beuth, Prediction of lack-of-fusion porosity for powder bed fusion, Addit. Manuf. 14 (2017) 39-48.
+
+[57] H. Gong, K. Rafi, H. Gu, T. Starr, B. Stucker, Analysis of defect generation in Ti-6Al-4V parts made using powder bed fusion additive manufacturing processes, Addit. Manuf. 1 (2014) 87-98.
+
+[58] R. Cunningham, C. Zhao, N. Parab, C. Kantzos, J. Pauza, K. Fezzaa, T. Sun, A. D. Rollett, Keyhole threshold and morphology in laser melting revealed by ultrahigh-speed x-ray imaging, Science 363 (6429) (2019) 849-852.
+
+[59] R. Cunningham, S.P. Narra, C. Montgomery, J. Beuth, A. Rollett, Synchrotronbased X-ray microtomography characterization of the effect of processing variables on porosity formation in laser power-bed additive manufacturing of Ti-6Al-4V Jom 69 (3) (2017) 479-484.
+
+[60] I. Yadroitsev, I. Yadroitsava, P. Bertrand, I. Smurov, Factor analysis of selective laser melting process parameters and geometrical characteristics of synthesized single tracks, Rapid Prototyp. J. (2012).
+
+[61] A. Laohaprapanon, P. Jeamwatthanachai, M. Wongcumchang, N. Chantarapanich, S. Chantaweroad, K. Sitthiseripratip, S. Wisutmethangoon, Optimal scanning condition of selective laser melting processing with stainless steel 316L powder, Adv. Mater. Res. (2012) 816-820.
+
+[62] T. Childs, C. Hauser, M. Badrossamay, Mapping and modelling single scan track formation in direct metal selective laser melting, CIRP Ann. 53 (1) (2004) 191-194.
+
+[63] K. He, X. Zhang, S. Ren and J. Sun, 2016, Deep residual learning for image recognition, Proceedings of the IEEE conference on computer vision and pattern recognition, pp. 770-778.
+
+[64] K. Simonyan, A. Zisserman. Very Deep convolutional Netw. Large-Scale Image Recognition. 2014.arXiv preprint arXiv:1409.1556.
+
+[65] A. Krizhevsky, I. Sutskever, G.E. Hinton, Imagenet classification with deep convolutional neural networks, Adv. Neural Inf. Process. Syst. (2012) 1097-1105.
+
+[66] I. Nabney, NETLAB: Algorithms for Pattern Recognition, Springer Science \& Business Media, 2002
+
+[67] H.B. Demuth, M.H. Beale, O. De Jess, M.T. Hagan, Neural Network Design, Martin Hagan, 2014.
+
+[68] D.P. Kingma , J. Ba , Adam: A Method for Stochastic Optimization. 2014.arXiv preprint arXiv:1412.6980
+
+[69] J. Canny, A computational approach to edge detection, IEEE Trans. Pattern Anal. Mach. Intell. 6 (1986) 679-698.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

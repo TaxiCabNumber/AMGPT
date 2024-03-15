@@ -1,0 +1,825 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Effect of processing parameters during the laser beam melting of Inconel 738: Comparison between simulated and experimental melt pool shape }
+
+
+\author{D. Grange ${ }^{a, c, *}$, A. Queva ${ }^{\text {b,c }}$, G. Guillemot ${ }^{b}$, M. Bellet ${ }^{b}$, J.-D. Bartout ${ }^{a}$, C. Colin ${ }^{a}$\\
+a MINES ParisTech, PSL Research University, MAT - Centre des matériaux, CNRS UMR 7633, BP 87, 91003, Evry, France\\
+b MINES ParisTech, PSL Research University, CEMEF - Centre de Mise en Forme des Matériaux, CNRS UMR 7635, CS10207 Rue Claude Daunesse, 06904, Sophia\\
+Antipolis Cedex, France\\
+${ }^{\mathrm{c}}$ Safran Additive Manufacturing, a Technology Platform of Safran Tech, Rue des Jeunes Bois, Châteaufort, 78114, Magny-Les-Hameaux, France}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+
+
+\section*{A R T I C L E I N F O}
+Associate Editor: A Clare
+
+\section*{Keywords:}
+Laser beam melting
+
+Melt pool shape
+
+Finite element simulation
+
+Convection
+
+Nickel-based alloy
+
+\begin{abstract}
+A B S T R A C T Numerical simulation is a powerful tool to understand the link between processing parameters and solidification conditions during the laser beam melting (LBM) process. To be able to use this tool for microstructural control, numerical models need to be validated on a large set of experimental conditions, to ensure that the model describes the predominant physical phenomena. In this study, an experimental set of twenty tracks was produced in an Inconel 738 alloy, with a wide range of energy input and scanning speed. Experimental melt pool shapes were compared to the predictions of a multiphysics numerical model. In this model, the powder bed is considered as a continuum. The laser source is modeled with a Beer-Lambert absorption law, and surface tension, Marangoni force and recoil pressure are the driving forces for melt pool dynamics. This kind of model offers an efficient computational time, but requires a calibration of the absorption coefficient and a representative description of laser-matter interaction. In order to represent correctly heat and mass transfer during laser-matter interaction, the model needs to account for the loss of matter caused by the ejection of powder particles and spatters. A novel calibration method was proposed to calculate the absorption coefficient. This method uses the experimental cross sections of the melt pools and a simplified analytical expression of energy balance. The use of this calibration method enabled a good agreement between experiments and calculations on a large process window. The values obtained by the calibrations resulted in a phenomenological expression of absorptivity coefficient with process parameters. Based on this expression, a comparison was made with another numerical model from literature using a time-consuming ray-tracing method in order to calculate the absorptivity coefficient. Similar results have been obtained, demonstrating the potential of the proposed approach to predict the melt pool shape and thus better understand the combined effect of laser-matter interaction and solidification in LBM process.
+\end{abstract}
+
+\section*{1. Introduction}
+Inconel 738 (IN738 LC) is a Nickel-based superalloy of great interest in aerospace industry, because of its excellent mechanical properties in high temperature environment, such as in aircraft engines, where parts undergo service temperatures higher than $900^{\circ} \mathrm{C}$. As a consequence, the mastering of additive manufacturing (AM) of Inconel 738 parts by laser beam melting (LBM) is a real challenge. Indeed, the high sensitivity of Inconel 738 to solidification cracking as known from the welding community makes its manufacturing by LBM process critical. This alloy is difficult to weld, and hence it is also difficult to process additively. The challenge is then to identify appropriate LBM "process window" (set of process parameters) adapted to a fabrication without any defect.\\
+In the context of AM-LBM, solidification cracking of Inconel 738 has been experimentally investigated in several studies, some of which focus on the influence of processing parameters. Cloots et al. (2016) have shown that the number of microcracks tends to decrease when the scanning velocity is increased while the beam power is maintained constant. Grange et al. (2020) have shown that the cracking is minimal when the material is processed with small melt pools with a strong overlap. They mentioned four contributing factors for solidification cracking: the extent of the mushy zone, the intensity of stresses in the mushy zone, a positive role of a fine grain structure and a positive effect of material remelting to avoid crack propagation.
+
+Beside experiments, numerical simulation is a powerful tool to understand and control materials processing. The development of numerical simulation, assessed and validated by experimental observations
+\footnotetext{\begin{itemize}
+  \item Corresponding author at: MINES ParisTech, PSL Research University, MAT - Centre des matériaux, CNRS UMR 7633, BP 87, 91003, Evry, France.
+\end{itemize}
+
+E-mail address: \href{mailto:david.grange@mines-paristech.fr}{david.grange@mines-paristech.fr} (D. Grange).
+}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{2}{|c|}{Nomenclature} & \multicolumn{2}{|l|}{Thermal} \\
+\hline
+\multicolumn{2}{|c|}{Acronyms} & $C_{p}$ & Heat capacity $\left(\mathrm{J}^{\left.\mathrm{kg}^{-1} \cdot \mathrm{K}^{-1}\right)}\right.$ \\
+\hline
+LBM & Laser beam melting & $D$ & Thermal diffusivity $\left(\mathrm{m}^{2} . \mathrm{s}^{-1}\right)$ \\
+\hline
+LPBF & Laser powder bed fusion & $\Delta H$ & Equivalent enthalpy corresponding to the absorbed energy \\
+\hline
+LS & Level set &  & \begin{tabular}{l}
+divided by the mass of the characteristic diffusion volume \\
+$\left(\mathrm{J} . \mathrm{kg}^{-1}\right)$ \\
+\end{tabular} \\
+\hline
+\multicolumn{2}{|c|}{\multirow{2}{*}}{}\{\begin{tabular}{l}
+Experimental \\
+$E_{l}=P_{L} / v_{L} \quad$ Linear incident energy $\left(\mathrm{J} \cdot \mathrm{mm}^{-1}\right)$ \\
+\end{tabular}\} & $h$ & \includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-02}
+ \\
+\hline
+ &  & $h_{s}$ & Enthalpy at solidus temperature $\left(\mathrm{J} . \mathrm{kg}^{-1}\right)$ \\
+\hline
+\multicolumn{2}{|c|}{\multirow{2}{*}}{$H_{M P}=H_{R Z}+H_{a p p} \quad$ Height of the track $(\mu \mathrm{m})$} & $\dot{q}_{L}$ & Heat source input $\left(\mathrm{W} \cdot \mathrm{m}^{-3}\right)$ \\
+\hline
+ &  & \begin{tabular}{l}
+$\dot{q}_{v}$ \\
+$\dot{q}_{v}$ \\
+\end{tabular} & Vaporization heat loss $\left(\mathrm{W} \cdot \mathrm{m}^{-3}\right)$ \\
+\hline
+$H_{R Z}$ & Height of the remelted zone $(\mu \mathrm{m})$ & $T$ & Temperature $\left({ }^{\circ} \mathrm{C}\right)$ \\
+\hline
+$p$ & Porosity of the powder bed & $T_{0}$ & Room temperature $\left({ }^{\circ} \mathrm{C}\right)$ \\
+\hline
+$P_{L}$ & Laser power (W) & $T_{l}$ & Liquidus temperature $\left({ }^{\circ} \mathrm{C}\right)$ \\
+\hline
+$\phi_{L}$ & Laser beam $1 / \mathrm{e}^{2}$ diameter $(\mu \mathrm{m})$ & $T_{\text {peak }}$ & Peak temperature at the center of the beam $\left({ }^{\circ} \mathrm{C}\right)$ \\
+\hline
+$r_{L}$ & Laser beam radius $(\mu \mathrm{m})$ & $T_{s}$ & Solidus temperature $\left({ }^{\circ} \mathrm{C}\right)$ \\
+\hline
+$S_{a p p}$ & \begin{tabular}{l}
+Volume of the apparent part of the track per unit of track \\
+length $\left(\mu \mathrm{m}^{2}\right)$ \\
+\end{tabular} & $T_{v}$ & Boiling temperature $\left({ }^{\circ} \mathrm{C}\right)$ \\
+\hline
+$S_{\text {ejected }}$ & \begin{tabular}{l}
+Volume per unit of track length in which powder particles \\
+are ejected without being melted $\left(\mu \mathrm{m}^{2}\right)$ \\
+\end{tabular} & \begin{tabular}{l}
+$\alpha$ \\
+$\rho$ \\
+$\lambda$ \\
+\end{tabular} & \begin{tabular}{l}
+Density $\left(\mathrm{kg} \cdot \mathrm{m}^{-3}\right)$ \\
+Thermal conductivity $\left(\mathrm{W} \cdot \mathrm{m}^{-1} \cdot \mathrm{K}^{-1}\right)$ \\
+\end{tabular} \\
+\hline
+\multirow[t]{2}{*}{$S_{\text {free }}$} & \begin{tabular}{l}
+Volume per unit of track length of powder which is free \\
+after the interaction with the laser beam, due the collapse \\
+\end{tabular} & $\lambda_{d}$ & \begin{tabular}{l}
+Thermal conductivity of the dense phase (solid and liquid) \\
+$\left(\mathrm{W} \cdot \mathrm{m}^{-1} \cdot \mathrm{K}^{-1}\right)$ \\
+\end{tabular} \\
+\hline
+ & of the powder bed on both sides of the track $\left(\mu \mathrm{m}^{2}\right)$ & $\lambda_{p}$ & Thermal conductivity of the powder bed $\left(\mathrm{W} \cdot \mathrm{m}^{-1} \cdot \mathrm{K}^{-1}\right)$ \\
+\hline
+$S_{\text {interaction }}$ & \begin{tabular}{l}
+Interaction volume per unit of track length, in which \\
+particles can be either ejected of melted $\left(\mu \mathrm{m}^{2}\right)$ \\
+\end{tabular} & \multicolumn{2}{|c|}{Hydrodynamics} \\
+\hline
+$S_{\text {melted }}$ & \begin{tabular}{l}
+Volume per unit of track length of melted powder bed \\
+$\left(\mu \mathrm{m}^{2}\right)$ \\
+\end{tabular} & \begin{tabular}{l}
+$f_{V}$ \\
+$g$ \\
+\end{tabular} & \begin{tabular}{l}
+Total volume forces $\left(\mathrm{N} . \mathrm{m}^{-3}\right)$ \\
+Acceleration due to gravity $(9.81)\left(\mathrm{m} . \mathrm{s}^{-2}\right)$ \\
+\end{tabular} \\
+\hline
+\multirow{2}{*}{}\begin{tabular}{l}
+$S_{M P}=S_{C}$ \\
+$S_{\text {spatter }}$ \\
+\end{tabular} & $p p+S_{R Z} \quad$ Volume of the track per unit of track length $\left(\mu \mathrm{m}^{2}\right)$ & $n$ & Normal vector \\
+\hline
+ & \begin{tabular}{l}
+Volume of material per unit of track length and then \\
+ejected as spatters $\left(\mu \mathrm{m}^{2}\right)$ \\
+\end{tabular} & \begin{tabular}{l}
+$\gamma$ \\
+$\frac{\partial \gamma}{\partial T}$ \\
+\end{tabular} & \begin{tabular}{l}
+Surface tension $\left(\mathrm{N} \cdot \mathrm{m}^{-1}\right)$ \\
+Marangoni coefficient $\left(\mathrm{N} \cdot \mathrm{m}^{-1} \cdot \mathrm{K}^{-1}\right)$ \\
+\end{tabular} \\
+\hline
+\multirow[t]{2}{*}{$\tau_{\text {app }}$} & Fraction of material interacting with the laser beam which & $\mu$ & Dynamic viscosity (Pa.s) \\
+\hline
+ & \begin{tabular}{l}
+participates in the apparent part of the track (-) \\
+Scanning speed of the laser beam $\left(\mathrm{mm} \cdot \mathrm{s}^{-1}\right)$ \\
+\end{tabular} & $\mu_{d}$ & \begin{tabular}{l}
+Dynamic viscosity of the dense metallic material (solid and \\
+liquid) (Pa.s) \\
+\end{tabular} \\
+\hline
+\multirow{3}{*}{}\begin{tabular}{l}
+$v_{L}$ \\
+$W_{M P}$ \\
+$\Delta Z_{\text {powder }}$ \\
+\end{tabular} & Width of the melt pool $(\mu \mathrm{m})$ & $\mu_{p}$ & Dynamic viscosity of the powder bed (Pa.s) \\
+\hline
+ & Powder bed height $(\mu \mathrm{m})$ & Level-Set &  \\
+\hline
+ &  & $\psi$ & Distance function $(\mu \mathrm{m})$ \\
+\hline
+\end{tabular}
+\end{center}
+
+and measurements, allows engineers to develop strategies to identify adequate process windows. However, it should be observed in LBM context that a very complex physics is at stake. Therefore, addressing directly the prediction of solidification cracking through numerical simulation might be a too ambitious objective, as this would require predictive models in laser/metal interaction, fluid flow, solidification, formation of microstructure, and thermo-mechanics in the semi-solid state. It appears then that a more progressive approach in numerical simulation development should be preferred, with a first assigned objective: a thermo-fluid numerical model capable of calculating a reliable description of LBM solidification conditions. Indeed, predicting the melt pool shape, the extension of the mushy zone, as well as the temperature gradients and cooling rates locally in the vicinity of the melt pool and in the mushy zone, is an obvious prerequisite before addressing thermo-mechanics. This is precisely the objective of the present paper: the evaluation of a multiphysics thermo-fluid simulation model by reference to experimental measurements, for LBM of Inconel 738.
+
+Numerous experimental studies highlighted the complexity and the multiplicity of the physical phenomena at stake and show which ones are essential to consider in numerical models. Experimentally, Yadroitsev and Smurov (2010) demonstrated the influence of process parameters such as scanning speed and laser power on single track formation for different alloys, including IN625. They demonstrated that melt pool penetration into the substrate is required to stabilize the track building and avoid track irregularities of balling. Furthermore, the tracks shape and dimensions are largely influenced by surface tension and Marangoni forces. Bidare et al. (2018) used fast camera equipment to develop observations of tracks development and vaporization stage during LBM process for stainless steel. They demonstrated that this latter phenomenon highly influences the melt pool and particles dynamics. Wang et al. (2017) suggested that the observed liquid spattering is a consequence of the recoil pressure induced by vaporization combined with Marangoni effect using $\mathrm{CoCr}$ powder. Furthermore, as shown by Matthews et al. (2016), the recoil pressure is also partly responsible for the denudation on track sides. From this short literature review, it appears that a predictive numerical model should at least take into account the following physical phenomena: heat transfer, fluid flow, surface tension including Marangoni effect, and laser/matter interaction including vaporization effect.
+
+The numerical simulation community has worked for several years to develop computational codes matching the previous requirements. Complex models have been developed to predict the melt pool and final track shape. Most of them consider the scale of powder particles, with an explicit description of every particle of the powder bed. Khairallah et al. (2016) presented an arbitrary Lagrangian-Eulerian (ALE) multiphysics code to simulate laser-matter interaction and fluid flow with an application to Ti-6Al-4 V. The Marangoni effect and the recoil pressure are considered in order to predict denudation during the heating stage. Martin et al. (2019) used this model to provide better understanding of
+
+Table 1
+
+Process parameters investigated in present study. Cases are ordered by increasing linear energy.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+$\#$ & $v_{L}\left[\mathrm{~mm} . \mathrm{s}^{-1}\right]$ & $P_{L}[\mathrm{~W}]$ & \includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-03}
+ & $\#$ & $v_{L}\left[\mathrm{~mm} . \mathrm{s}^{-1}\right]$ & $P_{L}[\mathrm{~W}]$ & $E_{l}\left[\mathrm{~J} . \mathrm{mm}^{-1}\right]$ \\
+\hline
+1 & 1350 & 280 & 0.21 & 11 & 315 & 115 & 0.37 \\
+\hline
+2 & 570 & 120 & 0.21 & 12 & 1000 & 370 & 0.37 \\
+\hline
+3 & 380 & 85 & 0.22 & 13 & 225 & 96 & 0.43 \\
+\hline
+4 & 960 & 230 & 0.24 & 14 & 730 & 340 & 0.47 \\
+\hline
+5 & 750 & 180 & 0.24 & 15 & 300 & 140 & 0.47 \\
+\hline
+6 & 1075 & 275 & 0.26 & 16 & 500 & 310 & 0.62 \\
+\hline
+7 & 1100 & 320 & 0.29 & 17 & 360 & 230 & 0.64 \\
+\hline
+8 & 430 & 125 & 0.29 & 18 & 385 & 265 & 0.69 \\
+\hline
+9 & 685 & 210 & 0.31 & 19 & 455 & 385 & 0.85 \\
+\hline
+10 & 800 & 260 & 0.33 & 20 & 245 & 215 & 0.88 \\
+\hline
+\end{tabular}
+\end{center}
+
+the occurrence of porosities during the transition from a track to another one. Bayat et al. (2019) developed a similar multiphysics model and applied it to Ti-6Al-4 V. They were able to get an accurate prediction of the melted zone dimensions compared to experimental observations. Aggarwal et al. (2019) used a similar model on $316 \mathrm{~L}$ stainless steel. They used the simulation to understand the influence of the distance between the powder bed position and the focal plane of the laser beam on the resulting melting mode (conduction or keyhole). However, being based on an explicit discretization of the powder bed particles, and possibly ray-tracing for laser/metal interaction, all these approaches are still excessively time consuming to model track evolution. This limits length of simulation domains even more when the formation of multiple tracks and layers is considered, as in effective AM. In view of an efficient search for process windows, a reasonable computational time is required as well as the development of a reliable model. Consequently, the simulation model previously proposed in Queva et al. (2020) is considered in the present study. In this approach the powder bed is modelled as a continuum and a Beer-Lambert absorption law is assumed to consider the progressive absorption of laser energy in matter, which generates lower computational time than previous ones. Queva et al. (2020) reported that the CPU time required to simulate a single track is approximately 3.5 times smaller than with other approaches. However, as a counterpart, the laser absorptivity is a variable parameter which has to be calibrated. In this article, a novel method was proposed to calibrate the absorptivity coefficient, with a combination of semi-analytical reasoning and numerical simulations in order to investigate the effect of processing parameters on experimental melt pool cross sections.
+
+The study reported here was structured as follows:
+
+\begin{itemize}
+  \item The evolution of the melt pool shape of IN738 was studied, for a wide range of LBM processing parameters. A set of twenty experiments was carried out under different laser power and scanning speed to provide a process window delimiting parameters where the track is stable from those associated to keyhole or capillary instabilities. A study of mass transfer during the interaction between the laser beam and the powder bed was conducted, based on optical profilometry measurements, and revealed the necessity to account for metal ejections. This is reported in Section 2.
+  \item Experimental observations were compared with the predictions of the numerical model developed by Queva et al. (2020). A novel calibration method for the absorptivity coefficient of the numerical simulation was proposed, based on the experimental cross sections of the melt pool and a simplified analytical expression of energy conservation. This is reported in Section 3.
+  \item After calibration, numerical simulation results and experimental observations were compared for the whole process window, demonstrating the capabilities of the present numerical approach to provide an efficient prediction of the melted zone dimensions, in a wide range of process parameters, and with an efficient computational time. The transition from very low keyhole melt pool morphology to deep keyhole is presented. An investigation of the absorptivity coefficient evolution with processing parameters is proposed and compared with in-situ measurements from literature, showing a good agreement. This is reported in Section 4.
+\end{itemize}
+
+\section*{2. Experiments}
+\subsection*{2.1. Experimental protocol}
+All the experiments reported here were undertaken with a gas atomized powder of Inconel $738 \mathrm{LC}$, and a Concept Laser M2 machine. The particle size distribution is Gaussian, with diameter percentiles $D_{10}=17 \mu \mathrm{m}, D_{50}=28 \mu \mathrm{m}$ and $D_{90}=45 \mu \mathrm{m}$. The substrate is a cylinder of $30 \mathrm{~mm}$ diameter and $10 \mathrm{~mm}$ height, previously fabricated with the same printer and the same material. The upper surface was then polished with 1200-grit paper and sandblasted to prevent the powder from sliding on the substrate. A powder layer was deposited with a rigid coater. The laser beam had a Gaussian power distribution, with a $1 / e^{2}$ diameter set to $\phi_{L}=100 \mu \mathrm{m}$ while the laser power $P_{L}$ and the scanning speed $v_{L}$ varied respectively in the range $85-384 \mathrm{~W}$ and $225-1350$ $\mathrm{mm} \cdot \mathrm{s}^{-1}$. Twenty tracks were built with a length of $20 \mathrm{~mm}$ and a gap of 1 $\mathrm{mm}$ between the centers of two adjacent tracks. The $1 \mathrm{~mm}$ gap guarantees that the melting of the different tracks are thermally\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_fc82295ca80e2636ba5dg-03(1)}
+
+Fig. 1. (a) Geometrical features of the tracks; (b) Top view of the tracks on the substrate after powder removal.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-04}
+\end{center}
+
+Fig. 2. Process window defined with the results obtained on a representative cross section for each processing parameters investigated.
+
+independent, with no waiting time between the melting of two adjacent tracks. The process parameters are indicated in Table 1.
+
+After irradiation, the substrate was scanned with an optical profilometer AltiSurf 500, before and after removal of the powder bed. The substrate was carefully moved from the building plate to the plate of the profilometer, to prevent any movement in the powder bed. A first scanning of the surface was done with the powder bed. Then, the powder bed was removed with a fine brush, before a second scanning. Measurements assessed a good uniformity of the powder bed thickness, with a height of powder $\Delta Z_{\text {powder }}$ between 105 and $120 \mu \mathrm{m}$. To measure the dimensions of the single tracks, the substrate was cut transversally to the scanning direction. Four cuts were distributed regularly along the track length, excluding $1.5 \mathrm{~mm}$ at both extremities to avoid the initial and final transient regime of the melt pool. After a polishing down to $1 \mu \mathrm{m}$, the shape of the melt pools was revealed with a glyceregia etching (15 $\mathrm{ml} \mathrm{HCl}+10 \mathrm{ml}$ glycerol $+5 \mathrm{ml} \mathrm{HNO}_{3}, 20 \mathrm{~s}$ by swabbing) and observed with an optical microscope. The following geometrical features are measured (Fig. 1): the melt pool width $W_{M P}$, the height of the remelted zone $H_{R Z}$, the height of the upper (or apparent) part of the track $H_{a p p}$, the total melt pool height $H_{M P}=H_{a p p}+H_{R Z}$ and the areas of the upper part of the track and of the remelted zone $S_{a p p}$ and $S_{R Z}$.
+
+\subsection*{2.2. Melt pool shapes and process windows}
+A transversal cut of every track is displayed on a $\left(v_{L}, P_{L}\right)$ diagram in Fig. 2. Firstly, a small angle of about $6^{\circ}$ exists between the centerline of the tracks and the vertical. This is due to the inclination between the laser beam and the vertical, linked to the position of the substrate on the building plate. Secondly, solidification cracks are often visible within the melt pools and in the substrate. This is actually not surprising, as Inconel 738 LC is known to be prone to solidification cracking (Cloots et al., 2016). Most importantly, a variety of melt pool morphologies are visible on the diagram. These morphologies can be firstly described as a function of the incident linear energy $E_{l}=P_{L} / v_{L}$ (in $\mathrm{J} . \mathrm{mm}^{-1}$ ), whose isovalues are represented with oblique dotted lines.
+
+For intermediate linear energies $\left(0.22<E_{l}<0.5 \mathrm{~J} . \mathrm{mm}^{-1}\right)$, the tracks have a reasonable penetration in the substrate, showing a ratio $H_{R Z} / H_{\text {app }}$ between 1 and 3 . A sufficient remelting is indeed important to avoid a lack of fusion and for the repair of defects. For high linear energies $\left(E_{l}>0.5 \mathrm{~J} . \mathrm{mm}^{-1}\right)$, the tracks have a keyhole shape and a deep penetration with a ratio $H_{R Z} / H_{a p p}>3$. As visible on the figure, pores are particularly frequent in that domain, making it inadequate for fabrication. At low linear energies, when $E_{l}<0.22 \mathrm{~J} . \mathrm{mm}^{-1}$, the tracks have a low penetration in the substrate and a high wetting angle $\theta>90$ $\left.{ }^{\circ}\right)$. Due to the surface tension, single tracks with a high wetting angle can be subjected to instabilities and therefore show an increased variability of their dimensions along their length. An estimation of the variability of the dimensions with several cuts is particularly necessary in that domain. Note that at a low laser power $\left(P_{L}<120 \mathrm{~W}\right)$, a region is observed where the tracks both have a low wettability and a keyhole shape. This region was arbitrarily included in the domain of low wettability, in grey.
+
+The mean dimensions of the melt pools are presented in Fig. 3(a), whereas their dispersion, defined as the ratio of the standard deviation to the mean, are displayed in Fig. 3(b). As expected, the dispersion is the highest in the low wettability domain. Both the apparent part and the remelting zones have highly varying shapes, with a dispersion of $H_{\text {app }}$ up to $30 \%$ and a dispersion of $H_{R Z}$ sometimes over $60 \%$ (around $45 \%$ for $\left.H_{M P}=H_{\text {app }}+H_{R Z}\right)$. On the contrary, the melt pool width remains quite stable in that region, with a dispersion under $15 \%$. Qualitatively, all dimensions increase with the incident linear energy $E_{l}=P_{L} / v_{L}$, although the increase is limited for $H_{a p p}$. The limits of the domain defined above are reported on the graphs with dotted lines. It can be seen that the green domain of Fig. 2 corresponds to the region with a good stability of the melt pool and still a limited penetration.
+
+The objective of the article is to discuss the effect of the processing parameters on the melt pool shape. First, experimental data were investigated using approximate analytical models, enabling a first evidence of prevailing phenomena and a discussion on energy and mass conservation. Second, relevant multiphysics numerical simulation was used to provide a quantitative prediction of the melt pool shapes. This second part focuses particularly on the green region in Fig. 2.
+
+Several analytical models - actually applied to dense material - aim to represent the melt pool dimensions. Hann et al. (2011) demonstrated that the melt pool depth with different materials and processing parameters collapse to one curve when plotted as a function of a normalized enthalpy:
+
+$\frac{\Delta H}{h_{s}}$, with $\Delta H=\frac{A P_{L}}{\pi \rho \sqrt{D v_{L}\left(\phi_{L} / 2\right)^{3}}}$
+
+The specific enthalpy at melting (solidus) temperature is noted $h_{s}=$ $h\left(T=T_{s}\right)$ and $\Delta H$ corresponds to the absorbed energy divided by the mass of the characteristic diffusion volume, where $A$ is the absorptivity and $D$ the thermal diffusivity. A description of the melt pool depth with\\
+(a)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_fc82295ca80e2636ba5dg-05}
+
+(b)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_fc82295ca80e2636ba5dg-05(1)}
+
+Fig. 3. (a) Melt pool dimensions and (b) their variability as a function of processing parameters (cubic interpolation).\\
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-06(1)}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-06}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-06(2)}
+\end{center}
+
+(d)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-06(3)}
+\end{center}
+
+Fig. 4. Evolution of a-b) the height of the remelted zone $H_{R Z}$ and c-d) the melt pool width $W_{M P}$ as a function of the incident linear energy $P_{L} / v_{L}$ and of $P_{L} / v_{L}^{0.5}$. Red dots belong to the keyhole domain and grey dots to the low wettability domain. Blue dots are associated to the stability domain The error bars correspond to the standard deviation. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)
+
+this model may seem surprising at first sight, because it only considers conductive thermal transfers, whereas the melt pool depth is known to depend significantly on other phenomena, as recoil pressure. In a study by King et al. (2014), the depth of melt pools produced by LBM was also found to be a function of the normalized enthalpy. Normalized enthalpy was also successful in describing keyhole transition, which highly depends on recoil pressure. They showed with an analytical thermal model that the normalized enthalpy was proportional to the peak temperature $T_{\text {peak }}$ at the center of the beam:
+
+$\frac{\Delta H}{h_{s}}=\pi \frac{T_{p e a k}}{T_{s}}$
+
+For that reason, the effect of saturated vapor pressure on the melt pool shape becomes significant when the peak temperature exceeds the boiling temperature, i.e. when the normalized enthalpy exceeds a certain value. In our experiments, only $P_{L}$ and $v_{L}$ are variable, the melt pool depth should be then, according to Eq. (1), a function of $P_{L} / \sqrt{v_{L}}$. On the contrary, Moniz et al. (2019), in a study of LBM process applied to ceramic materials, proposed a model in which the melt pool dimensions do not depend on the peak temperature, but rather on the linear density of energy absorbed by the material, $A P_{L} / v_{L}$. However, it should be noted for ceramic material that the incident energy of the laser beam accumulates in the material due to low thermal diffusion. The melt pool corresponds to the area where the local energy absorbed reaches the melting enthalpy. According to that model, melt pool dimensions should not depend on $P_{L} / \sqrt{v_{L}}$, but rather on $E_{l}=P_{L} / v_{L}$.
+
+Considering the present experimental results, the width of the melt pool $W_{M P}$ and the height of the remelted zone are plotted both as a function of $E_{l}=P_{L} / v_{L}$ and $P_{L} / \sqrt{v_{L}}$ (Fig. 4). Different marker colors and types are used for the melt pool, depending on the domain presented in Fig. 2. As in the studies previously cited, the values of $H_{R Z}$ globally collapse to one curve when plotted as a function of $P_{L} / \sqrt{v_{L}}$, whereas they are much dispersed when plotted as a function of the incident linear energy. This could imply that due to the recoil pressure, the melt pool depth is much more affected by the peak temperature of the melt pool than by the total amount of incident energy. The impact of the recoil pressure on the melt pool shape will be further investigated in section 3. Due to an evolution as a function of $P_{L} / \sqrt{v_{L}}, H_{R Z}$ increases with an increase of the scanning velocity while the linear energy is kept constant, see for example the melt pools with $E_{l} \approx 0.3 \mathrm{~J} . \mathrm{mm}^{-1}$ on Fig. 2. On the contrary, the melt pool width does not seem to evolve as a function of $P_{L} / \sqrt{v_{L}}$ but is better described by the incident linear energy $E_{l}=P_{L} / v_{L}$. This dimension seems to be less linked to the peak temperature than to the amount of incident energy.\\
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-07(2)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-07(3)}
+\end{center}
+
+Fig. 5. Melt pool transverse area $S_{M P}$ vs two functions of process parameters, for the whole experimental tests.
+
+\subsection*{2.3. Energy and mass transfer}
+The two characteristic sections $S_{a p p}$ and $S_{M P}=S_{a p p}+S_{R Z}$ are related to energy and mass transfer and their conservation during the laser beam interaction. Indeed, $S_{M P}$ is the volume of molten metal per unit length of the single track and is therefore a consequence of the amount of energy absorbed by the melt pool. The section $S_{\text {app }}$ is the volume of consolidated powder per unit length of the track. A good understanding of the energy and mass transfers during the irradiation is necessary to model accurately the process. In the following section, we discuss the experimental values of $S_{M P}$ and $S_{a p p}$ and the consequences regarding process numerical simulation.
+
+\section*{- Energy conservation}
+Let us consider a melt pool with a section $S_{M P}$ that reaches a mean temperature $T_{M P}$. The enthalpy increase per unit of track length is then $S_{M P}\left(\rho h\left(T_{M P}\right)-\rho h\left(T_{0}\right)\right)$, where $\rho h$ is the specific enthalpy and $T_{0}$ the room temperature. Under the approximation that most of the beam energy is absorbed by the melt pool, the energy balance can be written:
+
+$A\left(E_{l}-E_{l, m i n}\right)=S_{M P}\left(\rho h\left(T_{M P}\right)-\rho h\left(T_{0}\right)\right)$
+
+where $E_{l, \min }$ is the minimal linear energy to create a melt pool. Such a first order relationship can be assessed by plotting $S_{M P}$ (experimental values) as a function of $E_{l}$ in Fig. 5(a). It is visible that $E_{l, \text { min }}$ is close to $0.05 \mathrm{~J} . \mathrm{mm}^{-1}$. However, the alignment of the dots is not perfect and a significant difference of melt pool transverse section is observed for tracks having similar values of incident linear energy. A possible explanation is that the absorptivity $A$ varies significantly with the processing parameters, as it was observed for example by Cunningham et al. (2019). As absorptivity increases with the laser beam power and decreases with scanning velocity and considering the evolution measured by Trapp et al. (2017), we propose the following expression in the range of processing parameters: $A=C_{1} \cdot\left(P_{L}^{a} v_{L}^{b}-C_{2}\right)^{1 / 2}$. Moreover, we propose a further approximation that the mean temperature of the melt is constant in first order. Under these assumptions, $S_{M P}$ should be proportional to $\left(P_{L}^{a} \nu_{L}^{b}-C_{2}\right)^{1 / 2} \cdot\left(E_{l}-E_{l, \min }\right)$. Interestingly, Fig. 5(b) shows that with $a=0.2, b=-0.06, C_{2}=1.4$ and $E_{l}=0.05 \mathrm{~J} \mathrm{~mm}^{-1}$, the points obtained for very different regimes almost perfectly align. The evolution of absorptivity suggested here will be discussed later in the article, thanks to numerical simulation.
+
+\section*{- Mass conservation}
+During the interaction between the laser beam and the powder bed, particle dynamics is complex. Bidare et al. (2018) employed high speed imaging to observe the vapor plume, the argon gas flow and their effect on powder particles movements. They highlighted that numerous particles are entrained by the gas flow, some of which are drawn in towards the melt pool, while others are blown away. Moreover, some metal is ejected during fusion, as spatters. As the objective is to predict the dimensions of the consolidated tracks, experimental evidence of the extent of such mass transfers is required. Particularly, ejections of matter affect the amount of metal consolidated in the track.
+
+We based an analysis detailed hereafter on profilometry measurements on a single track, with $P_{L}=230 \mathrm{~W}$ and $v_{L}=960 \mathrm{~W}$ (referred as (a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-07}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-07(1)}
+\end{center}
+
+Fig. 6. Height of material around the track $P_{L} 230 v_{L} 960$ before and after removal of the powder: (a) transverse profiles at four different locations on the track, (b) identification of the transverse sections $S_{a p p}$ and $S_{\text {free }}$ on the mean profile.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-08}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-08(1)}
+\end{center}
+
+(b)
+
+Fig. 7. Schematic representation of mass transfers: (a) during the interaction between the laser beam and the powder bed; (b) powder bed after particles displacement and rearrangement.
+
+$\left.P_{L} 230 v_{L} 960\right)$. The surroundings of the track are scanned before and after removal of the powder. Fig. 6(a) displays the transverse profile of material height at four different locations along the track, before and after removal of powder. For each location, the profile was averaged on a length of $3 \mathrm{~mm}$ in the scanning direction, to reduce dispersion.
+
+It is visible that the original powder bed thickness of $120 \mu \mathrm{m}$ was modified during the interaction with the beam, as a result of powder consolidation by melting and ejections. No complete denudation is observed on both sides of the track as this latter is still covered with powder. This is in line with the observations of Bidare et al. (2018). They noted that denudation decreases with an increase of the powder bed height. For a powder bed thickness around $120 \mu \mathrm{m}$, they noticed that powder particles roll towards the track without leaving a completely denudated area. In the present case, the powder has a good ability to flow and the powder bed thickness is significantly higher than the track height. Consequently, the single track is covered with powder after the interaction with the beam.
+
+The area of powder bed left empty after the beam interaction is called $S_{\text {free }}$ (Fig. 6(b)). We propose to discuss the significance of material ejection with a comparison between $S_{a p p}$ and $S_{\text {free }}$. The mean values measured on the four transverse profiles are $S_{a p p}=4600 \mu \mathrm{m}^{2}$ and $S_{\text {free }}=$ $20300 \mu \mathrm{m}^{2}$. Let us suppose first that there is no material ejection (i.e. no ejected powder particles and no spatters). In permanent regime, these two sections are linked by the porosity of the powder bed $p: S_{a p p}=$ $S_{\text {free }}(1-p) / p$ (cf. Eq. (6) in development below). This leads to a porosity of $p=0.82$, which is not possible, as this value is significantly higher than the porosity of poured powder $(p=0.55)$. As consequence, there is obviously a significant matter loss. To estimate the loss of matter, a powder bed porosity of 0.5 was assumed. In fact, it should be noted that the density is difficult to estimate as it depends on several parameters as the coater or the fluidity of the powder, etc. Nevertheless, the reasoning is still valid with a value of the porosity value $p=0.4$ and $p=0.6$ and the sensitivity of the result to that parameter will be calculated. Fig. 7(a) represents the volume of interaction $S_{\text {interaction }}=W \Delta Z_{\text {powder }}$, defined as the volume in which powder particles are likely to be ejected or molten. The volumes of ejected and molten powder are respectively noted as $S_{\text {ejected }}$ and $S_{\text {molten }}$ as shown on Fig. 7(a). The consolidation transforms the porous volume of powder $S_{\text {molten }}$ into a volume of dense matter $S_{\text {molten }}(1-p)$, which is either blown away as spatters $\left(S_{\text {spatter }}\right)$ or participates in the creation of the apparent part of the track $\left(S_{a p p}\right)$ : $S_{\text {molten }}(1-p)=S_{\text {app }}+S_{\text {spatter }}$. After scanning by the laser beam, a volume $S_{\text {free }}$ of the powder bed is left empty. The rearrangement of the powder bed by rolling of particles is considered isovolumic without modification of $S_{\text {free }}$, as shown in Fig. 7(b). The expression of $S_{\text {free }}$ is then:
+
+$S_{\text {free }}=S_{\text {ejected }}+p \mathrm{~S}_{\text {molten }}+\mathrm{S}_{\text {spatter }}=S_{\text {ejected }}+S_{\text {molten }}-S_{\text {app }}$\\
+The fraction $\tau_{\text {app }}$ of useful material can then be calculated. This parameter is defined as the ratio of the quantity of matter which is consolidated, $S_{a p p}$, per the quantity of matter which is either consolidated or lost as powder ejections, $(1-p) S_{\text {ejected }}$, or lost as spatter, $S_{\text {spatter }}$ :
+
+$\tau_{a p p}=\frac{S_{a p p}}{S_{a p p}+S_{\text {spatter }}+(1-p) S_{\text {ejected }}}=\frac{S_{\text {app }}}{(1-p)\left(S_{\text {molten }}+S_{\text {ejected }}\right)}$
+
+The value of $\tau_{a p p}$ is comprised between zero and one: zero corresponds to a situation where no track forms and one to a situation with no matter loss by particle ejections or spatters. Using (4), we obtain:
+
+$\tau_{a p p}=\frac{S_{a p p}}{(1-p)\left(S_{a p p}+S_{\text {free }}\right)}$
+
+A porosity of powder bed $p=0.5$ gives a fraction of useful material $\tau_{a p p}=0.37$. The fraction of metal consolidated in the track after interacting with the laser beam is rather small. Moreover, this conclusion is not affected by the uncertainties about $p$, as values of the porosity $p=0.4$ and $p=0.6$ give respectively $\tau_{\text {app }}=0.30$ and $\tau_{a p p}=0.46$. For this track, a significant amount of metal is either ejected as powder particles or as spatters. This result is not surprising, considering the extent of ejected material observed by Bidare et al. (2018).
+
+The analytical models demonstrate their interest to interpret the experimental result and understand some of the physical phenomena at stake. Nevertheless, these models are not fully satisfactory to describe the melt pool dimensions in the whole domain. Indeed, both the complete melt pool shape evolution and the thermal gradients responsible for the occurrence of defects such as hot cracking cannot be predicted with analytical models. Consequently, in the following section, a multiphysical model was used to predict quantitatively the dimensions of the melt pools.
+
+\section*{3. Simulation of the melt pool shapes}
+\subsection*{3.1. Numerical model}
+A continuous-mesoscale finite element model thereafter applied to simulate the development of the set of single tracks was previously proposed for the investigation of melt pool development on metallic alloys during LBM process (Queva et al., 2020). This model relies on a level set (LS) formulation of conservation equations. Basically, the simulation domain is shared into two parts associated with the metallic material and the protective atmosphere. The metallic material includes the substrate, the powder bed, the melt pool and the solidified bead. The use of a continuous-mesoscale approach aims at considering the powder bed as a continuum with homogenized properties in order to limit high computation costs (Chen et al., 2017).
+
+The LS method is relevant to follow the spatial and temporal
+
+Table 2
+
+Material properties for IN738LC and gas.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+ & Property & Symbol & Value & Unit & Reference \\
+\hline
+\multirow{10}{*}{IN738LC} & Solidus, liquidus, boiling temperature & $T_{s}, T_{l}, T_{v}$ & 1216, 1341, 3062 & ${ }^{\circ} \mathrm{C}$ & Thermo-Calc (2020) - lever rule \\
+\hline
+ & Absorption coefficient of powder, liquid & $\alpha_{p}, \alpha_{l}$ & 25,100 & $\mathrm{~mm}^{-1}$ & - \\
+\hline
+ & Density solid/liquid & $\rho_{s}, \rho_{l}$ & 7659, 7118 & $\mathrm{~kg} \cdot \mathrm{m}^{-3}$ & Thermo-Calc (2020) \\
+\hline
+ & Heat capacity of solid/liquid phase & $C_{p, s}, C_{p, l}$ & 643,754 & J. $\mathrm{kg}^{-1} \cdot \mathrm{K}^{-1}$ & Thermo-Calc (2020) \\
+\hline
+ & Latent heat of fusion & $L_{f}$ & $266 \cdot 10^{6}$ & $\mathrm{~J} . \mathrm{kg}^{-1} \cdot \mathrm{K}^{-1}$ & Thermo-Calc (2020) \\
+\hline
+ & Latent heat of vaporization & $L_{v}$ & $6690 \cdot 10^{6}$ & $\mathrm{~J} . \mathrm{kg}^{-1}$ & Thermo-Calc (2020) \\
+\hline
+ & Thermal conductivity of bulk & $\lambda_{d}$ & \begin{tabular}{l}
+$0.014 \cdot T+6.7\left[0, T_{l}\right]$ \\
+$0.0136 \cdot T+6.7\left[T_{l}, 3500\right]$ \\
+\end{tabular} & $\mathrm{W} \cdot \mathrm{m}^{-1} \cdot \mathrm{K}^{-1}$ & JMatPro (2020) \\
+\hline
+ & Surface tension coefficient at melting & $\gamma_{l}$ & 1.8 & N. $\mathrm{m}^{-1}$ & Quested et al. (2009) \\
+\hline
+ & Marangoni coefficient & $\partial \gamma / \partial T$ & $-1 \cdot 10^{-4}$ & $\mathrm{~N} \cdot \mathrm{m}^{-1} \cdot \mathrm{K}^{-1}$ &  \\
+\hline
+ & Liquid dynamic viscosity & $\mu_{l}$ & $7 \cdot 10^{-3}$ & Pa.s & Mills et al. (2006) \\
+\hline
+\multirow{4}{*}{Gas} & Density & $\rho_{g}$ & 1.3 & $\mathrm{~kg} \mathrm{~m}^{-3}$ & Dry air properties (2020) \\
+\hline
+ & Heat capacity & $C_{p, g}$ & 1000 & $\mathrm{~J} . \mathrm{kg}^{-1}$ &  \\
+\hline
+ & Thermal conductivity & $\lambda_{g}$ & 0.024 & $\mathrm{~W} \cdot \mathrm{m}^{-1} \cdot \mathrm{K}^{-1}$ &  \\
+\hline
+ & Dynamic viscosity & $\mu_{g}$ & $2.4 \cdot 10^{-4}$ & P a.s &  \\
+\hline
+\end{tabular}
+\end{center}
+
+evolution of the metal/gas interface caused by the fusion/solidification steps endured by metallic material during building, also considering capillary and vaporization effects along the melt pool surface. Since the powder bed is assumed as continuous, the apparent density, thermal conductivity and dynamic viscosity have to be evaluated depending from local temperature and material state. This approach aims at simulating the thermo-mechanical evolution of material during process to follow track development. Heat transfer and fluid flow are consequently computed in the entire domain. For the present paper, only the relevant features are mentioned and described hereunder. More details are provided in Queva et al. (2020) for interested readers.
+
+\section*{- Thermal evolution}
+Heat transfer is obtained as the solution of the non-steady equation for energy conservation:
+
+$\frac{\partial\{\rho h\}}{\partial t}+\nabla \cdot(\{\rho h\} \boldsymbol{u})-\nabla \cdot(\{\lambda\} \nabla T)=\dot{q}_{L}-\dot{q}_{v}$
+
+where $\rho$ is the density, $h$ is the specific enthalpy, $\boldsymbol{u}$ is the velocity field obtained after the resolution of Navier-Stokes equations. $\lambda$ is the thermal conductivity and $T$ is the temperature field. The right hand side terms $\dot{q}_{L}$ and $\dot{q}_{v}$ represent respectively the heat source input induced by the laser and the heat loss due to vaporization. The brackets correspond to the mixture of quantities associated to metal and gas domains as developed in a LS approach. Both fusion and solidification phase changes are coupled with the resolution of this non-linear equation. The accurate modelling of the laser power input $\dot{q}_{L}$, is crucial to compute relevant melt pool evolution and final shape since phenomena such as capillary effect and recoil pressure, which are highly temperature dependent, govern melt pool dynamics. However, laser interaction should be distinguished between surfaces associated to powder material and liquid metal. For the laser/powder interaction, multiple reflections occur due to the interactions between powder particles and radiation when the laser beam penetrates the powder bed. Consequently, a volume heat source following the Beer-Lambert law was used to model the volume source:
+
+$\dot{q}_{L}=A \frac{2 P_{L}}{\pi r_{L}^{2}} \exp \left(-\frac{2 r^{2}}{r_{L}^{2}}\right) \alpha \exp \left(-\int_{0}^{z} \alpha d l\right)$
+
+where $A$ and $\alpha$ are respectively the absorptivity and the local absorption coefficient, and $z$ is the distance below the gas/metal interface. For the laser/liquid metal interaction, high and local absorption of laser energy should impose to use an expression restricted to the metal surface. However, in practice, Eq. (8) is used with a high value of absorption coefficient for the liquid phase $\alpha_{l}$ to ensure consistency with the surface expression provided in literature.
+
+\section*{- Hydrodynamic evolution}
+The melt pool dynamics is modeled by the momentum conservation equation (Navier-Stokes equation):
+
+$\{\rho\}\left(\frac{\partial \boldsymbol{u}}{\partial t}+(\boldsymbol{u} \cdot \nabla) \boldsymbol{u}\right)-\nabla \cdot\{\underline{\underline{\boldsymbol{\sigma}}}\}=\boldsymbol{f}_{v}$
+
+where $\underline{\sigma}$ is the stress tensor and $f_{v}$ is the total volumetric force, including surface tension, Marangoni force, recoil pressure and gravity. The stress tensor is directly related to the strain-rate tensor and consequently to the velocity field $u$ by a Newtonian behavior law with the dynamic viscosity $\mu$. Eq. (3) is coupled with the mass conservation equation:
+
+$\nabla \cdot \boldsymbol{u}=\dot{\theta}$
+
+where $\dot{\theta}$ represents the negative volume expansion rate associated with the transition from powder to dense material, which is supposed to occur in a certain temperature range. The velocity $\boldsymbol{u}$ is evaluated to follow the gas/metal interface when updating the LS function, by solving the transport equation:
+
+$\frac{\partial \psi}{\partial t}+\boldsymbol{u} \cdot \nabla \psi=0$
+
+However, after the transportation stage, the eikonal property $(\|\psi\|=1)$ is not respected anymore. A geometric reinitialization method is used (Shakoor et al., 2015) to recalculate the distance function with respect to the position $\psi=0$ obtained after the resolution of Eq. (5). Furthermore, the LS method involves mass conservation issues. Therefore, a method reported in literature (Zhang et al., 2019) has been applied presently to overcome this drawback. Anisotropic mesh adaptation techniques, based on error estimation, are used to optimize the CPU time cost.
+
+\subsection*{3.2. Material properties}
+The material properties of IN738LC and the gas are described in Table 2. The properties related to enthalpy evolution and phase changes are evaluated with Thermocalc software and NI25 database (Thermo-Calc, 2020). Thermal conductivity of the bulk material is calculated with
+
+Table 3
+
+Laser parameters $\left(P_{L}, v_{L}\right)$ in the process window delimited in Fig. 2 providing track stability as shown in Fig. 3.b and chosen for comparisons between numerical simulations and experiments.
+
+\begin{center}
+\begin{tabular}{lllllllll}
+\hline
+\begin{tabular}{l}
+Case number \\
+$\#$ \\
+\end{tabular} & 4 & 5 & 6 & 7 & 9 & 10 & 12 & 14 \\
+\hline
+$v_{L}\left(\mathrm{~mm} \cdot \mathrm{s}^{-1}\right)$ & 960 & 750 & 1075 & 1100 & 685 & 800 & 1000 & 730 \\
+$P_{L}(\mathrm{~W})$ & 230 & 180 & 275 & 320 & 210 & 260 & 370 & 340 \\
+$E_{l}\left(\mathrm{~J} \cdot \mathrm{mm}^{-1}\right)$ & 0.24 & 0.24 & 0.26 & 0.29 & 0.31 & 0.325 & 0.37 & 0.47 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-10(2)}
+\end{center}
+
+Fig. 8. Simulation domain with temperature field and melt pool shape obtained for $P_{L} 230 v_{L} 960$.
+
+JMatPro (JMatPro, 2020) software and properties of the material in liquid state are taken from experimental studies. To evaluate the thermal conductivity of the powder bed $\lambda_{p}$, the model developed by Zehner and Schlünder (1970) is used which considers the thermal conductivity of bulk and gas, thermal contacts and radiations:
+
+$\frac{\lambda_{p}}{\lambda_{g}}=1-\sqrt{1-p}+\frac{2 \sqrt{1-p}}{1-\beta B}\left[\frac{(1-\beta) B}{(1-\beta B)^{2}} \ln \left(\frac{1}{\beta B}\right)-\frac{B+1}{2}-\frac{B-1}{1-\beta B}\right]$
+
+where $\beta=\lambda_{g} / \lambda_{d}$ and $B=1.25((1-p) / p)^{10 / 9}$.
+
+As illustrated in the study of Queva et al. (2020), below solidus temperature, the dynamic viscosity for powder and dense phase is
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-10}
+\end{center}
+
+(a) Conduction mode\\
+Table 4
+
+Differences on the melted zone morphology between experimental and numerical results before calibration for case \#4 $\left(P_{L} 230 v_{L} 960\right) . \mathrm{DIFF}=(\mathrm{NUM}-\mathrm{EXP}) / \mathrm{EXP}$ represents the relative error between experiments and simulation in percent.
+
+\begin{center}
+\begin{tabular}{lllll}
+\hline
+Case \#4 & Unit & EXP & NUM & DIFF (\%) \\
+\hline
+$H_{a p p}$ & $\mu \mathrm{m}$ & 45 & 43.7 & -2.9 \\
+$H_{R Z}$ & $\mu \mathrm{m}$ & 70 & 8.9 & -87.3 \\
+$H_{M P}$ & $\mu \mathrm{m}$ & 115 & 52.6 & -54.3 \\
+$W_{M P}$ & $\mu \mathrm{m}$ & 125 & 88.6 & -29.1 \\
+$S_{M P}$ & $\mu \mathrm{m}^{2}$ & 9252 & 3772 & -59.2 \\
+\hline
+\end{tabular}
+\end{center}
+
+assumed constant (10 Pa.s and 1000 Pa.s respectively). During the phase change, the dynamic viscosity decreases exponentially with temperature. Finally, when the temperature exceeds the liquidus temperature, the dynamic viscosity remains constant at $7.0 \cdot 10^{-3}$ Pa.s.
+
+The absorption coefficient $\alpha_{p}$ of the powder bed has little influence in steady state, as most of the incident energy then irradiates the liquid surface of the melt pool. However, this absorption coefficient has an importance when the laser beam starts to irradiate the powder bed, at the very beginning of scanning. The value of $\alpha_{p}$ is chosen so that a significant proportion of the energy reaches the substrate. The absorption coefficient in the liquid corresponds to a very low characteristic distance of energy penetration $\left(1 / \alpha_{l}=10 \mu \mathrm{m}\right)$. The interaction is indeed close to a surface interaction, as the dense material is opaque at the wavelength of the laser beam.
+
+\subsection*{3.3. Simulation of case $P_{L} 230 v_{L} 960$}
+The scope of this paper is to validate simulation on processing parameters interesting for fabrication. For that reason, the comparison is focused on cases with a good track stability and without a deep keyhole shape (selection of cases located in the green region on Fig. 2). The laser parameters are resumed in Table 3.
+
+The configuration case \#4 was firstly investigated with $P_{L}=230 \mathrm{~W}$ and $v_{L}=960 \mathrm{~mm} . \mathrm{s}^{-1}$ noted $P_{L} 230 v_{L} 960$. The whole simulated domain is shown in Fig. 8 with overall dimensions $2 \times 0.5 \times 1.1 \mathrm{~mm}^{3}$. The previous section highlighted the significance of ejections during laser beam interaction. The present model treats the powder bed as a uniform medium and thus does not account for entrained particles due to gas flow. Therefore, the chosen value of the powder bed thickness is significantly lower than the experimental one, to account for the metal ejections outside the simulated domain. A layer of powder with thickness of $55 \mu \mathrm{m}$ and porosity of $50 \%$ is deposited on the substrate. The laser beam develops linear scanning with constant velocity. The trajectory evolves from initial position $(x, y)=(0.25,0.25) \mathrm{mm}$ to final position $(1.75$, $0.25) \mathrm{mm}$.
+
+The initial temperature is set to $20^{\circ} \mathrm{C}$. For the thermal resolution, adiabatic boundary conditions are applied on each face of the total
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-10(1)}
+\end{center}
+
+(b) Keyhole mode
+
+Fig. 9. Schematic of laser multiple reflections for (a) conduction mode and (b) keyhole mode leading to an enhancement of laser matter interaction.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-11(1)}
+\end{center}
+
+Fig. 10. Influence of absorptivity on the predicted melted area for $P_{L} 230 v_{L} 960$.
+
+domain. For the resolution of melt pool dynamics, a pure sliding condition is considered along the four lateral faces; a sticking condition is imposed along the lower face; and the upper face is free, allowing gas input or output. The total number of elements evolves from $\approx 1750000$ at the start to 2000000 at the end of the simulation in order to keep a good track morphology representation.
+
+Regarding data reported in previous studies (Mayi et al., 2020), a first value of absorptivity $A$ is set at 0.3 . The comparison between the numerical simulation and the experiments is shown in Fig. 11(a) and Table 4.
+
+Significant differences in the melted zone shape are observed between simulation and experiment. Indeed, the various dimensions predicted by the numerical simulation underestimate results experimentally achieved. The heat input is clearly insufficient to melt enough matter to reach the expected dimensions. Furthermore, the\\
+Table 5
+
+Differences on the melted zone morphology between experimental and numerical results before and after calibration for case $\# 4\left(P_{L} 230 v_{L} 960\right)$.
+
+\begin{center}
+\begin{tabular}{lllll}
+\hline
+Case \#4 & Unit & EXP & NUM (after calibration) & DIFF (\%) \\
+\hline
+$H_{a p p}$ & $\mu \mathrm{m}$ & 45 & 43.6 & -3.1 \\
+$H_{R Z}$ & $\mu \mathrm{m}$ & 70 & 67 & -4.3 \\
+$H_{M P}$ & $\mu \mathrm{m}$ & 115 & 110.6 & -3.8 \\
+$W_{M P}$ & $\mu \mathrm{m}$ & 125 & 116 & -7.2 \\
+$S_{M P}$ & $\mu \mathrm{m}^{2}$ & 9252 & 9038 & -2.3 \\
+\hline
+\end{tabular}
+\end{center}
+
+deviations are too large to assume that differences are related to an error in estimation of material properties.
+
+\subsection*{3.4. Calibration of absorptivity coefficient}
+The absorptivity value of 0.3 previously proposed corresponds to the case of a laser interacting perpendicularly with a perfectly plane metal surface (Trapp et al., 2017). As illustrated in Fig. 9(a), this case is encountered in conduction mode, where vaporization weakly occurs or is negligible. Due to surface tension forces, the melt pool shape is globally smooth and consequently, as shown in Fig. 9(a), the laser energy is reflected after striking the melt pool back to the gas. However, vaporization phenomenon is usually observed in SLM process, as reported in the introduction. Consequently, the recoil pressure induced by vaporization generates a keyhole where the laser beam penetrates deeply the melt pool.
+
+Consequently, its morphology cannot anymore be assumed as planar. Considering the melt pool morphology as shown in Fig. 9(b), multiple reflections take place in the capillary. Therefore, the fraction of laser energy reflected back to the gas and definitely lost in conduction mode, returns to the melt pool in keyhole mode and increases the amount of absorbed energy. Consequently, the apparent absorptivity of the material is increased. Furthermore, Trapp et al. (2017) have measured for
+
+\includegraphics[max width=\textwidth, center]{2024_03_10_fc82295ca80e2636ba5dg-11}\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_fc82295ca80e2636ba5dg-11(2)}
+
+Fig. 11. Comparison between numerical results (red) and experimental observations on optical micrograph on cross-sectional view (blue) for case \#4 (a) before and (b) after calibration. The scale bar is common for each image.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-12(4)}
+\end{center}
+
+Fig. 12. Comparison between numerical and experimental results in the process window. The blue and red contours represent respectively the boundary of the experimental and simulated melted zones in a cross section of the track, after solidification.
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-12(2)}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-12(3)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-12(1)}
+\end{center}
+
+(d)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-12}
+\end{center}
+
+Fig. 13. Evolution of (a) the apparent height $H_{a p p}$, (b) the melt pool depth $H_{R Z}$, (c) the apparent width $W_{M P}$ and (d) the melted melt pool area $S_{M P}$ as a function of the linear energy $\left(E_{l}\right)$.\\
+stainless steel $316 \mathrm{~L}$ the evolution of absorptivity with respect to laser power for a fixed laser scan velocity. They demonstrated that the capillary topology is responsible for an increase of the apparent absorptivity, associated with increasing laser power energy absorption.
+
+Different approaches have been proposed in the literature to model and simulate multiple reflections of laser wave. Generally, the raytracing method is used to provide a precise repartition of the energy introduced into the material (Khairallah et al., 2016). This method uses Fresnel's laws to deduce the light ray paths also considering the transmittance and the absorbance of the material depending on the light ray incidence angle. However, this method is generally costly in a 3D simulation context. In the present paper, a calibration methodology is used to provide an estimation of the absorptivity coefficient and efficiently compare experimental measurements and numerical simulation. An increase in the absorptivity value leads to a larger amount of energy delivered to the material. Consequently, the melted zone enlarges. Moreover, as shown in Fig. 10, an affine relationship is observed in the study range between the transverse area of the melt pool $\left(S_{M P}\right.$, perpendicular to the laser scan direction) obtained in numerical simulation and the absorptivity input value. This affine relationship is also consistent with the simplified energy conservation model, discussed in section 3 (cf. Eq. (4)). For the present configuration, this leads to a proposed value of 0.72 for the absorptivity, to match the experimental value of $S_{M P}$
+
+Consequently, according to this linear dependence, two numerical simulations with different values of the absorptivity coefficient are sufficient to determine the absorptivity coefficient providing relevant comparisons with experimental observations.
+
+\subsection*{3.5. Comparison of the experimental/simulated melt pool shape}
+After calibration of absorptivity as described above, Fig. 11(b) and Table 5 illustrate the comparison of the predicted melt pool shape and the experimental observation with a calibrated value for absorptivity of 0.72 .
+
+Contrary to the previous simulation (for which $A=0.3$ ), the model predicts more accurately both the track shape and the associated dimensions. Indeed, an increase in input energy is observed when increasing absorptivity coefficient. More energy is available to melt matter and larger dimensions in melted domain are achieved. In addition, since more energy is provided, higher temperatures are observed in the melt pool.
+
+As a result, the recoil pressure induced by vaporization is more intense, leading also to an increase of the melt pool depth and the global track dimension as explained previously by Queva et al. (2020). This result demonstrates the importance of accounting for the multiple reflections phenomena into the keyhole to obtain a good agreement with experimental observations. Consequently, the calibration of absorptivity was repeated for every simulated case in Table 3, leading to different values of absorptivity.\\
+3.6. Application to the whole experimental plan: comparison with observations
+
+Fig. 12 compares on cross-section views the results given by the numerical simulation with the experimental observations in the process window. A good agreement is obtained between numerical and experimental results in the whole process window. Indeed, from a configuration with a low linear energy $(0.24 \mathrm{~J} / \mathrm{mm})$ to a configuration considering a significant linear energy value $(0.47 \mathrm{~J} / \mathrm{mm})$, the model is able to predict both the melt pool dimensions and morphology. Fig. 13 presents quantitatively the comparison of the results obtained by the present model with experiment. As shown in Table 6, a good agreement is obtained between numerical simulation and experiments for $H_{a p p}, H_{R Z}$, $W_{M P}$ and $S_{M P}$. Indeed, for $H_{R Z}, W_{M P}$ and $S_{M P}$ the maximum of deviation between numerical and experimental results are lower than 8\%. Moreover, the mean value of the deviation of each dimension does not exceed $6.6 \%$. It has to be noted for case \#14 that the powder bed height has been raised from 55 to $70 \mu \mathrm{m}$. This will be discussed in the next section.
+
+Comparisons are obtained between experimental observations and numerical results on cross-section views on the left side in Fig. 14. On the right side of the same figure, the keyhole mode transition as linear energy increases is illustrated in longitudinal section snapshots. These comparisons are obtained for cases of interest from Table 3. The model demonstrates the capacity to simulate melt pool dynamics from low keyhole geometry to deep ones. As explained in the last part, stronger recoil force is applied to the gas/melt pool interface due to higher temperatures encountered as linear energy increases. Furthermore, it can be observed that the velocity magnitude reaches $5 \mathrm{~m} . \mathrm{s}^{-1}$, which is consistent with the maximum values reported by Ly et al. (2017) for Ti-6Al-4 V. It is also consistent with the values found by Bayat et al. (2019) for IN718.
+
+\section*{4. Discussion}
+\subsection*{4.1. Melt pool dimensions}
+Even if the present model is able to predict correctly the melt pool dimension, it tends to slightly underestimate the apparent height $H_{\text {app }}$. One of the possible explanations is that some particles are drawn from both sides of the track toward the melt pool, as observed by Bidare et al. (2018). Here, because the powder bed is modelled as a continuum, this effect is not considered in the simulation, leading to an underestimation of $H_{a p p}$. Particles dynamics with movements towards the melt pool and away from the melt pool could be an impacting phenomenon and should be consider to provide accurate estimation of $H_{a p p}$ on the whole process window.
+
+Moreover, for the numerical case with the highest linear energy (case \#14- $P_{L} 340 v_{L} 730$ ), as explained in the previous section, since the apparent height measured experimentally is much higher than the other cases investigated in the process window, a slight modification has been brought to the model by modifying the powder bed thickness for the
+
+Table 6
+
+Differences on the melted zone morphology between experimental (average of the different measures, noted M(EXP)) and numerical results for cases from Table 3 . DIFF is still calculated in percent.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\multirow{2}{*}{Case} & \multicolumn{2}{|c|}{$\boldsymbol{H}_{a p p}[\mu \mathrm{m}]$} & \multirow[b]{2}{*}{DIFF} & \multicolumn{2}{|c|}{$\boldsymbol{H}_{R Z}[\mu \mathrm{m}]$} & \multirow[b]{2}{*}{DIFF} & \multicolumn{2}{|c|}{$W_{M P}[\mu \mathrm{m}]$} & \multirow[b]{2}{*}{DIFF} & \multicolumn{2}{|c|}{$S_{M P}\left[\mu \mathrm{m}^{2}\right]$} & \multirow[b]{2}{*}{DIFF} \\
+\hline
+ & $\mathrm{M}(\mathrm{EXP})$ & NUM &  & M(EXP) & NUM &  & M(EXP) & NUM &  & M(EXP) & NUM &  \\
+\hline
+$\# 4$ & 53.75 & 43.6 & -18.8 & 70 & 67 & -4.3 & 125.3 & 116 & -7.7 & 10530 & 9038 & -14.2 \\
+\hline
+$\# 5$ & 57 & 44.2 & -13.7 & 61 & 57 & -6.6 & 123.5 & 115 & -6.9 & 9791 & 11290 & 5.1 \\
+\hline
+$\# 6$ & 55 & 49.5 & -10 & 87 & 82 & -5.7 & 132 & 121.5 & -8.0 & 12218 & 10676 & -12.6 \\
+\hline
+$\# 7$ & 60 & 50.3 & -16.2 & 97 & 100 & 3.1 & 133 & 132 & -0.8 & 14277 & 12956 & -9.3 \\
+\hline
+$\# 9$ & 61.25 & 51.2 & -16.4 & 85 & 80 & -5.9 & 147.8 & 150 & 1.5 & 14501 & 14698 & 1.4 \\
+\hline
+\#10 & 59.75 & 50.7 & -15.1 & 106 & 108 & 1.9 & 143.3 & 144 & 0.5 & 15477 & 15435 & -0.3 \\
+\hline
+\#12 & 60 & 52.6 & -12.3 & 153 & 149 & -2.6 & 149 & 151 & 1.3 & 21318 & 20027 & -6.1 \\
+\hline
+\#14 & 77 & 74.7 & -3.0 & 191 & 184 & -3.7 & 148 & 150 & 1.4 & 25867 & 23768 & -8.1 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-14}
+\end{center}
+
+Fig. 14. Comparison between numerical simulation and experiments on cross-sections and snapshots of the melt pool morphology transition as linear energy increases. The red and blue contours represent respectively numerical and experimental results. The black contour represents the melt pool shape. The scale bar is the same for each comparison case.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_fc82295ca80e2636ba5dg-15}
+
+Fig. 14. (continued).
+
+simulation (from $55 \mu \mathrm{m}$ to $70 \mu \mathrm{m}$ ) to enhance the calibration of the numerical simulation. Some assumptions can be advanced in order to discuss this observation and explain this choice. Matthews et al. (2016) consider that the denudation zone enlarges as laser power increases. Consequently, the proportion of ejected powder due to depression, of spatters generated from the melt pool and of powder entrained into the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-16(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-16(2)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_fc82295ca80e2636ba5dg-16}
+\end{center}
+
+(c)
+
+Fig. 15. Comparison between numerical absorptivity coefficient obtained after calibration by the present numerical simulation, and experimental measurements made by Trapp et al. (2017).
+
+melt pool may evolve as laser power increases. However, despite that consideration, the constant powder bed thickness ( $55 \mu \mathrm{m}$ ) allows to predict accurately the melt pool dimensions of most cases.
+
+The present model helps in understanding the influence of the laser power or the laser scan speed on laser-matter interaction, melt pool dynamics and finally the final bead shape obtained. For instance, for couples with similar linear energy $\left(0.24 \mathrm{~J} \cdot \mathrm{mm}^{-1}\right.$ for cases $\#\{1,2\}$ and $0.46 \mathrm{~J} \cdot \mathrm{mm}^{-1}$ for case $\#\{14,15\}$ ) a larger melted area and a higher melt pool depth $H_{R Z}$ are obtained. Indeed, for the case with the higher value of laser power and more importantly velocity, the keyhole wall angle tends to increase and modify the keyhole morphology as demonstrated by Cunningham et al. (2019). Therefore, it enhances the laser rays due to multiple reflections to merge to the center of the keyhole, increasing the global absorptivity of laser energy and finally the melt pool depth as explained in the last paragraph.
+
+\subsection*{4.2. Evolution of absorptivity coefficient}
+Fig. 15 illustrates the absorptivity values used after calibration compared to experimental measurements obtained by Trapp et al. (2017) with a $316 \mathrm{~L}$ steel. It is important to note that for all the measurements reported by Trapp et al., the laser scan speed was fixed at $1500 \mathrm{~mm} / \mathrm{s}$. A first comparison is done in Fig. 15(a), consisting in simply plotting $A$ as a function of $P_{L}$, despite the fact that the eight calibrated values of the present study are obtained for different scan velocities. It can be seen on this first chart that the present calibrated values are somewhat higher than the experimental ones. However, when plotting now $A$ as a function of the linear energy $E_{l}$, in Fig. 15(b), we observe a better coherence between the different values: the $A$ values of the present study - generally obtained for higher $E_{l}$ - tend to align in continuity with the measurements of Trapp et al.
+
+Nevertheless, dots are not well aligned on Fig. 15(b), showing that absorptivity is probably not a function of the linear energy, but of more complex function of $P_{L}$ and $v_{L}$. In section 2.3, it is shown that a good description of the evolution of $S_{M P}$ is achieved with an absorptivity having the following expression: $A=C_{1} \cdot\left(P_{L}^{a} v_{L}^{b}-C_{2}\right)^{1 / 2}$. Therefore, Fig. 15(c) shows a chart in which $A$ is plotted against $P_{L}^{a} v_{L}^{b}$ with $a=0.2$ and $b=-0.06$, for both Trapp et al. and present calibrated values. It is remarkable that, excepting the domain of lower energy, for which keyhole does not appear, the whole set of values is now almost perfectly aligned, demonstrating the relevance of proposed expression for $A$ :
+
+$A=0.95\left(P_{L}^{a} v_{L}^{b}-1.4\right)^{1 / 2}$
+
+This suggests that the laser power has probably a stronger effect on the absorptivity than the scanning velocity. This is consistent with the fact that absorptivity is affected by the recoil pressure and thus by the peak temperature.
+
+\subsection*{4.3. Comparison with another numerical simulation}
+The configuration investigated by Bayat et al. (2019) was considered. The process parameters used by Bayat et al. such as laser power $(285 \mathrm{~W})$, velocity scan $\left(960 \mathrm{~mm} . \mathrm{s}^{-1}\right)$ or deposited powder height $(40 \mu \mathrm{m})$ are used also for this comparison. It is first underlined that this configuration is addressed by numerical simulation for the alloy IN718, and not IN738LC as in the present study. However, the thermophysical properties of the two alloys are sufficiently close to make this comparison relevant. An interesting point is that the approach of Bayat et al. differs from the present one essentially by two points: i) an explicit description of the particles of the powder bed, and ii) a ray-tracing approach to model the multi-reflections of the laser beam.
+
+Fig. 16(a) illustrates the results of Bayat et al., as extracted from their article: melt pool shape at time $0.7 \mathrm{~ms}$ and three cross-section views showing the formation of the track. Fig. 16(b) shows the results from the present model. A good agreement was obtained both on the temperature distribution in the melt pool and on its dimensions in the different crosssections. First, from the capillary front to the tail of the melt pool, the temperature distribution between the two simulations is substantially the same, with temperature exceeding $3000^{\circ} \mathrm{C}$ where the laser is heating. Second, on the different cross-section views, more precisely at $X=$ $[300,400,500] \mu \mathrm{m}$ from the beginning of the track as shown in the right part of Fig. 16, the maximum of relative deviation between the two models for the total melt pool height $H$ is $12.1 \%$. For the melt pool width $\mathrm{W}$ (considering Bayat et al. notations), the maximum of deviation is 4.9 $\%$.
+
+However, there are some differences, first in the diffusion of heat through the powder bed around the melt pool. Diffusion is more rapid in the simulation of Bayat et al. than with the present approach. Looking at the right part of Fig. 16, it can be noticed that the powder bed generated by the DEM method in Bayat et al. seems to show an average porosity larger than the value used in the simulation with the present approach $(50 \%)$. Note that a higher porosity should favor a slower diffusion, instead of a faster one. The reason for a faster diffusion could be found in possible differences regarding the model for the homogenized conductivity of the powder bed. Finally, another difference lies in the effect of surface tension, which seems somewhat different in the two simulations, the trend to spheroidization being more marked in the present simulation.
+
+Finally, an interesting point to underline is that the absorptivity coefficient ( 0.76 ) has been obtained by using Fig. 15(a) where a quasilinear relationship is obtained between the laser power and the\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_fc82295ca80e2636ba5dg-17}
+
+Fig. 16. Comparison between numerical results obtained by a) Bayat et al. (2019), and b) the present numerical model. Part a) of the Figure is directly replicated from the article of Bayat et al. (2019). Color coding for temperature distribution is the same for parts a) and b).
+
+absorptivity for the laser power range investigated. This absorptivity coefficient also matches with the phenomenological expression given by Eq. (13). In other terms, this means that no calibration is necessary to get a good agreement with another numerical result considering a more accurate absorptivity calculation. Consequently, this demonstrates that numerical simulation can help also to provide averaged absorptivity estimation evolution maps according to different parameters such as laser power, scan speed or linear energy. These numerical evolution maps are interesting, because the experimental estimation of absorptivity is time and energy consuming.
+
+\section*{5. Conclusion}
+In this study, a set of tracks were fabricated in an Inconel 738 LC nickel-base superalloy using LBM process with a large set of processing parameters. The dimensions of tracks were precisely measured and cross sections of melted domains observed. Processing parameters with a linear incident energy between 0.22 and $0.5 \mathrm{~J} \cdot \mathrm{mm}^{-1}$ lead to tracks with stable dimensions and a penetration ratio $H_{R Z} / H_{a p p}$ between 1 and 3 . The use of analytical models allowed to describe the melt pool cross section, but was found insufficient to estimate quantitatively the different melt pool dimensions. For quantitative prediction, an advanced thermo-fluid finite element model was used. A novel method was proposed to calibrate the model, which then successfully predicted the melt pools dimensions on a large processing window. The calibration required first to take into consideration the significant amount of particle ejection during the interaction between the laser beam and the powder bed. This was done by a precise analysis of track and powder bed topography measurements. Because in the present model such ejections are not explicitly modeled, it was necessary to reduce the powder bed thickness in the simulation. This adjustment being done, the main results of the study are the followings:
+
+\begin{enumerate}
+  \item It was demonstrated that this numerical model, which considers the powder bed as a continuum, has an excellent capability to describe the melt pool shapes on the whole process window, from low energy conditions up to the keyhole mode and from low to high scanning velocities.
+
+  \item The study proved the importance to consider absorptivity as a variable parameter. A novel method was proposed to determine the value of absorptivity, with a combination of semi-analytical reasoning and numerical simulation. This method allowed expressing absorptivity as a function of the laser power and the scanning velocity. It was shown that such a correlation is fully consistent with separate in-situ measurements from the literature.
+
+  \item Using this phenomenological expression of absorptivity, the predictive character of the simulation code was successfully tested by comparison with another simulation code from the literature, which - at the cost of higher computational times - addresses more directly the physics (ray tracing, particle motion).
+
+\end{enumerate}
+
+This work also allows defining some progress orientations:
+
+\begin{enumerate}
+  \item The above-mentioned correlation and validation with respect to experimental observations essentially lies on the measurement of transverse sections of tracks and remelted zones. It would be highly appreciated to consolidate this with an advanced instrumentation. Two axes can be mentioned: thermal imaging to measure surface temperature fields, and high-speed imaging to observe and quantify ejection and denudation phenomena.
+
+  \item Nonetheless, considering the numerical model as it is, its capability to describe track formation on a wide process window is very promising for its future use to control the microstructure of nickel based superalloys processed by LBM, and more particularly solidification defects, such as hot cracking. This could be done first by a direct use of this thermo-fluid code, providing then critical quantities at the rear of the melt pool, such as temperature gradients and temperature rates, from which it is known that relevant cracking indicators can be produced. This could also be done by adding a solid mechanics solver to the code in order to predict stress and strainrates, and possibly directly simulate cracking.
+
+\end{enumerate}
+
+\section*{CRediT authorship contribution statement}
+D. Grange: Conceptualization, Methodology, Investigation, Formal analysis, Writing - original draft. A. Queva: Methodology, Software, Investigation, Writing - original draft. G. Guillemot: Methodology, Validation, Writing - review \& editing. M. Bellet: Methodology, Writing - review \& editing, Supervision. J.-D. Bartout: Methodology, Resources. C. Colin: Methodology, Validation, Supervision.
+
+\section*{Declaration of Competing Interest}
+The authors report no declarations of interest.
+
+\section*{Acknowledgements}
+Safran Tech (Châteaufort, France) funded this study. The authors would like to thank Clara Moriconi and Bruno Macquaire for their constructive remarks.
+
+\section*{References}
+Aggarwal, A., Patel, S., Kumar, A., 2019. Selective laser melting of 316L stainless steel: physics of melting mode transition and its influence on microstructural and mechanical behavior. JOM 71, 1105-1116. \href{https://doi.org/10.1007/s11837-0183271-8}{https://doi.org/10.1007/s11837-0183271-8}.\\
+Bayat, M., Thanki, A., Mohanty, S., Witvrouw, A., Yang, S., Thorborg, J., Tiedje, N.S., Hattel, J.H., 2019. Keyhole-induced porosities in Laser-based Powder Bed Fusion (LPBF) of Ti6Al4V: high-fidelity modelling and experimental validation. Addit. Manuf. 30, 100835 \href{https://doi.org/10.1016/j.addma.2019.100835}{https://doi.org/10.1016/j.addma.2019.100835}.
+
+Bidare, P., Bitharas, I., Ward, R.M., Attallah, M.M., Moore, A.J., 2018. Fluid and particle dynamics in laser powder bed fusion. Acta Mater. 142, 107-120. \href{https://doi.org/}{https://doi.org/} 10.1016/j.actamat.2017.09.051.
+
+Chen, Q., Guillemot, G., Gandin, C.-A., Bellet, M., 2017. Three-dimensional finite element thermomechanical modeling of additive manufacturing by selective laser melting for ceramic materials. Addit. Manuf. 16, 124-137. \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} j.addma.2017.02.005.
+
+Cloots, M., Uggowitzer, P.J., Wegener, K., 2016. Investigations on the microstructure and crack formation of IN738LC samples processed by selective laser melting using Gaussian and doughnut profiles. Mater. Des. 89, 770-784. \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} j.matdes.2015.10.027.
+
+Cunningham, R., Zhao, C., Parab, N., Kantzos, C., Pauza, J., Fezzaa, K., Sun, T., Rollett, A. D., 2019. Keyhole threshold and morphology in laser melting revealed by ultrahighspeed x-ray imaging. Science 363, 849-852. \href{https://doi.org/10.1126/science}{https://doi.org/10.1126/science}. aav4687.
+
+Dry air properties, n.d. URL \href{https://www.engineeringtoolbox.com/dry-air-properties}{https://www.engineeringtoolbox.com/dry-air-properties} -d\_973.html (accessed 15 March 2020).
+
+Grange, D., Bartout, J.D., Macquaire, B., Colin, C., 2020. Processing a non-weldable nickel-base superalloy by Selective Laser Melting: role of the shape and size of the melt pools on solidification cracking. Materialia 12, 100686. \href{https://doi.org/}{https://doi.org/} 10.1016/j.mtla.2020.100686.
+
+Hann, D.B., Iammi, J., Folkes, J., 2011. A simple methodology for predicting laser-weld properties from material and laser parameters. J. Phys. D Appl. Phys. 44, 445401 \href{https://doi.org/10.1088/0022-3727/44/44/445401}{https://doi.org/10.1088/0022-3727/44/44/445401}.
+
+JMatPro, 2020. Practical Software for Materials Properties. Sente Software Ltd.. www. \href{http://sentesoftware.co.uk}{sentesoftware.co.uk}
+
+Khairallah, S.A., Anderson, A.T., Rubenchik, A., King, W.E., 2016. Laser powder-bed fusion additive manufacturing: physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones. Acta Mater. 108, 36-45. \href{https://doi.org/10.1016/j.actamat.2016.02.014}{https://doi.org/10.1016/j.actamat.2016.02.014}.
+
+King, W.E., Barth, H.D., Castillo, V.M., Gallegos, G.F., Gibbs, J.W., Hahn, D.E., Kamath, C., Rubenchik, A.M., 2014. Observation of keyhole-mode laser melting in laser powder-bed fusion additive manufacturing. J. Mater. Process. Technol. 214, 2915-2925. \href{https://doi.org/10.1016/j.jmatprotec.2014.06.005}{https://doi.org/10.1016/j.jmatprotec.2014.06.005}.
+
+Ly, S., Rubenchik, A.M., Khairallah, S.A., Guss, G., Matthews, M.J., 2017. Metal vapor micro-jet controls material redistribution in laser powder bed fusion additive manufacturing. Sci. Rep. 7, 4085. \href{https://doi.org/10.1038/s41598-017-04237-z}{https://doi.org/10.1038/s41598-017-04237-z}.
+
+Martin, A.A., Calta, N.P., Khairallah, S.A., Wang, J., Depond, P.J., Fong, A.Y., Thampy, V., Guss, G.M., Kiss, A.M., Stone, K.H., Tassone, C.J., Nelson Weker, J., Toney, M.F., van Buuren, T., Matthews, M.J., 2019. Dynamics of pore formation during laser powder bed fusion additive manufacturing. Nat. Commun. 10, 1-10. \href{https://doi.org/10.1038/s41467-019-10009-2}{https://doi.org/10.1038/s41467-019-10009-2}.
+
+Matthews, M.J., Guss, G., Khairallah, S.A., Rubenchik, A.M., Depond, P.J., King, W.E., 2016. Denudation of metal powder layers in laser powder bed fusion processes. Acta Mater. 114, 33-42. \href{https://doi.org/10.1016/j.actamat.2016.05.017}{https://doi.org/10.1016/j.actamat.2016.05.017}.
+
+Mayi, Y.A., Dal, M., Peyre, P., Bellet, M., Metton, C., Moriconi, C., Fabbro, R., 2020. Laser-induced plume investigated by finite element modelling and scaling of particle entrainment in laser powder bed fusion. J. Phys. D Appl. Phys. 53, 075306 https:// \href{http://doi.org/10.1088/1361-6463/ab5900}{doi.org/10.1088/1361-6463/ab5900}.
+
+Mills, K.C., Youssef, Y.M., Li, Z., Su, Y., 2006. Calculation of thermophysical properties of Ni-based superalloys. ISIJ Int. 46, 623-632. \href{https://doi.org/10.2355/}{https://doi.org/10.2355/} isijinternational.46.623.
+
+Moniz, L., Chen, Q., Guillemot, G., Bellet, M., Gandin, C.-A., Colin, C., Bartout, J.-D., Berger, M.-H., 2019. Additive manufacturing of an oxide ceramic by laser beam melting-comparison between finite element simulation and experimental results. J. Mater. Process. Technol. 270, 106-117. \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. jmatprotec.2019.02.004.
+
+Quested, P.N., Brooks, R.F., Chapman, L., Morrell, R., Youssef, Y., Mills, K.C., 2009. Measurement and estimation of thermophysical properties of nickel based superalloys. Mater. Sci. Technol. 25, 154-162. \href{https://doi.org/10.1179/}{https://doi.org/10.1179/} $174328408 X 361454$.
+
+Queva, A., Guillemot, G., Moriconi, C., Metton, C., Bellet, M., 2020. Numerical study of the impact of vaporisation on melt pool dynamics in laser powder bed fusion application to IN718 and Ti-6Al-4V. Addit. Manuf. 35, 101249 \href{https://doi.org/}{https://doi.org/} 10.1016/j.addma.2020.101249.
+
+Shakoor, M., Scholtes, B., Bouchard, P.-O., Bernacki, M., 2015. An efficient and parallel level set reinitialization method - application to micromechanics and microstructural evolutions. Appl. Math. Model. 39, 7291-7302. \href{https://doi.org/}{https://doi.org/} 10.1016/j.apm.2015.03.014.
+
+Thermo-Calc, 2020. Thermo-Calc Software Company, Solna, Sweden. www.thermocalc. com.
+
+Trapp, J., Rubenchik, A.M., Guss, G., Matthews, M.J., 2017. In situ absorptivity measurements of metallic powders during laser powder-bed fusion additive manufacturing. Appl. Mater. Today 9, 341-349. \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. apmt.2017.08.006.
+
+Yadroitsev, I., Smurov, I., 2010. Selective laser melting technology: from the single laser melted track stability to 3D parts of complex shape. Physics Procedia, Laser Assisted
+
+Net Shape Engineering 6, Proceedings of the LANE 2010, Part 2 5, 551-560. https:// \href{http://doi.org/10.1016/j.phpro.2010.08.083}{doi.org/10.1016/j.phpro.2010.08.083}.
+
+Zehner, P., Schlünder, E.U., 1970. Wärmeleitfähigkeit von Schüttungen bei mäßigen Temperaturen. Chem. Ingenieur Tech. 42, 933-941. \href{https://doi.org/10.1002/}{https://doi.org/10.1002/} cite. 330421408 .\\
+Zhang, S., Guillemot, G., Gandin, C.-A., Bellet, M., 2019. A partitioned two-step solution algorithm for concurrent fluid flow and stress-strain numerical simulation in solidification processes. Comput. Methods Appl. Mech. Eng. 356, 294-324. https:// \href{http://doi.org/10.1016/j.cma.2019.07.006}{doi.org/10.1016/j.cma.2019.07.006}.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

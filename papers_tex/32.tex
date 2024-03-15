@@ -1,0 +1,626 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{bbold}
+
+\title{Using machine learning to identify in-situ melt pool signatures indicative of flaw formation in a laser powder bed fusion additive manufacturing process }
+
+
+\author{Luke Scime*, Jack Beuth\\
+NextManufacturing Center, Department of Mechanical Engineering, Carnegie Mellon University, 5000 Forbes Ave., Pittsburgh PA 15213, United States}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Full Length Article
+
+
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+Additive manufacturing
+
+Melt pool-scale flaws
+
+Computer vision
+
+Machine learning
+
+In-situ process monitoring
+
+\begin{abstract}
+A B S T R A C T Because many of the most important defects in Laser Powder Bed Fusion (L-PBF) occur at the size and timescales of the melt pool itself, the development of methodologies for monitoring the melt pool is critical. This works examines the possibility of in-situ detection of keyholing porosity and balling instabilities. Specifically, a visiblelight high speed camera with a fixed field of view is used to study the morphology of L-PBF melt pools in the Inconel 718 material system. A scale-invariant description of melt pool morphology is constructed using Computer Vision techniques and unsupervised Machine Learning is used to differentiate between observed melt pools. By observing melt pools produced across process space, in-situ signatures are identified which may indicate flaws such as those observed ex-situ. This linkage of ex-situ and in-situ morphology enabled the use of supervised Machine Learning to classify melt pools observed (with the high speed camera) during fusion of nonbulk geometries such as overhangs.
+\end{abstract}
+
+\section*{1. Introduction}
+In order for Additively Manufactured (AM) components to be used for safety-critical applications in industries such as aerospace, biomedical, energy, automotive, and tooling [1-3], a greater degree of part quality assurance must first be achieved. A key approach for achieving this goal is the integration of closed-loop control schema into the AM processes [4]. Monitoring efforts for the Powder Bed Fusion (PBF) and Direct Energy Deposition (DED) AM processes have variously focused on detecting macro-scale flaws (e.g. part delamination and residual stress-induced warping) [5,6], detecting micro-scale flaws (e.g. porosity), measuring temperature fields and histories [5,6], measuring shielding gas quality [7], and understanding melt pool dynamics [5,6].
+
+In Laser PBF (L-PBF), a shallow layer of metal powder is deposited over a build plate or existing powder bed. After the layer is deposited a laser beam selectively exposes (melts) the powder bed in the shape of a 2D slice of the desired 3D part. This process is repeated throughout the "build" until the entire part is complete. A schematic representation of an EOS M290 L-PBF machine (EOS GmbH, Germany) [8] is shown in Fig. 1.
+
+Defects common in L-PBF such as porosity formed by the keyholing mechanism [9] and the surface tension-related balling phenomenon $[10,11]$ are on the same size scale as the melt pool and occur along the melt tracks themselves. For these reasons, the authors consider in-situ monitoring of the melt pool itself to be critical for ensuring part quality. This view is also shared by many in the AM community, and a substantial body of work now exists relating to the observation of melt pools in L-PBF and DED AM processes using high speed visible-light and thermal imaging. Much of the existing work has focused on monitoring the dimensions of the melt pool. For example, Tan et al. [12] measured melt pool dimensions in a welding process using a coaxially aligned high speed camera and Heigel et al. [13] measured melt pool length in L-PBF using a high speed thermal camera. Impressively, Clijsters et al. [14] developed a real-time system capable of measuring the in-situ melt pool dimensions for an L-PBF process and similar systems are now in use by several L-PBF machine manufacturers [15,16]. Fisher et al. [17] worked to correlate temperature information (collected using a visiblelight camera) with melt pool dimensions in an L-PBF process.
+
+Qualitative and quantitative observation of L-PBF melt pool dynamics has been performed by Gunenthiram et al. [18], Criales et al. [19], and Bertoli et al. [20] although none of these groups sought to directly detect defect formation. Alternate but related sensor modalities have also been used to investigate the melt pool. For example, spectrographic imaging of the vapor plume has been utilized to detect processing defects in the LENS process by Nassar et al. [21]. While Islam et al. [22] attempted to use a combination of a high speed pyrometer and a high speed camera to detect balling via observation of the temperature profile of the melt pool and the surrounding area.
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail address: \href{mailto:lscime@andrew.cmu.edu}{lscime@andrew.cmu.edu} (L. Scime).
+}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-02}
+\end{center}
+
+Fig. 1. A schematic representation of an EOS M290 machine. The arrows indicate the direction that the schematic components will move immediately following the lasing of the current layer.
+
+Of most relevance, some work has also applied traditional statistical analysis methods and rudimentary Machine Learning (ML) and Computer Vision (CV) techniques to the task of defect detection. Luo et al. [23] leveraged a Neural Network to identify the correlation between process parameters and keyhole formation in laser beam welding using data collected from a high speed camera. Grasso et al. [24] detected off-nominal melting via statistical comparisons between the pixel-wise trans-layer emitted light intensity profiles. Repossini et al. [25] and Grasso et al. [26] correlated traditional statistical descriptors of spatter (e.g. number and size of spatter particles) and the vapor plume (e.g. emission intensity) with processing parameters (three different energy densities), laser beam scan direction, and catastrophic flaw formation in L-PBF processes. Khanzadeh et al. $[27,28]$ presented a method for detecting porosity in the LENS DED process by autonomously clustering different melt pool morphologies, where the morphologies are defined by a radial function that traces the melt pool boundary as detected by a thermal camera. Finally, recent work by Zhang et al. [29] has demonstrated the ability of ML, operating on both simple statistical descriptors and those generated by a Convolutional Neural Network, to differentiate between L-PBF melt pools produced using three different processing parameters.
+
+The melt pool monitoring approaches reported in the literature have a number of critical limitations: First and foremost, few focus on in-situ flaw detection and many of those that do operate on DED AM processes. In DED, the beam travel velocities are approximately one order of magnitude slower than those used in L-PBF and the melt pool dimensions are approximately one order of magnitude larger than those found in $\mathrm{L}-$ PBF $[30,31]$ - overall DED is a much more conducive environment for insitu melt pool monitoring than L-PBF. While Khanzadeh et al. [27,28] utilized unsupervised ML to differentiate between LENS melt pool morphologies, the chosen descriptor of melt pool shape was neither scale invariant nor capable of incorporating information about the spatter or vapor plume. While statistical learning was used by Repossini et al. [25] and Grasso et al. [26] to characterize spatter and the vapor plume, the work ignored the morphology of the melt pool itself and relied on segmentation rather than more advanced CV feature extraction techniques. Additionally, the work of Grasso et al. [24] requires either comparisons between data collected at different layers or a "clean" signal from a successful build of the same geometry - limiting its applicability to many situations. Finally, none of the work in the literature leverages knowledge of process space to enable the use of supervised ML techniques for melt pool classification and none seek to differentiate between flaw types (i.e. prior work focuses only on detecting "off-nominal" melt pools as opposed to specific defect generation mechanisms).
+
+In this work, a high speed, off-axis, visible-light camera with a fixed Field of View is used to image Inconel 718 (In718) melt pools in a commercially-available L-PBF process. In-situ melt pool morphology is studied and classified using CV and ML techniques in order to identify in-situ flaw formation signatures. It is worth noting that the high speed camera system used in this work detects the thermal emissions from both the melt pool as well as any hot material in the surrounding region [32]. Therefore the in-situ data are not well predicted by existing simulations - motivating the usage of CV and ML techniques to describe these data. Because the melt pool size often does not correlate to ex-situ flaws, a scale-agnostic description of melt pool morphology is created by applying the Bag-of-Words (or Keypoints) [33] ML technique to features extracted using SIFT (Scale Invariant Feature Transforms) [34]. The presented description of melt pool morphology explicitly incorporates information regarding the shape of the melt pool itself, the vapor plume, and spatter in order to improve differentiation between in-situ morphologies. Acquiring ground-truth information about in-situ melt pool morphology in a commercially-available L-PBF system is extremely non-trivial. Therefore, ex-situ melt pool morphology data previously collected by the authors [35], combined with fundamental knowledge of process space [36], are used to bridge the gap between unsupervised and supervised ML. This novel, human-in-the-loop, ML approach enables not only the identification of similar and dissimilar melt pool morphologies, but also the preliminary classification of melt pools based on observed in-situ flaw signatures. Specifically, the presented ML methodology is capable of classifying melt pool morphologies into four categories: desirable, balling, under-melting, and keyholing porosity which are defined in [35].
+
+Furthermore, while prior work [37] demonstrates that process parameters can be chosen to reduce the likelihood of melt pool-scale defects, the approach is not easily extensible to non-bulk geometries. In other words, even if process parameters are chosen to reside within a desirable processing window based on bulk data, defects may still occur during the printing of certain geometries such as unsupported overhangs [38]. As a result, the only way to assure machine users that melt pool-scale flaws are not occurring is through the implementation of insitu process monitoring or prohibitively-expensive ex-situ testing [39]. To address this issue, the high speed camera is used to collect data during the printing of a test artifact containing an unsupported overhang. The imaged melt pools are then analyzed using the trained ML methodology. The Additive Manufacturing terminology used herein complies as closely as possible with ISO/ASTM 52900:2015 [40].
+
+\section*{2. Experimental procedure and methods}
+\subsection*{2.1. Programming environment}
+Unless otherwise noted, all software was developed within the MATLAB R2016a or R2017a environments. The above MATLAB versions also included the following add-on packages: the Image Processing Toolbox and the Statistics Toolbox.
+
+\subsection*{2.2. High speed camera}
+The in-situ melt pool images analyzed in this work were captured by a one megapixel Photron FASTCAM Mini AX200 high speed camera mounted to the EOS M290 at CMU's NextManufacturing Center, the setup for which is described in [41]. Visible light collected by the camera sensor originates as thermal emissions ${ }^{1}$ from the melt pool and surrounding material which is also at an elevated temperature. The
+\footnotetext{${ }^{1}$ As discussed in [[41]], "this implies that the true melt pool boundaries are unknown when viewing the melt pool images." Further characterization of the system is explored by Fisher et al. [[32]] which enables the estimation of melt pool size under certain conditions. Nonetheless, the inability to precisely identify the true melt pool boundary is not a hindrance to the presented study of melt pool morphology.
+}
+high melt pool temperatures for the In718 alloy allow for sufficient emission in the visible spectrum for the use of a visible-light camera to be practical.
+
+Data are recorded on an onboard 16 GB circular RAM buffer. For the experiments presented in this chapter, camera recording was triggered either manually by the authors or automatically by the Photron PFV software package [42] based on the sudden increase in brightness corresponding to a melt pool entering the Field of View (FoV). "The optical train that is used in this work provides a maximum field of view of $6.35 \mathrm{~mm} \times 6.35 \mathrm{~mm}$, with each pixel covering a $6.2 \mu \mathrm{m} \times 6.2 \mu \mathrm{m}$ area. The resolving power of the system is approximately 50 line-pairs per millimeter as determined by visual inspection of a negative 1951 USAF resolution test target supplied by Thorlabs" [41].
+
+\subsection*{2.3. Camera calibration procedure}
+The location of the available chamber viewport [41] necessitates that the high speed camera be mounted such that its axis is not parallel to the normal vector of the build plate ( $z$-axis). The resulting distortion is compensated for by applying an affine warp [43] to the image such that a rectangular object in the initial image will appear truly rectangular in the final image. In order to determine the appropriate Homography matrix, a rectangular fiducial exposed using the nominal EOS parameters was imaged using both the high speed camera (Fig. 2) and an Alicona Infinite-Focus optical microscope (Fig. 3). Specifically, the four interior corners of the fiducial were used to map the high speed camera image to the "true" dimensions as measured from the microscope image. As expected, the camera distortion was minimal, given the relatively small FoV and shallow camera angle (relative to the $z$-axis).
+
+The frame rate of the high speed camera was chosen a priori to be $6400 \mathrm{fps}$ - the maximum frame rate for which the entire FoV (1024 pixels $\times 1024$ pixels) can be captured. At this frame capture rate the 16 GB RAM buffer on the high speed camera can record data for approximately $1.7 \mathrm{~s}$. An exposure time of $5.00 \mu \mathrm{s}$ was chosen based on visual observation of melt pools produced using four different power and velocity combinations spanning the process space of interest. Specifically, melt pools produced using PV \#1 (nominal EOS parameters), PV \#19 (high energy density regime), PV \#6 (low energy density regime), and PV \#36 (balling regime) were imaged at multiple exposure times (see Table 1). The exposure time was chosen such that the low energy density melt pool was visible while the vapor plume of high energy density melt pool did not completely obscure the melt pool itself. During a $5.00 \mu \mathrm{s}$ exposure time a melt pool traveling at the maximum tested velocity of $1400 \mathrm{~mm} / \mathrm{s}$ will travel $7 \mu \mathrm{m}$, or approximately one pixel; therefore motion blur can be considered negligible under these conditions. At a frame rate of $6400 \mathrm{fps}$ the melt pool will travel between $30 \mu \mathrm{m}$ and $220 \mu \mathrm{m}$ (over the range of beam velocities tested) between camera frames. These inter-frame travel distances are comparable to the length of the melt pool [35].
+
+\subsection*{2.4. Coaxial melt pool transformation}
+The high speed camera configuration described above provides a stationary FoV; as a result, the melt pool data are collected in an Eulerian frame of reference. This increases the difficulty of comparing data between melt pool images, and for this reason a Lagrangian frame of reference is preferred. While this can be accomplished via a coaxially-aligned optical configuration as demonstrated by Clijsters et al. [14] and Lane et al. [44], such an implementation is extremely nontrivial for an AM machine user that is not also an AM machine manufacturer. Therefore, in this work, the software solution reported by Scime et al. [41] is used to transform the high speed camera images into data analogous that which is collected in a coaxially-aligned configuration.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-03}
+\end{center}
+
+Fig. 2. The rectangular fiducial as imaged by the high speed camera.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-03(1)}
+\end{center}
+
+Fig. 3. The rectangular fiducial as imaged by the Alicona Infinite-Focus microscope.
+
+\subsection*{2.5. Collection of ex-situ process data}
+Prior work by the authors [35] studied the morphological behavior of In718 melt pools in the EOS M290 L-PBF process. As is discussed in Section 3.6, this ex-situ information is critical for the study of in-situ melt pool morphology and training of the presented ML algorithm. For this reason, the results presented in [35] are summarized in Fig. 4. Note that the morphology of the melt pools produced by each of the 36 process parameter combinations (Table 1) was categorized as producing one or more of five different types of melt pools: desirable, balling, severe keyholing, keyholing porosity, or under-melting using both qualitative and quantitative measures.
+
+"Specifically, balling melt pools were defined as those exhibiting the characteristic balling morphology. Processing parameters were considered to produce severely keyholed melt pools if the average aspect ratio (defined as the depth over the half-width) was greater than 2.5. If any of the melt pool cross-sections for a given power and velocity combination showed examples of keyholing porosity, that process parameter combination was categorized as producing keyholing porosity. Process parameter combinations producing melt pools with average depths less than the powder layer thickness of $70 \mu \mathrm{m}$ were considered to
+
+Table 1
+
+Process parameter combinations used for each 1LSB melt track on the EOS M290 L-PBF machine.
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Sample (PV) Number & Beam Power (W) & Beam Velocity $(\mathrm{mm} / \mathrm{s})$ \\
+\hline
+(EOS Nominal) 1 & 285 & 960 \\
+\hline
+2 & 100 & 200 \\
+\hline
+3 & 100 & 400 \\
+\hline
+4 & 100 & 600 \\
+\hline
+5 & 100 & 800 \\
+\hline
+6 & 100 & 1000 \\
+\hline
+7 & 150 & 200 \\
+\hline
+8 & 150 & 400 \\
+\hline
+9 & 150 & 600 \\
+\hline
+10 & 150 & 800 \\
+\hline
+11 & 150 & 1000 \\
+\hline
+12 & 150 & 1200 \\
+\hline
+13 & 200 & 200 \\
+\hline
+14 & 200 & 400 \\
+\hline
+15 & 200 & 600 \\
+\hline
+16 & 200 & 800 \\
+\hline
+17 & 200 & 1000 \\
+\hline
+18 & 200 & 1200 \\
+\hline
+19 & 250 & 200 \\
+\hline
+20 & 250 & 400 \\
+\hline
+21 & 250 & 600 \\
+\hline
+22 & 250 & 800 \\
+\hline
+23 & 250 & 1000 \\
+\hline
+24 & 250 & 1200 \\
+\hline
+25 & 250 & 1400 \\
+\hline
+26 & 300 & 400 \\
+\hline
+27 & 300 & 600 \\
+\hline
+28 & 300 & 800 \\
+\hline
+29 & 300 & 1000 \\
+\hline
+30 & 300 & 1200 \\
+\hline
+31 & 300 & 1400 \\
+\hline
+32 & 370 & 400 \\
+\hline
+33 & 370 & 800 \\
+\hline
+34 & 370 & 1000 \\
+\hline
+35 & 370 & 1200 \\
+\hline
+36 & 370 & 1400 \\
+\hline
+\end{tabular}
+\end{center}
+
+be under-melting. Finally, any melt pools not otherwise categorized were considered to be desirable" [35].
+
+\subsection*{2.6. Collection of in-situ training data}
+As described in Section 2.2, the high speed camera is only able to image a single, fixed FoV; therefore in-situ data collection during the experiments reviewed in Section 2.5 could not be performed. Therefore, the 36 process parameter combinations enumerated in Table 1 were exposed within the FoV of the high speed camera. Specifically, for each parameter combination, a set of $10 \mathrm{~mm}$ long single bead melt tracks were exposed within a rectangular region of size $10 \mathrm{~mm} \times 20 \mathrm{~mm}$. Each melt track was separated by a hatch spacing of $500 \mu \mathrm{m}$ and adjacent melt tracks were not exposed subsequently i.e. at least $140 \mathrm{~ms}$ elapsed between the exposures of adjacent melt tracks. As in [35], the chamber preheat was $80{ }^{\circ} \mathrm{C}$, the nominal ${ }^{2}$ beam diameter was $100 \mu \mathrm{m}$, and the nominal powder layer thickness was $40 \mu \mathrm{m}$ (resulting in an approximately $70 \mu \mathrm{m}$ effective layer thickness [35]).
+
+After the exposure of the single bead melt tracks for a given parameter combination, the rectangular region was re-exposed (without the addition of another powder layer) using the EOS nominal parameters (PV \#1) and the nominal hatch spacing of $110 \mu \mathrm{m}$. Then, an additional 11 layers of material were built using the EOS nominal parameters such that each set of single bead melt tracks were vertically separated by a $440 \mu \mathrm{m}$ tall block of nominally-processed material. Vertical separation was implemented to ensure that the observed melt pool morphologies
+\footnotetext{${ }^{2}$ The D86 beam diameter was measured to be approximately $90 \mu \mathrm{m}$ during the machine maintenance temporally closest to the reported experiments.
+}
+
+were not influenced by an interaction with porosity (or other defects) left behind by previously tested process parameter combinations. The initial set of single bead melt tracks were separated from the sub-size build plate ${ }^{3}$ by approximately $1 \mathrm{~mm}$ of nominally-processed material. Fig. 5 shows a Computer Aided Design (CAD) rendering of the experiment and Fig. 6 shows the as-built block of material.
+
+The $10 \mathrm{~mm}$ length of each single bead melt track was chosen such that the melt pool was always a minimum of $2 \mathrm{~mm}$ away from the end of the melt track while it was in view of the camera. More discussion of steady state melt pool lengths and the appropriate hatch spacing is available in [35]. The vertical buffer distance between sets of single bead melt tracks was informed by the maximum expected melt pool depth $^{4}$ of $175 \mu \mathrm{m}$ reported in [35]. To support robust training of the ML methodology, a substantial amount of training data are required - a minimum of 500 camera frames for each of the 36 power and velocity combinations was deemed sufficient for this task based on prior ML work by the authors [45]. Additional details regarding the design of this experiment can be found in [46].
+
+The number of frames of training data collected for a single process parameter combination ranged from 504 to 1394 . A total of 24,385 frames of usable data were collected across 29 of the 36 process parameter combinations. Data from four of the parameter combinations in the low energy density regime ( $\mathrm{PV} \# 5, \# 6, \# 12$, and $\# 18$ ) were not collected as the apparent melt pool size (brightness) was too small to automatically trigger the high speed camera's recording feature. Data from a further three parameter combinations (PV \#27, 28, and \#29) were inadvertently recorded using an incorrect exposure time and were therefore not used for training.
+
+\subsection*{2.7. Non-bulk geometry (unsupported overhang)}
+This experiment was designed to investigate melt pool behavior during the fusion of an unsupported overhang. Specially, the goal was to observe any melt pool morphological changes triggered by the differing thermal conditions present due to the low thermal conductivity of the unfused powder [47,48] below the overhang. As shown in Fig. 7, the camera's FoV is centered on an overhang spanning a gap of $5 \mathrm{~mm}$. To decrease the turnaround time between the experiments, a channel was milled into several of the sub-size plates - thereby reducing the build time and allowing additional test artifacts to be fabricated in the event of a build or data capture failure. Pads $160 \mu \mathrm{m}$ in height were built using nominal parameters (PV \#1) and a hatch spacing of $110 \mu \mathrm{m}$ on either side of the pre-cut channel in order to ensure appropriate bonding between the overhanging layers of interest and the sub-size plate.
+
+Data were collected for a total of 5 layers spanning the channel. The first observed layer was exposed directly on top of a bed of unfused powder while the fifth layer was exposed on top of (nominally) $160 \mu \mathrm{m}$ of fused material. The overhang test artifact was exposed with the EOS nominal parameters (PV \#1) and a hatch spacing of $110 \mu \mathrm{m}$. As in the previous experiments, the chamber preheat was $80^{\circ} \mathrm{C}$, the nominal beam diameter was $100 \mu \mathrm{m}$, and the nominal powder layer thickness was $40 \mu \mathrm{m}$. Fig. 8 shows the as-built test artifact after completion of the build. Over the course of this build, approximately 1500 frames of data were collected for each of the five overhanging layers.
+\footnotetext{${ }^{3}$ A sub-size low-carbon steel plate (McMaster-Carr P/N: 1388K311) mounted to a modified EOS build plate was used to decrease the turnaround time between the sequence of experiments.
+
+${ }^{4}$ The buffer depth was chosen based on the maximum predicted melt pool depth of $175 \mu \mathrm{m}$ and the depths reported by Narra [[67]]. The maximum measured depth of any melt pool was $600 \mu \mathrm{m}$. This only barely exceeds the sum of the vertical separation depth $(440 \mu \mathrm{m})$ and the penetration depth of the melt pools produced with the nominal parameters $(150 \mu \mathrm{m})$.
+}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-05(4)}
+\end{center}
+
+Fig. 4. Process space annotated with the ex-situ melt pool morphologies as determined by analysis of the 1LSB crosssections. The annotations indicate the percentage of melt pool cross-sections which had either keyholing porosity or exhibited the balling morphology. For reference, the EOS nominal parameter combination is indicated and two lines of constant melt pool geometry are overlaid. Note that this figure an caption were original reported by the authors in [35], but is reproduced here for clarity.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-05(1)}
+\end{center}
+
+Fig. 5. A CAD rendering of the rectangular exposure region built up over many sets of single bead melt tracks and separation layers. Note the FoV of the high speed camera.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-05}
+\end{center}
+
+Fig. 6. The as-built material deposited over the course of the in-situ data collection process.
+
+\section*{3. Theory}
+\subsection*{3.1. Overview}
+Fundamentally, all ML algorithms operate by extracting features from a set of training data provided by a human [49]. The extracted features are then analyzed: their frequencies in the training data are quantified and their similarities and differences are described [33]. In the case of Deep Learning, the algorithm will actually design its own optimized set of feature extraction tools, as opposed to only using the tools provided by the human programmer [49]. Once the feature extraction system is robust, a model for describing the input data (based on its features) is created [49]. Features are extracted from any new data (i.e. data a user wishes to analyze) and are input into the model allowing the algorithm to make a decision (e.g. whether or not a process anomaly is present) that is informed by the knowledge contained within the training database.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-05(3)}
+\end{center}
+
+Fig. 7. A CAD rendering of the completed overhang test artifact. Note the FoV of the high speed camera.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-05(2)}
+\end{center}
+
+Fig. 8. The as-built test artifact deposited over the course of the in-situ data collection process.
+
+The ML methodology presented in this section is an application of a widely-used ML technique, known as Bag of Words (or Keypoints) (BoW) [33], often applied to CV problems. In this implementation, the training data consist of frames of data captured by the high speed camera during the experiment described in Section 2.6 and transformed such that the melt pool appears to be in a Lagrangian (coaxial) reference frame (Section 2.4). The only human-applied "ground-truth" labels associated with the training data are the process parameter combinations used to produce each observed melt pool. While the BoW technique can be applied to multiple feature types, the authors chose to use SIFT features for their ability to be agnostic to scale information. The potential for scale agnosticism is considered by the authors to be critical, as melt pool size often does not correlate to ex-situ flaws. For example, two different process parameter combinations may produce melt pools with similar widths, however their morphologies could be radically different with one melt pool considered desirable and the other prone to generating keyholing porosity [35]. This section is intended to provide an overview of this methodology along with relevant ML and CV theory. Fig. 9 is a flowchart of this ML methodology and is referred to extensively throughout this section.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-06}
+\end{center}
+
+Fig. 9. Flowchart of the implementation of the BoW ML technique discussed in this section. Steps (a) through (f) depict the feature extraction process, step (g) shows a representation of the fingerprints used to describe the melt pool morphologies, steps (h) and (i) depict the linkage of in-situ and ex-situ results, and steps (j) and (k) show the training of the classification algorithm and its usage on new data. The representative micrographs shown in step (i) were collected during [35].
+
+\subsection*{3.2. Selection of the training data}
+Training data were collected as described in Section 2.6 - the high speed camera was used to image melt pools produced using a total of 29 different process parameter combinations spanning the EOS M290 process space. Unlike in prior work [45], the morphology of each training image is not labeled with a "ground truth" classification by the authors. Such an action is impossible as the correlations between the insitu appearance of a melt pool and ex-situ outcomes are not known. Indeed, this challenge necessitated the development of the ex-situ database reported in [35] and the identification of linkages between the in-situ and ex-situ melt pool morphologies is a primary goal of the current work. The labels associated with each training melt pool image only indicate the process parameter combination used to generate the corresponding melt pool. The final training database is composed of a total of 24,385 coaxially-transformed melt pool images labeled with their associated process parameters.
+
+\subsection*{3.3. Scale Invariant Feature Transform (SIFT)}
+This implementation of the BoW ML technique extracts features using the SIFT algorithm. SIFT features, as their name (Scale Invariant Feature Transform) might suggest, are considered robust even when the objects of interest in an image (or across images) may be of varying sizes. First developed by Lowe [34], they are commonly used when it is an object's overall shape that is of interest. Interestingly, this is not SIFT's first foray into the AM community as DeCost et al. [50] have used SIFT to classify metal powders for AM applications and a conceptually-similar feature known as DAISY has been used by Jacobsmühlen et al. [51] to detect super-elevation.
+
+SIFT features characterize the gradient field surrounding each pixel in an image. In this work, gradient orientations within a 2 pixels $\times 2$ pixels window are considered. That is, a coaxially-transformed melt pool image is broken into non-overlapping windows (Fig. 9b), each containing 4 pixels. The gradient orientations are grouped into nine, unsigned bins, e.g. one of the bins encompasses all gradients with the following orientations: $0^{\circ}-20^{\circ}$ and $180^{\circ}-200^{\circ}$. Observe that the output of this process is an image with a spatial resolution that has been reduced by a factor of two in each direction. While it is common practice to only calculate SIFT features at interest points (a.k.a. keypoints) in an image [52], in this implementation, a dense field of SIFT features is calculated at every strong edge. Where a "strong edge" is defined as any pixel at which the magnitude of the gradient is at least $10 \%$ of the magnitude of the strongest gradient in the image. Fig. 11 shows a visualization of the SIFT descriptors applied to the coaxially-transformed melt pool image shown in Fig. 10.
+
+\subsection*{3.4. Histogram of Oriented Gradients (HOG)}
+SIFT features are traditionally considered highly specific, that is, they have a dimensionality equal to the number of orientation bins (i.e. nine) with values in each dimension spanning a subset ${ }^{5}$ of $\mathbb{R}$. For this reason, SIFT algorithms are often used for template matching applications [52] and less often for classification. A variety of techniques are available to artificially reduce the specificity ${ }^{6}$ of the SIFT features. For this work, specificity reduction was accomplished using an
+\footnotetext{${ }^{5}$ Only numbers of the set $\mathbb{Z}[0, W] / W$ are possible, where $W$ is the window size (i.e. four pixels).
+
+${ }^{6}$ A simple method for specificity reduction is rounding a given value to a set number of digits after the decimal point. For example, reducing the $\mathbb{R}$ space to the subspace of $\mathbb{Z} / 10$ would eliminate the distinction between the values 42.14 and 42.13 .
+}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-07}
+\end{center}
+
+Fig. 10. An example false-color and coaxially-transformed image of a melt pool produced using PV \#36.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-07(1)}
+\end{center}
+
+Fig. 11. The SIFT features extracted from the melt pool shown in Fig. 10. This visualization of the SIFT features was generated using a MATLAB script written by Dollar [53].
+
+unsupervised clustering approach.
+
+In order to utilize a pre-existing high-dimensional clustering method, the SIFT features were first converted into a standard vectorized format known as Histogram of Oriented Gradients (HOG) [54] (Fig. 9c). Specifically, the number of gradients within the SIFT window falling into each orientation bin is counted and stored in the corresponding element in the HOG vector (i.e. for nine orientation bins the HOG vector will be nine elements long). The values in each element of the HOG vector are then normalized such that they range in magnitude from $\mathbb{R}[0,1]$. SIFT features (and their HOG equivalents) were collected from all of the melt pool images in the training database. Note that these features were extracted from each training image under three different contrast adjustments which are further discussed in the following subsection. Note that no subsampling of the training data is performed, i.e. all of the extracted SIFT features are included in the training process.\\
+Once collected, HOG vectors with similar values in each element (i.e. vectors that describe a similar gradient field) are grouped together using a standard k-means unsupervised clustering algorithm [55], represented by Fig. 9d. For this work, cluster initialization was performed using random seeding, with preference given to a uniform spacing between clusters. During development of this ML methodology, the requested number of clusters was varied between 25 and 200; satisfactory performance was achieved with 50 clusters. Each cluster is represented by a mean HOG vector. The 50 mean HOG vectors are commonly referred to as visual words, and are stored in a dictionary, represented by Fig. 9e.
+
+After the dictionary is constructed, each HOG vector in each training image can be matched to the closest (pair-wise distance [56]) visual word in the dictionary (Fig. 9f). Note that this operation has reduced the set of possible values of the SIFT features to the set $\mathbb{Z}[1,50]$. For each training image, the percentage of SIFT features matched to each visual word is calculated. This information can be represented by a histogram of size $1 \times 50$ (Fig. 9g). These histograms are referred to as fingerprints. Ideally, melt pools with similar in-situ appearances will have similar fingerprints, while melt pools with dissimilar appearances will have dissimilar fingerprints. The observant reader may have noticed that in addition to the loss of scale information (desired), the method presented above also loses information about the relative spatial positions of the SIFT features (not desired). To mitigate this side-effect, the spatial relationships are partially represented by a multi-modality histogram which is detailed in the following subsection.
+
+\subsection*{3.5. Multi-modality representation of melt pool morphology}
+While each melt pool could potentially be represented by a single histogram of visual word occurrences (as is the case for each image patch in [45]), such a representation was found to provide relatively poor differentiation between certain in-situ melt pool appearances. To improve differentiation, additional information contained within the original melt pool images was incorporated into the melt pool morphology representation by appending multiple histograms of visual word occurrences (Fig. 9g); where the calculation of each histogram was preceded by a different set of pre-processing operations performed on the original (coaxially-transformed) melt pool image.
+
+As noted in Section 2.2, the information of interest in each melt pool image spans a wide dynamic range. In order to capture gradient fields across this dynamic range, three different contrast adjustments [57] are applied to each melt pool image in the training database. Specifically, the pixel-wise data in each image are scaled using gamma values ${ }^{7}$ of 1 (no change), 0.75 (decreased contrast), and 10 (increased contrast). Physically, decreasing the contrast allows gradient fields to be captured for the lower temperature (strictly, lower emitting) regions of the image while increasing the contrast emphasizes the gradient fields in the higher temperature (strictly, higher emitting) regions of the image. In other words, the diffuse vapor plume and colder spatter particles may be more visible in the lower contrast image, while only the melt pool body and the hottest spatter particles will be visible in the high contrast image. Note that this difference in "visibility" is also dependent upon the gradient magnitude threshold used to define a "strong edge" (Section 3.3).
+
+Recall that the fingerprint presented in the previous subsection contains no information about the relative spatial configuration of the SIFT features. In order to preserve some of this spatial information, each of the three contrast-adjusted melt pool images is segmented into three different components. First, the spatter is isolated using the same connected-components algorithm described in [41]. Then the main melt
+\footnotetext{${ }^{7}$ The pixel-wise scaling is accomplished using a non-linear function of the form: $I_{\text {out }}=I_{i n}^{\Gamma}$, where $I_{\text {in }}$ is the original value of the pixel, $I_{\text {out }}$ is the adjusted value of the pixel, and the shape of the curve is defined by $\Gamma[[57]]$.
+}
+no contrast adjustment
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-08}
+\end{center}
+
+Fig. 12. False-color and coaxially-transformed images of a melt pool produced using PV \#1. The top row shows the melt pool image after three different contrast adjustments. The middle row shows each contrast-adjusted image segmented into spatter, the nose region, and the tail region. The bottom row shows a visualization of the SIFT features generated using a MATLAB script written by Dollar [53]. pool body (i.e. everything that is not considered spatter) is separated into the "tail" region and the "nose" region. These two regions are delineated by the line perpendicular to the $\xi$-axis (parallel to the direction of melt pool travel) at the point of maximum melt pool width. This process, shown schematically in Fig. 12, produces nine distinct fingerprints (calculated as described in Section 3.4) for each training image. All nine fingerprints are combined (appended) to form the final multi-modality representation of the melt pool which is of size $1 \times 450$. Note that programmatically all of the SIFT features are first calculated across the entirety of each contrast-adjusted melt pool image before segmentation in order to avoid the creation of artifacts at the boundaries of the segmented images.
+
+While the choice of the three segmentation regions (spatter, nose, and tail) is informed by knowledge of melt pool dynamics (e.g. that spatter is likely to occur when a deep keyhole is present [25] and balling affects the morphology of the tail [11,58]), the choices of the exact contrast adjustments, SIFT window size, and number of visual words, are less informed. Therefore the authors suspect that an improved representation of the in-situ melt pool appearance could be developed through the use of Deep Learning techniques [49].
+
+\subsection*{3.6. Training}
+As observed previously, the ground-truths in this work are not known a priori. That is, the authors do not know what groupings are appropriate to describe the in-situ melt pool morphologies; much less which specific in-situ melt pool appearances should correspond to each label. When confronting an "unsupervised" ML task, it is often useful to visualize the locations of the final feature vectors (in this case the fingerprints) of each training datum in feature space. Because feature space is typically high-dimensional (in this case 450D) direct visualization is not possible and a low-dimensional approximation of feature space must be used instead. A common algorithm for constructing this low-dimensional approximation is t-SNE (t-distributed Stochastic Neighbor Embedding) [59]. In a low-dimensional t-SNE visualization the relative distances between the feature vectors are preserved (albeit non-linearly), however the absolute distances between data and their relative positions are lost [59]. In other words, fingerprints that are close in 450D space will be close in t-SNE 2D space and fingerprints that are far apart in 450D space will be far apart in t-SNE 2D space, but no other conclusions about their relative distribution can be inferred. For this reason, $t$-SNE visualizations are often used to identify natural clusters of high-dimensional feature vectors [59]. Fig. 13 shows a t-SNE visualization of the 24,385 training fingerprints in which each datum has been color-coded using the only label available - the dominant ex-situ morphological characteristics for the given parameter combination reported in [35].
+
+Perhaps unsurprisingly, the above t-SNE visualization is not particularly illuminating. For example, fingerprints of melt pools produced using desirable process parameters overlap extensively with fingerprints of melt pools produced using balling and keyholing porosity process parameters. As discussed in [35], many of the ex-situ flaws such as keyholing porosity and balling are periodic in nature, therefore it is to be expected that each process parameter combination will produce a range of in-situ melt pool morphologies.
+
+A far more effective approach is to visualize the regions in process space for which a given set of fingerprints appear. In order to accomplish this, "sets" of similar fingerprints must first be identified and delineated. Grouping of similar fingerprints was performed using a standard kmeans unsupervised clustering algorithm [55], represented by Fig. 9h. For this work, cluster initialization was performed using random seeding, with preference given to a uniform spacing between clusters. Ideally, the number of requested clusters could be informed by the $t-$ SNE visualization in Fig. 13, unfortunately, very few distinct clusters are evident. Instead, many of the melt pool fingerprints appear to exist on a continuum. Therefore, a total of 30 clusters were requested; while this value is somewhat arbitrary, poor differentiation between in-situ melt pool appearances was observed when fewer than 20 clusters were delineated while additional meaningful differentiations did not appear when more than approximately 30 clusters were delineated. Cluster seeding is repeated 10 times to reduce the chance of the algorithm converging to a poor solution; e.g. a shallow local minimum instead of a global, or at least a deeper local, minimum.
+
+Fig. 14 shows the percentage of training melt pools at each of the 29 process parameter combinations with fingerprints belonging to one of the 30 clusters. Observe that this set (cluster) of fingerprints is far more prevalent in the keyholing porosity regime than elsewhere in process space. Therefore this set of fingerprints (i.e. this in-situ melt pool appearance) can be linked to keyholing porosity. This linkage process (Fig. 9i) is performed by a human and is repeated for all 30 sets
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-09}
+\end{center}
+
+(clusters) of fingerprints. Over the course of this work it was observed that no clusters of fingerprints could be associated with only the severe keyholing region of process space, implying that the depth of the keyhole-mode melting vapor cavity does not have a controlling influence on the in-situ appearance of the melt pool. Furthermore, it was observed that a side-effect of the multi-modality fingerprint histogram is the occurrence of clusters of fingerprints with locations in high-dimensional space that are driven primarily by the morphology of the spatter, which is not necessarily correlated with any ex-situ flaws observed in [35]. Clusters of this type were labeled spatter are discussed in more detail in Section 4.1.
+
+Once unsupervised ML techniques have been used to understand and label the in-situ appearances of the training melt pools, supervised ML techniques can be employed to classify melt pools not included in the training database. It is extremely important to note that any classifications based on this approach are not tied directly to ex-situ outcomes. In other words, even if a melt pool is classified as keyholing porosity it cannot be concluded that keyholing porosity was indeed generated by that melt pool - even within some degree of uncertainty.\\
+Fig. 13. A t-SNE visualization of all of the training fingerprints with each datum colorcoded according to the dominate ex-situ morphology of melt pools produced using the same process parameter combination. While t-SNE visualizations are sometimes presented with axes, they have been removed from this figure as neither their magnitudes nor their relative values carry any physical meaning. The t-SNE algorithm was executed with a perplexity of 75 while all other parameters were set to their default value [59] and no dimensionality reduction using Principle Component Analysis was implemented.\\
+Instead, such a classification only indicates that a given melt pool has an in-situ fingerprint which is similar to fingerprints found most prevalently (or ideally, exclusively) in the keyholing porosity regime of process space.
+
+Classification of the melt pool morphologies (i.e. the 450 element fingerprints) is performed using a multi-class Support Vector Machine (SVM) [60,61] which is shown graphically in Fig. 9j. In its original formulation, an SVM is a binary classifier capable of distinguishing between only two different classes [61]. During training an SVM learns a hyperplane which bisects the high-dimensional feature space such that all of the feature vectors belonging to one class lie on a different side of the hyperplane than all of the feature vectors belonging to the other class (with the minimum error possible) [61]. A variety of methods are available to apply SVMs to non-binary (i.e. multi-class) classification problems. Perhaps the simplest such method converts a multi-class problem into a set of binary classification problems such that binary classifiers can be trained to distinguish between each class and "all of the other classes" [62]. The multiple binary classifiers can then be combined to form the multi-class SVM. All of the training parameters
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-09(1)}
+\end{center}
+
+Fig. 14. A heat map showing the prevalence of a given set (cluster) of melt pool fingerprints across process space. Values within the text boxes indicate the percentage of training melt pools (at each process parameter combination) with fingerprints belonging to the given cluster. The ex-situ morphology information from [35] is overlaid on top of the heat map. In-situ data were not collected for the seven parameter combinations (circles) without an associated text box (see Section 2.6).\\
+for the multi-class SVM were set to the default values listed in [60].
+
+\subsection*{3.7. Melt pool classification and performance of the ML methodology}
+Once the training of the ML methodology is complete, previously "unseen" melt pool images captured during the overhang experiment (Section 2.7) can be classified as one of five melt pool types: desirable, balling, under-melting, keyholing porosity, or spatter (Fig. 9k). After coaxial transformation If each camera frame, the multi-modality fingerprint is calculated (Sections 3.3-3.5) and classified by the trained SVM (Section 3.6). The results of these classifications are presented in Section 4.2.
+
+The classification process requires approximately $0.4 \mathrm{~s}$ per frame on a single Intel ${ }^{\circledR} \mathrm{i} 7-6700 \mathrm{~K} 4.00 \mathrm{GHz}$ processor. It is important to note that in the absence of ground-truth labels, quantifying the overall performance of the presented ML methodology is not possible. However, 10fold cross-validation $[63,64]$ was performed during training of the multi-class SVM and reported a classification accuracy of $85.1 \%$. In other words, the hyperplanes learned by the SVM are able to properly delineate the fingerprints contained within the training database according to the labels applied in Section 3.6 with an accuracy of $85.1 \%$. It is important to note that this measure of classification accuracy is not an indicator of overall algorithm performance; it is only reported to demonstrate that the use of an SVM (as opposed to another classifier) is reasonable for this dataset.
+
+\section*{4. Results}
+\subsection*{4.1. Melt pool morphologies across process space}
+The prevalence of a particular in-situ melt pool appearance throughout process space can be visualized by considering the cluster assignments at each tested process parameter combination. In other words, for each parameter combination imaged during training, a certain percentage of the captured melt pool frames will belong to a given set (cluster) of fingerprints described in Section 3.6. For the remainder of this document, a set of similar fingerprints is referred to as a morphology.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-10(1)}
+\end{center}
+
+Fig. 15. A heat map showing the prevalence of melt pool morphologies associated with desirable ex-situ outcomes. Values within the text boxes indicate the percentage of training melt pools (at each process parameter combination) with desirable morphologies. The ex-situ morphology information from [35] is overlaid on top of the heat map. In-situ data were not collected for the seven parameter combinations (circles) without an associated text box (see Section 2.6). Refer to Fig. 4 for explanation of the overlaid ex-situ data.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_552cb8e3f1f233ad179cg-10}
+
+Fig. 16. A selection of false-color melt pool images captured by the high speed camera. All three melt pools have fingerprints associated with desirable ex-situ outcomes.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-10(2)}
+\end{center}
+
+Fig. 17. A heat map showing the prevalence of melt pool morphologies associated with balling. Values within the text boxes indicate the percentage of training melt pools (at each process parameter combination) with desirable morphologies. The ex-situ morphology information from [35] is overlaid on top of the heat map. In-situ data were not collected for the seven parameter combinations (circles) without an associated text box (see Section 2.6). Refer to Fig. 4 for explanation of the overlaid ex-situ data.
+
+While the example heat map shown in Section 3.6 (Fig. 14) contains information about only one of the morphologies, Figs. 15, 17, 19, 21, and 23 show the percentage of training melt pools (at each process parameter combination) belonging to the morphologies associated with a given ex-situ morphology. Also as in Section 3.6, the ex-situ morphology results are overlaid on top the heat map.
+
+Fig. 15, for example, shows the distribution of the six melt pool morphologies (i.e. six sets of similar fingerprints) associated with desirable outcomes. Observe that the desirable morphologies are most prevalent in the "center" of studied processing space - away from the high energy density, low energy density, and balling regimes. In the training dataset, $76 \%$ of the melt pools produced using the EOS nominal PV \#1 parameters ( $285 \mathrm{~W}, 960 \mathrm{~mm} / \mathrm{s}$ ) had fingerprints associated with desirable outcomes. More strictly, $76 \%$ of these melt pools had fingerprints belonging to one of the six clusters associated with desirable outcomes. Fig. 15 shows several examples of desirable melt pools.
+
+Fig. 17 shows the distribution of the single melt pool morphology associated with balling. Observe that the balling morphology is most prevalent in the high beam power and high beam velocity regime of
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-11(1)}
+\end{center}
+
+Fig. 18. A selection of false-color melt pool images captured by the high speed camera. All three melt pools have fingerprints associated with balling. Note the balling instabilities visible just behind the melt pool tail in the left and center images.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-11(3)}
+\end{center}
+
+Fig. 19. A heat map showing the prevalence of melt pool morphologies associated with under-melting. Values within the text boxes indicate the percentage of training melt pools (at each process parameter combination) with desirable morphologies. The ex-situ morphology information from [35] is overlaid on top of the heat map. In-situ data were not collected for the seven parameter combinations (circles) without an associated text box (see Section 2.6). Refer to Fig. 4 for explanation of the overlaid ex-situ data.
+
+process space. Fig. 18 shows several examples of balling melt pools. In general, the balling melt pools are more elongated than the desirable melt pools (this difference is expected as discussed in [35]). In some of the high speed images (Fig. 18) the balling instability itself is visible as small circle separated from the main melt pool body and located directly behind the melt pool tail.
+
+Fig. 19 shows the distribution of the two melt pool morphologies associated with under-melting. Observe that the under-melting morphologies are most prevalent in the low beam power regime of process space. Interestingly, these morphologies extend well into the regions of process space producing melt pools with depths greater than the $70 \mu$ m effective powder layer thickness. As noted in Section 2.6, in-situ data were not successfully collected for much of the under-melting region; more in-situ data may allow for a more robust understanding of morphologies associated with under-melting. Fig. 20 shows several examples of undermelting melt pools. In general, under-melting melt pools exhibit a "fragmented" appearance composed of multiple irregular bodies of\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_552cb8e3f1f233ad179cg-11(2)}
+
+Fig. 20. A selection of false-color melt pool images captured by the high speed camera. All three melt pools have fingerprints associated with under-melting.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-11}
+\end{center}
+
+Fig. 21. A heat map showing the prevalence of melt pool morphologies associated with keyholing porosity. Values within the text boxes indicate the percentage of training melt pools (at each process parameter combination) with desirable morphologies. The ex-situ morphology information from [35] is overlaid on top of the heat map. In-situ data were not collected for the seven parameter combinations (circles) without an associated text box (see Section 2.6). Refer to Fig. 4 for explanation of the overlaid ex-situ data.
+
+comparatively similar size.
+
+Fig. 21 shows the distribution of the three melt pool morphologies associated with keyholing porosity. Observe that the keyholing porosity morphologies are most prevalent in the low beam velocity regime of process space - particularly at higher beam powers. Interestingly, no insitu morphologies could be associated with the severe keyholing melt pools discussed in Section 2.5 and [35]. This suggests that the keyholing porosity morphologies are detectable due to the instability, and not the depth, of the vapor cavity present during keyhole-mode melting [65]. Fig. 22 shows several examples of keyholing porosity melt pools. In general, keyholing porosity melt pools are more radially symmetric and less elongated than either desirable or balling melt pools.
+
+Fig. 23 shows the distribution of the eighteen melt pool morphologies associated with spatter. Strictly, spatter is not a melt pool morphology identified by the ex-situ analysis presented in [35]. Indeed, its appearance as unique in-situ morphologies is an artifact of the multimodality melt pool representation discussed in Section 3.5. While independent calculation of a spatter fingerprint was observed to improve overall classification performance, it occasionally allows the morphology of the spatter to "overpower" information about the shape of the melt pool itself - resulting in the aforementioned spatter
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-12}
+\end{center}
+
+Fig. 22. A selection of false-color melt pool images captured by the high speed camera. All three melt pools have fingerprints associated with keyholing porosity.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-12(3)}
+\end{center}
+
+Fig. 23. A heat map showing the prevalence of melt pool morphologies associated with spatter. Values within the text boxes indicate the percentage of training melt pools (at each process parameter combination) with desirable morphologies. The ex-situ morphology information from [35] is overlaid on top of the heat map. In-situ data were not collected for the seven parameter combinations (circles) without an associated text box (see Section 2.6). Refer to Fig. 4 for explanation of the overlaid ex-situ data.
+
+morphologies. In general, spatter appears least frequently in the region of process space associated with desirable melt pool morphologies. Fig. 24 shows several examples spatter melt pools. Observe that the melt pool bodies exhibit dramatically different melt pool morphologies while the primary commonality between the selected images is the presence of spatter.
+
+Finally, Fig. 25 shows the occurrence of the various melt pool morphologies for several selected process parameter combinations. As hypothesized in [35], every process parameter combination produces melt pools with a range of in-situ appearances. For example, even the parameter combination producing the most keyholing porosity melt pools (PV \#19) also produces melt pools with desirable morphologies in $21 \%$ of frames.
+
+\subsection*{4.2. Non-bulk geometry (unsupported overhang)}
+Fig. 26 reports the melt pool morphology classifications during fusion of the first layer of a $5.0 \mathrm{~mm}$ wide unsupported overhang. Recall that in the first layer of an overhang there is no fused material below the melt pool, only unfused powder. Data were collected from multiple\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_552cb8e3f1f233ad179cg-12(2)}
+
+Fig. 24. A selection of false-color melt pool images captured by the high speed camera. All three melt pools have fingerprints associated with spatter.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-12(1)}
+\end{center}
+
+Fig. 25. The melt pool morphologies produced by four different process parmeter combinations in the training database. PV \#1 is the EOS nominal parameter combination. PV \#36 produced the largest percentage of balling melt pools. PV \#4 produced the largest percentage of under-melting melt pools. PV \#19 produced the largest percentage of keyholing porosity melt pools.
+
+adjacent melt tracks as the layer was fused. Each data bar reports the classifications for all of the melt pools that are certain distance across the width of the overhang; data are binned in increments of approximately $500 \mu \mathrm{m}$. The edges of the overhang are indicated by the vertical dashed lines. Note that the left-most and right-most data bars report data corresponding to melt pools beyond the extents of the overhang, i.e. those melt pools are, at least partially, on top of fused material. Data were collected for melt pools traveling in both directions across the overhang with each classification average based on between 60 and 129 frames of data. It is readily apparent that the melt pools transition from primarily desirable to primarily keyholing porosity as the melt pool travels from the edge of the overhang to its center. A symmetric transition back to desirable classifications occurs as the melt pool exits the overhang region and returns to previously-fused material. This behavior is fully expected as the low thermal conductivity [47,48] of the unfused powder is expected to result in a much deeper and more unstable keyhole vapor pocket than is otherwise produced by the EOS nominal process parameter combination ( $\mathrm{PV} \# 1$ ).
+
+Fig. 27 reports the melt pool morphology classifications during fusion of the first five layers of a $5.0 \mathrm{~mm}$ wide unsupported overhang. For the first three to four layers, the observed melt pool behavior is similar to that discussed above. That is, a substantial percentage of the melt pools transition from desirable to keyholing porosity as they pass over the unsupported overhang. Note that the upper bar plot is a simplified
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_552cb8e3f1f233ad179cg-13}
+\end{center}
+
+Fig. 26. Melt pool morphology classifications across the $5.0 \mathrm{~mm}$ width of the first layer of an unsupported overhang. Each data bar bins classifications in $500 \mu \mathrm{m}$ increments along the melt tracks spanning the width of the overhang. The extents of the overhang are indicated by the vertical dashed lines.The values in parantheses indicate the number of melt pool classifications included in the corresponding bin. The indicated positive $x$-axis corresponds to the global coordinate system used throughout this thesis.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_552cb8e3f1f233ad179cg-13(1)}
+
+Fig. 27. Melt pool morphology classifications across the $5.0 \mathrm{~mm}$ width of the first five layers of an unsupported overhang. Each data bar bins classifications in $500 \mu \mathrm{m}$ increments along the melt tracks spanning the width of the overhang. The extents of the overhang are indicated by the vertical dashed lines. The indicated positive $x$ axis corresponds to the global coordinate system used throughout this thesis.
+
+duplicate of the plot shown above in Fig. 26. As expected, the melt pools spanning the overhang are increasingly classified as desirable as subsequent layers are built. In other words, the morphology of the melt pools improves as the test artifact approaches bulk geometry. Indeed, by the fifth layer melt pool behavior in the center of the overhang is quite similar to melt pool behavior near the edges.
+
+\section*{5. Conclusions}
+In this work, In718 L-PBF melt pools were imaged using a high speed, visible-light camera with a fixed FoV. High speed camera data collected from across process space were analyzed using contemporary\\
+CV feature extraction methods and unsupervised ML techniques. These data were then used to link in-situ melt pool morphologies to the ex-situ melt pool morphologies and processing defects previously reported by the authors in [35]. These linkages allowed for the identification of potential in-situ flaw formation signatures and the training of a melt pool classification algorithm.
+
+Feature extraction was performed using SIFT and the BoW ML technique - resulting in a scale-invariant representation of the in-situ melt pool morphology. The need for scale-invariance is well demonstrated by Fig. 16, in which melt pools of dissimilar size are linked to similar ex-situ outcomes. In order to compensate for the loss of spatial information during feature extraction as well as the large dynamic range\\
+of the input images, the final fingerprint describing melt pool morphology is composed of nine different segments. Each segment describes the gradient fields under different contrast adjustments and in different regions of the melt pool. While effective at differentiating between melt pools of differing in-situ appearances, many of the parameters controlling the architecture of the final morphology descriptor remain un-optimized; Deep Learning techniques may be well suited for developing an even more robust representation of in-situ melt pool morphology.
+
+Several in-situ melt pool appearances were successfully linked to the ex-situ melt pool types identified in [35] and reviewed Section 2.5: (1) A set of in-situ morphologies were found to occur almost exclusively at keyholing porosity parameter combinations (Fig. 21). (2) Conversely, no in-situ morphologies were found to be associated with severe keyholing. (3) A set of in-situ morphologies were found to occur more frequently in the balling region of process space (Fig. 17). (4) Interestingly, the set of in-situ morphologies most closely linked to under-melting extended well throughout the low power regime of process space (Fig. 19). (5) Several melt pool morphologies were associated with desirable ex-situ outcomes (Fig. 15). (6) As discussed in Section 3.6, an additional set of morphologies were associated with the presence of spatter, as opposed to a specific ex-situ outcome (Fig. 23). The periodic nature of many of the flaws was observed in-situ, as each process parameter combination produced melt pools with fingerprints associated with a range of ex-situ morphologies. Using a unique approach, the associations determined via unsupervised learning were used as the inputs for a supervised learning technique; thereby enabling the classification of melt pools not studied during training.
+
+Specifically, melt pools were imaged during the printing of an unsupported overhang. Significant morphological changes were observed as the melt pools traveled away from the bulk region and across the overhang (Fig. 26). After the overhang reached a thickness exceeding the nominal depth of the melt pool, the in-situ morphological behavior approached that observed in the bulk (Fig. 27). The authors intend to utilize the presented methodology to study melt pool behavior of other non-bulk geometries such as contours and the edges of stripes [66] in the near future.
+
+It is worth reiterating that any classifications based on the presented approach are not tied directly to ex-situ outcomes. In other words, even if a melt pool is classified as keyholing porosity it cannot be concluded that keyholing porosity was indeed generated by that melt pool - even within some degree of uncertainty. Instead, such a classification only indicates that a given melt pool has an in-situ fingerprint which is similar to fingerprints found most prevalently in the keyholing porosity regime of process space. In order to improve the fidelity of the classification methodology, ground truth information is required to link each frame of in-situ training data to specific instances of flaws observed ex-situ. Finally, it is worth noting that while implementing the presented melt pool classification algorithm in a real-time scenario is beyond the current capabilities of the authors, ${ }^{8}$ extremely high speed calculation of simple melt pool descriptors (e.g. melt pool size) has been demonstrated in the literature [14].
+
+\section*{Acknowledgements}
+The authors would like to thank Dr. Brian Fisher (CMU) for lending their significant expertise with the high speed camera to help with the determination of appropriate camera settings. The authors would also like to thank Dr. Sneha Prabha Narra (CMU) for preliminary ex-situ
+\footnotetext{${ }^{8}$ At 6,400 fps and a resolution of 1024 pixels $\times 1024$ pixels a high speed camera would produce approximately $13 \mathrm{~Gb}$ of data per second. As a result, over the course of a relatively short, 24 hour L-PBF build, on the order of 1000 $\mathrm{Tb}$ of data would be generated. Such a data burden is currently unmanageable both in terms of data storage capacity as well as data transmission times.
+}
+
+In718 melt pool data which were used to plan these experiments. Funding for this work was provided by CMU's Manufacturing Futures Initiative (internal grant number 062900.005.105.100020.01) and the purchase of the high speed camera and associated optics was supported by a Carnegie Institute of Technology Dean's Equipment Grant, FY 2016.
+
+\section*{References}
+[1] K.M. Taminger, R.A. Hafley, Electron beam freeform fabrication for cost effective near-net shape manufacturing, NATO/RTOAVT-139 Spec. Metting Cost Eff. Manuf via Net Shape Process, (2006).
+
+[2] T. Wohlers, T. Caffrey, Wohlers Report, Fort Collins, CO, 2011.
+
+[3] C.A. Giffi, B. Gangula, P. Illinda, 3D Opportunity for the Automotive Industry: Additive Manufacturing Hits the Road, (2014) \href{http://dupress.com/articles/}{http://dupress.com/articles/} additive-manufacturing-3d-opportunity-in-automotive/.
+
+[4] D. Bourell, M. Leu, D. Rosen, Roadmap for additive manufacturing: identifying the future of freeform processing, Solid Free. Fabr. Proc. (2009) (Accessed 23 May 2017), \href{http://wohlersassociates.com/roadmap2009A.pdf}{http://wohlersassociates.com/roadmap2009A.pdf}.
+
+[5] M. Grasso, B.M. Colosimo, Process defects and in situ monitoring methods in metal powder bed fusion: a review, Meas. Sci. Technol. 28 (2017) 044005, , \href{https://doi}{https://doi}. org/10.1088/1361-6501/aa5c4f.
+
+[6] S.K. Everton, M. Hirsch, P. Stravroulakis, R.K. Leach, A.T. Clare, Review of in-situ process monitoring and in-situ metrology for metal additive manufacturing, JMADE. 95 (2016) 431-445, \href{https://doi.org/10.1016/j.matdes.2016.01.099}{https://doi.org/10.1016/j.matdes.2016.01.099}.
+
+[7] T.G. Spears, S.A. Gold, In-process sensing in selective laser melting (SLM) additive manufacturing, Integr. Mater. Manuf. Innov. 5 (2016) 1-25, \href{https://doi.org/10}{https://doi.org/10}. 1186/s40192-016-0045-4.
+
+[8] EOS GmbH, EOS M 290 Data Sheet, (2017) (Accessed 20 January 2018), https:// \href{http://cdn0.scrvt.com/eos/413c861f2843b377/51d966b8b31d/EOS_System_Data_Sheet_}{cdn0.scrvt.com/eos/413c861f2843b377/51d966b8b31d/EOS\_System\_Data\_Sheet\_} EOS\_M\_290\_EN\_V6\_Web.pdf.
+
+[9] H. Gong, K. Rafi, H. Gu, T. Starr, B. Stucker, Analysis of defect generation in Ti-6Al-4V parts made using powder bed fusion additive manufacturing processes, Addit. Manuf. 1-4 (2014) 87-98, \href{https://doi.org/10.1016/j.addma.2014.08.002}{https://doi.org/10.1016/j.addma.2014.08.002}.
+
+[10] U. Gratzke, P.D. Kapadia, J. Dowden, J. Kroos, G. Simon, Theoretical approach to the humping phenomenon in welding processes, J. Phys. D Appl. Phys. 25 (2000) 1640-1647, \href{https://doi.org/10.1088/0022-3727/25/11/012}{https://doi.org/10.1088/0022-3727/25/11/012}.
+
+[11] I. Yadroitsev, A. Gusarov, I. Yadroitsava, I. Smurov, Single track formation in selective laser melting of metal powders, J. Mater. Process. Technol. 210 (2010) 1624-1631, \href{https://doi.org/10.1016/j.jmatprotec.2010.05.010}{https://doi.org/10.1016/j.jmatprotec.2010.05.010}.
+
+[12] W. Tan, Y.C. Shin, Analysis of multi-phase interaction and its effects on keyhole dynamics with a multi-physics numerical model, J. Phys. D Appl. Phys. 47 (2014) 1-17, \href{https://doi.org/10.1088/0022-3727/47/34/345501}{https://doi.org/10.1088/0022-3727/47/34/345501}.
+
+[13] J.C. Heigel, B.M. Lane, Measurement of the melt pool length during single scan tracks in a commercial laser powder bed fusion process, ASME Int. Manuf. Sci. Eng. Conf. (2017), \href{https://doi.org/10.1115/MSEC2017-2942}{https://doi.org/10.1115/MSEC2017-2942}.
+
+[14] S. Clijsters, T. Craeghs, S. Buls, K. Kempen, J.P. Kruth, In situ quality control of the selective laser melting process using a high-speed, real-time melt pool monitoring system, Int. J. Adv. Manuf. Technol. 75 (2014) 1089-1101, \href{https://doi.org/10}{https://doi.org/10}. 1007/s00170-014-6214-8.
+
+[15] Concept Laser, Quality Management, (2018) (Accessed 8 February 2018), https:// \href{http://www.concept-laser.de/en/products/quality-management.html}{www.concept-laser.de/en/products/quality-management.html}.
+
+[16] C. Scott, EOS Introduces EOSTATE Exposure OT, First Commercial Optical Tomography System for Additive Manufacturing, \href{http://3DPrint.Com}{3DPrint.Com}., 2017, https:// \href{http://3dprint.com/178624/eos-eostate-exposure-ot/}{3dprint.com/178624/eos-eostate-exposure-ot/}.
+
+[17] B.A. Fisher, B. Lane, H. Yeung, J. Beuth, S. Hall, Toward determining melt pool quality metrics via coaxial monitoring in laser powder bed fusion, Soc. Manuf. Eng. Lett. 15 (2018) 116-121, \href{https://doi.org/10.1016/j.mfglet.2018.02.009}{https://doi.org/10.1016/j.mfglet.2018.02.009}.
+
+[18] V. Gunenthiram, P. Peyre, M. Schneider, M. Dal, F. Coste, R. Fabbro, Analysis of laser-melt pool-powder bed interaction during the selective laser melting of a stainless steel, J. Laser Appl. 29 (2017), \href{https://doi.org/10.2351/1.4983259}{https://doi.org/10.2351/1.4983259}.
+
+[19] L.E. Criales, Y.M. Arisoy, B. Lane, S. Moylan, A. Donmez, T. Özel, Laser powder bed fusion of nickel alloy 625: experimental investigations of effects of process parameters on melt pool size and shape with spatter analysis, Int. J. Mach. Tools Manuf. 121 (2017) 22-36, \href{https://doi.org/10.1016/j.ijmachtools.2017.03.004}{https://doi.org/10.1016/j.ijmachtools.2017.03.004}.
+
+[20] U. Scipioni Bertoli, G. Guss, S. Wu, M.J. Matthews, J.M. Schoenung, In-situ characterization of laser-powder interaction and cooling rates through high-speed imaging of powder bed fusion additive manufacturing, Mater. Des. 135 (2017) 385-396, \href{https://doi.org/10.1016/j.matdes.2017.09.044}{https://doi.org/10.1016/j.matdes.2017.09.044}.
+
+[21] A.R. Nassar, E.W. Reutzel, S.W. Brown, J.P. Morgan, J.P. Morgan, D.J. Natale, R.L. Tutwiler, D.P. Feck, J.C. Banks, Sensing for directed energy deposition and powder bed fusion additive manufacturing at Penn State University, Laser 3D Manuf. III SPIE. 9738 (2016), \href{https://doi.org/10.1117/12.2217855}{https://doi.org/10.1117/12.2217855}.
+
+[22] M. Islam, T. Purtonen, H. Piili, A. Salminen, O. Nyrhilä, Temperature profile and imaging analysis of laser additive manufacturing of stainless steel, Phys. Procedia 41 (2013) 835-842, \href{https://doi.org/10.1016/j.phpro.2013.03.156}{https://doi.org/10.1016/j.phpro.2013.03.156}.
+
+[23] M. Luo, Y.C. Shin, Estimation of keyhole geometry and prediction of welding defects during laser welding based on a vision system and a radial basis function neural network, Int. J. Adv. Manuf. Technol. 81 (2015) 263-276, \href{https://doi.org/}{https://doi.org/} 10.1007/s00170-015-7079-1.
+
+[24] M. Grasso, V. Laguzza, Q. Semeraro, B.M. Colosimo, In-process monitoring of selective laser melting: spatial detection of defects via image data analysis, J. Manuf. Sci. Eng. 139 (2016), \href{https://doi.org/10.1115/1.4034715}{https://doi.org/10.1115/1.4034715}.
+
+[25] G. Repossini, V. Laguzza, M. Grasso, B.M. Colosimo, On the use of spatter signature for in-situ monitoring of laser powder bed fusion, Addit. Manuf. 16 (2017) 35-48, \href{https://doi.org/10.1016/j.addma.2017.05.004}{https://doi.org/10.1016/j.addma.2017.05.004}.
+
+[26] M. Grasso, A.G. Demir, B. Previtali, B.M. Colosimo, In situ monitoring of selective laser melting of zinc powder via infrared imaging of the process plume, Robot. Comput. Manuf. 49 (2018) 229-239, \href{https://doi.org/10.1016/j.rcim.2017.07.001}{https://doi.org/10.1016/j.rcim.2017.07.001}.
+
+[27] M. Khanzadeh, L. Bian, N. Shamsaei, S.M. Thompson, Porosity detection of laser based additive manufacturing using melt pool morphology clustering, Solid Free. Fabr. (2016), pp. 1487-1494.
+
+[28] M. Khanzadeh, S. Chowdhury, M.A. Tschopp, H.R. Doude, M. Marufuzzaman, L. Bian, In-situ monitoring of melt pool images for porosity prediction in directed energy deposition processes, IISE Trans. (2017) 1-19, \href{https://doi.org/10.1080/}{https://doi.org/10.1080/} 24725854.2017.1417656.
+
+[29] D. Ye, J.Y. Hsi Fuh, Y. Zhang, G.S. Hong, K. Zhu, In situ monitoring of selective laser melting using plume and spatter signatures by deep belief networks, ISA Trans. (2018) 0-1, \href{https://doi.org/10.1016/j.isatra.2018.07.021}{https://doi.org/10.1016/j.isatra.2018.07.021}.
+
+[30] M. Kerschbaumer, G. Ernst, Hybrid manufacturing process for rapid high performance tooling combining high speed milling and laser cladding, Proc. 23rd Int. Congr. Appl. Lasers Electro-Optics (ICALEO) (2004) 1710-1720.
+
+[31] Sciaky, Electron Beam Manufacturing Technology, (2018) (Accessed 4 January 2018), \href{http://www.sciaky.com/additive-manufacturing/electron-beam-additivemanufacturing-technology}{http://www.sciaky.com/additive-manufacturing/electron-beam-additivemanufacturing-technology}.
+
+[32] B. Fisher, Part Temperature Effects in Powder Bed Fusion Additive Manufacturing of Ti-6Al-4V, Carnegie Mellon University, 2018.
+
+[33] G. Csurka, C. Dance, L. Fan, J. Willamowski, B. Cedric, Visual categorization with bags of keypoints, Work. Stat. Learn. Comput. Vis. (2004), pp. 1-22 http:// \href{http://citeseerx.ist.psu.edu/viewdoc/summary?doi}{citeseerx.ist.psu.edu/viewdoc/summary?doi} =10.1.1.72.604.
+
+[34] D.G. Lowe, Object recognition from local scale-invariant features, Proc. Int. Conf. Comput. Vis. (1999).
+
+[35] L. Scime, J. Beuth, Melt Pool Geometry and Morphology Variability for the Inconel 718 Alloy in a Laser Powder Bed Fusion Additive Manufacturing Process., Metall. Mater. Trans. A. (n.d.).
+
+[36] J. Beuth, J. Fox, J. Gockel, C. Montgomery, R. Yang, H. Qiao, E. Soylemez, P. Peeseewatt, A. Anvari, S. Narra, N. Klingbeil, Process mapping for qualification across multiple direct metal additive manufacturing processes, Solid Free. Fabr. Proc. (2013) 655-665, \href{https://doi.org/10.1017/CBO9781107415324.004}{https://doi.org/10.1017/CBO9781107415324.004}.
+
+[37] D.R. Clymer, J. Cagan, J. Beuth, Power-velocity process design charts for powder bed additive manufacturing, J. Mech. Des. 139 (2017) 100907, , \href{https://doi.org/10}{https://doi.org/10}. 1115/1.4037302.
+
+[38] J. Zur Jacobsmühlen, S. Kleszczynski, G. Witt, D. Merhof, Elevated region area measurement for quantitative analysis of laser beam melting process stability, J. Chem. Inf. Model. 53 (2013) 1689-1699, \href{https://doi.org/10.1017/}{https://doi.org/10.1017/} CBO9781107415324.004.
+
+[39] R.E. Laureijs, J. Bonnín Roca, S. Prabha Narra, C. Montgomery, J.L. Beuth, E.R.H. Fuchs, Metal additive manufacturing: cost competitive beyond low volumes, J. Manuf. Sci. Eng. 139 (2016) 1-9, \href{https://doi.org/10.1115/1.4035420}{https://doi.org/10.1115/1.4035420}.
+
+[40] ASTM, Standard Terminology for Additive Manufacturing, (2015) (Accessed 3 May 2017), \href{https://compass.astm.org/download/ISOASTM52900.23551.pdf}{https://compass.astm.org/download/ISOASTM52900.23551.pdf}.
+
+[41] L. Scime, B. Fisher, J. Beuth, Using coordinate transforms to improve the utility of a fixed field of view high speed camera for additive manufacturing applications, Manuf. Lett. 15PB (2018) 104-106, \href{https://doi.org/10.1016/j.mfglet.2018.01.006}{https://doi.org/10.1016/j.mfglet.2018.01.006}.
+
+[42] TechImaging, Photron FASTCAM Viewer, (2017) (Accessed 18 February 2018), \href{https://www.techimaging.com/downloads/}{https://www.techimaging.com/downloads/}.
+
+[43] E. Dubrofsky, Homography Estimation, The University of Vancouver, 2007, https:// \href{http://doi.org/10.1117/1.3364071}{doi.org/10.1117/1.3364071}.
+
+[44] B. Lane, S. Mekhontsev, S. Grantham, M. Vlasea, J. Whiting, H. Yeun, Design, developments, and results from the NIST additive manufacturing metrology testbed (AMMT), Solid Free. Fabr. (2016) 1145-1160.
+
+[45] L. Scime, J. Beuth, Anomaly detection and classification in a laser powder bed additive manufacturing process using a trained computer vision algorithm, Addit. Manuf. 19 (2018) 114-126, \href{https://doi.org/10.1016/j.addma.2017.11.009}{https://doi.org/10.1016/j.addma.2017.11.009}.
+
+[46] L. Scime, Methods for the Expansion of Additive Manufacturing Process Space and the Development of In-Situ Process Monitoring Methodologies, Carnegie Mellon University, 2018.
+
+[47] W.E. King, A.T. Anderson, R.M. Ferencz, N.E. Hodge, C. Kamath, S.A. Khairallah, A.M. Rubenchik, Laser powder bed fusion additive manufacturing of metals; physics, computational, and materials challenges, Appl. Phys. Rev. 2 (2015) 041304, \href{https://doi.org/10.1063/1.4937809}{https://doi.org/10.1063/1.4937809}.
+
+[48] L.C. Wei, L.E. Ehrlich, M.J. Powell-Palm, C. Montgomery, J. Beuth, J.A. Malen, Thermal conductivity of metal powders for powder bed additive manufacturing, Addit. Manuf. 21 (2018) 201-208, \href{https://doi.org/10.1016/j.addma.2018.02.002}{https://doi.org/10.1016/j.addma.2018.02.002}.
+
+[49] Y. LeCun, Y. Bengio, G. Hinton, Deep learning, Nature 521 (2015) 436-444, \href{https://doi.org/10.1038/nature14539}{https://doi.org/10.1038/nature14539}.
+
+[50] B.L. DeCost, H. Jain, A.D. Rollett, E.A. Holm, Computer vision and machine learning for autonomous characterization of AM powder feedstocks, J. Mater. 69 (2017) 456-465 (Accessed 7 June 2017), \href{http://download.springer.com/static/}{http://download.springer.com/static/} pdf/233/art\%253A10.1007\%252Fs11837-016-2226-1.pdf?originUrl =http\%3A\% $2 \mathrm{~F} \% 2$ \href{http://Flink.springer.com}{Flink.springer.com} $\% 2$ Farticle $\% 2 \mathrm{~F} 10.1007 \% 2 \mathrm{Fs} 11837-016-2226-1 \&$ \&token $2=$ $\exp =1496891043 \sim$ acl $=\% 2$ Fstatic $\% 2 F p d f \% 2 F 233 \% 2$ Fart $\% 25253 A 10.1007 \%$ 25252Fs11837-016-222.
+
+[51] J. Zur Jacobsmuhlen, S. Kleszczynski, G. Witt, D. Merhof, Detection of elevated regions in surface images from laser beam melting processes, Conf. IEEE Ind. Electron. Soc. (2016) 1270-1275, \href{https://doi.org/10.1109/IECON.2015.7392275}{https://doi.org/10.1109/IECON.2015.7392275}.
+
+[52] D.G. Lowe, Distinctive image features from scale-invariant keypoints, Int. J. Comput. Vis. 60 (2004) 91-110 (Accessed 22 June 2017), \href{https://www.robots.ox}{https://www.robots.ox}. \href{http://ac.uk/}{ac.uk/} vgg/research/affine/det\_eval\_files/lowe\_ijcv2004.pdf.
+
+[53] P. Dollar, hogdraw, (2009). \href{mailto:pdollar@caltech.edu}{pdollar@caltech.edu}.
+
+[54] N. Dalal, B. Triggs, Histograms of oriented gradients for human detection, Conf. Comput. Vis. Pattern Recognit. (2005), pp. 886-893 (Accessed 22 June 2017), \href{http://citeseer.ist.psu.edu/viewdoc/summary?doi}{http://citeseer.ist.psu.edu/viewdoc/summary?doi} =10.1.1.101.8745.
+
+[55] MathWorks, k-Means Clustering, (2016) (Accessed 30 December 2016), https:// \href{http://www.mathworks.com/help/stats/k-means-clustering.html}{www.mathworks.com/help/stats/k-means-clustering.html}.
+
+[56] MathWorks, bsxfun, (2017) (Accessed 4 July 2017), \href{https://www.mathworks.com/}{https://www.mathworks.com/} help/matlab/ref/bsxfun.html.
+
+[57] MathWorks, imadjust, (2018) (Accessed 20 October 2018), \href{https://www}{https://www}, \href{http://mathworks.com/help/images/ref/imadjust.html}{mathworks.com/help/images/ref/imadjust.html}.
+
+[58] S.A. Khairallah, A.T. Anderson, A. Rubenchik, W.E. King, Laser powder-bed fusion additive manufacturing: physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones, Acta Mater. 108 (2016) 36-45, \href{https://doi}{https://doi}. org/10.1016/j.actamat.2016.02.014.
+
+[59] MathWorks, t-SNE, (2018) (Accessed 18 February 2018), \href{https://www.mathworks}{https://www.mathworks}. com/help/stats/t-sne.html.
+
+[60] MathWorks, fitcecoc, (2018) (Accessed 18 February 2018), \href{https://www}{https://www}. \href{http://mathworks.com/help/stats/fitcecoc.html}{mathworks.com/help/stats/fitcecoc.html}.
+
+[61] K. Bennett, C. Campbell, Support vector machines: hype or hallelujah, SIGKDD Explor. 2 (2000) 1-13.
+
+[62] K.-B. Duan, S.S. Keerthi, Which is the best multiclass SVM method? An empirical study, in: N.C. Oza, R. Polikar, J. Kittler, F. Roli (Eds.), Mult. Classif. Syst. Springer Berlin Heidelberg, Berlin, Heidelberg, 2005pp. 278-285.
+
+[63] J. Brownlee, What Is the Difference Between Test and Validation Datasets, Mach. Learn. Mastery, 2017 (Accessed 8 February 2018), https:// \href{http://machinelearningmastery.com/difference-test-validation-datasets/}{machinelearningmastery.com/difference-test-validation-datasets/}.
+
+[64] M. Kuhn, K. Johnson, Applied Predictive Modeling, 5th ed., Springer US, New York, 2016, \href{https://doi.org/10.1007/978-1-4614-6849-3}{https://doi.org/10.1007/978-1-4614-6849-3}.
+
+[65] C. Zhao, K. Fezzaa, R.W. Cunningham, H. Wen, F. De Carlo, L. Chen, A.D. Rollett, T. Sun, Real-time monitoring of laser powder bed fusion process using high-speed Xray imaging and diffraction, Sci. Rep. 7 (1) (2017) 1-11, \href{https://doi.org/10.1038/}{https://doi.org/10.1038/} s41598-017-03761-2.
+
+[66] A. Anam, J.J.S. Dilip, D. Pal, B. Stucker, Effect of scan pattern on the microstructural evolution of Inconel 625 during selective laser melting, Solid Free. Fabr. (2014) 363-376, \href{https://doi.org/10.13140/2.1.1256.6089}{https://doi.org/10.13140/2.1.1256.6089}.
+
+[67] S.P. Narra, Melt Pool Geometry and Microstructure Control Across Alloys in Metal Based Additive Manufacturing Processes, Carnegie Mellon University, 2017.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

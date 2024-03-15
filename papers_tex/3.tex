@@ -1,0 +1,380 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Influence of processing parameters on laser penetration depth and melting/re-melting densification during selective laser melting of aluminum alloy }
+
+
+\author{Guanqun $\mathrm{Yu}^{1,2} \cdot$ Dongdong $\mathrm{Gu}^{1,2} \cdot$ Donghua Dai ${ }^{1,2} \cdot$ Mujian Xia ${ }^{1,2} \cdot$\\
+Chenglong $\mathrm{Ma}^{1,2} \cdot$ Kun Chang $^{1,2}$}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Received: 31 July 2016/Accepted: 7 September 2016/Published online: 14 September 2016
+
+(C) Springer-Verlag Berlin Heidelberg 2016
+
+\begin{abstract}
+A three-dimensional mesoscopic model, considering the powder-to-solid transition, motion of gas bubbles within molten pool and the effect of surface tension, has been established in order to investigate the evolution rule of pores and re-melting densification mechanism during selective laser melting of AlSi10Mg. The results indicated that re-melting phenomenon of previous fabricated layer induced by laser melting of current powder layer played a crucial role on the increase in densification rate. During the re-melting process, the trapped gas pores in previous layer rose up swiftly and came to the surface consequently, resulting in remarkably elevated densification in previous layer. The influences of laser scan speed on the single-track morphology, types of pores and laser penetration depth have also been studied. It showed that the maximum re-melting depth $(31 \mu \mathrm{m})$ was attained, and meanwhile, pores left in preceding layer got eliminated completely due to the mass transfer within molten pool, when an appropriate laser scan speed $(150 \mathrm{~mm} / \mathrm{s})$ was applied. In this case, reasonable laser energy per unit length and irradiation time tended to enhance the laser penetration depth for powder bed and decrease the porosity in as-fabricated layer. A series of experimental study were performed to verify the reliability of the above mesoscopic simulation, including the surface topography of single track
+\end{abstract}
+
+\footnotetext{$\boxtimes$ Dongdong Gu
+
+dongdonggu @nuaa.edu.cn
+
+1 College of Materials Science and Technology, Nanjing University of Aeronautics and Astronautics, Yudao Street 29, Nanjing 210016, People's Republic of China
+
+2 Institute of Additive Manufacturing (3D Printing), Nanjing University of Aeronautics and Astronautics, Yudao Street 29, Nanjing 210016, People's Republic of China
+}and the types of pores. The redistribution of bubbles between the adjacent layers as well as the localized remelting densification, which were observed from the longitudinal section of samples, was in good agreement with simulation results.
+
+\section*{1 Introduction}
+Aluminum alloys, as the second most used metal surpassed only by steel, are normally considered to fall into three main categories: heat treatable, non-heat treatable and casting alloys [1-4]. They are widely employed in automotive, aerospace and aircraft applications because of their recyclability, thermal and electrical conductivity, excellent strength-to-weight ratio, corrosion resistance, formability, and attractive appearance. In general, most components made in $\mathrm{Al}$ alloys are fabricated by traditional manufacturing processes such as casting, forging, extrusion and powder metallurgy. However, the adoption of tooling for making Al alloy parts through these traditional manufacturing routes has much difficulty in making complex and customized parts, and it also increases the cost of production as well as lead time [5]. Therefore, some novel processing techniques are highly required to obtain complex and functional components with high efficiency. Selective laser melting, as a newly developed additive manufacturing (AM) technique, has become a promising manufacturing route for such business [6, 7]. SLM creates parts by scanning powder particles with a laser beam so as to melt and fuse the material into a solid. The parts are manufactured layer-by-layer direct from the CAD file data, without any part-specific tools such as mold or dies. It shortens the design and production cycle and promises to revolutionize the traditional\\
+manufacturing processes by engendering significant time and cost savings.
+
+Nevertheless, previous researches have reported that a relatively high degree of porosity was still one of the major limitations in the ultimate SLM-processed builds [8-11]. Generally, stress concentration is prone to occur around the residual irregular pores, thus resulting in micro-crack initiation. Hence, the elevated densification degree could eliminate the risk of micro-defects and meanwhile improve remarkably attendant mechanical properties of SLM-processed AlSi10Mg components. Recently, extensive valuable studies have focused on the evolution of pores and strategies to reduce porosity by using variable processing parameters. For instance, Aboulkhair et al. [12] have enhanced the relative density of parts being processed (i.e., minimize the porosity) by design of scan strategies, revealing that a compromise between parameters and scan strategies was used to produce high density parts $(99.8 \%$ ) for AlSi10 Mg alloy. By using X-ray computed tomography, Maskery et al. [13] investigated porosity levels, as well as pore size and position, and found correlations with the scanning strategies used to manufacture their specimens. They provided us a novel SLM process monitoring methods (i.e., CT measurements and quantitative defect analysis) to refine our process parameters. Weingarten et al. [14] studied the formation mechanism and reduction of hydrogen porosity in $\mathrm{AlSi10Mg}$ parts built up with selective laser melting, indicating that the hydrogen porosity can be lowered by efficient drying of the powder as well as by the modification of the process parameters. However, all the results from previous researches mentioned above were obtained by experimental study, finding out the optical process parameters and strategies but little understanding about the motion of pores within molten pool and the mechanism of densification.
+
+On the other hand, computational fluid dynamics in combination with experiments have been performed to investigate the influence of laser scanning speed on the morphology of porosity in SLM-fabricated components [15]. It showed that the morphology of pores changed from near-spherical to elongated shape as the laser scan speed increased. That is to say, laser energy input per unit and the irradiation time by laser beam play crucial roles on the types of pores in final parts. Qiu et al. [16] discussed surface structure and porosity of Ti-6Al-4V samples under various laser scanning speeds and powder layer thicknesses through both experimental and CFD modeling approaches. It was found that the as-fabricated part was nearly free of any pores when the applied laser scan speed was decreased below $2700 \mathrm{~mm} / \mathrm{s}$, while the porosity got increased but not significantly upon laser scan speed further rising up. However, few published CFD models were established to study the motion of pores within molten pool and its influence on the re-melting process between adjacent layers, which is essential to predict the distribution of pores and better understand the densification mechanism in localized re-melting area.
+
+In the present work, a 3D mesoscopic powder-scale model was proposed by using the finite volume method (FVM), considering the laser absorption mechanism in powder bed, the powder-to-solid transition, the difference of heat transfer efficiency between particles and gas gaps as well as motion and annihilation mechanism of pores in molten pool $[17,18]$. The influences of scanning speed on the single-track morphology, types of pores and laser penetration depth have also been discussed. Finally, a fulldense AlSi10Mg component by using appropriate scanning speed at a fixed laser power could be successfully obtained, without re-melting the same layer twice. Meanwhile, a series of experiments with different parameters have been carried out to verify the reliability of the physical model.
+
+\section*{2 Numerical simulation}
+A multi-phase model presented in the next paragraph was used to analyze the influence of scanning speed $v[\mathrm{~mm} / \mathrm{s}]$ and laser energy per unit length $[\mathrm{J} / \mathrm{mm}]$ on the types of pores and relative density during the SLM of Aluminum alloy. In the present model, a simple powder layer of spheroidal particles irradiated with a Gaussian laser beam was considered. The scan length was $200 \mu \mathrm{m}$. The major simplifications of this model are that with respect to absorption angle dependency, shadowing effects, evaporation and variation of absorption coefficient are neglected, and an idealized spherical, closely packed powder in regular forms is assumed.
+
+\subsection*{2.1 Model establishment}
+Figure 1a depicts the schematic of thermofluid dynamical multi-phase model for SLM process. The important physical and chemical metallurgical processes in SLM, interactions between laser beam and powder particles, melting/solidification, fluid flow of molten pool [19] as well as heat transfer mechanism which mainly includes conduction, convection and radiation are all involved in this physical model. The fluid dynamical description is distinguished between three phases: solid, liquid and ambient air atmosphere.
+
+Numerical simulation is performed by using the commercial CFD software FLUENT. The three-dimensional finite volume model with preceding layers and current powder particles is established (Fig. 1b). The model geometry consists of a powder layer on a massive base plate representing the preceding layers. The current powder\\
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_f85dae329593e14f97f0g-03}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_f85dae329593e14f97f0g-03(1)}
+\end{center}
+
+Fig. 1 a Schematic of thermodynamics and hydrodynamics during SLM process. b The established 3D FVM model where the green balls represent the powder layer and the gray rectangle represents the preceding layers
+
+layer with laser irradiation has a length of $250 \mu \mathrm{m}$, a width of $150 \mu \mathrm{m}$ and a thickness of $60 \mu \mathrm{m}$. This area is an argonfilled chamber in which close-packed powder particles $\left(D_{50}=30 \mu \mathrm{m}\right)$ are mathematically generated by using the user-defined function. A AlSi10Mg block with dimensions of $500 \times 200 \times 100 \mu \mathrm{m}^{3}$ was initiated under the powder bed, representing the preceding layer which includes some pores. In order to get a balance between calculation efficiency and the computational precision, solid 375,000 hexahedron grids with a fine mesh of $2 \mu \mathrm{m} \times 2 \mu \mathrm{m} \times 2 \mu \mathrm{m}$ were used in powder bed, while a relatively coarse hexahedron mesh was adopted in the previous processing layer.
+
+\subsection*{2.2 Design of Gaussian volume heat source}
+During the SLM process, considering the penetration depth and multiple reflections in powder bed, a volumetric heat source with Gaussian distribution is usually designed to simulate the interaction of light with materials [20]:
+
+$q(x, y, z)=\frac{3 c_{\mathrm{s}} \mathrm{PA}}{\pi H\left(1-\frac{1}{e^{3}}\right)} \exp \left[\frac{-3 c_{\mathrm{s}}}{\log \left(\frac{H}{z}\right)}\left(x^{2}+y^{2}\right)\right]$
+
+where $c_{\mathrm{s}}$ is shape coefficient, equals $\frac{3}{R_{0}^{2}} ; R_{0}$ is mouth diameter of heat source; $P$ is the laser power; $H$ is the height of heat source; $A$ is laser energy absorptance of a material affected by the wavelength of laser [21,22]. The shape of volumetric heat source with Gaussian distribution was almost an inverted cone, which is underneath the surface of powder bed. However, this traditional Gaussian heat source just works well in the macroscopic model, such as regarding the powder bed as a bulk. Slight modifications about the program algorithm must be done to adapt our model of particles and gas. As we all know, the laser absorption of gas is pretty low and can be neglected, so user-defined function was used to make sure that the heat source only be loaded on the surface of particles. It should be pointed out that the modeling was carried out in each gird as a unit. All the grids in computational domain were divided into interface grid and internal grid. A statement was executed in the cone area that Gaussian function defined to find out whether this grid is interface gird. Eventually, only the interface grids were heated; then, the temperature increase in particles is due to the absorption of surface grids and the thermal conduction from external grids to the internal grids. Accordingly, the powder bed is incompact and porous. That is to say, the absorption is significantly larger than its value for normal incidence on a flat surface [23, 24]. This is due to multiple reflections inside the powder [25-27]. Lots of the laser rays that penetrate the powder are reflected back into the powder by the flat surface of preceding layer, resulting in little energy dissipation.
+
+\subsection*{2.3 Treatments of the initial and boundary conditions}
+An initial "guess" for the computational domain must be given before the CFD simulation. Each cell of the domain has to get a value of volume fraction to tell the computer which phase is it. The fields for all properties and variables are shared by the phases and represent volume-averaged values, as long as the volume fraction of each phase is known at each location. Thus, the variables and properties in any given cell are either purely representative of one of the phases, or representative of a mixture of the phases, depending upon the volume fraction values. Just as we described in previous work [28], if the $q$ th fluid's volume fraction in the cell is denoted as $\alpha_{q}$, then the following three conditions are possible:
+
+$\alpha_{q}=0$ : the cell is empty (of the $q$ th fluid).\\
+$\alpha_{q}=1$ : the cell is full (of the $q$ th fluid).
+
+$0<\alpha_{q}<1$ : the cell contains the interface between the $q$ th fluid and gas.
+
+Based on the local value of $\alpha_{q}$, the appropriate properties and variables will be assigned to each control volume within the domain. At first, the entire flow field was initialized with Ar gas. Then, the value of 1 for volume fraction was set in certain cells to build the bulk which represents the preceding process layer. In the same way, the powder bed of individual spherical particles was established in a regular form.
+
+Boundaries of the model vary in different parts. By using VOF method, the shape changing of the particles is visible and the free surface of the melt pool could be captured. The top surface of bulk area is free surface, while wall boundary conditions are used in the rest surfaces. On top of the substrate, the powder particles were established in the argon-filled chamber, pressure inlet boundary conditions were used at the top surface and pressure outlet boundary conditions were used at the lateral surfaces; the bottom surface that is connected to the preceding layer is free surface as well.
+
+\subsection*{2.4 Properties of as-used materials}
+The material applied is aluminum alloys AlSi10Mg. The material properties required are the thermal conductivity, heat capacity, density and so on. Table 1 lists the main properties of AISi10Mg, which are used in this simulation. In the real SLM process, many properties such as thermal conductivity and surface tension are dependent of the temperature. Powders are inherently light with poor flow ability and high reflectivity along with high thermal conductivity when compared to other SLM candidate materials [29].
+
+\section*{3 Experimental procedures}
+The $99.7 \%$ purity AlSi10Mg powder with spherical shape and an average particle diameter of $30 \mu \mathrm{m}$ was used in this experiment. The powder properties were values from the data sheets of the suppliers. The self-developed SLM system consisted mainly of an IPG YLR-500-WC ytterbium fiber laser with a power of $\sim 500 \mathrm{~W}$ and a spot size of $70 \mu \mathrm{m}$ (IPG Laser Gmbh, Germany), a computer process control system, an inert argon gas protection system and an automatic powder spreading device. The building chamber was then sealed, and the argon gas with an outlet pressure of 30 millibars was fed inside, decreasing the $\mathrm{O}_{2}$ content below $10 \mathrm{ppm}$. The processing parameters used in our experiments are listed in Table 2. An aluminum alloy block was fixed on the building platform for the specimens to be built. There are six cubic specimens of $5 \mathrm{~mm} \times 5 \mathrm{~mm} \times 5 \mathrm{~mm}$, which were built at six different scanning speeds in present experiment. In order to investigate the influence of scanning speed on morphology of single track, single scan vector was designed at the last layer. The specimens for metallographic examinations were cut, ground and polished according to the standard procedures. The surface morphologies of the fabricated parts were recorded using a Hitachi S-4800 field emission scanning electron microscope (FE-SEM).
+
+\section*{4 Results and discussion}
+\subsection*{4.1 Surface morphologies}
+The typical simulated surface morphologies of single track with variable scanning speed are shown in Fig. 2a, with a fixed laser power of $100 \mathrm{~W}$. It was apparent that width of the single track had a tendency to decrease as high scanning speed was used. As v increased from 150 to $400 \mathrm{~mm} /$ $s$, the fusion region became narrow due to insufficient liquid spreading to wet the surrounding powder particles. Furthermore, the peak temperature within molten poor and width of single track are depicted in Fig. 2b, showing a downward trend as the $v$ increases. For instance, at relatively lower $v$ of $150 \mathrm{~mm} / \mathrm{s}$, nearly three particles along the scanning trace were irradiated and melted to form the molten track, corresponding to the width of $62 \mu \mathrm{m}$. However, as the $v$ increased to $400 \mathrm{~mm} / \mathrm{s}$, on the scanning path,\\
+Table 1 Temperaturedependent material data (left: low-temperature regime, right: high-temperature regime)
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+ & AlSi10Mg & Air \\
+\hline
+Density $\rho\left[\mathrm{kg} / \mathrm{m}^{3}\right]$ & $2630 \ldots 2310$ & $1.2 \ldots 0.12$ \\
+Heat capacity Cp $[\mathrm{J} /(\mathrm{kg} \mathrm{K})]$ & $754 \ldots 921$ & $1015 \ldots 1306$ \\
+Thermal conductivity $k[\mathrm{~W} /(\mathrm{m} \mathrm{K})]$ & $92 \ldots 115$ & $2.6 \times 10^{-2} \ldots 6.6 \times 10^{-2}$ \\
+Viscosity $\mu[\mathrm{MPa} \mathrm{s}]$ & $1.1603 \ldots 0.7922$ & $1.8 \times 10^{-5} \ldots 7.0 \times 10^{-5}$ \\
+Surface tension $\sigma[\mathrm{N} / \mathrm{m}]$ & $0.92 \ldots 0.86$ &  \\
+Absorption coefficient $A$ & 0.09 &  \\
+Melting temperature $T_{\mathrm{m}}[\mathrm{K}]$ & 869 &  \\
+Evaporation temperature $T_{\mathrm{v}}[\mathrm{K}]$ & 2750 &  \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 2 SLM processing parameters in our experiment
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Parameters & Value & Unit \\
+\hline
+Ambient temperature, $T_{0}$ & 300 & $\mathrm{~K}$ \\
+Powder layer thickness, $d$ & 60 & $\mu \mathrm{m}$ \\
+diameter of laser beam, $R_{0}$ & 70 & $\mu \mathrm{m}$ \\
+Hatch spacing, $s$ & 50 & $\mu \mathrm{m}$ \\
+Laser power, $P$ & 100 & $\mathrm{~W}$ \\
+Scanning speed, $v$ & $150,200,250,300,350,400$ & $\mathrm{~mm} / \mathrm{s}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+only few powder particles near the spot center where the laser energy density is the largest were significantly heated and melted. The width of track consistently went down as a higher scanning speed was applied, falling to $27 \mu \mathrm{m}$ at $v$ of $400 \mathrm{~mm} / \mathrm{s}$. Moreover, the peak temperature predicted from simulation also showed a tendency to decline over the $v$ increased. The particles were heated to just above $1900 \mathrm{~K}$ at the $v$ of $150 \mathrm{~mm} / \mathrm{s}$, while this figure decreased to $1773 \mathrm{~K}$ at the $v$ of $250 \mathrm{~mm} / \mathrm{s}$ and ended up in $1311 \mathrm{~K}$ at $400 \mathrm{~mm} / \mathrm{s}$.
+
+Thus, it was reasonable to infer that the decrease in scanning speed increased the interaction time between laser beam and particles, causing low laser energy input within molten pool. As a result, high laser energy per unit length corresponding to low scanning speed contributed to sufficient melt liquid and high peak temperature in molten pool. This in turn declined the viscosity and surface tension, which are both temperature dependent. Flow ability of melts was apparently enhanced because of low viscosity and low surface tension caused by high work temperature. Therefore, the metallic liquid spread wider and filled in the gaps between particles more efficiently. It is noted that the thermal conductivity of the powder bed is mostly determined by the voids and not sensitive to the properties of the material [30]. When the melts filled up the voids between particles, the capacity of heat conduction enhanced because the thermal conductivity of metal is much higher than that of gas. Then more particles would be heated and translated to liquid phase.
+
+\subsection*{4.2 The types of pores at various scanning speeds}
+Figure 3 shows the longitudinal section $(X-Z$ view, $Y=0$ ) of the applied powder bed along the scanning path. According to the multi-phase distribution curve, it was obvious that particles irradiated by laser beam showed different degrees of fusion at variable $v$ (400, 250, $150 \mathrm{~mm} / \mathrm{s})$ with a constant laser power $(100 \mathrm{~W})$, leading to various morphologies of pores. The geometric appearance of powder bed at $100 \mathrm{~W}$ and $400 \mathrm{~mm} / \mathrm{s}$ indicated that the particles slightly melted on the surface while the core of the particles remained the initial solid state (Fig. 3a). In this situation, neck formed between adjacent powder particles but the liquid phase solidified rapidly before the neck size increased. As scanning speed fell to $250 \mathrm{~mm} / \mathrm{s}$, the neck size rose noticeably comparing to that in $400 \mathrm{~mm} / \mathrm{s}$ (Fig. 3c). Nevertheless, the upper-layer particles melted largely and formed a long continuous sintering line, whereas the underneath particles remained solid state, with some keyhole pores appearing between the upper and underneath particles. A full melting occurred with a relatively high dense and few pores in the molten pool, as the scanning speed went down further to $150 \mathrm{~mm} / \mathrm{s}$.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f85dae329593e14f97f0g-05}
+
+Fig. 2 a Simulated surface morphologies from top view by using different processing parameters: $v=150 \mathrm{~mm} / \mathrm{s}, v=250 \mathrm{~mm} / \mathrm{s}, v=400 \mathrm{~mm} /$ $\mathrm{s},(P=100 \mathrm{~W})$. b The peak temperature and width of single molten track vary with the increase of scan speed
+
+Fig. 3 Solid fraction of powder layers showing the formation of spherical and irregular pores: $\mathbf{a}$, b $v=400 \mathrm{~mm} / \mathrm{s}, \mathbf{c}$, d $v=250 \mathrm{~mm} / \mathrm{s}$, e, f $v=150 \mathrm{~mm} / \mathrm{s}(P=100 \mathrm{~W})$. The white circles at the upper part of each image section indicate the position of the heat source center (a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_f85dae329593e14f97f0g-06(2)}
+\end{center}
+
+(c)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_f85dae329593e14f97f0g-06(5)}
+\end{center}
+
+(e)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_f85dae329593e14f97f0g-06(4)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_f85dae329593e14f97f0g-06(1)}
+\end{center}
+
+(d)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_f85dae329593e14f97f0g-06}
+\end{center}
+
+(f)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_f85dae329593e14f97f0g-06(3)}
+\end{center}
+
+The dynamical behavior of fluid interface is illustrated in local amplification as shown in Fig. 3b, d, f. The velocity vector plots show that the motion of the metallic melts under the laser beam was quite unstable. Figure 3b shows that the melt trace broke up into pieces driven by surface tension and capillary forces, eventually resulting in open pore defects. The velocity of melts attached to the particle surface was $1.43 \mathrm{~m} / \mathrm{s}$ in maximum and $0.19 \mathrm{~m} / \mathrm{s}$ in minimum. However, this figure increased to $2.69 \mathrm{~m} / \mathrm{s}$ in maximum and $0.32 \mathrm{~m} / \mathrm{s}$ in minimum when scanning speed declined to $250 \mathrm{~mm} / \mathrm{s}$. It is noted that the gas in loose powder bed had no chance to escape successfully and evolved to pores, causing a low level of density. This was ascribed to the fact that insufficient laser power input caused by high $v$ led to less liquid phase and larger solidification rate. Furthermore, at a relatively lower $v$ of $150 \mathrm{~mm} / \mathrm{s}$, a complete molten pool appeared and the flow field depicted a typical radially outward flow pattern, with an elongated shape pore in the center of molten pool. Flow velocity of fluid $(3.24 \mathrm{~m} / \mathrm{s})$ on surface was about three times of that in the bottom $(1.13 \mathrm{~m} / \mathrm{s})$.
+
+Generally, at a high scanning speed of $400 \mathrm{~mm} / \mathrm{s}$ (LEPUL $=0.25 \mathrm{~J} / \mathrm{mm}$ ), the supplied heat by laser was insufficient to melt the whole particles. Only the shell at the grain border transformed to liquid phase, while the core of the grain stays unaffected. All the particles were incomplete bonding just like the liquid-phase sintering where powder was partial melting [31, 32]. A closer look at the open pore defect revealed that surface tension drove the melts on the surface shrinking outward [33], and this fluid flow made long cylindrical melt track break up into droplets (Fig. 3b), which eventually led to the Plateau-Rayleigh instability [34]. However, this instability was alleviated as a lower $v$ was applied. A full melting of upper particles can be seen with the $v$ going down to $250 \mathrm{~mm} / \mathrm{s}$ $(\mathrm{LEPUL}=0.4 \mathrm{~J} / \mathrm{mm})$. As a result, many keyhole pores and inverted triangle pores appeared, and this was primarily attributed to the fact that the high thermal conductivity of AlSi10Mg resulted in a quite high solidification rate; then, metallic liquid solidified before it filled in the pores. On the other hand, laser beam could not penetrate into the depth of powder bed when the upper particles melted and formed a long liquid cylinder. As the $v$ decreased to $150 \mathrm{~mm} / \mathrm{s}(\mathrm{LEPUL}=0.67 \mathrm{~J} / \mathrm{mm})$, it was clear that current layer was completely melted and formed a mature molten pool (Fig. 3e, f). The velocity field of the molten pool suggested that the molten pool presented an outward flow character because of the Marangoni effect $[35,36]$. The temperature gradient led to a surface tension gradient, which caused a Marangoni flow pointed from low surface tension to high surface tension area on the surface of the molten pool. In this situation, the large pores tended to split into several small sphere pores due to the fierce motion within molten pool. Moreover, it can be inferred that the Marangoni flow has a crucial influence on the types of pores and their distributions.
+
+\subsection*{4.3 Penetration depth and interlayer bonding}
+Figure 4 illustrates the temperature contour plots and solid fraction of the powder layer from longitudinal-section view at $X=150 \mu \mathrm{m}$ in three different scanning speeds. It can be seen that the previous layer was built with some porosity. Various scanning speeds led to the molten pool with different penetrating depths. That is to say, the dimension of molten pools was different. As $v$ of $400 \mathrm{~mm} / \mathrm{s}$ was used (LEDU $=0.25 \mathrm{~J} / \mathrm{mm}$ ), the particle in the center of laser spot absorbed the most laser energy and was hardly to transfer heat to ambient environment in such a short time, considering the low thermal conductivity of gas gap between particles. Then, the shell of particles accumulated enough energy to reach the melting point and began to partially melt on the surface (Fig. 4a). In this situation, the penetration depth (about $35 \mu \mathrm{m}$ ) was smaller than the powder thickness $(50 \mu \mathrm{m})$. As a result, the metallurgical bonding between layers was considerably weak and the preceding layer did not re-melt. As the $v$ decreased to $250 \mathrm{~mm} / \mathrm{s}$, the melt pool area enlarged with about six particles melting under the laser irradiation. A relatively dense area was gradually formed since the liquid metal filled in gaps. It should be noted the density in re-melting area was greatly enhanced (Fig. 4b). Moreover, the largest re-melting area and highest working temperature were obtained at $150 \mathrm{~mm} / \mathrm{s}$, which caused the best bonding area between current layers and preceding layer. This is to say, the laser beam penetrated to the preceding layer and the remelting area enlarged (approximately $81 \mu \mathrm{m}$ depth), causing a re-melting densification region. Interesting, gas bubbles in preceding layer tended to rose up to current layer's surface under the joint action of buoyancy, fluid flow and collapse, resulting in a fully dense layer. Figure 5 gives us temperature distribution profiles of the molten pool along Z-direction. The temperature decreased from $1693 \mathrm{~K}$ of surface to just above $800 \mathrm{~K}$ in $100 \mu \mathrm{m}$ depth at the $v$ of $400 \mathrm{~mm} / \mathrm{s}$, while this figure showed the same downward trend at the speed of 250 and $150 \mathrm{~mm} / \mathrm{s}$. As the graph shows, the penetration depth generally increases when the scanning speed falls. It stays $37.3 \mu \mathrm{m}$ at the speed of $400 \mathrm{~mm} / \mathrm{s}$, while this value goes up to $61.8 \mu \mathrm{m}$ $(250 \mathrm{~mm} / \mathrm{s})$ and $81 \mu \mathrm{m}(150 \mathrm{~mm} / \mathrm{s})$, respectively. Therefore, it can be concluded that low scanning speed allowed the powder particles to melt completely and increased the penetration depth of laser beam, which resulted in dense components with good metallurgical bonding between layers.
+
+\subsection*{4.4 Motion of single gaseous bubble}
+To develop insights into the elimination of porosity and the re-melting densification, motion trail of a single bubble and the velocity plots within the molten pool had been carried out at the $v$ of $400 \mathrm{~mm} / \mathrm{s}$ (Fig. 6). When the molten pool throughout the adjacent layers formed, the gas pore staying in previous layer went up to the current layer, which eventually made the preceding layer dense. The initial position of a single gas bubble is shown in Fig. 6a at $t=62 \mu \mathrm{s}$, and it is clear that the gas bubble that was left in preceding layer began to move up under the up-down convection within molten pool. Considering the effect of Marangoni flow, the molten pool tended to exhibit a radially outward flow pattern on the surface, while an upward flow in the center was observed due to the combination of surface tension and buoyancy forces. With the extension of\\
+Fig. 4 Temperature contour plots and solid fraction of the powder layer from crosssectional view at $X=150 \mu \mathrm{m}$ during SLM process by using different scan speeds:
+
+a $v=400 \mathrm{~mm} / \mathrm{s}$,
+
+b $v=250 \mathrm{~mm} / \mathrm{s}$,
+
+c $v=150 \mathrm{~mm} / \mathrm{s}(P=100 \mathrm{~W})$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f85dae329593e14f97f0g-07(1)}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_f85dae329593e14f97f0g-07}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_f85dae329593e14f97f0g-08}
+\end{center}
+
+Fig. 5 Temperature distribution profiles of the powder bed at different scan speeds with a constant laser power of $100 \mathrm{~W}$, mapping along Z-direction: $Z$-axis at $X=150 \mu \mathrm{m}, Y=0$
+
+laser irradiation time, the gas pore rose up from bottom of the melt pool to the surface. Meanwhile, the size of this pore increased slightly due to the low pressure in the top region. The gas pore would rotate several times under the influence of Marangoni effect before the molten pool completely solidified.
+
+Generally, as the bottom area of the molten pool connected the bulk material, which has a relatively high thermal conductivity, the molten pool tended to solidify from the bottom to top. So it can be found that doublecircle convection region became smaller and smaller, eventually pores stayed near the surface when the molten pool was completely solidified (Fig. 6e). It is noted that most of the bubbles overflew from the molten pool or split into several small round pores during the motion of pool. Only one typical bubble was monitored to investigate the mechanism of re-melting densification.
+
+According to this simulation result, it is reasonable to conclude that appropriate penetration depth could make each layer become dense after the next layer was processed. Figure 7 gives the schematic of re-melting densification. If the depth of re-melting area $(\Delta h)$ is almost equal to half of deposit thickness, full-dense part can be fabricated at a high forming rate without re-melting the same layer twice. It is noted that the last scanned layer, namely the top layer obviously, would remain relatively high porosity, and melting twice is needed for the top layer.
+
+\section*{5 Experimental investigations of SLMmanufactured parts}
+In order to validate the simulation results that have been discussed above, six cubic samples with dimensions of $5 \times 5 \times 5 \mathrm{~mm}^{3}$ were fabricated on aluminum substrate using various processing parameters. Furthermore, a single trace was scanned on the last layer of each sample to investigate the re-melting depth and multilayer bonding.
+
+Figure 8 shows the surface morphologies of the as-fabricated AlSi10Mg samples with different scanning speeds. At a relatively high speed of $400 \mathrm{~mm} / \mathrm{s}$, discontinuous melting track and open pores could be found on the top layer. In this situation, insufficient laser energy input leaded to incomplete melting of particles and unstable tracks. The solidified surface exhibited an interrupted morphology with many irregular pores. Meanwhile, the width of melting track was just\\
+Fig. 6 Motion trail of single bubble and the velocity vector plots around the pore in the molten pool at different moments: $\mathbf{a} t=62 \mu \mathrm{s}$; b $t=102 \mu \mathrm{s} ; \mathbf{c} t=142 \mu \mathrm{s}$; $\mathbf{d} t=182 \mu \mathrm{s} ; \mathbf{e} t=222 \mu \mathrm{s}$. $(v=150 \mathrm{~mm} / \mathrm{s}, P=100 \mathrm{~W})$\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f85dae329593e14f97f0g-08(1)}
+
+Fig. 7 A schematic depicts reducing porosity by re-melting the preceding layer at a certain depth
+
+\section*{Laser beam}
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_f85dae329593e14f97f0g-09}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_f85dae329593e14f97f0g-09(2)}
+\end{center}
+
+about $27 \mu \mathrm{m}$ (Fig. 8a). As shown in Fig. $8 \mathrm{~b}$ and c, when the applied $v$ decreased to 300 and $150 \mathrm{~mm} / \mathrm{s}$, the average width gradually increased to 34 and $62 \mu \mathrm{m}$, respectively. Figure $8 \mathrm{~d}$ gives us the average width of melt track measured by experiments. It is obviously that the figure shows a downward trend with an increasing scanning speed. High scanning speed at a fixed laser power means low laser energy per unit length, which made the full melting area decrease. As a result, width of molten pool went down. This observation agrees well with our simulation results in Fig. 2.
+
+Figure $9 \mathrm{a}, \mathrm{b}$ shows the surface topography of the sample fabricated at $100 \mathrm{~W}$ and $400 \mathrm{~mm} / \mathrm{s}$. A single-pass scanning was performed on the top layer in our experiments, and the powder-to-solid transformation was observed clearly (Fig. 9a). For high scanning speed, the formation of molten pool was quite unstable because of the limited melting liquid. In general, the partial melting particles were bonded by the liquid metal, leading to the formation of melting track. Neck was observed in this situation, and in some area the melting track broke due to the surface tension. Very loose interlayer bonding could be found from the side surface in Fig. 9b. Just as we simulated in Fig. 4, the penetration depth was relatively small and the laser beam could not re-melt the preceding layer. This caused the weak\\
+Fig. 8 FE-SEM images showing the surface morphologies of the asfabricated AlSi10Mg samples with different scanning speeds $(P=100 \mathrm{~W}): \mathbf{a} v_{1}=400 \mathrm{~mm} /$ $\mathrm{s} ; \mathbf{b} v_{2}=300 \mathrm{~mm} / \mathrm{s}$; c $v_{3}=150 \mathrm{~mm} / \mathrm{s}$. d The average width of melt track measured by experiments\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f85dae329593e14f97f0g-09(3)}
+
+(d)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_f85dae329593e14f97f0g-09(1)}
+\end{center}
+
+Fig. 9 Surface topography of the sample fabricated at $100 \mathrm{~W}$ and $400 \mathrm{~mm} / \mathrm{s}$ : a upper surface, b side surface. $\mathbf{c}$ Irregular pores formed at $100 \mathrm{~W}$ and $250 \mathrm{~mm} /$ $\mathrm{s}$; d round pores formed at $100 \mathrm{~W}$ and $150 \mathrm{~mm} / \mathrm{s}$\\
+Fig. $10 \mathrm{OM}$ images showing interlayer microstructure on cross sections of SLMprocessed AlSi10Mg parts with $v=150 \mathrm{~mm} / \mathrm{s}$, while the laser power is fixed at $100 \mathrm{~W}$ (a)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f85dae329593e14f97f0g-10(3)}
+
+(c)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_f85dae329593e14f97f0g-10(2)}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_f85dae329593e14f97f0g-10}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_f85dae329593e14f97f0g-10(1)}
+\end{center}
+
+bonding between current layer and previous layer. To enhance the bonding and density, a low speed that means high laser density should be applied. Figure $9 \mathrm{c}$ shows the irregular pores formed at $100 \mathrm{~W}$ and $250 \mathrm{~mm} / \mathrm{s}$. With this relatively high laser density $(0.4 \mathrm{~J} / \mathrm{mm})$, full melting occurred and the porosity greatly decreased. However, a few keyhole pores still left in the solidified material due to the gas entrapment.
+
+From our simulation results about the motion of bubbles, we inferred that most pores could be eliminated at $150 \mathrm{~mm} / \mathrm{s}(\mathrm{LEPUL}=0.67 \mathrm{~J} / \mathrm{mm})$ because of re-melting densification. In this simulation, the bubbles left in preceding layer would go up when current layer is processed. This can be seen from Fig. 9d where the metallurgical pores tended to gather in the upper layer, whereas the preceding layers were free of pores and showed quite high density. Figure 10a shows us the end face of sample and the single track on top layer can be clearly seen. The re- melting depth at these parameters was $27 \mu \mathrm{m}$, which is slightly larger than the half of layer thickness. Furthermore, some pores were observed in the upper area of this single track. This validated our simulation results and indicated that full-dense part was fabricated at $150 \mathrm{~W}$ and $100 \mathrm{~mm} / \mathrm{s}$ due to the re-melting densification (Fig. 10b).
+
+\section*{6 Conclusions}
+\begin{enumerate}
+  \item Both the maximum temperature of SLM process and width of each single track increased as higher LEPUL was applied by using lower scanning speed exceeding $150 \mathrm{~mm} / \mathrm{s}$. Compared with the influence of laser power, the width and surface topography of single track were quite more sensitive to scanning speed. The influence of the scanning speed on the width and\\
+surface topography of single track was proved to be quite more sensitive than that of the applied laser power.
+
+  \item The penetration depths and binding mechanism were presented with a considerable difference at the variable scanning speeds (ranging from 150 to $400 \mathrm{~mm} / \mathrm{s}$ ). Due to the limitation of irradiated energy, the powder particles were melt insufficiently and the resultant binding mechanism appeared to be a solid state sintering at high scanning speed. Accordingly, a considerable number of large-size open pores could be observed in simulations as well as the corresponding experiments. Additionally, as the scanning speed decreased from 400 to $150 \mathrm{~mm} / \mathrm{s}$, the depths of penetration reduced and the attendant pores transited from irregular to spherical (metallurgical pores) due to a relatively high laser energy density.
+
+  \item The motion trail of single bubble revealed that the gas pores remained in the preceding as-fabricated layer tended to move up to the current layer under the action of the fluid flow in present molten pool. In this situation, the accordingly experimental results validated that a numerous number of pores and the correspondingly high porosity were evidently observed in the upper layer of SLM-processed parts.
+
+  \item Re-melting densification mechanism was proposed as a novel approach to eliminate the residual pores. When the speed of $150 \mathrm{~mm} / \mathrm{s}$ was applied, the currently fabricated layer was irradiated by the laser beam with a relatively sufficient time and the previous layer had enough time to re-melt. As a relatively high laser energy density was used, the re-melting depth was slightly larger than half of the layer thickness, which was benefit for the residual pores to migrate toward the previously as-fabricated layer. Thus, it was reasonable to conclude that the part could be fabricated with a full density except the top layer, which could be repaired by scanning this layer twice.
+
+\end{enumerate}
+
+Acknowledgments The authors gratefully acknowledge the financial support from the National Natural Science Foundation of China (Nos. 51575267, 51322509), the National Key Research and Development Program "Additive Manufacturing and Laser Manufacturing" (No. 2016YFB1100101), the Top-Notch Young Talents Program of China, the NSFC-DFG Sino-German Research Project (No. GZ 1217), the Outstanding Youth Foundation of Jiangsu Province of China (No. BK20130035), the Program for New Century Excellent Talents in University (No. NCET-13-0854), the Science and Technology Support Program (The Industrial Part), Jiangsu Provincial Department of Science and Technology of China (No. BE2014009-2), the 333 Project (No. BRA2015368), the Aeronautical Science Foundation of China (No. 2015ZE52051), the Shanghai Aerospace Science and Technology Innovation Fund (No. SAST2015053), the Fundamental Research Funds for the Central Universities (Nos. NE2013103,\\
+NP2015206, NZ2016108) and the Priority Academic Program Development of Jiangsu Higher Education Institutions.
+
+\section*{References}
+\begin{enumerate}
+  \item S. Katakam, S.S. Joshi, S. Mridha, S. Mukherjee, N.B. Dahotre, J. Appl. Phys. 116, 104906 (2014)
+
+  \item G. Çam, M. Koçak, Int. Mater. Rev. 57, 1 (2013)
+
+  \item L.F. Mondolfo, Aluminum Alloys: Structure and Properties (Elsevier, Amsterdam, 2013)
+
+  \item T. Lienert, T. Siewert, S. Babu, V. Acoff, Weld. Fundam. Process. 6, 321 (2011)
+
+  \item E.O. Olakanmi, R.F. Cochrane, K.W. Dalgarno, Mater. Sci. 74, 401 (2015)
+
+  \item D.D. Gu, Y.C. Hagedorn, W. Meiners, G.B. Meng, R.J.S. Batista, K. Wissenbach, R. Poprawe, Acta Mater. 60, 3849 (2012)
+
+  \item D.D. Gu, W. Meiners, K. Wissenbach, R. Poprawe, Int. Mater. Rev. 57, 133 (2012)
+
+  \item L.L. Parimi, G.A. Ravi, D. Clark, M.M. Attallah, Mater. Charact. 89, 102 (2014)
+
+  \item L. Thijs, F. Verhaeghe, T. Craeghs, J. Van Humbeeck, J.P. Kruth, Acta Mater. 58, 3303 (2010)
+
+  \item C. Qiu, N.J.E. Adkins, M.M. Attallah, Mater. Sci. Eng. 578, 230 (2013)
+
+  \item L. Thijs, K. Kempen, J.P. Kruth, J. Van Humbeeck, Acta Mater. 61, 1809 (2013)
+
+  \item N.T. Aboulkhair, N.M. Everitt, I. Ashcroft, C. Tuck, Addit. Manuf. 1, 77 (2014)
+
+  \item I. Maskery, N.T. Aboulkhair, M.R. Corfield, C. Tuck, A.T. Clare, R.K. Leach, R.J.M. Hague, Mater. Charact. 111, 193 (2016)
+
+  \item C. Weingarten, D. Buchbinder, N. Pirch, W. Meiners, K. Wissenbach, R. Poprawe, J. Mater. Process. Technol. 221, 112 (2015)
+
+  \item C. Panwisawas, C.L. Qiu, Y. Sovani, J.W. Brooks, M.M. Attallah, H.C. Basoalto, Scr. Mater. 105, 14 (2015)
+
+  \item C.L. Qiu, C. Panwisawas, M. Ward, H.C. Basoalto, J.W. Brooks, M.M. Attallah, Acta Mater. 96, 72 (2015)
+
+  \item M.J. Xia, D.D. Gu, G.Q. Yu, D.H. Dai, H.Y. Chen, Q.M. Shi, Sci. Bull. 61, 1013 (2016)
+
+  \item D.D. Gu, P.P. Yuan, J. Appl. Phys. 118, 233109 (2015)
+
+  \item L.J. Wang, S.L. Jia, Y. Liu, B. Chen, D.G. Yang, Z.Q. Shi, J. Appl. Phys. 107, 113306 (2010)
+
+  \item S. Bag, A. Trivedi, A. De, Int. J. Therm. Sci. 48, 1923 (2009)
+
+  \item N.K. Tolochko, Y.V. Khlopkov, S.E. Mozzharov, M.B. Ignatiev, T. Laoui, V.I. Titov, Rapid Prototyp. J. 6(3), 155 (2000)
+
+  \item M. Haag, H. Hügel, C.E. Albright, S. Ramasamy, J. Appl. Phys. 79(8), 3835 (1996)
+
+  \item N.K. Tolochko, Y.V. Khlopkov, S.E. Mozzharov, M.B. Ignatiev, T. Laoui, V.I. Titov, Rapid Prototyp. J. 6, 155 (2000)
+
+  \item C.D. Boley, S.A. Khairallah, A.M. Rubenchik, Appl. Opt. 54, 2477 (2015)
+
+  \item A.V. Gusarov, I. Yadroitsev, P. Bertrand, I. Smurov, Appl. Surf. Sci. 254, 975 (2007)
+
+  \item S.A. Khairallah, A. Anderson, J. Mater. Process. Technol. 214, 2627 (2014)
+
+  \item P.P. Yuan, D.D. Gu, J. Phys. D Appl. Phys. 48, 035303 (2015)
+
+  \item G.Q. Yu, D.D. Gu, D.D. Dai, M.J. Xia, C.L. Ma, Q.M. Shi, J. Phys. D. Appl. Phys. 49(13), 135501 (2016)
+
+  \item D.D. Gu, Laser Additive Manufacturing of High-Performance Materials (Springer, Berlin, 2015). ISBN 978-3-662-46088-7
+
+  \item H. Qi, J. Mazumder, H. Ki, J. Appl. Phys. 100, 024903 (2006)
+
+  \item J.P. Kruth, P. Mercelis, J. Van Vaerenbergh, L. Froyen, M. Rombouts, Rapid Prototyp. J. 11, 26 (2005)
+
+  \item J.P. Kruth, G. Levy, F. Klocke, T.H.C. Childs, CIRP Ann. Manuf Technol. 56, 730 (2007)
+
+  \item C.L. Chan, J. Mazumder, M.M. Chen, J. Appl. Phys. 64, 6166 (1988)
+
+  \item S. Shabahang, J.J. Kaufman, D.S. Deng, A.F. Abouraddy, Appl. Phys. Lett. 99, 161909 (2011)
+
+  \item C.A. Sternling, L.E. Scriven, AIChE J. 5, 514 (1959)
+
+  \item T. Fuhrich, P. Berger, H. Hügel, J. Laser Appl. 13, 178 (2001)
+
+\end{enumerate}
+
+
+\end{document}

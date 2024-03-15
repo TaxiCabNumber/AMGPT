@@ -1,0 +1,1737 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{multirow}
+
+\title{A Numerical and Experimental Investigation of Steady-State and Transient Melt Pool Dimensions in Additive Manufacturing of Invar 36 }
+
+
+\author{A thesis submitted in partial fulfillment of\\
+the requirements for the degree of Master of\\
+Science in Mechanical Engineering}
+\date{}
+
+
+\begin{document}
+\maketitle
+Chigozie Nwachukwu Obidigbo
+
+Wright State University
+
+Follow this and additional works at: \href{https://corescholar.libraries.wright.edu/etd_all}{https://corescholar.libraries.wright.edu/etd\_all}
+
+Part of the Mechanical Engineering Commons
+
+\section*{Repository Citation}
+Obidigbo, Chigozie Nwachukwu, "A Numerical and Experimental Investigation of Steady-State and Transient Melt Pool Dimensions in Additive Manufacturing of Invar 36" (2017). Browse all Theses and Dissertations. 1821.
+
+\href{https://corescholar.libraries.wright.edu/etd_all/1821}{https://corescholar.libraries.wright.edu/etd\_all/1821}
+
+This Thesis is brought to you for free and open access by the Theses and Dissertations at CORE Scholar. It has been accepted for inclusion in Browse all Theses and Dissertations by an authorized administrator of CORE Scholar. For more information, please contact \href{mailto:library-corescholar@wright.edu}{library-corescholar@wright.edu}.
+
+\section*{A Numerical and Experimental Investigation of Steady-State and Transient Melt Pool Dimensions in Additive Manufacturing of Invar 36 }
+By
+
+Chigozie Nwachukwu Obidigbo
+
+B.E., Nnamdi Azikiwe University 2012
+
+\section*{WRIGHT STATE UNIVERSITY}
+\section*{GRADUATE SCHOOL}
+$\underline{07 / 26 / 2017}$
+
+I HEREBY RECOMMEND THAT THE THESIS PREPARED UNDER MY SUPERVISION BY Chigozie Nwachukwu Obidigbo ENTITLED A Numerical and Experimental Investigation of Steady-State and Transient Melt Pool Dimensions in Additive Manufacturing of Invar 36. BE ACCEPTED IN PARTIAL FULFILLMENT OF THE REQUIREMENTS FOR THE DEGREE OF Master of Science in Mechanical Engineering.
+
+Joy Gockel, Ph.D. Thesis Director
+
+Joseph C. Slater, Ph.D., P.E
+
+Chair, Department of Mechanical and Materials Engineering
+
+Committee on
+
+Final Examination
+
+Joy Gockel, Ph.D.
+
+Ha-Rok Bae, Ph.D.
+
+Ahsan Mian, Ph.D.
+
+Robert E. W. Fyffe, Ph.D.
+
+Vice President for Research and
+
+Dean of the Graduate School
+
+\begin{abstract}
+Obidigbo, Chigozie Nwachukwu. M.S.M.E. Department of Mechanical and Materials Engineering, Wright State University, 2017. A Numerical and Experimental Investigation of Steady-State and Transient Melt Pool Dimensions in Additive Manufacturing of Invar 36\\
+The use of additive manufacturing (AM) in tooling enables low production components to be fabricated with lower costs, reduced waste, increased design flexibility and reduced lead time. Invar 36 is a popular metal tooling material known for its low coefficient of thermal expansion. This work uses thermal finite element (FE) modeling as a tool to determine the feasibility of using Invar 36 in $A M$ and to investigate the transient effect from common scanning strategies. Results show that the steady-state melt pool dimensions behave similar to traditional AM materials for varying process parameters. Transient results show that the melt pool response is dependent on processing parameters. Single and multiple pass experiments were performed to compare the modeling results and determine additional effects caused by repeated scans. Results show that Invar 36 is a suitable material for use in AM, which will enable rapid tooling for composite structures.
+\end{abstract}
+
+\section*{TABLE OF CONTENTS}
+1 INTRODUCTION ..... 1\\
+1.1 Background. ..... 1\\
+1.2 Objective ..... 2\\
+1.3 Outline ..... 2\\
+2 LITERATURE REVIEW ..... 4\\
+2.1 Introduction ..... 4\\
+2.2 Additive Manufacturing ..... 4\\
+2.2.1 Powder Bed Additive Manufacturing (AM) ..... 6\\
+2.3 Tooling for Composites ..... 7\\
+2.4 Invar 36 ..... 9\\
+2.5 Review ..... 12\\
+3 FINITE ELEMENT THEORY FORMULATION ..... 15\\
+3.1 Introduction ..... 15\\
+3.2 Governing Equations ..... 15\\
+3.2.1 Boundary Conditions ..... 15\\
+3.3 Temperature Distribution ..... 16\\
+3.3.1 Finite Element Method ..... 17\\
+4 FINITE ELEMENT MODEL DESCRIPTION ..... 21\\
+4.1 AM Process Modeling Relevance ..... 21\\
+4.2 Modeling Approach ..... 21\\
+4.3 Heat Source Application ..... 23\\
+4.4 Meshing ..... 25\\
+4.5 Computational Domain and the Boundary Conditions. ..... 27\\
+4.6 Validation ..... 28\\
+4.7 Scan Length ..... 28\\
+4.8 Data Extraction ..... 29\\
+4.8.1 Latent Heat of Fusion. ..... 30\\
+4.9 Summary ..... 33\\
+5 EFFECT OF PROCESSING PARAMETERS ON MELT POOL GEOMETRY AT\\
+STEADY STATE ..... 34\\
+5.1 Introduction ..... 34\\
+5.2 Data Extraction ..... 34\\
+5.3 Linear Energy Density ..... 36\\
+5.4 Result Discussion ..... 37\\
+5.4.1 Depth ..... 38\\
+5.4.2 Width. ..... 39\\
+5.4.3 Length ..... 41\\
+5.4.4 Discussion ..... 43\\
+5.5 Conclusion ..... 46\\
+6 TRANSIENT EFFECTS OF LASER BEAM ON MELT POOL GEOMETRY ..... 48\\
+6.1 Introduction ..... 48\\
+6.2 Data Extraction ..... 48\\
+6.3 Effect of Latent Heat on Transient Response Time and Distance. ..... 50\\
+6.4 Results ..... 51\\
+6.4.1 Depth ..... 51\\
+6.4.3 Width. ..... 55\\
+6.4.4 Length ..... 58\\
+6.5 Discussion ..... 60\\
+6.6 Conclusion ..... 62\\
+7 SINGLE PASS STEADY-STATE AND TRANSIENT EXPERIMENT ANALYSIS ..... 63\\
+7.1 Introduction ..... 63\\
+7.2 Experimental Set-Up ..... 63\\
+7.2.1 Parameter Definition and Layout ..... 64\\
+7.3 Results ..... 66\\
+7.3.1 Steady State ..... 67\\
+7.4 Comparison between Numerical and experimental results ..... 69\\
+7.5 Conclusion ..... 70\\
+8 FINAL CONCLUSION ..... 71
+
+9 FUTURE WORK ................................................................................................. 73
+
+10 REFERENCE ........................................................................................................ 75
+
+APPENDIX..................................................................................................................... 80
+
+\section*{LIST OF FIGURES}
+Figure 1A CAD model on the left converted into STL format on the right [12]
+
+Figure 2.The Powder Bed Fusion-Laser Process [14] ..................................................... 6
+
+Figure 3 Invar 36 at $5{ }^{\circ} \mathrm{C} / \mathrm{min}$ showing values of the liquidus and solidus [12].............. 11
+
+Figure 4 Full model used in Abaqus viewport............................................................. 23
+
+Figure 5 (a) Surface over which heat flux is applied.(b) Zoomed out flux application over the surface. (c) Zoomed in view of applied heat flux. ........................................... 24
+
+Figure 6 (a) Coarse Mesh (b) Medium Mesh (c) Fine Mesh......................................... 25
+
+Figure 7 Plot of Mesh convergence study: Depth versus time. ..................................... 26
+
+Figure 8 Plot of Mesh convergence study: Width versus time. ...................................... 26
+
+Figure 9 Temperature distribution of the moving laser beam over the substrate. ............ 29
+
+Figure 10 A half melt pool at a 200W power and 2000mm/s....................................... 30
+
+Figure 11 Image showing the length and width of the melt pool .................................. 35
+
+Figure 12 Image showing the depth of the melt pool .................................................. 35
+
+Figure 13 Plot of melt pool depth versus power.......................................................... 38
+
+Figure 14 Plot of melt pool depth versus laser speed. ................................................... 39
+
+Figure 15 Plot of melt pool width versus laser power. ................................................. 40
+
+Figure 16 Plot of melt pool width versus laser speed. .................................................. 41
+
+Figure 17 Plot of melt pool length versus laser power. ................................................. 42
+
+Figure 18 Plot of melt pool length versus laser power. ................................................. 43
+
+Figure 19 Plot of melt pool width and depth versus linear energy density. 44
+
+Figure 20 Plot of melt pool length versus linear energy density. ................................... 45
+
+Figure 21 (a) Depth versus time (b) Zoomed in view of change in depth versus time..... 53
+
+Figure 22 (a) Plot of depth versus distance. (b) Zoomed in view of the plot of depth versus distance. 55
+
+Figure 23 (a) Plot of melt pool width versus time (b) Zoomed in plot of melt pool width versus time. 57
+
+Figure 24 (a) Plot of melt pool width versus (b) Zoomed in view of the plot of melt pool width versus distance. 58
+
+Figure 25 Plot of melt pool length versus time. 59
+
+Figure 26 Plot of melt pool length versus distance. 60
+
+Figure 27 Plot of distance versus the total time it takes for melt pool to get to steady state.
+
+\section*{61}
+Figure 28 Plot of total distance for melt pool to get to steady state versus power. 61
+
+Figure 29 The as planned experiment setup. ................................................................. 65
+
+Figure 30 Bi-directional laser scan Pattern.................................................................... 65
+
+Figure 31 (a) Laser glazed Invar plate (b) Optical microscope image of a single melt scan on the plate................................................................................................................... 66
+
+Figure 32 (a) A plot of experimental melt pool width at steady state versus power (b)
+
+Plot of experimental melt pool width at steady state versus speed................................. 68
+
+Figure 33 Plot of experimental width versus linear energy density................................ 69
+
+Figure 36 Plot of first and twenty sixth scan lengths for power 200 and speed 1800 mm/s. 74
+
+\section*{LIST OF TABLES}
+Table 1: Chemical composition for Invar 36
+
+Table 2: Thermo-Physical properties for Invar 36 10
+
+Table 3: Case 1 results for melt pool characteristics 31
+
+Table 4: Case 2 results for melt pool characteristics ..... 32
+
+Table 5: Percentage error between both Case1\&2....................................................... 32
+
+Table 6: Melt pool geometry for all considered process parameters............................. 36
+
+Table 7: Showing in decreasing magnitude the energy density at the different process parameters.
+
+Table 8: Table showing the ratio of width over depth of melt pool in ascending order of
+
+LED 46
+
+Table 9: Table step time and locations used.
+
+Table 10: A table showing the time it takes all the process materials to get to steady state 50
+
+Table 11: Table of change in melt pool depth with time due to the different process
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-012}
+\end{center}
+
+Table 12: Single beads ................................................................................................. 64
+
+Table 13: Multiple beads .............................................................................................. 64
+
+Table 14: Mean values of the experimental melt pool widths....................................... 67
+
+Table 15: Comparison of both numerical and experimental widths............................... 70
+
+\section*{ACKNOWLEDGEMENT}
+I would have never been able to complete my dissertation without the guidance of my advisor, committee members (Dr. Ha-rok Bae and Dr. Ashan Mian), department, and support from family and friends.
+
+I wish to express a sincere thank you to my talented advisor and committee chair, Dr. Joy Gockel, who had faith in me during the course of my graduate career. Her zeal towards the subject matter coupled with candid revisions and advice, contributed to the success and completion of this thesis.
+
+I would also thank the Department of Mechanical Engineering at Wright State University, especially those in the master's program for their tutelage, input, accessibility and valuable discussion. Without the resources provided by the university and its ambassadors, I would not have gained all the knowledge and tools from my research. I would also like to specially thank Luke Sheridan \& Nathan Levkulich whose knowledge and resources were vital to this effort. I am very fortunate to have worked with these scholars and I'm very grateful for their continuous support. I would like to thank the University of Dayton Research Institute (UDRI) for allowing the experimental analysis in their lab.
+
+Also, I would like to dedicate this to all my family and friends who encouraged me through the course of my academic career. I am very blessed to be surrounded by love, support and role models that encourage me to go beyond my comfort zone.
+
+\section*{1 INTRODUCTION}
+\subsection*{1.1 Background}
+The use of additive manufacturing (AM) technology has greatly increased over the past few decades because of the many added advantages of design flexibility and complexity that come with this technology. Metal AM processes are largely dominated by the fusion of several melt beads, the melt pool geometry of these melt scans will be studied using the numerical model for the selected process parameters. First, a single melt scan is investigated and then a multiple melt scan will be investigated in future work.
+
+The process parameters for LPBF (or any laser beam AM process) includes and are not limited to these: laser power, scan speed, laser spot size (area) etc. The use of a combination of the listed process parameters will amount to a unique temperature cycle within the build during fabrication. The thermal cycle within the build during fabrication is directly related to the microstructure, residual stress, and defects distribution within the fabricated part. Understanding the thermal cycles at any combination of process parameter will help in selecting the best design process parameter for the desired quality and microstructure.
+
+The goal of this study is the three dimensional modeling of a laser powder bed fusion (LPBF) process of AM technology to investigate the possible use of invar 36 material for the production of cheap, light weight composite tooling. Invar 36 material properties are investigated using commercial finite element (FE) packages to predict the possible reaction of Invar 36 material in an actual LPBF process. Abaqus/CAE will be the commercial FE software used for the numerical models discussed in this study. This report was prepared with financial support from the State of Ohio through the Ohio
+
+Federal Research Network. The content reflects the views of the author and does not purport to reflect the views of Wright State University, Wright State Applied Research Corporation or the State of Ohio.
+
+\subsection*{1.2 Objective}
+In theory, any metal material that can be welded and processed in powder form can be used as a material source for metal AM processes. This work investigates the processing of Invar 36 powder using AM technology. Of all the metals used for composite tooling, Invar 36 closely matches the CTE of composites. The end application of this project is the development of low cost tooling for manufacturing limited production composite structures. However, before this can be accomplished, there is a lack of understanding for the process to structure relationships of using AM for Invar materials.
+
+Thus, this research is the investigation of the use of Invar 36 in AM. The primary objective of this thesis work is understanding the thermal effects of processing of powder Invar 36 using FE modeling of LBPF. This is done to understand:
+
+\begin{itemize}
+  \item The effect of processing parameters on melt-pool geometry formation at steady state.
+
+  \item The effects of transient processing conditions within a single stripe length on the melt pool geometry.
+
+\end{itemize}
+
+The objective of the thermal analysis is to understand the response and behavior of Invar 36 powder with different processing conditions.
+
+\subsection*{1.3 Outline}
+This paper describes and discusses the numerical modeling of the LPBF AM processing of Invar 36. Chapter 2 discusses the background topics to better understand\\
+the basis for this thesis as well as discuss prior works using numerical models to predict AM process outcomes. Next, in Chapter 3, the FE theory formulation is presented after which the numerical model is described in Chapter 4. The numerical results are discussed, presenting both steady state and transient effects of heat deposition on melt pool formation in Chapters 5 and 6 respectively. The experimental analysis is described in Chapter 7 and the melt pool dimensions are compared with those from the numerical model showing both steady state and transient effects. Lastly, the final conclusion is discussed alongside a description of future work in Chapters 8 and 9.
+
+\section*{2 LITERATURE REVIEW}
+\subsection*{2.1 Introduction}
+This chapter discusses prior works that have been completed using numerical models to predict the AM process. Before this review, the theory behind AM, composite material tooling, and Invar 36 is discussed to better understand the basis for this thesis.
+
+\subsection*{2.2 Additive Manufacturing}
+This end application of this research is aimed at the development of low cost manufacturing for limited production composite structures. One way of achieving low cost in limited production is the use of AM techniques. It gives designers prospects to fabricate components with complex geometries, such as embedded channels or lattice structures, within the fabricated part, and thus can be optimized for performance gains that cannot be achieved using traditional manufacturing techniques.
+
+AM processes, also called 3D printing or rapid prototyping, generates material and geometry simultaneously as the material is deposited layer by layer. This threedimensional object is built by transferring a computer aided drawing (CAD) file saved as a Stereolithograhy (.STL) file into the AM machine where it is sliced into layers [1]. AM reduces the cost of production by reducing waste of raw material, increased design flexibility and a reduced lead time of production. Figure 1 below shows the conversion of a CAD file to STL.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_cd1e96b111daa6d49ef1g-018}
+
+Figure 1A CAD model on the left converted into STL format on the right [12].
+
+The AM software slices the data file into individual layers, which are sent as instructions to the AM machine, in which the building process takes place. The numerous ad AM processes differ according to the material, heat source, material feed, method of patterning and fusing layers they employ. AM processes come in a variety of scales and types and are designed for different material types (polymers, ceramics, and metals etc.) All AM processes are capable of producing some geometric complexity. Polymer based methods are considered the most mature and capable as they represent the earliest additive processes [2-3].
+
+AM processes are categorized based on several criterions, but the American Society for Testing and Materials (ASTM) group "ASTM F42 - Additive Manufacturing" in 2010, formulated a set of standards that classify the range of AM processes into 7 categories (Standard Terminology for Additive Manufacturing Technologies, 2012) [40].
+
+\begin{itemize}
+  \item VAT photopolymerisation
+
+  \item Material jetting
+
+  \item Binder jetting
+
+  \item Material Extrusion
+
+  \item Powder Bed Fusion
+
+  \item Sheet Lamination
+
+  \item Directed Energy Deposition
+
+\end{itemize}
+
+The beam-based AM processes are the printing technique commonly used for making 3D metallic components. The process utilizes a concentrated heat source, which may be a laser or electron beam, with in situ delivery of powder material for subsequent melting to accomplish layer-by-layer part fabrication. Beam-based AM process can further be categorized as direct deposition and powder bed deposition [5].
+
+\subsection*{2.2.1 Powder Bed Additive Manufacturing (AM)}
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-019}
+\end{center}
+
+Figure 2.The Powder Bed Fusion-Laser Process [14]
+
+The Powder Bed Fusion (PBF) process would be the focus of this paper. This process uses either an electron beam or laser beam to melt and fuse the powdered materials together. PBF was one of the first commercialized AM processes. Selective
+
+Laser Sintering was the first PBF process commercialized and this was developed at the University of Texas at Austin [6]. All PBF processes require the spreading of the powder material over previous layers of fused particles. The mechanism needed to implement this is a roller or a blade. Processes commonly using this printing technique:
+
+\begin{itemize}
+  \item Direct metal laser sintering (DMLS)
+
+  \item Electron beam melting (EBM)
+
+  \item Selective heat sintering (SHS)
+
+  \item Selective laser melting (SLM)
+
+  \item Selective laser sintering (SLS).
+
+\end{itemize}
+
+The SHS, SLM, and SLS are processes that can be used to fuse powdered plastics into components parts using a laser beam. The most detailed features can be formed in the powder bed processes so, the numerical models designed for this research describes the laser powder bed fusion (LPBF) process, which is the same as the SLM definition. A typical description of this processes begins with the spreading of a layer of powder on the build platform. After which a laser fuses the first layer of the sliced 3D component to be built. A new layer is spread across the previous layer. This process of fusing and spreading of powder is continued until the entire component is built. Unfused powder remains in position, which is later removed during removal of the part from the build chamber and in post-processing.
+
+\subsection*{2.3 Tooling for Composites}
+The demand for fiber-reinforced composites is needed in the aerospace industry, and as such, with a scale up of production demand, more efficient manufacturing ways become necessary. To make these composite parts, tooling is used to help cure and form\\
+the primary materials into the shape and size needed. "One of the great advantages of composites is the ability to make unitized, unusual shapes, rather than the limit (the geometry of parts) to the formability of metals," notes McLaughlin [7].
+
+Tooling for composites must be accurate, rigid, economical and easy to use. This includes the design and fabrication of the entire tool string needed to produce the parts: moulds, assembly jigs, and fixtures, etc. For composite parts cured in an autoclave, extra care must be exercised to account for the thermal coefficient mismatch (when metal tools are used) [7]. Special (and expensive) metal alloys (e.g. Invar) with low coefficients of thermal expansion are used where dimensional tolerances are critical. Also, careful planning of how heat is transmitted to the parts during cure for more uniform temperature distribution is required [8].
+
+The curing of the composite parts is sometimes completed at high temperatures up to $180{ }^{\circ} \mathrm{C}$ or more. In most situations, it is important to maintain a tight tolerance which will mean matching the coefficient of thermal expansion (CTE) of the tool to that of the composite material.
+
+Common tooling materials used for composites include aluminum, steel, epoxybased composites, bismaleimide (BMI) composites, graphite or carbon-carbon, and lastly Invar (an alloy of iron and nickel). Of the metals listed above, steel and aluminum have the advantage of low cost and machinability. They have a disadvantage of having a high CTE compared to that of composites. Invar matches the CTE of composites up to $200^{\circ} \mathrm{C}$, but with a disadvantage of being expensive and heavy. Noting that the disadvantage for using lighter composite tools is typically they end up being less durable while metallic tools can handle several cure cycles and could be used for a longer duration [7]. AM has\\
+the potential to allow for the use of Invar in tooling with design changes to decrease weight and material waste.
+
+\subsection*{2.4 Invar 36}
+Guillaume [9] in 1897 in a quest for less expensive materials than the platinumiridium alloy, that was then the standard for metrology, discovered that iron-nickel alloys containing about 36 percent of nickel have an extremely low CTE. Because the 36 percent alloy had such a low CTE at room temperature that the linear dimensions were almost invariable over ordinary changes in temperature, he named it Invar [10].
+
+Table 1: Chemical composition for Invar 36
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+Weight \% & Ni & Fe & C & Mn & P & S & Si & Cr & Mo & Co \\
+\hline
+Invar36 & $35.5-36.5$ & Bal & $\leq 0.10$ & $\leq 0.50$ & $\leq 0.025$ & $\leq 0.025$ & $\leq 0.35$ & $\leq 0.50$ & $\leq 0.50$ & $\leq 1.0$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Invar 36 (Fe-36Ni) is an iron-nickel alloy containing 36\% nickel known for its extremely low CTE (applicable for areas requiring no dimensional changes with temperature variations). These properties coupled with good weldability and desirable physical properties make this alloy attractive for many cryogenic applications [10]. This maintains nearly constant dimensions over the range of normal atmospheric temperatures and has a low coefficient of thermal expansion (CTE) from cryogenic temperatures to about $530^{\circ} \mathrm{F}\left(276^{\circ} \mathrm{C}\right)$ [11]. It can be hot or cold formed and machined using processes similar to austenitic stainless steels. The low CTE makes it useful in fine watches, sensitive instrumentation, aerospace, and especially in electronic applications where small differences in expansion may cause failure. The chemical composition of Invar is as shown above.
+
+It is one of the oldest of all nickel and cobalt based alloys. The main property is its extremely low thermal expansion at room temperatures realizing dimensional stability for all kinds of applications. Invar 36 is weldable, strong, tough, ductile, and possesses a useful degree of corrosion resistance Huving mechonical properties as shown below:
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-023}
+\end{center}
+
+This alloy is being used for applications where dimensional changes (motion) due to temperature variation must be minimized such as Precision instruments, in radio and electronic devices (bimetallic thermostats and in rod and tube assemblies for temperature regulators), aircraft controls, optical and laser system, construction, thermal stable precision parts (composite tooling), liquefied natural gas storage tanks etc. A report by Bruce Cassel et al. [12] on using STA 8000 (Simultaneous Thermal Analyzer) provides the solidus and liquidus temperature for Invar 36 which will be used as material inputs for the numerical model created. A comparison of the model with latent heat is compared to one without. Other papers stated the same temperature for both solidus and liquidus state as $1700 \mathrm{~K}$ respectively.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-024}
+\end{center}
+
+Figure 3 Invar 36 at $5^{\circ} \mathrm{C} / \mathrm{min}$ showing values of the liquidus and solidus [12].
+
+With its low CTE and weldable properties, Invar 36 was chosen to be investigated using 3D modeling for use in AM technology. The traditional way for processing Invar 36 in making composite tooling is expensive and involves subtractive machining of Invar bars, thus making the lead time for the production of an Invar composite tool up to a year in most cases [5]. With the use of AM technology, there will be a reduction in lead time from months to possibly within weeks. This manufacturing process could also help reduce the weight of the end component by using lattice structures within the build [13]. This lower weight of the tooling represents a lower thermal mass which invariably enables faster heat-up/cool down cycles. With a reduced weight, the composite tooling could also be attached to an automated system for automated fiber placement (AFP) machines; this tends to move the mandrel tooling. A heavy tool would stress the mechanism of an AFP more than a lighter composite tooling.
+
+\subsection*{2.5 Review}
+One of the early methods used to model beam based AM processes is the 2D and 3D Rosenthal solutions for a moving point-heat source. This analytical solution has been used for modeling a beam-based deposition process and can be applied to any moving heat source problem [14]. This has been applied for obtaining the temperature fields for a variety of welding speeds, determining the steady-state temperature field around a molten pool in a laser solid forming process [15-16]. Dykhuizen and Dobranich were the first to apply the Rosenthal solution to laser-based deposition processes, predicting the cooling rates in LENS'TM process [17-19].
+
+Bontha et al. employed a combination of analytical and numerical modeling approaches to investigate the effects of process variables and size-scale on solidification microstructure (grain size and morphology) in the beam-based fabrication of bulky 3D structures comparing results with a three dimension Rosenthal solution [15]. Roberts et al. used a three dimensional model considering process variables and multiple layers. This showed the transient temperature history for laser melting process in multiple layers by using a technique of element birth and death (turning elements on and off) [19]. D. Riedlbauer et al. simulated SLM process, to predict temperature fields and the dimensions of melting zones for different process parameter. They noticed an increase in melt pool dimensions as power increased and speed decreased.
+
+V. Manvatkar et al. developed a comprehensive, three-dimensional, transient, heat transfer, and fluid flow model for the laser assisted AM of parts from a stream of alloy powders. This simulation predicted the free form fabrication AM process. He also stated\\
+that the over prediction of temperature is as a result of not including convective and radiation heat loss [21-22].
+
+Dai and Shaw showed the effects of volume shrinkage on the model due to the transformation from powder compact to dense liquid, studied using three dimensional FE model and proposed different criterions judging the state of the element by taking volume shrinkage into consideration [23].
+
+The addition of heat both due to the impinging preheated powder particles and the direct absorption of the laser beam was modeled by an appropriate Gaussian energy density distribution over a surface or volume or both [24-25]. Dai and Gu modeled a surface heat source with Gaussian energy distribution, investigated the effects of linear energy density (LED) on temperature distribution, molten pool size, and densification, showing that a higher LED could increase the molten pool size and maximum temperature of the powder layer [26].
+
+Qiu et al. discussed the use of selective laser melting for the fabrication of Invar 36 components with the study showing the microstructure for as built and heat treated parts. Stating that parts built with scanning speeds under $3200 \mathrm{~mm} / \mathrm{s}$ showed very little porosity(<0.5\%) but showed an increase in porosity above $3200 \mathrm{~mm} / \mathrm{s}$ at $400 \mathrm{~W}$. The as built components were dominated by columnar y grains decorated by nanosized $\alpha$ precipitates that did not change with heat treatment [27]. Neil et al. investigated the retaining of the unique low thermal expansion property of invar after processing using selective laser AM process. A near-full-density component (99.96\%) was achieved having mechanical properties comparable to that of cold-drawn Invar 36. A lower value\\
+of the thermal coefficient of expansion was attributed to residual stress in the asdeposited parts, but with a non-conventional layer-based AM technique, the low thermal expansion was still maintained [28].
+
+\section*{3 FINITE ELEMENT THEORY FORMULATION}
+\subsection*{3.1 Introduction}
+This study is based on a simulation performed using commercial Abaqus/CAE, which solves the nonlinear transient heat conduction equation using FE method. A threedimensional thermal model is used to simulate both the steady-state and transient effects the laser beam power would have on the deposited material depicting the conductive heat transfer, melting and temperature profile within the substrate.
+
+\subsection*{3.2 Governing Equations}
+\subsection*{3.2.1 Boundary Conditions}
+The physical AM LPBF process is based on the continuous media theory. The fields describing the evolution of the medium are defined in the domain $\boldsymbol{\Omega}$. The specified loading/surface flux vector is [41]:
+
+$\mathrm{q}_{\mathrm{s}}=-\mathrm{k} \frac{\partial \mathrm{T}}{\partial \mathrm{t}}$
+
+The governing equations for heat conduction must be solved under appropriate initial-essential boundary conditions. The initial and essential conditions are:
+
+\[
+\begin{array}{ll}
+\mathrm{T}(\mathrm{x}, \mathrm{y}, \mathrm{z}, 0)=\mathrm{T}_{\mathrm{o}} & \text { in } \boldsymbol{\Omega} \\
+\mathrm{T}(\mathrm{x}, \mathrm{y}, \mathrm{z}, \infty)=\mathrm{T}_{\mathrm{o}} & \text { in } \boldsymbol{\Omega} \tag{3}
+\end{array}
+\]
+
+Where $T_{0}(K)$ is the preheat/initial temperature of the substrate, for transient problems it is necessary to specify an initial temperature field for a body at time $t=0$ Eq. 2 \& 3.
+
+\subsection*{3.3 Temperature Distribution}
+J.P Joule (1818 - 1889) in a famous experiment demonstrated that heat is a kind of energy; this was shown that as a substance gets heated up, its body temperature increases [29-31]. Heat can travel through metals and this form of heat transfer is called conduction. Fourier's law of heat conduction for an isotropic material is written as:
+
+$\mathrm{q}=-\mathrm{k} \frac{\partial \mathrm{T}}{\partial \mathrm{t}}$
+
+The time-dependent transport for any substance is generally governed by secondorder partial differential equations. The simplest example for heat conduction in one dimension:
+
+$\rho c \frac{\partial \mathrm{T}}{\partial \mathrm{t}}=\mathrm{k} \frac{\partial^{2} \mathrm{~T}}{\partial \mathrm{x}^{2}}$
+
+The three dimensional differential equation of heat conduction in Cartesian coordinates $(\mathrm{x}, \mathrm{y}, \mathrm{z})$ is expressed as shown in Eq.6. This is a representation of the temperature distribution $\mathrm{T}(\mathrm{x}, \mathrm{y}, \mathrm{z}, \mathrm{t})$ throughout the domain of a beam-based AM process along with the appropriate boundary conditions which are used to simulate this heat process.
+
+$\frac{\partial}{\partial \mathrm{x}}\left(\mathrm{k} \frac{\partial \mathrm{T}}{\partial \mathrm{x}}\right)++\frac{\partial}{\partial \mathrm{y}}\left(\mathrm{k} \frac{\partial \mathrm{T}}{\partial \mathrm{y}}\right)+\frac{\partial}{\partial \mathrm{z}}\left(\mathrm{k} \frac{\partial \mathrm{T}}{\partial \mathrm{z}}\right)+\mathrm{Q}=\rho \mathrm{c}_{\mathrm{p}} \frac{\partial(\mathrm{T})}{\partial \mathrm{t}}$
+
+This can be written in vector form as,
+
+$\nabla . k \nabla T+Q=\rho c_{p} \frac{\partial T}{\partial t}$
+
+Where $\mathrm{k}\left(\frac{\mathrm{kg}}{\mathrm{m}}\right)$ is thermal conductivity, $\mathrm{c}_{\mathrm{p}}\left(\frac{\mathrm{J}}{\mathrm{kgK}}\right)$ is specific heat capacity, $\rho\left(\frac{\mathrm{kg}}{\mathrm{m}^{3}}\right)$ is density, $\mathrm{t}(\mathrm{s})$ is time, and $\mathrm{Q}\left(\frac{\mathrm{W}}{\mathrm{m}^{3}}\right)$ is power generated per volume within the model.
+
+\subsection*{3.3.1 Finite Element Method}
+To solve this stated problem using numerical methods, it is important to rewrite Eq. 7 into purely algebraic form. To do this, various forms of discretization of continuum problems defined by differential equations can be used. The continuum problem is satisfied in all points in the problem domain, while a discretized form is satisfied at a finite number of points in the domain. One of the various forms of discretization is the finite element method (FEM) which was developed in the early 1960's [31]. FEM formulations can be derived by several methods such as variational principles, RayleighRitz method, and weighted residuals. The FEM formulation used for this paper is the Galerkin weighted residual method.
+
+\subsection*{3.3.1.1 Galerkin Weighted Residual Method}
+This method begins introducing a residual, $\mathrm{R}$ in the approximation which is defined by
+
+$\mathrm{R}_{\Omega}=\nabla \cdot \mathrm{k} \nabla \mathrm{T}+\mathrm{Q}-\rho \mathrm{c}_{\mathrm{p}} \frac{\partial \mathrm{T}}{\partial \mathrm{t}}$
+
+$\mathrm{R}$ should be noted, is a function in the region $\boldsymbol{\Omega}$. Reducing the residual to zero we have:
+
+$\int_{\Omega} \mathrm{W}_{\mathrm{i}} \mathrm{R}_{\Omega} \mathrm{d} \Omega=0 \quad \mathrm{i}=1,2, \mathrm{M}$
+
+Where $\mathrm{W}_{\mathrm{i}}$ is called the weighting function.
+
+$\int_{\Omega} W_{i}\left[\nabla \cdot k \nabla T+Q-\rho c_{p} \frac{\partial T}{\partial t}\right] d V=0$
+
+Similarly, we can treat the Neumann boundary condition as follows
+
+
+\begin{equation*}
+\mathrm{R}_{\Gamma \mathrm{q}}=\mathrm{k} \frac{\partial \mathrm{T}}{\partial \mathrm{n}}+\mathrm{q} \tag{11}
+\end{equation*}
+
+
+Where $\mathrm{R}_{\Gamma \mathrm{q}}$ is the residual on $\Gamma_{\mathrm{q}}$. Thus,\\
+$\int_{\Gamma_{\mathrm{q}}} \overline{\mathrm{W}_{\mathrm{i}}} \mathrm{R}_{\Gamma} \mathrm{dA}=0 \quad \mathrm{i}=1,2, \mathrm{M}$
+
+Where $\overline{\mathrm{W}}_{\mathrm{i}}$ is the residual on $\Gamma_{\mathrm{q}}$. Therefore;
+
+$\int_{\Gamma_{\mathrm{q}}} \overline{\mathrm{W}_{\mathrm{i}}}\left[\mathrm{k} \frac{\partial \mathrm{T}}{\partial \mathrm{n}}+\mathrm{q}\right] \mathrm{dA}=0$
+
+Adding both Eq. and Eq. we get:
+
+$\int_{\Omega} \mathrm{W}_{\mathrm{i}}\left[\nabla \cdot \mathrm{k} \nabla \mathrm{T}+\mathrm{Q}-\rho \mathrm{c}_{\mathrm{p}} \frac{\partial \mathrm{T}}{\partial \mathrm{t}}\right] \mathrm{dV}+\overline{\mathrm{W}_{\mathrm{i}}}\left[\mathrm{k} \frac{\partial \mathrm{T}}{\partial \mathrm{n}}+\mathrm{q}\right] \mathrm{dA}=0$
+
+Knowing that both $\mathrm{W}_{\mathrm{i}}$ and $\overline{\mathrm{W}}_{\mathrm{i}}$ are arbitrary, we can limit our choice of weighting functions as
+
+\[
+\begin{array}{ll}
+\mathrm{W}_{\mathrm{i}}=0 & \text { On } \mathrm{A}_{\mathrm{T}} \\
+\overline{\mathrm{W}_{\mathrm{i}}}=-\mathrm{W}_{\mathrm{i}} & \text { On } \mathrm{A}_{\mathrm{q}} \tag{16}
+\end{array}
+\]
+
+The term involving the weighted integral of on the boundary vanishes and the approximating equation becomes:
+
+$\int_{\Omega} \nabla \mathrm{W}_{\mathrm{i}} \cdot \mathrm{k} \nabla \mathrm{TdV}-\int_{\Omega} \mathrm{W}_{\mathrm{i}} \mathrm{QdV}+\int_{\Omega} \mathrm{W}_{\mathrm{i}} \rho \mathrm{c}_{\mathrm{p}} \frac{\partial \mathrm{T}}{\partial \mathrm{t}} \mathrm{dV}+\int_{\Gamma_{\mathrm{q}}} \overline{\mathrm{W}}_{\mathrm{i}} q \mathrm{dA}$
+
+This is known as the weak form steady state heat conduction equation. In order to use this weak form for the approximation of solution, first we need to choose appropriate trail functions, $\mathrm{N}_{\mathrm{i}}(\mathrm{x}, \mathrm{y}, \mathrm{z})$ also call shape functions. Popular forms of the weighted residual method are where the weight functions are chosen equal to the shape functions.
+
+
+\begin{equation*}
+\mathrm{W}_{\mathrm{i}}(\mathrm{x}, \mathrm{y}, \mathrm{z})=\mathrm{N}_{\mathrm{i}}(\mathrm{x}, \mathrm{y}, \mathrm{z}) \tag{18}
+\end{equation*}
+
+
+This approach is called Galerkin method, the end integral becomes:
+
+$\int_{\Omega} \partial \mathrm{N}_{\mathrm{i}} \mathrm{kVTdV}-\int_{\Omega} \mathrm{N}_{\mathrm{i}} \mathrm{Q} \mathrm{d} V+\int_{\Omega} \mathrm{N}_{\mathrm{i}} \rho \mathrm{c}_{\mathrm{p}} \frac{\partial \mathrm{T}}{\partial \mathrm{t}} \mathrm{dV}+\int_{\Gamma_{\mathrm{q}}} \mathrm{N}_{\mathrm{i}} \mathrm{qdA}=0$
+
+Where,
+
+$\partial \mathrm{T}=\mathrm{N} \partial \mathrm{T}_{\mathrm{e}}$\\
+$\mathrm{B}=\partial \mathrm{N}$
+
+Substituting Eq. 20 \& 21 into Eq.19, this ends up becoming:
+
+$\int_{\Omega} N_{i}^{T} \rho c_{p} N_{i} d V+\int_{\Omega} B^{T} k B T_{e} d V-\int_{\Omega} N_{i} Q d V+\int_{\Gamma_{q}} N_{i} q d A=0$
+
+This represents the spatially discretized FEM heat conduction equation. Where the first term represents the global heat capacitance matrix $\mathrm{C}$, the second term $\mathrm{K}$ represents the global conductivity matrix which is a summation of element conductivity matrices and $\mathrm{F}$ (the last two terms) represents the global load vector obtained from assembling element load vectors. The discretized $\mathrm{FE}$ equations for heat the transfer problem have the following form:
+
+$\mathrm{CT}+\mathrm{KT}=\mathrm{F}$
+
+\subsection*{3.3.1.2 Transient Nonlinear Problem}
+Eq. 24 represents the transient representation of Eq. 23 above.
+
+$[\mathrm{C}(\mathrm{T})]\{\dot{\mathrm{T}}\}+[\mathrm{K}(\mathrm{T})]\{\mathrm{T}\}=\{\mathrm{F}(\mathrm{T}, \mathrm{t})\}$
+
+The reason for time integration is to find the unknown values $T_{n+1}$ at time position $t_{n+1}$ from the known information. The values $T_{n}$ are known at time point $t_{n}$ while $\mathrm{F}$ is known in small time interval $\Delta \mathrm{t}$. The same process is continued until the time of interest is reached. Thus, this scheme is referred to as recurrence relations. The time intervals $\Delta t$ may be considered as elements of time and appropriate shape functions may be defined at the ends of the interval, i.e. $t_{n+1}$ andt $_{n}$, to establish the variation of the temperature field within the interval [25].
+
+$\left[\mathrm{C}\left(\mathrm{T}_{\mathrm{n}+1}, \mathrm{t}_{\mathrm{n}+1}\right)\right]\left\{\dot{\mathrm{T}}_{\mathrm{n}+1}\right\}+\left[\mathrm{K}\left(\mathrm{T}_{\mathrm{n}+1}, \mathrm{t}_{\mathrm{n}+1}\right)\right]\left\{\mathrm{T}_{\mathrm{n}+1}\right\}=\left\{\mathrm{F}_{\mathrm{n}+1}\right\}$
+
+For,\\
+$\frac{\dot{T}_{n+1}+\dot{T}_{n}}{2}=\frac{T_{n+1}-T_{n}}{\Delta t_{n}}$
+
+Where $\mathrm{n}$ represents the $\mathrm{nth}$ time step. If not stated otherwise $\Delta \mathrm{t}$ means $\Delta t_{n}$.
+
+$\left[\frac{2 C_{n+1}}{\Delta t}+K_{n+1}\right]\left(T_{n+1}\right)=\left[C_{n+1}\right]\left(\frac{2}{\Delta t} T_{n}+\dot{T}_{n}\right)+F_{n+1}$
+
+This represents the calculation for the derivatives on the right hand side where, $C_{n+1}$ equals $C\left(T_{n+1}, t_{n+1}\right)$.
+
+Writing Eq. 36 in generalized form we get:
+
+$\left[\frac{2 C_{n+\alpha}}{\Delta t}+\alpha K_{n+\alpha}\right]\left(T_{n+1}\right)=\left[\frac{C_{n+\alpha}}{\Delta t}-(1-\alpha) K_{n+\alpha}\right]\left(T_{n}\right)+\left(F_{n+\alpha}\right)$
+
+By changing the value of $\alpha$ from 0 to 1, Eq. 37 defines a family of different methods that could be used. Abaqus/CAE FE solver uses an implicit backward difference method which is defined by $\alpha=1$. Eq. 37 is solved for $\left\{T_{i}^{t+\Delta t}\right\}$ and then used to update the temperature solution for Eq. 38 until convergence is achieved at every point in the domain at time $t+\Delta t[27]$.
+
+$\left\{T_{i+1}^{t+\Delta t}\right\}=\left\{T_{i}^{t+\Delta t}\right\}+\left\{\Delta T_{i+1}^{t+\Delta t}\right\}$
+
+Considering the melting and solidification phenomenon that occurred in laser melting AM process, the latent heat could not be negligible for the phase change. The relationship between enthalpy and specific heat $\left(\mathrm{H}, c_{p}\right)$ can be described below as
+
+$H=\int \rho c_{p}(T) d T$
+
+Where $\rho$ equals the density of the material. As the temperature of the material exceeds the melting point, the latent heat fusion considered here is calculated by enthalpy change, $\Delta \mathrm{H}[32]$.
+
+$\Delta H=\rho T_{m}\left(\Delta c_{p}\right)$
+
+\section*{4 FINITE ELEMENT MODEL DESCRIPTION}
+\subsection*{4.1 AM Process Modeling Relevance}
+Fabrication of components using AM is integral in today's manufacturing. The process parameters used for the build will typically involve the heating up and cooling down of the component. The process parameters as stated in section 1.1 includes the laser spot size (70 $\mu \mathrm{m}$ diameter), laser power (varying from $200-300 \mathrm{~W}$ ) and laser speed (varying from $1200-3600 \mathrm{~mm} / \mathrm{s}$ ). These aspects of the thermal cycle affect the shape, geometry, and microstructure of the end build.
+
+Numerical simulations have become a powerful tool for thermal analysis, by assisting in the design and optimization of the AM thermal processes to achieve the needed mechanical properties. The cost of buying an actual AM machine is enormous as well as the cost needed for running an actual experiment, numerical simulation can help reduce the cost involved in this process by replacing the design of experiment as well as reducing the time needed for the process. Modeling can be sued to develop process parameter to microstructure relationships, as while as, increase the understanding of build properties for any material. Controlling as-built material properties can be achieved by modeling in other to reduce post build treatments, increase the reliability of builds and decrease time to adoption of a process for critical hardware.
+
+\subsection*{4.2 Modeling Approach}
+The FE model described here was performed using Abaqus CAE 2016 software. A three dimension model similar to that described by Gockel [37], Fox et al. [33] is used in the paper. The transient heat transfer during LPBF of metals is complex involving heat\\
+flux transport, phase change, melt pool formation, microstructure coupling and more. During LPBF process energy transformation, momentum transformation and mass transformation produce some thermal phenomena because of heat function between laser and powder in the melt pool such as heat transfer (conduction), convection and mass transfer [34]. Modeling of this physical phenomenon can be done using a reduced complex model, this is done for minimizing computational time and also for providing general insight into the process-property relationship applicable to parts fabricated via LPBF [35]. This approach is used to model the heat diffusion in this AM process.
+
+The 3D model solves a heat conduction problem of a point heat source (laser beam) traversing over a bulky 3D geometry representing the surrounding powder and substrate material. MATLAB is used to calculate the dimensionless Rosenthal length, width, and depth of the melt pool as shown in Eq.3.9 \& 3.11 of Sheridan [36]. These initial dimensionless melt pool dimensions are used as estimates to scale the entire 3D geometry for the model used for this analysis. This scaling was performed by using a MATLAB script to generate the input file for Abaqus. Figure 4 below represents the 3D geometry used.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-036}
+\end{center}
+
+Figure 4 Full model used in Abaqus viewport.
+
+The 3D model used for this work as shown in the figure above has dimensions 6001x1310x781 $\mu$. The thermal-physical material properties for Invar in Table 2 were used. The model describes a half model of the heat deposited, where half of the melt pool is modeled with an assumption of thermal isolation in the plane of symmetry. Therefore, the heat flux applied to the model is the total power divided by two and the melt pool represented in the numerical model is half of the total melt pool. This simplification reduces computational time for predicting the melt pool dimensions. An additional study was completed to compare the effects of the inclusion/exclusion of latent heat in the model.
+
+\subsection*{4.3 Heat Source Application}
+The laser beam simulated for the numerical analysis is a concentrated continuous wave heat source because there are no pulse time within the deposited laser heat. For the implementation of the movable heating source, an Abaqus/CAE DFLUX subroutine is\\
+used. Heat flux distribution in a cross-section of the heated element surface is shown in Figure 5. The laser beam is modeled to irradiate 8 elements of equal square sized surfaces, which represents the approximate size of the laser beam diameter $\sim 70 \mu \mathrm{m}$.
+
+To simulate the motion of heat source (laser beam), the heat flux is applied on surfaces representing the spot diameter. The flux is turned on and off as it travels along the scan length. To reduce computational time, the heat flux is modeled to jump two element units at a time. The effect of this jump can be seen in the leading edge of the melt pool in Figure 11 \& Figure 12. The heat source is modeled as a concentrated surface flux with no Gaussian profile. The area over which heat flux is applied is a representation of
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-037(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-037}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-037(2)}
+\end{center}
+
+(c)
+
+Figure 5 (a) Surface over which heat flux is applied.(b) Zoomed out flux application over the surface. (c) Zoomed in view of applied heat flux.\\
+half the size of the laser diameter $(70 \mu \mathrm{m})$. The laser spot size is converted to a square representation. The element type used for this analysis is an 8 noded continuum brickheat element (DC3D8).
+
+\subsection*{4.4 Meshing}
+A mesh convergence study was completed, and the finite-element mesh finally selected is a compromise between the computational efficiency/cost and the numerical accuracy. Three mesh sizes were used, and the results compared for convergence. Coarse mesh size contained 2 elements, medium mesh size contained 8 elements and the fine mesh size contained 18 elements. Each of these mesh sizes has a biasing separating the area from which data is collected with that from which no data is collected. Figure 6 shows the difference between the selected mesh sizes.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-038(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-038}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-038(2)}
+\end{center}
+
+(c)
+
+Figure 6 (a) Coarse Mesh (b) Medium Mesh (c) Fine Mesh
+
+The coarse, medium and fine mesh sizes represent the surfaces over which heat flux is applied. The result for melt pool depth and width are plotted against time to show convergence.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-039}
+\end{center}
+
+Figure 7 Plot of Mesh convergence study: Depth versus time.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-039(1)}
+\end{center}
+
+Figure 8 Plot of Mesh convergence study: Width versus time.
+
+The Figure 7 \& Figure 8 show that the values for melt pool size are converging between the medium and fine mesh. Since the medium mesh had less computer run time,\\
+the medium mesh was chosen as the mesh size used to run the numerical models. This was done to reduce computation time.
+
+Mesh biasing was used to increase the mesh size from the fine region to the coarse region. Biasing helped with reducing the total number of nodes and elements within in the model. The fine region of this model represents the area where numerical data will be collected. The laser diameter was converted into a square surface which represents the surface of applied heat flux. The mesh size used in this region is a representation of the division of the laser spot size into 4 equal lengths. The elements within the fine region have a dimension of $15.509 \times 15.509 \mu m$. This model contained a total of 221100 nodes and 221099 elements.
+
+\subsection*{4.5 Computational Domain and the Boundary Conditions}
+This model is used to simulate a single laser pass over a substrate with a scan length of $4 \mathrm{~mm}$ which is representative of an approximate stripe length used in the LPBF scanning strategy. The ambient temperature (which is the temperature of the solid before the laser arrives) on all surfaces of the simulation space is an initial condition of $300 \mathrm{~K}$. This boundary condition is based on the experimental setup in which the build plate is laser glazed with the temperature in the building chamber at room temperature. The moving concentrated heat flux is applied as a surface load on the predefined surfaces.
+
+The step time used for this analysis to simulate the speed of laser as it traverses the model is:
+
+$T_{\text {step }}=\frac{\left(\frac{S_{d}}{L S}\right)}{\text { number of steps }}$
+
+Where $T_{\text {step }}$ is the step time used, $S_{d}$ is the scan distance ( $4 \mathrm{~mm}$ ), LS is the laser speed.
+
+\subsection*{4.6 Validation}
+The simplified model used for this study with the assumptions stated in chapter 3 is only an estimation of the real case. To validate the results from the numerical model, results from the experimental setup will be used to compare its approximations. This study is of particular interest since it reports a representative Invar 36 melt pool geometries for various process conditions.
+
+\subsection*{4.7 Scan Length}
+The models described here are for single laser scan length. A single scan length of $4 \mathrm{~mm}$ is investigated using the 3D model. The temperature distribution from start to end of this scan length is needed to understand the response of Invar 36 under different processing conditions. This is needed to understand the effects of between a single laser scan and a multiple laser scan. Thus, the results, plots, and figures presented for this study are from models of single laser scan of a length of $4 \mathrm{~mm}$.
+
+The scan strategy used for this model is a bi-directional scan, having the laser beam move in the positive $\mathrm{x}$ direction from left to right and then turning to repeat the same motion in the opposite direction. For a single scan it only entails a one-time motion of laser beam from left to right. Future simulations will include multiple motions of the laser beam with hatch spacing between the scans.
+
+\subsection*{4.8 Data Extraction}
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-042}
+\end{center}
+
+Figure 9 Temperature distribution of the moving laser beam over the substrate.
+
+The magnitudes of the temperature distribution between neighboring elements separated by $(\Delta x, \Delta y, \Delta z)$ are estimated using the proposed 3D model. Figure 9 shows the temperature distribution due to the applied process condition. The heat flow driven by the thermal conductivity is influenced by the laser speed; this can be seen in the experimental model. Thus, the temperature distribution representing the molten pool formation are simulated. The melt pool characteristics are measured with contour lines showing the temperature profile of the melt temperature distribution. The results from the numerical models are presented in the following chapters.
+
+The representative melt pool is found to be in the form of a sector of a circle, this is because the model represents a symmetric model. Therefore, the melt pool is semicircular with maximum temperature at the center of the laser diameter. The localized laser irradiation results in a very high heat flux that overcome the latent heat of fusion of\\
+the material, forming the melt pool [35]. As the laser beam moves along the scan length it continues to form more melted heat affected zones, while the initial irradiated zone begins to cool down. Thermal energy not used for melting is utilized for heating the surrounding elements. This can be seen from Figure 10 where the gray region represents temperatures in and above the melting temperature (1727K).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-043}
+\end{center}
+
+Figure 10 A half melt pool at a $200 \mathrm{~W}$ power and $2000 \mathrm{~mm} / \mathrm{s}$.
+
+\subsection*{4.8.1 Latent Heat of Fusion}
+The effects of latent heat are considered in thermal analyses with two case studies. Case 1: with the inclusion of latent heat, and Case 2: neglecting latent heat. Latent heat is the amount of heat energy absorbed by a body as it changes phase (i.e. from solid to liquid and vice versa). Case 1 has a latent heat of $270 \mathrm{~kJ} / \mathrm{kg}$ spread over a temperature range of $1702 \mathrm{~K}$ to $1727 \mathrm{~K}$. The stated temperatures represent the solidus and liquidus temperatures for Invar 36 [12].
+
+Enthalpy $\mathrm{H}$ is used to relate heat content and temperature in this study. In order to trace the melt pool liquid/solid region (the phase change), the total enthalpy $\mathrm{H}$ is either represented as the summation of sensible heat or the summation of sensible heat and latent heat content $\Delta H$ (Eq.31). For both cases, the enthalpy is calculated and the FE program assigns a total enthalpy (latent heat) which is required for calculating the effects of absorbed energy for phase transformation.
+
+The Cases 1 \& 2 are done to understand the effects of adding latent heat of fusion as a material property to the model. Cassel et al. in a paper on the use of STA 8000 (Simultaneous thermal analyzer) for melt analysis of alloys stated the solidus temperature to be $1702 \mathrm{~K}$ and liquidus temperature $1727 \mathrm{~K}$ [12]. This is the only literature found to have a different temperature for both solidus and liquidus (Figure 3), as other literatures have them both to be $1700 \mathrm{~K}[11,38]$. Therefore, using these values as inputs for Case 1 , both analyses were run. To properly see the effects and temperature distribution on the substrate for both cases, the maximum temperature for the entire model using the contour plot option is set as $1727 \mathrm{~K}$ (this represents the melting temperature). The maximum temperature specified for the contour plot represents all temperatures above the melting temperature for Invar. This will help create a better visual for measuring the melt pool characteristics. The melt pool geometry at steady state for both Case $1 \& 2$ are tabulated below.
+
+Table 3: Case 1 results for melt pool characteristics
+
+\begin{center}
+\begin{tabular}{c|c|c}
+\hline
+\multicolumn{3}{c}{Case 1 - Latent Heat} \\
+\hline
+Length ( $\mathbf{\mu m})$ & Width ( $\mathbf{( m})$ & Depth( $\boldsymbol{\mu m})$ \\
+\hline
+1174.3 & 93.054 & 35.865 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 4: Case 2 results for melt pool characteristics
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\multicolumn{3}{|c|}{Case 1 - No Latent Heat} \\
+\hline
+Length ( $\mu \mathrm{m})$ & Width ( $\mu \mathrm{m})$ & Depth( $\mu \mathrm{m})$ \\
+\hline
+1093.4 & 98.87 & 39.742 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 5: Percentage error between both Case1\&2.
+
+\begin{center}
+\begin{tabular}{c|c}
+\hline
+Melt Pool & Error (\%) \\
+\hline
+Length $(\boldsymbol{\mu m})$ & +6.89 \\
+\hline
+Width $(\boldsymbol{\mu m})$ & -6.25 \\
+\hline
+Depth $(\boldsymbol{\mu m})$ & -10.81 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 3 \& Table 4 above shows the results for melt pool geometry for case 1 \& 2 respectively at steady state. This compares the effects of adding latent heat of fusion (LHF) on the melt pool characteristics with that of not including LHF when running the model. Table 5 shows the error difference between the melt pool characteristics for both cases. The results show a large melt pool depth prediction for case 2, while the other melt pool properties have a small difference between them. This can be seen by calculating the percentage error between the length, depth, and width for both cases. The error in percentage for the length of melt pool is approximately $6.89 \%$ while the depth has a percentage error of $10.81 \%$ and the width $6.25 \%$ percentage error. To note, the melt pool length is taken as the length from the front of the melt pool to the trailing tail of the melt pool. This shows that latent heat of fusion with a small mushy zone (1702 -1727 K) for Invar 36 has a significantly small effect on the melt pool geometry prediction. The depth has the highest change in effect with respect to latent heat. From Table 5, it can be seen that the melt pool dimensions for width and depth decrease with the inclusion of latent heat of fusion while the length increases.
+
+\subsection*{4.9 Summary}
+The FE model used for this work is similar to the approach used by both Gockel and Fox et al [37 and 33]. The model simulates a $4 \mathrm{~mm}$ laser scan length at selected process parameters. This model is half axis symmetric with the assumption of thermal isolation on the sides. This was done to reduce computational time by reducing the number of nodes in the FE analysis.
+
+The inclusion of latent heat is seen to have a slight effect with melt pool dimensions. The melt pool length is the only melt pool dimension to increase with the inclusion of latent heat. The melt pool depth and width reduces with the inclusion of latent heat, this could be as a result of the small temperature range in the mushy zone.
+
+\section*{5 EFFECT OF PROCESSING PARAMETERS ON MELT POOL GEOMETRY AT STEADY STATE}
+\subsection*{5.1 Introduction}
+The melt pool configuration at steady state is discussed in this section. For a heat source moving at a constant speed, over time, the heat distribution in the substrate reaches a state of equilibrium. At this point, the melt pool geometry for this single scan model remains constant over time and location. The developed model is long enough to allow the melt pool to reach an initial steady state. Steady state is defined as when the melt pool length, width, and depth are constant in time, and in which change in the direction of applied flux is continually balanced. A range of processing parameters (laser power and travel speed) typical to those used in the laser powder bed fusion process are chosen and melt pool dimension results from the numerical simulation are discussed in this chapter.
+
+\subsection*{5.2 Data Extraction}
+Results from the numerical models for melt pool characteristics at steady state are presented in this section. The temperature distribution within the substrate is an effect of the process parameters applied. In the scanning of a laser beam over the substrate, temperature builds up within the substrate is experienced until a point of steady state where equilibrium is reached. At this state, data is extracted by using the distance option of the query information tool for Abaqus. The dimension of for the length, width, and depth of melt pool is obtained by measuring the isotherm corresponding to the melted\\
+region. Figure 11 \& Figure 12 shows the melt pool description of what the length, width, and depth represent within the model.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-048(1)}
+\end{center}
+
+Figure 11 Image showing the length and width of the melt pool
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-048}
+\end{center}
+
+Figure 12 Image showing the depth of the melt pool
+
+Figure 11 is obtained from the plan view of the 3D model ( $y, x$ direction), while Figure 12 is obtained from the front view of the model ( $\mathrm{z}, \mathrm{x}$ direction). The length of melt pool is the distance from the front of melt pool to the trailing tail of the melt pool, while the width of melt pool is 2 times the distance from the edge of the model to the widest distance on the surface of the melt pool, and the depth is the distance from the edge of the\\
+model to the depths distance of the melt pool. Using the distance-query Abaqus tool, the melt pool dimensions for all the selected process conditions are presented below.
+
+Table 6: Melt pool geometry for all considered process parameters.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\begin{tabular}{c}
+Power \\
+$\mathbf{( W )}$ \\
+\end{tabular} & \begin{tabular}{c}
+Speed \\
+$\mathbf{( m m / s})$ \\
+\end{tabular} & \begin{tabular}{c}
+Width \\
+$\mathbf{( \mu m})$ \\
+\end{tabular} & \begin{tabular}{c}
+Depth \\
+$\mathbf{( \mu m})$ \\
+\end{tabular} & \begin{tabular}{c}
+Length \\
+$\mathbf{( \mu m})$ \\
+\end{tabular} \\
+\hline
+200 & 1600 & 108.56 & 45.557 & 1101.1 \\
+\hline
+200 & 2000 & 98.385 & 39.742 & 1093.4 \\
+\hline
+200 & 2600 & 89.177 & 33.441 & 1081.8 \\
+\hline
+250 & 1600 & 117.77 & 51.857 & 1360.4 \\
+\hline
+250 & 2000 & 108.56 & 45.558 & 1369.6 \\
+\hline
+250 & 2600 & 96.543 & 38.773 & 1358 \\
+\hline
+300 & 1600 & 127.95 & 57.431 & 1651.7 \\
+\hline
+300 & 2000 & 116.32 & 50.403 & 1643.9 \\
+\hline
+300 & 2600 & 104.69 & 43.377 & 1633 \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{5.3 Linear Energy Density}
+Melt pool formation and characteristics are fundamentally determined by the amount of absorbed energy by the substrate when the laser beam passes over it [1]. The melt pool characteristics (size, depth, width) are a function of the absorbed energy density. A simplified energy density equation used by many investigators for correlating the process parameters to the density and strength of the produced part is shown below [39]:
+
+
+\begin{equation*}
+E_{A}=\frac{P}{U t} \tag{33}
+\end{equation*}
+
+
+Eq. 33 represents the applied energy density (also called the Andrews number), where $\mathrm{P}$ is the laser power, $\mathrm{U}$ is the scan speed and $\mathrm{t}$ is the hatch spacing between parallel scan lines. Since the models discussed in this section are for single scans, the hatch spacing will be same for all runs. Because the model discussed here is one for a single laser scan, Eq. 33 is further reduced to:
+
+
+\begin{equation*}
+L E D=\frac{P}{U} \tag{34}
+\end{equation*}
+
+
+This is called the linear energy density. A table showing the magnitude of applied energy density sorted in order of highest to lowest is presented below.
+
+Table 7: Showing in decreasing magnitude the energy density at the different process parameters.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+No. & \begin{tabular}{c}
+Power \\
+$(\mathbf{W})$ \\
+\end{tabular} & \begin{tabular}{c}
+Speed \\
+$(\mathbf{m} / \mathbf{s})$ \\
+\end{tabular} & \begin{tabular}{c}
+Energy Density \\
+$\left(\frac{\mathbf{J}}{\mathbf{m}}\right)$ \\
+\end{tabular} \\
+\hline
+1 & 300 & 1.6 & 187.5 \\
+\hline
+2 & 250 & 1.6 & 156.25 \\
+\hline
+3 & 300 & 2.0 & 150 \\
+\hline
+4 & 200 & 1.6 & 125 \\
+\hline
+4 & 250 & 2.0 & 125 \\
+\hline
+5 & 300 & 2.6 & 115.38 \\
+\hline
+6 & 200 & 2.0 & 100 \\
+\hline
+7 & 250 & 2.6 & 96.1538 \\
+\hline
+8 & 200 & 2.6 & 76.9231 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 7 shows the order of linear energy density input into the system. The effect of energy density phenomenon can be noticed in the plots of melt pool properties against time as shown below. A process condition with high power and low speed relative to other process parameters will give a high energy density. With that said, a combination of power and speed can as well produce similar LED as can be seen with process parameters $250 \mathrm{~W}$ power $/ 2000 \mathrm{~mm} / \mathrm{s}$ speed and $200 \mathrm{~W}$ power/1600mm/s.
+
+\subsection*{5.4 Result Discussion}
+Results for the melt pool characteristics at steady state are presented in this section. The color scheme used for the plots shown in the legends below are: red solid lines represent all $1600 \mathrm{~mm} / \mathrm{s}$ speeds, blue dashed lines represent all $200 \mathrm{~mm} / \mathrm{s}$ speed, and\\
+black dotted lines represent all $2600 \mathrm{~mm} / \mathrm{s}$ speeds. $\Delta$ represents $200 \mathrm{~W}$ power, o represents $250 \mathrm{~W}$ power, while, + represents the $300 \mathrm{~W}$ power. With the plotting of melt pool dimensions against the process parameters, a better understanding of the relationship existing can be seen.
+
+\subsection*{5.4.1 Depth}
+The results of melt pool depth at steady state with respect to power and velocity is examined in this sub section. Column five of Table 6 lists the various melt pool depths for the different process parameters used in this study. Figure 13 shows a plot of melt pool depth against power.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-051}
+\end{center}
+
+Figure 13 Plot of melt pool depth versus power.
+
+As can be seen from Figure 13, there is an increase of melt pool depth as power increases. Following the shape and color scheme as described in section 5.4 for this plot. 300W generates the largest depth while 200W generates the smallest depth.
+
+Further investigation with a plot for melt pool depths against laser speed is presented below.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-052}
+\end{center}
+
+Figure 14 Plot of melt pool depth versus laser speed.
+
+Figure 14 shows that the melt pool depths decrease with increase in speed. The faster the laser speed the small the depth of the melt pool.
+
+\subsection*{5.4.2 Width}
+Similar plots for melt pool width against power and speed are presented below. Table 6, column four lists the melt pool widths for all process parameters used for this study. Figure 15 shows the plot of melt pool width against power.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-053}
+\end{center}
+
+Figure 15 Plot of melt pool width versus laser power.
+
+A similar trend as seen from Figure 13 above shows the increase of melt pool width as power input in the system increases. The rate of increase is directly proportional to the LED of the applied flux. The increase in melt pool width as observed is exactly in the same order as LED. Figure 16 is a plot of melt pool width against laser speed.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-054}
+\end{center}
+
+Figure 16 Plot of melt pool width versus laser speed.
+
+Likewise, the melt pool width decreases with increase in laser speed and vice versa. In Figure 15 \& Figure 16 (the plots of width against power and speed of the laser scan), it is noticeable that the process parameters with the most energy density are those up top followed by the next in line in order of decrease of LED.
+
+\subsection*{5.4.3 Length}
+The length of the melt pool as stated earlier is considered as the length from trailing tail to the point of applied heat flux. The results for the melt pool length are listed in column three of Table 6. Similar plots for the length of melt pool against power and speed is presented below.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-055}
+\end{center}
+
+Figure 17 Plot of melt pool length versus laser power.
+
+Figure 17 above shows the plot of the length of melt pool against power. The color and shape scheme is same as described at the beginning of section 5.4. The melt pool length is seen to remain almost the same relative to the applied power. The length of the melt pool does not follow a similar trend with melt pool depth and width relative to the applied LED.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-056}
+\end{center}
+
+Figure 18 Plot of melt pool length versus laser power.
+
+Figure 18 shows that the melt pool length at steady state remains same for all process conditions with similar power. Laser speed is only seen to affect the melt pool length at different powers, with the most power having the highest length [36].
+
+\subsection*{5.4.4 Discussion}
+A look at Table 7 for LED, the order in which the energy density decreases follows through with what is seen in Figure 13. A relationship can be seen with linear energy density. The numbering in Table 7 represents the listing of linear energy density in decreasing order. Having process parameters power $=200 \mathrm{~W}$, speed $=1600 \mathrm{~mm} / \mathrm{s}$ and power $=250 \mathrm{~W}$, speed $=2000 \mathrm{~mm} / \mathrm{s}$ both tying at fourth place. The depth dimension for the process parameter with the least applied energy density (power $200 \mathrm{~W}$ speed $2600 \mathrm{~m} / \mathrm{s}$ )\\
+can be seen to have the smallest melt pool depth; this follows the trend as can be seen from Table 8.
+
+A similar relationship with linear energy density is seen here too. The order of decrease in size of melt pool depth is same. The relationship the melt pool dimension has with respect to the applied process condition is directly proportional to the LED [26]. Melt pool depth and width is seen to strictly follow the order of applied LED. A combination of LED could likewise, produce similar effects as can be seen with the cases of Power= 200 Watts, Speed $=1600 \mathrm{~mm} / \mathrm{s}$ and Power= $250 \mathrm{~W}$, Speed= $2000 \mathrm{~mm} / \mathrm{sec}$. Both process conditions resulted in similar melt pool depth and width.
+
+To further show that melt pool depth and width has a linear relationship with LED and melt pool length does not, Figure 19 \& Figure 20 below contains plots of melt pool depth, width, and length versus LED.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-057}
+\end{center}
+
+Figure 19 Plot of melt pool width and depth versus linear energy density.
+
+Figure 19 shows that melt pool depth and width have a linear relationship with energy density; this means that a combination of process parameter will give a melt pool size (depth and width) which will increase or decrease in the order of applied LED. On the other hand, Figure 20 shows the relationship of melt pool length with LED. There exists a zigzag (nonlinear) relationship between length and LED which means that the variation in length of the melt pool is not affected by the effects of energy density.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-058}
+\end{center}
+
+Figure 20 Plot of melt pool length versus linear energy density.
+
+In the ideal case of a moving point heat source, the melt pool width should be twice the depth because of the symmetric nature. Below is a table showing the width to depth ratio of a melt pool.
+
+Tadie 8: Table showing the ratio of width over depth of melt pool in ascending order of LED.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Power (W) & Speed (mm/s) & Width ( $\mathbf{( m )})$ & Depth $(\boldsymbol{\mu} \mathbf{)})$ & Width/Depth \\
+\hline
+300 & 1600 & 127.95 & 57.43 & 2.23 \\
+\hline
+250 & 1600 & 117.77 & 51.86 & 2.27 \\
+\hline
+300 & 2000 & 116.32 & 50.40 & 2.31 \\
+\hline
+200 & 1600 & 108.56 & 45.56 & 2.38 \\
+\hline
+250 & 2000 & 108.56 & 45.56 & 2.38 \\
+\hline
+300 & 2600 & 104.69 & 43.38 & 2.41 \\
+\hline
+200 & 2000 & 98.39 & 39.74 & 2.48 \\
+\hline
+250 & 2600 & 96.54 & 38.77 & 2.49 \\
+\hline
+200 & 2600 & 89.18 & 33.44 & 2.67 \\
+\hline
+\end{tabular}
+\end{center}
+
+An investigation into the melt pool depth and width for all the process parameters shows that because of the large laser spot size relative to the melt pool dimensions, the melt pool width is more than twice the depth for process conditions at lower energy density. A small width to depth ratio is seen for processes with larger melt pools. With knowing that melt pool width and depth are directly proportional to LED, Table 8 above shows that due to the surface area of the spot size selected, heat conduction is forced more in the $\mathrm{y}$ direction than in the negative $\mathrm{z}$ direction for models with small applied LED and that is why the melt pool dimensions for depth and width vary. It is expected that as the laser spot size decreases, the influence of width to depth ratio is expected to even out.
+
+\subsection*{5.5 Conclusion}
+In conclusion, the melt pool width and depth both increase linearly with increasing applied energy density within the process domain. The melt pool length does not follow the same trend as the width and depth. The length of melt pool remains almost constant for a singular laser power and varies at different laser speeds only.
+
+Laser spot size also plays a significant role with the dimensioning of the melt pool depth and width. The size of the laser spot as well as LED will lead to a skew in the ratio between width and depth.
+
+\section*{6 TRANSIENT EFFECTS OF LASER BEAM ON MELT POOL GEOMETRY}
+\subsection*{6.1 Introduction}
+In LPBF, the scanning strategy of the laser is typically many short segments instead of long passes. Therefore, the melt pool is not consistently at a steady state. The effects of change of melt pool dimensions with time are examined in this section. A single short pass of $4 \mathrm{~mm}$ is modeled, which is comparative to a stripe length commonly used. The results presented in this section give insight into how the melt pool dimensions change with time and location on the substrate and show how much time and distance the melt pool will spend at transient or steady state behavior.
+
+\subsection*{6.2 Data Extraction}
+To obtain data from the numerical model over time, step times and the locations corresponding to theses times are selected. To simulate the motion of laser beam along the scan length, time steps were created. A selected few of these time steps are used as reference points for data collection. The change in melt pool dimension over time for all process conditions are measured at these selected time steps. The spacing between each time step measured is closer at the beginning of the scan length and then it becomes wider towards the end of the scan length once the melt pool reaches a steady state. A total of twelve time steps are selected for all process parameters. The extracted data are presented in the section below:
+
+Table 9: Table step time and locations used.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multirow{2}{*}{Step No.} & \multicolumn{2}{|c|}{Step time corresponding to laser speed} & \multirow{2}{*}{}\begin{tabular}{c}
+Distance \\
+$\mathbf{( \mu m})$ \\
+\end{tabular} &  \\
+\cline { 2 - 4 }
+ & $\mathbf{1 6 0 0}(\mathbf{m m} / \mathbf{s})$ & $\mathbf{2 0 0 0}(\mathbf{m m} / \mathbf{s})$ &  & 62.036 \\
+\hline
+1 & $1.95 \mathrm{E}-05$ & $1.56 \mathrm{E}-05$ & $1.20 \mathrm{E}-05$ & 155 \\
+\hline
+4 & $7.81 \mathrm{E}-05$ & $6.25 \mathrm{E}-05$ & $4.81 \mathrm{E}-05$ & 279 \\
+\hline
+8 & $1.56 \mathrm{E}-04$ & $1.25 \mathrm{E}-04$ & $9.62 \mathrm{E}-05$ & 527 \\
+\hline
+16 & $3.13 \mathrm{E}-04$ & $2.50 \mathrm{E}-04$ & $1.92 \mathrm{E}-04$ & 775 \\
+\hline
+24 & $4.69 \mathrm{E}-04$ & $3.75 \mathrm{E}-04$ & $2.88 \mathrm{E}-04$ & 1024 \\
+\hline
+32 & $6.25 \mathrm{E}-04$ & $5.00 \mathrm{E}-04$ & $3.85 \mathrm{E}-04$ & 1272 \\
+\hline
+40 & $7.81 \mathrm{E}-04$ & $6.25 \mathrm{E}-04$ & $4.81 \mathrm{E}-04$ & 1520 \\
+\hline
+48 & $9.38 \mathrm{E}-04$ & $7.50 \mathrm{E}-04$ & $5.77 \mathrm{E}-04$ & 156 \\
+\hline
+56 & $1.09 \mathrm{E}-03$ & $8.75 \mathrm{E}-04$ & $6.73 \mathrm{E}-04$ & 1768 \\
+\hline
+64 & $1.25 \mathrm{E}-03$ & $1.00 \mathrm{E}-03$ & $7.69 \mathrm{E}-04$ & 2016 \\
+\hline
+72 & $1.41 \mathrm{E}-03$ & $1.13 \mathrm{E}-03$ & $8.65 \mathrm{E}-04$ & 2264 \\
+\hline
+80 & $1.56 \mathrm{E}-03$ & $1.25 \mathrm{E}-03$ & $9.62 \mathrm{E}-04$ & 2512 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 9 above lists all the selected steps and distance from the start of the scan length. The distance in column 5 represents the total length the laser beam has traveled during a time step from the start of the scan length to the end of a step. The melt pool dimensions presented is the maximum dimension within the selected time step. Therefore, the distance on the y axis for plots of melt pool dimensions versus distance in the remainder of this thesis paper is the total distance traveled by the laser beam at the instance and not the exact location of the measured maximum melt pool dimension. The maximum melt pool dimension is seen to spread over a small area as can be seen from Figure 11 \& Figure 12. Table 10 below presents the total time it takes the different process conditions to get to steady state; it also presents the total distance from the start of the scan to the front of melt pool when it gets to steady state. The total time is arranged in order of decreasing applied energy density.
+
+Table 10: A table showing the time it takes all the process materials to get to steady state
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\begin{tabular}{c}
+Power \\
+$(\mathbf{W})$ \\
+\end{tabular} & \begin{tabular}{c}
+Speed \\
+$(\mathbf{m m} / \mathbf{s})$ \\
+\end{tabular} & \begin{tabular}{c}
+Total Distance \\
+$(\mathbf{m})$ \\
+\end{tabular} & \begin{tabular}{c}
+Total Time \\
+$(\mathbf{s})$ \\
+\end{tabular} & \begin{tabular}{c}
+Energy Density \\
+$\left(\frac{\boldsymbol{J}}{\mathbf{m}}\right)$ \\
+\end{tabular} \\
+\hline
+300 & 1600 & 0.001972 & 0.001232 & 187.50 \\
+\hline
+250 & 1600 & 0.001688 & 0.001055 & 156.25 \\
+\hline
+300 & 2000 & 0.001967 & 0.000984 & 150.00 \\
+\hline
+200 & 1600 & 0.001377 & 0.000861 & 125.00 \\
+\hline
+250 & 2000 & 0.001657 & 0.000828 & 125.00 \\
+\hline
+300 & 2600 & 0.001905 & 0.000733 & 115.38 \\
+\hline
+200 & 2000 & 0.001349 & 0.000675 & 100.00 \\
+\hline
+250 & 2600 & 0.001594 & 0.000613 & 96.15 \\
+\hline
+200 & 2600 & 0.001313 & 0.000505 & 76.92 \\
+\hline
+\end{tabular}
+\end{center}
+
+For Table 10, the total distance represents the distance from the point where melt pool becomes a steady state to the beginning of the scan length. While the total time is the time it takes the melt pool geometry to also get to the steady state. The total time can be found by dividing total distance with speed, which also corresponds to the step time of that location. The length of the melt pool is the last melt pool dimension to get to steady state, so the total time here represents the time it takes all melt pool dimensions to get to steady state. Melt pool depth and width get to steady state early into the scan.
+
+\subsection*{6.3 Effect of Latent Heat on Transient Response Time and Distance}
+The results presented here are specific to the change of melt pool dimensions with respect to time and distance. Going back to the models (Case 1 \& 2) for with and without latent heat respectively, it can be shown that for both cases it takes relatively the same time for melt pool dimensions to come to steady state at the test case of Power $=200$ Watts and Speed $=2000 \mathrm{~mm} / \mathrm{s}$. This happens within the 42nd step at time 0.000656 seconds, with $0.00134928 \mu \mathrm{m}$ distance from the point of applied flux. It is important to note that the steady state dimensions are different in the two cases, but response distance\\
+and time are the quantities of interest. Because latent heat adds significant computation time, it is neglected for the rest of the models.
+
+\subsection*{6.4 Results}
+The various transient melt pool dimensions will be plotted to give insight into the change happening in time with respect to the applied process conditions.
+
+\subsection*{6.4.1 Depth}
+The change of melt pool depth in time with respect to the applied process parameter is examined in this sub section. The distance corresponding to time is shown in Table 9 and the melt pool depths at this time steps are shown in the table below. A table of change in melt pool depths over time due to the applied process parameter is presented in Table 11.
+
+Table 11Table of change in melt pool depth with time due to the different process parameters with units in $\mu \mathrm{m}$.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+\begin{tabular}{c}
+P200 \\
+S1600 \\
+$(\mu \mathrm{m})$ \\
+\end{tabular} & \begin{tabular}{c}
+P200 \\
+S2000 \\
+$(\mu \mathrm{m})$ \\
+\end{tabular} & \begin{tabular}{c}
+P200 \\
+S2600 \\
+$(\mu \mathrm{m})$ \\
+\end{tabular} & \begin{tabular}{c}
+P250 \\
+S1600 \\
+$(\mu \mathrm{m})$ \\
+\end{tabular} & \begin{tabular}{c}
+P250 \\
+S2000 \\
+$(\mu \mathrm{m})$ \\
+\end{tabular} & \begin{tabular}{c}
+P250 \\
+S2600 \\
+$(\mu \mathrm{m})$ \\
+\end{tabular} & \begin{tabular}{c}
+P300 \\
+S1600 \\
+$(\mu \mathrm{m})$ \\
+\end{tabular} & \begin{tabular}{c}
+P300 \\
+S2000 \\
+$(\mu \mathrm{m})$ \\
+\end{tabular} & \begin{tabular}{c}
+P300 \\
+S2600 \\
+$(\mu \mathrm{m})$ \\
+\end{tabular} \\
+\hline
+15.5 & 14.5 & 13.6 & 16.3 & 15.3 & 14.5 & 18.4 & 15.5 & 14.8 \\
+\hline
+30.1 & 28.1 & 25.2 & 32.5 & 29.6 & 27.1 & 34.9 & 30.1 & 28.1 \\
+\hline
+40.7 & 34.9 & 29.6 & 43.1 & 38.8 & 31.0 & 44.588 & 40.7 & 34.4 \\
+\hline
+45.6 & 39.7 & 33.4 & 50.4 & 44.6 & 38.8 & 55.3 & 48.2 & 41.7 \\
+\hline
+45.6 & 39.7 & 33.4 & 51.9 & 45.6 & 38.8 & 57.4 & 50.4 & 43.4 \\
+\hline
+45.6 & 39.7 & 33.4 & 51.9 & 45.6 & 38.8 & 57.4 & 50.4 & 43.4 \\
+\hline
+45.6 & 39.7 & 33.4 & 51.9 & 45.6 & 38.8 & 57.4 & 50.4 & 43.4 \\
+\hline
+45.6 & 39.7 & 33.4 & 51.9 & 45.6 & 38.8 & 57.4 & 50.4 & 43.4 \\
+\hline
+45.6 & 39.7 & 33.4 & 51.9 & 45.6 & 38.8 & 57.4 & 50.4 & 43.4 \\
+\hline
+45.6 & 39.7 & 33.4 & 51.9 & 45.6 & 38.8 & 57.4 & 50.4 & 43.4 \\
+\hline
+45.6 & 39.7 & 33.4 & 51.9 & 45.6 & 38.8 & 57.4 & 50.4 & 43.4 \\
+\hline
+45.6 & 39.7 & 33.4 & 51.9 & 45.6 & 38.8 & 57.4 & 50.4 & 43.4 \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{6.4.1 Melt Pool Depth - Transient Response Time}
+Figure 21 below shows the change in depth over time. In plotting these melt pool depths with time corresponding to applied speed, it can be seen that the time for the\\
+selected steps corresponds with speed. All plots for melt pool dimensions having the same speed will end at the same time.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-065}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-066}
+\end{center}
+
+(b)
+
+Figure 21 (a) Depth versus time (b) Zoomed in view of change in depth versus time
+
+As can be seen from Figure 21, there is a sudden rise in the depth of melt pool. This rise in the dimension of melt pool depth is seen to still follow the rise in the order of applied LED. The least applied energy density is seen to reach steady state first, while the most applied energy density tends to reach steady state last. This can be seen as the combination of process parameters that give the same linear energy density is seen to get to steady state at the same time.
+
+\subsection*{6.4.2 Melt Pool Depth - Transient Response Distance}
+Figure 22 shows the change of melt pool depth over the distances before it gets to steady state. The time steps used are same as those shown in Table 9. The measurements for the depth corresponding to the different process parameters and were taken along the same distances within the $4 \mathrm{~mm}$ stripe. It can be seen that change in depth increases until\\
+it gets to a steady state. For the selected process conditions, the ranges of response distances are between $500-800 \mu \mathrm{m}(0.5-0.8 \mathrm{~mm})$. The change in depth is also seen to have a linear relationship with laser speed at the beginning of applied flux; this continues in that order till it the effect due to LED. Once the effects from LED become established, the depths are seen to increase in the order of applied LED.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-067}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-068}
+\end{center}
+
+(b)
+
+Figure 22 (a) Plot of depth versus distance. (b) Zoomed in view of the plot of depth versus distance.
+
+\subsection*{6.4.3 Width}
+Similarly, plots of the width of melt pool versus time and distance are examined in this section. It is expected that the trend will be similar to the depth of melt pool.
+
+\subsection*{6.4.3.1 Melt Pool Width - Transient Response Time}
+Melt pool width is plotted against time in Figure 23. This shows a similar trend to that of Figure 21 in section 5.4.1 above. The increase in width of melt pool shows a linear relationship with LED. Note that data for melt pool dimension were collected manually, and as such, there could be some measurement discrepancies because of human error. This is why the timing for melt pool width getting to steady state is inconsistent.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-069}
+\end{center}
+
+(a)
+
+\includegraphics[max width=\textwidth, center]{2024_03_10_cd1e96b111daa6d49ef1g-069(1)}\\
+(b)
+
+Figure 23 (a) Plot of melt pool width versus time (b) Zoomed in plot of melt pool width versus time.
+
+\subsection*{6.4.3.2 Melt Pool Width - Transient Response Distance}
+Figure 24 also shows a similar trend as the plot of melt pool depth response with distance. The relationship with laser speed is not as visible like that of depth because of the effect of the surface area of applied heat flux corresponding to the laser spot size as discussed in section 4.4. That is why there is a deviation at the beginning of the scan length. But once the effects of LED becomes pronounced and the melt pool width becomes larger, the width and depth of melt pool are seen to follow the same order getting to the steady state between $500-800 \mu$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-070}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-071}
+\end{center}
+
+(b)
+
+Figure 24 (a) Plot of melt pool width versus (b) Zoomed in view of the plot of melt pool width versus distance.
+
+\subsection*{6.4.4 Length}
+Melt pool length and its change with time over a specified distance are presented in this sub section. As can be deduced from chapter 5, that length has a constant relationship with laser power at steady state. The change in length of the melt pool as laser beam travels over the surface an LPBF substrate is shown in the plot below.
+
+\subsection*{6.4.4.1 Melt Pool Length - Transient Response Time}
+In Figure 25, length is seen to vary linearly with laser speed at a transient state. As heat within the system continues to build and melt pool length starts to get to steady state, the length begins to have a constant dimension with respect to power. This phenomenon is quite different from what can be seen with the change in melt pool depth and width over time.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-072}
+\end{center}
+
+Figure 25 Plot of melt pool length versus time.
+
+\subsection*{6.4.4.2 Melt Pool Length - Transient Response Distance}
+The plot of length versus the time as was shown in Figure 25 above clearly shows the constant varying of melt pool length over time until the steady state region. Figure 26 shows a plot of length over distance corresponding to time, the length of melt pool rises linearly at the beginning of the applied heat irrespective of the process condition. Length change remains constant until about $1000 \mu \mathrm{m}$ into the scan length before it begins to deviate due to the applied power.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-073}
+\end{center}
+
+Figure 26 Plot of melt pool length versus distance.
+
+\subsection*{6.5 Discussion}
+The individual melt pool properties get to steady state at different times. The time taken for melt pool to get to steady state was taken as the time it takes for the last melt pool property to get to steady state. Of all melt pool properties, melt pool length gets to steady state last, so the total time it takes for melt pool length to get to steady state is taken as total time it takes the entire melt pool to get to steady state. A plot of the total distance it takes for a melt pool to get to the steady state versus time shown below is seen to have a resemblance to that of the plot of length versus LED (Figure 20).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-074}
+\end{center}
+
+Figure 27 Plot of distance versus the total time it takes for melt pool to get to steady state.
+
+Next, we look at the plot of distance it takes the melt pool to geometry to get to steady state versus power.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-074(1)}
+\end{center}
+
+Figure 28 Plot of total distance for melt pool to get to steady state versus power.
+
+Figure 28 above seems to have a similar relationship with the trend shown by melt pool length versus power. This is so because, even though this distance corresponds to the location where the melt pool reaches steady state, it also is a representation of the melt pool length property. The width and the depth of the melt pool reach steady state at an earlier time. Therefore, it is always important to look at the melt pool properties one at a time to see when they get to steady state.
+
+\subsection*{6.6 Conclusion}
+The change in melt pool width and depth is seen to follow a similar trend with the order of applied LED. This shows that knowing the magnitude of applied LED, a manufacturer can easily tell the order in size of melt pool melt pool depth and width. The depth and width of melt pool are required for fusion and re-melting of cooled down melt beads, this melt and re-melt of previously melted/cooled melt beads is what defines the microstructure of the fabricated part. This can help with optimization of process parameters for building the Invar tooling using LPBF process. Also, the distance it takes the melt pool depth and width to get to steady state is possibly one of the reasons for the inherent roughness of AM processes. This distance (between 0.5-0.8 mm) for melt pool width and depth can be seen in Figure 22 \& Figure 24.
+
+Melt pool dimensions can all be seen to have a linear relationship with the speed at the beginning of the scan length. This relationship is more noticeable with length as the change in the length of melt pool is the last melt pool property to get to steady state. This is why the plot of Figure 27 in the introductory section of 5.4 resembles the plot of length versus LED (Figure 20, section 4.4.4). Length, therefore, is affected only by the power of laser beam and it remains constant over time (even in transient state).
+
+\section*{7 SINGLE PASS STEADY-STATE AND TRANSIENT EXPERIMENT ANALYSIS}
+\subsection*{7.1 Introduction}
+Single pass experiments were performed to compare to the numerical results and gain additional insights. The motive for this experiment is to compare what the melt-pool width of Invar 36 will be at the various parameters with respect to an actual AM setup as compared to those obtained from the numerical simulations.
+
+\subsection*{7.2 Experimental Set-Up}
+The experiment setup described here was completed using an in house AM machine built for the University of Dayton Research Lab (UDRI). This equipment has a YLR-AC 500W laser head which is a single-mode continuous wave (CW) Ytterbium fiber laser with a maximum power of $500 \mathrm{~W}$ modulating a frequency range of between 0 $50 \mathrm{kHz}$. The scan head is a ScanLab inteliSCAN20 with positioning speed 11m/s.
+
+This experiment involves the laser glazing of an Invar 36 plate. The laser glazing was performed in a chamber with evacuated atmosphere and Argon inert gas. The glazing of the Invar 36 plate was completed for both single and multiple beads laser scans. The scans were performed on a 3 x 3 x 0.496 inch Invar 36 plate. The process parameters used are same as those used in the numerical runs. The power ranged from 200 to 300 Watts with speeds varying from 1600 to $2600 \mathrm{~mm} / \mathrm{s}$. The powers and speeds used in this study are based on those used experimentally by Qiu et al. [27]. The length of each laser pass is $5 \mathrm{~mm}$ and having a $5 \mathrm{~mm}$ distance between laser pass on the build plate to avoid heat buildup within the plate.
+
+\subsection*{7.2.1 Parameter Definition and Layout}
+The process parameters used for the experiment are listed in the tables below. These tables are separated in two with numbering in the first column representing positions on the build plate while the second and third columns represent laser power and scan speed.
+
+Table 12: Single beads
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Scan No. & Power (W) & Laser Speed (mm/s) \\
+\hline
+1 & 200 & 1600 \\
+\hline
+2 & 200 & 1800 \\
+\hline
+3 & 200 & 2000 \\
+\hline
+4 & 200 & 2200 \\
+\hline
+5 & 200 & 2400 \\
+\hline
+6 & 200 & 2600 \\
+\hline
+7 & 250 & 1600 \\
+\hline
+8 & 250 & 1800 \\
+\hline
+9 & 250 & 2000 \\
+\hline
+10 & 250 & 2200 \\
+\hline
+11 & 250 & 2400 \\
+\hline
+12 & 250 & 2600 \\
+\hline
+13 & 300 & 1600 \\
+\hline
+14 & 300 & 1800 \\
+\hline
+15 & 300 & 2000 \\
+\hline
+16 & 300 & 2200 \\
+\hline
+17 & 300 & 2400 \\
+\hline
+18 & 300 & 2600 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 13: Multiple beads
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\begin{tabular}{l}
+Scan \\
+Number \\
+\end{tabular} & \begin{tabular}{l}
+Power \\
+(W) \\
+\end{tabular} & \multicolumn{2}{|l|}{}\begin{tabular}{l}
+Laser Speed \\
+(mm/s) \\
+\end{tabular} \\
+\hline
+19 & 200 & 1600 & \multirow{2}{*}{stripes} \\
+\hline
+20 & 200 & 1800 &  \\
+\hline
+21 & 250 & 1600 &  \\
+\hline
+22 & 250 & 1800 &  \\
+\hline
+23 & 300 & 1600 &  \\
+\hline
+24 & 300 & 1800 &  \\
+\hline
+25 & 200 & 1600 & \multirow{2}{*}{s stripes} \\
+\hline
+26 & 200 & 1800 &  \\
+\hline
+27 & 250 & 1600 &  \\
+\hline
+28 & 250 & 1800 &  \\
+\hline
+29 & 300 & 1600 &  \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{|l|l|l|l|}
+\hline
+30 & 300 & 1800 &  \\
+\hline
+31 & 200 & 1600 & \multirow{2}{*}{stripes} \\
+\hline
+32 & 200 & 1800 &  \\
+\hline
+33 & 250 & 1600 &  \\
+\hline
+34 & 250 & 1800 &  \\
+\hline
+35 & 300 & 1600 &  \\
+\hline
+36 & 300 & 1800 &  \\
+\hline
+37 & 250 & 1800 & \multirow{2}{*}{25 stripes} \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-078(1)}
+\end{center}
+
+Figure 29 The as planned experiment setup.
+
+The multiple laser pass section will have a hatch space of $80 \mu \mathrm{m}$. The scan pattern will be bi-directional in the form shown below.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-078}
+\end{center}
+
+Figure 30 Bi-directional laser scan Pattern.
+
+This scan pattern goes from left to right, starting from the root through the head of arrow 1 in Figure 30 and then continuing into scan 2 and 3 respectively for all multiple laser passes. There were multiple laser passes but that will be discussed in future work.
+
+The speeds used for these sets of multiple beads will be done ranging from 1600 and $2600 \mathrm{~mm} / \mathrm{s}$.
+
+\subsection*{7.3 Results}
+The results from the experimental setup are discussed in this section, after which melt geometry for the numerical and experimental models are compared to see how much variation there is between the two. Figure 31(a) shows the laser glazed Invar plate while (b) shows an optical microscope image of one of the melt scans.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-079}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-079(1)}
+\end{center}
+
+(b)
+
+Figure 31 (a) Laser glazed Invar plate (b) Optical microscope image of a single melt scan on the plate.
+
+The lay out of the laser glazing of the Invar plate is as discussed in Table 12 \& Table 13 except for the positioning of the 26 stripes multiple scan which is now positioned at the bottom of the plate. The reason for the change in position was only because of change in the size of substrate plate. Another reason was mainly to centralize the melt scans on the build plate.
+
+The result for the width of the experimental analysis is the only data discussed for now because the width can be easily measured without destruction of the plate. An Image\\
+processing software (ImageJ) was used to measure the widths for the single laser scans. There is an uncertainty with whether the optical images of the sections for the single scans overlapped while taking the pictures with an optical microscope, but the overlap would be in steady-state sections of the melt pool. Each single scan was divided into five sections with a scale of $100 \mu \mathrm{m}$ being equal to 392.67 pixels.
+
+\subsection*{7.3.1 Steady State}
+The measured widths varied along the length of the melt scan. This could be attributed to a fluctuating laser input power on the plate as well as machine marks on the surface of the plate. Also, other melt pool forming factors like surface tension and Invar material properties could as well contribute to the irregularities. The mean melt pool widths for the experimental analysis are taken as the melt pool width at steady state. The steady state widths for the experimental analysis of the same process parameters used for the numerical model are presented below.
+
+Table 14: Mean values of the experimental melt pool widths.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Power (W) & Speed (mm/s) & Mean Width $(\boldsymbol{\mu m})$ & Standard Deviation \\
+\hline
+200 & 1600 & 105.1 & 6.09 \\
+\hline
+200 & 2000 & 100.8 & 6.29 \\
+\hline
+200 & 2600 & 92.5 & 4.31 \\
+\hline
+250 & 1600 & 115.6 & 5.37 \\
+\hline
+250 & 2000 & 109.7 & 5.82 \\
+\hline
+250 & 2600 & 102.9 & 6.89 \\
+\hline
+300 & 1600 & 132.2 & 8.08 \\
+\hline
+300 & 2000 & 118.2 & 6.01 \\
+\hline
+300 & 2600 & 112.3 & 7.07 \\
+\hline
+\end{tabular}
+\end{center}
+
+Table 14, listing the average width melt pool dimensions was obtained using ImageJ image processing software. Figure 32 below contain plots of melt pool widths at steady state against power and speed.
+
+As can be seen from Figure 32, (a) shows the melt pool width versus power while (b) shows the plot of width against speed. The melt pool width is seen to increase with an increase in power while the increase in speed leads to a decrease the size of melt pool width, which is the same trend seen in the numerical results.
+
+The figure below shows the plot of melt pool width from experimental analysis against linear energy density.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-081}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-081(1)}
+\end{center}
+
+(b)
+
+Figure 32 (a) A plot of experimental melt pool width at steady state versus power (b) Plot of experimental melt pool width at steady state versus speed.
+
+\section*{Exp. Width Versus LInear Energy Density}
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-082}
+\end{center}
+
+Figure 33 Plot of experimental width versus linear energy density
+
+Figure 33 shows a similar trend as can be seen from the plot of numerical width against LED. The variation in the plots of Figure 33 can be due to measurement errors as well as errors due to melt pool irregularities. These plots clearly show that the numerical prediction of melt pool behavior corresponds with the results obtained from the experiments for melt pool width.
+
+\subsection*{7.4 Comparison between Numerical and experimental results}
+Comparing these values to the widths for both the numerical analysis and experimental analysis at steady state shows a close approximation of the melt pool geometry. The table below shows the percentage difference between the numerical analysis approximation for melt pool width and the experimental analysis.
+
+Table 15: Comparison of both numerical and experimental widths.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Power & Speed & \begin{tabular}{c}
+Mean Width \\
+(Experiment) \\
+\end{tabular} & \begin{tabular}{c}
+Numerical Steady \\
+State Width \\
+\end{tabular} & \begin{tabular}{c}
+Difference \\
+$\mathbf{( \% )}$ \\
+\end{tabular} \\
+\hline
+200 & 1600 & 105.1 & 108.56 & -3.29 \\
+\hline
+200 & 2000 & 100.782 & 98.385 & +2.38 \\
+\hline
+200 & 2600 & 92.495 & 89.177 & +3.59 \\
+\hline
+250 & 1600 & 115.641 & 117.77 & +1.84 \\
+\hline
+250 & 2000 & 109.657 & 108.56 & +1.00 \\
+\hline
+250 & 2600 & 102.964 & 96.543 & +6.24 \\
+\hline
+300 & 1600 & 132.202 & 127.95 & +3.22 \\
+\hline
+300 & 2000 & 118.195 & 116.32 & +1.59 \\
+\hline
+300 & 2600 & 112.338 & 104.69 & +6.81 \\
+\hline
+\end{tabular}
+\end{center}
+
+The largest percentage difference between the numerical and experimental analysis is within approximately seven percent (7\%). A point to note from the table above is that the high percentage difference between the numerical and experimental results occurred at high speeds. This could be as a result of inconsistencies in laser beam power and speed input during the experiment as the numerical analysis simulates a continuous uninterrupted laser power and speed. Therefore, the higher the laser speed the more the inconsistency of the AM process between the numerical and experimental models. This shows that numerical models could be used to minimize cost for running actual experimental analysis by approximating the melt pool characteristics within a good range.
+
+\subsection*{7.5 Conclusion}
+Melt pool geometry formation along the scan length for the experimental analysis is seen to exhibit a similar trend with that shown in Table 15 plots for the widths in the numerical analysis. This trend is as a result of the linear relationship between melt pool dimension (depth and width) and the linear energy density. The numerical approximation of melt pool width is within seven percent (7\%) difference of the measured experimental width. This shows that numerical thermal models can be used to predict the melt pool behavior and optimize the Invar 36 AM process.
+
+\section*{8 FINAL CONCLUSION}
+The ability to predict what materials are suitable for AM is useful to save costly experimental cost. This thesis uses a numerical modeling approach to assess the feasibility of fabricating Invar 36 using an LPBF AM process. Additionally, a novel investigation into the transient effects of common scanning strategies shows the importance of considering scan strategy in process parameter development. This work contributes to the current understanding of LPBF and sets-up future work to understand additional transient effects.
+
+A three-dimensional numerical model was created to simulate the LPBF AM process of Invar 36 material. This simulation was performed at a preheat temperature of $300 \mathrm{~K}$ with varying process conditions (power and speed). An experimental analysis was completed to compare the results from the numerical model. The numerical models simulated a single laser scan length of $4 \mathrm{~mm}$ with a laser spot ize of $70 \mu \mathrm{m}$ while the experimental analysis included both single and multiple scan lengths.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-084}
+\end{center}
+
+Using Abaqus/CAE solver for the FE analysis, temperature distribution within the substrate is obtained at the selected process parameters. The results show that melt pool formation is related to the amount of energy applied to the system. Melt pool length and depths are seen to have a linear relationship with the LED while the melt pool length has a linear relationship with power and is seen to remain constant over any distance along the scan length. The melt pool dimensions for depth and width get to a steady state earlier than the length of the melt pool does. This is of vital importance for any AM process because, the longer the length it takes for the melt pool width or depth to get to steady\\
+state, the more irregularities in the fusion of repeated laser scans there would be. This could lead to porosity within the fabricated part.
+
+The melt pool properties of length, width, depth are seen to have individual characteristic behaviors during an LPDF process. The time and distance it takes for these individual properties to get to the steady state are different and as such, the total time discussed in this study for melt pool dimensions getting to steady state was for the length property. That is why the Figure 27 for the plot of distance versus the total time it takes for melt pool to get to steady state is similar to the plot of length versus LED in Figure 20.
+
+Speed as a process parameter has more effect on the formation of melt pool at the early phase of a laser scan length. Once the melt pool dimension begins to get to steady state LED effects are seen to dominate. This is same for both numerical and experimental analysis. The predictions for melt pool dimensions from the numerical analysis are seen to come to close approximation of the experimental results. These results confirm that Invar 36 could be used in an AM process for the manufacture of low production composite tooling and expose key transient conditions that are a source of variation within the LPBF AM process.
+
+\section*{9 FUTURE WORK}
+The results presented in this thesis are a preliminary study to understanding the effects of melt pool formation with respect to the applied process conditions for Invar 36. The model neglecting latent heat of fusion was selected only for simplicity. Case2 also runs at a faster rate, thus, reducing computational time. Therefore, the exclusion of LHF was only done just to give a preliminary insight into the effects (with time) the melt pool geometry has due to the prescribed process parameters.
+
+For future work, a more sophisticated numerical analysis will be proposed and then the temperature gradient will be used to study and process map the types of microstructures obtained from using different processing conditions. Also, a look at multiple scan lengths will be done to see the effects of temperature buildup within the substrate. As the first laser scan completes, the temperature in the surrounding region will have some effects to the next laser scan. Therefore, a numerical model will be used to compare the results obtained from the experimental analysis already done.
+
+The figure below shows a plot of the first and the twenty sixth laser scan lengths from the experimental analysis. As will be seen from the plot, there is an increase in melt pool width dimensions as multiple laser scans a deposited. A study will be done to know when the melt pool dimensions for a multiple scan will get to a steady state. Displayed below is a figure of a multiple laser pass and a plot of the first and last melt pool width of the multiple pass.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-087(1)}
+\end{center}
+
+Figure 34 Image of 26 laser multiple pass
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-087}
+\end{center}
+
+Figure 35 Plot of first and twenty sixth scan lengths for power 200 and speed 1800 mm/s.
+
+\section*{10 REFERENCE}
+\begin{enumerate}
+  \item Gibson, I., Rosen, D., \& Stucker, B. (2015). Additive manufacturing technologies : 3D printing, rapid prototyping, and direct digital manufacturing New York, NY : Springer, 2015; Second edition
+
+  \item C. Hull. (1986). Apparatus for production of three-dimensional object by stereolithography.(U.S.P. Office (Ed.))
+
+  \item J.J. Beaman, \& C.R. Deckard. (1990). Selective laser sintering with assisted powder handling.(Google Patents)
+
+  \item Bradley H. Jared, Miguel A. Aguilo, Lauren L. Beghini, Brad L. Boyce, BrettW. Clark, Adam Cook, et al. Additive manufacturing: Toward holistic design.
+
+  \item Thompson, S. M., Bian, L., Shamsaei, N., \& Yadollahi, A. (2015). Review: An overview of direct laser deposition for additive manufacturing; part I: Transport phenomena, modeling and diagnostics. Additive Manufacturing, 8, 36-62. doi:10.1016/j.addma.2015.07.001
+
+  \item Simchi, A. (2006). Direct laser sintering of metal powders: Mechanism, kinetics and microstructural features. Materials Science \& Engineering A, 428, 148-158.
+
+\end{enumerate}
+
+doi:10.1016/j.msea.2006.04.117
+
+\begin{enumerate}
+  \setcounter{enumi}{6}
+  \item Morey, B. (2010). Tooling it up for Composites.
+
+  \item Kassapoglou, C. (2013). Design and analysis of composite structures. [electronic resource]: With applications to aerospace structures Chichester England]: John Wiley \& Sons Inc., 2013; 2nd Ed.
+
+  \item Guillaume, C. (1920). Invar and elinvar. Nobel Lectures, Physics 1901-1921, pg. 444473.
+
+  \item Rosenberg, S. J. (1984). Nickel and its alloys.
+
+  \item Davis, J. R. (2000). Nickel, cobalt, and their alloys Materials Park, OH: ASM International, c2000.
+
+  \item Bruce Cassel, \& Kevin P. Menard. (2012). Use of the STA 8000 simultaneous thermal analyzer for melt analysis of alloys, pp. 1-4.
+
+  \item Smith, M., Guan, Z., \& Cantwell, W. J. (2013). Finite element modelling of the compressive response of lattice structures manufactured using the selective laser melting technique. International Journal of Mechanical Sciences, 67, 28-41. doi:10.1016/j.ijmecsci.2012.12.004
+
+  \item D. Rosenthal (1946). The theory of moving sources of heat and its application to metal treatments. 68 (Transactions of the American Society of Mechanical Engineers), pp.849-866.
+
+  \item S. Bontha, N.W. Klingbeil, P.A. Kobryn, and H.L. Fraser. Thermal process maps for predicting solidification microstructure in laser fabrication of thin wall structures. Journal of Materials Processing Technology, 178(1-3):135-142, 2006.
+
+  \item Srikanth Bontha, Nathan W. Klingbeil, Pamela A. Kobryn, and Hamish L. Fraser. Effects of process variables and size-scale on solidification microstructure in beambased fabrication of bulky 3-D structures. Materials Science and Engineering, 513514:311-318, July 2009.
+
+  \item R.C. Dykhuizen and D. Dobranich. Cooling rates in the LENS process. Sandia National Laboratories Internal Report, 1998.
+
+  \item R.C. Dykhuizen and D. Dobranich. Analytical thermal models for the LENSprocess. Sandia National Laboratories Internal Report, 1998.
+
+  \item Roberts, I. A., Wang, C. J., Esterlein, R., Stanford, M., \& Mynors, D. J. (2009). A three-dimensional finite element analysis of the temperature field during laser melting of metal powders in additive layer manufacturing.International Journal of Machine Tools and Manufacture, 49, 916-923. doi:10.1016/j.ijmachtools.2009.07.004
+
+  \item Riedlbauer, D., Drexler, M., Drummer, D., Steinmann, P., \& Mergheim, J. (2014). Modelling, simulation and experimental validation of heat transfer in selective laser melting of the polymeric material PA12. Computational Materials Science, 93, 239248. doi:10.1016/j.commatsci.2014.06.046
+
+  \item Manvatkar, V. D., Gokhale, A. A., Reddy, G. J., Venkataramana, A., \& De, A. (2011). Estimation of melt pool dimensions, thermal cycle, and hardness distribution in the laser-engineered net shaping process of austenitic stainless steel.
+
+  \item Manvatkar, V., De, A., \& DebRoy, T. (2014). Heat transfer and material flow during laser assisted multi-layer additive manufacturing.
+
+  \item Dai, K., \& Shaw, L. (2004). Thermal and mechanical finite element modeling of laser forming from metal and ceramic powders. Acta Materialia, 52, 69-80. doi:10.1016/j.actamat.2003.08.028
+
+  \item He, X., \& Mazumder, J. (2007). Transport phenomena during direct metal deposition. Journal of Applied Physics, 101(5), 053113-N.Pag. doi:10.1063/1.2710780
+
+  \item Qi, H., Mazumder, J., \& Ki, H. (2006). Numerical simulation of heat transfer and fluid flow in coaxial laser cladding process for direct metal deposition. Journal of Applied Physics, 100(2), 024903. doi:10.1063/1.2209807
+
+  \item Dai, D., \& Gu, D. (2014). Thermal behavior and densification mechanism during selective laser melting of copper matrix composites: Simulation and experiments. Materials and Design, 55, 482-491. doi:10.1016/j.matdes.2013.10.006
+
+  \item Qiu, C., Adkins, N. J. E., \& Attallah, M. M. (2016). Full length article: Selective laser melting of Invar 36: Microstructure and properties. Acta Materialia, 103, 382-395. doi:10.1016/j.actamat.2015.10.020
+
+  \item Harrison, N., Todd, I., \& Mumtaz, K., \href{mailto:k.mumtaz@sheffield.ac.uk}{k.mumtaz@sheffield.ac.uk}. (2017). Thermal expansion coefficients in Invar processed by selective laser melting. Journal of Materials Science, 52(17), 10517-10525. doi:10.1007/s10853-017-1169-4
+
+  \item J. Fourier, Theorie du movement de la chaleur dans les corps solides, Mem. Acad. R. Sci. Vol. 5, pp. 153-246, 1821-22.
+
+  \item D. Poulikakos. Conduction heat transfer.
+
+  \item Hou-Cheng Huang, Asif S. Usmani. Finite Element Analysis for Heat Transfer.
+
+  \item Huang, Y., Yang, L. J., Du, X. Z., \& Yang, Y. P. (2016). Finite element analysis of thermal behavior of metal powder during selective laser melting. International Journal of Thermal Sciences, 104, 146-157. doi:10.1016/j.ijthermalsci.2016.01.007
+
+  \item Fox, J., \& Beuth, J. (2013). Process mapping of transient melt pool response in wire feed E-beam additive manufacturing of ti-6Al-4V. Proceedings of the Solid Freeform Fabrication Symposium, pp. 675-683.
+
+  \item Xing, J., Sun, W., \& Rana, R. S. (2013). 3D modeling and testing of transient temperature in selective laser sintering (SLS) process. Optik - International Journal for Light and Electron Optics, 124, 301-304. doi:10.1016/j.ijleo.2011.11.064
+
+  \item Masoomi, M., Thompson, S. M., \& Shamsaei, N. (2017). Laser powder bed fusion of ti-6Al-4V parts: Thermal modeling and mechanical implications. International Journal of Machine Tools and Manufacture, 118-119, 73-90.
+
+  \item Sheridan, L. C. (2016). An adapted approach to process mapping across alloy systems and additive manufacturing processes.
+
+  \item Davis, J. E. (2010). Effect of free-edges on melt pool geometry and solidification microstructure in beam-based fabrication methods. [electronic resource] Dayton, Ohio: Wright State University, 2010.
+
+  \item Flannery, J. W., \& Witherell, C. E. (1964). Welding 3 1/2 and 9 per cent nickel steels and 36 per cent nickel-iron alloy for cryogenic service. Materials Research \& Standards, 4, 533-539.
+
+  \item Williams, J. D., \& Deckard, C. R. (1998). Advances in modeling the effects of selected parameters on the SLS process. Rapid Prototyping Journal, (2), 90.Doi: 10.1108/13552549810210257.
+
+  \item Monzon, M. D., Ortega, Z., Martinez, A., \& Ortega, F. (2015). Standardization in additive manufacturing: Activities carried out by international organizations and projects.
+
+  \item Kontinos, D. A., \& Ames Research Center. (1997). Steady-state and transient boundary element methods for coupled heat conduction. Moffett Field, California: National Aeronautics and Space Administration, Ames Research Center.
+
+  \item Li, Y. G, Li, N. Y, \& Gao, J. (2014). Tooling design and microwave curing technologies for the manufacturing of fiber-reinforced polymer composites in aerospace applications.
+
+\end{enumerate}
+
+\section*{APPENDIX}
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-093}
+\end{center}
+
+Figure I: Single bead at power 200W, speed $1600 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-094}
+\end{center}
+
+Figure II: Single bead at power $200 \mathrm{~W}$, speed $2000 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-095}
+\end{center}
+
+Figure III: Single bead at power $200 \mathrm{~W}$, speed $2600 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-096}
+\end{center}
+
+Figure IV: Single bead at power $250 \mathrm{~W}$, speed $1600 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-097}
+\end{center}
+
+Figure V: Single bead at power $250 \mathrm{~W}$, speed $2000 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-098}
+\end{center}
+
+Figure VI: Single bead at power $250 \mathrm{~W}$, speed $2600 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-099}
+\end{center}
+
+Figure VII: Single bead at power 300W, speed 1600mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-100}
+\end{center}
+
+Figure VIII: Single bead at power 300W, speed 2000mm/s
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-101}
+\end{center}
+
+Figure IX: Single bead at power $300 \mathrm{~W}$, speed $2600 \mathrm{~mm} / \mathrm{s}$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_cd1e96b111daa6d49ef1g-102}
+\end{center}
+
+Figure X: Multiple beads (26 passes) at power $250 \mathrm{~W}$, speed $1800 \mathrm{~mm} / \mathrm{s}$
+
+
+\end{document}

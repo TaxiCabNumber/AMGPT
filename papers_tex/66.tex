@@ -1,0 +1,373 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+
+\title{Laser additive manufacturing of $\mathrm{Zn}-2 \mathrm{Al}$ part for bone repair: Formability, microstructure and properties }
+
+\author{}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\DeclareUnicodeCharacter{0131}{$\imath$}
+
+\begin{document}
+\maketitle
+\includegraphics[max width=\textwidth]{2024_03_10_21b341f35c63762de618g-01} \\
+ Fangwei Qi ${ }^{a}$ \\
+ a Jiangxi University of Science and Technology, Ganzhou 341000, China \\
+ b State Key Laboratory of High Performance Complex Manufacturing, Central South University, Changsha 410083, China \\
+ ' Shenzhen Institute of Information Technology, Shenzhen 518172, China \\
+ ${ }^{\mathrm{d}}$ The Key Laboratory of Carcinogenesis and Cancer Invasion of the Chinese Ministry of Education, Cancer Research Institute and School of Basic Medical \\
+ Sciences, Central South University, Changsha, 410078, China\\
+\}
+
+\section*{A R T I C L E I N F O}
+\section*{Article history:}
+Received 16 April 2019
+
+Received in revised form 18 May 2019
+
+Accepted 23 May 2019
+
+Available online 25 May 2019
+
+\section*{Keywords:}
+Laser additive manufacturing
+
+Zn alloys
+
+Mechanical properties
+
+Degradation rate
+
+Biocompability
+
+\begin{abstract}
+A B S T R A C T Zinc ( $\mathrm{Zn}$ ) alloys are promising bone repair materials due to their inherent degradability, favorable mechanical property and biocompatibility. In this investigation, laser powder bed fusion (LPBF) known as a representative additive manufacturing technique was applied to fabricate $\mathrm{Zn}-2 \mathrm{Al}$ (wt.\%) part for bone repair application. A low energy density $\left(E_{V}\right)$ led to the formation of pores and resultant insufficient densification rate due to the high liquid viscosity within the molten pool. In contrast, a high $E_{v}$ caused the evaporation of $\mathrm{Zn}$ powder and resultant failure of LPBF. With $E_{v}$ increasing, the obtained grains and the precipitated lamellar eutectic structure contained $\eta-\mathrm{Zn}$ and $\alpha-\mathrm{Al}$ phase became coarsened, which could be attributed to the enhanced heat accumulation and consequently decreased cooling rate. At optimized $E_{v}$ of $114.28 \mathrm{~J} / \mathrm{mm}^{3}$, fully dense $\mathrm{Zn}-2 \mathrm{Al}$ part with a densification rate of $98.3 \pm 1.4 \%$ was achieved, which exhibited an optimal hardness of $64.5 \pm 1.8 \mathrm{Hv}$, tensile strength of $192.2 \pm 5.4 \mathrm{MPa}$ and a moderate corrosion rate of $0.14 \mathrm{~mm} /$ year. In addition, in vitro cell tests confirmed its good biocompability. This study indicated that LPBF processed $\mathrm{Zn}-2 \mathrm{Al}$ part was a potential material for bone repair.
+\end{abstract}
+
+(C) 2019 Elsevier B.V. All rights reserved.
+
+\section*{1. Introduction}
+Zinc (Zn) alloy has recently received extensive attention in the field of bone repair, due to their natural degradability, good mechanical properties and favorable biocompatibility [1-3]. As a degradable metal, $\mathrm{Zn}$ alloy not only provides more stable mechanical support than bioceramics and polymers as implanted in vivo, but also gradually degrades until it is completely absorbed, subtly meeting the clinical needs as a temporary substitute [4]. Meanwhile, $\mathrm{Zn}$ is an essential nutrient element with a daily intake of $15 \mathrm{mg}$ for adults [5]. It participates in a series of physiological reactions. Previously, considerable researchers have confirmed that $\mathrm{Zn}$ alloy has good biocompatibility through in vivo and in vitro experiments [6-8].
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+** Corresponding author
+
+E-mail addresses: \href{mailto:yangyouwen@csu.edu.cn}{yangyouwen@csu.edu.cn} (Y. Yang), \href{mailto:shuping@csu.edu.cn}{shuping@csu.edu.cn} (S. Peng).
+}
+
+Despite the above advantages of $\mathrm{Zn}$ alloy, the fabrication of $\mathrm{Zn}$ bone implant is still a great challenge at present. $\mathrm{Zn}$ alloy has poor process ability at room temperature because of its hexagonal-close packed configuration, thus resulting in low efficiency and high cost in the traditional process technologies such as casting, rolling and extrusion [9]. On the other hand, bone implants generally require personalized shapes to reduce excessive bone removal during bone transplantation, as well as porous internal structure to provide necessary space for bone tissue growth [10,11]. Unfortunately, traditional process technologies mentioned above are unsuitable for fabricating parts with complicate structure. For instance, casting is usually applied to fabricate flat plates and thin-walled cylindrical tubes, but not appropriate for generating parts with porous structure [2]. Therefore, it is necessary to explore another processing technique to supersede traditional method for fabricating $\mathrm{Zn}$ bone implants.
+
+Laser powder bed fusion (LPBF) is an advanced processing technique in which metal powder is fully melted under the irradiation of high-energy laser beam and then solidifies to obtain\\
+three dimensional parts [12-14]. As a typical additive manufacturing technology, LPBF is able to precisely control the external shape and internal structure of as-built parts, so as to meet the personalization requirement for bone implants [15,16]. Meanwhile, it refers to a rapid solidification process [17]. A fact is that the formed micro-molten pools during LPBF can quickly dissipate heat through the underlying metal substrate, thus obtaining an extreme high cooling rate [18]. Such a rapid solidification is believed to facilitate the refinement and homogenization of microstructure, thus obtaining superior mechanical property [19-21]. However, it is prone to suffer from instability of the molten pool because of its full melting mechanism and a rapid solidification nature [12]. Several typical forming deficiencies, such as shrinkage, pores and cracks, tend to occur during such a rapid liquid/solid transformation [22,23]. On the other hand, it is also known as a nonequilibrium process, thus usually experiencing an uncontrollable development of microstructure. Till now, LPBF has been successfully used to fabricate Ti based scaffolds [24-26], 316L steel implants [27] and CoCr parts [28], and has shown favorable formability. Nevertheless, to the best of our knowledge, there is few literature regarding LPBF of Zn alloy parts for bone repair application, although LPBF of pure Zn have been reported by a few of researches [29,30].
+
+In this work, LPBF was used to fabricate $\mathrm{Zn}-2 \mathrm{Al}$ (wt.\%) part. $\mathrm{Zn}-\mathrm{Al}$ alloy was selected in consideration of its favorable mechanical properties. The formation quality, microstructural developments, as well as mechanical properties at various processing parameters were studied in-depth aiming to establish a relationship among them. The influence mechanism of processing conditions on microstructural characteristics and mechanical properties was clarified. Besides, the degradation behavior and biocompatibility were also investigated aiming to obtain a comprehensive assessment of its potential for bone repair application.
+
+\section*{2. Material and methods}
+\subsection*{2.1. Material and LPBF process}
+Spherical gas atomized $\mathrm{Zn}-2 \mathrm{Al}$ powder with a particle size ranging from 20 to $45 \mu \mathrm{m}$ was used in this investigation. A set of LPBF equipment, which mainly consisted of a fiber laser (maximum power $\sim 500 \mathrm{~W}$ ), a scanning galvanometer, a building platform and an automatic control system, was used to perform the experiments. An argon atmosphere with oxygen concentration below $1 \mathrm{ppm}$ was provided during LPBF using a gas protection system. A standard alternating $x / y$ raster strategy which directionally scanned in $x$ direction and turned $90^{\circ}$ in next layer was selected for the scanning paths. This scanning strategy could enhance the uniform shrinkage during the rapid cooling process, further alleviate the residual stress $[31,32]$.
+
+\subsection*{2.2. Microstructural characterization and mechanical tests}
+Surface morphology and microstructure of the LPBF processed part were observed using a scanning electron microscopy (SEM, EVO 18, Zeiss, Germany) combined with an energy dispersive spectroscopy (EDS, X-Max 20, Oxford instruments, UK). Phase composition was analyzed using an X-ray diffraction (XRD, D8 Advance, Karlsruhe, Germany) with $\mathrm{Cu} \mathrm{K} \alpha$ radiation.
+
+Tensile tests were performed on a testing machine (Metes industrial systems Co. Ltd., China) according to ASTM-E8-04. Indentation tests were performed using a microhardness tester (Beijing TIME High Technology Co. Ltd., China).
+
+\subsection*{2.3. Electrochemical experiments and immersion tests}
+Electrochemical tests were carried out utilizing the electrochemical equipment (CHI604D, CH Instruments Ins., China). The working electrode, counter electrode and reference electrode corresponded to the samples, the platinum sheet and $\mathrm{Ag} / \mathrm{AgCl}$ electrode, respectively. Simulated body fluids $\left(\mathrm{SBF}, 37^{\circ} \mathrm{C}\right)$ were used as electrolytic solution. The samples were firstly tested to achieve the open circuit potential (OCP). Then the Tafel curves were obtained within the scope of $\mathrm{OCP} \pm 300 \mathrm{mV}$.
+
+Immersion tests were used to investigate the corrosion behavior. Samples were removed from SBF after soaking in SBF for 14 days. The weight loss was obtained after washing the degradation product. The degradation rate was obtained by:
+
+$C=W /(D A t)$
+
+here, $C$ is the degradation rate, $W$ is the weight loss, $D$ is standard density, $\mathrm{A}$ is exposure area, $t$ is immersion time. In addition, the corrosion surfaces were observed using SEM.
+
+\subsection*{2.4. Cytotoxicity}
+MG 63 cells were used to evaluate the cytotoxicity. Dulbecco's modified Eagle medium supplemented with $10 \%$ fetal bovine serum, $100 \mathrm{U} / \mathrm{mL}$ of penicillin and $100 \mathrm{mg} / \mathrm{mL}$ of streptomycin was selected as culture medium. The extract of $\mathrm{Zn}-2 \mathrm{Al}$ was prepared by soaking $\mathrm{Zn}-2 \mathrm{Al}$ sample into culture medium for $72 \mathrm{~h}$ with an exposure area to volume of $1.25 \mathrm{~cm}^{2} / \mathrm{mL}$. The prepared MG 63 cells were cultured in the extract of Zn-2Al. After incubating for 1, 4 and 7 days, the cell viability was detected using a Counting Kit-8 (CCK8). Besides, the cells incubating for 1,4 and 7 days were observed utilizing a microscopy (BX60, Olympus Co., Japan), which were stained by Calcein-AM and Ethidium homodimer-1 reagents.
+
+\subsection*{2.5. Statistical analysis}
+All tests were repeated at least three times, including mechanical tests, immersion tests and electrochemical tests. Student's $t-$ test was used to analyze the significance. A $p$-value $<0.05$ was considered to have significant differences.
+
+\section*{3. Results and discussion}
+\subsection*{3.1. Formability}
+In this study, 24 samples were built for processing parameter optimization during the whole experiment. The laser power $(P)$ varied from $60 \mathrm{~W}$ to $160 \mathrm{~W}$ with an interval of $20 \mathrm{~W}$. The scanning velocity $(v)$ varied from $200 \mathrm{~mm} / \mathrm{s}$ to $500 \mathrm{~mm} / \mathrm{s}$ with an interval of $100 \mathrm{~mm} / \mathrm{s}$, while the hatching space $(h)$ was determined at $70 \mu \mathrm{m}$. The layer thickness $(T)$ was determined at $50 \mu \mathrm{m}$. Here, volume energy density $\left(E_{v}\right)$ was introduced to determine the laser energy input per volume, which was calculated by:
+
+$E_{v}=P /(h T v)$
+
+According to the formability of as-built parts, the whole LPBF processing map was divided into four regions marked with varied symbols, as depicted in Fig. 1.
+
+In zone I, the combination of fast $v$ and low $P$ caused too low an $E_{v}$ below $45.71 \mathrm{~J} / \mathrm{mm}^{3}$, resulting in loose surface without any continuous tracks. In zone II, $E_{v}$ was elevated to the range between 57.14 and $71.42 \mathrm{~J} / \mathrm{mm}^{3}$, obtaining obvious scanning tracks with a large amount of coarsened balls on surface. It was believed that the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_21b341f35c63762de618g-03}
+\end{center}
+
+Fig. 1. The processing map of LPBF experiments was obtained within the scope of $P 60-160 \mathrm{~W}$, and $v 200-500 \mathrm{~mm} / \mathrm{s}$. The representative surface morphology was obtained using SEM at low magnification.
+
+$v$ were still somewhat high for corresponding $P$, which influenced the stability of molten pool [33]. In this case, the molten pools would be governed by the thermal capillarity, and tend to gather into small balls so as to reduce the surface free energy [34]. In zone III, $E_{v}$ was further increased to the range between $76.19 \mathrm{~J} / \mathrm{mm}^{3}$ and $133.33 \mathrm{~J} / \mathrm{mm}^{3}$. As a result, continuous and smooth tracks were achieved, which was typical morphologies obtained by multi-trace melting and subsequent solidification. As for zone IV, the cooperation of low $v$ and high $P$ caused high energy inputs with $E_{v}$ above $152.38 \mathrm{~J} / \mathrm{mm}^{3}$, resulting in serious evaporation of the powders. The $\mathrm{Zn}$ powders were easy to gasify due to their low boiling point. The evaporated powder would expand rapidly and exert a high recoil pressure on the molten pool [29]. Consequently, the surrounding unmelted powder would be blew away and caused a failure of LPBF process. Previously, some researchers had designed a gas circulation system to reduce the adverse effect of $\mathrm{Zn}$ evaporation on its formability [29].
+
+Basing on above experimental results, four typical $E_{v}$ from zone III were used to build part with a size of $8 \times 8 \times 12 \mathrm{~mm}^{3}$, aiming to further investigate the effect of $E_{v}$ on formability. The as-built part was machined by electro spark wire-electrode cutting, and polished by metallographic sandpaper. Then the cross-sections were observed by SEM, with results presented in Fig. 2. Meanwhile, the densification rates were analyzed by measuring the porosity (Fig. 2e). At a low $E_{v}$ of $76.19 \mathrm{~J} / \mathrm{mm}^{3}$, quite a number of pores were presented on the cross-section (Fig. 2a), leading to a low densification rate of $79.9 \pm 5.1 \%$. With $E_{v}$ rising to $95.24 \mathrm{~J} / \mathrm{mm}^{3}$, the residual pores observed on cross-section were considerable reduced with very small size, thus enhancing the densification rate to $95.5 \pm 2.0 \%$ (Fig. 2b). At an elevated $E_{v}$ of $114.28 \mathrm{~J} / \mathrm{mm}^{3}$, near-full dense crosssection without obvious pores were obtained (Fig. 2c), which resulted in a high densification rate to $98.3 \pm 1.4 \%$. Nevertheless, as $E_{v}$ continuously increased to $133.33 \mathrm{~J} / \mathrm{mm}^{3}$, several pores with keyhole-shape were observed on cross-section (Fig. 2d), which reduced the densification rate to $94.5 \pm 3.6 \%$.\\
+In general, the densification rate of LPBF processed part was determined by the dynamic behavior of the molten pool. On one hand, the formed pores at low $E_{v}$ was due to the relative high dynamic viscosity $(\mu)$ of the liquid within molten pool, which could be calculated by Ref. [35]:
+
+$\mu=\frac{16}{15} \sqrt{\frac{m}{k T}} \gamma$
+
+here, $m$ is atomic mass, $T$ is the temperature of liquid pool, $k$ is the Boltzmann constant and $\gamma$ is the surface tension. According to equation (3), a low $E_{v}$ with resultantly low $T$ caused a high $\mu$ in the molten pool. In this condition, the liquid flow and spread would be significantly limited, thus leaving a large amount of unfilled voids. In addition, as a low $E_{v}$ was applied, particles with large size might not melt sufficiently. Therefore, the remained particles would further weaken the flow dynamics of molten pool, which also contributed to the formation of pores in built parts. On the other hand, the pores obtained at relatively high $E_{v}$ were believed to be caused by the evaporation of $\mathrm{Zn}$. A high laser energy input caused severe evaporation, which was confirmed by the large amount of grey smoke observed during the LPBF experiments. Once gasification occurred, a large number of bubbles would form in the molten pool and grew up gradually during the movement to the upper of the molten pool. Then the molten pool experienced an extremely fast cooling process. As a result, some bubbles could not escape in such a short time, thus leaving keyhole-shaped voids in as-built parts. The similar phenomenon and corresponding formation mechanism had been reported by other literature [36].
+
+\subsection*{3.2. Microstructure and phase composition}
+The microstructure of LPBF processed part was investigated using SEM at high magnification combined with EDS, with results shown in Fig. 3a. Meanwhile, the size distribution of grain size at\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_21b341f35c63762de618g-04}
+
+Fig. 2. Cross-sections of the as-built parts obtained at four typical $E_{v}$ of (a) $76.19 \mathrm{~J} / \mathrm{mm}^{3}$, (b) $95.24 \mathrm{~J} / \mathrm{mm}^{3}$, (c) $114.28 \mathrm{~J} / \mathrm{mm}^{3}$, and (d) $133.33 \mathrm{~J} / \mathrm{mm}^{3}$. (e) The relationship between $E_{v}$ and the corresponding densification rate. $n=3,{ }^{*} p<0.05$.
+
+various $E_{v}$ was exhibited in Fig. 3b. Image Pro 6.0 software was used to measure the grain size of at least 50 grains for each sample. The calculated mean grain size was shown in Fig. 3c. Clearly, fine columnar grains with a mean size of $2.21 \mu \mathrm{m}$ were achieved at a low $E_{v}$ of $76.19 \mathrm{~J} / \mathrm{mm}^{3}$. As $E_{v}$ increased to $95.24 \mathrm{~J} / \mathrm{mm}^{3}$, the grains coarsened to some extent $(4.49 \mu \mathrm{m})$. Some second phases with lamellar characteristic were uniformly precipitated around the grains. At an $E_{v}$ of $114.28 \mathrm{~J} / \mathrm{mm}^{3}$, the average grain size $(5.53 \mu \mathrm{m})$ and the lamellar second phases were further increased. EDS indicated that the lamellar second phase precipitated at grain boundaries was rich in $\mathrm{Al}(6.27 \mathrm{wt} \%$ ). In addition, a small amount of $\mathrm{Al}(1.80 \mathrm{wt} \%$ ) dissolved in the grain. With $E_{v}$ further enhancing to $133.33 \mathrm{~J} / \mathrm{mm}^{3}$, considerably coarsened grains with a mean size of $6.62 \mu \mathrm{m}$ formed.
+
+In present study, the obtained crystalline structure was closely related with the heat behavior during LPBF. At a low $E_{v}$, the temperature of molten pool was relatively low, resulting in a relative fast cooling rate by heat conduction. The growth of grains would be effectively interrupted by the rapidly advanced solidliquid interface, thus obtaining relatively fine grains. Meanwhile, the $\mathrm{Al}$ element dissolved in the molten pool would be captured by so called solute "capture effect" [37]. Particularly, the solute distribution coefficient $k_{v}$ is determined by Ref. [38]:
+
+$k_{v}=\left(k_{e}+R_{i} / V_{d}\right) /\left(1+R_{i} / V_{d}\right)$
+
+here $k_{e}$ is the equilibrium segregation coefficient, $R_{i}$ is solid/liquid interface rate, $V_{d}$ is the diffusion rate of solute atom. Basing on Eq. (4), a high $R_{i}$ resulted in a considerably larger $k_{v}$ than $k_{e}$. That was to say, a large amount of $\mathrm{Al}$ would be captured and dissolve in matrix. Thus, only a small amount of the Al-contained phase precipitated at\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_21b341f35c63762de618g-05(1)}
+
+Fig. 3. (a) Cross-sections of the as-built parts obtained at four typical $E_{v}$ from zone III and the EDS results of point 1 and point 2 as marked by intersection symbols. (b) The distribution of grain size and (c) average grain size. $n=50,{ }^{*} p<0.05$.
+
+the grain boundaries at low $E_{v}$. With $E_{v}$ increasing, the heat accumulation within the molten pool was enhanced. In this condition, the accumulated heat was difficult to dissipate, thereby obtaining a reduced cooling rate [19]. An extended cooling period was believed to provide improved kinetics qualifications for grain growth, thus leading coarsened grains. Meanwhile, the "capture effect" for Al element was also weakened, thus more $\mathrm{Al}$ atom precipitated at grain boundaries. Besides, the loss of alloying element during LPBF should not be ignored. For $\mathrm{Zn}-\mathrm{Al}$ alloy, $\mathrm{Zn}$ element with lower gasification point was more prone to be burn out at relative high $E_{v}$, which also contributed to a more precipitation of $\mathrm{Al}$ in matrix.
+
+The phase composition was investigated using XRD, with achieved diffraction patterns shown in Fig. 4. It could be seen that Zn$2 \mathrm{Al}$ part mainly contained $\eta-\mathrm{Zn}$ and $\alpha-\mathrm{Al}$ phase. During the solidification process, ternary eutectic reaction occurred at $616 \mathrm{~K}$ : Liquid $\rightarrow \eta$ - Zn $+\beta$-ZnAl [39]. Subsequently, the eutectoid reaction occurred at $537 \mathrm{~K}: \beta-\mathrm{ZnAl} \rightarrow \eta-\mathrm{Zn}+\alpha-\mathrm{Al}[40]$. Thus, lamellar eutectic structure contained $\eta$ - $\mathrm{Zn}$ and $\alpha$-Al was obtained in the LPBF processed $\mathrm{Zn}-2 \mathrm{Al}$ parts, as presented in Fig. 3a.
+
+\subsection*{3.3. Mechanical properties}
+The hardness of the as-built parts prepared at four typical $E_{v}$ was obtained by indentation tests, with results presented in Fig. 5a. Fifteen random points were measured in order to obtain the averages. The measured hardness fluctuated in a small range for all samples, which might be due to the varied microstructure. In
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_21b341f35c63762de618g-05}
+\end{center}
+
+Fig. 4. The XRD spectrum of as-built Zn-Al parts at different $E_{v}$.
+
+general, the hardness gradually increased to $64.5 \pm 1.8 \mathrm{Hv}$ with $E_{v}$ increasing from $76.19 \mathrm{~J} / \mathrm{mm}^{3}$ to $114.28 \mathrm{~J} / \mathrm{mm}^{3}$, which was mainly ascribed to the increased densification rate. Nevertheless, the hardness was reduced to $56.5 \pm 3.3 \mathrm{Hv}$ with $E_{v}$ increasing to $133.33 \mathrm{~J} / \mathrm{mm}^{3}$. Significantly, the LPBF processed $\mathrm{Zn}-2 \mathrm{Al}$ part built at a moderate $E_{v}$ exhibited higher hardness comparing with casted $\mathrm{Zn}-2 \mathrm{Al}$ part, which had a hardness of $58.4 \mathrm{Hv}$ [41].\\
+a
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_21b341f35c63762de618g-06(2)}
+\end{center}
+
+b
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_21b341f35c63762de618g-06(1)}
+\end{center}
+
+Fig. 5. The (a) hardness and (b) tensile properties of Zn-2Al parts.
+
+a
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_21b341f35c63762de618g-06(3)}
+\end{center}
+
+b
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_21b341f35c63762de618g-06}
+\end{center}
+
+Fig. 6. (a) The obtained potential dynamic polarization curves by electrochemical tests; (b) The derived corrosion potentials and corrosion current densities. The electrochemical parameters of Fe and ZK60 were obtained from Refs. [49,52].
+
+The improved hardness was closely related to the processing characteristic of LPBF. As a rapid solidification process, LPBF obtained extreme fine grains, with average grain size ranging from 2.21 to $6.62 \mu \mathrm{m}$. As a comparison, casted $\mathrm{Zn}-2 \mathrm{Al}$ part had a much larger size of $\sim 100 \mu \mathrm{m}$. According to the Hall-Petch theory, refined grains improved the hardness by means of fine grain strengthening effect [42]. Meanwhile, LPBF extended the solid solution of Al in Zn matrix. The dissolved $\mathrm{Al}$ atom could improve the dislocation density in grains. Moreover, LPBF favored for the homogeneous distribution of precipitated phase in the matrix, which was also beneficial to improve the hardness.
+
+The tensile properties of as-built parts were also obtained, with results shown in Fig. 5b. Similarly, with $E_{v}$ increasing to $114.28 \mathrm{~J} / \mathrm{mm}^{3}$, the tensile properties, including the ultimate strength, yield strength and the elongation were enhanced. In detail, the yield strength (YS) and ultimate strength (UTS) increased gradually from $121.4 \pm 6.6 \mathrm{MPa}$ and $170.5 \pm 6.2 \mathrm{MPa}$ at $76.19 \mathrm{~J} / \mathrm{mm}^{3}$ to $141.7 \pm 3.7 \mathrm{MPa}$ and $192.2 \pm 5.4 \mathrm{MPa}$ at $114.28 \mathrm{~J} / \mathrm{mm}^{3}$. And the elongation had a slight raise from $9.7 \pm 3.6 \%$ to $11.7 \pm 1.9 \%$. As $E_{v}$ further increasing to $133.33 \mathrm{~J} / \mathrm{mm}^{3}$, the tensile properties were reduced slightly. Clearly, the densification rate of as-built parts should be the major factor that influenced their tensile properties. Besides, the effect of the lamellar eutectic phase on tensile properties should also be taken into consideration. Usually, fine and uniformly dispersed second phase could enhance mechanical properties by second phase strengthening effect [43]. Previously, Wen et al. had successfully applied LPBF to build pure $\mathrm{Zn}$ parts, which exhibited a hardness of $42 \mathrm{Hv}$, yield strength of $114 \mathrm{MPa}$, ultimate strength of $134 \mathrm{MPa}$ [44]. In comparison, LPBF processed $\mathrm{Zn}-\mathrm{Al}$ alloy presented in this study, and $\mathrm{Zn}-\mathrm{Mg}$ alloy (177.2 Hv, 152.4 MPa, $222.3 \mathrm{MPa}$ ), exhibited better mechanical properties [3]. It was believed that the alloying treatment caused solution strengthening and second phase strengthening, thus resulting in improved mechanical properties [45].
+
+\subsection*{3.4. Degradation behavior}
+For LPBF processed part, the densification rate directly affected its degradation behavior. Therefore, three parts built at $E_{v}$ of $95.24 \mathrm{~J} /$\\
+$\mathrm{mm}^{3}, 114.28 \mathrm{~J} / \mathrm{mm}^{3}$ and $133.33 \mathrm{~J} / \mathrm{mm}^{3}$, which possessed relatively high densification rate, were chosen to further evaluate their degradation behavior. The potential dynamic polarization curves obtained by electrochemical tests were depicted in Fig. 6a. The corrosion potentials ( $E_{\text {corr }}$ ) and corrosion current densities $\left(i_{\text {corr }}\right.$ ) calculated from the Tafel Area were showed in Fig. 6b. It was revealed that the $E_{\text {corr }}$ of LPBF processed $\mathrm{Zn}-\mathrm{Al}$ parts ranged from -1.067 to $-1.053 \mathrm{~V}$. The corresponding $i_{\text {corr }}$ ranged from 7.07 to $11.75 \mu \mathrm{A} / \mathrm{cm}^{2}$. Such a small variation of $E_{\text {corr }}$ and $i_{\text {corr }}$ was due to the varied microstructure obtained at different $E_{\gamma}$. Previous studies proved that the elemental composition, second phase distribution, and grain size significantly affected the corrosion properties [46-48]. It should be stated that the $E_{\text {corr }}$ represented the tendency of electrochemical corrosion. A low $E_{\text {corr }}$ corresponded to high electrochemical inertia. Meanwhile, the $i_{\text {corr }}$ was proportional to the electrochemical corrosion rate. Up to now, two other degradable metals, including Fe alloy and Mg alloy, had been extensively studied for bone repair applications [49-52]. Nevertheless, Mg alloy exhibited too low an $E_{\text {corr }}$, whereas $F e$ alloy exhibited a relative high $E_{\text {corr, }}$ as shown in Fig. 6b. From the perspective of electrochemical corrosion dynamics, Zn alloy should exhibit a degradation rate between $\mathrm{Fe}$ alloy and $\mathrm{Mg}$ alloy.
+
+The degradation behavior was also investigated by immersion tests. The degradation rate was obtained by measuring the weight loss, with results presented in Fig. 7a. The LPBF processed Zn-Al parts exhibited corrosion rates in the range of $0.13-0.16 \mathrm{~mm} /$ year. As a comparison, $\mathrm{Mg}$ alloy exhibited too fast a degradation rate of $\sim 1.58 \mathrm{~mm} /$ year [49], whereas Fe alloy exhibited too slow a degradation rate of $0.08 \mathrm{~mm} /$ year [52]. Usually, the degradation rate of artificial bone implants needs to match the growth rate of human bone tissue. It was well known that the healing period of human bone ranged from 3 to 12 months, which usually demand the degradation rate of artificial bone implant to be around $0.2 \mathrm{~mm} /$ year [53,54]. From this view, Zn alloy possessed a more suitable\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_21b341f35c63762de618g-07}
+
+Fig. 7. (a) The degradation rate basing on immersion tests. The degradation rate of Fe and ZK60 was obtained from Refs. [49,52]. (b) The corrosion surface and (c) EDS results of the surface area as marked by red box in Fig. 7b. The scale bar was $20 \mu \mathrm{m}$ for all the images in Fig. 7b. (For interpretation of the references to colour in this figure legend, the reader is referred to the Web version of this article.)\\
+a
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_21b341f35c63762de618g-08(1)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_21b341f35c63762de618g-08}
+\end{center}
+
+Fig. 8. (a) CCK-8 results of cells incubated in $100 \%$ and $50 \%$ extracts of as-built Zn-2Al part. Data was the percentage of the control group. (b) The morphology of cells after culture in $100 \%$ extracts for 1,4 and 7 days. The scale bar was $100 \mu \mathrm{m}$ for all the images.
+
+degradation rate, as compared with the other two kinds of biodegradable metals mentioned above.
+
+The surface morphology after soaking in SBF for 14 days was presented in Fig. 7b. In general, no obvious corrosion pits or holes presented on the surface, which revealed that the samples experienced relatively slight and uniform corrosion. Particularly, the obvious cracks were believed to be caused by drying and vacuum evacuation before SEM observation. Besides, a small amount of corrosion products presented on the surface. EDS analysis demonstrated that these spherical corrosion products mainly contained $\mathrm{Zn}, \mathrm{C}$ and $\mathrm{O}$ elements, indicating that $\mathrm{Zn}$ oxide, $\mathrm{Zn}$ hydroxy carbonate formed on the surface, which was consistent with previous study [3]. In addition, a small amount of hydroxyapatite might be deposited on the surface, which can be confirmed by the detection of a few of $\mathrm{Ca}$ and $\mathrm{P}$ elements.
+
+\subsection*{3.5. Biocompatibility}
+The part built at $E_{v}$ of $114.28 \mathrm{~J} / \mathrm{mm}^{3}$ with optimal mechanical property was used to evaluate the cytotoxicity using CCK-8 assay, with results shown in Fig. 8a. 100\% extracts reduced the cell viability to $67.5 \pm 5.3 \%$ after 1 day culture, indicating its negative effect on cell growth due to the high ion concentration. With culture time extending to 7 days, the cell viability gradually increased to $85.6 \pm 3.4 \%$. In fact, the blood in the human body has been circulating. The local high ion concentration can be reduced by blood flow [55,56]. From this point of view, 100\% concentration extract do not reflect the real implantation environment. Therefore, $50 \%$ concentration extract was also used to evaluate its cytotoxicity. Results shown that the cell viability was $81.4 \pm 3.2 \%$ at day 1 , $89.5 \pm 2.5 \%$ at day 4 , and $92.3 \pm 2.6 \%$ at day 7 , which was considerably higher as compared with that obtained from $100 \%$ extract. The cell morphology culture in $100 \%$ extract was shown in Fig. $8 \mathrm{~b}$. It could be observed that with the prolongation of culture time, the number of cells increased significantly. After 4, 7 days of culture, the cells showed typical spindle shape and began to form extended filopodia. These results indicated that $\mathrm{Zn}-2 \mathrm{Al}$ part had good biocompatibility.
+
+\section*{4. Conclusions}
+In present study, $\mathrm{Zn}-2 \mathrm{Al}$ part was successfully fabricated using LPBF process. The microstructure evolution, mechanical properties, as well as degradation behavior were investigated systematically. The conclusions were draw as follows:
+
+(1) The densification rate of LPBF processed $\mathrm{Zn}-2 \mathrm{Al}$ part mainly depended on the utilized $E_{v}$. A low $E_{v}$ caused the formation of pores because of the relative high liquid viscosity, whereas a high $E_{v}$ caused the gasification of powder and resultant failure of LPBF. Dense part with a densification rate of $98.3 \%$ was achieved using a proper $E_{v}$ of $114.28 \mathrm{~J} / \mathrm{mm}^{3}$.
+
+(2) As $E_{v}$ elevating from $76.19 \mathrm{~J} / \mathrm{mm}^{3}$ to $133.33 \mathrm{~J} / \mathrm{mm}^{3}$, the obtained average grains coarsened gradually from $2.21 \mu \mathrm{m}$ to $6.62 \mu \mathrm{m}$, due to the enhanced heat accumulation and subsequently decreased cooling rate. Meanwhile, the lamellar eutectic structure contained $\eta-\mathrm{Zn}$ and $\alpha-\mathrm{Al}$ phase, increased gradually because of the weakened solute "capture effect".
+
+(3) $\mathrm{Zn}-2 \mathrm{Al}$ part obtained at $E_{v}$ of $114.28 \mathrm{~J} / \mathrm{mm}^{3}$ exhibited optimal mechanical properties, with a hardness of $64.5 \pm 1.8 \mathrm{Hv}$, a tensile strength of $192.2 \pm 5.4 \mathrm{Mpa}$. It also exhibited a proper degradation rate of $0.14 \mathrm{~mm} /$ year. In vitro cell experiments confirmed its good biocompability. All these positive results indicated that LPBF processed $\mathrm{Zn}-2 \mathrm{Al}$ part was a promising bone implant material.
+
+\section*{Acknowledgements}
+This study was supported by the following funds: (1) The Natural Science Foundation of China (81871494, 81871498, 51705540); (2) Hunan Provincial Natural Science Foundation of China (2018JJ3671); (3)Guangdong Province Higher Vocational Colleges and Schools Pearl River Scholar Funded Scheme(2018) (4) The Open-End Fund for the Valuable and Precision Instruments of Central South University; (5) The Project of Hunan Provincial Science and Technology Plan (2017RS3008); (6) National Postdoctoral Program for Innovative Talents (BX201700291); (7) The China
+
+Postdoctoral Science Foundation (2018M632983); (8) Science and Technology Project of Jiangxi Provincial Department of Education (GJJ180490).
+
+\section*{Appendix A. Supplementary data}
+Supplementary data to this article can be found online at \href{https://doi.org/10.1016/j.jallcom.2019.05.278}{https://doi.org/10.1016/j.jallcom.2019.05.278}.
+
+\section*{References}
+[1] P.K. Bowen, E.R. Shearier, Z. Shan, R.J. Guillory, Z. Feng, J. Goldman, J.W. Drelich, Biodegradable metals for cardiovascular stents: from clinical concerns to recent Zn-alloys, Adv. Healthc. Mater. 5 (2016) 1121-1140.
+
+[2] J. Venezuela, M.S. Dargusch, The influence of alloying and fabrication techniques on the mechanical properties, biodegradability and biocompatibility of zinc: a comprehensive review, Acta Biomater. 87 (2019) 1-40.
+
+[3] Y. Yang, F. Yuan, C. Gao, P. Feng, L. Xue, S. He, C. Shuai, A combined strategy to enhance the properties of $\mathrm{Zn}$ by laser rapid solidification and laser alloying, J. Mech. Behav. Biomed. Mater. 82 (2018) 51-60.
+
+[4] Y.F. Zheng, X.N. Gu, F. Witte, Biodegradable metals, Mater. Sci. Eng. R Rep. 77 (2014) 1-34.
+
+[5] E.A. Maylor, E.E.A. Simpson, D.L. Secker, M. Nathalie, A.S. Maud, P. Angela, S.K. Barbara, M.C. Chris, J.M. O'Connor, C. Charles, Effects of zinc supplementation on cognitive function in healthy middle-aged and older adults: the ZENITH study, Br. J. Nutr. 96 (2006) 752-760.
+
+[6] J. Kubásek, D. Vojtěch, E. Jablonská, I. Pospísilová, J. Lipov, T. Ruml, Structure, mechanical characteristics and in vitro degradation, cytotoxicity, genotoxicity and mutagenicity of novel biodegradable Zn-Mg alloys, Mater. Sci. Eng. C 58 (2016) 24-35.
+
+[7] H. Li, H. Yang, Y. Zheng, F. Zhou, K. Qiu, X. Wang, Design and characterizations of novel biodegradable ternary Zn-based alloys with IIA nutrient alloying elements Mg, Ca and Sr, Mater. Des. 83 (2015) 95-102.
+
+[8] E. Mostaed, M. Sikora-Jasinska, J.W. Drelich, M. Vedani, Zinc-based alloys for degradable vascular stent applications, Acta Biomater. 71 (2018) 1-23.
+
+[9] C. Wang, Z. Yu, Y. Cui, Y. Zhang, S. Yu, G. Qu, H. Gong, Processing of a novel Zn alloy micro-tube for biodegradable vascular stent application, J. Mater. Sci. Technol. 32 (2016) 925-929.
+
+[10] S. Bose, D. Ke, H. Sahasrabudhe, A. Bandyopadhyay, Additive manufacturing of biomaterials, Prog. Mater. Sci. 93 (2018) 45-111.
+
+[11] X. Wang, S. Xu, S. Zhou, W. Xu, M. Leary, P. Choong, M. Qian, M. Brandt, Y.M. Xie, Topological design and additive manufacturing of porous metals for bone scaffolds and orthopaedic implants: a review, Biomaterials 83 (2016) 127-141.
+
+[12] D. Gu, Y.-C. Hagedorn, W. Meiners, G. Meng, R.J.S. Batista, K. Wissenbach, R. Poprawe, Densification behavior, microstructure evolution, and wear performance of selective laser melting processed commercially pure titanium, Acta Mater. 60 (2012) 3849-3860.
+
+[13] S.L. Sing, W.Y. Yeong, F.E. Wiria, Selective laser melting of titanium alloy with $50 \mathrm{wt} \%$ tantalum: microstructure and mechanical properties, J. Alloys Compd. 660 (2016) 461-470.
+
+[14] H. Liang, D. Xie, Y. Mao, J. Shi, C. Wang, L. Shen, Z. Tian, The size effect on forming quality of Ti-6Al-4V solid struts fabricated via laser powder bed fusion, Metals 9 (2019) 416.
+
+[15] J. Venezuela, M. Dargusch, The Influence of Alloying and Fabrication Techniques on the Mechanical Properties, Biodegradability and Biocompatibility of Zinc: A Comprehensive Review, Acta biomaterialia, 2019.
+
+[16] L. Li, L. Yang, F. Yu, J. Shi, L. Zhu, X. Yang, H. Teng, X. Wang, Q. Jiang, 3D printing individualized heel cup for improving the self-reported pain of plantar fasciitis, J. Transl. Med. 16 (2018) 167.
+
+[17] D. Wang, C. Song, Y. Yang, Y. Bai, Investigation of crystal growth mechanism during selective laser melting and mechanical property characterization of 316L stainless steel parts, Mater. Des. 100 (2016) 291-299.
+
+[18] S. Dadbakhsh, J.P. Kruth, J. Schrooten, J. Luyten, J.V. Humbeeck, M. Speirs, Effect of SLM parameters on transformation temperatures of shape memory nickel titanium parts, Adv. Eng. Mater. 16 (2014) 1140-1146.
+
+[19] C. Shuai, Y. Yang, P. Wu, X. Lin, Y. Liu, Y. Zhou, P. Feng, X. Liu, S. Peng, Laser rapid solidification improves corrosion behavior of $\mathrm{Mg}-\mathrm{Zn}-\mathrm{Zr}$ alloy, J. Alloys Compd. 691 (2017) 961-969.
+
+[20] D. Dai, D. Gu, Influence of thermodynamics within molten pool on migration and distribution state of reinforcement during selective laser melting of AIN/ AlSi10Mg composites, Int. J. Mach. Tool Manuf. 100 (2016) 14-24.
+
+[21] C. Shuai, L. Xue, C. Gao, Y. Yang, S. Peng, Y. Zhang, Selective laser melting of $\mathrm{Zn}-\mathrm{Ag}$ alloys for bone repair: microstructure, mechanical properties and degradation behaviour, Virtual Phys. Prototyp. 13 (2018) 146-154.
+
+[22] D. Dai, D. Gu, H. Zhang, J. Xiong, C. Ma, C. Hong, R. Poprawe, Influence of scan strategy and molten pool configuration on microstructures and tensile properties of selective laser melting additive manufactured aluminum based parts, Optic Laser. Technol. 99 (2018) 91-100.
+
+[23] D. Xie, J. Zhao, H. Liang, Z. Tian, L. Shen, M. Xiao, M. Ahsan, C. Wang, Assumption of constraining force to explain distortion in laser additive manufacturing, Materials 11 (2018) 2327.
+
+[24] H. Liang, Y. Yang, D. Xie, L. Li, N. Mao, C. Wang, Z. Tian, Q. Jiang, L. Shen, Trabecular-like Ti-6Al-4V scaffolds for orthopedic: fabrication by selective laser melting and in vitro biocompatibility, J. Mater. Sci. Technol. 35 (7) (2019) 1284-1297.
+
+[25] A. Ataee, Y. Li, M. Brandt, C. Wen, Ultrahigh-strength titanium gyroid scaffolds manufactured by selective laser melting (SLM) for bone implant applications, Acta Mater. 158 (2018) 354-368.
+
+[26] S.L. Sing, S. Wang, S. Agarwala, F.E. Wiria, T.M.H. Ha, W.Y. Yeong, Fabrication of Titanium Based Biphasic Scaffold Using Selective Laser Melting and Collagen Immersion, 2017.
+
+[27] J. Suryawanshi, K.G. Prashanth, U. Ramamurty, Mechanical behavior of selective laser melted 316L stainless steel, Mater. Sci. Eng. A 696 (2017) 113-121.
+
+[28] B.V. Hooreweder, K. Lietaert, B. Neirinck, N. Lippiatt, M. Wevers, CoCr F75 scaffolds produced by additive manufacturing: influence of chemical etching on powder removal and mechanical performance, J. Mech. Behav. Biomed. Mater. 70 (2017) 60-67.
+
+[29] P. Wen, Y. Qin, Y. Chen, M. Voshage, L. Jauer, R. Poprawe, J.H. Schleifenbaum, Laser additive manufacturing of Zn porous scaffolds: shielding gas flow, surface quality and densification, J. Mater. Sci. Technol. 35 (2019) 368-376.
+
+[30] A.G. Demir, L. Monguzzi, B. Previtali, Selective laser melting of pure Zn with high density for biodegradable implant manufacturing, Addit. Manuf. 15 (2017) 20-28.
+
+[31] W. Yu, S.L. Sing, C.K. Chua, X. Tian, Influence of re-melting on surface roughness and porosity of AlSi10Mg parts fabricated by selective laser melting, J. Alloys Compd. 792 (2019) 574-581.
+
+[32] H. Wan, Z. Zhou, C. Li, G. Chen, G. Zhang, Effect of scanning strategy on grain structure and crystallographic texture of Inconel 718 processed by selective laser melting, J. Mater. Sci. Technol. 34 (2018) 1799-1804.
+
+[33] K. Wei, Z. Wang, X. Zeng, Preliminary investigation on selective laser melting of Ti-5Al-2.5Sn $\alpha$-Ti alloy: from single tracks to bulk 3D components, J. Mater Process. Technol. 244 (2017) 73-85.
+
+[34] J.P. Kruth, L. Froyen, J. Van Vaerenbergh, P. Mercelis, M. Rombouts, B. Lauwers, Selective laser melting of iron-based powder, J. Mater. Process. Technol. 149 (2004) 616-622.
+
+[35] R. Speiser, in: T. Iida, R.I.L. Gutthrie (Eds.), The Physical Properties of Liquid Metals, published by Clarendon Press, Oxford, 1988, p. 288, price, $\pounds 40.00$ Materials Science\&engineering:a, 114 (1989) 215-216.
+
+[36] J.D. Madison, L.K. Aagesen, Quantitative characterization of porosity in laser welds of stainless steel, Scripta Mater. 67 (2012) 783-786
+
+[37] K. Wei, M. Gao, Z. Wang, X. Zeng, Effect of energy input on formability microstructure and mechanical properties of selective laser melted AZ91D magnesium alloy, Mater. Sci. Eng. A 611 (2014) 212-222.
+
+[38] M.J. Aziz, Model for solute redistribution during rapid solidification, J. Appl. Phys. 53 (1982) 1158-1168
+
+[39] F. Yan, G. Wang, C. Wang, X. Hu, Y. Wang, Y. Tan, Z. Chen, S. Li, Microstructures and properties of laser welding joint of super-eutectic ZA alloy, Mater. Des. 43 (2013) 25-30.
+
+[40] R. Yu, Y. Li, S. Liu, W. Long, Y. Chen, Microstructural and damp-heat corrosion characteristics of $\mathrm{Zn}-2 \mathrm{wt} \% \mathrm{Al}$ solder alloys containing trace Ag, Mater. Res. Express 6 (2018), 026550
+
+[41] W. Sun, J. Zhang, L. He, X. Xie, Q. Xie, M. Zhang, Annealing hardening behavior of as-extruded Zn-2Al alloy, Special Cast. Nonferrous Alloys 30 (2010), 11681078.
+
+[42] J.R. WEERTMAN, Hall-Petch strengthening in nanocrystalline metals, Mater. Sci. Eng. A 166 (1993) 161-167.
+
+[43] H.D. BAE, H.M. LEE, T.K. KIM, T.W. KIM, H.D. KIM, Application of quasicrystalline particles as a strengthening phase in Mg-Zn-Y alloys, J. Alloys Compd. 342 (2002) 445-450.
+
+[44] P. Wen, M. Voshage, L. Jauer, Y. Chen, Y. Qin, R. Poprawe, J.H. Schleifenbaum, Laser additive manufacturing of $\mathrm{Zn}$ metal parts for biodegradable applications: processing, formation quality and mechanical properties, Mater. Des. 155 (2018) 36-45.
+
+[45] K. Wei, X. Zeng, Z. Wang, J. Deng, M. Liu, G. Huang, X. Yuan, Selective laser melting of $\mathrm{Mg}-\mathrm{Zn}$ binary alloys: effects of $\mathrm{Zn}$ content on densification behavior, microstructure, and mechanical property, Mater. Sci. Eng. A 756 (2019) 226-236.
+
+[46] M. Şahin, E. Çadırlı, Y. Sürme, D. Özkır, Thermo-electrical properties in Pb-Sb hypereutectic alloy, Met. Mater. Int. 19 (2013) 465-472.
+
+[47] C. Shuai, C. He, P. Feng, W. Guo, C. Gao, P. Wu, Y. Yang, S. Bin, Biodegradation mechanisms of selective laser-melted $\mathrm{Mg}-\mathrm{x} \mathrm{Al}-\mathrm{Zn}$ alloy: grain size and intermetallic phase, Virtual Phys. Prototyp. 13 (2018) 59-69.
+
+[48] Y. Deng, Y. Yang, C. Gao, P. Feng, W. Guo, C. He, J. Chen, C. Shuai, Mechanism for corrosion protection of $\beta$-TCP reinforced ZK60 via laser rapid solidification, Int. J. Bioprint. 4 (2018).
+
+[49] Y. Yang, X. Guo, C. He, C. Gao, C. Shuai, Regulating degradation behavior by incorporating mesoporous silica for Mg bone implants, ACS Biomater. Sci. Eng 4 (2018) 1046-1054.
+
+[50] C. Shuai, B. Wang, Y. Yang, S. Peng, C. Gao, 3D honeycomb nanostructureencapsulated magnesium alloys with superior corrosion resistance and mechanical properties, Compos. B Eng. 162 (2019) 611-620.
+
+[51] M. Schinhammer, P. Steiger, F. Moszner, J.F. Löffler, P.J. Uggowitzer, Degradation performance of biodegradable Fe Mn C( Pd) alloys, Mater. Sci. Eng. C Mater. Biol. Appl. 33 (2013) 1882-1893.
+
+[52] H. Wang, Y. Zheng, J. Liu, C. Jiang, Y. Li, In vitro corrosion properties and cytocompatibility of $\mathrm{Fe}-\mathrm{Ga}$ alloys as potential biodegradable metallic materials, Mater. Sci. Eng. C 71 (2017) 60-66.
+
+[53] Y. Chen, Z. Xu, C. Smith, J. Sankar, Recent advances on the development of magnesium alloys for biodegradable implants, Acta Biomater. 10 (2014) 4561-4573.
+
+[54] C. Shuai, S. Li, S. Peng, P. Feng, Y. Lai, C. Gao, Biodegradable metallic bone implants, Mater. Chem. Front. 3 (2019) 544-562.
+
+[55] C. Shuai, J. Zan, F. Qi, G. Wang, Z. Liu, Y. Yang, S. Peng, nMgO-incorporated PLLA bone scaffolds: enhanced crystallinity and neutralized acidic products, Mater. Des. (2019) 107801.
+
+[56] P. Feng, P. Wu, C. Gao, Y. Yang, W. Guo, W. Yang, C. Shuai, A multimaterial scaffold with tunable properties: toward bone tissue repair, Adv. Sci. 5 (2018).
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

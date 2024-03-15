@@ -1,0 +1,399 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Defect structure process maps for laser powder bed fusion additive manufacturing }
+
+
+\author{Jerard V. Gordon ${ }^{\text {a, }, *}$, , Sneha P. Narra ${ }^{b}$, Ross W. Cunningham ${ }^{\text {a,1 }}$, He Liu ${ }^{\text {d }}$, Hangman Chen ${ }^{a}$,\\
+Robert M. Suter ${ }^{c}$, Jack L. Beuth ${ }^{c}$, Anthony D. Rollett ${ }^{a, c}$\\
+a Department of Materials Science and Engineering, Carnegie Mellon University, Pittsburgh, PA, 15213, USA\\
+${ }^{\mathrm{b}}$ Department of Mechanical Engineering, Worcester Polytechnic Institute, Worcester, MA, 01609, USA\\
+${ }^{\mathrm{c}}$ Next Manufacturing Center, Carnegie Mellon University, Pittsburgh, PA, 15213, USA\\
+${ }^{\mathrm{d}}$ Department of Physics, Carnegie Mellon University, Pittsburgh, PA, 15213, USA}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+Metal additive manufacturing
+
+Laser powder bed fusion
+
+Porosity
+
+Processing parameters
+
+Powder feedstock
+
+\begin{abstract}
+A B S T R A C T Accurate detection, characterization, and prediction of defects has great potential for immediate impact in the production of fully-dense and defect free metal additive manufacturing (AM) builds. Accordingly, this paper presents Defect Structure Process Maps (DSPMs) as a means of quantifying the role of porosity as an exemplary defect structure in powder bed printed materials. Synchrotron-based micro-computed tomography ( $\mu$ SXCT) was used to demonstrate that metal AM defects follow predictable trends within processing parameter space for laser powder bed fusion (LPBF) materials. Ti-6Al-4 V test blocks were fabricated on an EOS M290 utilizing variations in laser power, scan velocity, and hatch spacing. In general, characteristic under-melting or lack-of-fusion defects were discovered in the low laser power, high scan velocity region of process space via $\mu$ SXCT. These defects were associated with insufficient overlap between adjacent melt tracks and can be avoided through the application of a lack-of-fusion criterion using melt pool geometric modeling. Large-scale keyhole defects were also successfully mitigated for estimated melt pool morphologies associated with shallow keyhole front wall angles. Process variable selections resulting in deep keyholes, i.e., high laser power and low scan velocity, exhibit a substantial increase of spherical porosity as compared to the nominal (manufacturer recommended) processing parameters for Ti-6Al-4 V. Defects within fully-dense process space were also discovered, and are associated with gas porosity transfer to the AM test blocks during the laser-powder interaction. Overall, this work points to the fact that large-scale defects in LPBF materials can be successfully predicted and thus mitigated/minimized via appropriate selection of processing parameters.
+\end{abstract}
+
+\section*{1. Introduction}
+Laser powder bed fusion (LPBF) metal additive manufacturing (AM) techniques currently offer the best reproducibility and dimensional accuracy for part production, and therefore have been well-researched in both industry and academia [1-10]. In general, LPBF techniques use the following steps to fabricate a component: (1) a layer of metal powder of specified thickness is spread onto the build plate in the machine; (2) the desired area within the powder layer is selectively melted using a laser beam; (3) the build plate moves down, and a new layer of powder is spread onto the build plate. This process is repeated layer-by-layer until the part fabrication is complete. Positive process outcomes for LPBF metal AM builds are controlled by various processing parameters including, but not limited to beam power $(P)$, scan velocity $(V)$, hatch spacing $(H)$, layer thickness $(D)$, and scan pattern amongst many others [4-6]. Numerous studies have demonstrated that the combination of these processing parameters is largely responsible for melt pool geometry, local microstructure, defect size, and defect morphology [2,3,6,11, 12]. Importantly, unwanted LPBF defects such as porosity, inclusions, and oxides are deleterious to the structural integrity and durability of metal AM components, particularly in aerospace and biomedical applications where premature failure (e.g., fatigue) is primarily controlled by the defect structure $[3,7,9,10,13,14]$. Edwards and Ramulu [15] discovered that regardless of surface condition or build orientatio the
+\footnotetext{\begin{itemize}
+  \item Corresponding author at: Department of Materials Science and Engineering, Carnegie Mellon University, Pittsburgh, PA, 15213, USA.
+\end{itemize}
+
+E-mail address: \href{mailto:jerardg@andrew.cmu.edu}{jerardg@andrew.cmu.edu} (J.V. Gordon).
+
+${ }^{1}$ Current Address: Messer Americas, Bridgewater, NJ.
+}
+fatigue performance strength of the L-PBF Ti-6Al-4V was approximately $77 \%$ below that of wrought alloys owing to the presence of unwanted defects. Masuo et al. [16] determined that processing defects (including surface roughness) limited the fatigue strength of the as-fabricated specimens to approximately $1 / 3$ of the fatigue strength for wrought Ti-6Al-4 V. Therefore, process-defect-property relationships are important to connect relevant processing parameters to resulting defect distributions to certify metal AM processes and components, particularly for structural materials and biomedical applications.
+
+In general, defects can be created or transferred to the finished part in three specific ways, namely through: (1) transfer from the feedstock powder, (2) the laser-powder-metal interaction during melting, and (3) post-processing treatments $[1-4,8,11,12]$. Overall, four different types of defects are observed in LPBF, namely:lack-of-fusion porosity, keyhole porosity, balling, and gas porosity [8]. In order to limit defect generation within metal AM builds, all three mechanisms of pore formation or transfer must be considered and controlled through appropriate selection of processing parameters. Of these, the laser-powder-metal interaction is the most common means of porosity transfer during metal AM processing [1-3], where defects such as "keyhole" and "lack-of-fusion" (LOF) porosity can be generally observed [11,12,17-19]. In more detail, the lack-of-fusion porosity boundary can be determined by whether there is sufficient overlap between melt pools to ensure that all points are melted at least once [20]. LOF porosity has also been recently shown to form due to the interaction of ejected particles/spatter with the laser and meltpool in [21]. Large spatter may not be fully melted during laser scanning, thus becoming potential sites of pore generation as shown by the string of lack-of-fusion pores are generated around the spatter in [21]. In contrast, the keyhole porosity boundarv corresponds to instabilities in deep keyholes leading opinching-off of pore, [22]. A third boundary (known as the 'beading-up Doundary) is determined by a combination of fluid flow patterns and capillary instability of the melt pool and is a limiting factor for increasing production rates while maintaining precision (e.g., increasing velocity and power simultaneously) in LPBF AM systems [23,24]. Overall LOF, keyhole, and bead-up porosity boundaries in particular define an effective 'process window' for production of parts with nominally full density; within that process window, porosity is transferred from the powder to the part [8, 21,24]. Accordingly, LOF and keyhole porosity boundaries will be the main focus of this paper, along with examination-of the way in which pore content varies-by particle size. Full density can be quantified as samples possessing $>99.9 \%$ volumetric density, although it should be noted that large defects are still possible. The aim is to optimize pro-
+
+cessing parameters, reduce unwanted defects in LPBF AM materials, and
+
+ultimately demonstrate that it is feasible to operate LPBF machines
+
+This study is intended to build upon previous investigations of the effect of processing parameters on the defect distribution in LPBF of Ti6Al-4 V [25]. This work builds on that preliminary research to show that fully-dense Ti-6Al-4 V metal AM parts can be produced based on melt pool geometric modeling [20] and recently obtained information on keyhole morphological trends and porosity formation during high-speed dynamic x-ray scanning of LPBF Ti-6Al-4V [22]. Since different alloys respond in a similar fashion in LPBF [20], the expectation is that the Defect Structure Process Maps (DSPMs) approach can be applied to all fusible alloys. This will be accomplished by mapping out the defect density variation within laser power-scan velocity (P-V) space [6], including a comparison of standard (manufacturer recommended) processing parameters for Ti-6Al-4V cubes. A second goal of this work is to investigate the formation and retention of gas porosity within the Ti-6Al-4 V powders and as-fabricated components resulting from entrapped gas within individual powder granules, as shown by Cunningham et al. [25]. Thus, the intended application of this knowledge is
+
+in the construction of DSPMs for fully-dense part-level builds for LPBF
+
+$1-6 \mathrm{Al}-4 \mathrm{~V}$, therefore improving the reliability of printing this material defect density.
+
+\section*{2. Materials and methods}
+\subsection*{2.1. Experimental setup}
+As previously reported [25], plasma atomized EOS Ti-6Al-4V alloy powder was used to fabricate test blocks (cubes) on an EOS M290 LPBF machine. A total of 12 test blocks were produced utilizing a variation of processing parameters including laser power $P$, laser speed $V$, and hatch spacing $H$, as given in Table 1 . The recommended EOS standard values of $\mathrm{P}=280 \mathrm{~W}$ and $\mathrm{V}=1,200 \mathrm{~mm} / \mathrm{s}$ for Ti-6Al- $4 \mathrm{~V}$ were used to produce Sample 1, which served as a baseline for comparison with the other samples that were produced utilizing the processing parameters given in Table 1. Processing parameters for these samples were chosen to span $P-V$ space around the nominal (manufacturer recommended) values available for EOS Ti-6Al-4 V for the purpose of understanding the effect of velocity (Samples 2-5), power (Samples 6, 7, 8, and 9), and hatch spacing (Samples 5, 8, 10, 11, 12) on defect density (Table 1) [25]. In Samples 2-5 where velocity is varied at a nominal power of $280 \mathrm{~W}$, hatch spacing is decreased in Sample 5 as per the geometric model to avoid lack-of-fusion porosity at a high velocity of $1500 \mathrm{~mm} / \mathrm{s}$. In samples with varying power at a nominal velocity of $1200 \mathrm{~mm} / \mathrm{s}$, hatch spacing is decreased in Sample 8 as per the geometric model to avoid lack-of-fusion porosity at lower power of $100 \mathrm{~W}$. In addition to Samples 5 and 8, hatch spacing is changed in Samples 10, 11, and 12. At a nominal power and velocity, hatch spacing is increased in Sample 10 to introduce lack-of-fusion porosity as per the geometric model and hatch spacing is decreased in Sample 11 to double the overlap depth and quadruple the overlap between adjacent melt tracks. On the other hand, in Sample 12, power, velocity, and hatch spacing are changed from the nominal conditions. An increase in power and a decrease in velocity is accompanied by an increase in hatch spacing as per the geometric model. The idea is to use the geometric model to avoid LOF porosity and single melt track experiments to know the keyhole boundary and then select processing parameters to increase the deposition rate. For all the samples, a slice layer thickness of $L=30 \mu \mathrm{m}$ was used for all the test blocks and a nominal spot size of $\sim 100 \mu \mathrm{m}$ (as per the technical specifications provided by the machine manufacturer).
+
+\subsection*{2.2. Synchrotron-based micro-tomography}
+High-energy $\mu$ SXCT was performed at the Advanced Photon Source (APS) to measure the size and morphology of defects (pores) within both powders and the printed Ti-6Al-4V test blocks as reported by Cunningham et al. [25]. As-fabricated $\mu$ SXCT samples with dimensions of $1 \mathrm{~mm} \times 9 \mathrm{~mm} \times 15 \mathrm{~mm}$ were extracted from the top $1.5 \mathrm{~mm}^{3}$ volume of each test block with longer dimension parallel to build direction. $\mu$ SXCT was performed in white beam mode with a total of 1500 projections taken over $180^{\circ}$ with a $50 \mathrm{~ms}$ exposure time. A voxel size of $0.65 \mu \mathrm{m}$ was used, resulting in a minimum detectable pore size of about $1.5 \mu \mathrm{m}$. Three-dimensional $\mu \mathrm{SXCT}$ volumes were reconstructed using the TomoPy 0.0.3.15 and AVIZO by FEI $^{\mathrm{TM}}$ 9.1.1 software. Pore morphology (i.e. "spherical" versus "non-spherical" designations) was determined using the 'anisotropy' function in Avizo 9 with a value of 0.5 being the cutoff for "spherical". While morphology is not a conclusive metric for determining the defect formation mechanism, it is reasonable to assume that highly spherical pores are likely to be formed from insoluble gas bubbles trapped during solidification (e.g. either gas or keyholing pores), while largely irregular pores are likely LOF defects [8]. For this analysis, the following quantitative metrics for porosity designation were utilized: (a) LOF pores ( $>40 \mu \mathrm{m}$ and spherical), (b) keyholing pores ( $>40 \mu \mathrm{m}$ and spherical) and, (c) gas pores ( $<20 \mu \mathrm{m}$ and spherical). Each reconstructed 3D data set contains $2560 \times 2560 \times 2100$ three dimensional voxels, yielding a total data size over 40 GB. This data volume implies that automated analysis methods
+
+Table 1
+
+List of processing parameters used to produce LPBF Ti-6Al-4 V test blocks [25].
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\begin{tabular}{l}
+Sample \\
+Number \\
+\end{tabular} & \begin{tabular}{l}
+Power, $P$ \\
+(W) \\
+\end{tabular} & \begin{tabular}{l}
+Velocity, $V$ \\
+$(\mathrm{~mm} / \mathrm{s})$ \\
+\end{tabular} & \begin{tabular}{l}
+Hatch Spacing, \\
+$H(\mu \mathrm{m})$ \\
+\end{tabular} & \begin{tabular}{l}
+Calculated melt pool \\
+depth, $D(\mu \mathrm{m})$ \\
+\end{tabular} & \begin{tabular}{l}
+$L / D$ \\
+ratio \\
+\end{tabular} & \begin{tabular}{l}
+$H / W$ \\
+ratio \\
+\end{tabular} & \begin{tabular}{l}
+Energy density, $E$ \\
+$\left(\mathrm{~J} / \mathrm{mm}^{3}\right)$ \\
+\end{tabular} & \begin{tabular}{l}
+Volume \% \\
+Spherical Pores \\
+\end{tabular} & \begin{tabular}{l}
+Volume \% \\
+Irregular Pores \\
+\end{tabular} \\
+\hline
+1 & 280 & 1,200 & 140 & 84 & 0.35 & 0.83 & 56 & 0.00077 & 0.0056 \\
+\hline
+2 & 280 & 400 & 140 & 144 & 0.21 & 0.49 & 167 & 0.67 & 1.69 \\
+\hline
+3 & 280 & 800 & 140 & 102 & 0.29 & 0.68 & 83 & 0.0092 & 0.052 \\
+\hline
+4 & 280 & 1,000 & 140 & 92 & 0.32 & 0.76 & 67 & 0.00073 & 0.00023 \\
+\hline
+5 & 280 & 1,500 & 80 & 75 & 0.4 & 0.53 & 44 & 0.000096 & 0.00013 \\
+\hline
+6 & 370 & 1,200 & 140 & 96 & 0.31 & 0.73 & 73 & 0.00019 & 0.00010 \\
+\hline
+7 & 325 & 1,200 & 140 & 90 & 0.33 & 0.78 & 64 & 0.00041 & 0.00050 \\
+\hline
+8 & 100 & 1,200 & 50 & 50 & 0.6 & 0.50 & 56 & 0.0012 & 0.11 \\
+\hline
+9 & 165 & 1,200 & 140 & 64 & 0.47 & 1.1 & 33 & 0.0015 & 0.34 \\
+\hline
+10 & 280 & 1,200 & 160 & 84 & 0.36 & 0.95 & 49 & 0.0010 & 0.015 \\
+\hline
+11 & 280 & 1,200 & 40 & 84 & 0.36 & 0.24 & 194 & 0.0093 & 0.005 \\
+\hline
+12 & 370 & 1,000 & 240 & 105 & 0.29 & 1.14 & 51 & 0.0015 & 0.021 \\
+\hline
+\end{tabular}
+\end{center}
+
+Note: Melt pool width, $W=2 * D$ assuming the shape of the melt pool is semi-circular. Here energy density $(E)$ is taken as $E=P / H V L$.
+
+are necessary to extract characteristic features and associated statics. This is particularly true for analysis of powder particles for which segmentation has to be performed on both the particles and the pores within them, which motivated the application of machine learning; analysis procedures and results are described below. For more specific details in setup and experimental procedures, the reader is referred to Ref. [25].
+
+\subsection*{2.3. Machine learning-based segmentation and analysis of trapped gas porosity}
+As a preliminary to analysis of built materials, variety of feedstock powders were examined to determine pore statistics. Depending on processing parameters, a substantial fraction of powder pores appears to be carried over into built parts, so it is critical to be aware of initial porepopulations and to include the elimination of such pores during melting in the consideration of optimal parameter choices. At least thousands of particles are used to build macroscopic parts and samples, so the task isdaunting. Machine learning (ML) techniques [26] were used to locate and segment the powder particles in tomographic data sets. For an automated procedure, the first task is to identify powder particles and separate them from the background in reconstructed 3D data sets that have a variety of signal-to-noise ratios. As compared to other software such as ImageJ [27] or ilastik, [28] machine learning algorithms are convenient for at least three reasons, namely: (1) enhanced memory efficiency, (2) possible porting of optimized batch processes to parallel processing, and (3) the existence of simple graphical user interface (GUI) formats for training the model. A general description of the ML technique used in this study is presented here. First, a set of $n$ 3-D image filters (typically based on convolutions using different masks) were applied to the reconstructed $\mu$ SXCT data in order to take the information characterizing the neighborhood of voxels into account. The intensity $I$ (x, y, z), and resultant feature vector, $F(\mathrm{x}, \mathrm{y}, \mathrm{z})$, of length $n$ were then generated at each voxel location. For example, the ith element of $F(x, y$, $z), F_{\mathrm{i}}(x, y, z)$, is the value obtained using the ith filter applied to the location $(x, y, z)$. Next, each voxel in a training data set was assigned a label, $l$, to provide the model with examples of powder material voxels and background voxels. Material voxels were labelled with 1 and background with 0 . This procedure was used to generate a set of labels $l$ $(x, y, z)$ along with the corresponding feature vector at each voxel location.
+
+After the above procedure was carried out, the model was trained using the corresponding label and feature vectors of the example voxels to automatically learn a complicated relation between labels and features. Finally, the model was used to assign labels to voxels in the entire data set from their feature vectors. In this way, a binary output of segmented 3-D images was obtained: 1 for particle material and 0 for low density, background or void regions. Porosity within the powder particles was identified as void regions that are surrounded by particle voxels in 3-D space. Finally, these binary data sets were well handled by the commercial software, AVIZO for statistical analysis. Statistical information including powder size, porosity distribution, and morphology were extracted from these volumetric data sets.
+
+\section*{3. Results and discussion}
+\includegraphics[max width=\textwidth, center]{2024_03_10_3ee16c41030613e24aabg-03}\\
+can be particularly deleterious to mechanical behavior [15,29-32]; they often contain unmelted powder particles. These defects are normally attributed to incorrect processing parameter selection as well as laser beam fluctuations, surface gas flow, and raw material characteristics $[33,34]$ such that not all locations in the powder bed are melted. For me Ti-6Al-4 V processing parameters investigated, it can be readily observed that LOF porosity occupies thelow laser power, high laser scan velocity region within P-V space as shown in Fig. 1 [4]. This behavior agrees with other investigations pointing to low power input, or alternatively low energy density as the primary source of LOF porosity [4]. Note, Fig. 1 only contains samples possessing a hatch spacing of $140 \mu \mathrm{m}$, and this value was used to estimate defect (porosity) boundaries in this work. Furthermore, this hatch spacing of $140 \mu \mathrm{m}$ will be the focus of this work when discussing the process windows for lack-of-fusion, keyhole, and gas porosity.
+
+Recent investigations of LOF porosity confirm this finding that relative densities for LPBF materials produced utilizing different processing parameters may vary by as much as $5 \%$ although they possess the same energy density showing that energy density alone is not a robust predictor of porosity formation [20]. Investigations on LPBF AlSi10Mg builds also support this, pointing to the ineffectiveness of this energy density criterion alone in consistently predicting porosity [35]. If hatch spacing is increased and layer thickness is decreased by the same proportion, energy density remains the same. In the geometric model [20], the key parameter is the minimum depth of melting (overlap depth between the adjacent melt pools) compared to the layer thickness. The minimum depth of melting does not depend on hatch spacing and layer thickness the same way as energy density. This can easily be seen by choosing a hatch spacing that is greater than the melt pool width. The minimum depth of melting is zero and lack-of-fusion will occur for any layer thickness. However, a constant value of energy density can still be maintained by a proportionally smaller layer thickness. Therefore, a simple geometric model as described by Tang et al. [35] was used to predict the LOF porosity boundary for Ti-6Al-4 V test blocks within P-V space, as shown in Fig. 2. The geometric criterion for insufficient melting of the material and therefore LOF porosity is captured in Eq. 1:
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3ee16c41030613e24aabg-04}
+\end{center}
+
+Fig. 1. EOS LPBF Ti-6Al-4V defect structure process map (DSPM) showing a systematic variation of defect morphology across P-V space. By remaining above the LOF boundary and below the keyhole boundary within the effective "Process Window", large-scale defects can be successfully mitigated through process variable selection.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3ee16c41030613e24aabg-04(1)}
+\end{center}
+
+Fig. 2. Samples utilized to determine the LOF porosity boundary are plotted against the LOF criterion [20] along with corresponding defect densities. To avoid irregular LOF porosity, melt pool overlap and overlap depth must obey geometric criterion [20]. Importantly, melt pool overlap $(H / W)$ should be $<1$, while overlap depth $(L / D)$ should also remain $<1$ as well.
+
+$\left(\frac{H}{W}\right)^{2}+\left(\frac{L}{D}\right)^{2} \leq 1$
+
+where $W$ is the melt pool width, $L$ is the slice layer thickness (also melted layer thickness assuming $50 \%$ powder packing fraction), and $D$ is the total melt pool depth. The values for the parameters used in the calculation are given in Table 1. The shape of the melt pool was assumed to be semi-circular, with melt pool width $(\mathrm{W})$ being estimated as twice the
+
+Rosenthal calculated melt pool depth (D) i.e. $\mathrm{W}=2 * \mathrm{D}$. This model assumes dual semi-circular melt pool cross-sectional shapes with center to center distance equal to the hatch spacing $H$ (e.g., conduction mode melting). The melt pool depth $D$ can be estimated from the Rosenthal equation [36] by differentiation and approximation [37], namely:
+
+$D=\sqrt{\frac{2 Q \varepsilon}{\pi \rho \rho C_{p} V\left(T_{\text {melt }}-T_{0}\right)}}$
+
+Here, $D$ is the melt pool depth (taken as $1 / 2$ the melt pool width for semicircular shapes), $Q$ is the laser power, $\varepsilon$ is the absorptivity, $e$ is the basis of natural logarithms, $\rho$ is the density, $C_{p}$ is the specific heat capacity, $V$ is the laser scan velocity, $T_{\text {melt }}$ is the melting temperature, and $T_{0}$ is the initial temperature [20]. The values for LPBF Ti-6Al-4V used in this analysis were $Q=170 \mathrm{~W}, \varepsilon=0.48, \rho=4430 \mathrm{~kg} / \mathrm{m}^{3}, C_{p}=526 \mathrm{~J} / \mathrm{Kg} \cdot \mathrm{K}$, $\left(T_{\text {melt }}-T_{0}\right)=1610 \mathrm{~K}[20]$. Note, that the specific assumptions made to derive this closed form solution can affect the validity of this equation when applied to materials with high thermal conductivity and at lower scan velocities. Melt pool dimensions were estimated at laser scan velocities and powers identical to those used to fabricate the test blocks [35]. Previous work calculating melt pool dimensions involving these processing parameters were based on experimental results, however the goal here is to provide the means for calculating melt pool dimensions analytically and to show that relatively simple equations can work well in predicting LOF porosity.
+
+Using the estimated melt pool widths (Eq. 2) in conjunction with Eq. 1 , a LOF boundary in P-V space was determined for the Ti-6Al- $4 \mathrm{~V}$ test blocks, e.g. the dotted black line separating Specimens 1, 4, 6, and 7 from Specimen 9 in Fig. 1. The $\mu$ SXCT results show that large, irregular LOF defects are present within Sample 9, which lies below the estimated LOF boundary in Fig. 1 [4]. Fig. 2 illustrates the melt pool geometric values plotted against Eq. 1, namely $(H / W)$ vs. $(L / D)$. The solid line in Fig. 2 designates values of $\left((H / W)^{2}+(L / D)^{2}\right)$ equal to 1 . For values much less than 1 , the geometric model assumes that full overlap can be realized, and therefore reduced occurrence of LOF porosity. Conversely, as values approach and exceed 1, LOF porosity is expected. The geometric model also assumes that as $\left((H / W)^{2}+(L / D)^{2}\right)$ values decrease (or incruce] further away from 1, LOF porosity will continue to decrease (or increase). This can be seen in the $\mu>\times(1$ resuits for Samples $1,4,6$, and 7 (see Fig. 2). Sample 7 had a similar $\left((H / W)^{2}+(L / D)^{2}\right)$ value as Sample 1, while Samples 4 and 6 possessed reduced $\left((H / W)^{2}+(L / D)^{2}\right)$ values compared to Sample 1 and reduced irregular defect content. As $\left((H / W)^{2}\right.$ $\left.+(L / D)^{2}\right)$ values decreased, irregular defect content seems to decrease as well, as shown in Fig. 2. Sample 6 possessed the smallest $\left((H / W)^{2}+\right.$ $\left.(L / D)^{2}\right)$ value and volume $\%$ of irregular LOF pores; consequently Sample 9 possessed the largest $\left((H / W)^{2}+(L / D)^{2}\right)$ value and greatest volume $\%$ of irregular LOF pores. This trend was observed for all specimens analyzed with hatch spacing values of $140 \mu \mathrm{m}$ (Fig. 2).
+
+The reduction of LOF porosity below the LOF boundary in Ti-6Al-4 V as shown for the Samples 1, 4, 6, 7, and 9 can be characterized by melt pool geometric properties. Overall, Samples $1,4,6$, and 7 possess $((H /$ $W)^{2}+(L / D)^{2}$ ) values less than 1 , e.g. below the LOF boundary line in Fig. 2. On the other hand, Sample 9 has a $\left((H / W)^{2}+(L / D)^{2}\right)$ value $43 \%$ greater than 1 , leading to $0.34 \%$ irregular (e.g., LOF) porosity (Fig. 2). Comparatively, Sample 1 below the LOF boundary possessed less than $0.0056 \%$ irregular porosity. Therefore, it is deduced that occurrence of large-scale LOF defects above the LOF boundary for Sample 9 is mainly a consequence of insufficient melt pool overlap [35]. Melt pool overlap can be characterized via both H/W and L/D ratios (Fig. 2, insert). For an $\mathrm{L} / \mathrm{D}$ ratio $<1$, the geometric model assures sufficient vertical overlap. By increasing overlap depth, L/D ratio is reduced and consequently LOF is lowered. Consequently, $H / W$ values (lateral overlap) should also remain below 1 as well to limit sensitivity to process settings (Fig. 2) [20]. Samples $1,4,6$, and 7 possess greatly reduced $L / D$ and $H / W$ ratios than Sample 9, and therefore experience more melt pool overlap and reduced occurrence of LOF (irregular) porosity, More analysis is necessary to fully determine the limits of applying the geometric criterion, however for process outcomes in LPBF Ti-6Al-4 V, the geometric criterion can provide satisfactory estimates of the potential for large-scale LOF porosity and can be used to increase build rates while maintaining fully-dense parts [20].
+
+\section*{3.2. $\mu S X C T$ validation of the keyhole porosity boundary in Ti-6Al-4V}
+A power density at the metal surface greater than $10^{6} \mathrm{~W} / \mathrm{cm}^{2}$ may result in a transition of melt pool geometry from semi-circular "conduction mode" to deep and narrow "keyhole mode" for Ti-6Al-4 V [38-40]. Keyhole mode occurrence is often identified using melt pool depth-to-width $(D / W)$ ratio (melt pool cross-sectional aspect ratio) is > 0.5 [41]. High speed visualization with synchrotron x-rays has, however, shown that there is a well-defined threshold in power density for keyhole formation [22]. During keyhole mode, large and spherical keyhole defects may be generated as a result of operating within the high-power, low-velocity region of process space (Fig. 1). The formation of these defects is strongly dependent on the choice of laser spot size and the boiling point for a specific material [8]. During keyhole mode, the absorptivity (i.e., net energy absorption) increases to values much greater than in conduction mode due to multiple reflections of the beam in the vapor cavity formed where the laser intersects the melt pool. This enables the laser to "drill" to a deeper depth in the material, generating elongated melt pools and a pronounced vapor cavity in the center of the cross-sectional melt pool [39,42,43]. Keyholes with large aspect ratios exhibit front wall fluctuations that can result in the generation of bubbles (keyhole porosity), via pinch-off of the bottom of the keyhole, that can remain within the part after solidification [8,22].
+
+Recent work has shown that the occurrence of keyhole porosity in metal AM is a result of instability of the base of the vapor depression (i. e., keyhole) that leaves pores behind as the laser moves away from the melt pool. Such instability is directly related to high aspect ratios in the cavities which occur in the upper left corner of the $P-V$ space, i.e., high power and low speed, for a given spot size [22]. Therefore, quantifying defect content throughout $\mathrm{P}-\mathrm{V}$ space allows estimation of the keyhole porosity boundary for LPBF Ti-6Al-4 V across process space. In [22], high power and low velocity combinations resulted in unstable morphologies for deep keyhole melt pools and subsequent porosity within in-situ dynamic x-ray radiography (DXR) single-bead samples. Furthermore, even in unstable keyhole meltpools, the extent or occurrence of porosity is not constant. Therefore accurate, real-time keyhole morphological datahas great potential to serve as a helpful predictors of keyhole porosity within process space.
+
+The elongation of the melt pool in the depth direction is indeed the key defining factor for a keyhole melt pool. As mentioned previously, a certain-severity of keyholing is necessary to-generate keyhole wall fluctuations-resulting in-a-pinched-off gas-bubble-(pore)-into-the-melt pool. Fig. 3 shows a schematic of the transfer of keyhole porosity to the melt pool via front wall fluctuations. Notably, keyhole wall fluctuations resulting in porosity have been found to correlate with keyhole front wall angle $(\theta)$ in laser welding [44]. Cunningham et al. [22] found that for $\theta$ values greater than $77^{\circ}$, large-scale keyhole porosity was formed in LPBF Ti-6Al-4 V. It should also be noted that the wall angle criterion seems to behave in a similar fashion as the melt pool width /laser spot size criterion developed in [33]. At this time, it appears that either criterion can be used depending on the application.
+
+To analyze severity of keyholing resulting in keyhole porosity for the Ti-6Al-4V test blocks, the melt pool depth and morphological data of Ti6Al-4V DXR single track experiments from [22] were plotted against the Ti-6Al-4V test blocks in this study. Fig. 4 shows the Ti-6Al-4 V test blocks printed in the high power, low velocity regions of $\mathrm{P}-\mathrm{V}$ space plotted against DXR Ti-6Al-4V melt pool morphologies of $\theta>77^{\circ}$ in [22]. It can be readily observed that Sample 2 of the Ti-6Al-4V test blocks is well within the keyhole porosity regime $\left(\theta>77^{\circ}\right)$. This resulted in large-scale keyhole defects, with spherical (keyhole) porosity values of
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3ee16c41030613e24aabg-06}
+\end{center}
+
+(a) Keyhole front wall at $77^{\circ}$
+
+(b) Gas bubble (pore) generated
+
+(c) Keyhole porosity remains
+
+Fig. 3. Schematic of time sequence (a-c) showing the transfer of keyholing porosity from the vapor depression to the baseplate during DXR experiments in [8] for a keyhole front wall angle $(\theta)$ greater than $77^{\circ}$. (a) Keyhole wall fluctuations (collisions) result in a (b) pinched-off gas bubble (pore) [45]. (c) The pore may remain in the part as keyhole porosity after solidification.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3ee16c41030613e24aabg-06(1)}
+\end{center}
+
+Fig. 4. Keyhole front wall angle $(\theta)$ plotted in P-V space for Ti-6Al-4 V DXR single track experiments in Cunningham et al. [22]. For $\theta$ greater than $77^{\circ}$, large keyhole defects were discovered in $\mu$ SXCT results, corresponding to the mechanism of pore transfer detailed in Cunningham et al. [22].
+
+approximately $0.67 \%$. However, Samples 1 , and 4 have $\theta<77^{\circ}$ and minimal spherical porosity, with a minimum of approximately 0.00073 $\%$ for Sample 3 (Fig. 4). This value is negligible compared to Sample 2, which is consistent with large-scale keyhole porosity occurring for $\theta>$ $77^{\circ}$. However, Sample 3 also contained spherical keyhole porosity $(0.052 \%)$, despite having a front wall angle $\theta<77^{\circ}$. This suggests that approach may need to be re-visited. More investigations are indicated but this present work confirms the DXR trends described in [22].
+
+For an analysis of the Ti-6Al-4 V test blocks outside of the keyhole boundary (i.e., $\theta<77^{\circ}$ ), the following remarks can be made. Keyhole front wall angle is a function of laser velocity $\left(V_{\mathrm{w}}\right)$ and power density dependent drill rate $\left(V_{\mathrm{d}}\right)$, namely [44]:\\
+Note, $V_{\mathrm{d}}$ is the component of laser velocity acting perpendicular to the surface i.e., the velocity that results in the penetration of the laser beam into the material [44]. Therefore, as laser velocity is increased, keyhole front wall angle is decreased and thus keyhole porosity is reduced for constant $V_{\mathrm{d}}$. Drill rate was calculated via the time resolved vapor depression penetration depths from stationary in-situ DXR experiments at identical P-V combinations as utilized for test block fabrication [8]. Fig 4 shows this, with a noticeable difference in defect densities that occurs between Samples 3 and 4. While Sample 3 displays noticeable small, round defects, Samples $4(P=280 \mathrm{~W})$ and $6(P=370$ W) display negligible porosity owing to an increased laser velocity of $200 \mathrm{~mm} / \mathrm{s}$ in both the cases. Although the defects observed in Sample 3 are deduced to be keyhole porosity, these $\mu$ SXCT scan volumes could also potentially contain some spherical gas porosity from powder.
+
+Therefore, further analysis and characterization of the differences between gas and small keyhole porosity are necessary for these samples.
+
+Fig. 5 shows defect densities in samples with varying hatch spacing. In the case of Samples 10 and 11, for the same power and velocity combination, the percentage of spherical pores increased with a decrease in hatch spacing. Although Sample 10 is designed to result in lack-of-fusion porosity, the percentage of lack-of-fusion pores is low. Both these observations suggest that (i) closely spaced tracks can result in temperature build-up that can increase the susceptibility of keyhole formation and result in spherical pores even at non-keyhole parameter combinations; and (ii)hemispherical melt pool shape assumption breaks down at certain regions in the process space and this, in turn, can shift the process window for lack-of-fusion porosity. Similarly, in the case of Sample 8, the parameters are not designed for lack-of-fusion porosity, but the sample consisted of lack-of-fusion pores which also suggests that the assumption of hemispherical melt pool shape has to be applied with caution when using the geometrical model for lack-of-fusion porosity. Samples 5 and 12 are the cases designed for maximizing the deposition rate while using different power, velocity, and hatch spacing combinations. In Sample 5, velocity is increased to result in a higher deposition rate and to account for the smaller resulting smaller melt pool size, hatch spacing is decreased to $80 \mu \mathrm{m}$. Whereas, in Sample 12, hatch spacing is increased to $240 \mu \mathrm{m}$ to result in a higher deposition rate as an increase in power to $370 \mathrm{~W}$ would result in larger melt pools. Interestingly, few lack-of-fusion pores were observed in Sample 12 whereas Sample 5 did not show any significant spherical or irregular pores. This observation also emphasizes the importance of melt pool geometry and variability, especially when using larger hatch spacings such as $240 \mu \mathrm{m}$ which is $100 \mu \mathrm{m}$ higher than the nominal hatch spacing. Overall, optimal hatch spacing to allow sufficient re-melting and while at the same time not resulting in temperature build-up can reduce the overall porosity observed in Sample 5.
+
+Lastly, it should be noted that the discrepancies in Samples 10 and 12 are because they correspond to $\mathrm{H} / \mathrm{W}$ values near 1 . Thus, inaccuracies of the assumed melt pool shape and variability in actual melt pool size and shape are most apparent when the predicted bead overlap is small or nonexistent. For specimen 8, melt pool variability does not play a significant factor, but instead it is likely that the assumed melt pool shape is the sole issue. This is because the predicted width of the melt pool is similar to the laser spot size whereas a hemispherical melt pool is only valid for a point heat source.
+
+\subsection*{3.3. An automated ML approach to characterizing gas porosity within $A M$ powders}
+Given that a fraction of the porosity contained in the feedstock powder is transmitted to the printed metal, it is useful to develop characterization methods that link pore size to particle size. Metal LPBF AM powders are manufactured in numerous ways, with three of the most common being gas atomization, plasma atomization (PA), and plasma rotating electrode (PREP) techniques [46-48]. ForPA, multiple plasmas are accelerated by the atomizing inert (argon) gas, with wire melting and atomization occurring in a single step [49]. PREP processing also operates in an inert environment and uses a rotating anode that is melted by an electric arc, forming liquid droplets that are further atomized and solidified into spherical particles [50]. However, inert gas trapped within individual powder particles can result in non-trivial laser-powder defects during metal AM processing [2,3,20,51,52], where the transfer of gas porosity to as-fabricated AM parts is dependent on both processing parameters and melt pool dynamics [11]. Therefore, individual powder particles and entrapped gas porosity within EOS plasma atomized and PREP Ti-6Al-4 V powders were investigated to quantify if higher porosity powders will also result in higher porosity parts in metal AM LPBF builds (Fig. 4). In particular, a detailed investigation of individual gas pores as a function of powder particle size was undertaken since it is useful to know whether or not pore size scales with powder particle size. Electron beam powder bed uses coarser powders, for example, which might mean that we would expect larger pores [25].
+
+Fig. 5 compares pore size versus enclosing particle size in both PA and PREP powders utilizing ML segmentation and analysis techniques. The segmentation procedures used in this analysis are described above in Section 2.3. Note that the lower limit of sizes is determined by the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_3ee16c41030613e24aabg-07}
+\end{center}
+
+Fig. 5. P-V locations of remaining specimens with hatch spacings different from $140 \mu \mathrm{m}$ [25].\\
+resolution of the CT reconstructions; here a minimum pore volume of nine voxels was used where the voxel size was $0.65 \mu \mathrm{m}^{3}$ corresponding to a minimum pore radius of $0.87 \mu \mathrm{m}$. Fig. 6a displays a log-scale correlation plot which relates powder size (radius) with the size distribution of pores contained within the pore particles for each of the Ti-6Al$4 \mathrm{~V}$ powder samples. The log-scale plot is used in Fig. 6a in order for enhanced visualization of clustering behaviours Fig. $6 \mathrm{~b}$ displays the same pore size (radius) data as Fig. 6a, but this data is shown in a histogram with bin sizes of approximately $4 \mu \mathrm{m}$; the amount and frequency of porosity is denoted for each powder in terms of particle fraction with pores. Note, "particle fraction with pores" was utilized to compare the two powders in Fig. 5b since more PA powder particles $(\sim 5,000)$ were measured than PREP particles $(\sim 3,100)$ due to the fact that PREP mean particle size was larger than mean PA particle size resulting in more PA particles per CT volume. The pore radii for PREP and PA powders in Fig. $6 \mathrm{a}$ and $6 \mathrm{~b}$ were determined assuming spherical geometries, e.g., $V=4 / 3 \pi R^{3}$, where $R$ is the radius. Overall, PREP powders possessed a larger value for mean-pore radius-than PA powders. The PREP powder also contained a much lower amount of both small and large pores than the PA powders, as shown in Fig. 6b. For any PA Ti-6Al-4 V powder radius, the pore size distribution is broadly distributed, spanning roughly a factor of ten. This signifies that there is not a strong correlation between powder radius (e.g., size) and pore radius for this manufacturing technique, contrary to the intuitive expectation that pore size might scale with particle size. These results agree with the results of individual pore size and powder size reported in [49]. Closer examination of the PREP powder in Fig. 6a (red points) shows a curious feature of two branches whereby a subset of particles appears to have pore sizes that scale with particle size, whereas the rest of the particles have only very small pores (Fig. 6a). The origin of the apparently distinct distributions in the PREP powder is not known; however, regression fitting of this data is of the form $R_{\text {pore }}=C \cdot R_{\text {particle }}{ }^{\alpha}$, where $\alpha=2.01$ and $\mathrm{C}=2.77 \mathrm{E}-04$ (Fig. 6a). Comparatively, both PA and PREP powders possessed similar trends in anisotropy values (i.e., sphericity), therefore it is difficult to draw strong conclusions on the difference in morphology between the two powder types.
+
+\subsection*{3.4. Analysis of gas porosity transfer to the as-fabricated Ti-6Al-4 V test blocks}
+Although major LOF and keyhole porosity may be avoided through the appropriate choice of LPBF processing parameters, gas porosity may still exist within the process window for fully-dense parts (Fig. 1). As mentioned previously, gas porosity is due to the fact that typical starting powder feedstock materials made via gas or plasma atomization may possess non-trivial amounts of entrapped gas within individual powder granules $[49,50]$. Upon laser melting, this is likely to result in gas bubble transfer to the melt pool during laser melting [1,2]. Fig. 7 directly visualizes gas pore transfer to the melt pool during the laser powder interaction captured via ultrafast DXR scanning of Ti-6Al-4 V utilizing a stationary laser, i.e., spot welding [8]. In Fig. 7(top right), a powder particle containing a gas bubble (circled in red) is located adjacent to the laser beam and pulled into the melt pool (b-c). Once inside, the entrapped gas bubble may exit or remain within the melt pool depending on the competition between Marangoni convection and buoyancy forces (d-i). For the Ti-6Al-4 V test blocks within the process window (coe Fig. 1), it is deduced that the small-scale defects present within the $\mu$ SXCT are indeed gas porosity inherited from the powder. Furthermore, gas porosity transfer to the melt pool into the Ti6Al-4 V test blocks may originate from powder particles adjacent to the scan path, as shown by the schematic in Fig. 7 (bottom) and which is consistent with the particle denudation mechanism pointed out by Khairallah et al. [50]. However, further analysis to araw stronger conclusions is warranted.
+
+To verify that the porosity observed within $\mu$ SXCT scan volumes within the process window (namely Samples 1,4,6,7 in Fig. 1) may indeed be gas pores, the transfer of gas porosity from the powder to asfabricated Ti-6Al-4 V test blocks was investigated for two further Ti-6Al$4 \mathrm{~V}$ test blocks utilizing both EOS PA and PREP powders. The test blocks were printed utilizing processing parameters similar to Sample 6 $(\mathrm{P}=340 \mathrm{~W}, \mathrm{~V}=1,250 \mathrm{~mm} / \mathrm{s}, \mathrm{H}=120 \mu \mathrm{m}, \mathrm{L}=60 \mu \mathrm{m}$ ) that were well within the process window region of P-V space (Fig. 1). Fig. 8a and 8b display the gas porosity distributions within the EOS PA and PREP metal powders and the resultant as-fabricated test blocks. It appears that gas pores do indeed transfer into the Ti-6Al-4 V LPBF part via the mechanism detailed in the modeling work of Khairallah et al. [50] (Fig. 7), and that the distribution of spherical porosity is significantly higher in the PA metal powder, than in the PREP powders (Fig. 8a) [49]. This is deduced to be resultant from a lower distribution of gas porosity within PREP powders than gas atomized powders for the Ti-6Al-4 $\mathrm{V}$ powders used in this study (Fig. 6 and Fig. 8). Importantly, for the gas atomized powders the transfer of gas porosity to as-fabricated part was shown to be minimal, with the maximum spherical equivalent diameter (SED) of gas porosity of $\sim 25 \mu \mathrm{m}$ in the as-fabricated test blocks. Comparatively, the PREP contained maximum gas porosity SED values of approximately $21 \mu \mathrm{m}$. This minimal transfer of gas porosity to the Ti-6Al-4 V test blocks\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_3ee16c41030613e24aabg-08}
+
+Fig. 6. (a) Comparison of pore size (radius) to powder size for EOS plasma atomized (PA) and PREP Ti-6Al-4 V powders. The mean values for pore radius for the PREP (solid red line) and PA (solid blue line) powders are also plotted. Note, the regression fits in Fig. 6(a) for PREP powder display two branches, namely: (1) powder particles that only have small pores and do not scale with size (e.g. points near the median) and (2) powder particles which scale with pores size (points fitted with dashed red line). (b) Histogram comparison of pore size (radius) for plasma atomized and PREP powders. (c) Representative CT slice of PREP and PA powders displaying pores (voids) within individual particles. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article).\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_3ee16c41030613e24aabg-09}
+
+is likely from the fact that when the metal powder particles experience illumination by the laser beam and are melted, a significant number of gas pores can escape via buoyancy forces [1,2,22]. By inspection, it is also evident that approximately $90 \%$ of powder porosity is eliminated\\
+Fig. 7. In-situ x-ray radiograph before a stationary laser spot welding experiment (top left) and time sequence a-i (top right), showing the transfer of entrapped gas porosity from powder particles into the melt pool that are adjacent to the laser spot [8]. (a) A powder particle containing a gas bubble (circled in red) located adjacent to the laser beam is pulled into the melt pool (b-c). (d) Once inside, the entrapped gas bubble may exit or remain within the melt pool, depending on the interaction between the laser beam and the molten drop (e-i). It is deduced that a similar mechanism exists during laser scanning in LPBF builds (bottom), corresponding to the denudation mechanism noted by Khairallah et al. [50]. Axes are ordered as follows: $\mathrm{x}=$ laser scanning direction, $\mathrm{y}=$ width direction, $\mathrm{z}=$ build direction. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article).
+
+Fig. 8. Comparison of retained gas porosity (red shapes in $\mu \mathrm{SXCT}$ images) within (a) plasma rotating electrode (PREP), and (b) EOS plasma atomized Ti-6Al-4 V powders versus as-fabricated test blocks ( $\mathrm{P}=340 \mathrm{~W}, \mathrm{~V}=1,250 \mathrm{~mm}$ / $\mathrm{s}, \mathrm{H}=120 \mu \mathrm{m}, \mathrm{L}=60 \mu \mathrm{m}$ ). Note the higher incidence of gas porosity in the EOS powder as compared to PREP. Both powders also contained lower incidence of spherical gas porosity than the asfabricated blocks, although irregular porosity from the laser-powder interaction is still present (blue coloring in $\mu$ SXCT images). (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article). by AM processing. Visual inspection of the $\mu$ SXCT images also confirms this, with a larger amount of spherical porosity (red shapes) within the powder versus the as-fabricated test block (Fig. 8). Interestingly, irregular shaped defects (blue shapes) were also discovered in the\\
+as-fabricated test blocks although the processing parameters used to fabricate this test block lie well within the process window. Although there is a possibility that these defects are keyhole porosity, generally keyhole pores are large and spherical [2]. Therefore, it is currently unclear what type of porosity these observed defects are, and more analysis is needed to characterize these shapes. Furthermore, it is important to note that powder characteristics such as particle size distribution, flow, tap density, packing density, chemistry, and morphology can all influence build quality and resultant porosity distributions.
+
+\section*{4. Conclusion}
+The effect of processing parameters on porosity formation for LPBF Ti-6Al-4 V was analyzed using synchrotron based micro-computed tomography. In general, it was discovered that porosity formation follows predictable trends within $\mathrm{P}-\mathrm{V}$ space for this material and processing technique. Gas porosity was also investigated utilizing two Ti-6Al-4 V metal AM powders in order to determine the amount of gas pore transfer from the powder to the part during the laser melting. Overall the following conclusions are briefly stated here:
+
+\begin{itemize}
+  \item The overlap of melt pools and melt pool depth are main driving factors for lack-of-fusion porosity. Thus, the use of geometric modeling techniques that take melt pool geometry and overlap into account enables rapid prediction of the effects of changing key processing parameters on LOF porosity. Furthermore, geometric modeling may be applicable for a wide range of materials and processing parameters sets within $\mathrm{P}-\mathrm{V}$ space.
+  \item In keeping with previous work [20], a simple Rosenthal model was used to approximate melt pool dimensions in the geometric modeling of lack-of-fusion; however, more complex models of melt pool dimensions can be used instead with expected increases in prediction accuracy.
+  \item Processing parameter-dependent keyhole morphologies are deduced to play a key role in keyhole porosity formation. For estimated keyhole morphologies above the keyhole boundary large scale defects were present within the Ti-6Al-4 V test blocks. Large-scale keyhole defects were located in the characteristic high power, low velocity regions of the process space in metal powder AM. At this time, it appears that criteria based on keyhole front wall angle or (from the literature) the ratio of melt pool width to spot size can equivalently be used to establish the transition to keyholing with processing parameter changes.
+  \item On the order of $90 \%$ of porosity in the powder can be eliminated by AM processing due to pore bubbles reaching the melt pool surface. Processing parameters can be manipulated within the processing window to enhance this effect yielding essentially defect-free deposits.
+  \item Further characterization and quantification of metal AM defects may result in an expanded process window for Ti-6Al-4 V and increased deposition efficiency.
+\end{itemize}
+
+\section*{CRediT authorship contribution statement}
+Jerard V. Gordon: Conceptualization, Writing - original draft, Writing - review \& editing, Data curation, Formal analysis. Sneha P. Narra: Methodology, Investigation, Data curation, Formal analysis, Writing - review \& editing. Ross W. Cunningham: Methodology, Investigation, Formal analysis, Data curation. He Liu: Formal analysis, Data curation. Hangman Chen: Formal analysis, Data curation. Robert M. Suter: Supervision, Resources. Jack L. Beuth: Conceptualization, Methodology, Investigation, Formal analysis, Supervision, Resources, Writing - review \& editing. Anthony D. Rollett: Conceptualization, Methodology, Investigation, Formal analysis, Supervision, Resources, Writing - review \& editing.
+
+\section*{Declaration of Competing Interest}
+As SPN and RC now work at Worcester Polytechnic Institute (WPI) and Messer Inc., respectively, it would also be inappropriate for anyone currently affiliated with WPI or Messer to review this work. SPN and JLB are part of the Editorial Board of the journal. To avoid potential conflict of interest, the responsibility for the editorial and peer-review process of this article lies with the journal's other editors. Furthermore, the authors of this article were removed from the peer review process and did not have, and will not have, any access to confidential information related to the editorial process of this article. There are no other known conflicts of interest to disclose.
+
+\section*{Acknowledgements}
+JVG acknowledges the support of the Manufacturing Futures Initiative program at Carnegie Mellon University (CMU). SPN, RWC, JLB and ADR acknowledge support from America Makes for the computed x-ray micro-tomography under the project entitled "A Database Relating Powder Properties to Process Outcomes for Direct Metal AM," Award Number FA8650-12-2-7230. RMS, ADR and HL acknowledge the support of the National Nuclear Security Administration under grant number DE-NA0003915. The work at CMU was also supported by the NextManufacturing Center. This research used resources of the Advanced Photon Source, a U.S. Department of Energy (DOE) Office of Science User Facility operated for the DOE Office of Science by Argonne National Laboratory under Contract No. DE-AC02-06CH11357. The authors acknowledge the use of the Materials Characterization Facility at CMU supported by Grant MCF-677785. Dr. Amir Mostafaei is acknowledged for helpful comments and review of the manuscript before submission.
+
+\section*{References}
+[1] J.A. Slotwinski, E.J. Garboczi, K.M. Hebenstreit, Porosity measurements and analysis for metal additive manufacturing process control, J. Res. Inst. Stand. Technol. 119 (2014) 494, \href{https://doi.org/10.6028/jres.119.019}{https://doi.org/10.6028/jres.119.019}.
+
+[2] S. Tammas-Williams, H. Zhao, F. Léonard, F. Derguti, I. Todd, P.B. Prangnell, XCT analysis of the influence of melt strategies on defect population in Ti-6Al-4V components manufactured by Selective Electron beam Melting, Mater. Charact. 102 (2015) 47-61, \href{https://doi.org/10.1016/j.matchar.2015.02.008}{https://doi.org/10.1016/j.matchar.2015.02.008},
+
+[3] R. Cunningham, A. Nicolas, J. Madsen, E. Fodran, E. Anagnostou, M.D. Sangid, A. D. Rollett, Analyzing the effects of powder and post-processing on porosity and properties of electron beam melted Ti-6Al-4V, Mater. Res. Lett. 5 (2017) 516-525, \href{https://doi.org/10.1080/21663831.2017.1340911}{https://doi.org/10.1080/21663831.2017.1340911}.
+
+[4] H. Gong, K. Rafi, H. Gu, T. Starr, B. Stucker, Analysis of defect generation in Ti-6Al$4 \mathrm{~V}$ parts made using powder bed fusion additive manufacturing processes, Addit. Manuf. 1 (2014) 87-98, \href{https://doi.org/10.1016/j.addma.2014.08.002}{https://doi.org/10.1016/j.addma.2014.08.002}.
+
+[5] S.K. Everton, M. Hirsch, P.I. Stavroulakis, R.K. Leach, A.T. Clare, Review of in-situ process monitoring and in-situ metrology for metal additive manufacturing, Mater. Des. 95 (2016) 431-445, \href{https://doi.org/10.1016/j.matdes.2016.01.099}{https://doi.org/10.1016/j.matdes.2016.01.099}.
+
+[6] J. Beuth, J. Fox, J. Gockel, C. Montgomery, R. Yang, H. Qiao, P. Reeseewatt, A. Anvari, S. Narra, N. Klingbeil, Process mapping for qualification across multiple direct metal additive manufacturing processes, Solid Free. Fabr. Proc. (2013) 655-665, \href{https://doi.org/10.1007/s13398-014-0173-7.2}{https://doi.org/10.1007/s13398-014-0173-7.2}.
+
+[7] M. Seifi, A. Salem, J. Beuth, O. Harrysson, J.J. Lewandowski, Overview of materials qualification needs for metal additive manufacturing, JOM 68 (2016) 747-764, \href{https://doi.org/10.1007/s11837-015-1810-0}{https://doi.org/10.1007/s11837-015-1810-0}.
+
+[8] R. Cunningham, Defect Formation Mechanisms in Powder-Bed Metal Additive Manufacturing, Carnegie Mellon University, 2018.
+
+[9] W.E. Frazier, Metal additive manufacturing: a review, J. Mater. Eng. Perform. 23 (2014) 1917-1928, \href{https://doi.org/10.1007/s11665-014-0958-z}{https://doi.org/10.1007/s11665-014-0958-z}.
+
+[10] J.J. Lewandowski, M. Seifi, Metal additive manufacturing: a review of mechanical properties, Annu. Rev. Mater. Res. 46 (2016) 151-186, \href{https://doi.org/10.1146/}{https://doi.org/10.1146/} annurev-matsci-070115-032024.
+
+[11] G.K.L. Ng, A.E.W. Jarfors, G. Bi, H.Y. Zheng, Porosity formation and gas bubble retention in laser metal deposition, Appl. Phys. A Mater. Sci. Process. 97 (2009) 641-649, \href{https://doi.org/10.1007/s00339-009-5266-3}{https://doi.org/10.1007/s00339-009-5266-3}.
+
+[12] S. Kou, Welding Metallurgy, 2nd ed., John Wiley \& Sons, 2003.
+
+[13] T.M. Mower, M.J. Long, Mechanical behavior of additive manufactured, powderbed laser-fused materials, Mater. Sci. Eng. A. 651 (2016) 198-213, \href{https://doi.org/}{https://doi.org/} 10.1016/j.msea.2015.10.068.
+
+[14] A.B. Spierings, T.L. Starr, K. Wegener, Fatigue performance of additive manufactured metallic parts, Rapid Prototyp. J. 19 (2013) 88-94, \href{https://doi.org/}{https://doi.org/} 10.1108/13552541311302932.
+
+[15] P. Edwards, M. Ramulu, Fatigue performance evaluation of selective laser melted Ti-6Al-4V, Mater. Sci. Eng. A 598 (2014) 327-337, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. msea.2014.01.041.
+
+[16] H. Masuo, Y. Tanaka, S. Morokoshi, H. Yagura, T. Uchida, Y. Yamamoto, Y. Murakami, Influence of defects, surface roughness and HIP on the fatigue strength of Ti-6Al-4V manufactured by additive manufacturing, Int. J. Fatigue 117 (2018) 163-179, \href{https://doi.org/10.1016/j.ijfatigue.2018.07.020}{https://doi.org/10.1016/j.ijfatigue.2018.07.020}.
+
+[17] S.K. Dinda, J.M. Warnett, M.A. Williams, G.G. Roy, P. Srirangam, 3D imaging and quantification of porosity in electron beam welded dissimilar steel to $\mathrm{Fe}-\mathrm{Al}$ alloy joints by X-ray tomography, Mater. Des. 96 (2016) 224-231, \href{https://doi.org/}{https://doi.org/} 10.1016/j.matdes.2016.02.010.
+
+[18] J.W. Elmer, J. Vaja, H.D. Carlton, R. pong, The effect of Ar and N 2 shielding gas on laser weld porosity in steel, stainless steels, and nickel, Weld. J. 94 (2015) 313-325. \href{https://app.aws.org/wj/supplement/WJ_2015_10_s313.pdf}{https://app.aws.org/wj/supplement/WJ\_2015\_10\_s313.pdf}.
+
+[19] Y. Tian, J.D. Robson, S. Riekehr, N. Kashaev, L. Wang, T. Lowe, A. Karanika, Process optimization of dual-laser beam welding of advanced Al-Li alloys through hot cracking susceptibility modeling, Metall. Mater. Trans. A Phys. Metall. Mater. Sci. 47 (2016) 3533-3544, \href{https://doi.org/10.1007/s11661-016-3509-4}{https://doi.org/10.1007/s11661-016-3509-4}.
+
+[20] M. Tang, P.C. Pistorius, J.L. Beuth, Prediction of lack-of-fusion porosity for powder bed fusion, Addit. Manuf. 14 (2017) 39-48, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j} addma.2016.12.001
+
+[21] Q. Guo, C. Zhao, L.I. Escano, Z. Young, L. Xiong, K. Fezzaa, W. Everhart, B. Brown, T. Sun, L. Chen, Transient dynamics of powder spattering in laser powder bed fusion additive manufacturing process revealed by in-situ high-speed high-energy x-ray imaging, Acta Mater. 151 (2018) 169-180, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. actamat.2018.03.036.
+
+[22] R. Cunningham, C. Zhao, N. Parab, C. Kantzos, J. Pauza, Keyhole threshold and morphology in laser melting revealed by ultrahigh- speed X-ray imaging, Science 363 (80) (2019) 849-852.
+
+[23] D. Gu, Y. Shen, Balling phenomena during direct laser sintering of multicomponent Cu-based metal powder, J. Alloys. Compd. 432 (2007) 163-166, \href{https://doi.org/10.1016/j.jallcom.2006.06.011}{https://doi.org/10.1016/j.jallcom.2006.06.011}.
+
+[24] H.J. Niu, I.T.H. Chang, Instability of scan tracks of selective laser sintering of high speed steel powder, Scr. Mater. 41 (1999) 1229-1234, \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} S1359-6462(99)00276-6.
+
+[25] R. Cunningham, S.P. Narra, C. Montgomery, J. Beuth, A.D. Rollett, Synchrotronbased X-ray microtomography characterization of the effect of processing variables on porosity formation in laser power-bed additive manufacturing of Ti-6Al-4V, JOM 69 (2017) 479-484, \href{https://doi.org/10.1007/s11837-016-2234-1}{https://doi.org/10.1007/s11837-016-2234-1}.
+
+[26] T. Thiede, T. Mishurova, S. Evsevleev, I. Serrano-Munoz, C. Gollwitzer, G. Bruno, 3D shape analysis of powder for laser beam melting by synchrotron X-ray CT, Quantum Beam Sci. 3 (2019) 3, \href{https://doi.org/10.3390/qubs3010003}{https://doi.org/10.3390/qubs3010003}.
+
+[27] C.T. Rueden, J. Schindelin, M.C. Hiner, B.E. DeZonia, A.E. Walter, E.T. Arena, K. W. Eliceiri, ImageJ2: ImageJ for the next generation of scientific image data, BMC Bioinformatics 18 (2017) 529.
+
+[28] C. Sommer, C. Straehle, U. Kothe, F.A. Hamprecht, Ilastik: Interactive learning and segmentation toolkit, Proc. - Int. Symp. Biomed. Imaging (2011) 230-233, https:// \href{http://doi.org/10.1109/ISBI.2011.5872394}{doi.org/10.1109/ISBI.2011.5872394}.
+
+[29] E. Wycisk, A. Solbach, S. Siddique, D. Herzog, F. Walther, C. Emmelmann, Effects of defects in laser additive manufactured Ti-6Al-4V on fatigue properties, Phys. Procedia 56 (2014) 371-378, \href{https://doi.org/10.1016/j.phpro.2014.08.120}{https://doi.org/10.1016/j.phpro.2014.08.120}.
+
+[30] S. Leuders, M. Thöne, A. Riemer, T. Niendorf, T. Tröster, H.A. Richard, H.J. Maier, On the mechanical behaviour of titanium alloy TiAl6V4 manufactured by selective laser melting: fatigue resistance and crack growth performance, Int. J. Fatigue 48 (2013) 300-307, \href{https://doi.org/10.1016/j.ijfatigue.2012.11.011}{https://doi.org/10.1016/j.ijfatigue.2012.11.011}
+
+[31] S. Tammas-Williams, P.J. Withers, I. Todd, P.B. Prangnell, The effectiveness of hot isostatic pressing for closing porosity in titanium parts manufactured by selective Electron beam melting, Metall. Mater. Trans. A Phys. Metall. Mater. Sci. 47 (2016) 1939-1946, \href{https://doi.org/10.1007/s11661-016-3429-3}{https://doi.org/10.1007/s11661-016-3429-3}.
+
+[32] H. Gong, H. Gu, K. Zeng, J.J.S. Dilip, D. Pal, B. Stucker, D. Christiansen, J. Beuth, J. J. Lewandowski, Melt pool characterization for selective laser melting of Ti-6Al-4V pre-alloyed powder, Solid Free. Fabr. Proc. (2014) 256-267.\\
+[33] Z. Francis, The Effects of Laser and Electron Beam Spot Size in Additive Manufacturing Processes. \href{http://repository.cmu.edu/dissertations/909}{http://repository.cmu.edu/dissertations/909}, 2017.
+
+[34] M. Tang, Inclusions, porosity, and fatigue of AlSi10Mg parts produced by selective laser melting, Int. J. Fatigue 94 (2017) 184, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. ijfatigue.2016.06.002.
+
+[35] M. Tang, P.C. Pistorius, C. Montgomery, J. Beuth, Build rate optimization for powder bed fusion, J. Mater. Eng. Perform. (2018) 1-7, \href{https://doi.org/10.1007/}{https://doi.org/10.1007/} s11665-018-3647-5.
+
+[36] D. Rosenthal, Mathematical theory of heat distribution during welding and cutting, Weld. J. 20 (1941) 220-234.
+
+[37] C.M. Adams, Cooling rates and peak temperatures in fusion welding, Weld. J. 37 (1958).
+
+[38] R. Rai, J.W. Elmer, T.A. Palmer, T. Debroy, Heat transfer and fluid flow during keyhole mode laser welding of tantalum, Ti-6Al-4V, 304L stainless steel and vanadium, J. Phys. D Appl. Phys. 40 (2007) 5753-5766, \href{https://doi.org/10.1088/}{https://doi.org/10.1088/} 0022-3727/40/18/037.
+
+[39] W.E. King, H.D. Barth, V.M. Castillo, G.F. Gallegos, J.W. Gibbs, D.E. Hahn, C. Kamath, A.M. Rubenchik, Observation of keyhole-mode laser melting in laser powder-bed fusion additive manufacturing, J. Mater. Process. Technol. 214 (2014) 2915-2925, \href{https://doi.org/10.1016/j.jmatprotec.2014.06.005}{https://doi.org/10.1016/j.jmatprotec.2014.06.005}
+
+[40] T.W. Eagar, N.-S. Tsai, Temperature Fields Produced by Traveling Distributed Heat Sources. \href{http://eagar.mit.edu/Publications/Eagar036.pdf}{http://eagar.mit.edu/Publications/Eagar036.pdf}, 1983.
+
+[41] T.W. Elmer, J.W. Giedt, W.H. Eagar, Transition from Shallow to Deep Penetration Weld, 1990, pp. 167-176.
+
+[42] T. Debroy, S.A. David, Physical processes in fusion welding, Rev. Mod. Phys. 67 (1995) 85-112, \href{https://doi.org/10.1103/RevModPhys.67.85}{https://doi.org/10.1103/RevModPhys.67.85}.
+
+[43] J. Trapp, A.M. Rubenchik, G. Guss, M.J. Matthews, In situ absorptivity measurements of metallic powders during laser powder-bed fusion additive manufacturing, Appl. Mater. Today. 9 (2017) 341-349, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. apmt.2017.08.006.
+
+[44] R. Fabbro, K. Chouf, Keyhole modeling during laser welding, J. Appl. Phys. 87 (2000) 4075-4083, \href{https://doi.org/10.1063/1.373033}{https://doi.org/10.1063/1.373033}.
+
+[45] N. Seto, S. Katayama, A. Matsunawa, High-speed simultaneous observation of plasma and keyhole behavior during high power CO2 laser welding: effect of shielding gas on porosity formation, J. Laser Appl. 12 (2000) 245-250, \href{https://doi}{https://doi}. org/10.2351/1.1324717.
+
+[46] B.H. Rabin, G.R. Smolik, G.E. Korth, Characterization of entrapped gases in rapidly solidified powders, Mater. Sci. Eng. A 124 (1990) 1-7, \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} 0921-5093(90)90328-Z.
+
+[47] I.E. Anderson, E.M.H. White, R. Dehoff, Feedstock powder processing research needs for additive manufacturing development, Curr. Opin. Solid State Mater. Sci. 22 (2018) 8-15, \href{https://doi.org/10.1016/j.cossms.2018.01.002}{https://doi.org/10.1016/j.cossms.2018.01.002}.
+
+[48] P. Sun, Z.Z. Fang, Y. Zhang, Y. Xia, Review of the methods for production of spherical Ti and Ti alloy powder, Jom 69 (2017) 1853-1860, \href{https://doi.org/}{https://doi.org/} 10.1007/s11837-017-2513-5.
+
+[49] G. Chen, S.Y. Zhao, P. Tan, J. Wang, C.S. Xiang, H.P. Tang, H.P. Chen, G. Zhao, S. Y. Tan, P. Wang, J. Xiang, C.S. Tang, A comparative study of Ti-6Al-4V powders for additive manufacturing by gas atomization, plasma rotating electrode process and plasma atomization, Powder Technol. 333 (2018) 38-46, \href{https://doi.org/10.1016/}{https://doi.org/10.1016/} j.powtec.2018.04.013.
+
+[50] J.O. Yin, G. Chen, S.Y. Zhao, Y. Ge, Z.F. Li, P.J. Yang, W.Z. Han, J. Wang, H. P. Tang, P. Cao, Microstructural characterization and properties of Ti-28Ta at.\% powders produced by plasma rotating electrode process, J. Alloys. Compd. 713 (2017) 222-228, \href{https://doi.org/10.1016/j.jallcom.2017.04.195}{https://doi.org/10.1016/j.jallcom.2017.04.195}.
+
+[51] S.A. Khairallah, A.T. Anderson, A.M. Rubenchik, W.E. King, Laser powder-bed fusion additive manufacturing: physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones Saad, Acta Mater. 108 (2016) 36-45, \href{https://doi.org/10.1016/j.actamat.2016.02.014}{https://doi.org/10.1016/j.actamat.2016.02.014}.
+
+[52] H.V. Atkinson, S. Davies, Fundamental aspects of hot isostatic pressing: an overview, Metall. Mater. Trans. A Phys. Metall. Mater. Sci. 31 (2000) 2981-3000, \href{https://doi.org/10.1007/s11661-000-0078-2}{https://doi.org/10.1007/s11661-000-0078-2}.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

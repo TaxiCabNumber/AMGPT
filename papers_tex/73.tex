@@ -1,0 +1,273 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Machine Learning of Selective Laser Melting }
+
+\author{}
+\date{}
+
+
+\begin{document}
+\maketitle
+LAWRENCE LIVERMORE NA TIONAL
+
+B. Yuan, G. Guss, A. Wilson, S. Hau-Riege, P. Depond, S. McMains, M. Matthews, B. Giera
+
+\section*{March 22, 2018}
+Advanced Materials Technologies
+
+This document was prepared as an account of work sponsored by an agency of the United States government. Neither the United States government nor Lawrence Livermore National Security, LLC, nor any of their employees makes any warranty, expressed or implied, or assumes any legal liability or responsibility for the accuracy, completeness, or usefulness of any information, apparatus, product, or process disclosed, or represents that its use would not infringe privately owned rights. Reference herein to any specific commercial product, process, or service by trade name, trademark, manufacturer, or otherwise does not necessarily constitute or imply its endorsement, recommendation, or favoring by the United States government or Lawrence Livermore National Security, LLC. The views and opinions of authors expressed herein do not necessarily state or reflect those of the United States government or Lawrence Livermore National Security, LLC, and shall not be used for advertising or product endorsement purposes.
+
+\section*{WILEY-VCH}
+DOI: $10.1002 /$ ((please add manuscript number))
+
+Article type: Full paper
+
+\section*{Machine Learning Based Monitoring of Laser Powder Bed Fusion}
+Bodi Yuan, Gabriel M. Guss, Aaron C. Wilson, Stefan P. Hau-Riege, Phillip J. DePond, Sara McMains, Manyalibo J. Matthews, and Brian Giera*
+
+Keywords: laser powder bed fusion, machine learning, additive manufacturing, selective laser melting
+
+A two-step machine learning approach to monitoring Laser Powder Bed Fusion (LPBF) additive manufacturing is demonstrated that enables on-the-fly assessments of laser track welds. First, in situ video melt pool data acquired during LPBF is labeled according to the (1) average and (2) standard deviation of individual track width and also (3) whether or not the track is continuous, measured post-build through an ex situ height map analysis algorithm. This procedure generates three ground truth labeled datasets for supervised machine learning. Using a portion of the labeled 10-millisecond video clips, a single Convolutional Neural Network architecture is trained to generate three distinct networks. With the remaining in situ LPBF data, the trained neural networks are tested and evaluated and found to predict track width, standard deviation, and continuity without the need for ex situ measurements. This two-step approach should benefit any LPBF system - or any additive manufacturing technology - where height-map-derived properties can serve as useful labels for in situ sensor data.
+
+\section*{1. Introduction}
+Laser Powder Bed Fusion (LPBF, or equivalently Selective Laser Melting) is an additive manufacturing technology that produces metal parts, layer by layer, by melting powdered metals and alloys with a high-power laser ${ }^{[1]}$. Considering the beneficially large set of metallic powders available to LPBF for fabricating objects of virtually any shape, the technique is versatile and ideally suited for applications such as rapid prototyping and lightweighting ${ }^{[2]}$. The final material properties of parts made via LPBF are extremely sensitive to\\
+the powder properties ${ }^{[3]}$ (e.g., powder shape, flow characteristics, porosity, laser absorptivity ${ }^{[4],[5]}$, etc.) and laser parameters (e.g., beam size, power, scan rate, etc. $)^{[6,7]}$. As such, it is a significant challenge to identify the optimal operating parameters to rapidly and reliably produce parts with the desired properties without defects ${ }^{[8]}$. Furthermore, many types of LPBF defects arise due to inherent variability in the powder properties ${ }^{[9]}$, bed thickness non-uniformity ${ }^{[10]}$, and laser parameters and scan paths that result in improper power melting $^{[11]}$. Thus, even after optimizing LPBF operating parameters and identifying suitable processing windows ${ }^{[12]}$, rapid build qualification, improved quality, and higher production yields require methods of monitoring the melt pool and/or powder bed in situ, i.e. during a build, that enable real-time process feedback and automated quality detection ${ }^{[13,14]}$.
+
+The majority of LPBF process monitoring approaches rely on non-contact sensing ${ }^{[15]}$ from optical, thermal ${ }^{[16]}$ and/or acoustic ${ }^{[17,18]}$ sensors. These sensors provide assessments of spatial and spectral features of the melt pool ${ }^{[19,20]}$, process plume ${ }^{[21]}$, degree of spatter ${ }^{[22-25]}$, overhang layers ${ }^{[26]}$, or print bed. High-speed image sequences of the melting process ${ }^{[27]}$, scans of the powder bed ${ }^{[28],[10]}$, beam quality ${ }^{[29]}$, and/or thermal monitoring ${ }^{[30]}$ are all routinely collected forms of in situ monitoring data. Making use of this data requires methods that can extract relevant diagnostic information. For instance, before initiating laser melting, automated computer vision algorithms can characterize metal powder feedstocks ${ }^{[31]}$, and image analysis of newly spread powder can reveal non-uniformities in the powder bed thickness ${ }^{[32]}$. Aminzadeh et. al. demonstrated layer-by-layer detection of fusion defects from images using a Bayesian classifier ${ }^{[33]}$. Real-time events such as material ejecta are detectable by applying manually-set thresholds to high speed near-infrared images of the melt pool. Also, increasing the $\mu \mathrm{m} / \mathrm{pixel}$ image resolution relative to the standard deviation of measured track width, $\sigma_{\text {measured, }}$, may result in improved predictions of the final track width, $\delta_{\text {predicted, }}$, and topography ${ }^{[34]}$. Reducing laser power proportionally to an integrated signal from a photodiode calibrated against a CMOS camera results in smoother overhang structures ${ }^{[35]}$. Using images
+
+\section*{WILEY-VCH}
+of the print bed taken after laser melting, a level sets method can detect intentionally created defects, ${ }^{[36]}$ machine vision algorithms can identify pore defects, ${ }^{[37]}$ and multifractal image analysis can characterize layers with balling, cracks and pores, and no defects ${ }^{[38]}$. Visual imaging equipment is appealing to LPBF monitoring systems because it is relatively inexpensive and provides non-contact sensing ${ }^{[13]}$.
+
+As with most additive manufacturing systems, analysis of LPBF sensor data currently occurs post-build, rendering process monitoring and rectification impossible. Machine learning offers a route to convert sensor data into real-time assessments; however, this requires a wealth of labeled sensor data that traditionally is too time-consuming and/or expensive to assemble. In this manuscript, this critical issue of generating labeled video data for machine learning is solved. An original multi-stage convolutional network is trained that processes in situ high speed video data to predict properties of track welds measured ex situ following an LPBF print. The in situ machine learning models rely on labeled time segments of high-speed video data generated from a separate height map analysis algorithm. The height map analysis algorithm presented here processes height map data of isolated track welds and extracts ground truth labels of the average and standard deviation of the width along each track and whether or not each track is continuous. A newly-developed single, general convolutional architecture is trained to predict ex situ measurements from as little as 10 video frames with a correlation coefficient of $R^{2}=0.93$ for track width, $R^{2}=0.70$ for standard deviation of track width, and prediction accuracy of $93.1 \%$ for track continutiy. The algorithm successfully generalizes across multiple tracks created with several combinations of the laser power and speed. In terms of broader impact, since this approach to generate labeled training sets for in situ machine learning-based detection algorithms does not rely on specific LPBF characteristics, is should be extensible to other additive manufacturing technologies ${ }^{[40]}$.
+
+\section*{2. Methods}
+In what follows, bead-on-plate LPBF experiments are performed wherein 870 isolated $5 \mathrm{~mm}$ track welds are created under a variety of randomly chosen laser speed and power settings while simultaneously recording video. After unwelded powder is removed, height maps of bare laser tracks are generated and analyzed with a novel height map analysis algorithm to determine the per-pixel average track width, $\delta_{\text {measured, }}$, standard deviation of the track width, $\sigma_{\text {measured, and give each track a Boolean "continuity label" that identifies whether }}$ or not a track is continuous. Each video is assigned three labels and assembled into training sets for our machine learning algorithm. A single supervised machine learning acrhitecture is used to predict these three ex situ measurements from in situ video data, as described below.
+
+An Aconity LAB system from Aconity3D is used for welding single tracks of 316L stainless steel. The system uses a carbon fiber brush to spread metal powder evenly into a $\sim 50$ $\mu \mathrm{m}$ layer atop a $180 \mathrm{~mm}$ 316L stainless steel plate in an argon-purged environment. Galvanometer mirrors scan the high-power laser across evenly spaced track sites on the powder bed at 11 possible scan speeds and 11 possible laser powers in evenly-spaced increments between $100-400 \mathrm{~mm} / \mathrm{s}$ and $50-375 \mathrm{~W}$, respectively, with each set of laser conditions repeated up to seven times. In situ video data is recorded at frame rate of $1 \mathrm{kHz}$ and frame size of $256 \times 256$ pixels using a 10-bit Mikrotron EOsens MC1362 incorporated into the optical system diagrammed in Figure 1. The illumination laser and Mikrotron video camera are co-aligned with the high-power laser. These components share a common moving focal point, fixed at the melt pool while the laser scans each track site. In each video, the melt pool and spatter are visible for each frame. The total frames per video range from $12-50$ frames, depending on the laser scan speed. The camera pixel size is $14 \mu \mathrm{m} / \mathrm{pixel}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_123d7fb5db614938938fg-07}
+\end{center}
+
+Figure 1. Schematic of video capture system. Adjustable mirrors trace the path of a focal point shared between the co-aligned high-speed camera, illumination laser, and high-power laser. The camera records in situ video taken during each welding event.
+
+Upon completing the bead-on-plate experiment, unwelded powder is removed from the plate and a Keyence VR3000 3D macroscope is used to generate a height map of all laser tracks. Figure 2a shows the grayscale electro-optical image of an array of isolated track welds. Structured light scans from the Keyence VR3000 instrument measure the height at each pixel in order to produce a surface map as shown in Figure 2b. Our pixel-level classification algorithm distinguishes track from background as shown in Figure 2c. After applying our classification algorithm, any number of quality metrics can be calculated from a surface map, e.g. $\delta_{\text {measured, }} \sigma_{\text {measured, }}$ whether or not the track is continuous, surface roughness, etc., by de-noising the height data, distinguishing track from background, and analyzing the height values corresponding to the track. This paper focuses solely on the prediction of the mean and standard deviation of track widths and classification of track continuity with our proposed algorithm.
+
+From the height maps, pixels are classified as one of three types: track weld, background, or etch (in which the height map gives values below the background). Since track locations are specified with pre-set spacing in both the horizontal and vertical directions, it is straightforward to analyze individual tracks in rectangular patches that encompass the
+
+\section*{WILEY-VCH}
+track and surrounding background. In each patch, background pixels are removed so that only weld and etch pixels remain via the following protocol:
+
+\begin{enumerate}
+  \item Calculate the mean pixel height in each patch, $h_{1}$.
+
+  \item Identify pixels whose heights are within $h_{1}+l$, where $t$ is a small constant with default value $0.01 \mathrm{~mm}$. Pixels within this range are likely to belong to the track weld.
+
+  \item Calculate the mean height for pixels outside of this range, $h_{2}$. Pixels whose heights are within $h_{2} \pm \iota$ belong to the background. The remaining pixels are given a preliminary classification of non-background.
+
+\end{enumerate}
+
+After executing the steps above, a binary \{background, non-background \} map is obtained that may contain mistakenly classified pixels due to the specified value of $\iota$ and inherent noise.
+
+Such "noise" pixels appear as small isolated regions on the height map that do not manifest in the electro-optical images. To filter these noise pixels, suspected noise pixels per column of pixels are counted in a given patch and reclassified as background if that count, $n$, is below some threshold. Here $n=10$, which is $\sim 6 \%$ of the overall track length. Etch pixels correspond to negative height values that result from the laser etching into the plate. After de-noising, a post-processed height map identifies track, etch, and background, as shown in Figure 2c. From the post-processed height map, $\delta_{\text {measured }}$ and $\sigma_{\text {measured }}$ are computed for every track and these are used to assign ground truth labels for the corresponding in situ videos, thereby assembling a training set for two regression models. Each track is also assessed for continuity, i.e. a track is discontinuous if at least one gap of non-track pixels exists along its length, otherwise a track is continous. The continuity labels serve as a training set for a binary classification model. The entire plate is scanned in less than 4 hours the ex situ height map analysis runs in $<10$ seconds. Since a large training set of in situ LPBF data is amassed quickly, it is feasible to develop machine learning algorithms capable of assessing the in situ data.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_123d7fb5db614938938fg-09}
+\end{center}
+
+Figure 2. Ex situ analysis of laser track height maps. (a) Electro-optical image of tracks weld on bare plate and corresponding height map (b). (c) results from applying the ex situ height map analysis algorithm that classifies each pixel as track, etch, or background, colored green, red, and white, respectively. From (c), per-pixel track width average, $\delta_{\text {measured, and }}$ standard deviation, $\sigma_{\text {measured, }}$, and continuity are determined.
+
+The LPBF video dataset contains 870 individual videos, labeled according the ex situ height map analysis algorithm that provides each video a label of $\delta_{\text {measured }}$ and $\sigma_{\text {measured }}$ for regression, and track continuity for classification. To do this, 700 randomly selected videos are used to train candidate machine learning models and the remaining videos are used to test the fully-trained models. The standard mean squared error loss function is used for the regression predictions, while cross entropy loss is used for classification. The model architecture is developed using only the $\delta_{\text {measured }}$ labels, but is trained separately on all three labels, and the learning rate hyperparameter retuned. As described below, our convolutional neural network architecture requires videos to be a fixed frame length and resolution. For the fastest scan speed, there are only 12 frames of video and the first and last frames are omitted to ensure end-of-track artifacts did not affect the results. Thus, only the 10 middle frames are chosen from each video, i.e. middle $10 \mathrm{~ms}$ of video. Furthermore, the frames for each track are center-cropped into $64 \times 64$ pixel size images, eliminating a portion of the background from the videos so that the neural network trains on the most relevant region of the video that encompasses the laser spot. A convolutional neural network (CNN) ${ }^{[41],[42]}$ is used to address this regression or classification problem. The CNN model is configured and trained with the
+
+\section*{WILEY-VCH}
+TensorFlow ${ }^{[43]}$ library on an NVIDIA TITAN X GPU. A full description of the CNN model architecture and training hyperparameters is given in the Supporting Information; here, the most important features of our model are discussed.
+
+To set the number of layers (the depth of the model), an initial architecture was configured with six convolutional layers, which contains sufficient capacity to learn $\delta_{\text {measured }}$ from the video data. Then the number of layers was reduced sequentially until the model did not exhibit overfitting. (Overfitted models provide excellent predictions for a training set, but do not generalize well to new datasets.) Based on several candidate model training sessions, three convolutional layers could generalize sufficiently to the test data, as discussed below. Although it is more common to use max-pooling to reduce dimensionality between convolutional layers, mean-pooling was found to outperforms max-pooling for learning to predict the track width. For this application, mean-pooling may help the CNN learn about the differences in melt pool size to generate predictions for the track width average, $\delta_{\text {predicted. If }}$ this is the case, the overall summation of the video pixel values would seem to be more relevant than the summation of max pixel values. Though the model architecture was not optimized based on track continuity or standard deviation of width measurements, reasonable results were obtained when retraining the same $\mathrm{CNN}$ model (developed with $\delta_{\text {measured) }}$ ) using $\sigma_{\text {measured }}$ and continuity labels as discussed below.
+
+\section*{3. Results and Discussion}
+After creating and scanning all tracks, the ex situ height map analysis algorithm is used to measure the tracks. Approximately $80 \%$ of all tracks are continous. Figure 3 shows measured track widths for all laser speed and power combinations studied, plotted as the average value of $\delta_{\text {measured }}$ with error bars corresponding to the standard deviation of repeat width measurements. Tracks are widest at high laser powers and slow scan speeds. The trends in Figure 3 agree with previous findings from experiments ${ }^{[44-47]}$ and simulation ${ }^{[48,49]}$\\
+that show the melt pool width increases with increasing laser power-to-speed ratio, i.e. increasing volumetric energy density. Error bar values show no clear trend as a function of laser parameters throughout the dataset collected. Thus, an in situ detection technique based solely on empirical fits of these data mav not rolidoly captumonatural variances within the
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_123d7fb5db614938938fg-11(1)}
+\end{center}
+
+Figure 3. Measured track widths for every laser power and speed combination. The dataset exhibits an expected trend: lasers with slower speed (legend) and/or at higher power settings impart more energy into the powder bed to create wider tracks. Error bars represent the standard deviation of $\delta_{\text {measured }}$ from repeat measurements.
+
+Track measurements are used as ground truth labels for each video taken during the welding process. Figure 4 shows the exact 10 middle center-cropped frames from the in situ videos and corresponding labels that are used to train the machine learning model for four different example laser conditions in our dataset. The bright area in the center of all video frames corresponds to incandescent light emitted from the melt pool. The video capture system alignment (Figure 1) ensures that the center of the melt pool appears in the same location of every frame. Figure 4 displays video segments in order of increasing $\delta_{\text {measured }}$ and
+
+\includegraphics[max width=\textwidth, center]{2024_03_10_123d7fb5db614938938fg-11}\\
+$310 \mathrm{~mm} / \mathrm{s}(\mathrm{a}, \mathrm{c})$ and $160 \mathrm{~mm} / \mathrm{s}(\mathrm{b}, \mathrm{d})$. Melt pool size and shape differences between videos at each distinct laser power setting are evident. At larger powers, the melt pool increases in size\\
+and aspect ratio, as expected. Intuitively, the relative size of the melt pool appears to correlate with larger values of $\delta_{\text {measured. }}$. Frame-by-frame variations in the quantity of bright pixels also appear to correlate with increasing $\sigma_{\text {measured. }}$. For instance, there are more saturated pixels in the melt pools at high power in Figure 4(c,d) than at low power Figure 4(a,b). The track width may also correlate with the degree of spatter, which is more pronounced for smaller $\delta_{\text {measured. }}$.
+
+It is hard to distinguish from visual inspection alone whether the melt pool is a better indicator of $\sigma_{\text {measured }}$ than the spatter. In addition to these features, temporal characteristics gathered from chronological series of frames may yield accurate predictors of resulting track properties. Moreover, there may be additional salient features besides characteristics of the melt pool spatter that correlate strongly with $\delta_{\text {measured }}$ and/or $\sigma_{\text {measured. It is unclear from }}$ inspection how one would identify track continuity from these video frames.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_123d7fb5db614938938fg-12}
+\end{center}
+
+Figure 4. Machine learning training data examples: in situ Laser Powder Bed Fusion video sequences with labels of measured average track width and per pixel width standard deviation. The training process utilizes only 10 center-cropped frames from the midpoint of an LPBF video along with the measured track widths. The machine learning algorithm does not learn from the laser parameters of each video, which are $147.5 \mathrm{~W}$ at 310 $\mathrm{mm} / \mathrm{s} \mathrm{(a)}$ and $160 \mathrm{~mm} / \mathrm{s} \mathrm{(b)} \mathrm{and} 342.5 \mathrm{~W}$ at $310 \mathrm{~mm} / \mathrm{s}$ (c) and $160 \mathrm{~mm} / \mathrm{s}$ (d). (a) is a discontinuous track and (b-d) are continuous tracks. The entire videos are provided in the Supporting Information.
+
+Since the relevant, visualized distinguishing features in the in situ video are not readily obvious, it is not straightforward to decipher the mapping between the video and track properties using only traditional video processing techniques. Rather than manually identifying relevant indicators within the entire in situ data set, machine learning is used to\\
+train our neural network model to learn a suitable mapping between video segments and measured average track width and standard deviation and continuity. Once trained, the video regression CNN model generates predictions of the average track width, $\delta_{\text {predicted, }}$ standard deviation, $\sigma_{\text {predicted, and }}$, anack continuity. The accuracy of track continuity classification is $93.1 \%$. Regression model performance is assessed by comparing measured versus predicted values for both training and test sets in Figure 5. A narrow distribution of points around the line of equality (black line) indicates favorably robust model performance, while $\delta_{\text {predicted }}=\delta_{\text {measured }}$ or $\sigma_{\text {predicted }}=\sigma_{\text {measured }}$ for all predictions signifies problematic overfitting. The CNN exhibits variance, i.e. training set predictions outperform the test set, as indicated by the tighter distributions of predicted values along the equality line. Furthermore, the CNN model predictions of $\delta_{\text {predicted }}$ outperform those of $\sigma_{\text {predicted }}$ according to the respective coefficients of determination by $R_{\delta}{ }^{2}=0.93$ and $R_{\sigma}{ }^{2}=0.70$.
+
+The discrepancy in model performance of predicting average track width versus standard deviation may be due only in part to the fact that the model architecture is developed using width data alone. Given the numerous available choices of model architectures and combinations of hyperparameters, different model configurations than chosen here may result in more accurate $\sigma_{\text {predicted. }}$. However, it seems likely that the standard deviation of width is inherently more difficult to predict than the width given the size and/or quality of our dataset. Outliers in Figure $5 \mathrm{~b}$ correspond to the slowest laser scan speeds, 130 and $100 \mathrm{~mm} / \mathrm{s}$. Thus, the 10 middle frames (of the 38-50 total frames per video collected at these conditions) the model uses do not contain information of the properties along the entire length of the track. This is a consequence of the CNN architecture, which requires a fixed frame number irrespective of laser operating parameters. Recurrent neural networks that generate predictions from input videos of variable length may help to alleviate this issue. Regardless, for any machine learning model that exhibits high variance, a larger dataset ensures higher quality\\
+predictions ${ }^{[50,51]}$. Indeed, worse results (not shown) were obtained than in Figure 5 when the model was trained on a small subset of our data. Thus, by following the experimental procedure described here, additional videos can be collected, labeled via the rapid ex situ algorithm, and used to retrain the $\mathrm{CNN}$ to obtain more accurate $\delta_{\text {predicted }}, \sigma_{\text {predicted }}$, and continuity predictions. Nevertheless, using only $10 \mathrm{~ms}$ videos, the CNN predicts track LPBF widths and continuity and (to a lesser degree) width standard deviation without the need for time-consuming height map derived ex situ measurements.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_123d7fb5db614938938fg-14}
+
+Figure 5. Predicted track widths (a) and standard deviation of track width (b) from 10frame LPBF video sequences versus ex situ measured value from height maps.
+
+Predictions from the training and test sets (legend) that are close to the black line signify high accuracy. The fully-trained convolutional neural network predicts values from LPBF video
+
+\section*{WILEY-VCH}
+with coefficients of determination $R_{\delta}{ }^{2}=0.93$ and $R_{\sigma}{ }^{2}=0.70$ for average track width and standard deviation of the track width, respectively.
+
+Going beyond this work, the training set can be expanded and/or the machine learning model can be modified to enable improved $\delta_{\text {predicted }}$ and $\sigma_{\text {predicted }}$ or possibly other height map derivable quality metrics, such as surface finish. In addition to detecting whether a track is defective, it is valuable to indicate where the defect occurs, which may be useful for potential rectification strategies. Moreover, it is worth pursuing whether other ex situ measurements (e.g., mechanical properties, microstructure, residual stress, part density, etc.) of LPBF printed objects are detectable from in situ data. An important requirement for in situ detection should involve predicting track properties in cases of multi-scan prints, e.g. parallel adjacent tracks, non-parallel tracks involved in complex strategies, etc. Semi-supervised or unsupervised machine learning may be necessary for cases where it is not desirable or possible to label all (or any) in situ data. Transfer learning techniques may help when ex situ measurements are difficult to obtain, e.g. x-ray computed tomography, and/or where complementary physicsbased simulations are available for only a subspace of the overall operating regime. While a deeper investigation into the model may reveal something about the features it uses to make predictions, it is unlikely to uncover important characteristics of the underlying physics of the LPBF process given the black box nature of CNNs at present. While our current model requires $10 \mathrm{~ms}$ video clips, faster detection rates may be possible without compromising prediction accuracy. Machine learning-based models generated with this approach can enable in situ quality detection and real-time process monitoring essential to rapid closed-loop control.
+
+\section*{4. Conclusions}
+A CNN model is developed, trained, and evaluated and shown to be capable of predicting LPBF track widths, width standard deviations, and track continuity from in situ video data alone. Here, video of LPBF tracks is collected using a variety of laser power and\\
+scan speed settings; however, it is straightforward to incorporate additional forms of in situ data, e.g, pyrometer readings, acoustic sensing, etc., that may boost prediction quality.
+
+Irrespective of the exact LPBF system configuration and/or chosen operating parameters, in situ data can be labeled using our ex situ height map analysis algorithm. After labeling in situ datasets with ex situ measurements, the model is then trained via supervised machine learning that can predict the final properties of LPBF track welds on-the-fly. With this approach, it should be possible to label in situ data via ex situ measurements for additive manufacturing technologies, e.g. extrusion-based and stereolithographic approaches, other than LPBF.
+
+\section*{Supporting Information}
+Supporting Information is available from the Wiley Online Library or from the author.
+
+\section*{Acknowledgements}
+This work was performed under the auspices of the U.S. Department of Energy by Lawrence Livermore National Laboratory under Contract DE-AC52-07NA27344, LLNL-JRNL-748383. This work was also supported by a Berkeley Graduate Fellowship.
+
+Received: ((will be filled in by the editorial staff))
+
+Revised: ((will be filled in by the editorial staff)) Published online: ((will be filled in by the editorial staff))
+
+\section*{References}
+[1] C. Y. Yap, C. K. Chua, Z. L. Dong, Z. H. Liu, D. Q. Zhang, L. E. Loh, S. L. Sing, Appl. Phys. Rev. 2015, 2, 041101.
+
+[2] W. E. Frazier, J. Mater. Eng. Perform. 2014, 23, 1917.
+
+[3] J. A. Slotwinski, E. J. Garboczi, P. E. Stutzman, C. F. Ferraris, S. S. Watson, M. A. Peltz, J. Res. Natl. Inst. Stand. Technol. 2014, 119, 460.
+
+[4] C. D. Boley, S. C. Mitchell, A. M. Rubenchik, S. S. Q. Wu, Appl. Opt. 2016, 55, 6496.
+
+[5] A. Rubenchik, S. Wu, S. Mitchell, I. Golosker, M. LeBlanc, N. Peterson, Appl. Opt. 2015, 54, 7230 .
+
+[6] C. Kamath, Int J Adv Manuf Tech 2016, 86, 1659.
+
+[7] C. Kamath, B. El-dasher, G. F. Gallegos, W. E. King, A. Sisto, Int J Adv Manuf Tech 2014, 74, 65 .
+
+[8] A. Bauereiß, T. Scharowsky, C. Körner, J. Mater. Process. Technol. 2014, 214, 2522.
+
+[9] J.-P. Choi, G.-H. Shin, H.-S. Lee, D.-Y. Yang, S. Yang, C.-W. Lee, M. Brochu, J.-H. Yu, Mater. Trans. 2017, 58, 294.
+
+[10] L. Scime, J. Beuth, Addit. Manuf. 2018, 19, 114.
+
+\section*{WILEY-VCH}
+[11] T. DebRoy, H. L. Wei, J. S. Zuback, T. Mukherjee, J. W. Elmer, J. O. Milewski, A. M. Beese, A. Wilson-Heid, A. De, W. Zhang, Prog. Mater. Sci. 2018, 92, 112.
+
+[12] G. Tapia, S. Khairallah, M. Matthews, W. E. King, A. Elwany, Int. J. Adv. Manuf. Technol. 2018, 94, 3591.
+
+[13] T. G. Spears, S. A. Gold, IMMI 2016, 1.
+
+[14] S. K. Everton, M. Hirsch, P. Stravroulakis, R. K. Leach, A. T. Clare, Mater. Des. 2016, 95, 431 .
+
+[15] H. Kim, Y. Lin, T.-L. B. Tseng, Rapid Prototyp. J. 2018, 00.
+
+[16] T. Purtonen, A. Kalliosaari, A. Salminen, Phys Procedia 2014, 56, 1218.
+
+[17] K. Wasmer, C. Kenel, C. Leinenbach, S. A. Shevchik, in Ind. Addit. Manuf. - Proc. Addit. Manuf. Prod. Appl. - AMPA2017 (Eds.: M. Meboldt, C. Klahn), Springer International Publishing, Cham, 2018, pp. 200-209.
+
+[18] S. A. Shevchik, C. Kenel, C. Leinenbach, K. Wasmer, Addit. Manuf. 2017, DOI 10.1016/j.addma.2017.11.012.
+
+[19] S. Berumen, F. Bechmann, S. Lindner, J.-P. Kruth, T. Craeghs, Phys. Procedia 2010, 5, 617.
+
+[20] M. A. Doubenskaia, I. V. Zhirnov, V. I. Teleshevskiy, P. Bertrand, I. Y. Smurov, Mater. Sci. Forum 2015, 834, 93.
+
+[21] M. Grasso, A. G. Demir, B. Previtali, B. M. Colosimo, Robot. Comput.-Integr. Manuf. 2018, 49, 229.
+
+[22] S. Ly, A. M. Rubenchik, S. A. Khairallah, G. Guss, M. J. Matthews, Sci. Rep. 2017, 7, DOI 10.1038/s41598-017-04237-z.
+
+[23] H. Nakamura, Y. Kawahito, K. Nishimoto, S. Katayama, J. Laser Appl. 2015, 27, 032012 .
+
+[24] H. Park, S. Rhee, D. Kim, Meas Sci Technol 2001, 12, 1318.
+
+[25] V. Gunenthiram, P. Peyre, M. Schneider, M. Dal, F. Coste, I. Koutiri, R. Fabbro, J. Mater. Process. Technol. 2018, 251, 376.
+
+[26] Y. Chivel, Phys. Procedia 2013, 41, 904.
+
+[27] A. Gusarov, D. Kotoban, I. Zhirnov, MATEC Web Conf. 2017, 129, 01037.
+
+[28] V. Forbes, J. A. Alvarez, R. M. Califa, S. J. Ezersky, G. A. L. Quiroz, K. L. Zeng, G. C. Lewin, IEEE SIEDS, 2017, pp. 225-230.
+
+[29] C. Dini, Laser Tech. J. 2018, 15, 35.
+
+[30] J. Li, R. Jin, H. Z. Yu, Mater. Des. 2018, 139, 473.
+
+[31] B. L. DeCost, H. Jain, A. D. Rollett, E. A. Holm, JOM 2017, 69, 456.
+
+[32] T. Craeghs, S. Clijsters, E. Yasa, J.-P. Kruth, in Proc. 20th Solid Free. Fabr. SFF Symp. Austin Tex. 8-10 August, 2011.
+
+[33] M. Aminzadeh, T. R. Kurfess, J. Intell. Manuf. 2018, DOI 10.1007/s10845-018-1412-0.
+
+[34] J. C. Fox, B. M. Lane, H. Yeung, in SPIE Commer. Sci. Sens. Imaging, International Society For Optics And Photonics, 2017, pp. 1021407-1021407.
+
+[35] J.-P. Kruth, J. Duflou, P. Mercelis, J. Van Vaerenbergh, T. Craeghs, J. De Keuster, in Proc. 5th Lane Conf. Laser Assist. Net Shape Eng., 2007, pp. 23-37.
+
+[36] M. Abdelrahman, E. W. Reutzel, A. R. Nassar, T. L. Starr, Addit Manuf 2017, $15,1$.
+
+[37] M. Aminzadeh, A Machine Vision System for In-Situ Quality Inspection in Metal Powder-Bed Additive Manufacturing, Georgia Institute of Technology, 2016.
+
+[38] B. Yao, F. Imani, A. S. Sakpal, E. W. Reutzel, H. Yang, J. Manuf. Sci. Eng. 2018, 140, 031014.
+
+[39] J. Stavridis, A. Papacharalampopoulos, P. Stavropoulos, Int J Adv Manuf Technol 2017, 1 .
+
+[40] Giera, B, Rapid Closed-Loop Control Based on Machine Learning, US20170144378A1, 2015
+
+[41] Y. LeCun, Y. Bengio, G. Hinton, Nature 2015, 521, 436.
+
+\section*{WILEY-VCH}
+[42] A. Krizhevsky, I. Sutskever, G. E. Hinton, Commun. ACM 2017, 60, 84.
+
+[43] M. Abadi, P. Barham, J. Chen, Z. Chen, A. Davis, J. Dean, M. Devin, S. Ghemawat, G. Irving, M. Isard, M. Kudlur, J. Levenberg, R. Monga, S. Moore, D. G. Murray, B. Steiner, P. Tucker, V. Vasudevan, P. Warden, M. Wicke, Y. Yu, X. Zheng, Proceedings of the 12th USENIX Symposium on OSDI 2016, 21. [44] C. Kusuma, S. H. Ahmed, A. Mian, R. Srinivasan, J. Mater. Eng. Perform. 2017, 26, 3560.
+
+[45] C. Kusuma, The Effect of Laser Power and Scan Speed on Melt Pool Characteristics of Pure Titanium and Ti-6Al-4V Alloy for Selective Laser Melting, Browse All Theses and Dissertations, Wright State University, 2016.
+
+[46] I. Yadroitsev, A. Gusarov, I. Yadroitsava, I. Smurov, J. Mater. Process. Technol. 2010, 210, 1624.
+
+[47] I. Yadroitsev, P. Bertrand, I. Smurov, Appl. Surf. Sci. 2007, 253, 8064.
+
+[48] S. A. Khairallah, A. Anderson, J. Mater. Process. Technol. 2014, 214, 2627.
+
+[49] S. A. Khairallah, A. T. Anderson, A. Rubenchik, W. E. King, Acta Mater. 2016, 108, 36.
+
+[50] A. Halevy, P. Norvig, F. Pereira, IEEE Intell. Syst. 2009, $24,8$.
+
+[51] M. Banko, E. Brill, Association For Computational Linguistics, 2001, pp. 26-33.
+
+\section*{WILEY-VCH}
+A procedure to label Laser Powder Bed Fusion video data and leverage it to train a convolutional neural network is demonstrated. Testing the neural network reveals it can predict track continuity and the average and standard deviations of track width from high speed video alone, reducing the need for post-build quality assessment.
+
+\section*{Keywords}
+laser powder bed fusion, machine learning, additive manufacturing, selective laser melting
+
+B. Yuan, G. M. Guss, A. C. Wilson, S. P. Hau-Riege, P. J. DePond, S. McMains, M. J. Matthews, B. Giera*
+
+Machine Learning Based Monitoring of Laser Powder Bed Fusion
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_123d7fb5db614938938fg-19}
+\end{center}
+
+Copyright WILEY-VCH Verlag GmbH \& Co. KGaA, 69469 Weinheim, Germany, 2016.
+
+
+\end{document}

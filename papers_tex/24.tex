@@ -1,0 +1,308 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Effect of evaporated gas flow on porosity and microstructure of IN718 parts produced by LPBF-processes }
+
+
+\author{J Jakumeit $^{1}$, C Huang ${ }^{1}$, R Laqua ${ }^{1}$, J Zielinski ${ }^{2}$ and $\mathbf{J}$ H Schleifenbaum ${ }^{2}$\\
+${ }^{1}$ Access e.V., Intzestr. 5, 52072 Aachen, Germany\\
+${ }^{2}$ RWTH Aachen University - Digital Additive Production (DAP), Campus Boulevard\\
+73, 52074 Aachen, Germany\\
+E-mail: j.jakumeit@access-technology.de}
+\date{}
+
+
+\begin{document}
+\maketitle
+PAPER $\cdot$ OPEN ACCESS
+
+Effect of evaporated gas flow on porosity and microstructure of IN718 parts produced by LPBF-processes
+
+To cite this article: J Jakumeit et al 2020 IOP Conf. Ser.: Mater. Sci. Eng. 861012011
+
+View the article online for updates and enhancements.
+
+
+
+\begin{abstract}
+Laser Powder Bed Fusion (LPBF) is the most widely used metal additive manufacturing (AM) process. A laser beam melts metal powder and partly the underlying solid metal to add metal layer by layer in selected regions. Temperatures up to the boiling temperature are reached resulting in a violent gas stream which affects solidification and can lead to porosity. Due to the small size of the melting zone, a detailed experimental analysis of the process is very difficult and simulation is an important tool to understand the manufacturing process and the influence of process parameter on the quality of components. In this work a three-phase melting and solidification simulation methodology has been used to investigate the melting, evaporation and solidification in a LPBF process. The methodology, originally developed to model casting processes, was extended by a model to calculate the heating of the metal powder by the laser beam and a metal evaporation model to include the effect of the evaporated metal gas on the total gas flow. The methodology was applied to analyse the melting, evaporation and solidification of single track experiments with IN718 powder. The simulation results were validated by comparing the calculated melt pool depth with the experimental findings. High laser power combined with slow laser speed leads to high energy densities at the melt pool, which result in a deep keyhole and increased porosity. The simulations revealed that evaporation of melt leads to a violent gas flow with velocities up to $100 \mathrm{~m} / \mathrm{s}$.
+\end{abstract}
+
+\section*{1. Introduction}
+Additive Manufacturing (AM), also known as 3D-printing, is a revolutionary fabrication technology, particularly for the metal forming industry. Aeronautic, aerospace, bio-engineering sectors, among many others, aspire to take advantage of the freedom at the design stage, without the restrictions imposed by the specific fabrication technologies such as in casting or forging. Moreover, the natural integration between the optimization strategies and the manufacturing technology make AM very appealing for weight saving, for enhancing performance and for the on-demand (personalized) production (e.g. bioengineering applications).
+
+In the laser-based additive manufacturing of metallic materials, defects inherent in the process such as connection defects and residual porosity play a major role, because these defects limit the mechanical strength of additively manufactured components. The understanding of the influence of the powder characteristics on the melting behaviour in the process and the prognosis of the resulting defect distribution are necessary steps to derive from this defect distribution a reliable life-time-prediction for additive-produced materials.
+
+Laser Powder Bed Fusion (LPBF) is the most widely used powder bed process for the additive fabrication of metallic components. The powder is applied in a layer thickness of about 30 - 50 microns and locally melted by a laser beam according to a CAD model using a laser beam. Subsequently, the building platform is lowered by the layer thickness and a new layer of powder is added. The previous layer is partially or completely remelted, whereby the layers are joined together [1]. The range of construction materials studied includes alloys based on iron [2], nickel [3] and aluminium [4]. The additive manufacturing of metallic alloys has not been used on a large scale so far, because the properties of the components cannot be reliably predicted. They depend, for example, on the equipment and parameters used as well as on the specific properties of the powders used [5].
+
+Khairallah et al. [6] showed in a 2014 study for the first time a comprehensive transient 3D modelling of the LPBF process on this spatial and time scale (mesoscale model). The simulation approach includes beam tracing for laser power input into the powder, realistic powder size distribution (also bimodal distributions), Marangoni convection, energy loss through the substrate, the powder bed and radiation. For the treatment of the evaporation, the energy loss due to evaporation and the recoil pressure on the melt front were taken into account.
+
+A similar level of modelling is shown in the work by Guertler et al. [7]. The investigation of the influence of particle inhomogeneity on the surface quality of the components was carried out with the software package OpenFOAM. Both approaches are single-phase models that model only the melt phase but not the gas phase. A recent, very comprehensive work by Panwisawas et al. [8] gives an overview of the multiscale modelling of the LPBF process. A simulation approach based on the Lattice-Boltzmann method was developed by Körner et al. for particle-resolved simulations of the LPBF process [9]. A single-phase model is used which neglects the gas phase. This model was extended by the consideration of metal vapour [10] and a coupling to a cellular automaton for the prediction of the resulting microstructures [11].
+
+The influence of powder particle size distribution on porosity was investigated by Guertler et al. [7] for various aluminium alloys both experimentally and by simulation. One result of these investigations is that a powder bed with many smaller particles can better balance in-homogeneities in the distribution and leads to a more stable process. Panwisawas et al. [8] use the multiphase approach to compare simulated porosity with experimental values. If the simulation was performed with a disordered distribution of powder particles, a good match between simulation and experiment could be found.
+
+The following chapter gives a short description of the methodology used in this work. Section 3 describes the single track LPFB experiments and presents first simulation results, followed by the validation of the methodology and investigations on the melt pool dynamics in section 4 . Section 5 focusses on the resulting porosity and the work is summarised in section 6 .
+
+\section*{2. Theory}
+Simulation of the particle resolved LPBF-process is based on a finite-volume method using control volumes (CVs) of arbitrary polyhedral shape. The transport equations for mass, momentum, energy, and phase in integral form are applied to each CV, whereby the surface and volume integrals are approximated using the midpoint rule. Linear equation systems for each variable are solved using algebraic multi-grid iterative solvers. Mass conservation, pressure and velocity conservation are coupled via the SIMPLE algorithm. The transient term is discretized based on an implicit Euler-segregated concept. Details of discretization and the solution method are available in [12,13]. For solidification modelling, the volume fraction of solidified liquid is determined using a tabulated fraction solid vs. temperature curve $\left(f_{s}(T)\right)$. Latent heat $L$ is released in proportion to the change in fraction solid $\left(L^{*} d(f s(T)) / d T\right)$. Details of the methodology are presented in [13].
+
+For correct calculation of air entrainment, the method used to track the motion of the free surface must provide a sharp interface. The volume of fluid (VoF) approach, in combination with a high resolution interface capturing (HRIC) scheme, is used to tackle the problem: the entire fluid domain is considered to be filled by a fluid, the properties of which vary according to the distribution of volume fractions of melt $C_{m}$, solid $C_{s}$ and gas $C_{g}(C m+C s+C g=1)$. The transport of melt, solid and gas is\\
+computed by solving transport equations for their volume fractions with a source term for the phase change from melt to solid. To achieve sharpness of the interface, an HRIC scheme [14] is used, which typically resolves the interface within one cell.
+
+The normal force due to surface tension is treated using the continuum surface force (CSF) model proposed by [15], which defines a volumetric source in the momentum equation. Flow resistance in the mushy zone is calculated assuming that the mushy zone acts like a porous medium. The fluid velocity resistance in the mushy zone can be approximated as a pressure drop [16]. Permeability can be deduced from the Kozeny-Carman equation as $K=\left((1-f s)^{3} \lambda_{2}^{2}\right) /\left(180 f s^{2}\right)$, where $\lambda_{2}$ is the secondary dendrite-arm spacing (SDAS).
+
+For the evaporation of melt, a simple version of the model developed by Klassen et al. [10,17] was adapted to LBPF (from EBF) and extended to incorporate the creation of a gas phase by evaporation. The evaporation model uses the following assumptions:
+
+\begin{itemize}
+  \item The evaporated metal gas is treated as ideal gas.
+  \item The density of the evaporated metal gas is low, so that absorption of laser light by the gas can be neglected.
+  \item Alloy is treated as pure material having effective properties. The different partial vapour pressures of the alloying elements are not taken into account.
+  \item LPBF processes at atmospheric pressure using medium laser intensities are modelled. The vapour flow remains subsonic and for the Mach number at the outer boundary of the Knudsen layer is smaller than 1 . Therefore, using the maximum value of 0.82 for the evaporation coefficient $\Phi$ is a plausible approximation (see also [19]).
+  \item Since the movement of gas bubbles in the melt pool is of main interest to analyse porosity Marangoni convection is included.
+\end{itemize}
+
+Based on these assumptions the net mass transport from the evaporating metal surface can be calculated by: $j_{n e t}=\Phi \cdot j_{+}, j_{+}=P_{S} \sqrt{m_{A} / 2 \pi k_{B} T_{S}}$, where $j+$ is the evaporating flux and $\Phi$ the evaporation coefficient, which gives the fraction of particles that can escape from the surface and are not scattered back to the surface or compensated by condensation of particles. For $\operatorname{MaKn}(T s)<1 \Phi$ approaches the maximum value of 0.82 (see $[17,18]$ ). This value is used throughout this work. In the evaporating flux $j+$ calculation $m_{A}$ is the atomic mass, $k_{B}$ is Boltzmann's constant and $P_{s}$ and $T_{s}$ are the pressure and temperature at the vapour side of the phase interface, respectively. $P_{s}$ can be interpreted as the saturation vapour pressure at $T_{\mathrm{s}}$ at the melt surface and calculated based on the Clausius-Clapeyron equation in its approximated form and the temperature dependent latent heat of vaporization $L_{\text {vap }}(T s)=$ $L_{\text {vap }, 0} *\left[1-(T s / \text { Tcrit) })^{2}\right]^{1 / 2}$ (see [17] for details):
+
+
+\begin{gather*}
+P_{S}=P_{a t m} \cdot \exp \left[-\frac{L_{\text {vap }, 0} \cdot m_{A}}{k_{B}}\left[\frac{1}{T_{S}} \sqrt{1-\left(\frac{T_{S}}{T_{\text {crit }}}\right)^{2}}-\frac{1}{T_{\text {boil }}} \sqrt{1-\left(\frac{T_{\text {boil }}}{T_{\text {crit }}}\right)^{2}}-\right.\right.  \tag{1}\\
+\left.\left.\frac{1}{T_{\text {crit }}}\left(\sin ^{-1}\left(\frac{T_{S}}{T_{\text {crit }}}\right)-\sin ^{-1}\left(\frac{T_{\text {boil }}}{T_{\text {crit }}}\right)\right)\right]\right],
+\end{gather*}
+
+
+where $L_{\text {vap }, 0}$ is the latent heat of vaporization at absolute zero temperature, $P_{a t m}=1$ bar and $T_{\text {boil }}$ and $T_{\text {crit }}$ are the boiling temperature at standard atmosphere ( 1 bar) and the critical temperature, respectively. The evaporation model is linked to the continuum equations describing the LPBF process by source terms to the momentum and energy equation.
+
+A crucial point for the comparison of experiments with simulation results is the model used to calculate the amount of laser power, absorbed by the powder. Such a model must treat the amount of powder irradiated by the laser and the absorption and reflection by the powder. While the laser power can be measured, the reflectivity of the powder and the amount of powder irradiated is difficult to measure and fluctuates during the process. A simple and often used approach is a volumetric heat source, which adds a defined amount of heat in each cell of the irradiated area. The amount of heat can be\\
+calculated using analytical functions describing the absorption of the powder bed and solidified melt underneath. (see for example [17,19]) A limitation of this approach is, that energy is not only deposit at the surface of the metal and shading of areas by overlying metal areas and irradiation by reflected light cannot be modelled. All these effects can be correctly accounted by using ray tracing algorithms to calculate the irradiation of the powder and solidified metal by the laser in a physical correct way. Such an approach was firstly applied to LPBF-process simulation by Khairallah et al. [6] and used by Bayat et al. for the investigation of keyhole burning [20]. While this approach gives a physical description of the radiation effects, its precision is limited by the quality of calibration of the model parameter like reflectivity of hot melt surfaces, which are difficult to obtain by measurement.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a981b2429b4e810c84afg-5(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a981b2429b4e810c84afg-5}
+\end{center}
+
+(b)
+
+Figure 1. (a) Surfaces irradiated by laser light are marked including shading effects and (b) the absorbed Gaussian distributed laser energy is applied using a volumetric heat source.
+
+Here, a new two stage approach is followed which is a compromise between the simple volumetric heat approach and the complex ray tracing method:
+
+First, using a participating media radiation model, the melt surface hit by the laser beam is marked. From a light source above the metal surface light is radiated towards the powder and substrate. Metal surfaces hit by the light are marked for energy deposition (see figure 1(a)) and shading of metal surfaces is correctly modelled. Since the light of the participating media radiation model is not monochromatic and not restricted to the laser beam, a direct calculation of the heat transfer to the melt surface is not possible.
+
+Therefore, in a second step, heat is deposited in the marked metal cells at the surface of the metal using a volumetric heat source. The Gaussian shape of the laser intensity is transferred to a radial Gaussian profile of the volume heat source term from the centre of the laser beam. Figure 1(b) shows the spatial heat distribution on the powder surface. In the simulation the amount of energy absorbed by the metal is directly accessible and, therefore, used as process parameter. The volumetric heat source is adjusted to add the total energy absorbed from the laser light to the marked metal volume. For comparison with experiments the laser power is calculated from the amount of energy absorbed by the metal by an absorption coefficient, which in reality depends on the metal surface size and form, the amount of reflected light absorption and the shading of laser light by evaporated metal
+
+Table 1. Material and powder parameters
+
+\begin{center}
+\begin{tabular}{cc}
+\multicolumn{2}{c}{parameters} \\
+\hline
+$\mathrm{T}_{\text {liquidus }}$ & $1335^{\circ} \mathrm{C}$ \\
+$\mathrm{T}_{\text {solidus }}$ & $1250^{\circ} \mathrm{C}$ \\
+$\mathrm{T}_{\text {evaporation }}$ & $2227^{\circ} \mathrm{C}$ \\
+$\mathrm{T}_{\text {crit }}$ & $7395^{\circ} \mathrm{C}$ \\
+Latent heat evaporation & $610^{7} \mathrm{~J} / \mathrm{kg}$ \\
+Evaporation coef. & 0.82 \\
+Mean particle diameter & $20 \mu \mathrm{m}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+gas and is difficult to be determined experimentally. This novel approach allows to use the laser absorption coefficient as fitting parameter between experimental findings and simulation result (see section 4).
+
+\section*{3. Simulation of single track LPBF-processes}
+The methodology was applied to analyse the melting, evaporation and solidification of single track experiments with IN718 powder (Ni+, 18.1 Fe, 18.6 Cr, 5.2 Nb, $3.02 \mathrm{Mo}, 1.01 \mathrm{~T}, 0.54 \mathrm{Al}, 0.11 \mathrm{Mn}, 0.16 \mathrm{Si}$ [wt\%]) in a DAP laboratory LPBF-machine. Material and powder parameter are given in table 1.
+
+The IN718 powder was melted using a laser beam diameter of $80 \mu \mathrm{m}$ (Gaussian distribution with standard deviation of $20 \mu \mathrm{m}$ assumed), laser power between $142 \mathrm{~W}$ and $285 \mathrm{~W}$ and a laser speed between $0.6 \mathrm{~m} / \mathrm{s}$ and $1.1 \mathrm{~m} / \mathrm{s}$.
+
+The powder bed was created using the DEM-model of STAR-CCM+ with a raining model. Particles with a Gaussian distribution with mean value $20 \mu \mathrm{m}$ fall on the IN718 substrate until a $60 \mathrm{~mm}$ layer was achieved. The DEM-created powder bed was then transferred to a polyhedral mesh (see figure 2). The size of the computation domain is $1000 \mu \mathrm{m} \times 500 \mu \mathrm{m} \times 500 \mu \mathrm{m}$ (length $\mathrm{x}$ width $\mathrm{x}$ height) and the mesh has around 2.1 million cells.
+
+Figure 3 shows the temperature distribution on the melt surface (left) and the pressure and velocity (right) after 0.3 , 0.4 and $0.5 \mathrm{~ms}$ for a process with a laser power of $250 \mathrm{~W}$ and a lase speed of $1100 \mathrm{~m} / \mathrm{s}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a981b2429b4e810c84afg-6(1)}
+\end{center}
+
+(a)\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_a981b2429b4e810c84afg-6}
+
+(b)
+
+Figure 3. (a) Temperature distribution on the melt surface and (b) the pressure and velocity field and velocity distribution after $0.3,0.4$ and 0.5 ms process time for a process with a laser power of $250 \mathrm{~W}$ and a laser speed of $1100 \mathrm{~m} / \mathrm{s}$.
+
+\section*{4. Validation}
+The simulation was validated by comparing the calculated melt pool depth with the experimental findings for the single track experiments without $(0 \mu \mathrm{m})$ and $60 \mu \mathrm{m}$ powder layer. The powder layer height of the experiments is manually applied and verified with an infinite focus microscope. Table 2 gives for 5 combinations of laser power and laser speed the melt pool depth found in the experiments and related simulations. For the simulations the desired total volumetric heat source (VHS) were calculated assuming a constant absorption coefficient of substrate and powder of $30 \%$, a value often reported for metal surfaces [19]. The simulation gives a fair agreement with the experimental findings. The general tendency is reproduced by the simulation, but the slope of the melt pool depth vs line energy
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a981b2429b4e810c84afg-7(1)}
+\end{center}
+
+Table 2. Experimental and simulation parameters and results
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\multicolumn{5}{|c|}{Experiment} & \multicolumn{5}{|c|}{Simulation} \\
+\hline
+\begin{tabular}{c}
+Laser \\
+power \\
+$[\mathrm{W}]$ \\
+\end{tabular} & \begin{tabular}{c}
+Laser \\
+speed \\
+$[\mathrm{mm} / \mathrm{s}]$ \\
+\end{tabular} & \begin{tabular}{c}
+Line \\
+energy \\
+$\left[\mathrm{J} / \mathrm{mm}^{3}\right]$ \\
+\end{tabular} & \begin{tabular}{c}
+Melt pool depth \\
+(no powder) \\
+$[\mu \mathrm{m}]$ \\
+\end{tabular} & \begin{tabular}{l}
+Melt pool depth \\
+$(60 \mu \mathrm{m}$ powder) \\
+$[\mu \mathrm{m}]$ \\
+\end{tabular} & \begin{tabular}{l}
+Total \\
+VHS \\
+$[\mathrm{W}]$ \\
+\end{tabular} & \begin{tabular}{r}
+Melt \\
+(no \\
+$[\mu \mathrm{n}$ \\
+\end{tabular} & \begin{tabular}{l}
+l depth \\
+wder) \\
+diff.) \\
+\end{tabular} & \begin{tabular}{l}
+Melt $]$ \\
+$(60 \mu \mathrm{I}$ \\
+$[\mu \mathrm{n}$ \\
+\end{tabular} & \begin{tabular}{l}
+lepth \\
+owder) \\
+diff.) \\
+\end{tabular} \\
+\hline
+142 & 960 & 0.15 & 48 & 73 & 42.6 & 67 & $(28 \%)$ & 88 & $(17 \%)$ \\
+\hline
+250 & 1100 & 0.23 & 85 & 120 & 75 & 100 & $(15 \%)$ & 120 & $(0 \%)$ \\
+\hline
+285 & 960 & 0.30 & 130 & 172 & 85.5 & 126 & $(3 \%)$ & 160 & $(7.5 \%)$ \\
+\hline
+250 & 660 & 0.38 & 150 & 176 & 75 & 145 & $(3.4 \%)$ &  &  \\
+\hline
+285 & 600 & 0.47 & 212 & 252 & 85.5 &  &  & 214 & $(18 \%)$ \\
+\hline
+\end{tabular}
+\end{center}
+
+To understand the found difference in the slope experimentalists at ILT suggest to use a power dependent absorption coefficient instead of the constant value of $30 \%$. Such a dependency is supported by the simulation result that the melt volume directly heated by the laser (marked cells) depends linearly on the line energy (see figure 4). In addition, Bayat et al. reported a linear dependence of the absorption coefficient on the laser power for Ti6Al4V powder in case of keyhole burning [20]. Using a linear dependency of the absorption coefficient vs line energy with slope of $0.3 \mathrm{~mm} / \mathrm{J}$, an almost perfect fit between simulation and experimental melt pool depths could be achieved, especially for the case with powder layer (see figure 5).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a981b2429b4e810c84afg-7}
+\end{center}
+
+Figure 4. Melt volume directly heated by the laser as function of line energy.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a981b2429b4e810c84afg-7(2)}
+\end{center}
+
+Figure 5. Comparison of experimental and simulation results for melt pool depth for single track experiments without powder and with a 60 $\mu$ m powder layer.
+
+\section*{5. Porosity}
+The porosity or density (=1-porosity) of the produced IN718 layer can be calculated by volume integral of the remaining gas in the melted and solidified region. Figure 6 shows the line energy dependence of the density. An almost linear increase of the density can be found with increasing line energy until keyhole burning leads to increasing porosity at high line energies. A similar behaviour was reported by Peng et al. [21] for 316L steel and by Bayat et al. [20] for Ti6Al4V.
+
+The correct handling of the evaporated metal as compressible gas makes it possible to investigate the interplay between the evaporated gas and the gas stream across the powder layer. The standard setting is no gas flow across the powder layer $(\mathrm{v}=0 \mathrm{~m} / \mathrm{s})$ and the top of the simulation box was handled as wall. Table 3 gives the influence of an open top of the simulation box (gas can escape freely) and a gas stream of $1 \mathrm{~m} / \mathrm{s}$ across the powder layer in scan direction and against scan direction. The gas stream leads to a
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_a981b2429b4e810c84afg-8}
+\end{center}
+
+Figure 6. Energy dependence of the layer density. slightly reduced porosity, but the overall effect is small.
+
+\begin{center}
+\begin{tabular}{ccccc}
+\hline
+\multicolumn{4}{c}{Table 3. Influence of gas flow above the powder layer on the porosity} &  \\
+\hline
+ & Closed top & Open top & Closed top & Closed top \\
+ & no gas flow & no gas flow & $1 \mathrm{~m} / \mathrm{s}$ in laser dir. & $1 \mathrm{~m} / \mathrm{s}$ against laser \\
+\hline
+Melt pool depth $[\mu \mathrm{m}]$ & 120 & 112 & 125 & 122 \\
+Porosity [\%] & 0.57 & 0.52 & 0.46 & 0.44 \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{6. Conclusion}
+Metal additive manufacturing by LPBF processes was analyzed using a three-phase melting and solidification simulation methodology originally developed to model casting processes. The methodology was extended by a model to calculate the heating of the metal powder by a laser beam, which combines a participating media radiation model with a volumetric heat source. The laser beam heats the metal powder to temperatures, at which metal evaporation leads to a violent gas flow, modelled by a newly implemented evaporation model. The methodology was applied to analyze the melting, evaporation and solidification of single track experiments with IN718 powder.
+
+Keyhole burning at higher line energies lead to an increase of the light absorbing metal surface and, thereby, to a linear increase of the absorbability of the metal powder. Taking this into account an excellent agreement between the predicted melt pool depth and experimental findings could be achieved. In good agreement with published results for different alloys an increase of the part density with increasing line energy could be observed until significant keyhole burning leads to increasing porosity at high line energies. Only a small effect of a cooling gas flow across the powder layer was found, which can lead to slightly reduced porosity.
+
+\section*{Acknowledgments}
+The work was supported by BMWi (Bundesministerium für Wirtschaft und Energie), INNOKOM project Fast Solid, funding contract 49VF170031. The authors acknowledge the support by Siemens PLM, agreement 60068580, for providing STAR-CCM+ licenses.
+
+IOP Conf. Series: Materials Science and Engineering 861 (2020) 012011 doi:10.1088/1757-899X/861/1/012011
+
+\section*{References}
+[1] Sun S, Brandt M and Easton M 2017 Powder bed fusion processes. In Laser Additive Manufacturing ed M Brandt (Elsevier) pp 55-77
+
+[2] Hanzl P, Zetek M, Bakša T and Kroupa T 2015 The Influence of Processing Parameters on the Mechanical Properties of SLM Parts. Procedia Engineer. 100 1405-13
+
+[3] Karapatan NP, Egger G, Gygax P E and Glardon R 1999 Optimization of Powder Layer Density in Selective Laser Sintering. In Proc. International Solid Freeform Fabrication Symposium
+
+[4] Mower T M and Long M 2016 Mat. Sci. Eng. A 651 198-213
+
+[5] Yadollahi A and Shamsaei N 2017 Int. J. Fatigue 98 14-31
+
+[6] Khairallah S A and Anderson A 2014 J. Mater. Process. Tech. 214 2627-36
+
+[7] Guertler F J, Karg M, Dobler M, Kohl S, Tzivilsky I and Schmidt M 2014 In Proc. 25th Annual International Solid Freeform Symposium, ed Bourell D (Austin, USA) pp 1099-117
+
+[8] Panwisawas C, Sovani Y, Anderson M J, Turner R, Palumbo N. M, Saunders B C, Choquet I, Brooks J W and Basoalto H C 2016 In Proc. 13th Intenational Symposium of Superalloys, ed. Hardy M et al. (Hoboken, USA) pp 1021-30
+
+[9] Bauereiß A, Scharowsky T and Körner C 2014 J. Mater. Process. Tech. 214 2522-28
+
+[10] Klassen A, Forster V E, Juechter V and Körner C 2017 J. Mater. Process. Tech. 247 280-8
+
+[11] Rai A, Markl M and Körner C 2016 Comp. Mater. Sci. 124 37-48
+
+[12] Jana S, Kattlitz O, Hediger F, Jakumeit J and Aguilar J 2012 IOP Conf. Ser.: Mater. Sci. Eng. 33 012007
+
+[13] Teskeredzic A, Demirdzic I, and Muzaferija S 2002 Numer. Heat Tr. B 4243
+
+[14] Muzaferija S and Peric M 1999 Computation of free surface flows using interface-tracking and interface-capturing methods. In Nonlinear Water Wave Interaction ed Mahrenholtz O et al. (Southampton: WIP Press) pp 59-100
+
+[15] Brackbill J U, Kothe D B and Zemach C 1992 J. Comput. Phys. 100335
+
+[16] Sabau S and Viswanath S 2002 Met. Mat. Trans. B 33131
+
+[17] Klassen A, Scharowsky T and Koerner C 2014 J. Phys. D: Appl. Phys. 4712
+
+[18] Anisimov S I 1968 Sov. Phys JETP 27182
+
+[19] Gusarov A V, Yadroitsev I, Bertrand P and Smurov I 2009 J. Heat Transf. 131072101
+
+[20] Bayata M, Thanki A, Mohanty S, Witvrouw A, Yang S, Thorborg J, Tiedje N S and Hattel J H 2019 Addit. Manuf. 30100835
+
+[21] Peng T and Chen C 2018 Int. J. Pr. Eng. Man. - GT 5 55-62
+
+
+\end{document}

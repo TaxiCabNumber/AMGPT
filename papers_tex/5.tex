@@ -1,0 +1,763 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{multirow}
+
+\title{Laser powder bed fusion of nickel alloy 625: Experimental investigations of effects of process parameters on melt pool size and shape with spatter analysis $^{\text {گर}}$ }
+
+
+\author{Luis E. Criales ${ }^{\mathrm{a}}$, Yiğit M. Arısoy ${ }^{\mathrm{a}}$, Brandon Lane ${ }^{\mathrm{b}}$, Shawn Moylan ${ }^{\mathrm{b}}$, Alkan Donmez ${ }^{\mathrm{b}}$,\\
+Tuğrul Özel ${ }^{\mathrm{a}, *}$}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\DeclareUnicodeCharacter{0131}{$\imath$}
+
+\begin{document}
+\maketitle
+a Rutgers, The State University of New Jersey, Department of Industrial \& Systems Engineering, NJ, USA
+
+b National Institute of Standards and Technology, Engineering Laboratory, Gaithersburg, MD, USA
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+Selective laser melting
+
+Powder bed fusion
+
+Nickel alloy
+
+Melt pool
+
+Spatter
+
+\begin{abstract}
+A B S T R A C T Laser powder bed fusion (L-PBF) as an metal additive manufacturing process that can produce fully dense 3D structures with complex geometry using difficult-to-process metal powders such as nickel-based alloy 625 which is one of the choice of metal materials for fabricating components in jet engines and gas turbines due to its high strength at elevated temperatures. L-PBF process parameters and scan strategy affect the resultant built quality and structural integrity. This study presents experimental investigations of the effects of process parameters and scan strategy on the relative density, melt pool size and shape. Fabricated test coupons were analyzed with two objectives in mind: i) to determine how close each coupon was to fully dense and ii) to determine melt pool dimensions (width and depth) and shape for each coupon. The identification and definition of a dynamic melt pool has been performed, a condition which indicates that melt pool geometry is constantly changing as the laser scans and moves along a single track. In order to gain in-depth understanding of the laser fusion processing of powder material, an in-situ thermal camera video recording is performed and analyzed for meltpool size, spattering particles, and heating and cooling rates during processing of powder material nickel alloy 625. The results reveal in-depth process information that can be used for further validation of modeling studies and adopted for the industrial practice.
+\end{abstract}
+
+\section*{1. Introduction}
+Metal additive manufacturing technology is attractive with unique applications in various industries for replacement or customized parts with complex geometries and structures [11,12,27]. As a metal additive manufacturing process, laser powder bed fusion (L-PBF) or traditionally known as selective laser melting process is favorable in obtaining fully dense structures without a need for post processing [9,21]. Many research studies have been reported on its applications, process improvement and parameter optimization $[35,36,38,43]$ and numerical modeling to predict the temperature field, melting and evaporation $([13,14,29,30,37,40])$ and microstructure analysis and prediction $[2,41,42]$. However, L-PBF process requires relatively high energy density levels and lower scan velocities to successfully melt and fuse the powder metal material when compared to laser sintering processes $[15,25]$. Due to high energy intensities applied with the high power laser beam, there may be meltpool instabilities, issues related to material spattering and balling, rapid material evaporation and keyhole effects [34,38]. Resultant built part quality, structural integrity and residual stresses $[6,24]$ is also a major concern especially for additively manufactured parts in nickel alloy 718 or nickel alloy 625 that are considered for deployment in mission critical components in aerospace applications. After all these research studies, the influence of L-PBF process parameters on the quality measures such as density and process signatures such as meltpool shape and size is still not fully understood.
+
+In literature, the overwhelmingly exploited quality measure is the density of the final part in addition to surface roughness and dimensional tolerances $[16-18,24]$. Meltpool geometry is also widely studied due to being a determinant of density and surface roughness [18,23].
+\footnotetext{\$5 Official contribution of the National Institute of Standards and Technology (NIST); not subject to copyright in the United States. The full descriptions of the procedures used in this paper require the identification of certain commercial products. The inclusion of such information should in no way be construed as indicating that such products are endorsed by NIST or are recommended by NIST or that they are necessarily the best materials, instruments, software or suppliers for the purposes described.
+
+\begin{itemize}
+  \item Correspondence to: Rutgers, The State University of New Jersey, 96 Frelinghuysen Road, Piscataway, NJ 08854, USA.
+\end{itemize}
+
+E-mail address: \href{mailto:ozel@rutgers.edu}{ozel@rutgers.edu} (T. Özel).
+}
+
+Kamath [17] claim that small meltpool depths make the system inefficient by increasing the processing time. On the other hand, large meltpools may yield vaporization of the substrate and causes pores in the structure that increase porosity [26]. To assure a stable meltpool, the meltpool dimensions are not allowed be too small or too large in order to avoid irregularities or droplets [24]. O’Regan et al. [28] classifies the parameters affecting such measures under four groups: feedstock, build environment, laser, and meltpool. Most of these parameters are predefined, that is, their values have to be adjusted before processing and some are controllable, that is, their values can be changed during processing. Lastly, some criteria are classified as undefined, that is, their values depend on other parameter adjustments. Control and optimization over L-PBF systems are achieved by changing predefined and controllable parameters. Even though laser power, scan velocity, hatch distance, and layer thickness have been known to be the most important parameters through experimentations, their relative importance are statistically analyzed in the recent study of Kamath [17]. According to this study, scan velocity is the most important parameters. A higher scan velocity causes the interaction between material and the laser beam to be short, which results in a narrow meltpool which also leads to rough surfaces, whereas decreasing the scan velocity causes excessive heating and vaporization. A very high scan velocity causes instability and droplet formation due to free cylindrical meltpool geometry. A very low scan velocity yields distortion and irregularities due to balling effect [18]. A low scan velocity is known to ensure a dense structure with the cost of rough surface. Hence, the optimal scan velocity is a trade-off between resultant density and surface quality [24].
+
+Criales et al. [7] analyzed the effects of varying laser power, scan velocity, and the packing density of the powder material for selective laser melting of nickel alloy Inconel 625 using finite element simulations. A sensitivity analysis has been conducted to investigate the influence of material properties and process parameters on the predicted temperature profile along the center of the laser beam path. They found that the packing density (or porosity) significantly affects the temperature profile. The powder reflectivity has the greatest effect on the predicted peak temperature and melts pool geometry, followed by laser power and scanning speed. In a recent study, Arisoy et al. [5] investigated L-PBF of nearly fully dense nickel alloy 625 . They observed that L-PBF generates a microstructure through directional solidification that can be controlled by scan strategies and selection of process parameters. They provided experimental investigations on microstructure formation including sizes of cellular grains and growth directions of columnar grains on the test coupons. They analyzed the main effects of process parameters including laser power, scan velocity, hatch distance, and scan strategy that produce various solidification cooling rates and thermal gradients during the process, which also contributed to understanding of the resultant microstructure.
+
+\section*{2. Laser powder bed fusion of nickel alloy 625}
+Laser powder bed fusion (L-PBF) is an additive manufacturing process that enables direct fabrication of three-dimensional (3D) parts from computer models by scanning regions of a powder bed using a high energy laser beam that selectively melts and fuses cross-sectional geometry on each layer followed by subsequent solidification according to active ASTM terminology [1]. In L-PBF, the powder material is completely melted and solidified with an aim to achieve fully dense parts. A traditional L-PBF set-up typically requires a high power laser source (Fig. 1). Some of the key advantages of L-PBF over other manufacturing techniques include: (i) high flexibility in manufacturing complex shapes, (ii) quick process setup avoiding the need for tooling, and (iii) broad choice of materials including high strength superalloys. These advantages allow for quick transition between manufacturing products of different geometries within the same station.
+
+The most attractive feature of L-PBF is the ability to use this process to produce highly complex geometries and structures that would normally not even be feasible using conventional production techniques. However, L-PBF has several major disadvantages: the laser heating process is known for its rapid heating times and unpredictable cooling times, which result in high localized residual stress, nonhomogeneous and anisotropic microstructure and material properties, as well as the formation of gas pores and voids in the microstructure, which often lead to reduced material density and mechanical properties such as strength, hardness, toughness, and fatigue resistance. Other than common concern of lack of fusion or gas induced porosity, dealing with structural defects such as residual stress, delamination, cracking are major challenges in L-PBF. The scan strategy, process temperature, powder mixture, build chamber atmosphere and many other inputs determine the occurrence and quantity of such defects [33].
+
+In L-PBF, laser characteristics, process parameters, and material properties must be studied jointly to obtain a better understanding of the laser processing of powder metal materials. Laser characteristics are unique to the laser equipment such as maximum power, wavelength, beam spot diameter (or size), and beam energy distribution and usually cannot be modified by the end user. However, L-PBF involves a set of processing parameters that can be modified such as laser power $(P)$, scan velocity $\left(v_{s}\right)$, hatch distance $(h)$, stripe width $(w)$, and layer thickness (s) as shown in Fig. 2 and scan strategy rotation (SSR) as shown in Fig. 3.
+
+In the L-PBF process, consecutive layers are built by processing powder material with a pre-specified powder layer thickness. These consecutive layers are processed slightly differently to ensure a robust build. More specifically, stripe orientation changes from layer to layer by a set margin. Two scan strategies available are a) $90^{\circ}$ counter clockwise rotation, and b) $67^{\circ}$ counter clockwise rotation between consecutive layers. Fig. 3 illustrates this concept for both of these laser scan strategies.
+
+In L-PBF, the laser beam spot diameter is considered fixed (e.g., $d=100 \mu \mathrm{m}$ ) with uniform or near Gaussian beam energy distribution, but laser power, scan velocity, hatch distance, and layer thickness can be altered to a desired energy density setting, which affect the resultant melt pool geometry, heat affected area, quality of fusion, cooling rate, formation of solidification microstructure on the powder bed. The effects of these process parameter settings together with powder material characteristics on the variations of the resultant part quality in terms of density, material properties, dimensional quality, surface roughness, and defects are not well understood.
+
+\section*{3. Experimental design}
+An EOS M270 ${ }^{1}$ Direct Metal Laser Sintering (DMLS) machine was utilized for processing of experimental test coupons. This machine has a single-mode, continuous wave (CW) ytterbium fiber laser with maximum power of $200 \mathrm{~W}$. An adequate quantity of commercial additive manufacturing grade nickel alloy 625 powder produced by gas atomized process with the average particle size of $35 \mu \mathrm{m}$ was used and solid coupons in the shape of cubes $(16 \mathrm{~mm} \times 16 \mathrm{~mm} \times 15 \mathrm{~mm}$ ) were manufactured using an EOS M270 DMLS machine under nitrogen gas ambience at the National Institute for Standards \& Technology (NIST) facility located in Gaithersburg, Maryland, USA. The powder material with -325 mesh size (particles that measure less than $44 \mu \mathrm{m}$ ) and atomized spherical morphology has a particle distribution of D60\% $=29.4 \mu \mathrm{m}, \mathrm{D} 10 \%=13.5 \mu \mathrm{m}$, and $\mathrm{D} 90 \%=43.0 \mu \mathrm{m}$. The chemical composition of the powder material in wt\% was reported as follows: $\mathrm{Cr}$ $21.01 \%$, Fe $0.85 \%$, Mo $8.77 \%$, Nb $3.35 \%$, C $0.02 \%$, Mn $0.36 \%$, Si
+\footnotetext{${ }^{1}$ Certain commercial equipment, instruments, or materials are identified in this paper in order to specify the experimental procedure adequately. Such identification is not intended to imply recommendation or endorsement by the National Institute of Standards and Technology, nor is it intended to imply that the materials or equipment identified are necessarily the best available for the purpose.
+}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-03(2)}
+\end{center}
+
+Fig. 1. The laser powder bed fusion system (Direct Metal Laser Sintering by EOS GmbH).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-03}
+\end{center}
+
+Fig. 2. L-PBF terminology [7].
+
+$0.39 \%$, P $0.005 \%$, S $0.003 \%$, Al $0.1 \%$, Ti $0.1 \%$, Co $0.1 \%$ and Ni-balance.
+
+Experiments were designed to establish a relationship between process parameters and part quality. During the experimental design phase, sets of process parameters to create test coupons were selected from a family of response surface methodology (RSM) design. There were two limitations that restricted experimental design selection: i) a maximum of 36 test coupons could be fabricated due to size constraints in the build platform of the L-PBF machine, and ii) hatch distance could only be increased or decreased in intervals of $0.01 \mathrm{~mm}$. The first limitation eliminated the possibility of a three-level factorial design for three factors and two scan strategies, which would require a minimum of 54 treatments. The second limitation greatly reduced the applicability of Box-Wilson central composite design types [32], which require high resolution in between levels. Therefore, machine rounding error while input of process settings would have significantly altered the outcome of Box-Wilson type designs. Another alternative, the BoxBehnken design, offered an advantage by requiring comparatively fewer number of runs while maintaining rotatability. The Box-\\
+Behnken design for three factors is based on considering process parameter combinations at the midpoints of the edges of the process space cube, as well as at the center. Therefore, three levels of each factor are considered. These low, medium, and high levels for each factor are defined as: $P=169 \mathrm{~W}, 182 \mathrm{~W}$, and $195 \mathrm{~W}, v_{\mathrm{s}}=725 \mathrm{~mm} / \mathrm{s}$, $800 \mathrm{~mm} / \mathrm{s}$, and $875 \mathrm{~mm} / \mathrm{s}$, and $h=0.09 \mathrm{~mm}, 0.10 \mathrm{~mm}$, and $0.11 \mathrm{~mm}$. Additionally, we define energy density as the amount of energy applied to the powder bed per unit volume. Energy density is then a function of laser power $(P)$, scan velocity $\left(v_{s}\right)$, hatch distance $(h)$, and layer thickness (s), as given in Eq. (1).
+
+$E=\frac{P}{v_{s} \bullet h \bullet s}$
+
+The range for each factor was selected so that resulting energy density for all sets fell within the calculated limits [3] that showed acceptable builds. Three additional coupons were built at the "default settings" for control purposes. The powder layer thickness is kept constant at $s=20 \mu \mathrm{m}$.
+
+The test coupons fabricated using these parameter settings are $16 \mathrm{~mm} \times 16 \mathrm{~mm}$ at the base, and $15 \mathrm{~mm}$ in height. The final height of the coupons is less than $15 \mathrm{~mm}$, as wire electrical discharge machining (w-EDM) is used to separate the built coupons from the platform, and some of the coupon remains attached to the platform. $16 \mathrm{~mm}$ was selected as the width and length of the coupons so that each processed layer of powder is composed of four 4-mm wide stripes. Stripe overlap, defined as the area of material in which laser scanning overlaps by consecutive stripes, is $0.1 \mathrm{~mm}$. Therefore, total stripe width is $4.1 \mathrm{~mm}$. At first, a set of 18 coupons were fabricated using $90^{\circ}$ rotation in scanning direction (stripe orientation) between layers. A second set of coupons, following the same experimental design as the first set, was processed using the default scanning rotation (stripe orientation) setting of the L-PBF machine, which is estimated to be an approximately $67^{\circ}$ rotation.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_52a85307004f6d652296g-03(1)}
+
+Fig. 3. Schematic of a stripe scan pattern with $90^{\circ}$ (left) and $67^{\circ}$ (right) CCW rotation between consecutively built layers [4].
+
+\section*{4. Measurement of relative density}
+Both sets of coupons, built with $90^{\circ}$ and $67^{\circ}$ scanning rotation between layers, were measured for size and mass to determine the density of each coupon. The objective is to determine how close each coupon was to fully dense. For this purpose, relative density is defined as shown in Eq. (2).
+
+$\rho_{\text {rel }}=\frac{\rho_{\text {coupon }}}{\rho_{\text {bulk }}} \times 100 \%=\frac{m / V}{\rho_{\text {bulk }}} \times 100 \%$
+
+where $m$ and $V$ are the mass and the volume of the coupon, respectively, and $\rho_{\text {bulk }}$ is the density of solid nickel alloy 625 . The mass of the coupon was calculated using a weighing scale with an accuracy of $0.001 \mathrm{gr}$. The mass was measured five times for each coupon, which provides an average (29.623-30.255 gr) and standard deviation (0.004-0.008 gr). The volume of the coupon was calculated by measuring the length, width, and height of the coupon using a Coordinate Measurement Machine (CMM) with accuracy of $5 \mu \mathrm{m}$, resolution of $0.25 \mu \mathrm{m}$, and uncertainty of $2.5 \mu \mathrm{m}$. Similarly, multiple measurements of each dimension were taken to find the average volume (3592.16-3643.65 mm³). The bulk density of nickel alloy 625 is $8.440 \mathrm{~g} / \mathrm{cm}^{3}$. Relative density values are summarized in Table 1 . It should be noted that he uncertainty of measured density is about $20 \mathrm{mg} / \mathrm{cm}^{3}$ and the uncertainty in calculated relative density is about $0.3 \%$.
+
+\section*{5. Measurement and analysis of melt pool marks}
+Melt pool marks can be analyzed to determine important information regarding melt pool geometry. Melt pool geometry data is classified into two types: melt pool dimensions (width/depth) and melt pool shape.
+
+\subsection*{5.1. Measurement of melt pool width and depth}
+Melt pool width and depth can be measured via digital optical microscopy (DOM) of the planes that allow a cross-sectional view of the melt pool, i.e., XZ and YZ. However, it should be noted that there is difficulty in measuring melt pool marks using microscope images especially with the depth measurements on multi-layer parts. It is certain that the subsequent layer will re-melt some of the recently processed layer, likely obscuring some of the melt pool marks and
+
+Table 1
+
+Process parameters, energy density, and measured relative density.
+
+\begin{center}
+\begin{tabular}{llllll}
+\hline
+\begin{tabular}{l}
+Laser \\
+Power, \\
+$\boldsymbol{P}[\mathbf{W}]$ \\
+\end{tabular} & \begin{tabular}{l}
+Scan \\
+Velocity, \\
+$\boldsymbol{v}_{\mathbf{s}}[\mathbf{m m} /$ \\
+$\mathbf{s}$ ] \\
+\end{tabular} & \begin{tabular}{l}
+Hatch \\
+Distance, \\
+$\boldsymbol{h}[\mathbf{m m}]$ \\
+\end{tabular} & \begin{tabular}{l}
+Energy \\
+Density, \\
+$\boldsymbol{E}[\mathbf{J} /$ \\
+$\left.\mathbf{m m}^{\mathbf{3}}\right]$ \\
+\end{tabular} & \begin{tabular}{l}
+Relative \\
+Density \\
+$\left(\mathbf{S S R}=\mathbf{6 7}^{\circ}\right)$, \\
+$\boldsymbol{\rho}_{\mathbf{r e l}}[\%]$ \\
+\end{tabular} & \begin{tabular}{l}
+Relative \\
+Density \\
+$\left(\mathbf{S S R}=\mathbf{9 0}{ }^{\circ}\right.$ ), \\
+$\boldsymbol{\rho}_{\mathbf{r e l}}[\%]$ \\
+\end{tabular} \\
+\hline
+$\mathbf{1 6 9}$ & 875 & 0.10 & 96.57 & 95.23 & 96.00 \\
+$\mathbf{1 9 5}$ & 875 & 0.10 & 111.43 & 98.30 & 98.70 \\
+$\mathbf{1 8 2}$ & 875 & 0.09 & 115.56 & 97.03 & 97.40 \\
+$\mathbf{1 8 2}$ & 725 & 0.11 & 114.11 & 95.97 & 96.17 \\
+$\mathbf{1 9 5}$ & 800 & 0.11 & 110.80 & 98.47 & 98.52 \\
+$\mathbf{1 8 2}$ & 725 & 0.09 & 139.46 & 97.14 & 97.29 \\
+$\mathbf{1 8 2}$ & 800 & 0.10 & 113.75 & 98.10 & 98.21 \\
+$\mathbf{1 8 2}$ & 800 & 0.10 & 113.75 & 98.05 & 98.19 \\
+$\mathbf{1 9 5}$ & 725 & 0.10 & 134.48 & 97.50 & 97.74 \\
+$\mathbf{1 8 2}$ & 800 & 0.10 & 113.75 & 98.13 & 98.30 \\
+$\mathbf{1 8 2}$ & 875 & 0.11 & 94.55 & 96.50 & 96.75 \\
+$\mathbf{1 6 9}$ & 725 & 0.10 & 116.55 & 96.38 & 96.52 \\
+$\mathbf{1 6 9}$ & 800 & 0.09 & 117.36 & 97.50 & 97.91 \\
+$\mathbf{1 6 9}$ & 800 & 0.11 & 96.02 & 96.60 & 96.78 \\
+$\mathbf{1 9 5}$ & 800 & 0.09 & 135.42 & 99.01 & 99.23 \\
+$\mathbf{1 9 5}$ & 800 & 0.10 & 121.88 & 98.64 & 98.86 \\
+$\mathbf{1 9 5}$ & 800 & 0.10 & 121.88 & 98.53 & 98.75 \\
+$\mathbf{1 9 5}$ & 800 & 0.10 & 121.88 & 98.69 & 98.81 \\
+ &  &  &  &  &  \\
+\end{tabular}
+\end{center}
+
+increasing uncertainty in these depth measurements. Nevertheless, images were taken using a progressive scan digital microscope equipped with CMOS image sensor. Image size is $1600(\mathrm{H})$ pixels $\times 1200(\mathrm{~V})$ pixels. The length of the melt pool at any specific time cannot be measured due to the continuous nature of the laser scanning process. Therefore, one single continuous track can be observed in the $x$-direction, as shown in Fig. 4a. Due to the $90^{\circ}$ scanning strategy between layers, $\mathrm{XZ}$ and $\mathrm{YZ}$ become interchangeable when analyzing melt pool dimension. Melt pool width and depth can be measured every other layer due to the change in orientation of the scanning direction, which allows a view of the cross-section of the melt pool every other layer (Fig. 4b). It should be noted that the images given in Fig. 4 are used in explaining the processing of tracks and layers in L-PBF and they are not used in taking measurements of melt pool dimensions.
+
+In order to obtain images where the melt pools could be measured, three of the coupon faces corresponding to XY-, XZ-, and YZ-plane, were electro-polished a total of $50 \mu \mathrm{m}$ deep. Therefore, melt pool measurements were taken at a cross-section very close to the edge of the coupon (see Fig. 5).
+
+Note that points A, B, and C will represent consecutive melt pools observed in an image taken of the YZ-plane. The distance between A-B and $\mathrm{B}-\mathrm{C}$ is the same, and equivalent to one hatch distance. However, there is a discrepancy between the time necessary for the laser to arrive at point $\mathrm{B}$ from point $\mathrm{A}$, and the time required to reach point $\mathrm{C}$ from point B. Assuming that the laser off-time between hatches is $0.042 \mathrm{~ms}$ measured during coupon building using a high speed camera at 24,000 frames/s, and the scan velocity is $800 \mathrm{~mm} / \mathrm{s}$ for a $4 \mathrm{~mm}$ stripe width, it follows that:
+
+$t_{A B} \approx \frac{2 w}{v}=\frac{2(4 \mathrm{~mm})}{800 \mathrm{~mm} / \mathrm{s}}=10 \mathrm{~ms}$
+
+$t_{B C} \approx$ laser off time $=0.042 \mathrm{~ms}$
+
+Therefore, it takes approximately $10 \mathrm{~ms}$ longer for the laser to reach the same $x$-coordinate location on consecutive hatches, depending on whether this particular location of interest constitutes the beginning or the end of a scanned hatch. This difference in time is considerable, because it allows the local powder material to cool about $10 \mathrm{~ms}$ and has an effect on the melt pool dimensions, as shown next.
+
+Two different sizes of melt pools were observed due to the characteristics of the laser scanning process described previously: i) a Type I melt pool, where the area being processed (points A and C in Figs. 5 and 6) is still within the heat-affected zone of the previous hatch scanning, and ii) a type II melt pool, where the area currently being processed (location B in Figs. 5 and 6) is no longer affected by the heat from the laser scanning of the previous hatch or track.
+
+Type I and Type II melt pools can be formally defined as follows: in an YZ-plane at a specific $x$-location ( $x$ is fixed), the time elapsed between two consecutive passes of the laser footprint through this plane will vary as a function of $x$. For locations very close to the stripe boundaries, the difference in time elapsed is the largest. This leads to different sized melt-pools along this particular YZ-plane. The size of the melt pool will depend on the scanning direction. Melt pools at a location at the beginning of the stripe will be larger (Type I) and melt pools at a location at the end of a processed stripe will be smaller (Type II). The difference in melt pool sizes can be attributed to the presence of a heat-affected zone (HAZ) and rapid cooling times. Digital optical microscopy imaging and thermal camera imaging were used to corroborate these results.
+
+A digital optical microscope was utilized to obtain images of the electro-polished surfaces from which the melt pool width and depth were measured. All the images utilized for analysis were captured in 1600 pixel $\times 1200$ pixel resolution and $500 \times$ magnification. The images were measured using a built-in scale provided by the optical microscope, as seen in the lower right corner of Fig. 7.
+
+First, the number of pixels that makes up the length of the scale
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-05}
+\end{center}
+
+(a) $\mathrm{XY}$ view
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-05(2)}
+\end{center}
+
+(b) YZ view
+
+Fig. 4. Views of Coupon 35 surfaces ( $P=195 \mathrm{~W}, v_{s}=800 \mathrm{~mm} / \mathrm{s}, h=0.1 \mathrm{~mm}$ ). (a) XY view (b) YZ view.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_52a85307004f6d652296g-05(1)}
+
+Fig. 5. Location of electro-polished surface relative to XY-plane.
+
+$(100 \mu \mathrm{m})$ was counted to obtain a pixel-to- $\mu \mathrm{m}$ conversion ratio. Then, the width and depth of the melt pools were measured by drawing colorcoded lines on the images and counting the number of pixels spanned by each individual line. Then, the measurements were converted to micrometers using the conversion ratio $(0.4184 \mu \mathrm{m} /$ pixel $)$. The width of Type I and Type II melt pools were marked using red (RGB=255-00 ) and blue ( $\mathrm{RGB}=0-0-255)$, respectively (see Fig. $7 \mathrm{a}$ and b). A subjectivity error of a few pixels should be noted when selecting the melt pool boundary, which leads to a Type-B uncertainty of $u_{M P}=(0.4184 \mu \mathrm{m} / \mathrm{pixel}) \square$ (3 pixels $)=1.2552 \mu \mathrm{m}$ for each length measurement by assuming a $67 \%$ probability that the melt pool boundaries exist within 3 pixel of the points selected (1.5 pixel per boundary) [31].\\
+A Matlab code was then used to automatically detect the colored lines and obtain the width and depth of each individual marked melt pool using the scale as a reference. While each melt pool is measured only once for each image, multiple optical images of each coupon were analyzed following this methodology, and the results were compiled to obtain an average melt pool width and depth, with corresponding standard deviation. It was found that melt pool width changes considerably based on the type of melt pool. Melt pool depth also varies slightly between types, though there is significant overlap when accounting for standard deviation. Table 2 summarizes all melt pool width and depth by type for each coupon, with the respective standard deviation. The average values incorporated $>30$ individual measurements, resulting in a measurement uncertainty less than
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-05(3)}
+\end{center}
+
+Fig. 6. Definition of Type I and Type II melt pools.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-06(1)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-06}
+\end{center}
+
+(b)
+
+Fig. 7. Marked melt pool (a) width and (b) depth of Coupon 29 (XZ-plane).
+
+$u_{M P_{\_} \text {ave }}=u_{M P} / \sqrt{30}=1.2552 \mu \mathrm{m} / 5.477=0.229 \mu \mathrm{m}$ for each coupon. The standard deviation columns in table represent the square root of the variance.
+
+\subsection*{5.2. Melt pool shape analysis}
+The laser heating effect described in the previous section produces a notable effect on the geometrical shape of the melt pool as well. In particular, by analyzing the images obtained via digital optical microscopy, it was observed that the location along the $y$-axis at which the maximum melting depth occurs does not necessarily lie on the hatch (or track) centerline. To quantify this effect, a measure of the melt pool shape was developed and will be explained next.
+
+For this analysis, we will consider once again the cross-sectional (YZ-plane) view of the melt pool. The melt pool width, $w$, and the distance from the edge of the melt pool farther away from the previous hatch to the location at which the maximum melted depth is observed, $a$, are measured using the same methodology as before (see Fig. 8a).
+
+Then, a measure for the melt pool shape is defined as follows:
+
+$\varphi(a, w)=\frac{a-w / 2}{w / 2}=\frac{2 a-w}{w}$
+
+With this definition, a way to determine how skewed the melt pool is has been established. If the melt pool is perfectly symmetrical about the $z$-axis, then $a=w / 2$ and $\varphi=0$, or $0 \%$. On the contrary, if the melt pool is completely skewed towards the previous processed hatch due to the heat-affected zone, then $a \rightarrow w / 2$, in which case $\varphi \rightarrow 1$, or $100 \%$. In summary, this measure gives a value between 0 and 1 (or $0 \%$ and $100 \%$ ) that quantifies how asymmetrical the melt pool geometry is. To further illustrate how this measure is employed, consider the following example taken from the digital optical image microscopy obtained of Coupon 29, previously shown in Fig. 6. In this example we consider only a single melt pool. Note that $w$ and $a$ have been measured in pixels and have not been converted to micrometers to avoid rounding error (see Fig. 8b).
+
+The melt pool shape can then be determined using Eq. (4):
+
+$\varphi(242,346)=\frac{242-346 / 2}{346 / 2}=0.3988=39.88 \%$
+
+This value of $\varphi$ close to $40 \%$ indicates that the melt pool is considerably asymmetrical, indicating a strong effect of the alreadyprocessed scanned hatch (or track). By repeating this process for all melt pools previously measured, it is possible to obtain an average measure (and standard deviation) of the melt pool shape for a specific set of process parameters. Then, the melt pool shape measure for different process parameters can be tabulated and presented for comparison, as shown in Table 3. It should be noted that at least 30 measurement samples for each melt pool type per coupon were collected. The main conclusion from this analysis is that beyond the variation in melt pool shape between processing conditions, Type I and
+
+Table 2
+
+Summary of melt pool dimensional measurements $\left(S S R=90^{\circ}\right.$ ) by melt pool type.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\multirow[b]{2}{*}{Coupon \#} & \multirow[b]{2}{*}{$P[W]$} & \multirow[b]{2}{*}{$v_{s}[\mathbf{m m} / \mathrm{s}]$} & \multirow[b]{2}{*}{$h[\mathrm{~mm}]$} & \multicolumn{2}{|c|}{}\begin{tabular}{l}
+Melt Pool Width - Avg. \\
+$[\mu \mathrm{m}]$ \\
+\end{tabular} & \multicolumn{2}{|c|}{}\begin{tabular}{l}
+Melt Pool Width - Std Dev. \\
+$[\mu \mathrm{m}]$ \\
+\end{tabular} & \multicolumn{2}{|c|}{}\begin{tabular}{l}
+Melt Pool Depth - Avg. \\
+$[\mu \mathrm{m}]$ \\
+\end{tabular} & \multicolumn{2}{|c|}{}\begin{tabular}{l}
+Melt Pool Depth - Std Dev. \\
+$[\mu \mathrm{m}]$ \\
+\end{tabular} \\
+\hline
+ &  &  &  & $\mathbf{I}$ & II & $\mathbf{I}$ & II & $\mathbf{I}$ & II & $\mathbf{I}$ & II \\
+\hline
+01 & 169 & 875 & 0.10 & 134 & 92 & 12 & 9 & 35 & 31 & 6 & 5 \\
+\hline
+04 & 195 & 875 & 0.10 & 170 & 111 & 25 & 7 & 49 & 46 & 7 & 8 \\
+\hline
+06 & 182 & 875 & 0.09 & 149 & 101 & 17 & 16 & 45 & 38 & 7 & 5 \\
+\hline
+08 & 182 & 725 & 0.11 & 153 & 107 & 25 & 12 & 48 & 39 & 8 & 9 \\
+\hline
+09 & 195 & 800 & 0.11 & 143 & 109 & 13 & 9 & 44 & 42 & 7 & 7 \\
+\hline
+12 & 182 & 725 & 0.09 & 134 & 113 & 18 & 11 & 45 & 36 & 7 & 10 \\
+\hline
+14 & 182 & 800 & 0.10 & 132 & 109 & 11 & 10 & 44 & 38 & 7 & 6 \\
+\hline
+15 & 182 & 800 & 0.10 & 128 & 105 & 12 & 11 & 40 & 33 & 9 & 6 \\
+\hline
+16 & 195 & 725 & 0.10 & 152 & 114 & 13 & 11 & 52 & 42 & 18 & 10 \\
+\hline
+17 & 182 & 800 & 0.10 & 143 & 112 & 10 & 7 & 48 & 38 & 6 & 7 \\
+\hline
+18 & 182 & 875 & 0.11 & 134 & 110 & 13 & 15 & 47 & 32 & 7 & 7 \\
+\hline
+20 & 169 & 725 & 0.10 & 159 & 106 & 13 & 8 & 51 & 42 & 8 & 6 \\
+\hline
+21 & 169 & 800 & 0.09 & 154 & 107 & 14 & 9 & 47 & 45 & 8 & 9 \\
+\hline
+23 & 169 & 800 & 0.11 & 150 & 96 & 28 & 11 & 43 & 33 & 6 & 6 \\
+\hline
+29 & 195 & 800 & 0.09 & 149 & 103 & 15 & 16 & 49 & 39 & 7 & 12 \\
+\hline
+35 & 195 & 800 & 0.10 & 155 & 112 & 11 & 15 & 50 & 41 & 6 & 7 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-07(3)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-07}
+\end{center}
+
+(b)
+
+Fig. 8. (a) Location of maximum depth of melted material, (b) measurements for calculation of melt pool shape.
+
+Table 3
+
+Summary of melt pool shape measurements $\left(S S R=90^{\circ}\right)$ by melt pool type.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+\multirow[b]{2}{*}{Coupon \#} & \multirow[b]{2}{*}{$P[W]$} & \multirow[b]{2}{*}{}\begin{tabular}{l}
+$v_{s}$ \\
+$[\mathbf{m m} /$ \\
+$s]$ \\
+\end{tabular} & \multirow[b]{2}{*}{$h[\mathrm{~mm}]$} & \multicolumn{2}{|c|}{}\begin{tabular}{l}
+Melt Pool \\
+Shape - Avg. \\
+$[\%]$ \\
+\end{tabular} & \multicolumn{2}{|c|}{}\begin{tabular}{l}
+Melt Pool \\
+Shape - Std \\
+Dev. [\%] \\
+\end{tabular} \\
+\hline
+ &  &  &  & I & II & I & II \\
+\hline
+01 & 169 & 875 & 0.10 & 10.0 & 2.2 & 3.1 & 2.9 \\
+\hline
+04 & 195 & 875 & 0.10 & 16.1 & 13.4 & 2.5 & 2.4 \\
+\hline
+06 & 182 & 875 & 0.09 & 19.4 & 15.3 & 3.1 & 2.7 \\
+\hline
+08 & 182 & 725 & 0.11 & 12.6 & 12.7 & 4.3 & 4.7 \\
+\hline
+09 & 195 & 800 & 0.11 & 11.8 & 10.5 & 4.2 & 4.0 \\
+\hline
+12 & 182 & 725 & 0.09 & 15.0 & 2.7 & 3.2 & 4.7 \\
+\hline
+14 & 182 & 800 & 0.10 & 10.9 & 1.0 & 4.0 & 4.1 \\
+\hline
+15 & 182 & 800 & 0.10 & 16.3 & 6.7 & 3.7 & 4.5 \\
+\hline
+16 & 195 & 725 & 0.10 & 9.5 & 11.5 & 3.6 & 4.1 \\
+\hline
+17 & 182 & 800 & 0.10 & 8.6 & 0.4 & 2.7 & 4.5 \\
+\hline
+18 & 182 & 875 & 0.11 & 7.1 & 0.1 & 2.4 & 3.1 \\
+\hline
+20 & 169 & 725 & 0.10 & 11.0 & 2.6 & 3.6 & 6.1 \\
+\hline
+21 & 169 & 800 & 0.09 & 23.4 & 11.5 & 5.1 & 6.4 \\
+\hline
+23 & 169 & 800 & 0.11 & 9.1 & 0.2 & 2.8 & 6.4 \\
+\hline
+29 & 195 & 800 & 0.09 & 21.0 & 6.0 & 5.2 & 5.5 \\
+\hline
+35 & 195 & 800 & 0.10 & 5.4 & 3.5 & 2.5 & 3.3 \\
+\hline
+\end{tabular}
+\end{center}
+
+Type II melt pools obtained via the same processing conditions often have considerably different shapes.
+
+\section*{6. Effect of process parameters on melt pool size and shape}
+The effects of L-PBF process parameters such as laser power, scan velocity, and hatch distance on the melt pool geometry has been investigated.
+
+\subsection*{6.1. Effect of process parameters on melt pool width and depth}
+The effect of process parameters on melt pool dimensions (width and depth) can be analyzed via main effect plots, as shown in Figs. 911. Melt pool size increases with increasing laser power and decreasing scan velocity. However, the behavior is clearly non-linear. Additionally,
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-07(1)}
+\end{center}
+
+(a) the melt pool width and depth measurements taken indicate that there is a large difference between Type I and Type II melt pool width (approx. $50 \mu \mathrm{m}$ ). This is in contrast with the difference between Type I and Type II melt pool depth, which does not appear to vary significantly (approx. $10 \mu \mathrm{m}$ ). Melt pool width and depth decrease with increasing hatch distance, especially for Type I melt pools. This is in agreement with what is intuitively expected, since a larger hatch distance causes the heat affected zone from a previously scanned track to be further away from the following track. Additionally, the difference in depth between Type I and Type II melt pools is greatly reduced with increasing hatch distance.
+
+Another way to analyze these results is to consider the behavior of melt pool depth and width as a function of laser energy density, as shown in Figs. 12 and 13. The trend lines show that melt pool size increases slightly as energy density increases. This behavior is more noticeable in melt pool depth than in melt pool width. Furthermore, there is no appreciable difference in behavior between Type I and Type II melt pool size when considering energy density as an all-inclusive factor. In summary, the measurements taken for melt pool width and depth give very significant insight into the dynamic nature of melt pool size. Furthermore, the change in melt pool size is non-linear.
+
+\subsection*{6.2. Effect of process parameters on melt pool shape}
+The effect of processing parameters on melt pool shape can be represented via main effect plots, as seen in Figs. 14-16. Notice the considerable effect of low hatch distance in Type I melt pools and of high laser power in Type II melt pools. Melt pool shape tends to be more asymmetric with increasing laser power and increasing scan velocity, especially for Type II melt pools. However, the behavior is clearly non-linear. Melt pool shape measurements taken indicate that there is a considerable difference between Type I and Type II melt pool shapes. Type I melt pools are considerably more asymmetric than Type II melt pools. This behavior is more easily observable at lower scan velocities. Notice that Type I melt pools tend to be more symmetric when the highest level of hatch distance is utilized. This is intuitive from the fact that a higher hatch distance, the distance between consecutive scanned tracks, results in the melt pool being further removed from the heat affected zone due to melting of the previous
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-07(2)}
+\end{center}
+
+(b)
+
+Fig. 9. Effect of laser power on melt pool (a) width, (b) depth.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-08(2)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-08(1)}
+\end{center}
+
+(b)
+
+Fig. 10. Effect of scan velocity on melt pool (a) width, (b) depth.
+
+track.
+
+It is possible to consider how melt pool shape changes as a function of laser energy density, using the definition introduced earlier. Recall that energy density is a function of laser power, scan velocity, layer thickness, and hatch distance. Fig. 17 shows a plot of melt pool shape, by type, as a function of energy density.
+
+The trend line on Fig. 17 shows that melt pool shape is more asymmetrical as energy density increases. This behavior is more noticeable in Type I melt pool than in Type II melt pools. In summary, the difference in melt pool shape for Type I and Type II melt pools can be mostly attributed to the effect of the heat-affected zone from the previous scanned track. Therefore, hatch distance is the most relevant factor, as hypothesized initially.
+
+\section*{7. In-situ thermal monitoring}
+In-situ monitoring of the process using two-color pyrometer thermal camera [10] and thermography ([20]) can be utilized to quantitatively analyze melt pool size and investigate spattering phenomenon [34]. Video recordings of the process can be utilized if a camera is placed in the L-PBF process chamber. Due to the nature of the process, i.e., a laser beam moving at very high speeds, a high frame rate (HFR) camera is required. An HFR infrared camera has been setup to observe a portion of the build area of an L-PBF machine at the National Institute of Standards and Technology (NIST) facility in Gaithersburg, MD, and the process has been recorded for a test coupon (Coupon 35) fabricated using $P=195 \mathrm{~W}, \quad v_{s}=800 \mathrm{~mm} / \mathrm{s}$, and $h=0.10 \mathrm{~mm}$.
+
+This section presents investigations on the melt pool size and spattering analyses of the process using the HFR thermal camera recording. There are some difficulties in processing of these images. The finite dynamic range of the camera means much of the data is at the noise floor outside the melt pool, or saturated due to the high temperatures within the melt pool. The spattering particles that occupy the same area as the melt pool in the image frame (e.g., particles that are immediately above the melt pool) are not all recoverable from the images as they may also saturate the camera and appear to coincide with the saturated melt pool. In addition, a visible lens glare (or ghosting) creates an erroneously increased temperature measurement which affects relative uncertainty at low temperature values. Furthermore, the speed, path, and frequency of spatter particles are not always captured since the spatter frequency is at or above the camera frame rate. Additionally, solidified and powder regions have locally variant emissivity values, which effectively cause spatially variant and 'noisy' temperature measurements. However, for simplicity, a single emissivity value is assumed, which is likely the largest contributor to temperature measurement uncertainty.
+
+\subsection*{7.1. Experimental set-up for thermal camera}
+The thermal camera properties are shown in Table 4. The camera has an integration time of $0.040 \mathrm{~ms}$ and can record at 1800 frames per second, which translates to $0.5555 \mathrm{~ms}$ per frame. In the instantaneous field of view (iFoV), each pixel represents $36 \mu \mathrm{m}$. Thermal video and process parameters are shown in Table 5. The video recording of the test coupon has 801 total frames. The processing occurs out of the view of the camera for 99 frames. Horizontal scanning is recorded for 602 frames with approximately 60 tracks, and a vertical scanning of the stripe boundary is recorded for 100 frames. Since each track is processed for $5.125 \mathrm{~ms}$ (calculated from track length divided by scan velocity), the camera records approximately 9.23 frames per track. The non-integer number means that the frequency of the process is different than what the camera records, therefore the initial and final point of each track are not necessarily recorded with the camera. It is also important to note that some frames during processing are missing in the recording, i.e., skipping occurs.
+
+Moreover, as shown in Fig. 17, the camera is placed at a $43.7^{\circ}$ angle with the powder bed. Recording at this angle causes the image of the build plane surface in the $y$ direction to appear smaller than the actual size. Each pixel represents a $36 \mu \mathrm{m}$ horizontal instantaneous field of view (iFoV), however, due to the recording angle, the $\mathrm{iFoV}$ size, projected onto the build plane, is corrected in the $y$ direction with
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-08}
+\end{center}
+
+(b)
+
+(a)
+
+Fig. 11. Effect of hatch distance on melt pool (a) width, (b) depth.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-09(2)}
+\end{center}
+
+Fig. 12. Effect of process energy density on melt pool width.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-09(3)}
+\end{center}
+
+Fig. 13. Effect of process energy density on melt pool depth.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-09(1)}
+\end{center}
+
+Fig. 14. Effect of laser power on melt pool shape.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-09(4)}
+\end{center}
+
+Fig. 15. Effect of scan velocity on melt pool shape.
+
+$d y^{\prime}=\frac{d y}{\sin (43.7)}=1.48 d y=52 \mu \mathrm{m}$. Calibrated temperature range for these settings is $450-1020^{\circ} \mathrm{C}$ based on blackbody temperature ( $\varepsilon \approx 1$ ). For the purpose of this study, an assumed emissivity value of 0.2 is uniformly applied for every pixel to calculate true temperature. It is important to note that for $\varepsilon=0.2$, the measurement range based on the calibration shifts to $555-1380^{\circ} \mathrm{C}$. However, due to non-linearity of the camera, temperatures below $600{ }^{\circ} \mathrm{C}$ should be treated with caution.
+
+\subsection*{7.2. Melt pool size analysis}
+It is possible to infer changes in the sizes of melt pools from the thermal camera recording by observing the size of the measurable
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-09}
+\end{center}
+
+Fig. 16. Effect of hatch distance on melt pool shape.
+
+isotherms surrounding the actual liquid melt pool. Each frame can be processed individually such that pixels with temperatures exceeding the liquidus temperature $\left(1350^{\circ} \mathrm{C}\right.$ for nickel alloy 625$)$ are segmented from colder pixels. Fig. 18 shows the result of image segmentation using liquidus temperature as a threshold on single frame where the molten region is marked red, and colder region is marked blue. Using Matlab's built-in functions, a bounding box is created around the melt pool such that the height of the box gives the width of the melt pool in pixels. This process is repeated for 185 different frames that belong to 20 different tracks. During the processing of melt pool size calculations, it is observed that some of the spattering particles that are in close proximity to the melt pool affect the melt pool size calculation algorithm. For simplicity, we refer to these particles as attached particles. Fig. 19 shows these attached particles and how they may affect the melt pool size calculation. Measurements coming from the melt pool size calculation algorithm are processed frame by frame to reduce or eliminate the errors caused by the attached spattering particles.
+
+Furthermore, the imaging system resolution is limited by inherent blur or focus, which tends to cause high temperature peaks to decrease, and neighboring lower temperature to apparently increase, effectively increasing the measured size of lower isotherm temperature bands. Combined with reflections from the surface of the processed area, attached spattering particles, uncertain true emissivity value, and potentially other optical phenomena, melt pool width measurements
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-10(1)}
+\end{center}
+
+Fig. 17. Effect of process energy density on melt pool shape.
+
+Table 4
+
+Thermal camera parameters.
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Wavelength (filter) & $1350-1600 \mathrm{~nm}$ \\
+Integration Time & $0.040 \mathrm{~ms}$ \\
+Frame Rate & $1800 \mathrm{frames} / \mathrm{s}$ \\
+iFoV & $36 \mathrm{~mm} /$ pixel \\
+Imaging window & 360 pixels $\times 128$ pixels $(12.96 \mathrm{~mm} \times 4.61 \mathrm{~mm})$ \\
+\end{tabular}
+\end{center}
+
+Table 5
+
+Thermal video and process parameters.
+
+\section*{Scan velocity: $800 \mathrm{~mm} / \mathrm{s}$}
+Stripe width (track length) including overlap: $4.1 \mathrm{~mm}$
+
+Laser scanning of a track : $4.1 \mathrm{~mm} / 800 \frac{\mathrm{mm}}{\mathrm{s}}=5.125 \mathrm{~ms}$
+
+Camera frame rate: $1800 \mathrm{fps}$ or $0.5555 \mathrm{~ms}$ per frame
+
+$\approx 9.23$ frames per track of laser scanning
+
+Laser $\mathrm{ON}: \approx 9$ frames
+
+Laser OFF (0.042 ms): 0-1 frame
+
+Total frames: 801
+
+Hatching: 602 frames
+
+Vertical (track boundary): 100 frames
+
+Out-of-frame: 99 frames from thermal images resulted in values considerably larger than the measurements obtained via digital microscopy reported in earlier sections [22]. In addition, the quantization error, equal to one pixel or the vertical iFoV size of $52 \mu \mathrm{m}$, is significant compared to the melt pool widths measured via microscopy (approximately 30\%). Due to these significant sources of uncertainty, only relative changes in melt pool size may be discerned from thermal images.
+
+Melt pool width measurements obtained via digital optical microscopy are utilized in order to calculate a linear correction factor for melt pool width measurements obtained from thermal images for more direct comparison. Correction factors are calculated for Type I (beginning of track, at $|x|=0 \mathrm{~mm}$ ) and Type II (end of track, at $|x|=4 \mathrm{~mm}$ ) melt pools by relating the microscopy-measured melt pool width to thermal image measurements. A linear correction function is applied on all melt pool measurements obtained via thermal imaging.
+
+A total of 185 frames from the camera recording are analyzed with this method to calculate the melt pool width. Fig. 20 shows the results of this analysis where the values are calculated across all 185 frames and the $x$ locations are calculated explicitly based on the number of frames recorded in that track and the scanning speed of the laser. The main conclusion that can be drawn from this analysis is that melt pool width tends to decrease from the beginning of each track towards the end of each track, which is in agreement with the results presented\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_52a85307004f6d652296g-10(2)}
+
+(b)
+
+$37.5^{\circ}$ port angle $43.7^{\circ}$ camera angle $\sim 150 \mathrm{~mm}$ distance Build Plate
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-10}
+\end{center}
+
+Fig. 18. Thermal camera set-up, (a) Side-view of the L-PBF machine, custom door, and thermal camera, (b) CAD solid model of L-PBF machine build chamber and custom viewport, (c) optical axis, plane of focus and vertical iFoV projected on the build plane.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-11(2)}
+\end{center}
+
+Fig. 19. Melt pool width measurements (calculated and actual) along with attached and detached spattering particles. Dimensions are in pixels.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-11(1)}
+\end{center}
+
+Fig. 20. Minimum, maximum and average melt pool width after attached particle and optical image comparison corrections. Error bars represent sample standard deviations.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-11}
+\end{center}
+
+Fig. 21. Processing steps for spattering particle detection.
+
+from optical imaging analysis. A non-linear correction factor could be employed if melt pool dimension measurements were available from optical imaging at other coupon cross-section locations.
+
+\subsection*{7.3. Spattering analysis}
+Spattering is a common but potentially detrimental phenomenon that is observed during L-PBF. When the laser beam hits an area, local evaporation of the melt pool cause some of the molten metal to eject from the melt pool, or surrounding heated particles to be blown away by the strong local convective flow, and land on other areas [19]. These particles are often observed to move in opposite direction of the laser beam and they may affect the melt pool behavior during processing. It is possible to determine the sizes and temperatures of the spattering particles from the HFR thermal video recording.
+
+Spattering particles are originating from the vicinity of the melt pool; therefore they have high temperatures and thus appear as bright clusters of pixels. Each frame of the thermal video recording is preprocessed in order to improve the quality of the particle count and size measurements. One of the biggest problems is the existence of the lens glare around the melt pool region. This not only creates difficulties in particle detection, but also creates spurious temperature fields. In order to remedy this, a lens glare filter is implemented in the region close to the melt pool. Images obtained from the red channel are first converted to grayscale images. Afterwards, a threshold based on pixel color density is implemented to segregate the image into black and white areas such that the lens glare region as well as the melt pool inside it are grouped together, and are separated from the lower density regions. Then, pixels in this region are divided into multiple bins based on their intensities and the median density of all bins that belong to the lens glare - melt pool regions are calculated and subtracted from this region. It is important to note that a tradeoff is necessary between the complete removal of the lens glare and preserving particle information, and rather conservative values are used in this study. As the next step in particle detection, another density based thresholding is employed to reveal the pixels at a certain temperature range, followed by median filtering to reduce noise. The resulting image is then processed to count the number of pixels in each particle that represent the area of each particle. These areas, in units of pixels, are then converted to millimeters using the iFoV sizes calculated for the camera, disregarding\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_52a85307004f6d652296g-12}
+
+Fig. 22. Frames from the thermal camera video showing the processing of a single track.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-13(5)}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-13(4)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-13(2)}
+\end{center}
+
+(c)
+
+Fig. 23. Minimum, maximum and average temperature histories grouped by the $x$ coordinates: At the beginning of the track (a), middle of the track (b) and end of the track (c) across multiple tracks. Error bars represent sample standard deviations. Only the tracks with positive scanning direction $(+x)$ are shown.
+
+the geometric perspective size changes caused by their motion towards the camera. Fig. 21 summarizes the processing steps for spattering calculation. This process is repeated for each frame in the thermal video, and detected particles are recorded. The ratio of total area of spattering particles to the total processing area $\left(6 \mathrm{~mm} \times 4.1 \mathrm{~mm}=24.6 \mathrm{~mm}^{2}\right)$, denoted by percentage spatter $(\% \mathrm{~S})$ is reported for each of the processed frames. It should be noted that some of the spattering particles that are much closer to the camera lens appear larger affecting the percentage spatter value.
+
+Fig. 22 shows thermal images from a single track. Measured melt pool width $\left(\mathrm{MP}_{\mathrm{w}}\right)$, frame number $(\mathrm{F})$, calculated relative track distance $\left(\mathrm{x}_{\mathrm{r}}\right)$ and spattering percentage $(\% \mathrm{~S})$ are shown in each frame. Here, $\mathrm{x}_{\mathrm{r}}$ is calculated by assuming the first frame of each track is at $\mathrm{x}_{\mathrm{r}}=0 \mathrm{~mm}$, and each frame increases this distance with respect to the recording rate and laser speed $(0.5555 \mathrm{~ms} /$ frame $\times 800 \mathrm{~mm} / \mathrm{s}=0.4444 \mathrm{~mm} /$ frame), rather than measuring the coordinates of the melt pool at each frame.
+
+This analysis reveals that material spattering during laser processing of powder material is significant that is the spattering percentage is $20 \%$ or more and in some instances it becomes as high as $70 \%$.
+
+\subsection*{7.4. Heating and cooling rates}
+The thermal camera images can be utilized to quantify the heating and cooling rates. By sampling the temperature data at certain points, the rate of cooling and heating can be estimated. Although absolute temperature measurements are affected by multiple potential sources of uncertainty previously mentioned, these create systematic bias errors, therefore differential measurements (like heating or cooling rate), may cancel a significant portion of this error. At this point, it is important to note that due to the asynchrony between the frequency of
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-13}
+\end{center}
+
+(a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-13(1)}
+\end{center}
+
+(b)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_52a85307004f6d652296g-13(3)}
+\end{center}
+
+(c)
+
+Fig. 24. Minimum, maximum and average temperature histories grouped by the $x$ coordinates: At the beginning of the track (a), middle of the track (b) and end of the track (c) across multiple tracks. Error bars represent sample standard deviations. Only the tracks with negative scanning direction $(-x)$ are shown.
+
+track processing and the recording rate of the camera, the $x$-coordinates of melt pools do not align across tracks. Theoretically, there can be up to $\frac{4.1 \mathrm{~mm}}{10}=410 \mu \mathrm{m}$ difference in melt pool $x$-coordinates between different tracks, considering that each track takes at most 10 frames to be processed. This causes an inconsistency in temperature measurements between tracks, when analyzed individually. In order to alleviate this, the temperature histories for certain tracks are shifted temporally ( $\pm 1$ frame) as a post processing operation in an attempt to create an agreement with the rest of the tracks. Furthermore, multiple tracks are used in the analysis and an average temperature history is constructed. Out of the 20 tracks analyzed, 10 of them have a positive scanning direction (laser moves in the $+x$ direction) while the other 10 have a negative scanning direction. These two groups of tracks are analyzed separately.
+
+At each frame from the thermal camera data, the centroid of the melt pool is calculated. Each track's center in $y$-coordinate is identified using the mean of melt pool centroids that are observed in that track. These $y$-coordinates are used in the following analysis. Temperature measurements at various $x$-coordinates (the beginning, middle, and end of the track) are recorded during the timeframe of the processing of each track (up to a maximum of 10 frames), at the respective track centers in $y$-coordinates. It is important to note that spattering particles, if positioned on top of the sampling points, can affect the result of this analysis.
+
+Fig. 23 shows the minimum, maximum and mean temperatures observed at three different $x$ locations: the beginning, middle and the end of the track, for the tracks with positive scanning directions. It is seen that the temperatures are very high at the beginning of the track when the processing starts, because the meltpool is located in this region. As the time passes, this point cools down. In contrast, the end of the track starts off with a low temperature, and heats up when the\\
+laser reaches and melts the region. As expected, the middle point of the track heats up as the laser approaches, and cools down as it departs.
+
+Fig. 24 shows the temperatures for the tracks with negative scanning directions which indicate similar results. Figs. 23 and 24 reveal similar heating and cooling profiles due to the nature of the high energy density laser processing. The differences between them can be related to conductivity due to the layout of neighboring solid/powder regions, local differences in emissivity and powder geometry as well as spattering particles that overlap the sampling points. Furthermore, it is possible to obtain the rate of cooling and heating from these figures. The heating rates in Fig. 23 are roughly $600^{\circ} \mathrm{C} / \mathrm{ms}$ and heating rates in Fig. 24 are roughly $1000^{\circ} \mathrm{C} / \mathrm{ms}$. The cooling rates are approximately $150^{\circ} \mathrm{C} / \mathrm{ms}$ in both figures. These observations are in agreement with the literature [39]. In comparison, welding process is said to have a much slower cooling rate of $0.550{ }^{\circ} \mathrm{C} / \mathrm{ms}$ [8].
+
+\section*{8. Conclusions}
+In this paper, a complete and thorough analysis of coupons additively fabricated using laser powder bed fusion (selective laser melting) of nickel alloy 625 powder has been presented. A methodology was defined and applied to analyze a set of test coupons, following a Box-Behnken experimental design. These coupons were analyzed with two objectives in mind: i) to determine how close each coupon was to fully dense and ii) to determine melt pool dimensions (width, and depth) and shape for each coupon. The main conclusion of this paper is the identification and definition of a dynamic melt pool, a condition which indicates that melt pool geometry is constantly changing as the laser scans a single track. Specifically, two different types of melt pools (i.e. Type I and Type II) have been identified from the process analysis. When the laser beam begins to process a new track that is still within the heat-affected zone of the previous scanning, the melt pool is named Type I and the width is the largest and the shape is highly skewed towards the heat-affected zone. As laser processing of the track reaches to the end of the track so called Type II melt pool becomes normal in shape and smallest in width. This is a unique observation that the melt pool size and shape changes dynamically leading to some new process knowledge in LPBF. The presence of melt pools of varying size may prove key in future research for microstructure characterization and the calculation of mechanical properties of additively manufactured parts.
+
+In order to gain in-depth understanding of the laser fusion processing of powder material, an in-situ thermal camera video recording is performed and analyzed for meltpool size, spattering particles and heating and cooling rates during processing of nickel alloy 625 powder material. From in-situ thermal video imaging analysis, significant powder particle spatter has been observed with about $20-35 \%$ of the total area being processed spattered along a single track leading to substantial powder material and heat loss. During high energy density laser processing of nickel alloy 625 powder material, a rapid heating from about $600-800^{\circ} \mathrm{C}$ temperature to $1200-1400{ }^{\circ} \mathrm{C}$ with a heating rate of $600^{\circ} \mathrm{C} / \mathrm{ms}$ towards the scanning direction and cooling from the peak process temperature to $600{ }^{\circ} \mathrm{C}$ with a rate of $150^{\circ} \mathrm{C} / \mathrm{ms}$ have been measured. These measured heating and cooling rates provide new in-depth process understanding and can be used in validating LPBF simulation models for prediction of thermal field and solidification microstructure.
+
+\section*{Acknowledgement}
+This project was supported by the National Institute of Standards and Technology, United States Department of Commerce, under the financial assistance number 70NANB14H227.
+
+\section*{References}
+[1] ASTM ISO / ASTM52900-15, Standard Terminology for Additive Manufacturing General Principles - Terminology, ASTM International, West Conshohocken, PA, 2015.
+
+[2] K.N. Amato, S.M. Gaytan, L.E. Murr, E. Martinez, P.W. Shindo, J. Hernandez, S. Collins, F. Medina, Microstructures and mechanical behavior of Inconel 718 fabricated by selective laser melting, Acta Mater. 60 (2012) 2229-2239.
+
+[3] M.A. Anam, J.J.S. Dilip, D. Pal, B. Stucker, Effect of scan pattern on the microstructural evolution of Inconel 625 during selective laser melting, in: Proceedings of 25th Annual International Solid Freeform Fabrication Symposium, Austin, Texas, 2014.
+
+[4] M.A. Anam, D. Pal, B. Stucker, Modeling and experimental validation of nickelbased super alloy (Inconel 625) made using selective laser melting, in: Proceeding of the 24th Annual International Solid Free form Fabrication Symposium-An Additive Manufacturing Conference, Austin, TX, USA, 2013, pp. 463-473.
+
+[5] Y.M. Arisoy, L.E. Criales, T. Özel, B. Lane, S. Moylan, A. Donmez, Influence of scan strategy and process parameters on microstructure and its optimization in additively manufactured nickel alloy 625 via laser powder bed fusion, Int. J. Adv. Manuf. Technol. (2016). \href{http://dx.doi.org/10.1007/s00170-016-9429-z}{http://dx.doi.org/10.1007/s00170-016-9429-z}.
+
+[6] E. Brinksmeier, G. Levy, D. Meyer, A.B. Spierings, Surface integrity of selectivelaser-melted components, CIRP Ann.-Manuf. Technol. 59 (1) (2010) 601-606.
+
+[7] L. Criales, Y.M. Arisoy, T. Özel, Sensitivity analysis of material and process parameters in finite element modeling of selective laser melting of Inconel 625, Int. J. Adv. Manuf. Technol. (2016). \href{http://dx.doi.org/10.1007/s00170-015-8329-y}{http://dx.doi.org/10.1007/s00170-015-8329-y}.
+
+[8] J.N. DuPont, Solidification of an alloy 625 weld overlay, Metall. Mater. Trans. A 27 (1996) 3612-3620.
+
+[9] S.K. Everton, M. Hirsch, P. Stravroulakis, R.K. Leach, A.T. Clare, Review of in-situ process monitoring and in-situ metrology for metal additive manufacturing, Mater. Des. 95 (2016) 431-445.
+
+[10] F. Furumoto, T. Ueda, M.R. Alkahari, A. Hosokawa, Investigation of laser consolidation process for metal powder by two-color pyrometer and high-speed video camera, CIRP Ann.-Manuf. Technol. 62 (1) (2013) 223-226.
+
+[11] I. Gibson, D.W. Rosen, B. Stucker, Additive Manufacturing Technologies: Rapid Prototyping to Direct Digital Manufacturing, Springer, 2009.
+
+[12] D.D. Gu, W. Meiners, K. Wissenbach, R. Poprawe, Laser additive manufacturing of metallic components: materials, processes and mechanisms, Int. Mater. Rev. 57 (3) (2012) 133-164.
+
+[13] A.V. Gusarov, I. Yadroitsev, Ph Bertrand, I. Smurov, Heat transfer modelling and stability analysis of selective laser melting, Appl. Surf. Sci. 254 (4) (2007) 975-979.
+
+[14] A.V. Gusarov, I. Smurov, Two-dimensional numerical modelling of radiation transfer in powder beds at selective laser melting, Appl. Surf. Sci. 255 (2009) 5595-5599.
+
+[15] Q. Jia, D. Gu, Selective laser melting additive manufacturing of Inconel 718 superalloy parts: densification, microstructure and properties, J. Alloy. Compd. 585 (2014) 713-721.
+
+[16] C. Kamath, B. El-dasher, G.F. Gallegos, W.E. Kinw, A. Sisto, Density of additivelymanufactured, 316L SS parts using laser powder-bed fusion at powers up to $400 \mathrm{~W}$, Int. J. Adv. Manuf. Technol. 74 (2014) 65-78.
+
+[17] C. Kamath, Data mining and statistical inference in selective laser melting, Int. J. Adv. Manuf. Technol. 85 (5) (2016) 1659-1677.
+
+[18] K. Kempen, L. Thijs, E. Yasa, M. Badrossamay, M. Verheecke, J.-P. Kruth, Process optimization and microstructural analysis for selective laser melting of AlSI10Mg, Phys. Procedia 39 (2011) 439-446.
+
+[19] S.A. Khairallah, A.T. Anderson, A. Rubenchik, W.E. King, Laser powder-bed fusion additive manufacturing: physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones, Acta Mater. 108 (2016) 36-45.
+
+[20] H. Krauss, T. Zeugner, M.F. Zaeh, Layerwise monitoring of the selective laser melting process by thermography, Phys. Procedia 56 (2014) 64-71.
+
+[21] J.-P. Kruth, G. Levy, F. Klocke, T.H.C. Childs, Consolidation phenomena in laser and powder-bed based layered manufacturing, CIRP Ann.-Manuf. Technol. 56 (2) (2007) 730-759.
+
+[22] B. Lane, S. Moylan, E. Whitenton, L. Ma, Thermographic measurements of the commercial laser powder bed fusion process at NIST, in: Proceedings of the Solid Freeform Fabrication Symposium, Austin, TX, 2015.
+
+[23] F. Lopez, P. Witherell, B. Lane, Identifying uncertainty in laser powder bed fusion additive manufacturing models, J. Mech. Des. 138 (11) (2016) 1-4.
+
+[24] R. Mertens, S. Clijsters, K. Kempen, J.-P. Kruth, Optimization of scan strategies in selective laser melting of aluminum parts with downfacing areas, J. Manuf. Sci. Eng. 136 (6) (2014) 1-7.
+
+[25] P. Mercelis, J.P. Kruth, Residual stresses in selective laser sintering and selective laser melting, Rapid Prototyp. J. 12/5 (2006) 254-265.
+
+[26] C. Montgomery, J. Beuth, L. Sheridan, N. Klingbeil, Process mapping of Inconel 625 in laser powder bed additive manufacturing, in: Proceedings of 26th Annual International Solid Freeform Fabrication Symposium, 2015, pp. 1195-1204.
+
+[27] L.E. Murr, S.M. Gaytan, D.A. Ramirez, E. Martinez, J. Hernandez, K.N. Amato, P.W. Shindo, F.R. Medina, R.B. Wicker, Metal fabrication by additive manufacturing using laser and electron beam melting technologies, J. Mater. Sci. Technol. 28 (2012) 1-14.
+
+[28] P. O’Regan, P. Prickett, R. Setchi, G. Hankins, N. Jones, Metal based additive layer manufacturing: variations, correlations and process control, in: Proceedings of the 20th International Conference on Knowledge-Based and Intelligent Information \& Engineering Systems, KES-2016, York, UK, Vol. 96, pp. 216-224.
+
+[29] R.B. Patil, V. Yadava, Finite element analysis of temperature distribution in single metallic powder layer during metal laser sintering, Int. J. Mach. Tools Manuf. 47
+
+(2007) 1069-1080.
+
+[30] I.A. Roberts, C.J. Wang, R. Esterlein, M. Stanford, D.J. Mynors, A three-dimensional finite element analysis of the temperature field during laser melting of metal powders in additive layer manufacturing, Int. J. Mach. Tools Manuf. 49 (2009) 916-923.
+
+[31] B.N. Taylor, C.E. Kuyatt, Guidelines for Evaluating and Expressing the Uncertainty of NIST Measurement Results. NIST Technical Note 1297, 1994. 〈\href{http://www.nist}{http://www.nist}. gov/pml/pubs/tn1297/> (Accessed on 28 March 2016).
+
+[32] R.H. Myers, D.C. Montgomery, C.M. Anderson-Cook, Response Surface Methodology: Process And Product Optimization Using Designed Experiments, John Wiley \& Sons, 2009.
+
+[33] W.J. Sames, F.A. List, S. Pannala, R.R. Dehoff, S.S. Babu, The metallurgy and processing science of metal additive manufacturing, Int. Mater. Rev. (2016). http:// \href{http://dx.doi.org/10.1080/09506608.2015.1116649}{dx.doi.org/10.1080/09506608.2015.1116649}.
+
+[34] M. Simonelli, C. Tuck, N.T. Aboulkhair, I. Maskery, I. Ashcroft, R.D. Wildman, R. Hague, A Study on the laser spatter and the oxidation reactions during Selective Laser Melting of 316L stainless steel, Al-Si10-Mg, and Ti-6Al-4V, Metall. Mater. Trans. A 46A (2015) 3842-3851.
+
+[35] B. Song, S. Dong, H. Liao, Process parameter selection for selective laser melting of Ti6Al4V based on temperature distribution simulation and experimental sintering, Int. J. Adv. Manuf. Technol. 6 (2012) 967-974.
+
+[36] J. Sun, T. Yang, D. Wang, Parametric optimization of selective laser melting for forming Ti6Al4V samples by Taguchi method, Opt. Laser Technol. 49 (2013) $118-124$.
+
+[37] M. Van Elsen, M. Baelmans, P. Mercelis, J.-P. Kruth, Solutions for modeling moving heat sources in a semi-infinite medium and applications to laser material processing, Int. J. Heat Mass Transf. 50 (2007) 4872-4882.
+
+[38] B. Vandenbroucke, J.P. Kruth, Selective laser melting of biocompatible metals for rapid manufacturing of medical parts, Rapid Prototyp. J. 13 (2007) 196-203.
+
+[39] T. Vilaro, C. Colin, J.D. Bartout, L. Nazé, M. Sennour, Microstructural and mechanical approaches of the selective laser melting process applied to a nickelbase superalloy, Mater. Sci. Eng.: A 534 (2012) 446-451.
+
+[40] F. Verhaeghe, T. Craeghs, J. Heulens, L. Pandalaers, A pragmatic model for selective laser melting with evaporation, Acta Mater. 57 (2009) 6006-6012.
+
+[41] Z. Wang, K. Guan, M. Gao, X. Li, X. Chen, X. Zeng, The microstructure and mechanical properties of deposited-IN718 by selective laser melting, J. Alloy. Compd. 513 (2012) 518-523,
+
+[42] I. Yadroitsev, P. Krakhmalev, I. Yadroitsava, Selective laser melting of Ti6Al4V alloy for biomedical applications: Temperature monitoring and microstructural evolution, J. Alloy. Compd. 583 (2013) 404-409.
+
+[43] E. Yasa, J.-P. Kruth, J. Deckers, Manufacturing by combining Selective Laser Melting and Selective Laser Erosion/laser re-melting, CIRP Ann.-Manuf. Technol. 60 (1) (2011) 263-266.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

@@ -1,0 +1,5 @@
+#!/Users/achuthchandrasekhar/Desktop/C_SEM2/RESEARCH/AMGPT/RAG_KRISHNAIK/LLAMA_INDEX/venv/bin/python3.10
+
+from idlelib.pyshell import main
+if __name__ == '__main__':
+    main()

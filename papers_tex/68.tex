@@ -1,0 +1,642 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{multirow}
+
+\title{Laser powder bed fusion of AA7075 alloy: Influence of process parameters on porosity and hot cracking }
+
+
+\author{Wojciech Stopyra*, Konrad Gruber, Irina Smolina, Tomasz Kurzynowski, Bogumiła Kuźnicka\\
+Wrocław University of Science and Technology, Faculty of Mechanical Engineering, Centre for Advanced Manufacturing Technologies (CAMT/FPC), 5 Łukasiewicza st. 50-\\
+371 Wrocław, Poland}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Research Paper
+
+
+
+\section*{A R T I C L E I N F O}
+\section*{Keywords:}
+Hot cracking
+
+Additive manufacturing
+
+Aluminium alloys
+
+LPBF
+
+Microsegregation
+
+\begin{abstract}
+A B S T R A C T Laser powder bed fusion (LPBF) is an attractive technology of manufacturing high-strength aluminium alloy parts for the aircraft and automobile industries, limited by poor processability of these alloys. This work was aimed at finding the process window for the LPBF manufacturing of defect-free components of AA7075 alloy. Optimization of the parameters was performed at each stage of the multi-stage research, i.e. for single tracks, thin walls and volumetric specimens. At each stage, the relation between LPBF parameters and defect formation with a focus on hot cracking was investigated and discussed. Due to the optimization of process parameters, the density of volumetric specimens above $99 \%$ was reached and vaporization losses of the alloying elements were significantly reduced, but solidification cracks could not be eliminated. It was found that solidification cracks were formed by the liquid film rupture mode, mainly along columnar grain boundaries. The EDS microanalysis showed intergranular microsegregation, not only of the main alloying elements $(\mathrm{Zn}, \mathrm{Mg}, \mathrm{Cu})$ but also of minor elements such as Si. Silicon may play a significant role in increasing susceptibility to cracking by increasing the stability of the liquid film. Reduction in the silicon impurity content in the AA7075 powder gives a chance to reduce susceptibility to cracking with no change of the alloy specification.
+\end{abstract}
+
+\section*{1. Introduction}
+\subsection*{1.1. Laser powder bed fusion}
+Laser powder bed fusion (LPBF), often also named selective laser melting (SLM), belongs to one of the seven categories of additive manufacturing processes specified in ASTM F2792-12a. In the LPBF technology, semi-finished parts with complex geometry are fabricated by the selective melting and consolidating of metallic powder in a layerby-layer manner using a laser beam controlled directly from a 3D CAD file.
+
+An advantage of LPBF technology is the possibility of manufacturing customized parts without the need for part-specific tooling, dies or casting moulds. On account of these advantages, LPBF is currently a widely accepted new way of designing and producing high performance components for applications in the automotive and aerospace industry $[1]$.
+
+Aluminium alloys, as construction materials, are very attractive for manufacturing parts that are characterized by an excellent strength-toweight ratio, a relatively low cost-to-specific strength ratio and corrosion resistance [2]. The application of LPBF technology would add to the advantages of using high strength aluminium alloys for the manufacturing of complex parts by introducing topology optimization, thin walls and internal structures [3]. However, there is a problem that the printability of aluminium alloys is low [4] in comparison to alloys such as stainless steel $316 \mathrm{~L}$, Inconel 718 or Ti6Al4V [5]. Only the neareutectic casting alloys like AlSi12 and AlSi10Mg are relatively easy to process [6] due to the small difference between their liquidus and solidus temperatures in comparison to that of the $2 \mathrm{xxx}, 6 \mathrm{xxx}$, and $7 \mathrm{xxx}$ series of wrought alloys [7]. Therefore, one of the solutions of this problem is developing new Al alloys, specifically designed for the LPBF process, mainly by an addition of silicon [8].
+
+\subsection*{1.2. Processability of $A A 7075$ alloy}
+Precipitation hardened wrought aluminium alloys have higher mechanical properties than eutectic alloys, and therefore alloys such as AA6061 and AA7075, which are important in the aircraft industry, are the objects of research works focused on poor LPBF processability of these, considered as difficult to weld and cast, alloys [9]. Due to properly selected ratios between the three main alloying elements $(\mathrm{Zn}$, $\mathrm{Mg}$ and $\mathrm{Cu}$ ), the AA7075 alloy achieves a high level of strength after
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail address: \href{mailto:wojciech.stopyra@pwr.edu.pl}{wojciech.stopyra@pwr.edu.pl} (W. Stopyra).
+}
+
+Table 1
+
+Physical properties of the AA7075 alloy [MatWeb-Material Property Data].
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Density & $2.81 \mathrm{~g} / \mathrm{cm}^{3}$ \\
+CTE (average for $20-300{ }^{\circ} \mathrm{C}$ ) & $25.2 \mu \mathrm{m} / \mathrm{m} \cdot{ }^{\circ} \mathrm{C}$ \\
+Specific heat capacity & $0.96 \mathrm{~J} / \mathrm{g} \cdot{ }^{\circ} \mathrm{C}$ \\
+Thermal conductivity & $130 \mathrm{~W} / \mathrm{m} \cdot \mathrm{K}$ \\
+Melting range & $477-635{ }^{\circ} \mathrm{C}$ \\
+Viscosity (in the liquid range) & $0.4-0.5 \mathrm{~mm}^{2} / \mathrm{s}$ \\
+Volumetric shrinkage & $6-8 \%$ \\
+\hline
+\end{tabular}
+\end{center}
+
+solutioning and peak-aging (T6). However, from the viewpoint of the processability by LPBF, the AA7075 composition and its physical properties (Table 1) are the reason for the strong tendency of the alloy to form defects during processing. These defects are due to the wide range of solidification temperatures, which are extended by the tendency of microsegregation occurring [10].
+
+Galy et al. [11] classified the defects observed in the LPBF-ed parts of aluminium alloys, distinguishing four main types: porosity, hot cracking, low surface quality and anisotropy. If surface quality and anisotropy are defects dependent on process parameters, the tendency to form pores and hot cracks is strongly affected by both the process parameters and the chemical composition of the alloy. The porosity of aluminium alloys can be minimized by the quality of the powder, as well as by the proper selection of the laser power and scanning speed. According to Louvis et al. [12], the phenomenon of the rapid creation of thin oxide films on both solid and liquid surfaces must also be taken into consideration. This requires a suitably high laser power and scanning speed to be selected due to the high thermal conductivity of aluminium alloys and the necessity to break the oxide films. In the case of AA7075, the selection of process parameters must additionally consider the high susceptibility of the alloy to hot cracking, i.e. solidification cracking and, to a lesser degree, liquation cracking.
+
+\subsection*{1.3. Solidification and liquation cracking}
+Cracking during solidification is generally believed to result from the uniaxial tensile fracture of the semisolid film at the grain boundaries [10]. Tension in the semisolid film is induced by volumetric shrinkage and by the thermal contraction of the semisolid and its neighbouring solids at a temperature in which the solid fraction exceeds 0.9 [13].
+
+The AA7075 alloy has poor processability by LPBF due to its high solidification shrinkage and high susceptibility to solidification cracking. Eskin et al. [13] reported that solidification shrinkage of aluminium alloys amounts from 6 to 8 vol\% as opposed to ca. 3 vol\% for titanium alloys and steels [14]. According to the Kou's criterion [15], the cracking susceptibility of AA7075, measured by the maximum value of the index $\left|\mathrm{dT} /\left(\mathrm{df}_{\mathrm{s}}\right)^{1 / 2}\right|$ at nearly $\mathrm{f}_{\mathrm{s}}{ }^{1 / 2} \approx 1$ (where $\mathrm{f}_{\mathrm{s}}$ is the solid fraction and $\mathrm{T}$ is the temperature of the mushy zone), is higher than for the other high strength Al alloys, e.g. AA2024 and AA2219, but lower than for AA6061 [16]. During the LPBF process, rapid solidification of the thin layers of the molten powder consists of cellular-dendritic and epitaxial growth of columnar grains [4]. This directional growth of columnar grains, proceeding across multiple build layers, creates the conditions that are conducive to solidification cracking. Because of the slow lateral growth and the much slower bridging than the forward growth of cell-dendrites, long grain boundary channels are created that are hard for liquid feeding and which act as very sharp notches. In addition, susceptibility to cracking is increased by interdendritic microsegregation of alloying elements, which results in constitutional undercooling [10].
+
+Liquation cracking is a consequence of constitutional liquation, i.e. non-equilibrium eutectic melting of the intermetallic-phase particles present at grain boundaries at temperatures above the eutectic temperature of the matrix-intermetallic phase system and below the equilibrium solidus temperature of the alloy [17]. This phenomenon occurs during rapid heating of a multi-phase alloy to the solution temperature, when the time before reaching the eutectic temperature is too short for dissolving the intermetallic-phase particles [18]. The liquid film produced by constitutional liquation at grain boundaries initiates cracks under tensile stresses. Therefore, it cannot be excluded that, during the LPBF of AA7075, liquation cracking interferes with solidification cracking. As was found by Ghaini et al. [19], liquation cracks can strongly affect the initiation of solidification cracks in the AA2024 alloy.
+
+\subsection*{1.4. Current status of research on high-strength aluminium alloys processed by $L P B F$}
+Difficulties in processing aluminium alloys are the reason for the interest of scientists in investigating the feasibility of introducing high strength wrought aluminium alloys to the LPBF process [20]. This particularly concerns the alloy series $6 \mathrm{xxx}$ and $7 \mathrm{xxx}$, which have a very high crack susceptibility index [16].
+
+A way to prevent the formation of cracks in these alloys during LPBF is by controlling the nucleation and growth of crystals, so that small equiaxed grains are obtained instead of columnar grains [21]. One approach to manufacturing grain-refined alloys is to control the thermal gradient and solidification velocity in order to induce the large undercooling required for the nucleation and growth of equiaxed grains, which is in accordance with the Hunt criterion for the columnar-toequiaxed transition [22]. This demands appropriate manipulation of the LPBF process parameters. In the case of aluminium alloys, it is extremely difficult to obtain critical undercooling because of the high thermal conductivity of aluminium and the large liquid diffusivities of alloying elements. Nevertheless, it is possible that the equiaxed grains can be originated by the breakdown and fragmentation of the columnar dendrites, induced by melt movement [23] or by acoustic cavitation [24].
+
+Even though Reschetnik et al. [25] used the best experimentally determined set of process parameters ( $350 \mathrm{~W} / 930 \mathrm{~mm} / \mathrm{s}$ ) for manufacturing the AA7075 specimens, they did not achieve a success. The specimens contained a dense network of long cracks, initiated mostly in the track fusion zone parallel to the building direction.
+
+Martin et al. [9] succeeded in producing the AA7075 alloy by LPBF with no cracks by reducing the undercooling threshold for equiaxed grain growth with the introduction of low-energy-barrier heterogeneous nucleants ahead of the solidification front. They developed a method of "nano-functionalization" of powder with hydrogen-stabilized zirconium nanoparticles that, after decomposition at the melt, created the $\mathrm{Al}_{3} \mathrm{Zr}$ nucleant phase. However, use of hydrogen as a stabilizer is questionable due to aluminium alloys being susceptible to hydrogen embrittlement. Moreover, the much lower solubility of hydrogen in solid than in liquid aluminium causes the additional problem of porosity for the fabricated parts.
+
+Qi et al. [26] focused on investigating the effect of scanning speed and defocusing distance on the melting mode transition and cracking in LPBF of the AA7050 powder using a $200 \mathrm{~W}$ laser power. They stated that using the optimal scanning speed can only reduce, but not eliminate the cracks, induced by the process. By manipulating the scanning speed and defocusing distance, it is possible to change the keyholemode to the conduction mode of melting and to therefore influence the hot crack sensitivity of the alloy.
+
+Another approach to preventing the forming of solidification cracks is to preheat the base plate in order to decrease thermal gradients during LPBF and thus reduce thermal stresses and decrease undercooling. Using high-power platform preheating at $200{ }^{\circ} \mathrm{C}$ and a set of process parameters of $500 \mathrm{~W} / 1200 \mathrm{~mm} / \mathrm{s}$, Kaufmann et al. [27] obtained a $99.8 \%$ density of the AA7075 alloy, but were not able to reduce cracking.
+
+During the manufacturing of AA7075 alloy parts, Mertens et al. [28]\\
+used platform preheating at $400{ }^{\circ} \mathrm{C}$ with process parameters of $270 \mathrm{~W} /$ $1200 \mathrm{~mm} / \mathrm{s}$, obtaining a reduction in crack formation and a change in crack morphology. However, they were not able to completely prevent cracking.
+
+Uddin et al. [29] used $500{ }^{\circ} \mathrm{C}$ preheating in combination with parameters: $400 \mathrm{~W} / 1400 \mathrm{~mm} / \mathrm{s}$, obtaining a result in the form of crack-free cubic specimens of the Al6061 alloy. Judging by the presence of divorced eutectic particles in the as-built microstructure, a disadvantage of this method, which is a result of non-equilibrium melting, can be the inability to achieve elongations of over $5 \%$ in the aging condition.
+
+The above-presented results demonstrate that finding the optimal LPBF process parameters for the manufacturing of pore-free and crackfree parts of AA6061 and AA7075 alloys is a very difficult task. As is stressed in the subject literature, the reason for this is the insufficient understanding of the behaviour of these alloys during LPBF fabrication and also the insufficient identification of the processing parameters that are responsible for hot crack formation.
+
+The presented work aimed to find the process window for the production of defect-free components of the high-strength AA7075 alloy. Selection of the parameters was made at each stage of the multi-stage experiment, i.e. for single tracks, thin walls, and for volumetric specimens. In addition, the relation between the process parameters and defect formation was investigated, with a focus on hot cracking. It was assumed that the obtained results would broaden the knowledge about defects, and in particular the hot cracks created during the LPBF fabrication of AA7075, and also explain whether hot isostatic pressing (HIP) can be used to reduce defects and to heal cracks.
+
+\section*{2. Materials and methods}
+\subsection*{2.1. Aluminium 7075 powder}
+The quality of parts manufactured by LPBF is significantly influenced by the characteristics of alloy powder as a feedstock material. These characteristics include chemical composition, shape, size distribution, surface morphology, and the fraction of internal pores [30]. The quality of the powder determines its flowability and apparent density [31].
+
+In the presented research, the commercially available gas-atomised AA7075 powder, supplied by KAMB Import-Export, was used, with the particle shape qualified, according to ASTM B243-11, as nodular (Fig. 1a) with an aspect ratio from 1 to 4, surface satellite defects and internal porosity (Fig. 1b). This morphology negatively affects flowability and packing density [7]. Nevertheless, Reschetnik et al. [25], Kaufmann et al. [27], Montero Sistiaga et al. [32], Aboulkhair et al. [33], while employing in their research the AA7075 and AlSi10Mg gasatomised powders with non-spherical particles, achieved a high density of fabricated parts when an appropriate energy density was used.
+
+Chemical composition of the powder (Table 2) was determined using the optical emission spectrometer ARL 4460. Particle size distribution (PSD) was determined using sieve analysis according to EN 24497. The 10th, 50th and 90th weight percentiles of the different size particles were $\mathrm{D}_{10} \leq 39.0 \mu \mathrm{m}, \mathrm{D}_{50} \leq 57.0 \mu \mathrm{m}$, and $\mathrm{D}_{90} \leq 85.0 \mu \mathrm{m}$, with the low span value of 0.8 defined as $\left(D_{90}-D_{10}\right) / D_{50}$.
+
+The Hall Flowmeter Funnel - Copley (Type Upright \& Stand) and Mitutoyo Absolute Digimatic Heightgage were used to measure angles of repose (ASTM B213) and apparent density of the powder (ASTM B212). Before the process, the virgin powder was dried at $350{ }^{\circ} \mathrm{C}$ for $120 \mathrm{~h}$ inside the process chamber. After drying, the powder was characterised by low angles of repose of 30 to $40^{\circ}$, meeting the criterion of freely flowing powders [34]. The determined apparent density of 1.23 $\mathrm{g} / \mathrm{cm}^{3}$ constituted $44 \%$ of the solid material density, which is contained within the range of $40-60 \%$ that is typical for the gas-atomised powders, as is reported in review paper [35]. Considering the findings for the IN738LC alloy presented in paper [36], the determined powder characteristics were acknowledged as acceptable from the viewpoint of their flowability and the fact that there was no influence on cracking susceptibility.
+
+\subsection*{2.2. Fabrication of specimens}
+Specimens with various geometries were produced using the LPBF Realizer II 250 (MPC-HEK) system equipped with a $400 \mathrm{~W}$ pulsed Ytterbium fibre laser with a focused beam diameter of $200 \mu \mathrm{m}$. Highpurity argon was used as the protective atmosphere.
+
+Taking into account poor processability of the AA7075 powder and strong dependence of quality (including dimensional accuracy) of the final product on quality of each single track and each single layer [37], optimum process parameters were selected for individual steps, i.e. for single tracks, thin walls and volumetric specimens. At each stage, the process stability was evaluated, as well as the strength of influence of individual process parameters on the alloy behaviour in the course of the process. Course of the gradual selection of various LPBF process variables aimed at determining the optimum set of process parameters is shown in Table 3.
+
+The multi-stage investigations included:
+
+\begin{itemize}
+  \item Trial melting of substrate in the form of single tracks on the surface of the hot-rolled plate of the alloy AA7075-T6 (165 HV0.5). The plate was $8 \mathrm{~mm}$ thick, a laser power of $200 \mathrm{~W}$ and $400 \mathrm{~W}$ was used, and various scanning speeds set by a combination of the point distances and varying exposure time of one point, were adopted. The cross sections of the tracks were examined and correlated with the process parameters.
+  \item Trial manufacturing of thin walls at various sets of process\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_b6298c9a4a3486463622g-03}
+\end{itemize}
+
+Fig. 1. Backscattered Electron Detector (BSD) images of AA7075 powder: (a) globular particles with large amounts of satellites on their surfaces; (b) internal gas pores on the cross-sections of some particles. The aspect ratios of selected particles are given in brackets.
+
+Table 2
+
+Chemical composition of AA7075 (AlZn5.5MgCu) powder in wt.\%.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+Element & $\mathrm{Al}$ & $\mathrm{Zn}$ & $\mathrm{Mg}$ & $\mathrm{Cu}$ & $\mathrm{Cr}$ & Mn & Si & $\mathrm{Fe}$ \\
+\hline
+Powder & Bal. & 5.54 & 2.40 & 1.56 & 0.25 & 0.26 & 0.4 & 0.11 \\
+\hline
+ISO $209-1$ & Bal. & $5.1-6.1$ & $2.1-2.9$ & $1.2-2.0$ & $0.18-0.28$ & $\max 0.30$ & $\max 0.40$ & $\max 0.50$ \\
+\hline
+\end{tabular}
+\end{center}
+
+parameters, where laser power and scanning speed set by a combination of point distances 20,40, 60 and $80 \mu \mathrm{m}$ and varying exposure time of one point $(20-420 \mu \mathrm{s})$ were accepted as variables. The walls were built on the plate of the AA7075 alloy with a single track that outlined a square of $7 \mathrm{~mm} \times 7 \mathrm{~mm}$ to the height of $5 \mathrm{~mm}$. The layer of melted powder was $50 \mu \mathrm{m}$ thick. The quality of the walls was evaluated by: determining their thickness measured by width of the last (top) track, and visual, microscopic evaluation of their side surface quality. The variants showing an irregular width of tracks or their discontinuities and side surfaces with "balling effect", overlaps and stuck-on agglomerates of powder particle were rejected.
+
+Because of unsatisfactory results, i.e. obtaining too thick walls in relation to the focused beam diameter, the series of tests was repeated delaying the scanning of each subsequent thin-walled specimen by 1.5 $\mathrm{s}$. The distance between neighbouring specimens was $10 \mathrm{~mm}$.
+
+\begin{itemize}
+  \item Multivariant trial manufacturing of volumetric specimens of $10 \mathrm{~mm} \times 8$ $\mathrm{mm} \times 5 \mathrm{~mm}$ at variable parameters: hatch spacing, scanning speed, negative defocus distance, scanning strategy and the parameter values selected in the previous tests, i.e. a laser power of $200 \mathrm{~W}$ and a scan delay (SD) of $1.5 \mathrm{~s}$. The focal offset distance was set by a change of lens position, resulting in a shift of the laser focus in relation to the calibrated zero-plane of the system. A negative shift describes the displacement of focus below the build plane.
+\end{itemize}
+
+In order to determine the influence of the scanning strategy on the porosity and hot cracking, four variants of scanning strategy were used: alternating (S1), double scanning (DS), $2.5 \mathrm{~mm}$ wide stripes alongside (SS2), and chessboard (SS3) with the field size of $2.5 \mathrm{~mm} \times 2.5 \mathrm{~mm}$. The specimens were prepared on support structures without preheating the base plate and with preheating it to $300{ }^{\circ} \mathrm{C}$ at the same configuration. Porosity was the main quality criterion of all the specimens.
+
+\begin{itemize}
+  \item Tensile tests with the use of cylindrical specimens with a diameter of $4 \mathrm{~mm}$ on the gauge length of $20 \mathrm{~mm}$, manufactured using the parameter sets selected at the previous stages. The tensile specimens were built with the tension axis parallel to the build direction. The tensile tests were carried-out on as-built specimens and on the specimens additionally densified by HIP. The HIP process was conducted under conditions: $450^{\circ} \mathrm{C} / 2 \mathrm{~h} / 100 \mathrm{MPa}$, and cooling to 400 ${ }^{\circ} \mathrm{C} / 2 \mathrm{~h} / 50 \mathrm{MPa}$.
+\end{itemize}
+
+\subsection*{2.3. Examination methods}
+Microstructure examinations were carried-out on the longitudinal and transverse sections of all the variants of the specimens except thin walls, i.e. single tracks, cuboid-shaped and tensile specimens. The sections were ground with carborundum papers (down to 2000 grit), then polished with suspension of alumina particles $(0.025 \mu \mathrm{m})$. The polished surfaces were cleaned in a supersonic washer in order to remove residuals in pores and cracks and then etched with the Kroll's reagent. The optical microscope Olympus LEXT OLS4000 and the scanning electron microscope Zeiss EVO MA25, equipped with an EDS analysis system, were used for microstructure and crack surface examination, as well as for chemical microanalysis.
+
+Wall thickness was determined by width measurements of the last track in top view of the specimens left on the base plate, with the digital microscope Keyence VHX-600. The wall thickness representative for a single specimen (composed of four walls) was calculated as the average of thickness measurements of each wall. After removing the specimens from the platform, quality of their side surfaces was evaluated with use of the same digital microscope.
+
+The relative density of the rectangular specimens was assessed by computer analysis of binarized images obtained for the metallographic xy sections. The percentage of pixels falling on the pores and cracks was determined. Thus, relative density in this paper was calculated as the difference between $100 \%$ and the percentage of pores and cracks, which made it possible for it be referred to the results quoted in the references, where density was determined by the Archimedes method [38].
+
+The three-dimensional distribution of pores and cracks within the gauge length of the tensile specimens was detected and visualized using computed tomography. The system ZEISS METROTOM 1500 was used for the image reconstruction. Resolution of data for the AA7075 specimens was $8 \mu \mathrm{m}$ at an X-ray tube voltage of $200 \mathrm{kV}$ and a current of 40 $\mu \mathrm{A}$.
+
+The static tensile tests were performed on an Instron 3384 testing machine. A Zwick Roell tester was used for the hardness measurements.
+
+Table 3
+
+Comparison of fixed and variable LPBF process parameters for manufacture of the specimens used at individual stages of the research.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b6298c9a4a3486463622g-04}
+\end{center}
+
+Table 4
+
+Results of the scan single track melting test.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+\multirow[t]{2}{*}{No.} & \multirow{2}{*}{}\begin{tabular}{l}
+Laser power \\
+$[\mathrm{W}]$ \\
+\end{tabular} & \multirow{2}{*}{}\begin{tabular}{l}
+Point exposure time $t$ \\
+$[\mu s]$ \\
+\end{tabular} & \multirow{2}{*}{}\begin{tabular}{l}
+Point distance \\
+s \\
+$[\mu \mathrm{m}]$ \\
+\end{tabular} & \multirow{2}{*}{}\begin{tabular}{l}
+Scanning speed \\
+$\mathrm{v}=\mathrm{s} / \mathrm{t}$ \\
+$[\mathrm{mm} / \mathrm{s}]$ \\
+\end{tabular} & \multirow{2}{*}{}\begin{tabular}{l}
+Energy density $\mathrm{E}_{\mathrm{L}}$ \\
+$[\mathrm{J} / \mathrm{mm}]$ \\
+\end{tabular} & \multicolumn{3}{|c|}{Cross-section of a track} \\
+\hline
+ &  &  &  &  &  & \begin{tabular}{l}
+Depth \\
+d \\
+$[\mu \mathrm{m}]$ \\
+\end{tabular} & \begin{tabular}{l}
+Width \\
+$\mathrm{w}$ \\
+$[\mu \mathrm{m}]$ \\
+\end{tabular} & Ratio d/w \\
+\hline
+1 & 400 & 80 & 20 & 250 & 1.6 & $612 \pm 22$ & $451 \pm 20$ & 1.36 \\
+\hline
+2 & 200 & 80 & 20 & 250 & 0.8 & $76 \pm 56$ & $161 \pm 43$ & 0.47 \\
+\hline
+3 & 200 & 20 & 160 & 8000 & 0.025 & $20 \pm 4$ & $64 \pm 7$ & 0.31 \\
+\hline
+4 & 200 & 10 & 80 & 8000 & 0.025 & $22 \pm 1$ & $66 \pm 2$ & 0.32 \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{3. Results and discussion}
+\subsection*{3.1. Single track melting of substrate}
+The first step towards process optimization was single track melting of the AA7075 alloy substrate surface with various combinations of parameters. Trials of single track melting made it possible to assess both the process stability by the prevention of balling and the determination of the threshold for the keyhole-mode melting, as well as the susceptibility of the alloy to solidification and liquation cracking. As was stated by King et al. [39], the melting mode can be changed from keyhole to conduction mode by a combination of laser power and scanning speed, and therefore the depth and width of melting can be controlled and the creation of defects in the form of vapour voids or insufficient melting can be prevented. It results from the above that, to achieve continuous single tracks with shallow semi-circular melt pools suitable for LPBF, an optimum set of process parameters should provide melting that is mainly determined by the thermal conductivity of the material.
+
+The results of single track melting trials, obtained within the presented research in the form of the cross-sectional dimensions of the tracks (Table 4), are consistent with the conclusions given by [40], i.e. both the depth and width of the melt pools, as well as their corresponding depth to width ratio, decrease with a diminishing energy density.
+
+It was found that, for a high enough energy density, the depth to width ratio of the melt pool is bigger than 0.5 , which is due to the transition mode melting that is conducive to the creation of gas pores (Fig. 2a) and to hot cracking (Fig. 2a, b). A reduction of laser power from $400 \mathrm{~W}$ to $200 \mathrm{~W}$, but at the same scanning speed of $250 \mathrm{~mm} / \mathrm{s}$, undoubtedly reduces metal vaporization. The depth to width ratio of the melt pool decreases due to the increased share of conduction in the melting mode, but this is insufficient to make the melt pool stable. This is demonstrated by the diversification of the dimensions of the melt pool for the tracks fabricated at the same process parameters (Fig. 2b, c) and also by the formation of solidification cracks when $\mathrm{d} / \mathrm{w}=0.69$, as can be seen in Fig. 2b. Qi et al. [26] observed a similar phenomenon of unstable keyhole-mode melting in the case of AA7050, for a laser power of $200 \mathrm{~W}$ and a scanning speed within $250-350 \mathrm{~mm} / \mathrm{s}$, recognizing it as the transition mode between the keyhole-mode and the conduction mode of melting.
+
+The presence of hot cracks in the melted zones of tracks, shown in Fig. 2a, b, confirms the high sensitivity to solidification cracking of the AA7075 alloy and its lower susceptibility to liquation cracking in partially melted zones. The properties of the alloy, given in Table 1, are conducive to this sensitivity. Moreover, a high cooling rate decreases the solidus temperature, favours non-equilibrium solidification with the participation of an eutectic mixture as a result of interdendritic microsegregation, and causes high thermal shrinkage strains, a high stress gradient and a lack of backfilling of the developing cracks [19]. As can be seen in Fig. 2, the crack path is determined by the front of the rapid growth of the columnar grains. When energy density $\mathrm{E}_{\mathrm{L}}$ is high and $\mathrm{d} / \mathrm{w}$ is much higher than 0.5 , the crack proceeds centrically along the line of straight contact of the rapidly growing columnar grains (Fig. 2a). At lower $\mathrm{E}_{\mathrm{L}}$ and d/w close to 0.5 (Fig. 2b), cracking occurs in the zone of the columnar to equiaxed grain transition [21].
+
+Therefore, the test results (Table 4 and Fig. 2) suggest that, in order to minimize susceptibility of the AA7075 alloy to hot cracking, conduction in the melting mode should be increased by reducing the laser energy density, accepting $0.4<\mathrm{d} / \mathrm{w}<0.5$ as a threshold.
+
+\subsection*{3.2. Fabrication of thin wall specimens}
+Trials of thin wall fabrication are the subsequent step of the optimisation of process parameters. In comparison to the single track melting trials, these tests bring additional information, for the assumed layer thickness, about the influence of laser power and scanning speed on the thickness and surface quality of LPBF-fabricated thin walls. The measurement results of wall thickness are shown in Fig. 3a. The\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_b6298c9a4a3486463622g-05}
+
+Fig. 2. Cross-sections of single tracks on the AA7075-T6 substrate fabricated with a scanning speed of $250 \mathrm{~mm} / \mathrm{s}$ and laser power of: (a) $400 \mathrm{~W}$, (b) and (c) $200 \mathrm{~W}$. Solidification cracks are marked with white arrows, a keyhole pore with a yellow arrow and liquation cracks with red arrows.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b6298c9a4a3486463622g-06}
+\end{center}
+
+Fig. 3. Wall thickness (average values of 4 measurements) versus laser beam velocity for various combinations of irradiation time (20-420 $\mu$ s) and distance between irradiation points $(20-80 \mu \mathrm{m}$ ): (a) without scan delay, (b) with scan delay of 1-2 s.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_b6298c9a4a3486463622g-06(1)}
+
+Fig. 4. Top view of two exemplary thin wall specimens qualified on the grounds of width and continuity of tracks as: (a) good quality, and (b) bad quality. Thickness of each wall was measured by the distance between two white lines drawn along the whole track length. The arrow indicate cracks perpendicular to the tracks.
+
+methods of measurement and continuity evaluation of the tracks are shown in Fig. 4. As can be seen in Fig. 3a, wall thickness decreases along with the laser power - drastically when scanning speed increases over $200 \mathrm{~mm} / \mathrm{s}$, especially in the case of using short $(<100 \mu \mathrm{s})$ laser irradiation times and a short $(20 \mu \mathrm{m})$ distance between irradiation points. Nevertheless, the smallest thickness of the selected walls was twice as large as the laser spot size and as the hot cracks parallel to the build direction (perpendicular to the scanning direction) that occurred in the walls (arrows in Fig. 4). This was caused by a drop of heat transfer effectiveness from the molten pool into the substrate as the subsequent layers were built, which was demonstrated by increasing size of the melt pool [5]. Thus, to increase the conductive heat loss by the substrate, a time delay was used between scanning the successive specimens. Usage of a 1-2 s delay gave the additional effect of a\\
+significant reduction of the wall thickness, especially for $200 \mathrm{~W}$ laser power (see Fig. 3b), but did not eliminate hot cracks completely. This means that the used scan delay did not affect the hot cracking directly, i.e. no simple correlation existed between them and the two factors determining crack initiation: residual stresses and solidification behaviour of this alloy.
+
+The side surface quality of all the variants of the thin wall specimens was assessed visually using a digital microscope. To link the PBF surface topography with its process parameters, effects of different features, i.e. roughness, waviness, shape distortion, globules (unmelted/partial melted particles, spatter particles) and surface pores, should be taken into consideration. The existing methods of surface parameterization use filtration techniques that do not permit extraction of the abovementioned topographical features [41]. Therefore, with regard to large number of the specimens at this stage of the optimisation process, it was reasonable to accept a quick method of surface quality evaluation instead of strict measurements of traditional profiles or areal surface texture parameters.
+
+For energy density $\mathrm{E}_{\mathrm{L}}$, used in the range from 0.1 to $5.0 \mathrm{~J} / \mathrm{mm}$, a tendency of a decreasing surface quality with an increasing scanning speed was visible, especially for the specimens manufactured at a higher laser power of $400 \mathrm{~W}$. Fig. 5 shows representative examples of the surface morphology of the specimens manufactured at a similar energy density within 0.8 to $0.9 \mathrm{~J} / \mathrm{mm}$, but which resulted from various combinations of laser power and scanning speed. With energy densities below $0.5 \mathrm{~J} / \mathrm{mm}$, low quality surfaces were formed due to incomplete melting of powder particles or to the balling phenomenon.
+
+On this basis, for the next stage of the research involving laser power between 200 and $400 \mathrm{~W}$, the scanning speed threshold was accepted as 200 and $400 \mathrm{~mm} / \mathrm{s}$, respectively.
+
+\subsection*{3.3. Fabrication of volumetric rectangular specimens}
+When striving for the minimization of porosity, it was taken into account that alloying elements like $\mathrm{Zn}$ and $\mathrm{Mg}$ have lower boiling points and much higher equilibrium vapour pressure than aluminium\\
+(Fig. 6a), which results in their significant vaporization during laser melting. This can affect both the porosity and chemical composition of the alloy. A control chemical analysis of the volumetric specimens, fabricated at $200 \mathrm{~W}$ and $400 \mathrm{~W}$, but with the same linear energy density, showed a significant loss of $\mathrm{Zn}$ and $\mathrm{Mg}$, especially of $\mathrm{Zn}$ at the higher laser power (Fig. 6b). Comparison of these results with those reported by Kaufmann et al. [27], Martin et al. [9], and Wang et al. [42] suggests that vaporization of these elements is decidedly affected by laser power and, to a lesser degree, by scanning speed. This conclusion is consistent with the results of the numerical parametric study for the AA6061 alloy [43]. A spectral analysis of the AA7075 specimens manufactured with a laser power of $200 \mathrm{~W}$ showed about a $23 \%$ loss of $\mathrm{Zn}$ and about a $14 \%$ loss of Mg. Increasing the laser power to 400-500 W resulted in about a $30 \%$ loss of $\mathrm{Zn}$ and about a $23 \%$ loss of $\mathrm{Mg}$. Therefore, at the third stage of fabrication of the volumetric specimens, $\mathrm{P}=200 \mathrm{~W}$ was accepted as the fixed parameter, with SD being maintained at $1.5 \mathrm{~s}$.
+
+The main problem for AA7075 processing is, apart from porosity, its susceptibility to hot cracking. Therefore, the parameters influencing energy density and the stresses arising during solidification of the alloy were accepted as the variable parameters to be optimised. LPBF is a process that is sensitive to (apart from laser power) scanning strategy, hatch spacing, scanning speed and the negative shift of focal height $(-\Delta \mathrm{F})$. The selection of these parameters necessitates a compromise, since a decreased hatch spacing and scanning speed (at a constant laser power and layer thickness) result in a higher energy density, lower porosity and lower stress level, but at the same time in a lower surface quality [5]. In turn, the laser focus shift $(\Delta \mathrm{F})$ changes the melting mode [26], enlarges the spot size and reduces the energy density at the melt pool [45].
+
+The effective methods of reducing build-up of residual stresses are double scanning and the dividing of the laser-scanned area of each layer into smaller stripes or into square sections referred to as 'islands'. Taking this into account, in this work the rectangular specimens were manufactured using 4 scanning variants (Fig. 7): alternating single scanning (SS1), double scanning (DS; remelting), stripes alongside\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_b6298c9a4a3486463622g-07}
+
+Fig. 5. Surface topography of thin wall specimens fabricated with parameters: (a) $P=400 \mathrm{~W}, \mathrm{v}=429 \mathrm{~mm} / \mathrm{s}, \mathrm{E}_{\mathrm{L}}=0.93 \mathrm{~J} / \mathrm{mm}, \mathrm{s}=60 \mu \mathrm{m}$; (b) $\mathrm{P}=200 \mathrm{~W}, \mathrm{v}=250$ $\mathrm{mm} / \mathrm{s}, E_{\mathrm{L}}=0.8 \mathrm{~J} / \mathrm{mm}, \mathrm{s}=60 \mu \mathrm{m}$.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_b6298c9a4a3486463622g-08(6)}
+
+Fig. 6. Vaporization of zinc and magnesium in AA7075 during laser melting: (a) comparison of equilibrium vapour pressure of $\mathrm{Zn}, \mathrm{Mg}, \mathrm{Cu}$ and $\mathrm{Al}$ at various temperatures (based on [44]); (b) concentration of $\mathrm{Zn}$ and $\mathrm{Mg}$ in raw powder and after LPBF with various laser power and constant linear energy $\mathrm{E}_{\mathrm{L}}=1 \mathrm{~J} / \mathrm{mm}$ : $\mathrm{P}=$ $200 \mathrm{~W}, \mathrm{~s}=20 \mu \mathrm{m}, \mathrm{t}=100 \mu \mathrm{s} ; \mathrm{P}=400 \mathrm{~W}, \mathrm{~s}=40 \mu \mathrm{m}, \mathrm{t}=100 \mu \mathrm{s}$.
+
+(SS2) and chessboard (SS3).
+
+The effect of scanning strategy on the quantity and arrangement of pores and cracks in the cross-sections xy and yz of the specimens are shown in Fig. 8. It can be seen that scanning with short scan vectors (Fig. 8d) results in lower porosity in comparison to scanning with longer scan vectors (Fig. 8a, b, c). Similar results were obtained for the AA2618 alloy by Koutny et al. [46]. The strategies SS1, DS and SS2 are conducive to the formation of channel-like pores and gaseous pores with spherical shapes (Fig. 8a, b, c). Application of strategy SS3 not only leads to the reduction of the quantity of pores, but also to the reduction of their sizes (Fig. 8d). This is related to the fact that scanning of small fields with short, parallel vectors results in local overheating and reduction of the thermal gradient, resulting subsequently in better wetting conditions and lower porosity. In the case of the other strategies (SS1, DC and SS2), longer and successively scanned tracks have more time to cool down, which results in worse wetting conditions and higher porosity. However, cracks occurred irrespective of the strategy.
+
+In all the specimens, as can be seen in Fig. 8, the solidification cracks have a different width, length and distribution density depending on the scanning variant. The cracks are caused by the action of 2 factors: thermally induced re-strain (volume shrinkage and thermal contraction) and the crack-susceptible microstructure. Their propagation is determined by the distribution of tensile stresses and the persistence of liquid films along the solidification boundaries in the manufactured specimen. It can be seen in Fig. 8d that long cracks propagate along the island borders. The islands were scanned in the sequence every second island area (see Fig. 7d), which inclines to the supposition that the overlapping contour is the preferred location for initiation of liquation cracking in the previously solidified outmost track of the neighbouring island. On cross-sections yz, cracks are parallel to the building direction of the specimens. They are also initiated on the irregularities on the free and side surfaces of the specimens, on the areas between the supports, and on the internal pores. In the case of small cracks initiated inside the specimens, their sources cannot be identified.
+
+Attention is attracted to the reverse correlation between porosity and the observed crack density. The reason for this can be the fact that shrinkage of the material is partially compensated by its higher porosity. In consequence, shrinkage-related residual stresses are reduced, in turn causing the cracks to become thinner and be visible at larger magnifications only (compare Fig. 8c, d).
+
+Even if no success was achieved in the form of the complete elimination of cracks, one scanning pattern, considered as the best, was accepted at the subsequent stage of tests for all the volumetric specimens, i.e. the chessboard scanning strategy with one island size of 2.5 $\mathrm{mm} \times 2.5 \mathrm{~mm}$.
+
+The results obtained for the selected parameter sets in the form of diagrams of relative density versus scanning speed and defocusing distance are shown in Fig. 9a and b, respectively. The distance and the defocusing sign aff ;ect the size and geometry of the melt pool [47]. In order to increase the width of the melt pool and to reduce its depth a
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b6298c9a4a3486463622g-08(2)}
+\end{center}
+
+C
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b6298c9a4a3486463622g-08(4)}
+\end{center}
+
+Layer $n+1$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b6298c9a4a3486463622g-08(1)}
+\end{center}
+
+Layer $\mathrm{n}+1$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b6298c9a4a3486463622g-08}
+\end{center}
+
+b\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_b6298c9a4a3486463622g-08(3)}
+
+d\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_b6298c9a4a3486463622g-08(5)}
+
+Fig. 7. Scanning variants: (a) alternating single scanning - SS1; (b) double scanning - DS; (c) stripes alongside (2.5 mm wide) - SS2; (d) chessboard - SS3. Red dots mean start points of the scan path.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b6298c9a4a3486463622g-09}
+\end{center}
+
+Fig. 8. Influence of scanning strategy on the quantity and distribution of pores and solidification cracks. Parameters used for all samples: $\mathrm{P}=200 \mathrm{~W} ; \mathrm{h}=140$ $\mu \mathrm{m} ; \mathrm{v}=200 \mathrm{~mm} / \mathrm{s} ; \mathrm{s}=20 \mu \mathrm{m}, \Delta \mathrm{F}=-1 ; \mathrm{E}_{\mathrm{V}}=143 \mathrm{~J} / \mathrm{mm}^{3}$.
+
+resulting from lowered power density, negative defocusing was adjusted while taking into account the results obtained by McLouth et al. [45].
+
+As can be seen in Fig. 9a, none of the specimens fabricated at a constant laser power and focus distance, but which did have a variable hatch spacing and scanning speed, did not achieve a relative density of over $98.5 \%$. On the other hand, a very strong influence of defocusing distance on the density of the specimens is visible in Fig. 9b. An increase of the defocus distance was accompanied by an increase in density. The highest level of relative density, amounting to about 99.5 $\%$, was reached for the variant of parameter set: $\mathrm{P}=200 \mathrm{~W}, \mathrm{v}=200$ $\mathrm{mm} / \mathrm{s}, \mathrm{s}=20 \mu \mathrm{m}$, hatch spacing $=140 \mu \mathrm{m}$ and $\Delta \mathrm{F}=-3.5 \mathrm{~mm}$. However, it was not possible to eliminate hot cracks completely.
+
+An additional decrease of the level of residual stresses, and thus susceptibility of the alloy to hot cracking, was also expected as a result of preheating the base plate to $300{ }^{\circ} \mathrm{C}$ - the maximum temperature possible to be reached in the applied LPBF machine. Even if crack density was reduced this way (compare the images in Fig. 8d and\\
+Fig. 10), it was still at the expense of relative density (Fig. 9). It is possible that application of preheating with no change of the process parameters (reduction of energy density) creates conducive conditions to transition from the conduction controlled melting to the keyholemode melting that results in increased porosity. Hot cracks were observed for all the variants of the parameter sets, especially between the individual fields of the scanning pattern.
+
+Mertens et al. [28] were also unable to eliminate cracks in the AA7075 alloy, even if they applied a higher preheating temperature of $400{ }^{\circ} \mathrm{C}$. However, they applied high scanning speeds $(500-1500 \mathrm{~mm} / \mathrm{s})$ and a thinner layer in comparison to the parameters used in this work, thus creating favourable conditions for higher residual stresses. Therefore, this does not justify ceasing the trials with the use of preheating as the tool supporting the elimination of hot cracking.
+
+\subsection*{3.4. Fabrication of tensile specimens}
+Before tensile testing, the as-built specimens were subjected to CT and microscopic examinations in order to determine their relative density and the presence of cracks. Since it was found that high relative density (see Table 5) and the complete elimination of hot cracks in LPBF-ed AA7075 (Fig. 11a) cannot be assured by adjusting the process parameter window only, HIP treatment was introduced to heal hot cracks, pores and other accidental defects. As the results in Table 5 indicate, HIP resulted in a higher relative density of the specimens and better plastic properties of the alloy. However, in comparison to the properties of the wrought alloy in an annealed condition, the elongation at failure and strength values are lower due to the fact that HIP failed to close the cracks. It can be seen in Fig. 11b that even if the higher density of the specimens indicated the healing of a significant part of the defects during HIP treatment, the large cracks that developed along the boundaries of the columnar grains still remained open.
+
+The HIP-ing conditions, temperature and pressure (Table 5), were so selected that pores and cracks were closed by plastic flow and creep. From microstructure point of view, they neither changed the shape and size of the columnar grains nor clearly reduced the segregation patterns of scan layers (Fig. 11).
+
+The results of hardness measurements in Table 5 indicate hardening of the alloy in the as-built condition, similar to the hardening in the T6 condition. After HIP, however, its hardness is close to that of in the state of equilibrium. This demonstrates overaged condition of the alloy.
+
+\subsection*{3.5. Examination of the formation and healing of hot cracks}
+The multistage trials to determine a set of LPBF parameters, optimum from the viewpoint of the minimisation of porosity and hot cracking during the manufacture of AA7075 objects, did not bring the expected results with regard to cracks. This is why microscopic examinations of the cracks were taken-up in order to explain, in relation to the models accepted for this type of cracking at traditional casting and welding, the mechanism and the origin of hot cracking in the AA7075 alloy fabricated by LPBF.
+
+According to Kou [15] and Liu et al. [48], hot cracking is actuated by insufficient compensation of solidification shrinkage by the melt flow in the presence of thermal stresses. Nevertheless, other factors like pores, surface irregularities or constitutional liquation can be conducive to the initiation and propagation of hot cracks, as the authors of the current study highlighted in their comments concerning Fig. 8. Eskin et al. [49] defined several mechanisms of hot cracking during directchill casting, as well as the conditions that may lead to it. In their opinion, the mechanisms of nucleation, crack propagation and fracture mode are influenced by the range of solidification temperatures and the strength of the semisolid zone, as well as by structure of the alloy. Defects in the form of a liquid film, pores, intermetallic particles and a film of oxides, as well as the structure of defects like vacancy clusters and grain boundary, can have a strong influence on crack initiation\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_b6298c9a4a3486463622g-10(1)}
+
+Fig. 9. Relative density of volumetric specimens fabricated with $P=200 \mathrm{~W}$, chessboard strategy and various variants of the remaining process parameters, versus (a) scanning speed; $\Delta \mathrm{F}=-1$ (b) defocusing distance $\Delta \mathrm{F}$.
+
+under specific temperature-stress conditions. Thus, depending on the solid fraction, crack development can be caused by disruption of the liquid film, the brittle fracture of bridges and by an intergranular brittle or ductile fracture.
+
+Microscopic examinations of the surfaces of long cracks, shown in Figs. 10 and $11 \mathrm{a}$, indicate solidification cracking by the liquid film rupture mode. As can be seen in Fig. 12a and b, this is evidenced by the dendritic nature of the fracture surfaces covered by the solidified liquid film. Preheating of the base plate to $300^{\circ} \mathrm{C}$, in spite of a reduction of the ratio of thermal gradient (G) to growth rate (R), did not change the fracture mode of cracking.
+
+Attention is drawn to the fact that the wide, long cracks shown in Fig. 11a occur mostly between high-angle misoriented columnar grains, but not between low-angle misoriented cell-dendrites, inside the columnar grains. The columnar grains are unfavourably (perpendicularly) oriented in relation to the direction of tensile stresses induced by solidification shrinkage and thermal contraction, both of which are obstructed by the solidified bottom layer. The cracks propagate through successive layers, since the healing of the crack by feeding with liquid metal is impeded by a high strain rate.\\
+The reason that the liquid film between the columnar grains persists to lower temperatures in comparison to the liquid film on the subboundaries can be, according to the model of Rappaz et al. [50], due to the higher stability of the liquid film at the high-angle grain boundary during the last stage of solidification. Additionally, the relatively higher concentration of the segregating alloying elements, according to the Scheil-Gulliver model, lowers the solidus temperature. Microsegregation also results in an increase of the alloy susceptibility to liquation cracking, which is due to the rapid heating of the already solidified alloy layer during the subsequent pass of the laser beam [19]. It seems, due to the complex thermal history of the material, i.e. melting, remelting, partial melting and cyclic heat treatment at high speeds of heating and cooling, that liquation cracking interferes with solidification cracking and that their distinction departs from the goal of this work.
+
+The influence of microsegregation on lowering the AA7075 solidus temperature is related to the low values of partitioning coefficients of both the main and minor alloying elements (Table 6), which results in a higher concentration of these elements in liquid at the final phases of non-equilibrium solidification. In comparison to the AA7075 solidus
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b6298c9a4a3486463622g-10}
+\end{center}
+
+Fig. 10. Effect of base plate preheating to $300^{\circ} \mathrm{C}$ on the quantity and distribution of pores and solidification cracks in planes xy and yz. Parameter set: $\mathrm{P}=200 \mathrm{~W}, \mathrm{~h}$ $=140 \mathrm{um}, \mathrm{v}=200 \mathrm{~mm} / \mathrm{s}, \mathrm{s}=20 \mu \mathrm{m}, \Delta \mathrm{F}=-1 \mathrm{~mm}$.
+
+Table 5
+
+Comparison of the mechanical properties of the AA7075 alloy in various fabrication conditions.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+Tensile specimen & $\mathrm{R}_{\mathrm{p} 0.2}[\mathrm{MPa}]$ & $\mathrm{R}_{\mathrm{m}}[\mathrm{MPa}]$ & $\varepsilon_{\mathrm{f}}[\%]$ & HV0.3 & Density [\%] \\
+\hline
+As-built ${ }^{\mathrm{a}}$ & - & $160 \pm 12$ & $0.3 \pm 0.05$ & $137 \pm 6$ & $96.7 \pm 2.5$ \\
+\hline
+$\mathrm{HIP}^{\mathrm{b}}$ & $97 \pm 9$ & $159 \pm 11$ & $3.5 \pm 0.6$ & $83 \pm 4$ & $99.1 \pm 0.5$ \\
+\hline
+Wrought, $\mathrm{T}^{\mathrm{C}}$ & $372-503$ & $462-572$ & 3-11 & 175 & 100 \\
+\hline
+Wrought, annealed ${ }^{c}$ & 95 & 220 & 17 & 60 & 100 \\
+\hline
+\end{tabular}
+\end{center}
+
+\footnotetext{a Parameter set: $\mathrm{P}=200 \mathrm{~W}, \mathrm{~h}=140 \mu \mathrm{m}, \mathrm{s}=20 \mu \mathrm{m}, \mathrm{v}=200 \mathrm{~mm} / \mathrm{s}$, and $\Delta \mathrm{F}=-3.5 \mathrm{~m}$, without preheating.
+
+b HIP parameters: $450{ }^{\circ} \mathrm{C} / 2 \mathrm{~h} / 100 \mathrm{MPa}$, and cooling to $400{ }^{\circ} \mathrm{C} / 2 \mathrm{~h} / 50 \mathrm{MPa}$.
+
+c MatWeb-Material Property Data.
+}temperature of $477{ }^{\circ} \mathrm{C}$ that is quoted in materials databases (see Table 1), the lowest melting point within the Al-Cu-Mg-Zn system, calculated by Gómez-Acebo et al. [51] as $338^{\circ} \mathrm{C}$, belongs to the ternary system $\mathrm{Al}-\mathrm{Mg}-\mathrm{Zn}$, while the eutectic point for $\mathrm{Al}-\mathrm{Cu}-\mathrm{Mg}$ is $425{ }^{\circ} \mathrm{C}$. This means that in the case of a high cooling rate $\left(10^{4}-10^{6} \mathrm{~K} / \mathrm{s}\right)$, the shapes of the solidification curves can be changed due to the non-equilibrium partition coefficients and reduced back diffusion of solute. Since the susceptibility index of the alloy, i.e. its maximum steepness $\mid \mathrm{dT} /\left(\mathrm{df}_{\mathrm{s}}\right)^{1 /}$ ${ }^{2}$ at nearly $\mathrm{f}_{\mathrm{s}}^{1 / 2} \approx 1$ is highest without back diffusion [48], it is clear that microsegregation at rapid cooling is an important factor for cracking. An increased concentration of segregating alloying elements in interdendritic liquid intensifies remelting and partial melting in individual material layers.
+
+EDS analysis (Fig. 13) of the as-built microstructure showed microsegregation of $\mathrm{Zn}, \mathrm{Mg}, \mathrm{Cu}$ and $\mathrm{Si}$ (despite its low content) at the grain boundaries. The microstructure of AA7075, shown in Fig. 14, consists of primary solid solution $\alpha$, dispersed secondary phases and a divorced eutectic phase arranged at low- and high-angle grain boundaries. This eutectic phase, most likely $\eta-\mathrm{Mg}(\mathrm{Zn}, \mathrm{Cu}, \mathrm{Al})_{2}$, is the main strengthening phase in the AA7075 alloy [52]. In Fig. 14a and b, micropores distributed close to the eutectic $\eta$-phase can be seen in addition to a solidification crack. Such a series of micropores, which originated from solidification shrinkage, gas precipitation or vacancy supersaturation, are the potential nuclei of hot cracks. Thus, the main reason for solidification cracking is the persistence of liquid films (rich in $\mathrm{Zn}, \mathrm{Mg}, \mathrm{Cu}$, and $\mathrm{Si}$ ) between high-angle misorientation grains in the critical temperature range, where strain rate and stress are high. It is highly probable that the presence of minor elements such as silicon in the liquid film significantly contributes to its stability by reducing liquid-solid interface energy $\gamma_{\mathrm{sl}}$ in relation to grain boundary energy $\gamma_{\mathrm{gb}}$ to the level (acc. to the concept of Rappaz et al. [50]) for that the condition $\gamma_{\mathrm{gb}}>2 \gamma_{\mathrm{sl}}$ is fulfilled. The high influence of Si on the cracking susceptibility of the Al-xSi binary alloys $(0<x<1)$, as well as of the IN738LC alloy during LPBF, reported respectively by Kimura et al. [53] and Engeli et al. [36], supports this hypothesis.
+
+Apart from $\eta-\mathrm{Mg}(\mathrm{Zn}, \mathrm{Cu}, \mathrm{Al})_{2}$, fine strengthening precipitates and secondary particles typical in AA7075 (constituent and dispersoid particles of E-phase $\mathrm{Al}_{18} \mathrm{Mg}_{3} \mathrm{Cr}_{2}$ ) do not affect susceptibility to hot cracking, since they are not created as a result of the eutectic reaction.
+
+HIP treatment of the LPBF-ed tensile specimens significantly increased their relative density to $99.1 \%$ (Table 5), although this is not a satisfactory result. Wide, long cracks (see Fig. 11b) remained open, which was evidenced by the cellular-dendritic structure of their fracture surfaces, similar to those shown in Fig. 12a and b for the specimens in their as-built condition. Nevertheless, it was found that, apart from healing of lack-of-fusion or other pores, the narrow, short microcracks became also closed (Fig. 15a). What is interesting, some discrete secondary phase precipitated along the healed cracks. The EDS analysis showed a concentration of $\mathrm{Mg}$ inside the healed crack (EDS map in Fig. 15a). This raises the suspicion that a localized liquid film is created during HIP on crack surfaces. Thus, it can be concluded that some cracks and shrinkage pores became closed due to simultaneous presence of a liquid film and a compressive stress field. Because of microsegregation, the temperature $450{ }^{\circ} \mathrm{C}$ during HIP-ing can be locally higher than the melting temperature of the zones along grain boundaries rich in the segregating $\mathrm{Zn}, \mathrm{Mg}, \mathrm{Cu}$ and $\mathrm{Si}$. In consequence, the liquid film is created by constitutional liquation mechanism, i.e. by dissolution of the primary $\eta$-phase at grain boundaries and on the crack surface by the eutectic reaction. This is confirmed by the BSD image (Fig. 15b) of the resolidified grain boundary zones with white traces of retained segregation and small shrinkage pores. The similar crack healing mechanism was observed by Kalentics et al. [54], repeatedly applying the laser shock peening during processing the CM247LC alloy by LPBF, as well as by Zhao et al. using HIP after laser solid forming of Rene88DT alloy.
+
+The results of EDS analysis of fragment of the high-angle boundary with traces of residual microsegregation, decorated by precipitates of the second phases (see Fig. 15b) are shown in Fig. 16. High concentration of $\mathrm{Mg}$ and $\mathrm{Si}$ in some precipitates is visible. In the authors' opinion, precipitating of the $\mathrm{Mg}$ and $\mathrm{Si}$ rich phase confirms creation of the liquid film at high-angle grain boundaries, which was followed by solidification and precipitation of the $\eta$-phase and $\mathrm{Mg}$-Si phase or the $\eta$ -
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b6298c9a4a3486463622g-11}
+\end{center}
+
+Fig. 11. Hot cracks in the gauge length of the tensile specimens in: (a) as-built and (b) HIP-ed condition.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b6298c9a4a3486463622g-12}
+\end{center}
+
+Fig. 12. SE-SEM images of the solidification crack surfaces: (a) tensile specimen with cracks, shown in Fig. 11a and fabricated without preheating; (b) cuboidal specimen with cracks, shown in Fig. 10 and fabricated with preheating to $300{ }^{\circ} \mathrm{C}$.
+
+Table 6
+
+Equilibrium partition coefficients for alloying elements in aluminium [10].
+
+\begin{center}
+\begin{tabular}{lllllllll}
+\hline
+Element & $\mathrm{Fe}$ & $\mathrm{Si}$ & $\mathrm{Cu}$ & $\mathrm{Mg}$ & $\mathrm{Zn}$ & $\mathrm{Mn}$ & $\mathrm{Cr}$ & $\mathrm{Ti}$ \\
+\hline
+$\mathrm{k}$ & 0.03 & 0.13 & 0.17 & 0.43 & 0.45 & 0.82 & 2.0 & 9.0 \\
+\hline
+\end{tabular}
+\end{center}
+
+phase only, depending on local concentration of Si.
+
+Confirmation of these conclusions requires the examinations to be methodically continued with the use of the Atom Probe Tomography (APT), Electron Backscatter Diffraction (EBSD), and Transmission Electron Microscopy (TEM) methods in order to identify small-scale segregation, misorientation angles and phase composition.
+
+It is highly probable that long cracks, being connected to the surface, made the HIP process ineffective. It is also possible that there exists a threshold opening of the crack that can be closed as a result of both the liquation mechanism and the HIP densification mechanisms presented by Atkinson et al. [55], i.e. plastic yielding, power-law creep and densification by diffusion creep. This is affected by temperature and pressure, which are selected on the assumption that part of the geometry remains unchanged.
+
+\section*{4. Conclusions}
+Multi-stage trials to adjust the optimum process parameters for the fabrication of crack-free AA7075 parts using LPBF technology were finished with no success. However, the obtained results make it possible to better understand the causes of the problems related to processing AA7075, as well as to formulate conclusions that will be useful for future research.
+
+1 With regard to optimisation of the process window, the following was concluded:
+
+\begin{itemize}
+  \item To avoid keyhole-mode melting and thus to reduce gas pores and the formation of hot cracks, the depth to width ratio of the melt pool should be kept between 0.4 and 0.5 , a laser power of $200 \mathrm{~W}$ should be used and a scanning speed of $200-250 \mathrm{~mm} / \mathrm{s}$ should be adopted. The laser power is of crucial importance in comparison to the scanning speed, and its relatively low value is profitable with respect to the reduction of $\mathrm{Zn}$ and $\mathrm{Mg}$ losses by vaporization and for the reduction of surface roughness.
+  \item Because of the inverse correlation between porosity and crack density (porosity compensates shrinkage), the selection of the optimum process parameters that are based on the maximization
+\end{itemize}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b6298c9a4a3486463622g-12(1)}
+\end{center}
+
+Fig. 13. EDS maps showing the concentration of $\mathrm{Zn}, \mathrm{Cu}, \mathrm{Mg}$ and Si-impurity at the grain boundaries. Cross section (xy plane).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b6298c9a4a3486463622g-13}
+\end{center}
+
+Fig. 14. Microstructure of the as-built tensile specimens, fabricated with the process parameters shown in Table 3: (a) longitudinal section, (b) cross section. Arrows indicate the eutectic $\eta$-phase particles at grain (orange arrows) and cells (white arrows) boundaries. BSD-SEM images.
+
+of the parts' density is a reasonable optimisation criterion. Accomplishing relative density of the order of $99.5 \%$ is possible for the following parameters: defocusing distance $\Delta \mathrm{F}=-3.5 \mathrm{~mm}$, chessboard scanning strategy and hatch spacing $=140 \mu \mathrm{m}$, whereby pores are almost eliminated, but cracks are only partially reduced. Preventing hot cracking requires a metallurgical approach towards optimization of the chemical composition of the AA7075 powder for LPBF.
+
+\begin{itemize}
+  \item The optimum process parameters determined for small specimens do not guarantee that the the same qualilty will be obtained in the case of tensile specimens. Apart from reducing density to $96.7 \%$, vertical orientation of building tensile specimens is conducive to the development of long cracks along columnar grain boundaries. HIP is an effective method to improve density to $99.1 \%$ by healing defects and short cracks. However, the method does leave long cracks open.
+\end{itemize}
+
+2 With regard to the relation between the process and the formation of defects, the following was concluded:
+
+\begin{itemize}
+  \item The manufacturing of defect-free parts of AA7075 by LPBF represents a major challenge, since the detrimental defects like pores and solidification cracks are consequences of high volumetric shrinkage and non-equilibrium directional solidification connected with a high cooling rate.
+  \item Solidification cracks are formed by the liquid film rupture mode. The reason why the liquid film persists to low temperatures at the last solidification stage is due to the microsegregation of $\mathrm{Zn}, \mathrm{Cu}$, and $\mathrm{Mg}$, which results in the presence of the non-equilibrium eutectic form of the main strengthening phase $(\eta)$ at the grain boundaries.
+  \item Concentration of silicon detected at grain boundaries indicates that this minor element, with a strong tendency to undergo segregation in $\mathrm{Al}$, plays a significant role in increasing susceptibility to cracking. This can be explained by the fact that silicon increases the stability of the liquid film by decreasing the liquid-solid interface energy in relation to the energy of the high-angle grain boundary. Lowering the silicon content would decrease the hot cracking tendency of the AA7075 alloy, while at the same time maintaining its specified composition.
+\end{itemize}
+
+3 HIP is effective in healing only the short cracks, not connected with the surface, by the liquation mechanism, i.e. crack surface melting combined with action of compressive stresses.
+
+To sum up, the obtained results are an incentive to continue the research aimed at manufacturing crack-free parts with no change of the AA7075 specified composition. Even if the optimum selection of LPBF parameters, determined by the characteristics of the AA7075 powder and susceptibility of $\mathrm{Zn}$ and $\mathrm{Mg}$ to vaporization, makes it possible to obtain relative density above $99 \%$, its effect on solidification cracking is too weak.
+
+Therefore, a new approach to increasing the hot cracking resistance of this alloy uses powders with a concentration of $\mathrm{Si}$ that is reduced below $0.1 \mathrm{wt}$ \% (considering vaporization losses of $\mathrm{Zn}$ and $\mathrm{Mg}$ ) and, at the same time, applies powder bed preheating that should activate back diffusion of alloying elements from a liquid to solid solution. Concurrent action of both factors should drastically increase the resistance to cracking by increasing the solidification temperature and reducing shrinkage stresses.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b6298c9a4a3486463622g-13(1)}
+\end{center}
+
+Fig. 15. Tensile specimen after HIP treatment with parameters: $\mathrm{T}=450^{\circ} \mathrm{C} / 100 \mathrm{MPa}$, cooling to $400^{\circ} \mathrm{C} / 50 \mathrm{MPa}$ (a) SE-SEM micrographs of the microstructure with the healed short cracks (white arrows), pores (orange arrow), and EDS map of Mg concentration; (b) BSD-SEM image of the microstructure showing resolidified grain boundary with residual segregation traces, dispersive precipitates and shrinkage pores.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_b6298c9a4a3486463622g-14}
+\end{center}
+
+Fig. 16. Microstructure of the tensile specimen, HIP-ed with parameters: $\mathrm{T}=450{ }^{\circ} \mathrm{C} / 100 \mathrm{MPa}$, cooling to $400{ }^{\circ} \mathrm{C} ; \mathrm{p}=50 \mathrm{MPa}$ (a) BSD-SEM image on the cross section; (b) EDS maps of the alloying elements of the selected area.
+
+\section*{Declaration of competing interest}
+None.
+
+\section*{CRediT authorship contribution statement}
+Wojciech Stopyra: Conceptualization, Formal analysis, Writing original draft. Konrad Gruber: Data curation, Methodology. Irina Smolina: Resources, Investigation. Tomasz Kurzynowski: Funding acquisition, Project administration. Bogumiła Kuźnicka: Writing - review \& editing, Supervision.
+
+\section*{Acknowledgement}
+This work was financially supported byThe National Centre for Research and Development, Polandwithin the project INNOLOT/I/6/ NCBR/2013, AMpHOra.
+
+\section*{References}
+[1] N. Guo, M.C. Leu, Additive manufacturing: technology, applications and research needs, Front. Mech. Eng. China 8 (2013) 215-243, \href{https://doi.org/10.1007/}{https://doi.org/10.1007/} s11465-013-0248-8.
+
+[2] T. Dursun, C. Soutis, Recent developments in advanced aircraft aluminium alloys, Mater. Des. 56 (2014) 862-871, \href{https://doi.org/10.1016/j.matdes.2013.12.002}{https://doi.org/10.1016/j.matdes.2013.12.002}.
+
+[3] A. Panesar, I. Ashcroft, D. Brackett, R. Wildman, R. Hague, Design framework for multifunctional additive manufacturing: coupled optimization strategy for structures with embedded functional systems, Addit. Manuf. 16 (2017) 98-106, https:// \href{http://doi.org/10.1016/j.addma.2017.05.009}{doi.org/10.1016/j.addma.2017.05.009}.
+
+[4] J. Zhang, B. Song, Q. Wei, D. Bourell, Y. Shi, A review of selective laser melting of aluminum alloys: processing, microstructure, property and developing trends, J. Mater. Sci. Technol. 35 (2019) 270-284, \href{https://doi.org/10.1016/j.jmst.2018.09}{https://doi.org/10.1016/j.jmst.2018.09}. 004.
+
+[5] T. DebRoy, H.L. Wei, J.S. Zuback, T. Mukherjee, J.W. Elmer, J.O. Milewski, A.M. Beese, A. Wilson-Heid, A. De, W. Zhang, Additive manufacturing of metallic components - Process, structure and properties, Prog. Mater. Sci. 92 (2018) 112-224, \href{https://doi.org/10.1016/j.pmatsci.2017.10.001}{https://doi.org/10.1016/j.pmatsci.2017.10.001}.
+
+[6] D. Zhang, S. Sun, D. Qiu, M.A. Gibson, M.S. Dargusch, M. Brandt, M. Qian, M. Easton, Metal alloys for fusion-based additive manufacturing, Adv. Eng. Mater. 20 (2018) 1-20, \href{https://doi.org/10.1002/adem}{https://doi.org/10.1002/adem}. 201700952.
+
+[7] N.T. Aboulkhair, M. Simonelli, L. Parry, I. Ashcroft, C. Tuck, R. Hague, 3D printing of Aluminium alloys: additive manufacturing of Aluminium alloys using selective laser melting, Prog. Mater. Sci. 106 (2019) 100578, , \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. pmatsci.2019.100578.
+
+[8] A. Aversa, G. Marchese, A. Saboori, E. Bassini, D. Manfredi, S. Biamino, D. Ugues,\\
+P. Fino, M. Lombardi, New aluminum alloys specifically designed for laser powder bed fusion: a review, Materials (Basel). 12 (2019), \href{https://doi.org/10.3390/}{https://doi.org/10.3390/} ma12071007.
+
+[9] J.H. Martin, B.D. Yahata, J.M. Hundley, J.A. Mayer, T.A. Schaedler, T.M. Pollock, 3D printing of high-strength aluminium alloys, Nature. 549 (2017) 365-369, \href{https://doi.org/10.1038/nature23894}{https://doi.org/10.1038/nature23894}.
+
+[10] D.G. Eskin, Physical Metallurgy of Direct Chill Casting of Aluminum Alloys, Vol. 6. Physical Metallurgy of Direct Chill Casting of Aluminum Alloys, CRC Press, Boca Raton, 2008, p. 23 28, 183, 216.
+
+[11] C. Galy, E. Le Guen, E. Lacoste, C. Arvieu, Main defects observed in aluminum alloy parts produced by SLM: from causes to consequences, Addit. Manuf. 22 (2018) 165-175, \href{https://doi.org/10.1016/j.addma.2018.05.005}{https://doi.org/10.1016/j.addma.2018.05.005}.
+
+[12] E. Louvis, P. Fox, C.J. Sutcliffe, Selective laser melting of aluminium components, J. Mater. Process. Technol. 211 (2011) 275-284, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. jmatprotec.2010.09.019
+
+[13] D.G. Eskin, Suyitno, J.F. Mooney, L. Katgerman, Contraction of aluminum alloys during and after solidification, Metall. Mater. Trans. A: Phys. Metall. Mater. Sci. 35 A (2004) 1325-1335, \href{https://doi.org/10.1007/s11661-004-0307-1}{https://doi.org/10.1007/s11661-004-0307-1}.
+
+[14] V.N. Moiseyev, Titanium Alloys: Russian Aircraft and Aerospace Applications, CRC Press, 2005, p. 162.
+
+[15] S. Kou, A criterion for cracking during solidification, Acta Mater. 88 (2015) 366-374, \href{https://doi.org/10.1016/j.actamat.2015.01.034}{https://doi.org/10.1016/j.actamat.2015.01.034}.
+
+[16] T. Soysal, S. Kou, A simple test for assessing solidification cracking susceptibility and checking validity of susceptibility prediction, Acta Mater. 143 (2018) 181-197, \href{https://doi.org/10.1016/j.actamat.2017.09.065}{https://doi.org/10.1016/j.actamat.2017.09.065}.
+
+[17] K.-H. Grote, E.K. Antonsson (Eds.), Springer Handbook of Mechanical Engineering, Springer, 2008, pp. 721-723 Part B/7.4.
+
+[18] B. Kuźnicka, R. Dziedzic, P. Szymczyk, E. Chlebus, Consequences of rapid heating of Al-Cu alloy and martensitic stainless steel, Eng. Fail. Anal. 26 (2012) 192-202, \href{https://doi.org/10.1016/j.engfailanal.2012.07.024}{https://doi.org/10.1016/j.engfailanal.2012.07.024}.
+
+[19] F.M. Ghaini, M. Sheikhi, M.J. Torkamany, J. Sabbaghzadeh, The relation between liquation and solidification cracks in pulsed laser welding of 2024 aluminium alloy, Mater. Sci. Eng.: A. 519 (2009) 167-171, \href{https://doi.org/10.1016/j.msea.2009.04}{https://doi.org/10.1016/j.msea.2009.04}. 056.
+
+[20] K. Bartkowiak, S. Ullrich, T. Frick, M. Schmidt, New developments of laser processing aluminium alloys via additive manufacturing technique, Phys. Procedia 12 (2011) 393-401, \href{https://doi.org/10.1016/j.phpro.2011.03.050}{https://doi.org/10.1016/j.phpro.2011.03.050}.
+
+[21] P.C. Collins, D.A. Brice, P. Samimi, I. Ghamarian, H.L. Fraser, Microstructural control of additively manufactured metallic materials, Annu. Rev. Mater. Res. 46 (2016) 63-91, \href{https://doi.org/10.1146/annurev-matsci-070115-031816}{https://doi.org/10.1146/annurev-matsci-070115-031816}.
+
+[22] W. Kurz, C. Bezençon, M. Gäumann, Columnar to equiaxed transition in solidification processing, Sci. Technol. Adv. Mater. 2 (2001) 185-191, \href{https://doi.org/10}{https://doi.org/10}. 1016/S1468-6996(01)00047-X.
+
+[23] D. Ruvalcaba, In situ observations of dendritic fragmentation due to local soluteenrichment during directional solidification of an aluminum alloy, Acta Mater. 55 (2007) 4287-4292, \href{https://doi.org/10.1016/j.actamat.2007.03.030}{https://doi.org/10.1016/j.actamat.2007.03.030}.
+
+[24] C.J. Todaro, M.A. Easton, D. Qiu, D. Zhang, M.J. Bermingham, E.W. Lui, M. Brandt, D.H. Stjohn, M. Qian, Grain structure control during metal 3D printing by highintensity ultrasound, Nat. Commun. (2020) 1-9, \href{https://doi.org/10.1038/s41467019-13874-z}{https://doi.org/10.1038/s41467019-13874-z}.
+
+[25] W. Reschetnik, J.P. Brüggemann, M.E. Aydinöz, O. Grydin, K.-P. Hoyer, G. Kullmer,
+
+H.A. Richard, Fatigue crack growth behavior and mechanical properties of additively processed EN AW-7075 aluminium alloy, Struct. Integr. Procedia. 2 (2016) 3040-3048, \href{https://doi.org/10.1016/j.prostr.2016.06.380}{https://doi.org/10.1016/j.prostr.2016.06.380}.
+
+[26] T. Qi, H. Zhu, H. Zhang, J. Yin, L. Ke, X. Zeng, Selective laser melting of Al7050 powder: melting mode transition and comparison of the characteristics between the keyhole and conduction mode, Mater. Des. 135 (2017) 257-266, \href{https://doi.org/}{https://doi.org/} 10.1016/j.matdes.2017.09.014.
+
+[27] N. Kaufmann, M. Imran, T.M. Wischeropp, C. Emmelmann, S. Siddique, F. Walther, Influence of process parameters on the quality of aluminium alloy en AW 7075 using Selective Laser Melting (SLM), Phys. Procedia 83 (2016) 918-926, https:// \href{http://doi.org/10.1016/j.phpro.2016.08.096}{doi.org/10.1016/j.phpro.2016.08.096}.
+
+[28] R. Mertens, S. Dadbakhsh, J. Van Humbeeck, J.P. Kruth, Application of base plate preheating during selective laser melting, Procedia CIRP 74 (2018) 5-11, https:// \href{http://doi.org/10.1016/j.procir.2018.08.002}{doi.org/10.1016/j.procir.2018.08.002}.
+
+[29] S.Z. Uddin, L.E. Murr, C.A. Terrazas, P. Morton, D.A. Roberson, R.B. Wicker, Processing and characterization of crack-free aluminum 6061 using high-temperature heating in laser powder bed fusion additive manufacturing, Addit. Manuf. 22 (2018) 405-415, \href{https://doi.org/10.1016/j.addma.2018.05.047}{https://doi.org/10.1016/j.addma.2018.05.047}.
+
+[30] W.J. Sames, F.A. List, S. Pannala, R.R. Dehoff, S.S. Babu, The metallurgy and processing science of metal additive manufacturing, Int. Mater. Rev. 61 (2016) 315-360, \href{https://doi.org/10.1080/09506608.2015.1116649}{https://doi.org/10.1080/09506608.2015.1116649}.
+
+[31] A. Santomaso, P. Lazzaro, P. Canu, Powder flowability and density ratios: the impact of granules packing, Chem. Eng. Sci. 58 (2003) 2857-2874, \href{https://doi.org/}{https://doi.org/} 10.1016/S0009-2509(03)00137-4.
+
+[32] M.L. Montero Sistiaga, R. Mertens, B. Vrancken, X. Wang, B. Van Hooreweder, J.P. Kruth, J. Van Humbeeck, Changing the alloy composition of Al7075 for better processability by selective laser melting, J. Mater. Process. Technol. 238 (2016) 437-445, \href{https://doi.org/10.1016/j.jmatprotec.2016.08.003}{https://doi.org/10.1016/j.jmatprotec.2016.08.003}.
+
+[33] N.T. Aboulkhair, N.M. Everitt, I. Ashcroft, C. Tuck, Reducing porosity in AlSi10Mg parts processed by selective laser melting, Addit. Manuf. 1 (2014) 77-86, https:// \href{http://doi.org/10.1016/j.addma.2014.08.001}{doi.org/10.1016/j.addma.2014.08.001}.
+
+[34] M. Cloots, P.J. Uggowitzer, K. Wegener, Investigations on the microstructure and crack formation of IN738LC samples processed by selective laser melting using Gaussian and doughnut profiles, Mater. Des. 89 (2016) 770-784, \href{https://doi.org/}{https://doi.org/} 10.1016/j.matdes.2015.10.027.
+
+[35] J.H. Tan, W.L.E. Wong, K.W. Dalgarno, An overview of powder granulometry on feedstock and part performance in the selective laser melting process, Addit. Manuf. 18 (2017) 228-255, \href{https://doi.org/10.1016/j.addma.2017.10.011}{https://doi.org/10.1016/j.addma.2017.10.011}.
+
+[36] R. Engeli, T. Etter, S. Hövel, K. Wegener, Processability of different IN738LC powder batches by selective laser melting, J. Mater. Process. Technol. 229 (2016) 484-491, \href{https://doi.org/10.1016/j.jmatprotec.2015.09.046}{https://doi.org/10.1016/j.jmatprotec.2015.09.046}.
+
+[37] I. Yadroitsev, P. Bertrand, I. Smurov, Parametric analysis of the selective laser melting process, Appl. Surf. Sci. 253 (2007) 8064-8069, \href{https://doi.org/10.1016/j}{https://doi.org/10.1016/j}. apsusc.2007.02.088.
+
+[38] A.B. Spierings, M. Schneider, I. Ag, U.I. Ag, S. Gallen, Comparison of density measurement techniques for additive manufactured metallic parts, Rapid Prototyp. J. 5 (2011) 380-386, \href{https://doi.org/10.1108/13552541111156504}{https://doi.org/10.1108/13552541111156504}.
+
+[39] W.E. King, H.D. Barth, V.M. Castillo, G.F. Gallegos, J.W. Gibbs, D.E. Hahn, C. Kamath, A.M. Rubenchik, Observation of keyhole-mode laser melting in laser powder-bed fusion additive manufacturing, J. Mater. Process. Technol. 214 (2014) 2915-2925, \href{https://doi.org/10.1016/j.jmatprotec.2014.06.005}{https://doi.org/10.1016/j.jmatprotec.2014.06.005}.
+
+[40] I. Yadroitsev, I. Yadroitsava, P. Bertrand, I. Smurov, Factor analysis of selective laser melting process parameters and geometrical characteristics of synthesized single tracks, Rapid Prototyp. J. 18 (2012) 201-208, \href{https://doi.org/10.1108/}{https://doi.org/10.1108/} 13552541211218117
+
+[41] S. Lou, X. Jiang, W. Sun, W. Zeng, L. Pagani, P.J. Scott, Characterisation methods for powder bed fusion processed surface topography, Precis. Eng. 57 (2019) 1-15, \href{https://doi.org/10.1016/j.precisioneng.2018.09.007}{https://doi.org/10.1016/j.precisioneng.2018.09.007}.
+
+[42] P. Wang, H.C. Li, K.G. Prashanth, J. Eckert, S. Scudino, Selective laser melting of AlZn-Mg-Cu: heat treatment, microstructure and mechanical properties, J. Alloys. Compd. 707 (2017) 287-290, \href{https://doi.org/10.1016/j.jallcom.2016.11.210}{https://doi.org/10.1016/j.jallcom.2016.11.210}.
+
+[43] L.E. Loh, C.K. Chua, W.Y. Yeong, J. Song, M. Mapar, S.L. Sing, Z.H. Liu, D.Q. Zhang, Numerical investigation and an effective modelling on the Selective Laser Melting (SLM) process with aluminium alloy 6061, Int. J. Heat Mass Transf. 80 (2015) 288-300, \href{https://doi.org/10.1016/j.ijheatmasstransfer.2014.09.014}{https://doi.org/10.1016/j.ijheatmasstransfer.2014.09.014}.
+
+[44] T. Ilda, R. Guthrie, The Physical Properties of Liquid Metals, Oxford University Press, New York, 1988, p. 85.
+
+[45] T.D. McLouth, G.E. Bean, D.B. Witkin, S.D. Sitzman, P.M. Adams, D.N. Patel, W. Park, J.M. Yang, R.J. Zaldivar, The effect of laser focus shift on microstructural variation of Inconel 718 produced by selective laser melting, Mater. Des. 149 (2018) 205-213, \href{https://doi.org/10.1016/j.matdes.2018.04.019}{https://doi.org/10.1016/j.matdes.2018.04.019}.
+
+[46] D. Koutny, D. Palousek, L. Pantelejev, C. Hoeller, R. Pichler, L. Tesicky, J. Kaiser, Influence of scanning strategies on processing of aluminum alloy EN AW 2618 using selective laser melting, Materials (Basel). 11 (2018), \href{https://doi.org/10.3390/}{https://doi.org/10.3390/} ma11020298.
+
+[47] J. Metelkova, Y. Kinds, K. Kempen, C. de Formanoir, A. Witvrouw, B. Van Hooreweder, On the influence of laser defocusing in Selective Laser Melting of 316L, Addit. Manuf. 23 (2018) 161-169, \href{https://doi.org/10.1016/j.addma}{https://doi.org/10.1016/j.addma}. 2018. 08.006 .
+
+[48] J. Liu, S. Kou, Susceptibility of ternary aluminum alloys to cracking during solidification, Acta Mater. 125 (2017) 513-523, \href{https://doi.org/10.1016/j.actamat}{https://doi.org/10.1016/j.actamat}. 2016.12.028.
+
+[49] D.G. Eskin, L. Katgerman, A quest for a new hot tearing criterion, Metall. Mater. Trans. A: Phys. Metall. Mater. Sci. 38 A (2007) 1511-1519, \href{https://doi.org/10}{https://doi.org/10}. 1007/s11661-007-9169-7
+
+[50] M. Rappaz, J.M. Drezet, M. Gremaud, A new hot-tearing criterion, Metall. Mater. Trans. A: Phys. Metall. Mater. Sci. 30 (1999) 449-455, \href{https://doi.org/10.1007/}{https://doi.org/10.1007/} s11661-999-0334-z.
+
+[51] T. Gomez-Acebo, J.M. Martin, F. Castro, Systematic search of low melting point alloys in the Al-Cu-Mg-Zn system, Proc. Euro PM2003. (2003) 75-80.
+
+[52] R. Goswami, S. Lynch, N.J.H. Holroyd, S.P. Knight, R.L. Holtz, Evolution of grain boundary precipitates in $\mathrm{Al} 7075$ upon aging and correlation with stress corrosion cracking behavior, Metall. Mater. Trans. A: Phys. Metall. Mater. Sci. 44 (2013) 1268-1278, \href{https://doi.org/10.1007/s11661-012-1413-0}{https://doi.org/10.1007/s11661-012-1413-0}.
+
+[53] T. Kimura, T. Nakamoto, M. Mizuno, H. Araki, Effect of silicon content on densification, mechanical and thermal properties of Al-xSi binary alloys fabricated using selective laser melting, Mater. Sci. Eng.: A. 682 (2017) 593-602, \href{https://doi.org/}{https://doi.org/} 10.1016/j.msea.2016.11.059.
+
+[54] N. Kalentics, N. Sohrabi, H.G. Tabasi, S. Griffiths, J. Jhabvala, C. Leinenbach, A. Burn, R.E. Logé, Healing cracks in selective laser melting by 3D laser shock peening, Addit. Manuf. 30 (2019) 100881, , \href{https://doi.org/10.1016/j.addma}{https://doi.org/10.1016/j.addma}. 2019.100881.
+
+[55] H.V. Atkinson, S. Davies, Fundamental aspects of hot isostatic pressing: an overview, Metall. Mater. Trans. A: Phys. Metall. Mater. Sci. 31 (2000) 2981-3000, \href{https://doi.org/10.1007/s11661-000-0078-2}{https://doi.org/10.1007/s11661-000-0078-2}.
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}

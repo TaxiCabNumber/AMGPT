@@ -1,0 +1,611 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{mathrsfs}
+
+\title{Multi-Resolution SPH Simulation of a Laser Powder Bed Fusion Additive Manufacturing Process }
+
+
+\author{Abbreviations\\
+AM additive manufacturing\\
+CFD computational fluid dynamics\\
+CPU central processing unit\\
+FEM finite element method\\
+FVM finite volume method\\
+GPU graphics processing unit\\
+LBM Lattice Boltzmann method\\
+LPBF laser powder bed fusion\\
+PBF powder bed fusion\\
+SPH smoothed particle hydrodynamics}
+\date{}
+
+
+\begin{document}
+\maketitle
+Citation: Afrasiabi, M.; Lüthi, C.; Bambach, M.; Wegener, K. MultiResolution SPH Simulation of a Laser Powder Bed Fusion Additive Manufacturing Process. Appl. Sci. 2021, 11, 2962. \href{https://doi.org/}{https://doi.org/} 10.3390/app11072962
+
+Academic Editor: Mehrshad Mehrpouya
+
+Received: 7 March 2021
+
+Accepted: 22 March 2021
+
+Published: 26 March 2021
+
+Publisher's Note: MDPI stays neutral with regard to jurisdictional claims in published maps and institutional affiliations.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_97637720aa0371e31845g-01}
+\end{center}
+
+Copyright: (C) 2021 by the authors. Licensee MDPI, Basel, Switzerland. This article is an open access article distributed under the terms and conditions of the Creative Commons Attribution (CC BY) license (https:// \href{http://creativecommons.org/licenses/by/}{creativecommons.org/licenses/by/} $4.0 /$ ).
+
+\begin{abstract}
+This paper presents an efficient mesoscale simulation of a Laser Powder Bed Fusion (LPBF) process using the Smoothed Particle Hydrodynamics (SPH) method. The efficiency lies in reducing the computational effort via spatial adaptivity, for which a dynamic particle refinement pattern with an optimized neighbor-search algorithm is used. The melt pool dynamics is modeled by resolving the thermal, mechanical, and material fields in a single laser track application. After validating the solver by two benchmark tests where analytical and experimental data are available, we simulate a single-track LPBF process by adopting SPH in multi resolutions. The LPBF simulation results show that the proposed adaptive refinement with and without an optimized neighbor-search approach saves almost $50 \%$ and $35 \%$ of the SPH calculation time, respectively. This achievement enables several opportunities for parametric studies and running high-resolution models with less computational effort.
+\end{abstract}
+
+Keywords: additive manufacturing; LPBF; numerical simulation; SPH; particle refinement
+
+\section*{1. Introduction}
+Laser Powder Bed Fusion (LPBF), also known as Laser Beam Melting (LBM), is an Additive Manufacturing (AM) technique used for fabricating metallic parts with complex shapes. LPBF falls into the Powder Bed Fusion (PBF) category, where a small focus spot laser is employed to melt and fuse metallic powders. Recently, LPBF-fabricated parts can feature an almost full density ( $>99.5 \%$ ) with mechanical properties comparable to conventionally manufactured metals, according to several review papers published within the last decade, e.g., [1,2]. More indicatively, Lachmayer et al. [3] claimed in 2016 that densities greater than $99.9 \%$ referred to the pure metal can be obtained through optimized PBF processes. The LPBF technology is being used in a wide range of industry applications, most notably in the aerospace [4,5] and medical [6,7] domains. Parallel to this rapid growth of AM in industry, understanding the interplay between process parameters and part properties is necessary to design and operate LPBF processes. Modeling and simulation of the LPBF process can help explain the experimental observations and optimize the PBF fabrication systems.
+
+An LPBF process is inherently a multi-scale problem that involves a variety of complex phenomena such as laser-powder interactions, material phase transitions, and violent freesurface flows. Figure 1 illustrates some physical challenges of LPBF at the powder scale. In an early effort to simulate this thermally driven process, Zaeh and Branner [8] used the Finite Element Method (FEM) in a thermo-mechanically coupled analysis to study the heat impact on residual stresses and structural deformations of T-bar cantilever specimens after multiple tracks. The numerical approach they undertook, however, was based on a homogeneous powder-bed model with several simplifications such as modeling a $20 \times$\\
+thicker powder layer to reduce the required simulation time. Körner et al. [9] addressed this issue by introducing a 2D fine-scale model of the selective beam melting process using a Lattice-Boltzmann approach. They found good agreement with experimental data and predicted the melting behavior as a function of process parameters like the scan speed and powder properties. While the physical model incorporated into [9] was fairly advanced, some crucial phenomena like the Marangoni effect and recoil pressure were still lacking. Many research studies have repeatedly confirmed that these effects play a key role in the melt pool dynamics (e.g., see in $[2,10])$.
+
+In an extension to the work of Körner et al. [9], Gürtler and his colleagues [11] followed a similar approach and generalized the analysis of melting and re-solidification of powder to 3D space for the first time. The numerical results suffer from low resolution, and their model does not account for some governing physical phenomena such as surface heat loss and thermo-capillary effects either. In 2014, a particularly robust numerical simulation of LPBF was developed by Khairallah and Anderson [12]. The authors made use of a massively parallel code to simulate a single-track LPBF process in 3D using a hybrid finite element and finite volume formulation, through which they modeled a fully resolved particle bed geometry. This hybrid FEM-FVM approach, however, relies on a crude surface tension model, neglecting the effects of wetting, thermal gradients, and so on. The importance of surface tension effects in melt pool dynamics was highlighted in this paper, concluding that these effects are, in fact, the driving forces in the LPBF process. In another attempt to obtain more efficiency, Lee and Zhang [13] used the Volume of Fluid method (VOF) method with a mesh size of $3 \mu \mathrm{m}$ and examined the influence of process parameters on the bed geometry and formation of balling defects. No experimental validation of the LPBF simulation is performed in this work, however.
+
+A year ago, Cook and Murphy [14] published a comprehensive review paper, where they cross-compare the individual capabilities of different methods in AM modeling and simulation. It turns out that most CFD codes for AM process simulation are based on either FVM or FEM tools. A few recent publications are mentioned in the following. Lee and Zhang [15] combined a DEM powder-bed model with the melt pool CFD simulation using the package Flow-3D to model an LPBF process for IN718 - a nickel-based superalloy. Ansys Fluent ${ }^{\circledR}$ is another commercial software employed by the AM community for PBF simulation, e.g., in [16,17]. There are also some studies on solving the melt pool CFD equations by applying the open-source CFD software OpenFOAM, e.g., by [18]. Despite the excellent insights generated by these developments into the AM process simulation, the issue with their computational effort and parallelization capability is still an open question.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_97637720aa0371e31845g-02}
+\end{center}
+
+Figure 1. Main physical processes in melt-pool region during powder bed fusion of LPBF.
+
+In addition to the broad class of mesh-based techniques, mesh-free particle methods have also been attempted in simulating the LPBF process. Specifically, a growing share of interest in using the Smoothed Particle Hydrodynamics (SPH) method for such applications can be noticed in the literature. In essence, SPH is a purely Lagrangian method, introduced by Lucy [19] and Gingold and Monaghan [20], that can efficiently handle large deformations, violent free surface movements, and multiphase material boundaries. For the adoption of SPH in various multi-physics and manufacturing processes, see in [21-25]. These attractive features of SPH have convinced the AM research community to apply this method to laserbased processes such as LPBF. In 2016, Hu and Eberhard [26] demonstrated promising SPH results in simulating a laser spot welding process of aluminum and suggested that SPH can offer great potential for large-scale manufacturing simulations. Trautmann et al. [27] presented a 3D SPH model of Tungsten Inert Gas (TIG) welding and validated their numerical results with experiments. The applicability of SPH to high-fidelity modeling of AM processes like LPBF is still being explored, but Russell et al. [28] have made important headway in this area. They present a robust SPH framework for modeling a 2D LPBF track, where the most important thermal-mechanical-material aspects of the process were included. This method achieves excellent results at the powder scale but suffers from the calculation effort for simulations on a large scale or 3D. In another effort to develop SPH for AM simulations, Park and Zohdi [29] proposed coupling of SPH and FEM for thermomechanical simulation of droplet-based AM processes. Afrasiabi et al. [30] studied the material removal simulation in laser drilling and then extended this approach to 3D in [31]. However, they accounted only for the thermal aspect of the process. More recently, Fürstenau et al. [32] developed a GPU-accelerated 3D SPH model of LPBF. These authors demonstrate high-resolution SPH simulation using a discretization size of $1 \mu \mathrm{m}$, which is the finest particle size to date.
+
+Despite these incremental improvements of SPH AM simulations from both algorithmic and computational perspectives, all recent developments overlook the topic of adaptivity. In other words, state-of-the-art SPH models of AM use a uniform resolution for their spatial discretization. Therefore, a significant amount of SPH calculation time is wasted on unimportant regions with no (or negligible) physical contribution to the solution. In an LPBF process, for instance, the mechanism decisive for the outcome of the process occurs under the laser beam and in the vicinity of the melt pool. Consequently, the need for an efficient SPH model of LPBF within a multi-resolution framework motivates this study.
+
+To fill the research gap identified above, an enhanced dynamic refinement algorithm via particle splitting is developed. The additional enhancement offered herein stems from the proposed optimization of the neighbor-list in multi-resolution SPH interactions. This issue was overlooked by previous multi-resolution SPH publications such as Afrasiabi et al. [33], and is addressed here. Section 2.5 gives a description of the proposed neighbor-search algorithm in more detail. The present numerical results show that the proposed adaptive approach can save almost $50 \%$ of the computational time in $2 \mathrm{D}$ SPH simulations of LPBF processes. Most numerical algorithms are aligned with the thermal-mechanical-material formulation of [28] for a 304 stainless steel powder bed, regarded as one the most comprehensive SPH frameworks for LPBF so far. The correctness of the code is verified through two benchmarks, where analytical and experimental data are available. Several parameter studies are performed to acknowledge the computational efficiency of the present method but to gain further insight into the capabilities of SPH in simulating an LPBF process.
+
+The remainder of this manuscript is structured as follows. Section 2 details the computational framework of this study. First, an outline of the theoretical background implemented within the SPH code is given. The section closes by presenting the dynamic refinement scheme and describing how it applies to an LPBF process. Next, the correct working of the code is verified by two examples in Section 3. Section 4 then presents and discusses the LPBF simulation results with relevant experimental and computational comparisons. Conclusive remarks are made in Section 5.
+
+\section*{2. Computational Framework}
+Smoothed Particle Hydrodynamics (SPH) is a Lagrangian mesh-free method used here to discretize the governing partial differential equations in space. In principle, the derivation of SPH equations starts by taking the integral form of an arbitrary function:
+
+
+\begin{equation*}
+f(\underline{r})=\int_{\Omega} f\left(\underline{r}^{\prime}\right) \delta\left(\left|\underline{r}-\underline{r}^{\prime}\right|\right) d V^{\prime} \tag{1}
+\end{equation*}
+
+
+and replacing the Dirac delta function with a smoothing kernel function $W\left(\left|\underline{r}-\underline{r}^{\prime}\right|, h\right)$ as:
+
+
+\begin{equation*}
+f(\underline{r}) \approx\langle f(\underline{r})\rangle=\int_{\Omega_{s}} f\left(\underline{r}^{\prime}\right) W\left(\left|\underline{r}-\underline{r}^{\prime}\right|, h\right) d V^{\prime} \tag{2}
+\end{equation*}
+
+
+where $d V^{\prime}$ is the weight of integration and $h$ the smoothing length parameter to determine the size of a finite smoothing domain $\Omega_{s}$ (i.e., support domain). According to the first SPH publications by $[19,20]$, the approximation in Equation (2) is valid if the kernel $W$ is: (1) normalized, meaning $\int W\left(\left|\underline{r}-\underline{r}^{\prime}\right|, h\right) d V^{\prime}=1$; (2) convergent to $\delta$ as $h$ goes to zero; and (3) differentiable at least more than once. In addition to these three essential conditions, Monaghan [34] suggests that the kernel function should also have a compact support for efficiency reasons. The Wendland quintic [35] and quintic spline [36] functions meet all these conditions, and are chosen for the numerical simulations of this work. To discretize the kernel approximation of SPH, Equation (2) is transformed into a summation over neighboring particles. This can be achieved using, for instance, a Riemann sum over a set of $N$ neighbors within $\Omega_{s}$ to evaluate $f$ at position $\underline{r}$ via:
+
+
+\begin{equation*}
+\langle f(\underline{r})\rangle \approx \sum_{j=1}^{N} f\left(\underline{r}_{j}\right) W\left(\left|\underline{r}-\underline{r}_{j}\right|, h\right) V_{j} \tag{3}
+\end{equation*}
+
+
+or rewriting Equation (3) for another particle $i$ at $\underline{r}=\underline{r}_{i}$ instead of an arbitrary point:
+
+
+\begin{equation*}
+\left\langle f_{i}\right\rangle \approx \sum_{j=1}^{N} f_{j} W_{i j} V_{j} \tag{4}
+\end{equation*}
+
+
+where $V_{j}=m_{j} / \rho_{j}$ is an estimate of the volume assigned to particle $j$ and the term $W\left(\left|\underline{r}_{i j}\right|, h\right)=W\left(r_{i j}, h\right)$ is abbreviated to $W_{i j}$ for simplicity. Now, the spatial derivatives of $f$ can be approximated through the spatial derivatives of the smoothing kernel. A useful formulation of the SPH gradient for multi-phase flows (see in [37]) is given as:
+
+
+\begin{equation*}
+\left\langle\nabla f_{i}\right\rangle \approx \rho_{i} \sum_{j}\left[\frac{f_{i}}{\rho_{i}^{2}}+\frac{f_{j}}{\rho_{j}^{2}}\right] \nabla W_{i j} m_{j} \tag{5}
+\end{equation*}
+
+
+For simulating a powder bed fusion AM process, the computational model needs to account for the thermal, mechanical and material effects. In what follows, an overview of these thermal-mechanical-material equations, as well as their SPH discretizations, is outlined.
+
+\subsection*{2.1. Thermal Model}
+In LPBF, the energy required for melting and fusing metallic powders together is provided by a laser. The thermal effects are, therefore, addressed by solving the heat equation for incompressible flows including a laser heat source as:
+
+
+\begin{equation*}
+\rho c_{p} \frac{d T}{d t}=\underline{\underline{\tau}}: \nabla \underline{u}+\nabla \cdot(k \nabla T)+Q^{\text {laser }} \tag{6}
+\end{equation*}
+
+
+where $\underline{\underline{\tau}}$ is the shear stress tensor, $\underline{u}$ the velocity, $\rho$ the density, $c_{p}$ the specific heat capacity, $k$ the thermal conductivity, and $Q^{\text {laser }}$ is the laser heat source term. The viscous heating\\
+and conduction terms in Equation (6) are computed respectively by the SPH schemes of Marrone et al. [38], and Cleary and Monaghan [39], which are both suitable for multiphase applications. These formulations for particle $i$ are given by:
+
+
+\begin{align*}
+\left\langle\underline{\underline{\tau}}_{i}: \nabla \underline{u}_{i}\right\rangle & \approx \sum_{j}\left(\frac{\mu_{i} \mu_{j}}{\mu_{i}+\mu_{j}}\right) \frac{m_{i}}{\rho_{j}} \pi_{i j}\left(\underline{u}_{j}-\underline{u}_{i}\right) \cdot \nabla W_{i j}  \tag{7}\\
+\left\langle\nabla \cdot\left(k_{i} \nabla T_{i}\right)\right\rangle & \approx \sum_{j} 4\left(\frac{k_{i} k_{j}}{k_{i}+k_{j}}\right) \frac{m_{i}}{\rho_{j}}\left(T_{i}-T_{j}\right) \frac{\left(\underline{r}_{i}-\underline{r}_{j}\right)}{\left|\underline{r}_{i}-\underline{r}_{j}\right|^{2}+\eta^{2}} \cdot \nabla W_{i j} \tag{8}
+\end{align*}
+
+
+in which:
+
+
+\begin{equation*}
+\pi_{i j}=2\left(n_{D}+2\right) \frac{\left(\underline{u}_{j}-\underline{u}_{i}\right) \cdot\left(\underline{r}_{j}-\underline{r}_{i}\right)}{\left|\underline{r}_{j}-\underline{r}_{i}\right|^{2}} \tag{9}
+\end{equation*}
+
+
+and $\mu$ is the viscosity, $n_{D}$ the dimension factor, and $\eta=0.1 h$ inserted here as a small parameter for ensuring non-zero denominators. For SPH Laplacian schemes more sophisticated than Equation (8) please refer to [40].
+
+The heat source term $Q^{\text {laser }}$ in Equation (6) still needs to be defined. In this paper, a volumetric heat source modeling approach based on the Beer-Lambert law is used for calculating the laser energy absorption. As such, increasing the penetration depth decreases the laser absorptivity exponentially. Figure 2 illustrates this scheme, in which the normalized Beer-Lambert law for the powder bed can be written as:
+
+
+\begin{equation*}
+I(z)=\frac{\beta \exp (-\beta z)}{[1-\exp (-\beta L)]} \tag{10}
+\end{equation*}
+
+
+where $L$ is the powder bed depth and $\beta$ the extinction coefficient, taken as a constant value according to [28,41]. The intensity distribution of the laser in the radial direction, $I(r)$, follows a normalized Gaussian distribution:
+
+
+\begin{equation*}
+I(r)=\frac{4 P_{L}}{\pi R^{2}} \exp \left(-\frac{4 r^{2}}{R^{2}}\right) \tag{11}
+\end{equation*}
+
+
+with $P_{L}$ indicating the laser power and $R$ the laser beam radius. Finally, the laser heat source appeared in Equation (6) can be calculated as $Q^{\text {laser }}=a_{L} I(r, z)$ with $a_{L}$ denoting the absorption coefficient. The implementation details of a 2D Beer-Lambert laser absorption model for SPH frameworks can be found in [28]. Figure 2 gives a graphical illustration of how this absorption model is implemented in the present code.
+
+To complete the solution of Equation (6), the set of boundary conditions, including the Dirichlet and Neumann boundary conditions, are imposed on one layer of surface particles. In this work, heat loss $q_{l}$ can occur via radiation and convection through open surfaces, calculated from:
+
+
+\begin{equation*}
+q_{l}=-\left[h_{c}\left(T_{s}-T_{\infty}\right)+\epsilon \sigma\left(T_{s}^{4}-T_{\infty}^{4}\right)\right] \tag{12}
+\end{equation*}
+
+
+where $h_{c}$ is the convective heat transfer coefficient, $\sigma=5.67 \times 10^{-8} \mathrm{~W} /\left(\mathrm{m}^{2} \cdot \mathrm{K}^{4}\right)$ the StefanBoltzmann constant, $\epsilon$ the emissivity factor, and $T_{S}$ and $T_{\infty}$ are the surface and background temperatures.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_97637720aa0371e31845g-06}
+
+Figure 2. Illustration of the volumetric heat source modeling approach and the laser intensity distribution.
+
+\subsection*{2.2. Mechanical Model}
+To model the dynamics of the melt pool region in LPBF, it is usually assumed that the liquid is incompressible and the liquid pool is in a laminar flow regime. As a result of this simplification, the Navier-Stokes equations for mass and momentum conservation in a Lagrangian frame arrive at:
+
+
+\begin{align*}
+\frac{d \rho}{d t} & =-\rho \nabla \cdot \underline{u}  \tag{13}\\
+\rho \frac{d \underline{v}}{d t} & =-\nabla p \underline{I}+\mu \nabla^{2} \underline{u}+\rho \underline{g}+\underline{b} \tag{14}
+\end{align*}
+
+
+where $p$ is the pressure, $\underline{\underline{I}}$ the unity tensor, $\mu$ the dynamic (shear) viscosity, $g$ the gravitational acceleration, and $\underline{b}$ any other volumetric body forces. To compute the spatial discretization of these equations, the $\delta$-SPH scheme proposed by Antuono et al. [42] is employed. Consequently, Equations (13) and (14) become:
+
+
+\begin{align*}
+\left\langle\frac{d \rho_{i}}{d t}\right\rangle_{i} & \approx \rho_{i} \sum_{j}\left(\underline{v}_{i j}+\underline{Y}_{i j}\right) \cdot \nabla W_{i j} V_{j}  \tag{15}\\
+\left\langle\frac{d \underline{v}_{i}}{d t}\right\rangle_{i} & \approx-\sum_{j} \frac{1}{\rho_{i}}\left(\frac{p_{j}}{\Gamma_{i}}+\frac{p_{i}}{\Gamma_{j}}\right) \nabla W_{i j} V_{j}+\sum_{j} \frac{1}{\rho_{i}}\left(\frac{2 \mu_{i} \mu_{j}}{\mu_{i}+\mu_{j}}\right) \pi_{i j} \nabla W_{i j} V_{j}+\underline{g}+\frac{1}{\rho_{i}} \underline{b}_{i} \tag{16}
+\end{align*}
+
+
+where $\pi_{i j}$ was defined via Equation (9), $\Gamma_{i}=\sum_{j} V_{j} W_{i j}$ is a renormalization factor widely used for free surface problems (e.g., in [43]), and $\underline{Y}_{i j}$ is the $\delta$-SPH diffusion term given by [42]:
+
+
+\begin{equation*}
+\underline{Y}_{i j}=-2 \delta h c_{0}\left[\left(\bar{\rho}_{j}-\bar{\rho}_{i}\right) \frac{\left(\underline{r}_{i}-\underline{r}_{j}\right)}{\left|\underline{r}_{i}-\underline{r}_{j}\right|^{2}}\right] \tag{17}
+\end{equation*}
+
+
+in which $\delta$ denotes the $\delta$-SPH smoothing parameter, $c_{0}$ is the sound speed, and $\bar{\rho}=\rho-\rho_{0}$. Very often in weakly compressible SPH frameworks (see in [44-47], for example), an equation of state is enforced to approximately satisfy the incompressibility condition. Russell et al. [28] proposed a modified equation of state that accounts for thermal expansion, thus well-suited to the LPBF application. This temperature-dependent equation of state computes the pressure $p$ from:
+
+
+\begin{equation*}
+p=c_{0}^{2}\left(\rho-\hat{\rho}_{0}(T)\right) \tag{18}
+\end{equation*}
+
+
+where $\hat{\rho}_{0}$ is the reference density expressed by:
+
+
+\begin{equation*}
+\hat{\rho}_{0}(T)=\rho_{0, T_{r}}\left[1+\alpha_{T}\left(1-\frac{T}{T_{r}}\right)\right] \tag{19}
+\end{equation*}
+
+
+in which $T_{r}$ is refereed to as a thermal reference value for the temperature field, $\rho_{0, T_{r}}$ a thermal reference value for the reference density field, and $\alpha_{T}$ the volumetric thermal expansion coefficient. To complete the SPH momentum Equation (16), surface tension forces are exerted to surface particles as a traction boundary condition. In this paper, the SPH-based surface tension model employs the continuum surface force (CSF) scheme of Brackbill et al. [48] and follows the algorithm proposed by Russell et al. [28]. In a nutshell, the surface force term (without recoil pressure) can be computed from:
+
+
+\begin{equation*}
+\underline{F}_{s}=-\sigma \kappa \underline{n}+\underbrace{\frac{d \sigma}{d T}\left[\nabla T-\left(\nabla T \cdot \frac{\nabla c}{|\nabla c|}\right) \frac{\nabla c}{|\nabla c|}\right]|\nabla c|}_{\text {Marangoni term (tangential) }} \tag{20}
+\end{equation*}
+
+
+where $\sigma$ is the surface tension coefficient, $\kappa$ is the surface curvature, $\underline{n}$ the surface normal vector, and $c$ the color function suggested by Adami et al. [49] to track the interface location. The term $d \sigma / d T$ is sometimes referred to as the thermo-capillary coefficient, too. The gradient operators in Equation (20) are replaced by the same normalized SPH formulation used for the pressure term in Equation (16).
+
+\subsection*{2.3. Material Model}
+During the melting/re-solidification process in LPBF, a significant amount of energy is released/absorbed as the substance undergoes a change of state. This energy is also known as the latent heat associated with the phase change. Hashemi and Sliepcevich [50] modified the heat capacity coefficient to address this important issue. In their modification, an apparent heat capacity of the form:
+
+\[
+c_{p}(T)= \begin{cases}c_{p}^{\mathrm{S}} & T<T_{m}-\delta T  \tag{21}\\ \frac{c_{p}^{\mathrm{S}}+c_{p}^{\mathrm{L}}}{2}+\frac{\mathscr{L}}{\delta T} & T_{m}-\frac{\delta T}{2}<T<T_{m}+\frac{\delta T}{2} \\ c_{p}^{L} & T_{m}+\delta T<T\end{cases}
+\]
+
+is defined as a function of temperature, where $c_{p}^{\mathrm{S}}$ and $c_{p}^{\mathrm{L}}$ are the solid and liquid heat capacities, $T_{m}$ the melting temperature, $\mathscr{L}$ the latent heat of melting, and $\delta T$ is the size of a phase-change temperature bandwidth. Together with this adjustment, a temperaturedependent state variable, $s(T)$, is defined to specify the phase of the material at temperature $T$. Similar to the formulation in [28], the state of a given SPH particle reads:
+
+\[
+s(T)= \begin{cases}0 & T<T_{m}-\frac{\delta T}{2}  \tag{22}\\ \frac{T-\left(T_{m}-\delta T / 2\right)}{\delta T} & T_{m}-\frac{\delta T}{2} \leq T \leq T_{m}+\frac{\delta T}{2} \\ 1 & T_{m}+\frac{\delta T}{2}<T\end{cases}
+\]
+
+with $s=0$ representing a solid state, $s=1$ a liquid state, and $0 \leq s \leq 1$ a two-phase state between the solid and liquid phase.
+
+\subsection*{2.4. Time Integration}
+The temperature, density, and velocity of SPH particles (see in Equations (6), (15) and (16)), as well as their position, are evolved by using an explicit time integration scheme. In this work, the second-order leapfrog method is implemented on account of a good compromise between accuracy and efficiency it offers. As a necessary condition for stability issues, the maximum time step is enforced to obey a global Courant-Friedrichs-Lewy (CFL) criterion through:
+
+
+\begin{equation*}
+\Delta t \leq \mathrm{CFL} \times \min \left(\Delta t_{f}, \Delta t_{v}, \Delta t_{c}, \Delta t_{b}, \Delta t_{s}\right) \tag{23}
+\end{equation*}
+
+
+considering each time step constraint as [39,51]:
+
+
+\begin{equation*}
+\Delta t_{f}=\frac{h}{\left(c_{0}+|\underline{u}|_{\max }\right)}, \quad \Delta t_{v}=\frac{\rho h^{2}}{\mu}, \quad \Delta t_{c}=\frac{\rho c_{p} h^{2}}{k}, \quad \Delta t_{b}=\sqrt{\frac{h}{|\underline{g}|}}, \quad \Delta t_{s}=\sqrt{\frac{\rho h^{3}}{2 \pi \sigma}} \tag{24}
+\end{equation*}
+
+
+in which the CFL coefficient is taken between 0.1 and 0.4 .
+
+\subsection*{2.5. Dynamic Particle Refinement}
+The novelty offered by this work lies in reducing the computational cost of the SPH LPBF simulations via spatial adaptivity. We propose a simple algorithm to refine SPH particles dynamically and increase the spatial resolution. This approach follows the procedure elaborated upon in the SPH metal cutting adoption of Afrasiabi et al. [33], which is easy to implement and well-suited to the LPBF simulation. In brief, the refinement procedure is carried out via particle splitting to decrease the discretization size (i.e., increase the spatial resolution) in some regions of the computational domain. Here, a uniform mass splitting approach is used to conserve the mass and momentum of the system. More sophisticated mass splitting approaches can be found in [52,53].
+
+Inspired by the multi-resolution SPH simulation of metal cutting in [33], the spatial adaptivity here occurs inside a moving frame in the vicinity of the laser processing area, where a cubic refinement pattern is chosen for particle splitting (see Figure 3). As far as an LPBF process is concerned, such a choice seems appropriate since the melt pool region is formed under the laser beam, and this is where the most challenging physics resides. The size of this frame can be sensitive to the configuration of the LPBF process, including the laser power, the beam radius, the powder bed geometry, and so on. Choosing proper dimensions for the refinement frame ensures that important areas (e.g., melting and re-solidification zones) are always discretized with the finest resolution available.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_97637720aa0371e31845g-08}
+
+Figure 3. Schematic illustration of the particle refinement approach: (Left) demonstrating the situation before and after splitting, where particle $p$ meets the refinement criterion and is split into 4 smaller particles via a square splitting pattern; (Right) showing how the proposed refinement strategy works for an LPBF application. The initial refinement frame has a width of $4 R$, where $R$ is the laser beam radius. Particles with lower mass are depicted in blue and with smaller size.
+
+In this work, we proposed using an initial refinement frame with a width of $4 R$ centered at the laser focal point, where $R$ is the laser beam radius. This frame moves at the same speed as the scanning laser. Only one stage of refinement is permitted here, meaning a refined particle will never be refined or coarsened again. Figure 3 displays a graphical abstract of the proposed particle refinement approach.
+
+A second improvement of the present work stems from optimizing the nearest neighbor search algorithm within a multi-resolution domain. In particle-based simulations, using an efficient way to determine and organize neighbor particles is of vital importance. Previous multi-resolution SPH studies such as [33] rely on a cell-list structure where the size of each cell is twice the "maximum" smoothing length in the simulation. While this strategy is straightforward and ensures the completeness of particle interaction globally, the neighbor list of a particle would involve redundant particles in refined sub-domains. This paper, however, addresses this issue by reducing the cell size throughout the refined regions according to the "current" smoothing length instead of the "maximum" smoothing length. Therefore, a significant amount of unnecessary particle interactions in the refined sub-domains are avoided, and the computational performance of the code can be further enhanced. Figure 4 illustrates this optimization algorithm, where the choice of $h_{r}<h_{u}$ provides a more efficient neighbor search.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_97637720aa0371e31845g-09}
+\end{center}
+
+Figure 4. Graphical illustration of the proposed cell optimization for multi-resolution SPH domains.
+
+\section*{3. Validation}
+The numerical results in this section are validated by comparing them to either an analytical solution or experimental data. For all cases, a quintic-spline kernel as in $[36,54]$ is used. Please note that the code used for producing the present numerical results follows the main structure of the open-source SPH codes referenced in the "Supplementary Materials" section of this article.
+
+\subsection*{3.1. Liquid Droplet: Validation of Surface Tension}
+Surface tension plays a crucial role in LPBF processes. Therefore, it is necessary to investigate the method's accuracy in approximating surface tension forces before applying it to a more complex problem. For this purpose, a surface-tension driven deformation of a liquid droplet in free space (i.e., no gravity) is examined. The initial geometry of the droplet is a square of size $l=1 \mathrm{~cm}$. Properties of the liquid material are given in Table 1.
+
+With the surface tension forces acting as a traction boundary condition, the initial square droplet reaches an equilibrium state by transforming into a circular shape. To capture this process within the SPH framework, the first term on the right-hand side of Equation (20) is exerted to one layer of free-surface particles in the normal direction. Figure 5 shows this evolution at 5 time steps using a total of 1600 uniform particles. For better visualization, the arrows are scaled to the magnitude of curvature at surface particles.
+
+At the last time step when $t=0.1 \mathrm{~s}$, the SPH particles are at rest and turn into a nearly perfect circle, as expected.
+
+Table 1. Properties of water used in the SPH simulation.
+
+\begin{center}
+\begin{tabular}{cccc}
+\hline
+ & Density & Dynamic Viscosity & Surface Tension Coefficient \\
+\hline
+Symbol & $\rho$ & $\mu$ & $\sigma$ \\
+Unit & $\mathrm{kg} / \mathrm{m}^{3}$ & $\mathrm{~Pa} \cdot \mathrm{s}$ & $\mathrm{N} / \mathrm{m}$ \\
+\hline
+Value & 1000 & 0.001 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_97637720aa0371e31845g-10(1)}
+\end{center}
+
+Figure 5. Deformation of a square droplet to a circle under the effect of surface tension.
+
+The analytical solution is considered here by calculating the radius of the circular droplet at rest. Given the incompressible condition, this computation leads to a circle with $R=0.56 \mathrm{~cm}$, which has the same area as the initial square geometry. To show the convergence of the method, the shape of this analytical circle is compared to the convex hull of the SPH particles at the last time step in 3 different resolutions. Figure 6 demonstrates this comparison, where $\Delta$ is the initial particle spacing for the lowest resolution case with a total of $100 \mathrm{SPH}$ particles (i.e., $\Delta=0.11 \mathrm{~cm}$ ). The numerical result using $d x=\Delta / 4$ and the exact solution in this figure are nearly identical and on top of each other, indicating the accuracy and convergence of the present method.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_97637720aa0371e31845g-10}
+\end{center}
+
+Figure 6. Convergence of the SPH results to the analytical solution in a liquid droplet test.
+
+\subsection*{3.2. Weld Pool Experiment: Validation of Multiphysics Modeling}
+The laser spot welding experiments of He et al. [55] are taken as reference to validate the fully coupled thermal-mechanical-material model. Specifically, the test case pertains\\
+to a 304 stainless steel block welded by a laser pulse of power $1967 \mathrm{~W}$, beam radius of $0.428 \mathrm{~mm}$, and pulse duration of $3 \mathrm{~ms}$. The workpiece is $1.3 \mathrm{~mm}$ by $1.3 \mathrm{~mm}$ and $0.4 \mathrm{~mm}$ height with material properties listed in Table 2. The convective heat transfer coefficient and emissivity factor are taken here as $h_{c}=20 \mathrm{~W} /\left(\mathrm{m}^{2} \cdot \mathrm{K}\right)$ and $\epsilon=0.4$, respectively. Expressed by Russell et al. [28], the reference density is considered herein to be a function of temperature:
+
+\[
+\rho_{0}(T)= \begin{cases}8020-0.50(T-298) & \text { solid }  \tag{25}\\ 7332-6.03(T-1673) & \text { transition } \\ 6840-0.70(T-1773) & \text { liquid }\end{cases}
+\]
+
+To account for the thermo-capillary convection (i.e., Marangoni effect) at the melt-pool interface, the surface tension coefficient is also taken to be temperature-dependent. A common choice for $\sigma(T)$ in this application was suggested by Sahoo et al. [56] as:
+
+
+\begin{equation*}
+\sigma(T)=\sigma_{0}-A\left(T-T_{m}\right)-R T \Gamma_{s} \log \left[1+k_{l} a_{s} \exp \left(-\frac{\Delta H_{0}}{R T}\right)\right] \tag{26}
+\end{equation*}
+
+
+in which $\sigma_{0}=1.943 \mathrm{~N} / \mathrm{m}, A=0.0005 \mathrm{~N} /(\mathrm{m} \cdot \mathrm{K}), R=8.3145 \mathrm{~J} /(\mathrm{mol} \cdot \mathrm{K})$, $\Gamma_{s}=1.3 \times 10^{-8}(\mathrm{~kg} \cdot \mathrm{mol}) / \mathrm{m}^{2}, k_{l}=0.0032$, and $\Delta H_{0}=-166 \times 10^{3} \mathrm{~J} /(\mathrm{kg} \cdot \mathrm{mol})$. Together with the thermal gradient, this temperature-dependent coefficient is plugged in Equation (20) to approximate the tangential Marangoni surface tension force.
+
+A 3D SPH model of this benchmark is created by discretizing the block with approximately $25 \mathrm{k}$ particles. This setup leads to a discretization size of $d x=0.045 \mathrm{~mm}$ and a time step in the order of $10^{-7} \mathrm{~s}$. As for the thermal boundary conditions, a constant temperature of $T_{0}=293 \mathrm{~K}$ is imposed on the bottom of the substrate (i.e., Dirichlet boundary condition). Furthermore, heat loss is included via radiation and convection to air through all open surfaces (i.e., Neumann boundary condition).
+
+Table 2. Material properties used for the weld pool simulation, according to [28].
+
+\begin{center}
+\begin{tabular}{lcccc}
+\hline
+Property & Symbol & Unit & Solid & Liquid \\
+\hline
+Dynamic viscosity & $\mu$ & $\mathrm{Pa} \cdot \mathrm{s}$ & 1.0 & 0.01 \\
+Heat conductivity & $k$ & $\mathrm{~W} /(\mathrm{m} \cdot \mathrm{K})$ & 20.93 & 209.3 \\
+Specific heat capacity & $c_{p}$ & $\mathrm{~J} /(\mathrm{kg} \cdot \mathrm{K})$ & 711.2 & 937.4 \\
+\hline
+Melting temperature & $T_{m}$ & $\mathrm{~K}$ & \multicolumn{2}{c}{1732} \\
+Evaporation temperature & $T_{e}$ & $\mathrm{~K}$ & 3100 &  \\
+Melting bandwidth & $\delta T$ & $\mathrm{~K}$ & 100 &  \\
+Absorption coefficient & $a_{L}$ & - & 0.27 &  \\
+\hline
+\end{tabular}
+\end{center}
+
+Figure 7 and Table 3 provide the simulation results of the weld pool geometry at $t=3 \mathrm{~ms}$. We measured the radius and depth of the weld pool by a line distance calculator in ParaView. According to the data in Figure 7, the predicted weld pool dimensions are compared against the results from two other references, both experimental and computational, in Table 3. The comparison shows that the present values of weld pool dimension agree well with those of He et al. [55] and Russell et al. [28]. Also, the geometry of the weld pool simulated by SPH is similar to that of the physical experiment, clearly seen through the side-by-side comparison in Figure 7. Even at this fairly low resolution, the 3D SPH model predicts the depth of the weld pool by an error of $4 \%$ and its radius by $10 \%$.
+
+Table 3. Comparison of the weld pool dimensions: SPH vs. experiment.
+
+\begin{center}
+\begin{tabular}{lccc}
+\hline
+Dimension & Present SPH & Russell et al. SPH [28] & Hu et al. Experiment [55] \\
+\hline
+Radius in mm (\% error) & $0.43(-10 \%)$ & $0.46(-4 \%)$ & 0.48 \\
+Depth in mm (\% error) & $0.27(+4 \%)$ & $0.25(-4 \%)$ & 0.26 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_97637720aa0371e31845g-12}
+\end{center}
+
+Figure 7. Numerical and experimental weld pool Geometry for laser power of $1967 \mathrm{~W}$, beam radius of $0.428 \mathrm{~mm}$, and pulse duration of $3 \mathrm{~ms}$ including: (Left) weld pool cross sections in a side-by-side comparison of SPH result with experiment of He et al. [55]; (Right) top view of the whole domain showing the diameter of the laser weld spot.
+
+Another check on the model is performed by reporting the maximum temperature in the last time step. Figure 8 presents two snapshots for this purpose, showing the temperature distribution of the solidified SPH particles alongside a top view of the weld pool. It is observed that the maximum temperature in this simulation is $3152 \mathrm{~K}$ found at the center of the weld spot. This value is close to $T_{\max }=3200 \mathrm{~K}$ from the high-resolution SPH simulation of Dao and Lou [57] and the experimental measurement of He et al. [55].\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_97637720aa0371e31845g-12(1)}
+
+Figure 8. Temperature distribution at $t=3 \mathrm{~ms}$ for: (Left) SPH particles with temperatures higher than the melting temperature of the material; (Right) top view of the full domain including all particles.
+
+\section*{4. Application: Laser Powder Bed Fusion}
+The proposed multi-resolution SPH code is applied to simulate a 2D laser powder bed fusion (LPBF) process. Similar to the experimental setup of Khairallah and Anderson [12], the initial configuration is composed of a 304 stainless steel particle bed sitting on a flat substrate of the same material, with properties given in Equations (25) and (26) and Table 2. For the SPH simulation setup, one layer of circular powder particles with a diameter of $50 \mu \mathrm{m}$ is uniformly distributed on a $1 \mathrm{~mm}$ long track. Figure 9 shows the dimensions and boundary conditions of this problem. We terminate the simulation at around $t=1.13 \mathrm{~ms}$ to ensure that the powder bed is scanned and fully solidified.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_97637720aa0371e31845g-13}
+\end{center}
+
+Figure 9. Initial configuration and boundary conditions of the LPBF simulation. A Gaussian laser beam is scanning the track from left to right, shown in orange. The size (i.e., mass) of each SPH particle inside the refinement frame is $1 / 4$ of the unrefined particles in blue.
+
+\subsection*{4.1. Parameter Study and Some General Observations}
+The presented spatial adaptivity algorithm helps achieve a more realistic LPBF simulation with less computational effort (see Figure 10). However, another incentive to introduce particle refinement into the current SPH LPBF models was to minimize their computational cost and allow for parameter studies in a reasonable amount of time. For instance, analyzing the sensitivity of melt pool dimensions to process parameters is a useful consideration that will assist in optimizing fabricated part quality. Therefore, the effect of the track energy on the melt geometry using the efficient SPH code is investigated in this section. According to the term used in [58], the track energy is defined here as $\bar{E}=P_{L} / v_{S}$ with respect to the laser power and scan speed.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_97637720aa0371e31845g-13(1)}
+\end{center}
+
+Figure 10. Effect of spatial discretization on SPH results. Particle refinement leads to a more accurate melt surface in LPBF simulation. The blue particles inside the squares represent the finest resolution in each case.
+
+Since SPH particles are incapable of representing the interface explicitly [54], a postprocessing analysis needs to be performed to accurately extract the melt geometry. The $\alpha$-shape algorithm of Edelsbrunner et al. [59] was chosen for this purpose. Figure 11 illustrates the calculation steps of the melt geometry as an $\alpha$-shape, depicted in green. The procedure is showcased for a laser power of $100 \mathrm{~W}$ scanning the LPBF track at the speed of $1 \mathrm{~m} / \mathrm{s}$. Snapshots of the temperature and material phase are shown, where the state color-bar indicates the parameter $s$ defined in Equation (22). The state scale is linear, starting from the liquid state represented by red, down to the solid state shown in blue. The
+
+SPH particles with temperatures equal or greater than the melt temperature are extracted, shown in solid grey on the right top frame. The $\alpha$-shape algorithm is then applied to these melted particles to find an explicit definition of the melt pool interface.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_97637720aa0371e31845g-14}
+
+Figure 11. Melt pool formation and calculation of the melted area for the case of $P_{L}=100 \mathrm{~W}$ and $v_{s}=1 \mathrm{~m} / \mathrm{s}$ after the laser has scanned half of the powder bed.
+
+Halfway through the scanning process, the melt pool seems to reach a steady state. SPH frames are thus taken from this time instant: after the laser has scanned half of the powder bed. It is clear from the state of SPH particles in Figure 11 that the laser beam (in orange) creates a highly dynamic melt pool underneath itself, fusing the powder bed along the way. A very similar behavior and zonal distinction were also observed by previous studies in FEM [12] and (single-resolution) SPH [28].
+
+In order to set up the parameter study, a total of 16 test cases was simulated by varying the laser power from 50 to $200 \mathrm{~W}$ at different scan speeds of $1,1.5,2$, and $2.5 \mathrm{~m} / \mathrm{s}$. The finest and coarsest discretization sizes in these models were, respectively, $3 \mu \mathrm{m}$ and $6 \mu \mathrm{m}$. In Figure 12, the total melt depth $d_{m}$ is plotted in grey as a surface function of the laser power and scan speed. The blue stems in this plot indicate the 16 simulation data points. As expected, the maximum depth is found when using the maximum power $(200 \mathrm{~W})$ at the minimum scan speed $(1 \mathrm{~m} / \mathrm{s})$. Moreover, a second-degree polynomial equation of $d_{m}$ expresses the best fit to the available track energies. The red curve in Figure 12 represents this graph alongside the SPH data-sets shown in black squares.
+
+For a laser power of $200 \mathrm{~W}$ at the scan speed of $2 \mathrm{~m} / \mathrm{s}$, Figure 13 shows the melt dimensions after the powder bed is scanned and fully solidified. As a verification that the present SPH results are correct, the simulated LPBF track is plotted next to the experimental monograph of [12] for a very similar case. The numerical calculations are represented at six locations sufficiently far from the two edges to average the melt shape. We found the mean approximation error in the range of $15-20 \%$. The diameter of fine SPH particles is $\approx 3 \mu \mathrm{m}$ and almost all melted sub-domains are discretized by this resolution (i.e., the red particles in Figure 13). In contrast to the LPBF simulation of Russell et al. [28], SPH particles ejected from the melt pool were not removed from the present model. A closer look at the red particles flying above the solidified track confirms this, clearly seen in Figure 13.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_97637720aa0371e31845g-15(1)}
+
+Figure 12. Prediction of the melt depth using the proposed multi-resolution SPH approach.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_97637720aa0371e31845g-15}
+\end{center}
+
+Figure 13. Melt dimensions for $P_{L}=200 \mathrm{~W}$ at $v_{s}=2 \mathrm{~m} / \mathrm{s}$ when the track is fully solidified. The melted and re-solidified SPH particles are shown in red, obtained from the present multi-resolution SPH simulation at $t=1.25 \mathrm{~ms}$. The numerical melt depth and height are represented at 6 locations (green line segments). The experimental micrograph reprinted from Khairallah and Anderson [12] Copyright (2021), with permission from Elsevier under License Number 5013001359377.
+
+To generate deeper insight into the LPBF process, another sensitivity analysis on the laser power effects was carried out. For this purpose, powers varying from 50 to $200 \mathrm{~W}$ at a constant speed of $2.5 \mathrm{~m} / \mathrm{s}$ were considered. A full representation is depicted in Figure 14 at $t=0.13$ and $t=1 \mathrm{~ms}$. Following from top to bottom, it becomes evident that increasing the power causes material sputtering and leads to worse surface roughness. The existence of voids between unmelted powders at $P_{L}=50 \mathrm{~W}$ implies that this power is insufficient for fully melting the powder bed and penetrating into the substrate. On the other hand, the melt surface profile is significantly more volatile in the case of $P_{L}=200$ and necking can be observed at the solidified track. Overall, among these numerical experiments, scanning a 150-W laser at the speed of $v_{s}=2.5 \mathrm{~m} / \mathrm{s}$ for this LPBF setup seems to produce the best result with fewer manufacturing defects.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_97637720aa0371e31845g-16}
+\end{center}
+
+Figure 14. Laser tracks with different powers at scan speed $2.5 \mathrm{~m} / \mathrm{s}$. Snapshots of the temperature distribution shown at $t=0.13 \mathrm{~ms}$, when $1 / 3$ of the powder-bed length is melted, and at $t=1.0 \mathrm{~ms}$, when the LPBF track is fully solidified. The color-bar limit is set to a maximum of $2173 \mathrm{~K}$ for better visualization. The SPH particles are dynamically refined in all simulations, where the coarsest and finest discretization size used is 6 and $3 \mu \mathrm{m}$, respectively.
+
+\subsection*{4.2. Computational Performance}
+To better appreciate the improvement gained by the proposed particle refinement approach, a runtime analysis was performed on 4 models:
+
+\begin{enumerate}
+  \item Single resolution $\mathrm{w} / \mathrm{o}$ dynamics particle refinement $\mathrm{w}$ / uniform discretization size $\Delta / 2$
+
+  \item Multi resolution $\mathrm{w} /$ dynamics particle refinement $\mathrm{w} / \mathrm{o}$ neighbor-list optimization
+
+  \item Multi resolution $\mathrm{w} /$ dynamics particle refinement $\mathrm{w} /$ neighbor-list optimization
+
+  \item Single resolution $\mathrm{w} / \mathrm{o}$ dynamics particle refinement $\mathrm{w}$ / uniform discretization size $\Delta$
+
+\end{enumerate}
+
+The simulation setup in all cases is the same as the reference model taken from [28], corresponding to a laser power of $100 \mathrm{~W}$ at the scan speed of $2 \mathrm{~m} / \mathrm{s}$ using a discretization size of $4 \mu \mathrm{m}$. Elapsed simulation times are recorded for a serial C++14 implementation, run on a single CPU core of Intel® Core $^{\mathrm{TM}}$ i5-4690 at $3.50 \mathrm{GHz}$. Shown in Figure 15 is a comparison of the runtime associated with each model. The only difference between models 2 and 3 is using the optimized algorithm proposed for constructing the neighbor list of multi-resolution SPH particles (see in Section 2.5). This explains why the number of particles in both cases is the same (yellow graph of the left plot in Figure 15), but their runtime is different (orange vs. yellow graphs on the right plot in Figure 15). As can be seen, using the proposed optimization saves an additional $25 \%$ of the computational cost in multi-resolution SPH schemes. Consequently, a 2D LPBF simulation of a 1-mm long track with a reasonable discretization size of $4 \mu \mathrm{m}$ can be finished in almost $90 \mathrm{~min}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_97637720aa0371e31845g-17}
+\end{center}
+
+Figure 15. Runtime performance comparison. The proposed multi-resolution model (with optimized neighbor list) outperforms the other models by reducing approximately $50 \%$ of the computational cost of the reference model (i.e., single high resolution with $d x=4 \mu \mathrm{m}$ ). The total number of SPH particles used by the multi-resolution model is 3668 at the beginning and 7658 at the end of the simulation, significantly lower than a total of 11,800 particle used by the reference model 1.
+
+On the other hand, both multi-resolution cases (models 2 and 3) could cut the final number of particles down to almost half of the reference case (model 1). The barchart comparison shows that the optimized multi-resolution simulation saves $50 \%$ of the computational time, thus $2 \times$ faster in providing the same result. Although not quite similar in terms of the computing platform and hardware, it is still beneficial to point out that the (single-resolution) SPH model of [28] published in 2018 was claimed to take $36 \mathrm{~h}$ on a single CPU core.
+
+\section*{5. Conclusions}
+This paper developed an efficient multi-resolution SPH framework for numerical simulation of the LPBF process. Analytical and experimental validations were carried out to ensure the correct working of the code in a liquid droplet and laser spot welding test. The numerical results demonstrate the capability of the presented method in simulating the melt pool dynamics and capturing the relevant physics in an LPBF process. By enabling dynamic particle refinement within the SPH simulation, the proposed approach reduced the calculation time remarkably and facilitated further explorations such as parameter study and fine discretization. The results from this improvement are promising: Showcased for a 2D single-track LPBF case, almost $35 \%$ of the computational cost of SPH was saved without using the optimized neighbor-list algorithm. Using an optimized neighbor-search scheme resulted in a $15 \%$ additional saving and led to a $2 \times$ faster code with the same result. In brief, a 2D LPBF simulation of a 1-mm long track using SPH particles of $4 \mu \mathrm{m}$ diameter can now be completed in $90 \mathrm{~min}$.
+
+The use of SPH for AM simulation is a young but rapidly growing area of research, which opens up multiple new avenues for future developments. It is of utmost importance to strengthen the numerical model validation against physical experiments where more measurement data are available. The proposed scheme was presented for a 2D LPBF simulation but can be easily extended to 3D applications. Furthermore, the achieved saving in runtime is convincing to incorporate the dynamic refinement algorithm into the parallel SPH codes running on both CPUs and GPUs.
+
+Supplementary Materials: The following are available at https:/ /www.mdpi.com/2076-3417/11 $/ 7 / 2962 /$ s1. The software used for producing the results in this paper follows the implementation given in the following public source codes: "MFree IWF Cut Refine" (link: \href{https://github.com/}{https://github.com/} iwf-inspire/mfree\_iwf-ul-cut-refine (accessed on 24 March 2021)) and "MFree IWF Thermal" (link: \href{https://github.com/iwf-inspire/thermal_iwf}{https://github.com/iwf-inspire/thermal\_iwf} (accessed on 24 March 2021)).
+
+Author Contributions: M.A.: conceptualization, methodology, software, validation, formal analysis, investigation, data curation, visualization, writing, original draft preparation, and writing, review and editing. C.L.: software, data curation. M.B.: supervision, revision, project administration. K.W.: supervision, revision, project administration, and funding acquisition. All authors read and agreed to the published version of the manuscript.
+
+Funding: The authors received no specific funding for this work.
+
+Institutional Review Board Statement: Not applicable.
+
+Informed Consent Statement: Not applicable.
+
+Acknowledgments: The authors thank Matthias Röthlin, Hagen Klippel, and Eleni Chatzi for their support and invaluable discussions during this research project.
+
+Conflicts of Interest: The authors declare no conflict of interest. The funders had no role in the design of the study; in the collection, analyses, or interpretation of data; in the writing of the manuscript; nor in the decision to publish the results.
+
+
+
+\section*{References }
+\begin{enumerate}
+  \item Gu, D.D.; Meiners, W.; Wissenbach, K.; Poprawe, R. Laser additive manufacturing of metallic components: Materials, processes and mechanisms. Int. Mater. Rev. 2012, 57, 133-164. [CrossRef]
+
+  \item King, W.E.; Anderson, A.T.; Ferencz, R.M.; Hodge, N.E.; Kamath, C.; Khairallah, S.A.; Rubenchik, A.M. Laser powder bed fusion additive manufacturing of metals; physics, computational, and materials challenges. Appl. Phys. Rev. 2015, 2, 041304. [CrossRef]
+
+  \item Lachmayer, R.; Lippert, R.B.; Fahlbusch, T. 3D-Druck beleuchtet. In Additive Manufacturing auf dem Weg in die Anwendung; Springer: Berlin/Heidelberg, Germany, 2016.
+
+  \item Uriondo, A.; Esperon-Miguez, M.; Perinpanayagam, S. The present and future of additive manufacturing in the aerospace sector: A review of important aspects. Proc. Inst. Mech. Eng. Part G J. Aerosp. Eng. 2015, 229, 2132-2147. [CrossRef]
+
+  \item Liu, R.; Wang, Z.; Sparks, T.; Liou, F.; Newkirk, J. Aerospace applications of laser additive manufacturing. In Laser Additive Manufacturing; Elsevier: Amsterdam, The Netherlands, 2017; pp. 351-371.
+
+  \item Wohlers, T.T. Wohlers Report...: 3D Printing and Additive Manufacturing, State of the Industry, Annual Worldwide Progress Report; Wohlers Associates Incorporated: Auckland, New Zealand, 2014.
+
+  \item Francis, M.P.; Kemper, N.; Maghdouri-White, Y.; Thayer, N. Additive manufacturing for biofabricated medical device applications. In Additive Manufacturing; Elsevier: Amsterdam, The Netherlands, 2018; pp. 311-344.
+
+  \item Zaeh, M.F.; Branner, G. Investigations on residual stresses and deformations in selective laser melting. Prod. Eng. 2010, 4, 35-45. [CrossRef]
+
+  \item Körner, C.; Attar, E.; Heinl, P. Mesoscopic simulation of selective beam melting processes. J. Mater. Process. Technol. 2011, 6, 978-987. [CrossRef]
+
+  \item Khairallah, S.A.; Anderson, A.T.; Rubenchik, A.; King, W.E. Laser powder-bed fusion additive manufacturing: Physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones. Acta Mater. 2016, 108, 36-45. [CrossRef]
+
+  \item Gürtler, F.-J.; Karg, M.; Leitz, K.-H.; Schmidt, M. Simulation of laser beam melting of steel powders using the three-dimensional volume of fluid method. Phys. Procedia 2013, 41, 881-886. [CrossRef]
+
+  \item Khairallah, S.A.; Anderson, A. Mesoscopic simulation model of selective laser melting of stainless steel powder. J. Mater. Process. Technol. 2014, 214, 2627-2636. [CrossRef]
+
+  \item Lee, Y.; Zhang, W. Mesoscopic Simulation of Heat Transfer and Fluid Flow in Laser Powder Bed Additive Manufacturing. In Proceedings of the 26th Solid Freeform Fabrication Symposium, Austin, TX, USA, 10-12 August 2015.
+
+  \item Cook, P.S.; Murphy, A.B. Simulation of melt pool behaviour during additive manufacturing: Underlying physics and progress. Addit. Manuf. 2020, 31, 100909. [CrossRef]
+
+  \item Lee, Y.; Zhang, W. Modeling of heat transfer, fluid flow and solidification microstructure of nickel-base superalloy fabricated by laser powder bed fusion. Addit. Manuf. 2016, 12, 178-188. [CrossRef]
+
+  \item Dai, D.; Gu, D. Influence of thermodynamics within molten pool on migration and distribution state of reinforcement during selective laser melting of AlN/AlSi10Mg composites. Int. J. Mach. Tools Manuf. 2016, 100, 14-24. [CrossRef]
+
+  \item Yuan, P.; Gu, D. Molten pool behaviour and its physical mechanism during selective laser melting of TiC/AlSi10Mg nanocomposites: Simulation and experiments. J. Phys. D Appl. Phys. 2015, 48, 035303. [CrossRef]
+
+  \item Bidare, P.; Bitharas, I.; Ward, R.; Attallah, M.; Moore, A.J. Fluid and particle dynamics in laser powder bed fusion. Acta Mater. 2018, 142, 107-120. [CrossRef]
+
+  \item Lucy, L.B. A numerical approach to the testing of the fission hypothesis. Astron. J. 1977, 82, 1013-1024. [CrossRef]
+
+  \item Gingold, R.A.; Monaghan, J.J. Smoothed particle hydrodynamics: Theory and application to non-spherical stars. Mon. Not. R. Astron. Soc. 1977, 181, 375-389. [CrossRef]
+
+  \item Röthlin, M.; Klippel, H.; Afrasiabi, M.; Wegener, K. Metal cutting simulations using smoothed particle hydrodynamics on the GPU. Int. J. Adv. Manuf. Technol. 2019, 102, 3445-3457. [CrossRef]
+
+  \item Afrasiabi, M.; Meier, L.; Röthlin, M.; Klippel, H.; Wegener, K. GPU-accelerated meshfree simulations for parameter identification of a friction model in metal machining. Int. J. Mech. Sci. 2020, 176, 105571. [CrossRef]
+
+  \item Roethlin, M.; Klippel, H.; Afrasiabi, M.; Wegener, K. Meshless single grain cutting simulations on the GPU. Int. J. Mechatronics Manuf. Syst. 2019, 12, 272-297. [CrossRef]
+
+  \item Afrasiabi, M.; Klippel, H.; Roethlin, M.; Wegener, K. Smoothed Particle Hydrodynamics Simulation of Orthogonal Cutting with Enhanced Thermal Modeling. Appl. Sci. 2021, 11, 1020. [CrossRef]
+
+  \item Afrasiabi, M.; Klippel, H.; Roethlin, M.; Wegener, K. Parameter Identification of a Friction Model in Metal Cutting Simulations with GPU-Accelerated Meshfree Methods. In Proceedings of the 14th World Congress on Computational Mechanics, Paris, France, 19-24 July 2020; pp. 1-12.
+
+  \item Hu, H.; Eberhard, P. Thermomechanically coupled conduction mode laser welding simulations using smoothed particle hydrodynamics. Comput. Part. Mech. 2017, 4, 473-486. [CrossRef]
+
+  \item Trautmann, M.; Hertel, M.; Füssel, U. Numerical simulation of TIG weld pool dynamics using smoothed particle hydrodynamics. Int. J. Heat Mass Transf. 2017, 115, 842-853. [CrossRef]
+
+  \item Russell, M.; Souto-Iglesias, A.; Zohdi, T. Numerical simulation of Laser Fusion Additive Manufacturing processes using the SPH method. Comput. Methods Appl. Mech. Eng. 2018, 341, 163-187. [CrossRef]
+
+  \item Park, C.Y.; Zohdi, T.I. Numerical modeling of thermo-mechanically induced stress in substrates for droplet-based additive manufacturing processes. J. Manuf. Sci. Eng. 2019, 141, 061001. [CrossRef]
+
+  \item Afrasiabi, M.; Chatzi, E.; Wegener, K. A Particle Strength Exchange Method for Metal Removal in Laser Drilling. Procedia CIRP 2018, 72, 1548-1553. [CrossRef]
+
+  \item Afrasiabi, M.; Wegener, K. 3D Thermal Simulation of a Laser Drilling Process with Meshfree Methods. J. Manuf. Mater. Process. 2020, 4, 58. [CrossRef]
+
+  \item Fürstenau, J.P.; Wessels, H.; Weißenfels, C.; Wriggers, P. Generating virtual process maps of SLM using powder-scale SPH simulations. Comput. Part. Mech. 2020, 7, 655-677. [CrossRef]
+
+  \item Afrasiabi, M.; Röthlin, M.; Klippel, H.; Wegener, K. Meshfree simulation of metal cutting: An updated Lagrangian approach with dynamic refinement. Int. J. Mech. Sci. 2019, 160, 451-466. [CrossRef]
+
+  \item Monaghan, J.J. Smoothed particle hydrodynamics. Annu. Rev. Astron. Astrophys. 1992, 30, 543-574. [CrossRef]
+
+  \item Wendland, H. Piecewise polynomial, positive definite and compactly supported radial functions of minimal degree. Adv. Comput. Math. 1995, 4, 389-396. [CrossRef]
+
+  \item Liu, M.; Liu, G. Smoothed particle hydrodynamics (SPH): An overview and recent developments. Arch. Comput. Methods Eng. 2010, 17, 25-76. [CrossRef]
+
+  \item Hu, X.; Adams, N.A. A multi-phase SPH method for macroscopic and mesoscopic flows. J. Comput. Phys. 2006, 213, 844-861. [CrossRef]
+
+  \item Marrone, S.; Colagrossi, A.; Di Mascio, A.; Le Touzé, D. Analysis of free-surface flows through energy considerations: Single-phase versus two-phase modeling. Phys. Rev. E 2016, 93, 053113. [CrossRef] [PubMed]
+
+  \item Cleary, P.W.; Monaghan, J.J. Conduction modelling using smoothed particle hydrodynamics. J. Comput. Phys. 1999, 148, 227-264. [CrossRef]
+
+  \item Afrasiabi, M.; Roethlin, M.; Wegener, K. Contemporary Meshfree Methods for Three Dimensional Heat Conduction Problems. Arch. Comput. Methods Eng. 2020, 27, 1413-1447. [CrossRef]
+
+  \item Gusarov, A.; Yadroitsev, I.; Bertrand, P.; Smurov, I. Model of radiation and heat transfer in laser-powder interaction zone at selective laser melting. J. Heat Transf. 2009, 131, 072101. [CrossRef]
+
+  \item Antuono, M.; Colagrossi, A.; Marrone, S.; Molteni, D. Free-surface flows solved by means of SPH schemes with numerical diffusive terms. Comput. Phys. Commun. 2010, 181, 532-549. [CrossRef]
+
+  \item Colagrossi, A.; Antuono, M.; Le Touzé, D. Theoretical considerations on the free-surface role in the smoothed-particlehydrodynamics model. Phys. Rev. E 2009, 79, 056701. [CrossRef]
+
+  \item Becker, M.; Teschner, M. Weakly compressible SPH for free surface flows. In Proceedings of the 2007 ACM SIGGRAPH/Eurographics Symposium on Computer Animation, San Diego, CA, USA, 2-4 August 2007; pp. 209-217.
+
+  \item Afrasiabi, M.; Mohammadi, S. Analysis of bubble pulsations of underwater explosions by the smoothed particle hydrodynamics method. In Proceedings of the ECCOMAS International Conference on Particle Based Methods, Spain, Barcelona, 25-27 November 2009.
+
+  \item Afrasiabi, M.; Roethlin, M.; Wegener, K. Thermal simulation in multiphase incompressible flows using coupled meshfree and particle level set methods. Comput. Methods Appl. Mech. Eng. 2018, 336, 667-694. [CrossRef]
+
+  \item Afrasiabi, M.; Roethlin, M.; Chatzi, E.; Wegener, K. A Robust Particle-Based Solver for Modeling Heat Transfer in Multiphase Flows. In Proceedings of the ECCM-ECFD, Glasgow, UK, 11-15 June 2018.
+
+  \item Brackbill, J.U.; Kothe, D.B.; Zemach, C. A continuum method for modeling surface tension. J. Comput. Phys. 1992, 100, 335-354. [CrossRef]
+
+  \item Adami, S.; Hu, X.; Adams, N. A new surface-tension formulation for multi-phase SPH using a reproducing divergence approximation. J. Comput. Phys. 2010, 229, 5011-5021. [CrossRef]
+
+  \item Hashemi, H.; Sliepcevich, C. A numerical method for solving two-dimensional problems of heat conduction with change of phase. Chem. Eng. Prog. Symp. Ser. 1967, 63, 34-41.
+
+  \item Monaghan, J.J. Smoothed particle hydrodynamics. Rep. Prog. Phys. 2005, 68, 1703. [CrossRef]
+
+  \item Feldman, J.; Bonet, J. Dynamic refinement and boundary contact forces in SPH with applications in fluid flow problems. Int. J. Numer. Methods Eng. 2007, 72, 295-324. [CrossRef]
+
+  \item Vacondio, R.; Rogers, B.; Stansby, P.; Mignosa, P. Variable resolution for SPH in three dimensions: Towards optimal splitting and coalescing for dynamic adaptivity. Comput. Methods Appl. Mech. Eng. 2016, 300, 442-460. [CrossRef]
+
+  \item Afrasiabi, M. Thermomechanical Simulation of Manufacturing Processes Using GPU-Accelerated Particle Methods. Ph.D. Thesis, ETH Zurich, Zurich, Switzerland, 2020; ISBN 9783907234211. [CrossRef]
+
+  \item He, X.; Fuerschbach, P.; DebRoy, T. Heat transfer and fluid flow during laser spot welding of 304 stainless steel. J. Phys. D Appl. Phys. 2003, 36, 1388. [CrossRef]
+
+  \item Sahoo, P.; Debroy, T.; McNallan, M. Surface tension of binary metal-Surface active solute systems under conditions relevant to welding metallurgy. Metall. Trans. B 1988, 19, 483-491. [CrossRef]
+
+  \item Dao, M.H.; Lou, J. Simulations of Laser Assisted Additive Manufacturing by Smoothed Particle Hydrodynamics. Comput. Methods Appl. Mech. Eng. 2021, 373, 113491. [CrossRef]
+
+  \item Weirather, J.; Rozov, V.; Wille, M.; Schuler, P.; Seidel, C.; Adams, N.A.; Zaeh, M.F. A smoothed particle hydrodynamics model for laser beam melting of Ni-based alloy 718. Comput. Math. Appl. 2019, 78, 2377-2394. [CrossRef]
+
+  \item Edelsbrunner, H.; Kirkpatrick, D.; Seidel, R. On the shape of a set of points in the plane. IEEE Trans. Inf. Theory 1983, 29, 551-559. [CrossRef]
+
+\end{enumerate}
+
+\end{document}

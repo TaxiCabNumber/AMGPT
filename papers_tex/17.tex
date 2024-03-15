@@ -1,0 +1,269 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Laser-Induced Keyhole Defect Dynamics during Metal Additive Manufacturing }
+
+
+\author{Andrew M. Kiss, Anthony Y. Fong, Nicholas P. Calta, Vivek Thampy, Aiden A. Martin,\\
+Philip J. Depond, Jenny Wang, Manyalibo J. Matthews, Ryan T. Ott,\\
+Christopher J. Tassone, Kevin H. Stone, Matthew J. Kramer, Anthony van Buuren,\\
+Michael F. Toney, and Johanna Nelson Weker*}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Laser powder bed fusion (LPBF) metal additive manufacturing provides distinct advantages for aerospace and biomedical applications. However, widespread industrial adoption is limited by a lack of confidence in part properties driven by an incomplete understanding of how unique process parameters relate to defect formation and ultimately mechanical properties. To address that gap, high-speed $\mathrm{X}$-ray imaging is used to probe subsurface melt pool dynamics and voidformation mechanisms inaccessible to other monitoring approaches. This technique directly observes the depth and dynamic behavior of the vapor depression, also known as the keyhole depression, which is formed by recoil pressure from laser-driven metal vaporization. Also, vapor bubble formation and motion due to melt pool currents is observed, including instances of bubbles splitting before solidification into clusters of smaller voids while the material rapidly cools. Other phenomena include bubbles being formed from and then recaptured by the vapor depression, leaving no voids in the final part. Such events complicate attempts to identify defect formation using surface-sensitive process-monitoring tools. Finally, once the void defects form, they cannot be repaired by simple laser scans, without introducing new defects, thus emphasizing the importance of understanding processing parameters to develop robust defect-mitigation strategies based on experimentally validated models.
+
+\section*{1. Introduction}
+Additive manufacturing (AM) is a powerful alternative to conventional manufacturing approaches that can streamline the manufacturing process from design to final part, enable design flexibility, and reduce material waste..$^{[1-3]}$ Although several techniques have been developed, laser powder bed fusion (LPBF) is one of the most common approaches for metal AM. ${ }^{[4,5]}$ Some of the inherent advantages of the LPBF method are the excellent spatial resolution due to the laser beam that is typically focused to a diameter of less than $100 \mu \mathrm{m}$ and fast build times afforded by scan rates on the order of $100 \mathrm{~s}$ to $1000 \mathrm{~mm} \mathrm{~s}^{-1}[6,7]$ These scan speeds lead to highly localized, rapid heating and cooling, with relevant time scales on the order of micro- to milliseconds. ${ }^{[6]}$
+
+While AM parts are used in industry today, ${ }^{[8-10]}$ understanding of the fundamental processes that govern final part properties is incomplete ${ }^{[6]}$ and impedes widespread adoption. A central gap in knowledge is the physical details of the link between laser parameters and defect-formation mechanisms. Without this under-
+\footnotetext{standing, the engineering qualification of parts is through trial and error, which is time-consuming and expensive. In particular, understanding the physics in order to converge on a set of build parameters to minimize internal porosity is one of the key factors in improving the mechanical properties of a printed part, which depend in part on the size, shape, and distribution of voids. ${ }^{[11-14]}$ Systematic experimental studies relating void size and distribution to laser scan speed and power typically rely on ex situ characterization, such as two-dimensional micrographs using scanning electron microscopy (SEM), optical microscopy $(\mathrm{OM}){ }^{[15]}$ or three-dimensional computed tomography approaches. ${ }^{[16]}$ SEM and OM are inherently surface-sensitive techniques that require destructive preparation methods such as slicing to see subsurface defects. X-ray-based microtomography has successfully been used to image voids in titanium alloy Ti-6Al-4V (Ti64) $^{[17]}$ and 316L stainless steel ${ }^{[18,19]}$ parts printed using LPBF. By sorting the voids by size and sphericity,
+
+Dr. A. M. Kiss, Dr. A. Y. Fong, Dr. V. Thampy, Dr. C. ,\\
+Dr. K. H. Stone, Dr. M. F. Toney, Dr. J. Nelson Weker
+
+Stanford Synchrotron Radiation Lightsource
+
+SLAC National Accelerator Laboratory
+
+E-mail: \href{mailto:jlnelson@slac.stanford.edu}{jlnelson@slac.stanford.edu}
+
+Dr. N. P. Calta, Dr. A. A. Martin, P. J. Depond, J. Wang, Dr. M. J. Matthews, Dr. A. van Buuren
+
+Physical and Life Sciences Directorate
+
+Lawrence Livermore National Laboratory Livermore, CA 94550, USA
+
+Dr. R. T. Ott, Dr. M. J. Kramer
+
+Division of Materials Science and Engineering
+
+Ames Laboratory
+
+lowa State University
+
+Ames, IA 50011, USA
+
+(iD) The ORCID identification number(s) for the author(s) of this article can be found under \href{https://doi.org/10.1002/adem.201900455}{https://doi.org/10.1002/adem.201900455}.
+
+DOI: 10.1002/adem. 201900455
+}
+
+Cunningham et al. roughly categorized void origin as lack of fusion (highly irregular, larger voids), keyholing (large, spherical voids), and precursor voids (small, spherical voids). However, as the authors note, morphology is not a definitive metric for determining void-formation mechanisms. Although computational efforts to simulate process physics provide valuable insight, they require experimental validation and are computationally expensive, which makes a high-fidelity simulation of an entire build impractical. ${ }^{[6,20]}$ Therefore, in situ monitoring is needed to fully understand the mechanisms which lead to different defect void formations during the LPBF process.
+
+Several in situ process monitoring techniques have been developed to examine the build process for improving process parameters and inform models. Visible-light high-speed imaging provides insight into many important phenomena including spatter, powder motion and denudation, and melt pool dynamics $^{[1,21-23]}$ Thermal imaging has also played a significant role in understanding how material thermal properties and build strategies affect the final build. ${ }^{[1,24-27]}$ In addition, commercial systems now include melt-pool monitoring using cameras and photodiodes to quantify process stability ${ }^{[1]}$ Although these techniques provide useful, real-time information, they are limited to probing the surface of the part due to their use of visible or infrared light. Acoustic measurements can indirectly probe subsurface phenomena, but the difficulty of correlating complex acoustic signals to discrete defect-creation events currently hinders their widespread adoption. ${ }^{[28,29]}$ Complimentary techniques are needed to directly probe the interior of the part and understand the underlying physics controlling the melt pool and the surrounding material.
+
+Synchrotron-based X-ray techniques provide the high X-ray flux necessary to probe the interior of the part to directly monitor the build process and material properties. ${ }^{[30-36]}$ X-ray phasecontrast imaging was used to capture melt-pool dynamics and void formation of laser butt welding with a laser scanning at $500 \mathrm{~W}$ and $16.7 \mathrm{~mm} \mathrm{~s}^{-1}$, with $1 \mathrm{kHz}$ frame rates. ${ }^{[36]}$ Although these imaging settings were sufficient to observe this system, higher frame rates are necessary for capturing the key dynamics at the micro- to millisecond timescales during these LPBF builds. Using high-speed X-ray imaging, the vapor depression, and sometime the melt-pool dynamics can be imaged directly. ${ }^{[30,32-35]}$ Recent work has used synchrotron X-ray imaging to probe how melt-pool behavior relates to spatter and meltpool dynamics ${ }^{[33]}$ in conditions approximating overhang regions, which are particularly defect-prone regions in bulk part builds. ${ }^{[34]}$ Cunningham et al. imaged the melt pool and vapor depression on bare Ti64 using synchrotron-based X-rays to study how the power and velocity of the incident laser beam affected the heat-transfer mode of the sample (i.e., conduction or keyhole mode) and its relation to laser drilling speed, vapor depression dynamics, and front keyhole wall angle. ${ }^{[35]}$ Herein, we utilize high-speed X-ray imaging to quantify subsurface-defect formation and dynamics during the LPBF process in Ti64. We span the laser-processing parameter space from the conduction regime, where the melt-pool dynamics are dominated by the conduction of heat into the solid material, into the keyhole regime, where the recoil momentum of the vaporized material exerts a force on the melted material and forms a depression, to validate the theoretically determined keyhole threshold. ${ }^{[18]}$ We also explore strategies to repair these keyholing voids after they form. Our results reveal the complexity in repairing these voids and possible pitfalls in positively identifying defect-formation events using surface-sensitive monitoring tools without complementary in situ subsurface probes.
+
+\section*{2. Results and Discussion}
+\subsection*{2.1. Identifying Keyhole Regime and Void Formation}
+By adjusting the laser power at two different speeds (146 and $455 \mathrm{~mm} \mathrm{~s}^{-1}$ ), we compare the frequency of void formation as the laser energy density is increased into the keyhole regime (Figure 1). For the $146 \mathrm{~mm} \mathrm{~s}^{-1}$ laser-speed tracks, two different runs for each laser power were averaged together. The error bars in Figure 1 show one standard deviation from the average for the $146 \mathrm{~mm} \mathrm{~s}^{-1}$ laser speed. The onset of void formation for both speeds is around $75 \mathrm{~W}$. Previous studies have predicted that the transition from the conduction regime to keyhole regime occurs when the normalized enthalpy exceeds a value of $\approx 6$, whereas experiments in stainless steel show this transition occurring closer to a normalized enthalpy of $\approx 300^{[18,37]}$ Normalized enthalpy $\left(\Delta H / h_{\mathrm{s}}\right)$ can be written as
+
+$\frac{\Delta H}{h_{s}}=\frac{A P}{\pi \rho C T_{m} \sqrt{D^{3}}}$
+
+where $\Delta H$ is the specific enthalpy, $h_{\mathrm{s}}$ is the enthalpy at melting, $A$ is the absorptivity of the material (assumed here to be 0.6 under all conditions), $P$ is the laser power, $\rho$ is the density $\left(4.43 \mathrm{~g} \mathrm{~cm}^{-3}\right.$ for Ti64), ${ }^{[38]} C$ is the specific heat capacity
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ab996ee883a125af6982g-2}
+\end{center}
+
+Figure 1. The frequency of void defect formation within the fixed field of view $(2.048 \mathrm{~mm})$ as the laser power is increased into the keyhole regime for two different laser scan speeds. An arrow indicating the approximate location of the transition to the keyhole regime is drawn to show the relationship between keyhole formation and the formation of voids. The faster scan speed shows a linear increase in voids with increased laser power with a slope of 0.05 voids $\mathrm{mm}^{-1} \mathrm{~W}^{-1}$. The slow speed shows the same linear dependence after a dramatic increase in void formation between 75 and $100 \mathrm{~W}$. The slower scan speed is the average number of voids for two different tracks with the error bars showing one standard deviation. Error bars are not shown for the $455 \mathrm{~mm} \mathrm{~s}^{-1}$ laser speed because only one run was performed for each power.\\
+$\left(0.83 \mathrm{~J} \mathrm{~g}^{-1} \mathrm{~K}^{-1}\right),{ }^{[38]} T_{\mathrm{m}}$ is the melting temperature $(1923 \mathrm{~K}),{ }^{[38]}$ $D$ is thermal diffusivity of the melt $\left(0.086 \mathrm{~cm}^{2} \mathrm{~s}^{-1}\right),{ }^{[38]} u$ is the scan speed of the laser, and $a$ is the radius of the laser beam such that $a=\sigma \sqrt{2}$. Normalized enthalpy is a term commonly used in laser welding literature ${ }^{[37,39]}$ and has been shown to accurately describe the transition from conduction to void formation regime under different laser scan speeds, power, and beam size. ${ }^{[18]}$ For the two laser scan speeds presented here, the onset of void formation occurs at around a normalized enthalpy of $17 \pm 8$. This agrees well with the previous experimental estimate $(30 \pm 4)$ made on $316 \mathrm{~L}$ stainless steel using two different beam sizes strengthening the proposition that the normalized enthalpy is indeed an useful metric to compare selective laser melting under varying laser conditions and even across different materials.
+
+Immediately after the onset of void formation, the two laser scan speeds behave very differently. We observe that the liquidvapor interface is more stable at higher scan speeds and is therefore less likely to produce bubbles. The faster scan rate $\left(455 \mathrm{~mm} \mathrm{~s}^{-1}\right)$ shows a linear increase in the number of voids with increasing power with a slope of 0.05 voids $\mathrm{mm}^{-1} \mathrm{~W}^{-1}$. However, the slower scan speed $\left(146 \mathrm{~mm} \mathrm{~s}^{-1}\right)$ shows a sharp jump in the number of voids formed at $100 \mathrm{~W}$ before a linear increase with a slope equal to that of the faster scan rate; namely 0.05 voids $\mathrm{mm}^{-1} \mathrm{~W}^{-1}$. This dramatic jump in voids is maintained in the slower scan speed even if considering the void formation rate (voids $\mathrm{mm}^{-1} \mathrm{~s}^{-1}$ ) rather than the total number of voids formed within the field of view (voids per $\mathrm{mm}^{-1}$ ). This jump is also seen if the number of voids is plotted with respect to the normalized enthalpy (Figure S2, Supporting Information). Conversely, well into the keyhole regime where the number of voids formed changes linearly at a rate independent of scan speed, the total number of voids is scan-speed dependent. These observations suggest that the change in the rate of void formation well into the keyhole regime is adequately described with the laser scan parameters; yet, the void formation mechanism immediately after the onset of void formation cannot be fully explained.
+
+\subsection*{2.2. Vapor Depression Dynamics}
+From the high-speed in situ imaging data, we can also track the vapor depression dynamics formed by the recoil pressure of the vaporized metal as the laser scans across the powder (Figure 2a). The vapor depression shape and depth are highly variable even as the laser is scanned at a constant speed. Dramatic changes in shape and depth of the vapor depression often result in the formation of a vapor-filled bubble forming near the base of the depression. We have tracked the vapor depression depth, distance between the top of the powder and the bottom of the vapor depression, as a function of time (Figure $2 \mathrm{~b}$ ) and found an average depth of $262 \mu \mathrm{m}$ with a standard deviation of $26 \mu \mathrm{m}$ for a scan speed of $146 \mathrm{~mm} \mathrm{~s}^{-1}$ and laser power of $100 \mathrm{~W}$.
+
+To better understand the relationship between the vapor depression and void formation, we plotted the average vapordepression depth and average void depth distance between the top of the powder bed and the bottom of the vapor depression or center of void, respectively, as functions of power (Figure 3). For both speeds, below a laser power of $75 \mathrm{~W}$, a vapor depression was not visible and void defects do not form. The onset of void formation is also the scan speed and power at which a vapor depression is visible. Although these phenomena occur simultaneously for the performed experiments, additional work is needed to determine the relationship between the onset of the vapor depression and generation of voids. As the power increases, the depth of both the voids and vapor depression increase. This agrees with the vapor depression results from Cunningham et al. on bare Ti64 plates, where they reported a linear relationship of vapor depression with increased power ${ }^{[35]}$ Moreover, the slower scan speed results in a higher average depth of both voids and the depression for all laser powers investigated.
+
+On average, voids form within a standard deviation (colored error bars) of the base of the vapor depression, and typically slightly shallower. This suggests that voids form when the base of the depression is pinched off as a gas bubble, and the bubbles are not dragged significantly closer to the surface or (a)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ab996ee883a125af6982g-3(1)}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ab996ee883a125af6982g-3}
+\end{center}
+
+Figure 2. a) A series of images shows the vapor depression moving through the sample. The depth and shape of the vapor depression varies considerably in these four images. b) The vapor-depression depth can be tracked during a scan to see the variation. This scan at $146 \mathrm{~mm} \mathrm{~s}^{-1}$ and $100 \mathrm{~W}$ shows an average vapor-depression depth of $262 \mu \mathrm{m}$.
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ab996ee883a125af6982g-4}
+\end{center}
+
+Figure 3. The average depth of the voids with increasing laser power tracks the average vapor-depression depth for both 146 and $455 \mathrm{~mm} \mathrm{~s}^{-1}$ laser scan speed. On average, voids (open symbols) form within the colored error bars, representing one standard deviation of the depth of the vapor depression, or slightly shallower. The variability in both the vapor depression and void depths increases with increased power and decreased speed.
+
+deeper by the melt-pool currents before solidifying. This agrees with what we observe from the X-ray movies of the different prints. Moreover, the spread in the void depth increases considerably with higher power and slower speed as seen in the large standard deviation in the average void depth (black error bars). This large distribution agrees with our observations from the X-ray movies where we find that voids tend to form when the vapor depression depth is near an extreme, either much shallower or deeper than the average depth. Looking closer at the distribution of void depths (Figure S3 and S4, Supporting Information) it is difficult to extract a clear trend; nevertheless, it clearly does not resemble a normal distribution centered around the average vapor-depression depth.
+
+It is also notable that the average vapor-depression depth (and therefore, void depth) is linear with normalized enthalpy for both speeds (Figure S5, Supporting Information) in the keyhole regime. Thus, normalized enthalpy appears to capture the key mechanisms for the average depth of the vapor depression and resulting voids, but does not accurately predict the number of voids formed for a given set of scan parameters. We observe from the high-speed imaging that voids are created due to instabilities in the vapor depression and develop randomly during the scan. Therefore, the frequency of these events is dependent on the instability of the vapor depression, which is related to material properties (vaporization temperature, viscosity, surface tension) as well as process parameters (surface temperature, vapor pressure above the sample, depression depth, melt-pool waves, laser-driven currents in the liquid). Next, we explore a few observed phenomena related to the dynamics of the melt-vapor interface.
+
+\subsection*{2.3. Bubble Dynamics}
+In addition to vapor-depression dynamics, in situ X-ray imaging reveals the dynamic behavior of vapor-filled bubbles as they move through the melt pool and are trapped by the solidifying metal. Many of the observed voids appear as expected, developing from the instability of the liquid-vapor interface and solidifying soon after creation. However, we do observe some more interesting, frequent phenomena that should be considered. For example, we frequently observe the breaking apart of single bubbles into two or more bubbles during solidification. An example is shown in Figure 4 and Movie S1, Supporting Information. In the first panel, the bottom of the vapor depression is slightly bulged suggesting a bubble may form. In the second panel of Figure 4, the bubble is first observed $\approx 100 \mu \mathrm{m}$ behind the depression as the laser scans from left to right. The " $x$ " in each frame indicates the position of the bubble in the second frame. Notably, the bubble appears well past the depression, which only moves $\approx 6 \mu \mathrm{m}$ between frames. This indicates that the laser-driven bubble motion shortly after formation for this scan is much faster than we can accurately capture with the camera frame rate used $(20 \mathrm{kHz})$. However, we observe, for higher energy density scans, the motion of bubbles in the melt pool is much slower and is captured. Often those bubbles are observed being dragged along by the laser near the surface of the melt pool at depths around $60-100 \mu \mathrm{m}$ and as far as $\approx 300 \mu \mathrm{m}$ behind the vapor depression (Movie S2, Supporting Information).
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ab996ee883a125af6982g-4(1)}
+\end{center}
+
+Figure 4. Four consecutive images of the vapor depression showing the formation of a void. As the laser (approximate position shown with red line) and vapor depression moves from left to right, the void develops after the laser has passed, as seen in the second frame. An " $x$ " is used to mark the location of the void in that second frame. As the laser moves right and the melt pool begins to cool, the void is seen splitting into two voids and solidifying (yellow arrows). The scan was performed at $146 \mathrm{~mm} \mathrm{~s}^{-1}$ and $100 \mathrm{~W}$. See Movie S1, Supporting Information.
+
+Based on the imaging, the bubble in Figure 4 travels at $1.3 \mathrm{~mm} \mathrm{~s}^{-1}$ opposite the direction of the laser scan in the $50 \mu$ s after pinching off the vapor depression. Less than $100 \mu \mathrm{s}$ after forming, as the bubble slows to near zero, as it is influenced by the viscosity and currents of the melt pool, it also splits in two. By $150 \mu \mathrm{s}$ after formation, both bubbles are trapped as void defects with the distance between their centers at the approximate location of the bubble immediately before splitting. The behavior of the bubbles primarily depends on the complex fluid flow present in the melt pool, which has been modeled in the case of 316 AM and in laser welding of Ti alloys ${ }^{[4,40]}$ and cannot be imaged directly using our current X-ray projection imaging setup.
+
+We found that bubble breakup is a relatively common occurrence for the processing parameters that we examined. In fact, nearly all the scans with laser power above $100 \mathrm{~W}$ for a scan speed of $455 \mathrm{~mm} \mathrm{~s}^{-1}$ and above $75 \mathrm{~W}$ for a scan speed of $146 \mathrm{~mm} \mathrm{~s}^{-1}$ show bubble breakup. Since the bubbles tend to form near the bottom of the vapor depression, their formation occurs close in proximity to the edge of the melt pool solid-liquid interface. ${ }^{[4,18]}$ As a bubble is carried by convective currents away from the vapor depression and depending on the direction of the current, the bottom of the bubble approaches that solid-liquid interface, and the bubble becomes pinned to that location. Marangonidriven melt-pool flow pulls on the top of the bubble and eventually overcomes surface tension to split the bubble. The frequency of this effect is likely material dependent, as the relative strength of the Marangoni-driven flow and surface tension are materialdependent properties.
+
+A second notable bubble dynamic is the recapturing of a bubble by the vapor depression (Figure S6, Movie S3, Supporting Information). In this particular case, instability in the vapor depression shape and size leads to a bubble which exists for $\approx 100 \mu$ s before being recaptured by the depression. The bubble is formed near the vapor depression, creating a situation where it would more likely be recaptured. This self-healing, recapturing event is less frequent than bubbles breaking apart, but also occurs more often in scans with laser power above $100 \mathrm{~W}$ for a scan speed of $455 \mathrm{~mm} \mathrm{~s}^{-1}$ and above $75 \mathrm{~W}$ for a scan speed of $146 \mathrm{~mm} \mathrm{~s}^{-1}$ where the vapor depression shape is rapidly changing. Bubble recapture and bubble breakup are important phenomenon that need careful consideration when developing process-monitoring tools which might detect bubble recapture as a void-formation event and give a false-positive or bubble breakup as only one void rather than a cluster of smaller ones.
+
+\subsection*{2.4. Void Repair Strategies}
+Although determining the controlling mechanisms of void formation in AM processes is critical to advancing AM technologies, equally important is understanding how such defects can be removed or fixed after creation. It has been proposed that scanning the laser over an already printed region can be an effective means of repairing voids. ${ }^{[41]}$ Nondestructive X-ray imaging provides an ideal approach to investigate this strategy for void repair, as it allows imaging between multiple laser passes to assess the formation and repair of voids. Herein, we directly investigated the effectiveness of using a second laser scan with variable laser power to repair keyhole void defects. Prior to laser exposure, no voids are discernable in the substrate. As expected from the work described earlier, voids result from an initial laser pass with speed of $144 \mathrm{~mm} \mathrm{~s}^{-1}$ and power at $100 \mathrm{~W}$. In an attempt to repair these voids, a second laser pass was executed at a) $100 \mathrm{~W}$, b) $150 \mathrm{~W}$, and c) $50 \mathrm{~W}$ using the same scan speed. Images after these passes are shown in Figure 5, where the voids created by the initial scan are colored red if they are successfully repaired by the subsequent scan, or magenta if they remain after the repair attempt. New voids formed in the second scan are blue. During the second laser pass at $100 \mathrm{~W}$ (Figure 5a), the average vapor depression reaches the same depth within the substrate as the first pass. Thus, the melt pool is around the same depth, melting the same material as the first pass and repairing the voids formed during the original laser scan. However, the second laser scan also forms new voids at approximately the same depth, but in different locations. This suggests that void formation under these conditions primarily arises from the stochastic behavior of meltpool dynamics rather than any preexisting defect in the material itself. This void repair and reformation behavior was consistent
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_ab996ee883a125af6982g-5}
+\end{center}
+
+Figure 5. Test of the effect of laser power on the success of repairing voids. In each of these scenarios, the first laser pass was performed at $100 \mathrm{~W}$. a) The original voids are repaired (red) by the $100 \mathrm{~W}$ repair track, but new voids are created (blue) at the same depth. b) The original voids are repaired (red) at $150 \mathrm{~W}$, but new voids (blue) are created deeper in the substrate. c) The repair track was run at $50 \mathrm{~W}$ and does not repair the existing voids (magenta). All laser passes are with a scan speed of $144 \mathrm{~mm} \mathrm{~s}^{-1}$. The approximate location of the surface of the sample is indicated with a dashed line.\\
+over three tracks treated with the same scanning and rescanning strategy. Based on these laser parameters, using a second laser scan with the same laser power does not represent a successful repair strategy for keyhole voids.
+
+When the laser power in the second pass is increased from 100 to $150 \mathrm{~W}$ (Figure 5b), the melt pool extends deeper in the substrate, melting the material around the voids generated during the first pass and repairing them. However, the higher power scan also leaves behind voids deeper into the substrate, between 180 and $385 \mu \mathrm{m}$ below the surface, consistent with the average void depth results shown in Figure 3. Since the voids are generated on average $50-100 \mu \mathrm{m}$ shallower than the depth of the vapor depression, a laser pass with a lower laser power may be able to repair the initial voids and form voids higher in the substrate or not form voids at all. To investigate this, a final repair attempt used a second laser power of only $50 \mathrm{~W}$ (Figure 5c). The low power repair track produced a vapor depression that only penetrates roughly $80 \mu \mathrm{m}$ into the substrate and does not produce any new voids; however, the melt pool does not penetrate deep enough to remove any of the voids formed in the first pass.
+
+This test of a void repair strategy using varying laser power demonstrates the difficulty in finding a laser power strong enough to access keyhole voids without producing new voids. However, this approach only investigates repair of keyhole porosity and it is entirely possible that such a remelting strategy could be an effective repair approach for voids formed by other mechanisms, such as lack of fusion or voids originating from the precursor powder. In any case, this study suggests that the melting of additional powder layers will not remove the voids formed at the base of the vapor depression in keyhole-mode processing. If one considers building the next layer with the second scan with an additional $50-70 \mu \mathrm{m}$ layer of powder on the surface, the vapor depression will not penetrate on average to the depth required to repair most of the voids created by the first pass. Thus, a voidrepair strategy using varying laser power with or without an additional powder layer added before the second laser scan, is not a workable approach.
+
+\section*{3. Conclusions}
+In conclusion, we have directly measured the dynamics of the vapor depression, keyhole void formation, vapor bubble dynamics, and void-repair strategies during LPBF using a high-speed in situ synchrotron X-ray-imaging technique. The measured keyhole threshold in Ti64 agrees well with the theory proposed and demonstrated in 316L stainless steel by King et al. ${ }^{[18]}$ Additionally, we found that although the average vapordepression depth and average void depth scale linearly with normalized enthalpy, the likelihood of void formation does not. Instead, the slower scan speed produced significantly more voids in the keyhole regime than expected from normalized enthalpy. We observed bubbles pinch off the vapor depression and then influenced by strong fluid flow in the melt pool, which can cause them to break into multiple bubbles during solidification or reconnect with the vapor depression. Finally, the simple voidrepair strategy using a second laser pass is not a valuable strategy for keyhole void removal even if the laser power is modified. Once a keyhole void is formed, it is extremely difficult to remove with additional laser processing. We observe that normalized enthalpy is a reliable metric to predict the build conditions and quality based on the vapor-depression depth, and therefore, an important value to monitor during the build process to minimize void defects. High-speed X-ray imaging of LPBF build processes is a valuable tool which can observe new phenomena, inform modeling and simulation efforts, and improve understanding to improve confidence in LPBF-built components.
+
+\section*{4. Experimental Section}
+Using high-speed X-ray imaging, void formation during the build process was nondestructively imaged at $2 \mu \mathrm{m}$ pixel size and up to $20 \mathrm{kHz}$ frame rates. For these experiments, $3 \mathrm{~mm}$ long single-layer tracks were formed in $50-70 \mu \mathrm{m}$ thick layers of Ti64 powder on top of a substrate of the same material. Since we were interested in observing void defects formed during the build, a precursor powder with minimal voids was selected. The laser power and speed were varied from 50 to $300 \mathrm{~W}$ and 144 to $455 \mathrm{~mm} \mathrm{~s}^{-1}$, respectively, with $\mathrm{a} \approx 50 \mu \mathrm{m}$ diameter (D4 $\sigma$ ) Gaussian beam. Only the center of the $3 \mathrm{~mm}$ tracks was imaged to ensure the laser scan speed and power had reached steady state, avoiding mirror acceleration effects and laser power spikes at the beginning of tracks. The images presented in this work represent $X$-ray absorption differences, where each frame is referenced to the initial image $\left(t-t_{0}\right)$. During a scan, darker regions represented a reduction in absorption (implying less material was present) and lighter regions represented an increase in absorption (implying more material was present). For the statistical analysis, void defects were identified through thresholding the averaged difference image between before and after the laser pass (Figure S1, Supporting Information). Voids below $3 \times 3$ pixels $\left(<36 \mu \mathrm{m}^{2}\right.$ projected area which translates to an equivalent diameter of $<7 \mu \mathrm{m}$ ) were disregarded to avoid counting noisy pixels as voids.
+
+Further details on the in situ chamber and the experimental setup can be found in Calta et al., ${ }^{[32]}$ as well as the Supporting Information section of this article.
+
+\section*{Acknowledgements}
+This material is based upon work supported by the US Department of Energy's Office of Energy Efficiency and Renewable Energy (EERE) under the Advanced Manufacturing Office, CPA agreements 32035, 32037, and 32038. Lawrence Livermore National Laboratory is operated by Lawrence Livermore National Security, LLC, for the US Department of Energy, National Nuclear Security Administration under Contract DE-AC52-07NA27344. Use of the Stanford Synchrotron Radiation Lightsource, SLAC National Accelerator Laboratory, is supported by the US Department of Energy, Office of Science, Office of Basic Energy Sciences under Contract No. DE-AC02-76SF00515. Ames Laboratory is operated for the US DOE by lowa State University under Contract No. DE-AC02-07CH11358. A.M.K. acknowledges support from the SRX beamline of the National Synchrotron Light Source II, a US Department of Energy (DOE) Office of Science User Facility operated for the DOE Office of Science by Brookhaven National Laboratory under Contract No. DE-SC0012704.
+
+\section*{Conflict of Interest}
+The authors declare no conflict of interest.
+
+\section*{Keywords}
+additive manufacturing, laser powder bed fusion, titanium, $\mathrm{X}$-ray imaging
+
+Received: April 24, 2019
+
+Revised: June 25, 2019
+
+Published online:
+
+[1] S. K. Everton, M. Hirsch, P. Stravroulakis, R. K. Leach, A. T. Clare, Mater. Des. 2016, 95, 431.
+
+[2] T. Wohlers, Wohlers Report 2014 : 3D Printing and Additive Manufacturing State of the Industry Annual Worldwide Progress Report, Wohlers Associates, Fort Collins, Col. 2014.
+
+[3] W. E. Frazier, J. Mater. Eng. Perform. 2014, 23, 1917.
+
+[4] S. A. Khairallah, A. T. Anderson, A. Rubenchik, W. E. King, Acta Mater. 2016, 108, 36.
+
+[5] F42.19, Standard Terminology for Additive Manufacturing - General Principles - Terminology, ASTM International, West Conshohocken, PA 2015.
+
+[6] W. E. King, A. T. Anderson, R. M. Ferencz, N. E. Hodge, C. Kamath, S. A. Khairallah, A. M. Rubenchik, Appl. Phys. Rev. 2015, 2, 041304.
+
+[7] J. J. Lewandowski, M. Seifi, Annu. Rev. Mater. Res. 2016, 46, 151.
+
+[8] R. E. Laureijs, J. B. Roca, S. P. Narra, C. Montgomery, J. L. Beuth, E. R. H. Fuchs, J. Manuf. Sci. Eng. 2017, 139, 081010.
+
+[9] J. Bamberg, K.-H. Dusel, W. Satzger, AIP Conf. Proc. 2015, 1650, 156.
+
+[10] B. P. Bewlay, MRS Symp. Intermet. Alloy. Sci. Technol. Appl. 2015, 1516, 49.
+
+[11] J. Stef, A. Poulon-Quintin, A. Redjaimia, J. Ghanbaja, O. Ferry, M. De Sousa, M. Gouné, Mater. Des. 2018, 156, 480.
+
+[12] T. M. Mower, M. J. Long, Mater. Sci. Eng. A 2016, 651, 198.
+
+[13] H. Gong, K. Rafi, H. Gu, G. D. Janaki Ram, T. Starr, B. Stucker, Mater. Des. 2015, 86, 545.
+
+[14] R. Day, A. Kop, T. Sercombe, N. Jones, Rapid Prototyp. J. 2008, 14, 300.
+
+[15] N. T. Aboulkhair, N. M. Everitt, I. Ashcroft, C. Tuck, Addit. Manuf. 2014, 1, 77.
+
+[16] C. Qiu, C. Panwisawas, M. Ward, H. C. Basoalto, J. W. Brooks, M. M. Attallah, Acta Mater. 2015, 96, 72.
+
+[17] R. Cunningham, S. P. Narra, C. Montgomery, J. Beuth, A. D. Rollett, JOM 2017, 69, 479.
+
+[18] W. E. King, H. D. Barth, V. M. Castillo, G. F. Gallegos, J. W. Gibbs, D. E. Hahn, C. Kamath, A. M. Rubenchik, J. Mater. Process. Technol. 2014, 214, 2915.\\
+[19] H. Choo, K. L. Sham, J. Bohling, A. Ngo, X. Xiao, Y. Ren, P. J. Depond, M. J. Matthews, E. Garlea, Mater. Des. 2019, 164, 107534.
+
+[20] W. King, A. T. Anderson, R. M. Ferencz, N. E. Hodge, C. Kamath, S. A. Khairallah, Mater. Sci. Technol. 2015, 31, 957.
+
+[21] S. Ly, A. M. Rubenchik, S. A. Khairallah, G. Guss, M. J. Matthews, Sci. Rep. 2017, 7, 1.
+
+[22] M. J. Matthews, G. Guss, S. A. Khairallah, A. M. Rubenchik, P. J. Depond, W. E. King, Acta Mater. 2016, 114, 33.
+
+[23] P. Bidare, R. R. J. Maier, R. J. Beck, J. D. Shephard, A. J. Moore, Addit. Manuf. 2017, 16, 177.
+
+[24] M. Pavlov, M. Doubenskaia, I. Smurov, Phys. Procedia 2010, 5, 523.
+
+[25] T. Furumoto, T. Ueda, M. R. Alkahari, A. Hosokawa, CIRP Ann. Manuf. Technol. 2013, 62, 223.
+
+[26] E. Rodriguez, J. Mireles, C. A. Terrazas, D. Espalin, M. A. Perez, R. B. Wicker, Addit. Manuf. 2015, 5, 31.
+
+[27] P. A. Hooper, Addit. Manuf. 2018, 22, 548.
+
+[28] S. A. Shevchik, C. Kenel, C. Leinenbach, K. Wasmer, Addit. Manuf. 2018, 21, 598.
+
+[29] H. Rieder, M. Spies, J. Bamberg, B. Henkel, AIP Conf. Proc. 2016, 1706, 130002 .
+
+[30] C. Zhao, K. Fezzaa, R. W. Cunningham, H. Wen, F. De Carlo, L. Chen, A. D. Rollett, T. Sun, Sci. Rep. 2017, 7, 1.
+
+[31] J. Wong, T. Ressler, J. W. Elmer, J. Synchrotron Radiat. 2003, 10, 154.
+
+[32] N. P. Calta, J. Wang, A. M. Kiss, A. A. Martin, P. J. Depond, G. M. Guss, V. Thampy, A. Y. Fong, J. N. Weker, K. H. Stone, C. J. Tassone, M. J. Kramer, M. F. Toney, A. Van Buuren, M. J. Matthews, Rev. Sci. Instrum. 2018, 89, 055101.
+
+[33] Q. Guo, C. Zhao, L. I. Escano, Z. Young, L. Xiong, K. Fezzaa, W. Everhart, B. Brown, T. Sun, L. Chen, Acta Mater. 2018, 151, 169.
+
+[34] C. L. A. Leung, S. Marussi, R. C. Atwood, M. Towrie, P. J. Withers, P. D. Lee, Nat. Commun. 2018, 9, 1.
+
+[35] R. Cunningham, C. Zhao, N. Parab, C. Kantzos, J. Pauza, K. Fezzaa, T. Sun, A. D. Rollett, Science 2019, 363, 849.
+
+[36] Y. Kawahito, H. Wang, Scr. Mater. 2018, 154, 73.
+
+[37] D. B. Hann, J. lammi, J. Folkes, J. Phys. D: Appl. Phys. 2011, 44, 445401.
+
+[38] K. C. Mills, Recommended Values of Thermophysical Properties for Selected Commercial Alloys, Woodhead, Cambridge 2002.
+
+[39] D. B. Hann, J. Iammi, J. Folkes, in Proc. of 36th Int. MATADOR Conf. (Eds: S. Hinduja, L. Li), Springer, London 2010, pp. 275-278.
+
+[40] R. Rai, J. W. Elmer, T. A. Palmer, T. Debroy, J. Phys. D. Appl. Phys. 2007, 40, 5753.
+
+[41] E. Yasa, J. Deckers, J. Kruth, Rapid Prototyp. J. 2011, 17, 312.
+
+
+\end{document}

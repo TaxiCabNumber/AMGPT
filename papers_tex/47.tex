@@ -1,0 +1,309 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Phase field simulation of powder bed-based additive manufacturing }
+
+
+\author{Liang-Xing Lu, N. Sridhar, Yong-Wei Zhang*\\
+Institute of High Performance Computing, A*STAR, Singapore 138632, Singapore}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+Full length article
+
+
+
+\section*{A R T I C L E I N F O}
+\section*{Article history:}
+Received 13 March 2017
+
+Received in revised form
+
+15 November 2017
+
+Accepted 17 November 2017
+
+Available online 1 December 2017
+
+\section*{Keywords:}
+Additive manufacturing
+
+Phase field simulation
+
+Microstructure
+
+\begin{abstract}
+A B S T R A C $T$ Quality control in parts built layer-by-layer via Additive Manufacturing (AM) process is still a challenge since critical features, such as the control in porosity, residual stress and deformation, surface roughness and microstructure, are yet to be fully addressed. In this work, we develop a phase field model to simulate powder bed-based AM, focusing on the effects of two major process parameters, the beam power and scanning speed, on the melt pool size and shape, porosity and grain structure. The model reproduces many important phenomena observed experimentally and reveals scaling relations for the depth and length of melt pool, the porosity and the grain density on process parameters. We find critical power densities below which the grain density or the porosity increases rapidly and the grain structure is controlled by different mechanisms in different power density regimes which allows for the possibility of controlling the grain structure. The present work could serve as a useful reference for accurate control of defects and microstructure in AM build.
+\end{abstract}
+
+(C) 2017 Acta Materialia Inc. Published by Elsevier Ltd. All rights reserved.
+
+\section*{1. Introduction}
+Additive manufacturing (AM), also known as three-dimensional (3D) printing, refers to the process of building an object in a layerby-layer manner. Selective laser melting (SLM) and electron beam melting (EBM) are two commonly-used AM processes to create three-dimensional metal parts by fusing fine powder together [1-3]. In these AM processes, an electron or laser beam selectively scans a paved metal powder layer, resulting in the formation of a melt pool. Subsequent solidification of the melt pool transforms the porous metal powder into a dense layer. After completion of one layer, the whole powder bed is lowered and a new powder layer is spread on the surface of the just-solidified layer, and the scanningmelting-solidification process is repeated until the component is built. These metal powder bed-based additive manufacturing (MPBAM) technologies are currently being considered in the manufacturing of aerospace and medical orthopedic components.
+
+Clearly, component quality with MPBAM depends on many factors, such as packing and spreading of the metal powder, interaction of electron/laser beam with the powder, heat conduction in and between solid, melt pool and surrounding environment, solid to liquid phase transformation and re-solidification, fluid dynamics of the melt pool, and pre-heating of the powder bed, etc. [4-18]. As
+\footnotetext{\begin{itemize}
+  \item Corresponding author.
+\end{itemize}
+
+E-mail address: \href{mailto:zhangyw@ihpc.a-star.edu.sg}{zhangyw@ihpc.a-star.edu.sg} (Y.-W. Zhang).
+}
+
+a result, control of the part quality is still a challenge. In particular, controls in porosity, residual stress and deformation, surface roughness, and microstructure are yet to be fully addressed.
+
+Various models and simulation methods have been developed to understand and control AM processes [7,10,16-21]: Packing of metal powder using the "rain" model or discrete element method [10,17]; simulation of residual stress with finite element algorithms based on homogenized approximation of the powder bed [16]; melt pool dynamics with either Navier-Stokes equation or lattice Boltzmann methods [7,10], and simulation of microstructure evolution using either cellular automaton method or phase field methods [19-21]. Clearly, there is a demand to develop an integrated computational platform coupling various phenomena or models together to understand and ultimately control and optimize the AM build process.
+
+As mentioned earlier, porosity and microstructure control is still largely not possible in current metal AM processes. Synchrotron tomography and three-dimensional reconstruction [22] show two dominant types of voids: process-induced voids with irregular crack-like geometry and gas-induced voids with rounded shape, with the former being caused by the insufficient fusion of powder, while the latter by overheating of powder. For gas-induced voids, there were several studies using fluid dynamic methods to model the melt flow and the trapping and freezing of gas bubbles in the melt pool $[7,23,24]$. However, for process-induced voids, we found only one reference [25] studying void formation during the melting and re-solidification of multilayers of the metal powder using\\
+lattice Boltzmann method. Their simulation results were in qualitative agreement with experimental observations. In addition, a spatial Gaussian process regression model was developed to predict the porosity in metal-based AM process [26], and good agreement was achieved against experimental results. It is noted that these methods are unable to provide a physical understanding behind the metal AM process and there are few studies on the modelling and simulation for the formation of process-induced voids.
+
+Besides voids and porosity, microstructure is another important factor that strongly influences the mechanical properties of AMbuilt components. Existing experiments [1-3] show process parameters, such as beam power, scanning speed, hatch distance, and scan strategy greatly influence the grain size, aspect ratio, and grain texture. Often, the relationship between these process parameters and the component grain microstructure is very complex. Several studies were performed to understand the formation of microstructure in AM processes [27-31]. Zinoviev et al. [27]. coupled the Goldak heat source model with a cellular automata (CA) model to simulate columnar grain growth from the base plate. Botello et al. [28]. simulated the 2D grain structure of AA-2024 alloy by coupling a finite element model for the melt pool and a CA model for grain nucleation and growth. Both powder and melt pool dynamics were not explicitly considered in these studies. As opposed to their predictions, experimental observations show that the solidification process in powder bed AM is often dominated by epitaxial grain growth, and new grains are mainly introduced by partially melted powder. Considering this fact, it is necessary to explicitly consider powder in simulating the microstructure of AM components. Rai et al. $[29,30]$. developed a 2D model, which couples a powder scale lattice Boltzmann model with a CA model to simulate the microstructural evolution in IN718 alloy. They showed epitaxial columnar grain growth and new grain nucleation from partially melted powder. Recently, Panwisawas et al. [31]. employed a 3D framework to study the formation of grain structure from the melt pool using a fluid dynamics method. In this 3D work, a nucleation model was used to introduce new grains.
+
+Previous experimental observations [22] show that in the low to moderate power density regime, the contribution from convection in the fluid dynamics of the melt pool is insignificant and the resulting void formation is negligible. In this regime of MPBAM, mass transport via diffusion is the dominant mechanism in the melt pool dynamics and in consolidating the powder particles into the solidified part. Based on this understanding, the phase field method, which has been successfully applied to many microstructure evolution problems such as in dendritic solidification and grain growth [20,21], is an appropriate approach to simulate the metal AM process. In fact, there were several attempts in using phase field simulations for AM process. For example, Gong et al. [20]. and Sahoo et al. [21]. simulated the dendritic growth of Ti-6Al-4V alloy in electron beam-induced melt pool. Krivilyov et al. [32]. developed a phase field model to simulate the consolidation process of $\mathrm{Fe}$ powder. Clearly, in the diffusion-dominated regime, phase field method is capable of simulating melting, solidification, and grain growth and substantially reduces the complexity of the calculation algorithm and the use of computational resources.
+
+In the present work, a 3D phase field model is developed to simulate MPBAM process in the low to moderate power density regime. This new model captures melting and re-solidification and the grain structure formation under a unified framework. Instead of direct 3D simulations, large-scale 2D simulations are performed to study the effects of power density and scan speed on the formation of porosity and grain structure. These 2D simulations provide better visualization and intuitive comprehension on the details of MPBAM process than 3D simulations. These 2D simulations also reproduce many important features frequently observed in MPBAM in the low to moderate lower density regime, such as the balling effect, formation of process-induced pores, lack of fusion between layers, and solid state sintering between powder particles of the built components. The simulations also reveal scaling relations between the porosity and grain structure and the "power density", which is defined as the ratio of beam power to scanning velocity, and these scaling relations are consistent with existing experimental results. Although the current study focuses on MPBAM, the findings are expected to extend to other powder-based techniques that share similar mechanisms, such as direct energy deposition.
+
+\section*{2. Model}
+\subsection*{2.1. Phase and grain representations}
+Fig. 1 shows a schematic of the model. Four phases are included: the gas or vapor phase represented by $\eta^{v}$, the base metal phase represented by $\eta^{b}$, the solid phase represented by $\eta^{s}$ and the liquid phase represented by $\eta^{l}$. To characterize the grain structure, we also introduce a series of grain fields $\eta^{s i}$ in the solid phase, where each superscript $i$ represents one specific crystallographic orientation randomly picked from the orientation space. In order to retain mass conservation of the solid and liquid phases, we introduce a conserved phase field of $\rho$ to represent the density. Here, we define the phase and grain by using $\left(\left[\eta^{v}, \eta^{b}, \eta^{l}, \eta^{s}, \rho\right],\left[\eta^{s i}\right]\right)$. More specifically $\quad([1,0,0,0,0],[0,0 \ldots]), \quad\left(\left[0,1,0,0, \rho^{b}\right],[0,0 \ldots]\right) \quad$ and $\left(\left[0,0,1,0, \rho^{l}\right],[0,0 \ldots]\right)$ represent the vapor phase, the base metal and the liquid phase, respectively, the polycrystalline grains are represented by: $\quad\left(\left[0,0,0,1, \rho^{s}\right],[1,0,0, \ldots]\right)$
+
+$\left(\left[0,0,0,1, \rho^{s}\right],[0,0, \ldots, 1,0,0 \ldots]\right)$.
+
+\subsection*{2.2. Phase field model}
+\section*{- Total free energy}
+In order to correctly simulate the AM process, the total free energy of the whole system $F$ must have a minimal value in the liquid, vapor and base metal phases when temperature is higher than melting point: $T>T_{m}$, and a minimal value in solid, vapor and base metal phases when temperature is lower than melting point $\left(T<T_{m}\right)$. To meet these requirements, make the numerical scheme efficient and keep the model simple, we formulate the following free energy expression:
+
+$F=\int\left\{g_{\text {phase }}+\left(\eta^{S}\right)^{2} \cdot g_{\text {grain }}+\left(1-\eta^{S}\right)^{2} \sum_{i=1}^{N G}\left(\eta^{s i}\right)^{2}+g_{\text {grad }}\right\} d V$
+
+where $g_{\text {phase }}$ is the free energy for phase transformation without considering the grain structure, and can be expressed as:
+
+\[
+\begin{array}{r}
+g_{\text {phase }}=\rho^{2}\left(\eta^{b}-1\right)^{2}\left[\left(\eta^{s}-1\right)^{2} \cdot \Phi(\tau)+\left(\eta^{l}-1\right)^{2} \cdot \Theta(\tau)\right]+ \\
+\left(\rho-\eta^{s} \rho^{s}-\eta^{l} \rho^{l}-\eta^{b} \rho^{b}\right)^{2}\left(\eta^{v}-1\right)^{2}+w \cdot \sum_{i \neq j}\left(\eta^{i} \eta^{j}\right)^{2} \tag{2}
+\end{array}
+\]
+
+where $\tau=T / T_{m}, \Phi(\tau)$ and $\Theta(\tau)=1-\Phi(\tau)$ are the interpolation functions: $\Phi(\tau) \rightarrow 1$ when $\tau<1$ and $\Phi(\tau) \rightarrow 0$ when $\tau \geq 1$. Here, instead of using a thermodynamics-based expression (i.e., dendritic growth), we use a simple interpolation to deal with the solid-liquid transformation that allows for use of a much larger time step in simulating the layer-by-layer fusion process in AM. $g_{\text {grain }}$ in Eq. (1)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_86b7739524e5a28e679dg-3}
+\end{center}
+
+Fig. 1. Schematic for 3D AM process and setup for the 2D phase field simulation model. The simulation plane is chosen as the central cross-section plane of the 3D AM component with $\pm x$ being the scanning direction. A forth-and-back scanning strategy is used to build the component.
+
+is the free energy for grain evolution expressed by:
+
+$g_{\text {grain }}=\frac{1}{4} \sum_{i=1}^{N G}\left[\left(\eta^{s i}\right)^{2}-1\right]^{2}+\frac{3}{4} \sum_{i<j}^{N G-1}\left(\eta^{s i} \eta^{s j}\right)^{2}-\frac{N G-1}{4}$
+
+where $N G$ is the number of crystallographic orientation used in the simulation, and is set as $N G=20 . g_{\text {grad }}$ in Eq. (1) is the gradient energy, which includes the contributions of phase-phase boundaries and grain-grain boundaries, and can be expressed as:
+
+$g_{\text {grad }}=-\sum_{i<j}^{4} k_{i j} \nabla \eta^{i} \nabla \eta^{j}-\sum_{i<j}^{\mathrm{NG}} k_{g} \nabla \eta^{s i} \nabla \eta^{s j}$
+
+where $k_{i j}$ and $k_{g}$ are the gradient coefficients for phase boundaries and grain boundaries, respectively. Values of $k_{i j}$ and $k_{g}$ are set to be constants for simplification. The last term in Eq. (1) is the coupling energy between phase transformation and grain evolution, which ensures that the grains can only exist in the solid phase.
+
+\section*{- Kinetic equations}
+The kinetic evolution laws of density $\rho$, phase fields $\eta^{i}$ and grain fields $\eta^{s i}$ can be expressed by the following respective equations:
+
+$\frac{\partial \rho}{\partial t}=\nabla M\left(\eta^{i}, T\right) \nabla \frac{\delta F}{\delta \rho}$
+
+$\frac{\partial \eta^{i}}{\partial t}=-L\left(\eta^{j}, T\right) \cdot \frac{\delta F}{\delta \eta^{i}}$
+
+$\frac{\partial \eta^{s i}}{\partial t}=-L_{g}^{i}\left(\eta^{j}, T\right) \cdot \frac{\delta F}{\delta \eta^{s i}}$
+
+where $M, L$ and $L_{g}^{i}$ are temperature-dependent kinetic coefficients, which are given by: $M=M_{0} \exp \left[-\Delta G_{M} / R T\right], L=L_{0} \exp \left[-\Delta G_{L} / R T\right]$ and $L_{g}^{i}=L_{g 0}^{i} \exp \left[-\Delta G_{g} / R T\right]$, respectively.
+
+It is noted that in the present phase field model, we only consider the formation and growth of grains during the resolidification process. However, an AM process often involves solid-state phase transformation during the re-solidification, which can be important for the control of mechanical properties of the AM component. In principle, inclusion of solid-state phase transformations into the phase field model can be addressed by techniques similar to the grain evolution (formulated in Eqs. (1), (3) and (4)), and will be carried out in future work.
+
+Besides the phase field model described above, we have also developed a fast algorithm for the generation of powder bed after each scanning track, which is described in Supporting Information (See Section S1). In Supporting Information, we also describe the evolution of temperature, the non-dimensionalization procedure, the numerical algorithm for the developed phase field model and the model/material parameters (See Sections S2 - S5), where a model TiAl6V4 is served as the prototypical material.
+
+\section*{3. Results and discussion}
+To describe the AM process, we have formulated our total free energy at proper local minima as described in Sections of 2.1 and 2.2, where the transition point is defined by an interpolation function given in Eq. (2), the driving force for the solid-liquid transformation is given by Eq. (3), and the energy barrier for the formation of solid nucleus is given by Eq. (3) together with the gradient energy of Eq. (4). For our model material that mimics the properties of Ti-6Al-4V [10,34] (See Tables S1-S3 in Supporting Information for the model/material parameters), the driving force $\left(\Delta G_{l \rightarrow s}\right)$ and the solid/liquid interface energy density $\left(\gamma_{l s}\right)$ are $350 \mathrm{~kJ} / \mathrm{m}^{3}$ and $0.74 \mathrm{~J} / \mathrm{m}^{2}$, respectively, resulting in an energy barrier $\left(\Delta G_{m}=\pi \gamma_{l s}^{2} / \Delta G_{l \rightarrow S}\right.$ for 2D) of $5 \times 10^{-6} \mathrm{~J} / \mathrm{m}$ and a critical nucleus radius $\left(r_{m}=\gamma_{l s} / \Delta G_{l \rightarrow S}\right.$ for $\left.2 \mathrm{D}\right)$ of $2.1 \mu \mathrm{m}$. Since the critical nucleus size adopted here is large, there is no chance for homogeneous nucleation to occur in our simulations. Considering the small melt pool size of typical SLM technique, epitaxial grain growth should be the main mechanism, Hence, it is reasonable to exclude homogeneous nucleation for the solidification process in our current work.
+
+Our focus of this paper is on the effect of two major process parameters, that is, beam power and scan speed, on the melt pool geometry, porosity and grain structure. To show the complexity of the AM process, we first present the simulation results for a typical case in the low-to-medium beam power density range.
+
+\subsection*{3.1. A typical case with $P_{0}=80 \mathrm{~W}, v=800 \mathrm{~mm} / \mathrm{s}$}
+Snapshots of the simulation results for a typical case with beam power of $80 \mathrm{~W}$, scanning speed of $800 \mathrm{~mm} / \mathrm{s}$, and powder layer thickness of $30 \mu \mathrm{m}$ are shown in Fig. 2. (Movie for the whole printing process is available in Supplemental Material). At the beginning, a new powder layer is spread on the top surface of the AM component. After spreading of the powder, a beam scans the powder layer from the left side to the right side as shown in Fig. 2(a)-Fig. 2(c). After the scan, spreading of another powder layer is followed and then the beam scans from the right side to the left side as shown in Fig. 2(d) to Fig. 2(e). During the scans, powder melts. Driven by the reduction of surface energy and interface energy, the melt wets the solid and connects with each other to form a melt pool (marked in dark red in Fig. 2). The phase field simulations
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2024_03_10_86b7739524e5a28e679dg-4}
+\end{center}
+
+Fig. 2. Simulation results from a typical 2D AM process with beam power of $80 \mathrm{~W}$ and scanning speed of $800 \mathrm{~mm} / \mathrm{s}$. Scanning direction: a) - c) from left side to right side, and d) - e) from right side to left side.
+
+capture many interesting phenomena frequently observed in AM: partial melting, balling, void formation, solid state sintering, columnar grain growth, new grain nucleation due to incomplete melting, etc. These results signify that many phenomena, such as mass diffusion, partial melting, melt pool size and shape, porosity, and grain structure, are generally interrelated.
+
+Supplementary video related to this article can be found at \href{https://doi.org/10.1016/j.actamat.2017.11.033}{https://doi.org/10.1016/j.actamat.2017.11.033}.
+
+For example, partial melting of powder particles leads to the formation of void defects as shown at (A1) of Fig. 2(a), (A2) of Fig. 2(b) and (A3) of Fig. 2(c). These voids can shrink and even vanish via a solid state sintering mechanism (see (B1) of Fig. 2(b), (B2) of Fig. 2(c) and (B3) of Fig. 2(d)). Same as the voids at (A1)-(A3), the voids at (B1)-(B3) are formed via partial melting. Different from voids at (A1)-(A3), these voids are just beneath a long melt pool. As a result, the thermal flux from the pool keeps their temperature just below the melting point for a longer period of time, promoting mass diffusion to fill the void and causing these voids to shrink or even vanish via solid state sintering mechanism.
+
+Fig. 2(b) shows two separate melt pools at (C1) due to balling. Driven by the minimization of surface/interface energies, the two pools evolve and solidify separately. As a result, a deep balling hole is formed as shown at (C2) of Fig. 2(c). Subsequent powder spreading and scanning is unable to fill this balling hole, resulting in a balling void at (C3) of Fig. 2(d) and (C4) of Fig. 2(e). The balling is strongly dependent on the inter powder distance and easily appear near the gap location upon increasing the distance. This observation is consistent with a previous study [10]. In addition, we find balling is strongly dependent on the depth of melt pool. For instance, a large melt pool can dramatically decrease balling voids. The balling effect is also dependent on the wetting angle of the melt on the solid powder. For a smaller wetting angle between melt and solid powder, the balling effect is minimized. In the present work, good wettability, i.e. a small wetting angle between the solid and its molten liquid is assumed.\\
+Fig. 2 also shows that partial melting greatly influences grain structure. In particular, the residual of a partially molten powder can serve as a nucleus for new grain formation. For example, we can see the case at (D) of Fig. 2(c), at which three powder beneath the melt pool are melted partially. During solidification, new grains inheriting the same crystallographic orientation as the powder start to grow from the unmolten powder. The epitaxial growth from the pre-existing grains leads to a columnar grain structure shown in (E) of Fig. 2(e). Another interesting observation is the occurrence of curved grain boundaries (GBs). Examples can be found at (F1) of Fig. 2(d) and (F2) of Fig. 2(e). At (F1), two GBs indicated by black lines are curved towards to the right side. However, after the reverse scan, these GBs become wave-like, i.e., the lower halves are still curved towards the right, while the upper halves are curved towards the left. Such curved GBs can be related to the temperature gradient, the pool geometry, layer thickness, etc.
+
+These results from the typical case discussed above highlight the complexity of the AM process, which arises from the fact that the AM process is to a certain degree statistical in nature, depending on various factors, including process conditions, powder properties and local powder environment. In the following, we examine in detail the relationship between the process parameters: the beam power and scan speed, and the melt pool size and geometry, porosity formation and grain structure.
+
+\subsection*{3.2. Melt pool size and geometry}
+As discussed above, the geometry and size of the melt pool greatly influence the outcome of the AM process. In this section, we study the evolution of the melt pool with two process parameters, i.e., beam power and scanning speed. Since we take the central cross-section of the scanning track as the 2D simulation plane, we only discuss the depth and length of the melt pool. Here, the depth of a melt pool is defined as the maximum dimension of the pool along the $y$ direction, and the length as the distance between the\\
+pool front end and tail end. In the case of melt pool splitting (Fig. 2(b)), the length is defined as the total length of all the pieces.
+
+In the simulations of Fig. 3(a), the beam power is set as $80 \mathrm{~W}$, and the scanning speed as 400,800 and $1600 \mathrm{~mm} / \mathrm{s}$. Our simulations show that during the beam scan, the melt pool first experiences a transient stage followed by a quasi-steady-state stage as shown in Fig. 3(a-c). Fig. 3(a) shows the evolution of the melt pool geometry within the quasi-steady-state stage with beam power of $80 \mathrm{~W}$ and scanning speed of $400 \mathrm{~mm} / \mathrm{s}$ for $A_{1}$ and $A_{2}, 800 \mathrm{~mm} / \mathrm{s}$ for $B_{1}$ to $B_{4}$ and $1600 \mathrm{~mm} / \mathrm{s}$ for $C_{1}$ to $C_{7}$. It is seen that with increasing scanning speed, the melt pool size shrinks and the shape stability deteriorates. The melt pool at scanning speed of $400 \mathrm{~mm} / \mathrm{s}$ is much bigger than those at scanning speeds of $800 \mathrm{~mm} / \mathrm{s}$ and $1600 \mathrm{~mm} / \mathrm{s}$. In addition, the fluctuations in size and shape at the quasi-steadystate stage are also much smaller. For example, at $800 \mathrm{~mm} / \mathrm{s}$, the melt pool shape oscillates between a thin tail configuration (B1 and B3 of Fig. 3(a) (b)) and a relatively thick tail configuration (B2 and B4 of Fig. 3(a) (b)). Such a thin/thick tail oscillation may vary in amplitude and time interval, depending on beam power, scaning speed and powder arrangement. At $1600 \mathrm{~mm} / \mathrm{s}$, the melt pool shape follows a mixed mode of thin/thick tail oscillations (for example from $C_{1}$ to $C_{2}$ of Fig. 3(a) (b)) and melt pool splittings (for example from $C_{3}$ to $C_{4}$ and from $C_{5}$ to $C_{6}$ of Fig. 3(a) (b)). These simulations clearly show that evolution of the melt pool, with the thin/thick tail oscillations and melt pool splittings, is complex and strongly dependent on the local powder distribution, beam power and scanning speed.
+
+Fig. 3(b) and (c) show the change of melt pool length and depth with the motion of the beam after the start of scanning. The length and depth increase with the scanning distance initially and reach their quasi-steady-state values after a certain scanning distance. The relative magnitudes of these parameters decrease with increase of scanning speed. However, the pool depth reaches its quasi-steady-state value much faster than the pool length. The fluctuations of the length and depth during quasi-steady-state likely arise from the highly dynamic and localized nature of the melt pool discussed earlier.
+
+Fig. 3(d) shows the change in quasi-steady-state pool depth $d_{\text {pool }}$ with the scanning speed and beam power. The depth of the melt pool decreases with the increase of speed and the decrease of beam power. The error bars in Fig. 3(d) correspond to the fluctuations as shown in Fig. 3(c). Through data analysis, we find that there is a scaling law between melt pool depth and the scanning power density, $E_{v}$, which is the energy supplied per scanning length, that is:
+
+$E_{v}=P_{0} / v$
+
+where $P_{0}$ is the beam power and $v$ is the scanning velocity. Fig. 3(e) plots the relationship between the melt pool depth and $E_{v}$. For the four different power values, the pool depth as a function of the power density collapses into a single monotonically increasing curve and is linear in the region of $E_{v}>50 \mathrm{~J} / \mathrm{m}$. Fig. 3(f) shows the change in quasi-steady-state melt pool length $l_{\text {pool }}$ with the scanning speed and beam power. The length decreases with increase of scanning speed and the decrease of the beam power. Different from the scaling relation for pool depth, the scaling law is between $l_{\text {pool }} / P_{0}$ and power density $E_{v}$ as shown in Fig. 3(g).
+
+Besides the phase field simulations, we developed an analytical model to interpret the above simulation results for the melt pool size (Detailed derivations are given Section S6 of Supporting Information). We find that for relatively high scanning speed, we have: $d_{\text {pool }} \approx \frac{2 D \cdot E_{v}}{\sqrt{2 \pi} e^{1 / 2} K \Delta T}$
+
+$l_{\text {pool }} \approx \frac{D \cdot P_{0} \cdot E_{v}}{\pi K^{2}(\Delta T)^{2}}$
+
+where, $D$ and $K$ are the thermal diffusivity and thermal conductivity of the solid phase, $\Delta T$ is the difference between melting point and preheating temperature. The approximate linear scaling shown by the phase field results in Fig. 3(e) and (g) are consistent with the linear scaling relations derived above. We also note that the scaling law for the pool depth obtained in our simulations agrees well with experimental observations [35].
+
+In the following sections, we show that considering the width and depth of the melt pool only is inadequate to fully understand the AM process. The length of the melt pool also plays an important role in the evolution of grain structure.
+
+\subsection*{3.3. Porosity}
+We carried out a series of simulations to investigate the relationship between porosity and process parameters. Fig. 4( $\left.\mathrm{a}_{13}\right)$ shows the porosity phase diagram from these simulations, and Fig. $4\left(a_{1}\right)-\left(a_{12}\right)$ show the void distribution together with grain structure at representative points in the phase space of power and scanning speed. The color in Fig. 4( $\left.\mathrm{a}_{13}\right)$ denotes the simulated porosity with lighter color corresponding to higher porosity. In Fig. 4( $\left.\mathrm{a}_{13}\right)$, the field space (the beam power and scanning speed) can be roughly divided into two regions, with the phase boundary represented by the dashed blue line. The phase in the lower-left region is free or nearly free of voids, while that in the upper-right region contains voids. In this region, farther the phase point is from the dashed line, higher is the porosity. As an extreme example, for the phase point at $P_{0}=40 \mathrm{~W}$ and $v=1200 \mathrm{~mm} / \mathrm{s}$ shown in Fig. $4\left(a_{4}\right)$, the porosity is $16 \%$.
+
+Fig. 4(b) shows the change of porosity with scanning speed and beam power. The porosity increases with increasing scanning speed and decreasing beam power. The scaling relation between porosity and $E_{v}$ is shown in Fig. 4(c). Note that besides our phase field simulation results, experimental results obtained from Ref. [33] are added in Fig. 4(b) and 4(c). It is seen that the phase field simulations agree well with the experimental data, indicating the experimental data also obeys the scaling relation.
+
+From Fig. 4(c), we see that there is a critical power density of $E_{v, \text { crit }} \approx 100 \mathrm{~J} / \mathrm{m}$, below which porosity increases rapidly. This critical power density obtained from Fig. 3(e) can be defined as the power density necessary for the melt pool depth to equal the layer thickness (with the porosity correction): $d_{\text {pool }}\left(E_{v}=E_{v, \text { crit }}\right)=\left(1+f_{0}\right) \cdot \delta$, where $f_{0}$ is the porosity of the powder bed before scanning, which is about $20 \%$ in the present work. For $\delta=30 \mu \mathrm{m}$, this relationship predicts a critical power density of $100 \mathrm{~J} / \mathrm{m}$, agreeing well with the phase field simulation results. To further verify this relationship, we performed additional simulations with a layer thickness of $60 \mu \mathrm{m}$ and predicted the critical power density as $230 \mathrm{~J} / \mathrm{m}$. The porosity values for $\delta=60 \mu \mathrm{m}$ are shown in Fig. 4(c) (in purple dots) and the critical power density is indeed around $230 \mathrm{~J} / \mathrm{m}$.
+
+\subsection*{3.4. Grain structure}
+As shown in Fig. 4(a), different grain structures were obtained in different phase regimes. Clearly, grains in the lower-left region are all columnar-like; while the grains in the upper-right region are\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_86b7739524e5a28e679dg-6}
+
+Fig. 3. Melt pool evolution predicted by the phase field model. a) Evolution of melt pool size and geometry with beam power of $80 \mathrm{~W}$ and scanning speed of $400 \mathrm{~mm} / \mathrm{s}$ for $\mathrm{A}_{1}$ and $A_{2}, 800 \mathrm{~mm} / \mathrm{s}$ for $B_{1}$ to $B_{4}$ and $1600 \mathrm{~mm} / \mathrm{s}$ for $C_{1}$ to $C_{7}$. Variation of melt pool length b) and depth c) with scanning distance, respectively. Beam power for b) and c) is set as $80 \mathrm{~W}$ and scanning speed as 400, 800 and $1600 \mathrm{~mm} / \mathrm{s}$ d) Variation of pool depth with scanning speed at different power values. e) Variation of pool depth with power density; f) Variation of pool length with scanning speed at different power values; and e) Variation of melt pool length over beam power with power density.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_86b7739524e5a28e679dg-7}
+
+Fig. 4. Evolution of porosity and microstructure with process parameters: $a_{1}$ ) - $a_{12}$ ) void distribution and grain structure under different power and scanning speed combinations; $a_{13}$ ) porosity map with lighter color corresponding to higher porosity; b) change of porosity with scanning speed at different values of beam power; and c) change of porosity with power density. The purple dot and line show the porosity simulated with $60 \mu \mathrm{m}$ layer thickness. Process parameters corresponding to the five purple circle dots from left to right are: $P_{0}=40 \mathrm{~W}, v=400 \mathrm{~mm} / \mathrm{s} ; P_{0}=160 \mathrm{~W}, v=1000 \mathrm{~mm} / \mathrm{s} ; P_{0}=80 \mathrm{~W}, v=400 \mathrm{~mm} / \mathrm{s} ; P_{0}=120 \mathrm{~W}, v=400 \mathrm{~mm} / \mathrm{s} ;$ and $P_{0}=160 \mathrm{~W}, v=400 \mathrm{~mm} / \mathrm{s}$, respectively.\\
+mostly equiaxed. In the lower-left region, the depth of the melt pool is larger than the layer thickness so that powder particles fully melt. As a result, there are no new nuclei formed during the AM process. It is known that homo-epitaxial growth from pre-existing grains leads to the formation of columnar grain structure. In the upperright region, however, partially melted powder particles serve as nuclei for new orientations and thus interrupt the homo-epitaxial growth from the pre-existing grains. As the power density decreases, the number of partially melted powder particles increases, providing more nuclei and giving rise to a more equiaxed grain microstructure.
+
+In order to investigate the influence of process parameters on grain structure, we cut a region with $540 \mu \mathrm{m}$ height along the stacking direction (the $y$ axis) and $500 \mu \mathrm{m}$ width along the scanning direction (the $x$ axis) from each simulation and then calculate various quantities, such as the grain number $N_{g}$, the width of each grain along scanning direction $W_{g, i}$, the length of each grain $L_{g, i}$, the aspect ratio of each grain $R_{g, i}$, and the area size of each grain $A_{g, i}$. With these quantities, we calculate area averaged values, i.e., the averaged grain width: $W_{g}=\sum_{i} A_{g, i} W_{g, i} / \sum_{i} A_{g, i}$, the averaged grain length: $L_{g}=\sum_{i} A_{g, i} L_{g, i} / \sum_{i} A_{g, i}$ and averaged grain aspect ratio: $R_{g}=\sum_{i} A_{g, i} R_{g, i} / \sum_{i} A_{g, i}$ for each power-scanning speed combination and plot them in Fig. 5 and Fig. S5.
+
+Fig. 5(a) shows the change of grain density with scanning speed and beam power. Here, the grain density is defined as the grain number divided by the region area: $N_{v g}=N_{g} / 540 \mu \mathrm{m} / 500 \mu \mathrm{m}$. We see that the grain density increases with the increase of scanning speed and decrease of beam power. We also plot in Fig. 5(b) the relationship between $N_{v g}$ and $E_{v}$. It is seen that the grain density roughly obeys a scaling law. Interestingly, there is a critical value of $E_{v}(\sim 150 \mathrm{~J} / \mathrm{m})$ below which the grain density deceases rapidly with increasing $E_{v}$. This critical power density of $150 \mathrm{~J} / \mathrm{m}$ is larger than the one for porosity, which is near $100 \mathrm{~J} / \mathrm{m}$. This difference primarily arises from two sources: the wetting of melt pool on residual powder and the solid state sintering as described in Section 3.1. Examples are the grains labeled as A1 and A2 in Fig. 4( $\left.\mathrm{a}_{7}\right)$ and Fig. $4\left(a_{10}\right)$, where without any voids, new grains can still form.
+
+Besides the grain density, we also investigate the grain size influenced by process parameters. We find that the grain size is controlled by different mechanisms in different power density regimes, i.e., the partial melting induced nucleation in the lower power density regime, the competitive grain growth in the intermediate power density regime and the thermal gradient forced grain growth in the high power density regime (See detailed discussion in Section S7 of Supporting Information).
+
+We emphasize that the simulation results for grain structure and grain size agree well with many experimental observations. For example, previous experimental observations [11] often show zigzag morphology of GBs in AM components. This is also shown in our present simulations for the case of the round-like melt pool (the $40 \mathrm{~W}$ case). In addition, previous experiments show that although scanning strategy affects the grain structure, the most pronounced effect is from beam energy [11]. Our simulations show that in certain power density regime, the microstructure is dominated by long columnar grains. Since these columnar grains are epitaxially grown from pre-existing grains of the component, it is thus difficult to significantly change the microstructure by changing the scanning direction. However, in low power density regime, new grains are nucleated from partially melted powder, providing for the possibility of modulating the grain structure by controlling the motion of melt pool. As shown earlier, this modulation is sensitive to the curvature of the melt pool and is more pronounced in the case of rounded pool, which is typical in DED since it uses much slower scanning speed and larger beam spot. However, since the scanning speed in SLM and EBM is much faster than DED, this results in a smaller curvature of the solid-liquid interface. In this case, grain growth is mostly directional along the stacking direction, and thus insensitive to the motion of melt pool (the scanning direction). This finding also agrees well with grain structures obtained from experimental observations using SLM, EBM and DED [2]. Finally, we note that there are conflicting experimental observations about the grain size evolution. Kobryn et al. [12]. studied the microstructure and texture evolution of Ti-6Al-4V fabricated by direct laser melting, and found that the grain width decreases with increasing scan speed and increases with increasing power density. Han et al. [13]. also studied the microstructure of direct laser melted Ti-6Al$4 \mathrm{~V}$ alloy. However, they found that the grain size can be refined by decreasing the scanning speed and increasing laser power. Although these two works employ different machine systems and different process parameters, we find that the microstructure from Han et al. is more columnar-like than that from Kobryn et al. Based on the present work, we believe that their experiments are likely in different power density regimes: Kobryn's work is the regime where partial melting of powder and competitive grain growth dominates, while Han's work is in the regime where thermal gradient-driven grain growth dominates microstructural evolution.\\
+\includegraphics[max width=\textwidth, center]{2024_03_10_86b7739524e5a28e679dg-8}
+
+Fig. 5. Influence of process parameters on grain structure: a) change of grain density with scanning speed under different values of beam power, and b) change of grain density with power density.
+
+\section*{4. Conclusion}
+We have developed a phase field model to study the melt pool size and shape, porosity, and grain structure during powder bedbased additive manufacturing. With simulations, we find that both depth and length of melt pool increase with the increase of beam power density. The depth of the melt pool, the porosity and the grain density all follow a scaling relation with power density. However, the length of melt pool, grain size and aspect ratio only partially follow a scaling relation with power density. In addition, porosity is found to increase with the decrease of power density. When power density decreases to a critical value, porosity increases rapidly. Grain density increases with the decrease of power density. The critical power density for grain density is larger than the one for porosity. The grain structure is found to be controlled by different mechanisms in different power density regimes. In the low power density regime, partially melted powder contributes to formation of nuclei for new grains and interrupts homo-epitaxial grain growth. As a result, grain size in this regime slowly increases with the increase of power density and obeys a scaling relation. In the intermediate power density regime, columnar grain structure dominates and competitive grain growth controls grain size. The grain size in this regime increases rapidly with the increase of power density. In the high power density regime, the competition between columnar grains is suppressed by the high thermal gradient, and width of the grains decrease rapidly with the increase of power density, while the grain length only increases slightly. In the case of low power and low scanning speed, roundlike melt pool is able to promote the competition between columnar grains, resulting in the increase of both grain width and grain length. The present work reproduces many key experimental observations and reveals valuable insights into the relationship between process parameters and the melt pool size and shape, formation of porosity, and grain structure.
+
+\section*{Appendix A. Supplementary data}
+Supplementary data related to this article can be found at \href{https://doi.org/10.1016/j.actamat.2017.11.033}{https://doi.org/10.1016/j.actamat.2017.11.033}.
+
+\section*{References}
+[1] D. Herzog, V. Seyda, E. Wycisk, C. Emmelmann, Additive manufacturing of metals, Acta Mater 117 (2016) 371-392.
+
+[2] W.J. Sames, F.A. List, S. Pannala, R.R. Dehoff, S.S. Babu, The metallurgy and processing science of metal additive manufacturing, Int. Mat. Rev. 61 (5) (2016) 315-360.
+
+[3] W.E. Frazier, Metal additive manufacturing: a review, J. Mat. Eng. Perform. 23 (6) (2014) 1917-1928.
+
+[4] S. Das, Physical aspects of process control in selective laser sintering of metals, Adv. Eng. Mater 5 (2003) 701-711.
+
+[5] W. Devesse, D.D. Baere, P. Guillaume, Modeling of laser beam and powder flow interaction in laser cladding using ray-tracing, J. Laser Appl. 27 (2015) S29208.
+
+[6] W. Yan, J. Smith, W. Ge, F. Lin, W.K. Liu, Multiscale modeling of electron beam and substrate interaction: a new heat source model, Comput. Mech. 56 (2015) 265-276.
+
+[7] S.A. Khairallah, A.T. Anderson, A. Rubenchik, W.E. King, Laser powder-bed fusion additive manufacturing: physics of complex melt flow and formation mechanisms of pores, spatter, and denudation zones, Acta Mater 108 (2016) 36-45.
+
+[8] T. Scharowsky, F. Osmanlic, R.F. Singer, C. Körner, Melt pool dynamics during selective electron beam melting, Appl. Phys. A 114 (2014) 1303-1307.
+
+[9] H. Nakamura, Y. Kawahito, K. Nishimoto, S. Katayama, Elucidation of melt flows and spatter formation mechanisms during high power laser welding of pure titanium, J. Laser Appl. 27 (2015) 032012.
+
+[10] C. Körner, E. Attar, P. Heinl, Mesoscopic simulation of selective beam melting process, J. Mat. Process. Technol. 211 (2011) 978-987.
+
+[11] L.L. Parimia, R.G. A, D. Clark, M.M. Attallaha, Microstructural and texture development in direct laser fabricated IN718, Mat. Charact. 89 (2014) 102-111.
+
+[12] P.A. Kobryn, S.L. Semiatin, Microstructure and texture evolution during solidification processing of Ti-6Al-4V, J. Mat. Process. Technol. 135 (2003) 330-339.
+
+[13] Y. Han, W. Lu, T. Jarvis, J. Shurvinton, X. Wu, Investigation on the microstructure of direct laser additive manufactured Ti6Al4V alloy, Mat. Res. 18 (2015) 24-28.
+
+[14] J. Yang, J. Han, H. Yu, J. Yin, M. Gao, Z. Wang, X. Zeng, Role of molten pool model on formability, microstructure and mechanical properties of selective laser melted Ti-6Al-4V alloy, Mat. Des. 110 (2016) 558-570.
+
+[15] J.P. Kruth, G. Levy, F. Klocke, T.H.C. Childs, Consolidation phenomena in laser and powder-bed based layered manufacturing, CIRP Ann. Manuf. Techn 56 (2) (2007) 730-759.
+
+[16] M. Megahed, H.-W. Mindt, N. N'Dri, H. Duan, O. Desmaison, Metal additivemanufacturing process and residual stress modeling, IMMI 5 (2016) 4.
+
+[17] S. Haeri, Y. Wang, O. Ghita, J. Sun, Discrete element simulation and experimental study of powder spreading process in additive manufacturing, Powder Technol. 306 (2017) 45-54.
+
+[18] M.J. Matthews, G. Guss, S.A. Khairallah, A.M. Rubenchik, P.J. Depond, W.E. King, Denudation of metal powder layers in laser powder bed fusion processes, Acta Mater 114 (2016) 33-42.
+
+[19] R. Chen, Q. Xu, B. Liu, Cellular automaton simulation of three-dimensional dendrite growth in $\mathrm{Al}-7 \mathrm{Si}-\mathrm{Mg}$ ternary aluminum alloys, Comput. Mat. Sci. 105 (2015) 90-100.
+
+[20] X. Gong, K. Chou, Phase-field modeling of microstructure evolution in electron beam additive manufacturing, JOM 67 (2015) 5.
+
+[21] S. Sahoo, K. Chou, Phase-field simulation of microstructure evolution of $\mathrm{Ti}-6 \mathrm{Al}-4 \mathrm{~V}$ in electron beam additive manufacturing process, Add. Manuf. 9 (2016) 14-24.
+
+[22] G. Kasperovich, J. Haubrich, J. Gussone, G. Requena, Correlation between porosity and processing parameters in TiAl6V4, Mat. Des. 105 (2016) 160-170.
+
+[23] K. Chongbunwatana, Simulation of vapour keyhole and weld pool dynamics during laser beam welding, Prod. Eng. Res. Devel 8 (2014) 499-511.
+
+[24] J. Zhou, H.-L. Tsai, Porosity formation and prevention in pulsed laser welding, J. Heat. Transf. 129 (2007) 1014-1024.
+
+[25] A. Bauerei, T. Scharowsky, C. Körner, Defect generation and propagation mechanism during additive manufacturing by selective beam melting, J. Mat. Process. Technol. 214 (2014) 2522-2528.
+
+[26] G. Tapia, A.H. Elwany, H. Sang, Prediction of porosity in metal-based additive manufacturing usingspatial Gaussian process models, Add. Manuf. 12 (2016) 282-290.
+
+[27] A. Zinoviev, O. Zinovieva, V. Ploshikhia, V. Romanova, R. Balokhonov, Evolution of grain structure during laser additive manufacturing. Simulation by a cellular automata method, Mat. Des. 106 (2016) 321-329.
+
+[28] O. Lopez-Botello, U. Martinez-Hernandez, J. Ramírez, C. Pinna, K. Mumtaz, Two-dimensional simulation of grain structure growth within selective laser melted AA-2024, Mat. Des. 113 (2017) 369-376.
+
+[29] A. Rai, M. Markl, C. Körner, A coupled cellular automaton-lattice Boltzmann model for grain structure simulation during additive manufacturing, Comput. Mat. Sci. 124 (2016) 37-48.
+
+[30] A. Rai, H. Helmer, C. Körner, Simulation of grain structure evolution during powder bed based additive manufacturing, Add. Manuf. 13 (2017) 124-134.
+
+[31] C. Panwisawas, C. Qiu, M.J. Anderson, Y. Sovani, R.P. Turner, M.M. Attallah, J.W. Brooks, H.C. Basoalto, Mesoscale modelling of selective laser melting: thermal fluid dynamics and microstructural evolution, Comput. Mat. Sci. 126 (2017) 479-490
+
+[32] M.D. Krivilyov, S.D. Mesarovic, D.P. Sekulic, Phase-field model of interface migration and powder consolidation in additive manufacturing of metals, J. Mat. Sci. 52 (8) (2017).
+
+[33] H. Gong, K. Rafi, T. Starr, B. Stucker, The effects of processing parameters on defect regularity in $\mathrm{Ti}-6 \mathrm{Al}-4 \mathrm{~V}$ parts fabricated by selective laser melting and electron beam melting, Solid free. Fabr. Symp. (2013) 424-439.
+
+[34] M. Boivineau, C. Cagran, D. Doytier, V. Eyraud, M.-H. Nadal, B. Wilthan, G. Pottlacher, Thermophysical properties of solid and liquid Ti-6Al-4V (TA6V) alloy, Int. J. Thermophys. 27 (2006) 507-529.
+
+[35] C. Kusuma, The Effect of Laser Power and Scan Speed on Melt Pool Characteristics of Pure Titanium and Ti-6Al-4V Alloy for Selective Laser Melting, Wright State University, 2016 .
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+
+\end{document}
